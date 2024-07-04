@@ -1,4 +1,4 @@
-package com.indie.apps.pannypal.ui.theme
+package com.indie.apps.pannypal.view.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
