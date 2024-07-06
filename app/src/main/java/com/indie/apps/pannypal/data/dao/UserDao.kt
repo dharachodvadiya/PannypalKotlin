@@ -14,6 +14,6 @@ interface UserDao : BaseDao<User>{
     //get user data
     //can not delete
 
-    @Query("SELECT * FROM user")
-    fun getUsers(): List<User>
+    @Query("SELECT * FROM user WHERE id = 1")
+    fun getUser(): User
 }
