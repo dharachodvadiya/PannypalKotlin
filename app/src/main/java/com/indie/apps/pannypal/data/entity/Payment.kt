@@ -16,5 +16,5 @@ data class Payment(
     val name: String,
 
     @ColumnInfo(name = "pre_added")
-    val preAdded : Int
+    val preAdded : Int = 0
 )

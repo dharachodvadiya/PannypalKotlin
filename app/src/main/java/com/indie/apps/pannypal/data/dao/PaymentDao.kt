@@ -24,4 +24,7 @@ interface PaymentDao : BaseDao<Payment> {
     @Transaction
     @Query("SELECT * FROM payment_type")
     fun getPayments(): List<Payment>
+
+    @Insert
+    fun insertPayments(payments: List<Payment>) : List<Long>
 }
