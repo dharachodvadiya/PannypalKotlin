@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import com.indie.apps.pannypal.data.entity.Payment
 import com.indie.apps.pannypal.data.entity.User
@@ -20,6 +21,7 @@ interface PaymentDao : BaseDao<Payment> {
     @Query("DELETE FROM payment_type WHERE id = :paymentId AND pre_added = 0")
     fun deleteCustomPayment(paymentId: Long) : Int
 
+    @Transaction
     @Query("SELECT * FROM payment_type")
     fun getPayments(): List<Payment>
 }

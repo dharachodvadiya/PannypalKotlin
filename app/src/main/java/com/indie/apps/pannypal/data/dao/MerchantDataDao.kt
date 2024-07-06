@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import com.indie.apps.pannypal.data.entity.Merchant
 import com.indie.apps.pannypal.data.entity.MerchantData
@@ -25,6 +26,7 @@ interface MerchantDataDao : BaseDao<MerchantData> {
     @Delete
     fun deleteMerchantsData( vararg merchantsData: List<MerchantData>) : Int
 
+    @Transaction
     @Query("SELECT * FROM merchant_data")
     fun getMerchantsData(): List<MerchantData>
 }
