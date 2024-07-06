@@ -1,4 +1,4 @@
-package com.indie.apps.pannypal.data.model
+package com.indie.apps.pannypal.data.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
