@@ -2,8 +2,9 @@ package com.indie.apps.pannypal.repository
 
 import com.indie.apps.pannypal.data.dao.UserDao
 import com.indie.apps.pannypal.data.entity.User
+import javax.inject.Inject
 
-class UserRepositoryImpl(private val userDao: UserDao) : UserRepository {
+class UserRepositoryImpl @Inject constructor(private val userDao: UserDao) : UserRepository {
 
     override suspend fun getUser() = userDao.getUser()
 

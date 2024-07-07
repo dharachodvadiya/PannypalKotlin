@@ -2,8 +2,9 @@ package com.indie.apps.pannypal.repository
 
 import com.indie.apps.pannypal.data.dao.MerchantDao
 import com.indie.apps.pannypal.data.entity.Merchant
+import javax.inject.Inject
 
-class MerchantRepositoryImpl(private val merchantDao: MerchantDao) : MerchantRepository {
+class MerchantRepositoryImpl @Inject constructor(private val merchantDao: MerchantDao) : MerchantRepository {
 
     override suspend fun deleteMerchant(merchant: Merchant) = merchantDao.deleteMerchant(merchant)
 
