@@ -3,6 +3,7 @@ package com.indie.apps.pannypal.data.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(
@@ -16,6 +17,10 @@ import androidx.room.PrimaryKey
             parentColumns = ["id"],
             childColumns = ["payment_id"],
             onDelete = ForeignKey.NO_ACTION)
+    ],
+    indices = [
+        Index(value = ["merchant_id"]),
+        Index(value = ["payment_id"])
     ]
 )
 data class MerchantData(

@@ -54,6 +54,7 @@ android {
 dependencies {
     implementation("androidx.test.ext:junit-ktx:1.2.1")
     val room_version = "2.6.1"
+    val hilt_version = "2.48"
 
     implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.2")
@@ -82,23 +83,23 @@ dependencies {
     implementation("androidx.room:room-ktx:$room_version")
 
     //dagger-hilt
-    implementation("com.google.dagger:hilt-android:2.44")
-    kapt("com.google.dagger:hilt-android-compiler:2.44")
+    implementation("com.google.dagger:hilt-android:$hilt_version")
+    kapt("com.google.dagger:hilt-android-compiler:$hilt_version")
 
     // For Robolectric tests.
-    testImplementation("com.google.dagger:hilt-android-testing:2.44")
+    testImplementation("com.google.dagger:hilt-android-testing:$hilt_version")
     // ...with Kotlin.
-    kaptTest("com.google.dagger:hilt-android-compiler:2.44")
+    kaptTest("com.google.dagger:hilt-android-compiler:$hilt_version")
     // ...with Java.
-    testAnnotationProcessor("com.google.dagger:hilt-android-compiler:2.44")
+    testAnnotationProcessor("com.google.dagger:hilt-android-compiler:$hilt_version")
 
 
     // For instrumented tests.
-    androidTestImplementation("com.google.dagger:hilt-android-testing:2.44")
+    androidTestImplementation("com.google.dagger:hilt-android-testing:$hilt_version")
     // ...with Kotlin.
-    kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.44")
+    kaptAndroidTest("com.google.dagger:hilt-android-compiler:$hilt_version")
     // ...with Java.
-    androidTestAnnotationProcessor("com.google.dagger:hilt-android-compiler:2.44")
+    androidTestAnnotationProcessor("com.google.dagger:hilt-android-compiler:$hilt_version")
 
 }
 

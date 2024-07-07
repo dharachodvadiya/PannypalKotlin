@@ -24,7 +24,7 @@ class AppDatabaseTest {
             // Allowing main thread queries, just for testing.
             .allowMainThreadQueries()
             .build()
-        paymentDao = appDatabase.paymentDao
+        paymentDao = appDatabase.paymentDao()
     }
 
     @After

@@ -27,14 +27,15 @@ import kotlinx.coroutines.runBlocking
         Merchant::class,
         MerchantData::class
     ],
-    version = 1
+    version = 1,
+    exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
 
-    abstract val userDao : UserDao
-    abstract val paymentDao : PaymentDao
-    abstract val merchantDao : MerchantDao
-    abstract val merchantDataDao : MerchantDataDao
+    abstract fun userDao() : UserDao
+    abstract fun paymentDao() : PaymentDao
+    abstract fun merchantDao() : MerchantDao
+    abstract fun merchantDataDao() : MerchantDataDao
 
     companion object {
         @Volatile
@@ -72,7 +73,7 @@ abstract class AppDatabase : RoomDatabase() {
         @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
         suspend fun populateDatabase(db: AppDatabase) {
 
-            val paymentDao = db.paymentDao
+            val paymentDao = db.paymentDao()
             // Define your pre-added payment methods
             val preAddedPayments = listOf(
                 Payment(name = "Cash", preAdded = 1),

@@ -27,21 +27,21 @@ object AppModule {
 
     @Provides
     fun provideUserRepository(database: AppDatabase): UserRepository {
-         return UserRepositoryImpl(database.userDao)
+         return UserRepositoryImpl(database.userDao())
     }
 
     @Provides
     fun providePaymentRepository(database: AppDatabase): PaymentRepository {
-        return PaymentRepositoryImpl(database.paymentDao)
+        return PaymentRepositoryImpl(database.paymentDao())
     }
 
     @Provides
     fun provideMerchantRepository(database: AppDatabase): MerchantRepository {
-        return MerchantRepositoryImpl(database.merchantDao)
+        return MerchantRepositoryImpl(database.merchantDao())
     }
 
     @Provides
     fun provideMerchantDataRepository(database: AppDatabase): MerchantDataRepository {
-        return MerchantDataRepositoryImpl(database.merchantDataDao)
+        return MerchantDataRepositoryImpl(database.merchantDataDao())
     }
 }
