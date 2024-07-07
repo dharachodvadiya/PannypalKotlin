@@ -1,6 +1,7 @@
 package com.indie.apps.pannypal.data.db
 
 import android.content.Context
+import androidx.annotation.VisibleForTesting
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -68,7 +69,8 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
-        private suspend fun populateDatabase(db: AppDatabase) {
+        @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+        suspend fun populateDatabase(db: AppDatabase) {
 
             val paymentDao = db.paymentDao
             // Define your pre-added payment methods

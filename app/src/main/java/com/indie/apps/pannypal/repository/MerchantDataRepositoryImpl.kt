@@ -7,7 +7,7 @@ class MerchantDataRepositoryImpl(private val merchantDataDao: MerchantDataDao) :
 
     override suspend fun deleteMerchantData(merchantData: MerchantData) = merchantDataDao.deleteMerchantData(merchantData)
 
-    override suspend fun deleteMerchantsData(vararg merchantsData: List<MerchantData>) = merchantDataDao.deleteMerchantsData(*merchantsData)
+    override suspend fun deleteMerchantsData(merchantsData: List<MerchantData>) = merchantDataDao.deleteMerchantsData(merchantsData)
 
     override suspend fun getMerchantsData() = merchantDataDao.getMerchantsData()
 

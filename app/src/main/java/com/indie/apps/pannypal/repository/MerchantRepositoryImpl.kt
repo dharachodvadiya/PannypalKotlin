@@ -7,7 +7,7 @@ class MerchantRepositoryImpl(private val merchantDao: MerchantDao) : MerchantRep
 
     override suspend fun deleteMerchant(merchant: Merchant) = merchantDao.deleteMerchant(merchant)
 
-    override suspend fun deleteMerchants(vararg merchants: List<Merchant>) = merchantDao.deleteMerchants(*merchants)
+    override suspend fun deleteMerchants(merchants: List<Merchant>) = merchantDao.deleteMerchants(merchants)
 
     override suspend fun getMerchants() = merchantDao.getMerchants()
 

@@ -23,7 +23,7 @@ interface MerchantDao : BaseDao<Merchant> {
     fun deleteMerchant(merchant: Merchant) : Int
 
     @Delete
-    fun deleteMerchants( vararg merchants: List<Merchant>) : Int
+    fun deleteMerchants(merchants: List<Merchant>) : Int
 
     @Transaction
     @Query("SELECT * FROM merchant")

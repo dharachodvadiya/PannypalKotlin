@@ -6,7 +6,7 @@ interface MerchantDataRepository : BaseRepository<MerchantData>{
 
     suspend fun deleteMerchantData(merchantData: MerchantData) : Int
 
-    suspend fun deleteMerchantsData( vararg merchantsData: List<MerchantData>) : Int
+    suspend fun deleteMerchantsData(merchantsData: List<MerchantData>) : Int
 
     suspend fun getMerchantsData(): List<MerchantData>
 }
