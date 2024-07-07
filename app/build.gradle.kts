@@ -16,7 +16,7 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.indie.apps.pannypal.CustomTestRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -53,8 +53,6 @@ android {
 
 dependencies {
     implementation("androidx.test.ext:junit-ktx:1.2.1")
-    val room_version = "2.6.1"
-    val hilt_version = "2.48"
 
     implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.2")
@@ -73,32 +71,22 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
     //Room
+    val room_version = "2.6.1"
     implementation("androidx.room:room-runtime:$room_version")
     annotationProcessor("androidx.room:room-compiler:$room_version")
-
-    // To use Kotlin annotation processing tool (kapt)
     kapt("androidx.room:room-compiler:$room_version")
-
-    //Kotlin Extensions and Coroutines support for Room
     implementation("androidx.room:room-ktx:$room_version")
 
     //dagger-hilt
+    val hilt_version = "2.48"
     implementation("com.google.dagger:hilt-android:$hilt_version")
     kapt("com.google.dagger:hilt-android-compiler:$hilt_version")
 
-    // For Robolectric tests.
     testImplementation("com.google.dagger:hilt-android-testing:$hilt_version")
-    // ...with Kotlin.
     kaptTest("com.google.dagger:hilt-android-compiler:$hilt_version")
-    // ...with Java.
     testAnnotationProcessor("com.google.dagger:hilt-android-compiler:$hilt_version")
-
-
-    // For instrumented tests.
     androidTestImplementation("com.google.dagger:hilt-android-testing:$hilt_version")
-    // ...with Kotlin.
     kaptAndroidTest("com.google.dagger:hilt-android-compiler:$hilt_version")
-    // ...with Java.
     androidTestAnnotationProcessor("com.google.dagger:hilt-android-compiler:$hilt_version")
 
 }

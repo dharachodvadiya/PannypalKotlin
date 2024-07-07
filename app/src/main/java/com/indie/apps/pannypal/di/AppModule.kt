@@ -1,4 +1,4 @@
-package com.indie.apps.pannypal
+package com.indie.apps.pannypal.di
 
 import android.content.Context
 import com.indie.apps.pannypal.data.db.AppDatabase
