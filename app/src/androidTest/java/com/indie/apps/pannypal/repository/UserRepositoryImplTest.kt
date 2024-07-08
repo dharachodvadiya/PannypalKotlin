@@ -7,6 +7,7 @@ import com.indie.apps.pannypal.data.db.AppDatabase
 import com.indie.apps.pannypal.data.entity.User
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runBlockingTestOnTestScope
 import org.junit.After
 import org.junit.Assert.*
@@ -42,7 +43,7 @@ class UserRepositoryImplTest {
     }
 
     @Test
-    fun getUser_test() = runBlockingTestOnTestScope{
+    fun getUser_test() = runBlocking{
         userDao.insert(User(name = "testUser", currency = "AED"))
 
         val user = userDao.getUser()
