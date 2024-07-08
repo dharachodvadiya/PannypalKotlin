@@ -8,16 +8,16 @@
       <SelectionState runConfigName="Tests in 'com.indie.apps.pannypal'">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="deleteCustomPayment_test()">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
       <SelectionState runConfigName="getMerchants_test()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="getMerchantsData_test()">
+      <SelectionState runConfigName="getMerchantsData_with_Limit_and_offset_test()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="getMerchantsData_with_Limit_and_offset_test()">
+      <SelectionState runConfigName="getMerchantsData_with_merchantName_with_Limit_and_offset_test()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="getUser_test()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

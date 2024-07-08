@@ -8,6 +8,8 @@ class UserRepositoryImpl @Inject constructor(private val userDao: UserDao) : Use
 
     override suspend fun getUser() = userDao.getUser()
 
+    override suspend fun updateAmount(incomeAmt: Long, expenseAmt: Long) = userDao.updateAmount(incomeAmt, expenseAmt)
+
     override suspend fun insert(user: User) = userDao.insert(user)
 
     override suspend fun update(user: User) = userDao.update(user)

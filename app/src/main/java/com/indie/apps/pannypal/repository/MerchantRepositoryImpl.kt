@@ -12,6 +12,13 @@ class MerchantRepositoryImpl @Inject constructor(private val merchantDao: Mercha
 
     override suspend fun getMerchants(limit: Int, offset: Int) = merchantDao.getMerchants(limit, offset)
 
+    override suspend fun updateAmountWithDate(
+        id: Long,
+        incomeAmt: Long,
+        expenseAmt: Long,
+        dateInMilli: Long
+    ) = merchantDao.updateAmountWithDate(id, incomeAmt, expenseAmt, dateInMilli)
+
     override suspend fun insert(merchant: Merchant) = merchantDao.insert(merchant)
 
     override suspend fun update(merchant: Merchant) = merchantDao.update(merchant)

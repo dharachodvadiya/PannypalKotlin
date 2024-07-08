@@ -16,7 +16,9 @@ import kotlinx.coroutines.flow.flowOn
 import java.io.IOException
 import javax.inject.Inject
 
-class getMerchantDataWithMerchantNameUsecase @Inject constructor(private val merchantDataRepository: MerchantDataRepository,  @IoDispatcher private val dispatcher: CoroutineDispatcher) {
+class getMerchantDataWithMerchantNameUsecase @Inject constructor(
+    private val merchantDataRepository: MerchantDataRepository,
+    @IoDispatcher private val dispatcher: CoroutineDispatcher) {
 
     suspend fun loadData(page : Int) : Flow<Resource<List<MerchantDataWithName>>>{
         return flow{

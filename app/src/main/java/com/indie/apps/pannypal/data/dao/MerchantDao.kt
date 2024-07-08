@@ -32,4 +32,12 @@ interface MerchantDao : BaseDao<Merchant> {
     @Transaction
     @Query("SELECT * FROM merchant ORDER BY id DESC LIMIT :limit OFFSET :offset")
     suspend fun getMerchants(limit: Int, offset: Int): List<Merchant>
+
+    @Transaction
+    @Query("UPDATE merchant " +
+            "SET income_amt = income_amt + :incomeAmt, " +
+            "expense_amt = expense_amt + :expenseAmt, " +
+            "date_milli = :dateInMilli " +
+            "WHERE ID = :id")
+    suspend fun updateAmountWithDate(id: Long, incomeAmt : Long, expenseAmt : Long, dateInMilli: Long ): Int
 }
