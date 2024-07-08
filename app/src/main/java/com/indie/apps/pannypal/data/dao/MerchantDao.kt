@@ -10,6 +10,7 @@ import com.indie.apps.pannypal.data.entity.Merchant
 import com.indie.apps.pannypal.data.entity.MerchantData
 import com.indie.apps.pannypal.data.entity.Payment
 import com.indie.apps.pannypal.data.entity.User
+import com.indie.apps.pannypal.data.module.MerchantNameAndDetails
 
 @Dao
 interface MerchantDao : BaseDao<Merchant> {
@@ -32,6 +33,10 @@ interface MerchantDao : BaseDao<Merchant> {
     @Transaction
     @Query("SELECT * FROM merchant ORDER BY id DESC LIMIT :limit OFFSET :offset")
     suspend fun getMerchants(limit: Int, offset: Int): List<Merchant>
+
+    @Transaction
+    @Query("SELECT id, name, details FROM merchant ORDER BY id DESC LIMIT :limit OFFSET :offset")
+    suspend fun getMerchantsNameAndDetails(limit: Int, offset: Int): List<MerchantNameAndDetails>
 
     @Transaction
     @Query("UPDATE merchant " +

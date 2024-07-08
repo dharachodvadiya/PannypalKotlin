@@ -2,6 +2,7 @@ package com.indie.apps.pannypal.repository
 
 import com.indie.apps.pannypal.data.dao.MerchantDao
 import com.indie.apps.pannypal.data.entity.Merchant
+import com.indie.apps.pannypal.data.module.MerchantNameAndDetails
 import javax.inject.Inject
 
 class MerchantRepositoryImpl @Inject constructor(private val merchantDao: MerchantDao) : MerchantRepository {
@@ -18,6 +19,11 @@ class MerchantRepositoryImpl @Inject constructor(private val merchantDao: Mercha
         expenseAmt: Long,
         dateInMilli: Long
     ) = merchantDao.updateAmountWithDate(id, incomeAmt, expenseAmt, dateInMilli)
+
+    override suspend fun getMerchantsNameAndDetails(
+        limit: Int,
+        offset: Int
+    ) = merchantDao.getMerchantsNameAndDetails(limit, offset)
 
     override suspend fun insert(merchant: Merchant) = merchantDao.insert(merchant)
 
