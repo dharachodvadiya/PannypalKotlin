@@ -16,5 +16,5 @@ interface UserDao : BaseDao<User>{
 
     //this always has single user
     @Query("SELECT * FROM user WHERE id = 1")
-    fun getUser(): User
+    suspend fun getUser(): User
 }

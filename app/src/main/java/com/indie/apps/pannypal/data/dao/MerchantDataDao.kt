@@ -21,12 +21,16 @@ interface MerchantDataDao : BaseDao<MerchantData> {
     //get data
 
     @Delete
-    fun deleteMerchantData(merchantData: MerchantData) : Int
+    suspend fun deleteMerchantData(merchantData: MerchantData) : Int
 
     @Delete
-    fun deleteMerchantsData(merchantsData: List<MerchantData>) : Int
+    suspend fun deleteMerchantsData(merchantsData: List<MerchantData>) : Int
+
+    /*@Transaction
+    @Query("SELECT * FROM merchant_data")
+    suspend fun getMerchantsData(): List<MerchantData>*/
 
     @Transaction
-    @Query("SELECT * FROM merchant_data")
-    fun getMerchantsData(): List<MerchantData>
+    @Query("SELECT * FROM merchant_data ORDER BY id DESC LIMIT :limit OFFSET :offset")
+    suspend fun getMerchantsData(limit: Int, offset: Int): List<MerchantData>
 }

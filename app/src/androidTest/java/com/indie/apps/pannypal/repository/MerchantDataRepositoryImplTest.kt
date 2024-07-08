@@ -49,23 +49,30 @@ class MerchantDataRepositoryImplTest {
     }
 
     @Test
-    fun getMerchantsData_test() {
+    fun getMerchantsData_with_Limit_and_offset_test() = runBlocking{
         val merchant = Merchant(id = 1, name = "Merchant A")
         val payment = Payment(id = 1, name = "Debit Card")
-        val merchantData = MerchantData(
-            merchantId = merchant.id,
-            paymentId = payment.id,
-            dateInMilli = System.currentTimeMillis(),
-            details = "Sample transaction",
-            amount = 1000
-        )
-
         merchantDao.insert(merchant)
         paymentDao.insert(payment)
-        merchantDataDao.insert(merchantData)
 
-        val merchantsData = merchantDataDao.getMerchantsData()
+        (1..30).forEach {
+            merchantDataDao.insert( MerchantData(
+                merchantId = merchant.id,
+                paymentId = payment.id,
+                dateInMilli = System.currentTimeMillis(),
+                details = "Sample transaction $it",
+                amount = it.toLong()
+            ))
+        }
+
+        var merchantsData = merchantDataDao.getMerchantsData(10,0)
         assertNotNull(merchantsData)
-        assert(merchantsData.size == 1)
+        assert(merchantsData.size == 10)
+        assert(merchantsData[0].amount == 30L)
+
+        merchantsData = merchantDataDao.getMerchantsData(10,5)
+        assertNotNull(merchantsData)
+        assert(merchantsData.size == 10)
+        assert(merchantsData[0].amount == 25L)
     }
 }

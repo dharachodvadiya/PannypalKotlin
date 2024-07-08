@@ -19,12 +19,12 @@ interface PaymentDao : BaseDao<Payment> {
 
     //delete only custom payment method
     @Query("DELETE FROM payment_type WHERE id = :paymentId AND pre_added = 0")
-    fun deleteCustomPayment(paymentId: Long) : Int
+    suspend fun deleteCustomPayment(paymentId: Long) : Int
 
     @Transaction
     @Query("SELECT * FROM payment_type")
-    fun getPayments(): List<Payment>
+    suspend fun getPayments(): List<Payment>
 
     @Insert
-    fun insertPayments(payments: List<Payment>) : List<Long>
+    suspend fun insertPayments(payments: List<Payment>) : List<Long>
 }

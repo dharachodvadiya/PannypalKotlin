@@ -7,6 +7,7 @@ import com.indie.apps.pannypal.data.db.AppDatabase
 import com.indie.apps.pannypal.data.entity.Merchant
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
 
 import org.junit.After
@@ -40,12 +41,18 @@ class MerchantRepositoryImplTest {
     }
 
     @Test
-    fun getMerchants_test() {
+    fun getMerchants_with_limit_and_offset_test() = runBlocking{
 
-        merchantDao.insert(Merchant(name = "Amazon"))
-        merchantDao.insert(Merchant(name = "Flipkart"))
+        (1..30).forEach {
+            merchantDao.insert( Merchant(name = "Item $it") )
+        }
 
-        val merchants = merchantDao.getMerchants()
-        assert(merchants.size == 2)
+        var merchants = merchantDao.getMerchants(10, 0)
+        assert(merchants.size == 10)
+        assert(merchants[0].id == 30L)
+
+        merchants = merchantDao.getMerchants(10, 5)
+        assert(merchants.size == 10)
+        assert(merchants[0].id == 25L)
     }
 }

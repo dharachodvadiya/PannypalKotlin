@@ -56,7 +56,7 @@ class PaymentRepositoryImplTest {
     }
 
     @Test
-    fun getPayments_test() {
+    fun getPayments_test() = runBlocking{
         paymentDao.insert(Payment(name = "debitCard"))
         paymentDao.insert(Payment(name = "debitCard1"))
         val payments = paymentDao.getPayments()

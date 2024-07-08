@@ -8,5 +8,5 @@ interface MerchantDataRepository : BaseRepository<MerchantData>{
 
     suspend fun deleteMerchantsData(merchantsData: List<MerchantData>) : Int
 
-    suspend fun getMerchantsData(): List<MerchantData>
+    suspend fun getMerchantsData(limit: Int, offset: Int): List<MerchantData>
 }
