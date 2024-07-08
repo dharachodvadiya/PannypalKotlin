@@ -18,6 +18,12 @@ class MerchantDataRepositoryImpl @Inject constructor(private val merchantDataDao
         offset: Int
     ): List<MerchantDataWithName>  = merchantDataDao.getMerchantsDataWithMerchantName(limit, offset)
 
+    override suspend fun searchMerchantDataWithMerchantName(
+        searchQuery: String,
+        limit: Int,
+        offset: Int
+    ) = merchantDataDao.searchMerchantDataWithMerchantName(searchQuery, limit, offset)
+
     override suspend fun insert(merchantData: MerchantData) = merchantDataDao.insert(merchantData)
 
     override suspend fun update(merchantData: MerchantData) = merchantDataDao.update(merchantData)

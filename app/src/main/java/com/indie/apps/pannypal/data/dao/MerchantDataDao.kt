@@ -48,4 +48,19 @@ interface MerchantDataDao : BaseDao<MerchantData> {
         ORDER BY id DESC LIMIT :limit OFFSET :offset
     """)
     suspend fun getMerchantsDataWithMerchantName(limit: Int, offset: Int): List<MerchantDataWithName>
+
+    @Transaction
+    @Query("""
+        SELECT md.id as id, 
+                md.merchant_id as merchantId, 
+                md.date_milli as dateInMilli, 
+                md.details, 
+                md.amount, 
+                m.name as merchantName
+        FROM merchant_data md
+        INNER JOIN merchant m ON md.merchant_id = m.id
+        WHERE m.name LIKE :searchQuery || '%' OR md.details LIKE :searchQuery || '%'
+        ORDER BY id DESC LIMIT :limit OFFSET :offset
+    """)
+    suspend fun searchMerchantDataWithMerchantName(searchQuery : String, limit: Int, offset: Int): List<MerchantDataWithName>
 }
