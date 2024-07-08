@@ -95,13 +95,18 @@ class addMerchantDataUsecaseTest {
         assert(result.toList().size == 2)
 
         val getUser = userDao.getUser()
-        assert(getUser.incomeAmount == 100L)
-        assert(getUser.expenseAmount == 0L)
+        getUser.run {
+            assert(incomeAmount == 100L)
+            assert(expenseAmount == 0L)
+        }
 
         val getMerchants = merchantDao.getMerchants(10, 0)
         assert(getMerchants.size == 1)
-        assert(getMerchants[0].incomeAmount == 100L)
-        assert(getMerchants[0].expenseAmount == 0L)
+        getMerchants[0].run {
+            assert(getMerchants[0].incomeAmount == 100L)
+            assert(getMerchants[0].expenseAmount == 0L)
+        }
+
     }
 
     @Test
@@ -149,12 +154,18 @@ class addMerchantDataUsecaseTest {
         assert(result2.toList().size == 2)
 
         val getUser = userDao.getUser()
-        assert(getUser.incomeAmount == 100L)
-        assert(getUser.expenseAmount == 50L)
+        getUser.run {
+            assert(incomeAmount == 100L)
+            assert(expenseAmount == 50L)
+        }
+
 
         val getMerchants = merchantDao.getMerchants(10, 0)
         assert(getMerchants.size == 1)
-        assert(getMerchants[0].incomeAmount == 100L)
-        assert(getMerchants[0].expenseAmount == 50L)
+        getMerchants[0].run {
+            assert(incomeAmount == 100L)
+            assert(expenseAmount == 50L)
+        }
+
     }
 }

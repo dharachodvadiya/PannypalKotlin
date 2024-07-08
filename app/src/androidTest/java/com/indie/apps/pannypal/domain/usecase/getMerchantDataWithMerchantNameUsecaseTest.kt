@@ -85,8 +85,11 @@ class getMerchantDataWithMerchantNameUsecaseTest {
 
         assert(list.size == 2)
         assert(list[0] is Resource.Loading<List<MerchantDataWithName>>)
-        assertNotNull(list[1].data)
-        assert(list[1].data!!.size == Constant.QUERY_PAGE_SIZE)
+        list[1].run {
+            assertNotNull(data)
+            assert(data!!.size == Constant.QUERY_PAGE_SIZE)
+        }
+
 
     }
 }
