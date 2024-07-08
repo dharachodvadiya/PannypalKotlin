@@ -59,7 +59,6 @@ class getMerchantNameAndDetailsUsecaseTest {
     fun get_merchant_name_details_test() = runBlocking{
         val merchant1 = Merchant(id = 1, name = "Merchant A")
         val merchant2 = Merchant(id = 2, name = "Merchant B")
-        val payment = Payment(id = 1, name = "Debit Card")
         merchantDao.insert(merchant1)
         merchantDao.insert(merchant2)
 
