@@ -25,6 +25,12 @@ class MerchantRepositoryImpl @Inject constructor(private val merchantDao: Mercha
         offset: Int
     ) = merchantDao.getMerchantsNameAndDetails(limit, offset)
 
+    override suspend fun searchMerchantsNameAndDetails(
+        searchQuery: String,
+        limit: Int,
+        offset: Int
+    ) = merchantDao.searchMerchantsNameAndDetails(searchQuery, limit, offset)
+
     override suspend fun insert(merchant: Merchant) = merchantDao.insert(merchant)
 
     override suspend fun update(merchant: Merchant) = merchantDao.update(merchant)
