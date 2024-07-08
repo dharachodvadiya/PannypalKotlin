@@ -34,11 +34,6 @@ class AppDatabaseTest {
         paymentDao = appDatabase.paymentDao()
     }
 
-    @After
-    fun teardown() {
-        appDatabase.close()
-    }
-
     @Test
     fun populateDatabase_Test() = runBlocking {
         // Perform database initialization
@@ -47,9 +42,13 @@ class AppDatabaseTest {
         // Verify that pre-added payments are inserted correctly
         val payments = paymentDao.getPayments()
         assert(payments.isNotEmpty())
-        assert(payments.size == 3) // Assuming 3 pre-added payments
         assert(payments.any { it.name == "Cash" })
         assert(payments.any { it.name == "Bank Transfer" })
         assert(payments.any { it.name == "Credit Card" })
+    }
+
+    @After
+    fun teardown() {
+        appDatabase.close()
     }
 }

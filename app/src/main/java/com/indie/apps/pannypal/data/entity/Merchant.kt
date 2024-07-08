@@ -16,16 +16,16 @@ data class Merchant(
     val name: String,
 
     @ColumnInfo(name = "phone_num")
-    val phoneNumber: Int?,
+    val phoneNumber: String? = null,
 
     @ColumnInfo(name = "date_milli")
-    val dateInMilli: Long,
+    val dateInMilli: Long = 0,
 
-    val details: String?,
+    val details: String? = null,
 
     @ColumnInfo(name = "income_amt")
-    val incomeAmount: Long,
+    val incomeAmount: Long = 0,
 
     @ColumnInfo(name = "expense_amt")
-    val expenseAmount: Long,
+    val expenseAmount: Long = 0,
 )

@@ -36,7 +36,7 @@ data class MerchantData(
     @ColumnInfo(name = "date_milli")
     val dateInMilli: Long,
 
-    val details: String?,
+    val details: String? = null,
 
     val amount: Long,
 
