@@ -1,4 +1,4 @@
-package com.indie.apps.pannypal.view.ui.theme
+package com.indie.apps.pannypal.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

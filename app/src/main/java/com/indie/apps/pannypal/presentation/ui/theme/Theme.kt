@@ -1,4 +1,4 @@
-package com.indie.apps.pannypal.view.ui.theme
+package com.indie.apps.pannypal.presentation.ui.theme
 
 import android.app.Activity
 import android.os.Build
