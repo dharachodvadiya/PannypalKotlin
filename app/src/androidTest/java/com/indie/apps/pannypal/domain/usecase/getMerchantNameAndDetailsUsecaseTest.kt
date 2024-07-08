@@ -18,6 +18,7 @@ import com.indie.apps.pannypal.util.Resource
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
@@ -57,8 +58,8 @@ class getMerchantNameAndDetailsUsecaseTest {
 
     @Test
     fun get_merchant_name_details_test() = runBlocking{
-        val merchant1 = Merchant(id = 1, name = "Merchant A")
-        val merchant2 = Merchant(id = 2, name = "Merchant B")
+        val merchant1 = Merchant(id = 1, name = "Merchant A", dateInMilli = 5L)
+        val merchant2 = Merchant(id = 2, name = "Merchant B", dateInMilli = 10L)
         merchantDao.insert(merchant1)
         merchantDao.insert(merchant2)
 
@@ -66,14 +67,10 @@ class getMerchantNameAndDetailsUsecaseTest {
 
         val list = result.toList()
 
-
         assert(list.size == 2)
         assert(list[0] is Resource.Loading<List<MerchantNameAndDetails>>)
-        list[1].run {
-            assertNotNull(data)
-            assert(data!!.size == 2)
-        }
-
+        assertNotNull(list[1])
+        assert(list[1].data?.get(0)!!.name == "Merchant B")
 
     }
 }

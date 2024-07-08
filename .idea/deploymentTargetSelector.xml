@@ -8,16 +8,16 @@
       <SelectionState runConfigName="searchMerchantsData_with_merchantName_with_Limit_and_offset_test()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="getMerchantsData_with_merchantName_with_Limit_and_offset_test()">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="getMerchantsData_with_merchantName_with_Limit_and_offset_test() (1)">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
       <SelectionState runConfigName="searchMerchantDataWithMerchantNameUsecaseTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
       <SelectionState runConfigName="update_user_with_email_Test()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="get_merchant_name_details_test()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="Tests in 'com.indie.apps.pannypal'">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
