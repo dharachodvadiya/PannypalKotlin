@@ -54,7 +54,7 @@ class updateMerchantUsecaseTest {
 
         merchantDao.insert(merchant1)
 
-        val merchant1Updated = merchant1.copy(name = "Merchant B")
+        val merchant1Updated = merchant1.copy(name = "Merchant B", details = "test detail")
 
         val result = updateMerchantUsecase(
             merchantRepository = merchantRepository,
@@ -68,6 +68,7 @@ class updateMerchantUsecaseTest {
         val getMerchants = merchantDao.getMerchants(10, 0)
         assert(getMerchants.size == 1)
         assert(getMerchants[0].name == "Merchant B")
+        assert(getMerchants[0].details == "test detail")
 
     }
 
