@@ -6,9 +6,9 @@ import com.indie.apps.pannypal.data.module.MerchantNameAndDetails
 
 interface MerchantRepository : BaseRepository<Merchant> {
 
-    suspend fun deleteMerchant(merchant: Merchant) : Int
+    suspend fun deleteMerchantWithId(id : Long) : Int
 
-    suspend fun deleteMerchants(merchants: List<Merchant>) : Int
+    suspend fun deleteMerchantsWithId(idList: List<Long>) : Int
 
     suspend fun getMerchants(limit: Int, offset: Int): List<Merchant>
 

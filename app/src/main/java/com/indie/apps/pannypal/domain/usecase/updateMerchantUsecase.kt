@@ -5,12 +5,10 @@ import androidx.compose.ui.unit.Constraints
 import com.indie.apps.pannypal.data.dao.MerchantDataDao
 import com.indie.apps.pannypal.data.entity.Merchant
 import com.indie.apps.pannypal.data.entity.MerchantData
-import com.indie.apps.pannypal.data.entity.Payment
 import com.indie.apps.pannypal.di.IoDispatcher
 import com.indie.apps.pannypal.data.module.MerchantDataWithName
 import com.indie.apps.pannypal.repository.MerchantDataRepository
 import com.indie.apps.pannypal.repository.MerchantRepository
-import com.indie.apps.pannypal.repository.PaymentRepository
 import com.indie.apps.pannypal.repository.UserRepository
 import com.indie.apps.pannypal.util.Constant
 import com.indie.apps.pannypal.util.Resource
@@ -21,9 +19,9 @@ import kotlinx.coroutines.flow.flowOn
 import java.io.IOException
 import javax.inject.Inject
 
-class updatePaymentUsecase @Inject constructor(
-    private val paymentRepository: PaymentRepository,
-    private val payment: Payment,
+class updateMerchantUsecase @Inject constructor(
+    private val merchantRepository: MerchantRepository,
+    private val merchant: Merchant,
     @IoDispatcher private val dispatcher: CoroutineDispatcher) {
 
     suspend operator fun invoke() : Flow<Resource<Int>>{
@@ -31,13 +29,13 @@ class updatePaymentUsecase @Inject constructor(
 
             try {
                 emit(Resource.Loading<Int>())
-                val count = paymentRepository.update(payment)
+                val count = merchantRepository.update(merchant)
 
                 if(count >0)
                 {
                     emit(Resource.Success<Int>(count))
                 }else{
-                    emit(Resource.Error<Int>("Payment not updated"))
+                    emit(Resource.Error<Int>("Merchant not add"))
                 }
 
 

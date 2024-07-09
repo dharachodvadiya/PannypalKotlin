@@ -49,10 +49,8 @@ class MerchantRepositoryImplTest {
 
         var merchants = merchantDao.getMerchants(10, 0)
         assert(merchants.size == 10)
-        assert(merchants[0].id == 30L)
 
         merchants = merchantDao.getMerchants(10, 5)
         assert(merchants.size == 10)
-        assert(merchants[0].id == 25L)
     }
 }

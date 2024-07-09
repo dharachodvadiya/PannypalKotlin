@@ -20,16 +20,14 @@ interface MerchantDao : BaseDao<Merchant> {
     //[delete with id -> all merchant data which contain id] -> update user income expense amount
     //get data
 
-    @Delete
-    suspend fun deleteMerchant(merchant: Merchant) : Int
+    @Transaction
+    @Query("delete from merchant where id = :id")
+    suspend fun deleteMerchantWithId(id : Long) : Int
 
-    @Delete
-    suspend fun deleteMerchants(merchants: List<Merchant>) : Int
+    @Transaction
+    @Query("delete from merchant where id IN (:idList)")
+    suspend fun deleteMerchantsWithId(idList: List<Long>) : Int
 
-   /* @Transaction
-    @Query("SELECT * FROM merchant")
-    fun getMerchants(): List<Merchant>
-*/
     @Transaction
     @Query("SELECT * FROM merchant ORDER BY date_milli DESC LIMIT :limit OFFSET :offset")
     suspend fun getMerchants(limit: Int, offset: Int): List<Merchant>

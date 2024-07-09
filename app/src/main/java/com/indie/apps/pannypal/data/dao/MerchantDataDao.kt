@@ -21,15 +21,21 @@ interface MerchantDataDao : BaseDao<MerchantData> {
     //delete data -> update merchant income-expense
     //get data
 
-    @Delete
-    suspend fun deleteMerchantData(merchantData: MerchantData) : Int
+    @Transaction
+    @Query("delete from merchant_data where id = :id")
+    suspend fun deleteMerchantDataWithId(id: Long) : Int
 
-    @Delete
-    suspend fun deleteMerchantsData(merchantsData: List<MerchantData>) : Int
+    @Transaction
+    @Query("delete from merchant_data where id In (:idList)")
+    suspend fun deleteMerchantsWithId(idList: List<Long>) : Int
 
-    /*@Transaction
-    @Query("SELECT * FROM merchant_data")
-    suspend fun getMerchantsData(): List<MerchantData>*/
+    @Transaction
+    @Query("delete from merchant_data where merchant_id In (:idList)")
+    suspend fun deleteMerchantsWithMerchantIds(idList: List<Long>) : Int
+
+    @Transaction
+    @Query("delete from merchant_data where merchant_id = :id")
+    suspend fun deleteMerchantsWithMerchantId(id: Long) : Int
 
     @Transaction
     @Query("SELECT * FROM merchant_data ORDER BY id DESC LIMIT :limit OFFSET :offset")

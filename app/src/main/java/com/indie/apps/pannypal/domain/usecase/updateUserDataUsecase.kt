@@ -29,11 +29,11 @@ class updateUserDataUsecase @Inject constructor(
 
             try {
                 emit(Resource.Loading<Int>())
-                val id = userRepository.update(user)
+                val count = userRepository.update(user)
 
-                if(id >0)
+                if(count >0)
                 {
-                    emit(Resource.Success<Int>(id))
+                    emit(Resource.Success<Int>(count))
                 }else{
                     emit(Resource.Error<Int>("Merchant data not updated"))
                 }
