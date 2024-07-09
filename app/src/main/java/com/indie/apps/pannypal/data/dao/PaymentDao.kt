@@ -22,8 +22,12 @@ interface PaymentDao : BaseDao<Payment> {
     suspend fun deleteCustomPayment(paymentId: Long) : Int
 
     @Transaction
-    @Query("SELECT * FROM payment_type")
-    suspend fun getPayments(): List<Payment>
+    @Query("SELECT * FROM payment_type LIMIT :limit OFFSET :offset")
+    suspend fun getPayments(limit: Int, offset: Int): List<Payment>
+
+    @Transaction
+    @Query("SELECT * FROM payment_type WHERE name LIKE :searchQuery || '%' LIMIT :limit OFFSET :offset")
+    suspend fun searchPayments(searchQuery : String, limit: Int, offset: Int): List<Payment>
 
     @Insert
     suspend fun insertPayments(payments: List<Payment>) : List<Long>

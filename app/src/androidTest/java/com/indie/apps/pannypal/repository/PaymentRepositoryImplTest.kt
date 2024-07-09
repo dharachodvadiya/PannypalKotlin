@@ -46,12 +46,12 @@ class PaymentRepositoryImplTest {
     fun deleteCustomPayment_test()= runBlocking {
         AppDatabase.populateDatabase(appDatabase)
         paymentDao.deleteCustomPayment(1)
-        val payments = paymentDao.getPayments()
+        val payments = paymentDao.getPayments(10,0)
         assert(payments.size == 3)
         paymentDao.insert(Payment(name = "debitCard"))
         paymentDao.insert(Payment(name = "debitCard1"))
         paymentDao.deleteCustomPayment(4)
-        val payments1 = paymentDao.getPayments()
+        val payments1 = paymentDao.getPayments(10,0)
         assert(payments1.size == 4)
     }
 
@@ -59,7 +59,7 @@ class PaymentRepositoryImplTest {
     fun getPayments_test() = runBlocking{
         paymentDao.insert(Payment(name = "debitCard"))
         paymentDao.insert(Payment(name = "debitCard1"))
-        val payments = paymentDao.getPayments()
+        val payments = paymentDao.getPayments(10, 0)
         assert(payments.isNotEmpty())
         assert(payments.size == 2) // Assuming 3 pre-added payments
         assert(payments.any { it.name == "debitCard" })
