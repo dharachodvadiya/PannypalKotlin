@@ -30,8 +30,8 @@ class deleteSingleMerchantDataUsecase @Inject constructor(
                 if(count >0)
                 {
                     merchantData.run {
-                        var newIncomeAmt = 0L;
-                        var newExpenseAmt = 0L;
+                        var newIncomeAmt = 0L
+                        var newExpenseAmt = 0L
 
                         when{
                             amount < 0 -> newExpenseAmt -= (amount * -1)
