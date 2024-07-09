@@ -31,8 +31,8 @@ class updateMerchantDataUsecase @Inject constructor(
                 if(count >0)
                 {
                     merchantDataNew.run {
-                        var newIncomeAmt = 0L;
-                        var newExpenseAmt = 0L;
+                        var newIncomeAmt = 0L
+                        var newExpenseAmt = 0L
 
                         merchantDataOld.run {
                             when{
