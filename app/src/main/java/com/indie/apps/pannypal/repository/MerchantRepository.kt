@@ -17,4 +17,6 @@ interface MerchantRepository : BaseRepository<Merchant> {
     suspend fun getMerchantsNameAndDetails(limit: Int, offset: Int): List<MerchantNameAndDetails>
 
     suspend fun searchMerchantsNameAndDetails(searchQuery : String, limit: Int, offset: Int): List<MerchantNameAndDetails>
+
+    suspend fun searchMerchants(searchQuery : String, limit: Int, offset: Int): List<Merchant>
 }

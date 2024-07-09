@@ -31,7 +31,7 @@ interface MerchantDao : BaseDao<Merchant> {
     fun getMerchants(): List<Merchant>
 */
     @Transaction
-    @Query("SELECT * FROM merchant ORDER BY id DESC LIMIT :limit OFFSET :offset")
+    @Query("SELECT * FROM merchant ORDER BY date_milli DESC LIMIT :limit OFFSET :offset")
     suspend fun getMerchants(limit: Int, offset: Int): List<Merchant>
 
     @Transaction
@@ -41,6 +41,11 @@ interface MerchantDao : BaseDao<Merchant> {
     @Transaction
     @Query("SELECT id, name, details FROM merchant WHERE name LIKE :searchQuery || '%' OR details LIKE :searchQuery || '%'ORDER BY date_milli DESC LIMIT :limit OFFSET :offset")
     suspend fun searchMerchantsNameAndDetails(searchQuery : String, limit: Int, offset: Int): List<MerchantNameAndDetails>
+
+    @Transaction
+    @Query("SELECT * FROM merchant WHERE name LIKE :searchQuery || '%' OR details LIKE :searchQuery || '%' ORDER BY date_milli DESC LIMIT :limit OFFSET :offset")
+    suspend fun searchMerchants(searchQuery : String, limit: Int, offset: Int): List<Merchant>
+
 
     @Transaction
     @Query("UPDATE merchant " +
