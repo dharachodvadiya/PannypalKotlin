@@ -1,7 +1,6 @@
 package com.indie.apps.pannypal.repository
 
 import com.indie.apps.pannypal.data.entity.Merchant
-import com.indie.apps.pannypal.data.entity.MerchantData
 import com.indie.apps.pannypal.data.module.MerchantNameAndDetails
 
 interface MerchantRepository : BaseRepository<Merchant> {

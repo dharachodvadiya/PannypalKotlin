@@ -2,14 +2,11 @@ package com.indie.apps.pannypal.repository
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.indie.apps.pannypal.data.dao.MerchantDao
-import com.indie.apps.pannypal.data.dao.PaymentDao
 import com.indie.apps.pannypal.data.db.AppDatabase
 import com.indie.apps.pannypal.data.entity.Merchant
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.runBlocking
-import org.junit.Assert.*
-
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule

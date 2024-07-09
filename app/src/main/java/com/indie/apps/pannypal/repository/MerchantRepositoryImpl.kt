@@ -2,7 +2,6 @@ package com.indie.apps.pannypal.repository
 
 import com.indie.apps.pannypal.data.dao.MerchantDao
 import com.indie.apps.pannypal.data.entity.Merchant
-import com.indie.apps.pannypal.data.module.MerchantNameAndDetails
 import javax.inject.Inject
 
 class MerchantRepositoryImpl @Inject constructor(private val merchantDao: MerchantDao) : MerchantRepository {
