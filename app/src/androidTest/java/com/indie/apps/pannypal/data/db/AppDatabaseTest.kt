@@ -5,6 +5,7 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.indie.apps.pannypal.data.dao.PaymentDao
+import com.indie.apps.pannypal.data.entity.Payment
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.runBlocking
@@ -36,15 +37,24 @@ class AppDatabaseTest {
 
     @Test
     fun populateDatabase_Test() = runBlocking {
-        // Perform database initialization
+        // Given
+        val expectedPayments = listOf(
+            Payment(name = "Cash"),
+            Payment(name = "Bank Transfer"),
+            Payment(name = "Credit Card")
+        )
+
+        //When
         AppDatabase.populateDatabase(appDatabase)
 
-        // Verify that pre-added payments are inserted correctly
+        //Then
         val payments = paymentDao.getPaymentList(10,0)
+
+        // Assertions
         assert(payments.isNotEmpty())
-        assert(payments.any { it.name == "Cash" })
-        assert(payments.any { it.name == "Bank Transfer" })
-        assert(payments.any { it.name == "Credit Card" })
+        expectedPayments.forEach { expectedPayment ->
+            assert(payments.any { it.name == expectedPayment.name })
+        }
     }
 
     @After

@@ -44,9 +44,13 @@ class UserRepositoryImplTest {
 
     @Test
     fun get_user_test() = runBlocking{
+        //inserting sample data
         userDao.insert(User(name = "testUser", currency = "AED"))
 
+        //when
         val user = userDao.getUser()
+
+        //then
         assert(user.name == "testUser")
     }
 

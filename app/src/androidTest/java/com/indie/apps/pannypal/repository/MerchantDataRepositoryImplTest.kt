@@ -50,11 +50,13 @@ class MerchantDataRepositoryImplTest {
 
     @Test
     fun get_merchantsData_with_limitAndOffset_test() = runBlocking{
+        // Given
         val merchant = Merchant(id = 1, name = "Merchant A")
         val payment = Payment(id = 1, name = "Debit Card")
         merchantDao.insert(merchant)
         paymentDao.insert(payment)
 
+        // Inserting sample data
         (1..30).forEach {
             merchantDataDao.insert( MerchantData(
                 merchantId = merchant.id,
@@ -65,14 +67,20 @@ class MerchantDataRepositoryImplTest {
             ))
         }
 
+        // When
         var merchantsData = merchantDataDao.getMerchantDataList(10,0)
-        assertNotNull(merchantsData)
-        assert(merchantsData.size == 10)
-        assert(merchantsData[0].amount == 30L)
 
-        merchantsData = merchantDataDao.getMerchantDataList(10,5)
+        //Then
         assertNotNull(merchantsData)
-        assert(merchantsData.size == 10)
-        assert(merchantsData[0].amount == 25L)
+        assertEquals(10, merchantsData.size)
+        assertEquals(30L, merchantsData[0].amount)
+
+        // When (with offset)
+        merchantsData = merchantDataDao.getMerchantDataList(10,5)
+
+        //Then
+        assertNotNull(merchantsData)
+        assertEquals(10, merchantsData.size)
+        assertEquals(25L, merchantsData[0].amount)
     }
 }
