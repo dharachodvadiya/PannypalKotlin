@@ -26,14 +26,10 @@ class deleteSingleMerchantUsecase @Inject constructor(
             try {
                 emit(Resource.Loading<Int>())
                 val merchantDeleteCount = merchantRepository.deleteMerchantWithId(merchant.id)
-                //val merchantDeleteCount = merchantDataRepository.deleteMerchantsWithMerchantId(merchant.id)
 
-               // val userUpdateCount = userRepository.updateAmount(merchant.incomeAmount, merchant.expenseAmount)
-
-                //emit(Resource.Success<Int>(merchantDeleteCount))
                 if(merchantDeleteCount > 0)
                 {
-                    merchantDataRepository.deleteMerchantsWithMerchantId(merchant.id)
+                    merchantDataRepository.deleteMerchantDataWithMerchantId(merchant.id)
                     val userUpdateCount = userRepository.updateAmount(-merchant.incomeAmount, -merchant.expenseAmount)
 
                     when {

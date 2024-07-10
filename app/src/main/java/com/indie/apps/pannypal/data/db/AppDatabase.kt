@@ -81,7 +81,7 @@ abstract class AppDatabase : RoomDatabase() {
                 Payment(name = "Credit Card" , preAdded = 1)
             )
 
-            PaymentRepositoryImpl(paymentDao).insertPayments(preAddedPayments)
+            PaymentRepositoryImpl(paymentDao).insertPaymentList(preAddedPayments)
 
         }
     }

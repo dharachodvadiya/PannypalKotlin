@@ -1,11 +1,7 @@
 package com.indie.apps.pannypal.domain.usecase
 
-import android.net.http.HttpException
-import androidx.compose.ui.unit.Constraints
-import com.indie.apps.pannypal.data.dao.MerchantDataDao
 import com.indie.apps.pannypal.data.entity.MerchantData
 import com.indie.apps.pannypal.di.IoDispatcher
-import com.indie.apps.pannypal.data.module.MerchantDataWithName
 import com.indie.apps.pannypal.repository.MerchantDataRepository
 import com.indie.apps.pannypal.util.Constant
 import com.indie.apps.pannypal.util.Resource
@@ -16,7 +12,7 @@ import kotlinx.coroutines.flow.flowOn
 import java.io.IOException
 import javax.inject.Inject
 
-class getMerchantDataFromMerchantIdUsecase @Inject constructor(
+class getMerchantDataListFromMerchantIdUsecase @Inject constructor(
     private val merchantDataRepository: MerchantDataRepository,
     @IoDispatcher private val dispatcher: CoroutineDispatcher) {
 
@@ -25,7 +21,7 @@ class getMerchantDataFromMerchantIdUsecase @Inject constructor(
 
             try {
                 emit(Resource.Loading<List<MerchantData>>())
-                val merchantsDataFromId = merchantDataRepository.getMerchantsDataFromId(merchantId, Constant.QUERY_PAGE_SIZE,Constant.QUERY_PAGE_SIZE * (page-1))
+                val merchantsDataFromId = merchantDataRepository.getMerchantDataListFromMerchantId(merchantId, Constant.QUERY_PAGE_SIZE,Constant.QUERY_PAGE_SIZE * (page-1))
                 emit(Resource.Success<List<MerchantData>>(merchantsDataFromId))
             } catch(e: Throwable) {
                 when(e) {

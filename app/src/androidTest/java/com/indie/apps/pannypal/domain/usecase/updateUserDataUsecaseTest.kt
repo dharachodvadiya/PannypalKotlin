@@ -58,7 +58,7 @@ class updateUserDataUsecaseTest {
     }
 
     @Test
-    fun update_user_with_email_Test() = runBlocking {
+    fun update_user_without_amount_test() = runBlocking {
         val user = User(id = 1, name = "Test User", currency = "AED")
 
         userDao.insert(user)

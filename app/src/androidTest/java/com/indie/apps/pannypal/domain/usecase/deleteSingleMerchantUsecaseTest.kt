@@ -67,7 +67,7 @@ class deleteSingleMerchantUsecaseTest {
     }
 
     @Test
-    fun delete_single_merchant_Test() = runBlocking {
+    fun delete_single_merchant_delete_merchantDataFromMerchantId_update_userAmount_test() = runBlocking {
         val user = User(id = 1, name = "Test User", currency = "AED")
         val merchant1 = Merchant(id = 1, name = "Merchant A")
         val payment = Payment(id = 1, name = "Debit Card")
@@ -98,7 +98,7 @@ class deleteSingleMerchantUsecaseTest {
             assert(expenseAmount == 0L)
         }
 
-        val merchants = merchantDao.getMerchants(10,0)
+        val merchants = merchantDao.getMerchantList(10,0)
 
         assert(merchants.size == 1)
         assert(merchants[0].incomeAmount == 100L)

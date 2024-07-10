@@ -58,7 +58,7 @@ class addMerchantUsecaseTest {
     }
 
     @Test
-    fun addMerchant_Test() = runBlocking {
+    fun add_merchant_test() = runBlocking {
         val merchant1 = Merchant(id = 1, name = "Merchant A")
 
         merchantDao.insert(merchant1)
@@ -71,7 +71,7 @@ class addMerchantUsecaseTest {
 
         assert(result.toList().size == 2)
 
-        val getMerchants = merchantDao.getMerchants(10, 0)
+        val getMerchants = merchantDao.getMerchantList(10, 0)
         assert(getMerchants.size == 1)
     }
 

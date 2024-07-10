@@ -20,23 +20,23 @@ interface MerchantDataDao : BaseDao<MerchantData> {
 
     @Transaction
     @Query("delete from merchant_data where id In (:idList)")
-    suspend fun deleteMerchantsWithId(idList: List<Long>) : Int
+    suspend fun deleteMerchantDataWithIdList(idList: List<Long>) : Int
 
     @Transaction
     @Query("delete from merchant_data where merchant_id In (:idList)")
-    suspend fun deleteMerchantsWithMerchantIds(idList: List<Long>) : Int
+    suspend fun deleteMerchantDataWithMerchantIdList(idList: List<Long>) : Int
 
     @Transaction
     @Query("delete from merchant_data where merchant_id = :id")
-    suspend fun deleteMerchantsWithMerchantId(id: Long) : Int
+    suspend fun deleteMerchantDataWithMerchantId(id: Long) : Int
 
     @Transaction
     @Query("SELECT * FROM merchant_data ORDER BY id DESC LIMIT :limit OFFSET :offset")
-    suspend fun getMerchantsData(limit: Int, offset: Int): List<MerchantData>
+    suspend fun getMerchantDataList(limit: Int, offset: Int): List<MerchantData>
 
     @Transaction
-    @Query("SELECT * FROM merchant_data where id = :id ORDER BY id DESC LIMIT :limit OFFSET :offset")
-    suspend fun getMerchantsDataFromId(id: Long, limit: Int, offset: Int): List<MerchantData>
+    @Query("SELECT * FROM merchant_data where merchant_id = :merchantId ORDER BY id DESC LIMIT :limit OFFSET :offset")
+    suspend fun getMerchantDataListFromMerchantId(merchantId: Long, limit: Int, offset: Int): List<MerchantData>
 
     @Transaction
     @Query("""
@@ -50,7 +50,7 @@ interface MerchantDataDao : BaseDao<MerchantData> {
         INNER JOIN merchant m ON md.merchant_id = m.id
         ORDER BY id DESC LIMIT :limit OFFSET :offset
     """)
-    suspend fun getMerchantsDataWithMerchantName(limit: Int, offset: Int): List<MerchantDataWithName>
+    suspend fun getMerchantsDataWithMerchantNameList(limit: Int, offset: Int): List<MerchantDataWithName>
 
     @Transaction
     @Query("""
@@ -65,5 +65,5 @@ interface MerchantDataDao : BaseDao<MerchantData> {
         WHERE m.name LIKE :searchQuery || '%' OR md.details LIKE :searchQuery || '%'
         ORDER BY id DESC LIMIT :limit OFFSET :offset
     """)
-    suspend fun searchMerchantDataWithMerchantName(searchQuery : String, limit: Int, offset: Int): List<MerchantDataWithName>
+    suspend fun searchMerchantDataWithMerchantNameList(searchQuery : String, limit: Int, offset: Int): List<MerchantDataWithName>
 }

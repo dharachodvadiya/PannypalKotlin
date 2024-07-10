@@ -1,9 +1,5 @@
 package com.indie.apps.pannypal.domain.usecase
 
-import android.net.http.HttpException
-import androidx.compose.ui.unit.Constraints
-import com.indie.apps.pannypal.data.dao.MerchantDataDao
-import com.indie.apps.pannypal.data.entity.MerchantData
 import com.indie.apps.pannypal.di.IoDispatcher
 import com.indie.apps.pannypal.data.module.MerchantDataWithName
 import com.indie.apps.pannypal.repository.MerchantDataRepository
@@ -16,7 +12,7 @@ import kotlinx.coroutines.flow.flowOn
 import java.io.IOException
 import javax.inject.Inject
 
-class searchMerchantDataWithMerchantNameUsecase @Inject constructor(
+class searchMerchantDataWithMerchantNameListUsecase @Inject constructor(
     private val merchantDataRepository: MerchantDataRepository,
     @IoDispatcher private val dispatcher: CoroutineDispatcher) {
 
@@ -25,7 +21,7 @@ class searchMerchantDataWithMerchantNameUsecase @Inject constructor(
 
             try {
                 emit(Resource.Loading<List<MerchantDataWithName>>())
-                val merchantDataWithName = merchantDataRepository.searchMerchantDataWithMerchantName(searchQuery,Constant.QUERY_PAGE_SIZE,Constant.QUERY_PAGE_SIZE * (page-1))
+                val merchantDataWithName = merchantDataRepository.searchMerchantDataWithMerchantNameList(searchQuery,Constant.QUERY_PAGE_SIZE,Constant.QUERY_PAGE_SIZE * (page-1))
                 emit(Resource.Success<List<MerchantDataWithName>>(merchantDataWithName))
             } catch(e: Throwable) {
                 when(e) {

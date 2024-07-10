@@ -5,19 +5,16 @@
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="update_MerchantData_old_expense_new_expense_value_Test()">
+      <SelectionState runConfigName="get_merchant_test()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="update_MerchantData_old_expense_new_income_value_Test()">
+      <SelectionState runConfigName="getMerchantsData_From_MerchantId_Limit_and_offset_test()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="update_MerchantData_old_income_new_expense_value_Test()">
+      <SelectionState runConfigName="Tests in 'com.indie.apps.pannypal'">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="delete_merchantData_income_value_Test()">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="delete_merchantData_expense_value_Test()">
+      <SelectionState runConfigName="delete_multiple_merchant_delete_merchantDataFromMerchantId_update_userAmount_test()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

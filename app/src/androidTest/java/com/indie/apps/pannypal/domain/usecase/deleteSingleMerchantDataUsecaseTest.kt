@@ -67,7 +67,7 @@ class deleteSingleMerchantDataUsecaseTest {
     }
 
     @Test
-    fun delete_single_merchantData_income_value_Test() = runBlocking {
+    fun delete_single_merchantData_income_update_merchant_income_update_user_income_test() = runBlocking {
         val user = User(id = 1, name = "Test User", currency = "AED")
         val merchant1 = Merchant(id = 1, name = "Merchant A")
         val payment = Payment(id = 1, name = "Debit Card")
@@ -93,7 +93,7 @@ class deleteSingleMerchantDataUsecaseTest {
 
         assert(result.toList().size == 2)
 
-        val getMerchantsData = merchantDataDao.getMerchantsData(10, 0)
+        val getMerchantsData = merchantDataDao.getMerchantDataList(10, 0)
         assert(getMerchantsData.size == 1)
 
         val result1 = deleteSingleMerchantDataUsecase(
@@ -114,7 +114,7 @@ class deleteSingleMerchantDataUsecaseTest {
             assert(expenseAmount == 0L)
         }
 
-        val getMerchants = merchantDao.getMerchants(10, 0)
+        val getMerchants = merchantDao.getMerchantList(10, 0)
         assert(getMerchants.size == 1)
         getMerchants[0].run {
             assert(getMerchants[0].incomeAmount == 0L)
@@ -124,7 +124,7 @@ class deleteSingleMerchantDataUsecaseTest {
     }
 
     @Test
-    fun delete_single_merchantData_expense_value_Test() = runBlocking {
+    fun delete_single_merchantData_expense_update_merchant_expense_update_user_expense_test() = runBlocking {
         val user = User(id = 1, name = "Test User", currency = "AED")
         val merchant1 = Merchant(id = 1, name = "Merchant A")
         val payment = Payment(id = 1, name = "Debit Card")
@@ -150,7 +150,7 @@ class deleteSingleMerchantDataUsecaseTest {
 
         assert(result.toList().size == 2)
 
-        val getMerchantsData = merchantDataDao.getMerchantsData(10, 0)
+        val getMerchantsData = merchantDataDao.getMerchantDataList(10, 0)
         assert(getMerchantsData.size == 1)
 
         val result1 = deleteSingleMerchantDataUsecase(
@@ -171,7 +171,7 @@ class deleteSingleMerchantDataUsecaseTest {
             assert(expenseAmount == 0L)
         }
 
-        val getMerchants = merchantDao.getMerchants(10, 0)
+        val getMerchants = merchantDao.getMerchantList(10, 0)
         assert(getMerchants.size == 1)
         getMerchants[0].run {
             assert(getMerchants[0].incomeAmount == 0L)

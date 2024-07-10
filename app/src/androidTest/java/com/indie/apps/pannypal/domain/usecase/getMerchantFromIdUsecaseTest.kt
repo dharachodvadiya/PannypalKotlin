@@ -57,7 +57,7 @@ class getMerchantFromIdUsecaseTest {
     }
 
     @Test
-    fun get_merchant_From_Id_test() = runBlocking{
+    fun get_merchant_from_id_test() = runBlocking{
         val merchant1 = Merchant(id = 1, name = "Merchant A", dateInMilli = 5L)
         val merchant2 = Merchant(id = 2, name = "Merchant B", dateInMilli = 10L)
         merchantDao.insert(merchant1)

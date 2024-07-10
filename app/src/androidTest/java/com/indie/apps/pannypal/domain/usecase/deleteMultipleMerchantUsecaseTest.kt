@@ -67,7 +67,7 @@ class deleteMultipleMerchantUsecaseTest {
     }
 
     @Test
-    fun delete_multiple_merchant_Test() = runBlocking {
+    fun delete_multiple_merchant_delete_merchantDataFromMerchantId_update_userAmount_test() = runBlocking {
         val user = User(id = 1, name = "Test User", currency = "AED")
         val merchant1 = Merchant(id = 1, name = "Merchant A")
         val merchant2 = Merchant(id = 2, name = "Merchant B")
@@ -113,7 +113,7 @@ class deleteMultipleMerchantUsecaseTest {
             assert(expenseAmount == 10L)
         }
 
-        val merchants = merchantDao.getMerchants(10,0)
+        val merchants = merchantDao.getMerchantList(10,0)
 
         assert(merchants.size == 2)
 
@@ -129,6 +129,12 @@ class deleteMultipleMerchantUsecaseTest {
         val resList = result3.toList()
         assert(resList.size == 2)
         assert(resList[1].data!! == 2)
+
+        val merchantsData1 = merchantDataDao.getMerchantDataListFromMerchantId(merchants[0].id, 10, 0)
+        val merchantsData2 = merchantDataDao.getMerchantDataListFromMerchantId(merchants[1].id, 10, 0)
+
+        assert(merchantsData1.isEmpty())
+        assert(merchantsData2.isEmpty())
 
         val user2 = userDao.getUser()
         user2.run {

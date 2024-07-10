@@ -11,13 +11,11 @@ import com.indie.apps.pannypal.data.entity.Payment
 import com.indie.apps.pannypal.data.module.MerchantDataWithName
 import com.indie.apps.pannypal.di.IoDispatcher
 import com.indie.apps.pannypal.repository.MerchantDataRepository
-import com.indie.apps.pannypal.repository.MerchantRepository
 import com.indie.apps.pannypal.util.Constant
 import com.indie.apps.pannypal.util.Resource
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
@@ -31,7 +29,7 @@ import javax.inject.Inject
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-class searchMerchantDataWithMerchantNameUsecaseTest {
+class getMerchantDataListWithMerchantNameUsecaseTest {
 
     @get:Rule
     var hiltAndroidRule = HiltAndroidRule(this)
@@ -59,7 +57,7 @@ class searchMerchantDataWithMerchantNameUsecaseTest {
     }
 
     @Test
-    fun searchMerchantsData_with_merchantName_with_Limit_and_offset_test() = runBlocking{
+    fun get_merchantsData_with_merchantName_list_with_page_test() = runBlocking{
         val merchant1 = Merchant(id = 1, name = "Merchant A")
         val merchant2 = Merchant(id = 2, name = "Merchant B")
         val payment = Payment(id = 1, name = "Debit Card")
@@ -72,13 +70,13 @@ class searchMerchantDataWithMerchantNameUsecaseTest {
                 merchantId = if (it % 2 == 0) merchant2.id else merchant1.id,
                 paymentId = payment.id,
                 dateInMilli = System.currentTimeMillis(),
-                details = "$it Sample transaction ",
+                details = "Sample transaction $it",
                 amount = it.toLong()
             )
             )
         }
 
-        val result = searchMerchantDataWithMerchantNameUsecase(merchantDataRepository, coroutineDispatcher).loadData("2",1)
+        val result = getMerchantDataListWithMerchantNameUsecase(merchantDataRepository, coroutineDispatcher).loadData(1)
 
         val list = result.toList()
 
@@ -87,6 +85,7 @@ class searchMerchantDataWithMerchantNameUsecaseTest {
         assert(list[0] is Resource.Loading<List<MerchantDataWithName>>)
         list[1].run {
             assertNotNull(data)
+            assert(data!!.size == Constant.QUERY_PAGE_SIZE)
         }
 
 

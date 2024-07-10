@@ -28,7 +28,7 @@ class deleteMultipleMerchantUsecase @Inject constructor(
                 val ids = merchants.map{
                     it.id
                 }
-                val merchantDeleteCount = merchantRepository.deleteMerchantsWithId(ids)
+                val merchantDeleteCount = merchantRepository.deleteMerchantWithIdList(ids)
 
                 if(merchantDeleteCount == ids.size)
                 {
@@ -38,7 +38,7 @@ class deleteMultipleMerchantUsecase @Inject constructor(
                             totalIncome + merchant.incomeAmount to totalExpense + merchant.expenseAmount
                         }
 
-                    merchantDataRepository.deleteMerchantsWithMerchantIds(ids)
+                    merchantDataRepository.deleteMerchantDataWithMerchantIdList(ids)
                     val userUpdateCount = userRepository.updateAmount(-incomeAmt, -expenseAmt)
 
                     when {

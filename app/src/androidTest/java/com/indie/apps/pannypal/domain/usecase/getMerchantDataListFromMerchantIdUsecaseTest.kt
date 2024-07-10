@@ -8,18 +8,12 @@ import com.indie.apps.pannypal.data.db.AppDatabase
 import com.indie.apps.pannypal.data.entity.Merchant
 import com.indie.apps.pannypal.data.entity.MerchantData
 import com.indie.apps.pannypal.data.entity.Payment
-import com.indie.apps.pannypal.data.module.MerchantDataWithName
-import com.indie.apps.pannypal.data.module.MerchantNameAndDetails
 import com.indie.apps.pannypal.di.IoDispatcher
 import com.indie.apps.pannypal.repository.MerchantDataRepository
-import com.indie.apps.pannypal.repository.MerchantRepository
-import com.indie.apps.pannypal.util.Constant
 import com.indie.apps.pannypal.util.Resource
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
@@ -33,21 +27,25 @@ import javax.inject.Inject
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-class searchMerchantUsecaseTest {
+class getMerchantDataListFromMerchantIdUsecaseTest {
 
     @get:Rule
     var hiltAndroidRule = HiltAndroidRule(this)
 
     @Inject lateinit var appDatabase: AppDatabase
-    @Inject lateinit var merchantRepository: MerchantRepository
+    @Inject lateinit var merchantDataRepository: MerchantDataRepository
     @IoDispatcher
     @Inject lateinit var coroutineDispatcher: CoroutineDispatcher
 
+    private lateinit var merchantDataDao: MerchantDataDao
+    private lateinit var paymentDao: PaymentDao
     private lateinit var merchantDao: MerchantDao
 
     @Before
     fun setUp() {
         hiltAndroidRule.inject()
+        merchantDataDao = appDatabase.merchantDataDao()
+        paymentDao = appDatabase.paymentDao()
         merchantDao = appDatabase.merchantDao()
     }
 
@@ -57,22 +55,38 @@ class searchMerchantUsecaseTest {
     }
 
     @Test
-    fun search_merchant_name_details_test() = runBlocking{
-        val merchant1 = Merchant(id = 1, name = "Merchant A", dateInMilli = 5L)
-        val merchant2 = Merchant(id = 2, name = "Merchant B", dateInMilli = 10L)
-        val merchant3 = Merchant(id = 3, name = "ccc", dateInMilli = 10L)
+    fun get_merchantsData_from_merchantId_with_page_test() = runBlocking{
+        val merchant1 = Merchant(id = 1, name = "Merchant A")
+        val merchant2 = Merchant(id = 2, name = "Merchant B")
+        val payment = Payment(id = 1, name = "Debit Card")
         merchantDao.insert(merchant1)
         merchantDao.insert(merchant2)
-        merchantDao.insert(merchant3)
+        paymentDao.insert(payment)
 
-        val result = searchMerchantUsecase(merchantRepository, coroutineDispatcher).loadData("Merch",1)
+        (1..30).forEach {
+            merchantDataDao.insert( MerchantData(
+                merchantId = if (it % 2 == 0) merchant2.id else merchant1.id,
+                paymentId = payment.id,
+                dateInMilli = System.currentTimeMillis(),
+                details = "Sample transaction $it",
+                amount = it.toLong()
+            )
+            )
+        }
+
+
+        val result = getMerchantDataListFromMerchantIdUsecase(merchantDataRepository, coroutineDispatcher).loadData(2,1)
 
         val list = result.toList()
 
+
         assert(list.size == 2)
-        assert(list[0] is Resource.Loading<List<Merchant>>)
-        assertNotNull(list[1])
-        assert(list[1].data?.get(0)!!.name == "Merchant B")
+        assert(list[0] is Resource.Loading<List<MerchantData>>)
+        list[1].run {
+            assertNotNull(data)
+            assert(data?.get(0)!!.merchantId == 2L)
+        }
+
 
     }
 }

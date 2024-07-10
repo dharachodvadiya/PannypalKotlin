@@ -38,16 +38,16 @@ class MerchantRepositoryImplTest {
     }
 
     @Test
-    fun getMerchants_with_limit_and_offset_test() = runBlocking{
+    fun get_merchants_with_limitAndOffset_test() = runBlocking{
 
         (1..30).forEach {
             merchantDao.insert( Merchant(name = "Item $it") )
         }
 
-        var merchants = merchantDao.getMerchants(10, 0)
+        var merchants = merchantDao.getMerchantList(10, 0)
         assert(merchants.size == 10)
 
-        merchants = merchantDao.getMerchants(10, 5)
+        merchants = merchantDao.getMerchantList(10, 5)
         assert(merchants.size == 10)
     }
 }

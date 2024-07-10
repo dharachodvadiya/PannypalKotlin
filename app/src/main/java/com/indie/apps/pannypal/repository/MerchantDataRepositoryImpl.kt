@@ -9,31 +9,30 @@ class MerchantDataRepositoryImpl @Inject constructor(private val merchantDataDao
 
     override suspend fun deleteMerchantDataWithId(id: Long) : Int = merchantDataDao.deleteMerchantDataWithId(id)
 
-    override suspend fun deleteMerchantsWithId(idList: List<Long>) = merchantDataDao.deleteMerchantsWithId(idList)
+    override suspend fun deleteMerchantDataWithIdList(idList: List<Long>) = merchantDataDao.deleteMerchantDataWithIdList(idList)
 
-    override suspend fun deleteMerchantsWithMerchantIds(idList: List<Long>) = merchantDataDao.deleteMerchantsWithMerchantIds(idList)
+    override suspend fun deleteMerchantDataWithMerchantIdList(idList: List<Long>) = merchantDataDao.deleteMerchantDataWithMerchantIdList(idList)
 
-    override suspend fun deleteMerchantsWithMerchantId(id: Long) = merchantDataDao.deleteMerchantsWithMerchantId(id)
+    override suspend fun deleteMerchantDataWithMerchantId(id: Long) = merchantDataDao.deleteMerchantDataWithMerchantId(id)
 
-    //override suspend fun deleteMerchantsData(merchantsData: List<MerchantData>) = merchantDataDao.deleteMerchantsData(merchantsData)
+    override suspend fun getMerchantDataList(limit: Int, offset: Int) = merchantDataDao.getMerchantDataList(limit, offset)
 
-    override suspend fun getMerchantsData(limit: Int, offset: Int) = merchantDataDao.getMerchantsData(limit, offset)
-    override suspend fun getMerchantsDataFromId(
+    override suspend fun getMerchantDataListFromMerchantId(
         id: Long,
         limit: Int,
         offset: Int
-    ) = merchantDataDao.getMerchantsDataFromId(id, limit, offset)
+    ) = merchantDataDao.getMerchantDataListFromMerchantId(id, limit, offset)
 
-    override suspend fun getMerchantsDataWithMerchantName(
+    override suspend fun getMerchantsDataWithMerchantNameList(
         limit: Int,
         offset: Int
-    ): List<MerchantDataWithName>  = merchantDataDao.getMerchantsDataWithMerchantName(limit, offset)
+    ): List<MerchantDataWithName>  = merchantDataDao.getMerchantsDataWithMerchantNameList(limit, offset)
 
-    override suspend fun searchMerchantDataWithMerchantName(
+    override suspend fun searchMerchantDataWithMerchantNameList(
         searchQuery: String,
         limit: Int,
         offset: Int
-    ) = merchantDataDao.searchMerchantDataWithMerchantName(searchQuery, limit, offset)
+    ) = merchantDataDao.searchMerchantDataWithMerchantNameList(searchQuery, limit, offset)
 
     override suspend fun insert(merchantData: MerchantData) = merchantDataDao.insert(merchantData)
 

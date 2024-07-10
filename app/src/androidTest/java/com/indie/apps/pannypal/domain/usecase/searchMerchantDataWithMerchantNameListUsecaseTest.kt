@@ -11,13 +11,10 @@ import com.indie.apps.pannypal.data.entity.Payment
 import com.indie.apps.pannypal.data.module.MerchantDataWithName
 import com.indie.apps.pannypal.di.IoDispatcher
 import com.indie.apps.pannypal.repository.MerchantDataRepository
-import com.indie.apps.pannypal.repository.MerchantRepository
-import com.indie.apps.pannypal.util.Constant
 import com.indie.apps.pannypal.util.Resource
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
@@ -31,7 +28,7 @@ import javax.inject.Inject
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-class getMerchantDataFromMerchantIdUsecaseTest {
+class searchMerchantDataWithMerchantNameListUsecaseTest {
 
     @get:Rule
     var hiltAndroidRule = HiltAndroidRule(this)
@@ -59,7 +56,7 @@ class getMerchantDataFromMerchantIdUsecaseTest {
     }
 
     @Test
-    fun getMerchantsData_From_MerchantId_Limit_and_offset_test() = runBlocking{
+    fun search_merchantsData_with_merchantName_list_with_page_test() = runBlocking{
         val merchant1 = Merchant(id = 1, name = "Merchant A")
         val merchant2 = Merchant(id = 2, name = "Merchant B")
         val payment = Payment(id = 1, name = "Debit Card")
@@ -72,23 +69,21 @@ class getMerchantDataFromMerchantIdUsecaseTest {
                 merchantId = if (it % 2 == 0) merchant2.id else merchant1.id,
                 paymentId = payment.id,
                 dateInMilli = System.currentTimeMillis(),
-                details = "Sample transaction $it",
+                details = "$it Sample transaction ",
                 amount = it.toLong()
             )
             )
         }
 
-
-        val result = getMerchantDataFromMerchantIdUsecase(merchantDataRepository, coroutineDispatcher).loadData(2,1)
+        val result = searchMerchantDataWithMerchantNameListUsecase(merchantDataRepository, coroutineDispatcher).loadData("2",1)
 
         val list = result.toList()
 
 
         assert(list.size == 2)
-        assert(list[0] is Resource.Loading<List<MerchantData>>)
+        assert(list[0] is Resource.Loading<List<MerchantDataWithName>>)
         list[1].run {
             assertNotNull(data)
-            assert(data?.get(0)!!.merchantId == 2L)
         }
 
 

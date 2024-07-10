@@ -29,7 +29,7 @@ class deleteMultipleMerchantDataUsecase @Inject constructor(
                 val ids = merchantsData.map{
                     it.id
                 }
-                val count = merchantDataRepository.deleteMerchantsWithId(ids)
+                val count = merchantDataRepository.deleteMerchantDataWithIdList(ids)
 
                 if(count == ids.size)
                 {

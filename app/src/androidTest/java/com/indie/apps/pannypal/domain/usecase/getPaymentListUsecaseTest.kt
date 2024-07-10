@@ -1,27 +1,17 @@
 package com.indie.apps.pannypal.domain.usecase
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.indie.apps.pannypal.data.dao.MerchantDao
-import com.indie.apps.pannypal.data.dao.MerchantDataDao
 import com.indie.apps.pannypal.data.dao.PaymentDao
-import com.indie.apps.pannypal.data.dao.UserDao
 import com.indie.apps.pannypal.data.db.AppDatabase
-import com.indie.apps.pannypal.data.entity.Merchant
-import com.indie.apps.pannypal.data.entity.MerchantData
 import com.indie.apps.pannypal.data.entity.Payment
-import com.indie.apps.pannypal.data.entity.User
 import com.indie.apps.pannypal.di.IoDispatcher
-import com.indie.apps.pannypal.repository.MerchantDataRepository
-import com.indie.apps.pannypal.repository.MerchantRepository
 import com.indie.apps.pannypal.repository.PaymentRepository
-import com.indie.apps.pannypal.repository.UserRepository
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import org.junit.After
-import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -30,7 +20,7 @@ import javax.inject.Inject
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-class searchPaymentUsecaseTest {
+class getPaymentListUsecaseTest {
 
     @get:Rule
     var hiltAndroidRule = HiltAndroidRule(this)
@@ -59,22 +49,22 @@ class searchPaymentUsecaseTest {
     }
 
     @Test
-    fun search_payment_Test() = runBlocking {
+    fun get_payment_list_Test() = runBlocking {
         val payment1 = Payment(id = 1, name = "Debit Card")
         val payment2 = Payment(id = 2, name = "Cash")
 
         paymentDao.insert(payment1)
         paymentDao.insert(payment2)
 
-        val result = searchPaymentUsecase(
+        val result = getPaymentListUsecase(
             paymentRepository = paymentRepository,
             dispatcher = coroutineDispatcher
-        ).loadData("ca",1)
+        ).loadData(1)
 
         assert(result.toList().size == 2)
 
-        assert(result.toList()[1].data!!.size == 1)
-
+        val getPayment = paymentDao.getPaymentList(10, 0)
+        assert(getPayment.size == 2)
     }
 
 }

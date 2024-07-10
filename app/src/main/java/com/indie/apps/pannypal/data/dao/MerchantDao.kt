@@ -20,7 +20,7 @@ interface MerchantDao : BaseDao<Merchant> {
 
     @Transaction
     @Query("delete from merchant where id IN (:idList)")
-    suspend fun deleteMerchantsWithId(idList: List<Long>) : Int
+    suspend fun deleteMerchantWithIdList(idList: List<Long>) : Int
 
     @Transaction
     @Query("SELECT * FROM merchant where id = :id")
@@ -28,19 +28,19 @@ interface MerchantDao : BaseDao<Merchant> {
 
     @Transaction
     @Query("SELECT * FROM merchant ORDER BY date_milli DESC LIMIT :limit OFFSET :offset")
-    suspend fun getMerchants(limit: Int, offset: Int): List<Merchant>
+    suspend fun getMerchantList(limit: Int, offset: Int): List<Merchant>
 
     @Transaction
     @Query("SELECT id, name, details FROM merchant ORDER BY date_milli DESC LIMIT :limit OFFSET :offset")
-    suspend fun getMerchantsNameAndDetails(limit: Int, offset: Int): List<MerchantNameAndDetails>
+    suspend fun getMerchantNameAndDetailList(limit: Int, offset: Int): List<MerchantNameAndDetails>
 
     @Transaction
     @Query("SELECT id, name, details FROM merchant WHERE name LIKE :searchQuery || '%' OR details LIKE :searchQuery || '%'ORDER BY date_milli DESC LIMIT :limit OFFSET :offset")
-    suspend fun searchMerchantsNameAndDetails(searchQuery : String, limit: Int, offset: Int): List<MerchantNameAndDetails>
+    suspend fun searchMerchantNameAndDetailList(searchQuery : String, limit: Int, offset: Int): List<MerchantNameAndDetails>
 
     @Transaction
     @Query("SELECT * FROM merchant WHERE name LIKE :searchQuery || '%' OR details LIKE :searchQuery || '%' ORDER BY date_milli DESC LIMIT :limit OFFSET :offset")
-    suspend fun searchMerchants(searchQuery : String, limit: Int, offset: Int): List<Merchant>
+    suspend fun searchMerchantList(searchQuery : String, limit: Int, offset: Int): List<Merchant>
 
 
     @Transaction

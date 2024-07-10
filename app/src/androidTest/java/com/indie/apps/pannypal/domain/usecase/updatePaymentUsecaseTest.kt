@@ -59,7 +59,7 @@ class updatePaymentUsecaseTest {
     }
 
     @Test
-    fun update_payment_Test() = runBlocking {
+    fun update_payment_test() = runBlocking {
         val payment = Payment(id = 1, name = "Debit Card")
 
         paymentDao.insert(payment)
@@ -75,7 +75,7 @@ class updatePaymentUsecaseTest {
         assert(result.toList().size == 2)
         assert(result.toList()[1].data == 1)
 
-        val getPayment = paymentDao.getPayments(10, 0)
+        val getPayment = paymentDao.getPaymentList(10, 0)
         assert(getPayment.size == 1)
         assert(getPayment[0].name == "Cash")
     }

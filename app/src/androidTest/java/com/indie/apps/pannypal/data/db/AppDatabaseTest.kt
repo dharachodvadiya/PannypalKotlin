@@ -40,7 +40,7 @@ class AppDatabaseTest {
         AppDatabase.populateDatabase(appDatabase)
 
         // Verify that pre-added payments are inserted correctly
-        val payments = paymentDao.getPayments(10,0)
+        val payments = paymentDao.getPaymentList(10,0)
         assert(payments.isNotEmpty())
         assert(payments.any { it.name == "Cash" })
         assert(payments.any { it.name == "Bank Transfer" })

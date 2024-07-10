@@ -67,7 +67,7 @@ class updateMerchantDataUsecaseTest {
     }
 
     @Test
-    fun update_MerchantData_old_income_new_income_value_Test() = runBlocking {
+    fun update_merchantData_old_income_new_income_value_update_merchantIncome_update_userIncome_test() = runBlocking {
         val user = User(id = 1, name = "Test User", currency = "AED")
         val merchant1 = Merchant(id = 1, name = "Merchant A")
         val payment = Payment(id = 1, name = "Debit Card")
@@ -93,7 +93,7 @@ class updateMerchantDataUsecaseTest {
 
         assert(result.toList().size == 2)
 
-        val getMerchantsData = merchantDataDao.getMerchantsData(10, 0)
+        val getMerchantsData = merchantDataDao.getMerchantDataList(10, 0)
         assert(getMerchantsData.size == 1)
 
         val newMerchant = getMerchantsData[0].copy(amount = 20)
@@ -119,7 +119,7 @@ class updateMerchantDataUsecaseTest {
             assert(expenseAmount == 0L)
         }
 
-        val getMerchants = merchantDao.getMerchants(10, 0)
+        val getMerchants = merchantDao.getMerchantList(10, 0)
         assert(getMerchants.size == 1)
         getMerchants[0].run {
             assert(getMerchants[0].incomeAmount == 20L)
@@ -129,7 +129,7 @@ class updateMerchantDataUsecaseTest {
     }
 
     @Test
-    fun update_MerchantData_old_expense_new_expense_value_Test() = runBlocking {
+    fun update_merchantData_old_expense_new_expense_value_update_merchantExpense_update_userExpense_test() = runBlocking {
         val user = User(id = 1, name = "Test User", currency = "AED")
         val merchant1 = Merchant(id = 1, name = "Merchant A")
         val payment = Payment(id = 1, name = "Debit Card")
@@ -155,7 +155,7 @@ class updateMerchantDataUsecaseTest {
 
         assert(result.toList().size == 2)
 
-        val getMerchantsData = merchantDataDao.getMerchantsData(10, 0)
+        val getMerchantsData = merchantDataDao.getMerchantDataList(10, 0)
         assert(getMerchantsData.size == 1)
 
         val newMerchant = getMerchantsData[0].copy(amount = -100L)
@@ -179,7 +179,7 @@ class updateMerchantDataUsecaseTest {
             assert(expenseAmount == 100L)
         }
 
-        val getMerchants = merchantDao.getMerchants(10, 0)
+        val getMerchants = merchantDao.getMerchantList(10, 0)
         assert(getMerchants.size == 1)
         getMerchants[0].run {
             assert(getMerchants[0].incomeAmount == 0L)
@@ -189,7 +189,7 @@ class updateMerchantDataUsecaseTest {
     }
 
     @Test
-    fun update_MerchantData_old_expense_new_income_value_Test() = runBlocking {
+    fun update_MerchantData_old_expense_new_income_value_update_merchantIncomeExpense_update_user_expense_test() = runBlocking {
         val user = User(id = 1, name = "Test User", currency = "AED")
         val merchant1 = Merchant(id = 1, name = "Merchant A")
         val payment = Payment(id = 1, name = "Debit Card")
@@ -215,7 +215,7 @@ class updateMerchantDataUsecaseTest {
 
         assert(result.toList().size == 2)
 
-        val getMerchantsData = merchantDataDao.getMerchantsData(10, 0)
+        val getMerchantsData = merchantDataDao.getMerchantDataList(10, 0)
         assert(getMerchantsData.size == 1)
 
         val newMerchant = getMerchantsData[0].copy(amount = 10)
@@ -239,7 +239,7 @@ class updateMerchantDataUsecaseTest {
             assert(expenseAmount == 0L)
         }
 
-        val getMerchants = merchantDao.getMerchants(10, 0)
+        val getMerchants = merchantDao.getMerchantList(10, 0)
         assert(getMerchants.size == 1)
         getMerchants[0].run {
             assert(getMerchants[0].incomeAmount == 10L)
@@ -249,7 +249,7 @@ class updateMerchantDataUsecaseTest {
     }
 
     @Test
-    fun update_MerchantData_old_income_new_expense_value_Test() = runBlocking {
+    fun update_MerchantData_old_income_new_expense_value_update_merchantIncomeExpense_update_user_expense_test() = runBlocking {
         val user = User(id = 1, name = "Test User", currency = "AED")
         val merchant1 = Merchant(id = 1, name = "Merchant A")
         val payment = Payment(id = 1, name = "Debit Card")
@@ -275,7 +275,7 @@ class updateMerchantDataUsecaseTest {
 
         assert(result.toList().size == 2)
 
-        val getMerchantsData = merchantDataDao.getMerchantsData(10, 0)
+        val getMerchantsData = merchantDataDao.getMerchantDataList(10, 0)
         assert(getMerchantsData.size == 1)
 
         val newMerchant = getMerchantsData[0].copy(amount = -100L)
@@ -299,7 +299,7 @@ class updateMerchantDataUsecaseTest {
             assert(expenseAmount == 100L)
         }
 
-        val getMerchants = merchantDao.getMerchants(10, 0)
+        val getMerchants = merchantDao.getMerchantList(10, 0)
         assert(getMerchants.size == 1)
         getMerchants[0].run {
             assert(getMerchants[0].incomeAmount == 0L)
