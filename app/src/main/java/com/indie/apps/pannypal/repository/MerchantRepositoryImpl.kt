@@ -6,11 +6,13 @@ import javax.inject.Inject
 
 class MerchantRepositoryImpl @Inject constructor(private val merchantDao: MerchantDao) : MerchantRepository {
 
-    override suspend fun deleteMerchantWithId(id : Long) : Int = merchantDao.deleteMerchantWithId(id)
+    override suspend fun deleteMerchantWithId(id : Long) = merchantDao.deleteMerchantWithId(id)
 
-    override suspend fun deleteMerchantsWithId(idList: List<Long>) : Int = merchantDao.deleteMerchantsWithId(idList)
+    override suspend fun deleteMerchantsWithId(idList: List<Long>) = merchantDao.deleteMerchantsWithId(idList)
 
     override suspend fun getMerchants(limit: Int, offset: Int) = merchantDao.getMerchants(limit, offset)
+
+    override suspend fun getMerchantFromId(id: Long) = merchantDao.getMerchantFromId(id)
 
     override suspend fun updateAmountWithDate(
         id: Long,

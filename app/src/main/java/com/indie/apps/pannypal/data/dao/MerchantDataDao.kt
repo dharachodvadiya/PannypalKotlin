@@ -35,6 +35,10 @@ interface MerchantDataDao : BaseDao<MerchantData> {
     suspend fun getMerchantsData(limit: Int, offset: Int): List<MerchantData>
 
     @Transaction
+    @Query("SELECT * FROM merchant_data where id = :id ORDER BY id DESC LIMIT :limit OFFSET :offset")
+    suspend fun getMerchantsDataFromId(id: Long, limit: Int, offset: Int): List<MerchantData>
+
+    @Transaction
     @Query("""
         SELECT md.id as id, 
                 md.merchant_id as merchantId, 
