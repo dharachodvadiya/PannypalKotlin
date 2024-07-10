@@ -1,13 +1,16 @@
 package com.indie.apps.pannypal.domain.usecase
 
+import android.database.sqlite.SQLiteConstraintException
 import com.indie.apps.pannypal.data.entity.MerchantData
 import com.indie.apps.pannypal.di.IoDispatcher
 import com.indie.apps.pannypal.repository.MerchantDataRepository
 import com.indie.apps.pannypal.repository.MerchantRepository
 import com.indie.apps.pannypal.repository.UserRepository
 import com.indie.apps.pannypal.util.Resource
+import com.indie.apps.pannypal.util.handleException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import java.io.IOException
@@ -37,45 +40,45 @@ class deleteSingleMerchantDataUsecase @Inject constructor(
                             amount < 0 -> newExpenseAmt -= (amount * -1)
                             amount > 0 -> newIncomeAmt -= (amount)
                         }
-                        val updatedRowMerchant = merchantRepository.updateAmountWithDate(
-                            id = merchantId,
-                            incomeAmt = newIncomeAmt,
-                            expenseAmt = newExpenseAmt,
-                            dateInMilli = System.currentTimeMillis()
-                        )
 
-                        val updatedRowUser = userRepository.updateAmount(
-                            incomeAmt = newIncomeAmt,
-                            expenseAmt = newExpenseAmt
-                        )
+                        handleReflectedTableOperation(count, newIncomeAmt, newExpenseAmt)
 
-                        when {
-                            updatedRowUser == 1 && updatedRowMerchant == 1 -> {
-                                emit(Resource.Success<Int>(count))
-                            }
-                            updatedRowUser == 1 && updatedRowMerchant == 0 -> {
-                                emit(Resource.Error<Int>("Merchant not updated"))
-                            }
-                            updatedRowUser == 0 && updatedRowMerchant == 1 -> {
-                                emit(Resource.Error<Int>("User not updated"))
-                            }
-                            else -> {
-                                emit(Resource.Error<Int>("User and Merchant not updated"))
-                            }
-                        }
                     }
                 }else{
-                    emit(Resource.Error<Int>("Merchant data not deleted"))
+                    emit(Resource.Error("Fail to delete Single Merchant Data"))
                 }
 
-
-            } catch(e: Throwable) {
-                when(e) {
-                    is IOException -> emit(Resource.Error<Int>("Network Failure"))
-                    else -> emit(Resource.Error<Int>("Conversion Error"))
-                }
+            } catch (e: Throwable) {
+                emit(Resource.Error(handleException(e).message + ": ${e.message}"))
             }
         }.flowOn(dispatcher)
+    }
+
+    private suspend fun FlowCollector<Resource<Int>>.handleReflectedTableOperation(affectedRowCount: Int, newIncome : Long, newExpense: Long ) {
+        merchantData.run {
+            val updatedRowMerchant = merchantRepository.updateAmountWithDate(
+                id = merchantId,
+                incomeAmt = newIncome,
+                expenseAmt = newExpense,
+                dateInMilli = System.currentTimeMillis()
+            )
+
+            val updatedRowUser = userRepository.updateAmount(
+                incomeAmt = newIncome,
+                expenseAmt = newExpense
+            )
+
+            emit(
+                when {
+                    updatedRowUser == 1 && updatedRowMerchant == 1 -> Resource.Success(affectedRowCount)
+                    updatedRowUser == 1 && updatedRowMerchant == 0 -> Resource.Error("Fail to update Merchant Amount")
+                    updatedRowUser == 0 && updatedRowMerchant == 1 -> Resource.Error("Fail to update User Amount")
+                    else -> Resource.Error("Fail to update User And Merchant Amount")
+                }
+            )
+
+        }
+
     }
 
 }

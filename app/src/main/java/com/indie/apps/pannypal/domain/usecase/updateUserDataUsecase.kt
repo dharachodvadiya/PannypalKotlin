@@ -4,6 +4,7 @@ import com.indie.apps.pannypal.data.entity.User
 import com.indie.apps.pannypal.di.IoDispatcher
 import com.indie.apps.pannypal.repository.UserRepository
 import com.indie.apps.pannypal.util.Resource
+import com.indie.apps.pannypal.util.handleException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -20,22 +21,18 @@ class updateUserDataUsecase @Inject constructor(
         return flow{
 
             try {
-                emit(Resource.Loading<Int>())
+                emit(Resource.Loading())
                 val count = userRepository.update(user)
 
-                if(count >0)
-                {
-                    emit(Resource.Success<Int>(count))
+                if(count >0){
+                    emit(Resource.Success(count))
                 }else{
-                    emit(Resource.Error<Int>("Merchant data not updated"))
+                    emit(Resource.Error("Fail to update User"))
                 }
 
 
-            } catch(e: Throwable) {
-                when(e) {
-                    is IOException -> emit(Resource.Error<Int>("Network Failure"))
-                    else -> emit(Resource.Error<Int>("Conversion Error"))
-                }
+            } catch (e: Throwable) {
+                emit(Resource.Error(handleException(e).message + ": ${e.message}"))
             }
         }.flowOn(dispatcher)
     }

@@ -14,9 +14,11 @@ import com.indie.apps.pannypal.di.IoDispatcher
 import com.indie.apps.pannypal.repository.MerchantDataRepository
 import com.indie.apps.pannypal.repository.MerchantRepository
 import com.indie.apps.pannypal.repository.UserRepository
+import com.indie.apps.pannypal.util.Resource
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import org.junit.After
@@ -59,18 +61,26 @@ class addMerchantUsecaseTest {
 
     @Test
     fun add_merchant_test() = runBlocking {
-        val merchant1 = Merchant(id = 1, name = "Merchant A")
+        //Arrange data
+        val merchant = Merchant(id = 1, name = "Merchant A")
 
-        merchantDao.insert(merchant1)
-
-        val result = addMerchantUsecase(
+        //when
+        val resultFlow = addMerchantUsecase(
             merchantRepository = merchantRepository,
-            merchant = merchant1,
+            merchant = merchant,
             dispatcher = coroutineDispatcher
         ).invoke()
 
-        assert(result.toList().size == 2)
+        // Assert: Collect and verify the result
+        resultFlow.drop(1).collect{ result ->
+            when (result) {
+                is Resource.Success -> assertEquals(1L, result.data)
+                is Resource.Error -> fail("Unexpected Resource.Error: ${result.message}")
+                is Resource.Loading -> fail("Unexpected Resource.Loading")
+            }
+        }
 
+        //Assert: Verify after operation
         val getMerchants = merchantDao.getMerchantList(10, 0)
         assert(getMerchants.size == 1)
     }

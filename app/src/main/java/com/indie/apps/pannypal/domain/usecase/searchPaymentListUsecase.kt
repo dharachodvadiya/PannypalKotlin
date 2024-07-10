@@ -5,6 +5,7 @@ import com.indie.apps.pannypal.di.IoDispatcher
 import com.indie.apps.pannypal.repository.PaymentRepository
 import com.indie.apps.pannypal.util.Constant
 import com.indie.apps.pannypal.util.Resource
+import com.indie.apps.pannypal.util.handleException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -20,14 +21,11 @@ class searchPaymentListUsecase @Inject constructor(
         return flow{
 
             try {
-                emit(Resource.Loading<List<Payment>>())
+                emit(Resource.Loading())
                 val merchantDataWithName = paymentRepository.searchPaymentList(searchQuery, Constant.QUERY_PAGE_SIZE,Constant.QUERY_PAGE_SIZE * (page-1))
-                emit(Resource.Success<List<Payment>>(merchantDataWithName))
-            } catch(e: Throwable) {
-                when(e) {
-                    is IOException -> emit(Resource.Error<List<Payment>>("Network Failure"))
-                    else -> emit(Resource.Error<List<Payment>>("Conversion Error"))
-                }
+                emit(Resource.Success(merchantDataWithName))
+            } catch (e: Throwable) {
+                emit(Resource.Error(handleException(e).message + ": ${e.message}"))
             }
         }.flowOn(dispatcher)
     }

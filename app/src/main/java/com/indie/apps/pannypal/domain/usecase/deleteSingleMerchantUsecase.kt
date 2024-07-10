@@ -6,6 +6,7 @@ import com.indie.apps.pannypal.repository.MerchantDataRepository
 import com.indie.apps.pannypal.repository.MerchantRepository
 import com.indie.apps.pannypal.repository.UserRepository
 import com.indie.apps.pannypal.util.Resource
+import com.indie.apps.pannypal.util.handleException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -24,32 +25,26 @@ class deleteSingleMerchantUsecase @Inject constructor(
         return flow{
 
             try {
-                emit(Resource.Loading<Int>())
+                emit(Resource.Loading())
                 val merchantDeleteCount = merchantRepository.deleteMerchantWithId(merchant.id)
 
-                if(merchantDeleteCount > 0)
-                {
+                if(merchantDeleteCount > 0){
                     merchantDataRepository.deleteMerchantDataWithMerchantId(merchant.id)
-                    val userUpdateCount = userRepository.updateAmount(-merchant.incomeAmount, -merchant.expenseAmount)
+                    val updatedRowUser = userRepository.updateAmount(-merchant.incomeAmount, -merchant.expenseAmount)
 
-                    when {
-                        userUpdateCount > 0 -> {
-                            emit(Resource.Success<Int>(merchantDeleteCount))
+                    emit(
+                        when {
+                            updatedRowUser == 1 -> Resource.Success(merchantDeleteCount)
+                            else -> Resource.Error("Fail to update User Amount")
                         }
-                        else -> {
-                            emit(Resource.Error<Int>("User and Merchant Data not updated"))
-                        }
-                    }
+                    )
 
                 }else{
-                    emit(Resource.Error<Int>("Merchant not delete"))
+                    emit(Resource.Error("Fail to delete single Merchant"))
                 }
 
-            } catch(e: Throwable) {
-                when(e) {
-                    is IOException -> emit(Resource.Error<Int>("Network Failure.."))
-                    else -> emit(Resource.Error<Int>("Conversion Error.."))
-                }
+            } catch (e: Throwable) {
+                emit(Resource.Error(handleException(e).message + ": ${e.message}"))
             }
         }.flowOn(dispatcher)
     }

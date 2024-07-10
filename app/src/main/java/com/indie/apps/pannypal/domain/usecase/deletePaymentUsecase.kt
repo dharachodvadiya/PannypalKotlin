@@ -1,5 +1,6 @@
 package com.indie.apps.pannypal.domain.usecase
 
+import android.database.sqlite.SQLiteConstraintException
 import android.net.http.HttpException
 import androidx.compose.ui.unit.Constraints
 import com.indie.apps.pannypal.data.dao.MerchantDataDao
@@ -14,6 +15,7 @@ import com.indie.apps.pannypal.repository.PaymentRepository
 import com.indie.apps.pannypal.repository.UserRepository
 import com.indie.apps.pannypal.util.Constant
 import com.indie.apps.pannypal.util.Resource
+import com.indie.apps.pannypal.util.handleException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -30,22 +32,18 @@ class deletePaymentUsecase @Inject constructor(
         return flow{
 
             try {
-                emit(Resource.Loading<Int>())
+                emit(Resource.Loading())
                 val id = paymentRepository.deleteCustomPayment(payment.id)
 
-                if(id >0)
-                {
-                    emit(Resource.Success<Int>(id))
+                if(id >0){
+                    emit(Resource.Success(id))
                 }else{
-                    emit(Resource.Error<Int>("Payment not deleted"))
+                    emit(Resource.Error("Fail to delete payment"))
                 }
 
 
-            } catch(e: Throwable) {
-                when(e) {
-                    is IOException -> emit(Resource.Error<Int>("Network Failure"))
-                    else -> emit(Resource.Error<Int>("Conversion Error"))
-                }
+            } catch (e: Throwable) {
+                emit(Resource.Error(handleException(e).message + ": ${e.message}"))
             }
         }.flowOn(dispatcher)
     }

@@ -5,6 +5,7 @@ import com.indie.apps.pannypal.data.module.MerchantNameAndDetails
 import com.indie.apps.pannypal.repository.MerchantRepository
 import com.indie.apps.pannypal.util.Constant
 import com.indie.apps.pannypal.util.Resource
+import com.indie.apps.pannypal.util.handleException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -20,14 +21,11 @@ class searchMerchantNameAndDetailListUsecase @Inject constructor(
         return flow{
 
             try {
-                emit(Resource.Loading<List<MerchantNameAndDetails>>())
+                emit(Resource.Loading())
                 val merchantDataWithName = merchantRepository.searchMerchantNameAndDetailList(searchQuery, Constant.QUERY_PAGE_SIZE,Constant.QUERY_PAGE_SIZE * (page-1))
-                emit(Resource.Success<List<MerchantNameAndDetails>>(merchantDataWithName))
-            } catch(e: Throwable) {
-                when(e) {
-                    is IOException -> emit(Resource.Error<List<MerchantNameAndDetails>>("Network Failure"))
-                    else -> emit(Resource.Error<List<MerchantNameAndDetails>>("Conversion Error"))
-                }
+                emit(Resource.Success(merchantDataWithName))
+            } catch (e: Throwable) {
+                emit(Resource.Error(handleException(e).message + ": ${e.message}"))
             }
         }.flowOn(dispatcher)
     }

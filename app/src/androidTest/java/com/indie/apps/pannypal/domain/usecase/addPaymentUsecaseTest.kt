@@ -15,9 +15,11 @@ import com.indie.apps.pannypal.repository.MerchantDataRepository
 import com.indie.apps.pannypal.repository.MerchantRepository
 import com.indie.apps.pannypal.repository.PaymentRepository
 import com.indie.apps.pannypal.repository.UserRepository
+import com.indie.apps.pannypal.util.Resource
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import org.junit.After
@@ -60,18 +62,26 @@ class addPaymentUsecaseTest {
 
     @Test
     fun add_payment_test() = runBlocking {
+        //prepare test data
         val payment = Payment(id = 1, name = "Debit Card")
 
-        paymentDao.insert(payment)
-
-        val result = addPaymentUsecase(
+        //when
+        val resultFlow = addPaymentUsecase(
             paymentRepository = paymentRepository,
             payment = payment,
             dispatcher = coroutineDispatcher
         ).invoke()
 
-        assert(result.toList().size == 2)
+        // Assert: Collect and verify the result
+        resultFlow.drop(1).collect{ result ->
+            when (result) {
+                is Resource.Success -> assertEquals(1L, result.data)
+                is Resource.Error -> fail("Unexpected Resource.Error: ${result.message}")
+                is Resource.Loading -> fail("Unexpected Resource.Loading")
+            }
+        }
 
+        //Assert: verify operation
         val getPayment = paymentDao.getPaymentList(10, 0)
         assert(getPayment.size == 1)
     }

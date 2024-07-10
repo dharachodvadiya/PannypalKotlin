@@ -1,5 +1,6 @@
 package com.indie.apps.pannypal.domain.usecase
 
+import android.database.sqlite.SQLiteConstraintException
 import android.net.http.HttpException
 import androidx.compose.ui.unit.Constraints
 import com.indie.apps.pannypal.data.dao.MerchantDataDao
@@ -12,6 +13,7 @@ import com.indie.apps.pannypal.repository.MerchantRepository
 import com.indie.apps.pannypal.repository.UserRepository
 import com.indie.apps.pannypal.util.Constant
 import com.indie.apps.pannypal.util.Resource
+import com.indie.apps.pannypal.util.handleException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -28,22 +30,17 @@ class addMerchantUsecase @Inject constructor(
         return flow{
 
             try {
-                emit(Resource.Loading<Long>())
+                emit(Resource.Loading())
+
                 val id = merchantRepository.insert(merchant)
-
-                if(id >0)
-                {
-                    emit(Resource.Success<Long>(id))
+                if(id >0){
+                    emit(Resource.Success(id))
                 }else{
-                    emit(Resource.Error<Long>("Merchant not add"))
+                    emit(Resource.Error("Fail to add Merchant"))
                 }
 
-
-            } catch(e: Throwable) {
-                when(e) {
-                    is IOException -> emit(Resource.Error<Long>("Network Failure"))
-                    else -> emit(Resource.Error<Long>("Conversion Error"))
-                }
+            } catch (e: Throwable) {
+                emit(Resource.Error(handleException(e).message + ": ${e.message}"))
             }
         }.flowOn(dispatcher)
     }

@@ -14,12 +14,17 @@ import com.indie.apps.pannypal.di.IoDispatcher
 import com.indie.apps.pannypal.repository.MerchantDataRepository
 import com.indie.apps.pannypal.repository.MerchantRepository
 import com.indie.apps.pannypal.repository.UserRepository
+import com.indie.apps.pannypal.util.Resource
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import junit.framework.Assert.assertTrue
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import org.junit.After
+import org.junit.Assert.assertEquals
+import org.junit.Assert.fail
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -68,14 +73,17 @@ class deleteMultipleMerchantDataUsecaseTest {
 
     @Test
     fun delete_multiple_merchantData_update_merchantAmount_update_userAmount_test() = runBlocking {
+        //prepare initial value
         val user = User(id = 1, name = "Test User", currency = "AED")
         val merchant1 = Merchant(id = 1, name = "Merchant A")
         val payment = Payment(id = 1, name = "Debit Card")
 
+        //insert initial value
         userDao.insert(user)
         paymentDao.insert(payment)
         merchantDao.insert(merchant1)
 
+        //prepare sample data
         val merchantData1 = MerchantData(
             merchantId = merchant1.id,
             paymentId = payment.id,
@@ -99,57 +107,42 @@ class deleteMultipleMerchantDataUsecaseTest {
             details = "Sample transaction",
             amount = 50L
         )
-        val result1 = addMerchantDataUsecase(
+
+        //insert sample data
+        addMerchantDataAndAssertResult(merchantData1)
+        addMerchantDataAndAssertResult(merchantData2)
+        addMerchantDataAndAssertResult(merchantData3)
+
+        //collect data
+        val merchantDataList = merchantDataDao.getMerchantDataList(10,0)
+        assert(merchantDataList.size == 3)
+
+        //when
+        val resultFlow = deleteMultipleMerchantDataUsecase(
             merchantDataRepository = merchantDataRepository,
             merchantRepository = merchantRepository,
             userRepository = userRepository,
-            merchantData = merchantData1,
+            merchantsData = merchantDataList,
             dispatcher = coroutineDispatcher
         ).invoke()
 
-        assert(result1.toList().size == 2)
+        // Assert: Collect and verify the result
+        resultFlow.drop(1).collect{ result ->
+            when (result) {
+                is Resource.Success -> assertEquals(3, result.data)
+                is Resource.Error -> fail("Unexpected Resource.Error: ${result.message}")
+                is Resource.Loading -> fail("Unexpected Resource.Loading")
+            }
+        }
 
-        val result2 = addMerchantDataUsecase(
-            merchantDataRepository = merchantDataRepository,
-            merchantRepository = merchantRepository,
-            userRepository = userRepository,
-            merchantData = merchantData2,
-            dispatcher = coroutineDispatcher
-        ).invoke()
-
-        assert(result2.toList().size == 2)
-
-        val result3 = addMerchantDataUsecase(
-            merchantDataRepository = merchantDataRepository,
-            merchantRepository = merchantRepository,
-            userRepository = userRepository,
-            merchantData = merchantData3,
-            dispatcher = coroutineDispatcher
-        ).invoke()
-
-        assert(result3.toList().size == 2)
-
-        val getMerchantsData = merchantDataDao.getMerchantDataList(10, 0)
-        assert(getMerchantsData.size == 3)
-
-        val result4 = deleteMultipleMerchantDataUsecase(
-            merchantDataRepository = merchantDataRepository,
-            merchantRepository = merchantRepository,
-            userRepository = userRepository,
-            merchantsData = getMerchantsData,
-            dispatcher = coroutineDispatcher
-        ).invoke()
-
-        val resList = result4.toList()
-        assert(resList.size == 2)
-        assert(resList[1].data == 3)
-
+        //Assert: Verify Operation with user data
         val getUser = userDao.getUser()
         getUser.run {
             assert(incomeAmount == 0L)
             assert(expenseAmount == 0L)
         }
 
+        //Assert: verify operation with merchant
         val getMerchants = merchantDao.getMerchantList(10, 0)
         assert(getMerchants.size == 1)
         getMerchants[0].run {
@@ -157,6 +150,22 @@ class deleteMultipleMerchantDataUsecaseTest {
             assert(getMerchants[0].expenseAmount == 0L)
         }
 
+    }
+
+    private suspend fun addMerchantDataAndAssertResult(merchantData: MerchantData) {
+        // Act: Add merchant data and assert the result
+        val resultFlow = addMerchantDataUsecase(
+            merchantDataRepository = merchantDataRepository,
+            merchantRepository = merchantRepository,
+            userRepository = userRepository,
+            merchantData = merchantData,
+            dispatcher = coroutineDispatcher
+        ).invoke()
+
+        // Assert: Collect and verify the result
+        resultFlow.drop(1).collect { result ->
+            assertTrue(result is Resource.Success)
+        }
     }
 
 }

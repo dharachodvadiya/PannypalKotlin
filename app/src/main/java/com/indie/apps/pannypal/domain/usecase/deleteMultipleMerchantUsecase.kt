@@ -1,11 +1,13 @@
 package com.indie.apps.pannypal.domain.usecase
 
+import android.database.sqlite.SQLiteConstraintException
 import com.indie.apps.pannypal.data.entity.Merchant
 import com.indie.apps.pannypal.di.IoDispatcher
 import com.indie.apps.pannypal.repository.MerchantDataRepository
 import com.indie.apps.pannypal.repository.MerchantRepository
 import com.indie.apps.pannypal.repository.UserRepository
 import com.indie.apps.pannypal.util.Resource
+import com.indie.apps.pannypal.util.handleException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -24,14 +26,14 @@ class deleteMultipleMerchantUsecase @Inject constructor(
         return flow{
 
             try {
-                emit(Resource.Loading<Int>())
+                emit(Resource.Loading())
                 val ids = merchants.map{
                     it.id
                 }
                 val merchantDeleteCount = merchantRepository.deleteMerchantWithIdList(ids)
 
-                if(merchantDeleteCount == ids.size)
-                {
+                if(merchantDeleteCount == ids.size){
+
                     val (incomeAmt, expenseAmt) = merchants
                         .fold(0L to 0L) { acc, merchant ->
                             val (totalIncome, totalExpense) = acc
@@ -39,27 +41,22 @@ class deleteMultipleMerchantUsecase @Inject constructor(
                         }
 
                     merchantDataRepository.deleteMerchantDataWithMerchantIdList(ids)
-                    val userUpdateCount = userRepository.updateAmount(-incomeAmt, -expenseAmt)
+                    val updatedRowUser = userRepository.updateAmount(-incomeAmt, -expenseAmt)
 
-                    when {
-                        userUpdateCount > 0 -> {
-                            emit(Resource.Success<Int>(merchantDeleteCount))
+                    emit(
+                        when {
+                            updatedRowUser == 1 -> Resource.Success(merchantDeleteCount)
+                            else -> Resource.Error("Fail to update User Amount")
                         }
-                        else -> {
-                            emit(Resource.Error<Int>("User and Merchant Data not updated"))
-                        }
-                    }
+                    )
 
                 }else{
-                    emit(Resource.Error<Int>("Merchant not delete"))
+                    emit(Resource.Error("Fail to delete multiple merchant"))
                 }
 
 
-            } catch(e: Throwable) {
-                when(e) {
-                    is IOException -> emit(Resource.Error<Int>("Network Failure..${e.message}"))
-                    else -> emit(Resource.Error<Int>("Conversion Error..${e.message}"))
-                }
+            } catch (e: Throwable) {
+                emit(Resource.Error(handleException(e).message + ": ${e.message}"))
             }
         }.flowOn(dispatcher)
     }

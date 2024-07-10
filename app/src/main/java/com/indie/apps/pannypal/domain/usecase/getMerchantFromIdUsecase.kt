@@ -12,6 +12,7 @@ import com.indie.apps.pannypal.repository.MerchantDataRepository
 import com.indie.apps.pannypal.repository.MerchantRepository
 import com.indie.apps.pannypal.util.Constant
 import com.indie.apps.pannypal.util.Resource
+import com.indie.apps.pannypal.util.handleException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -27,14 +28,11 @@ class getMerchantFromIdUsecase @Inject constructor(
         return flow{
 
             try {
-                emit(Resource.Loading<Merchant>())
+                emit(Resource.Loading())
                 val merchantFromId = merchantRepository.getMerchantFromId(id)
-                emit(Resource.Success<Merchant>(merchantFromId))
-            } catch(e: Throwable) {
-                when(e) {
-                    is IOException -> emit(Resource.Error<Merchant>("Network Failure"))
-                    else -> emit(Resource.Error<Merchant>("Conversion Error"))
-                }
+                emit(Resource.Success(merchantFromId))
+            }catch (e: Throwable) {
+                emit(Resource.Error(handleException(e).message + ": ${e.message}"))
             }
         }.flowOn(dispatcher)
     }

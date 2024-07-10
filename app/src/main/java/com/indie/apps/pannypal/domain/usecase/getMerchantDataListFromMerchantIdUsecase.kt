@@ -5,6 +5,7 @@ import com.indie.apps.pannypal.di.IoDispatcher
 import com.indie.apps.pannypal.repository.MerchantDataRepository
 import com.indie.apps.pannypal.util.Constant
 import com.indie.apps.pannypal.util.Resource
+import com.indie.apps.pannypal.util.handleException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -20,14 +21,11 @@ class getMerchantDataListFromMerchantIdUsecase @Inject constructor(
         return flow{
 
             try {
-                emit(Resource.Loading<List<MerchantData>>())
+                emit(Resource.Loading())
                 val merchantsDataFromId = merchantDataRepository.getMerchantDataListFromMerchantId(merchantId, Constant.QUERY_PAGE_SIZE,Constant.QUERY_PAGE_SIZE * (page-1))
-                emit(Resource.Success<List<MerchantData>>(merchantsDataFromId))
-            } catch(e: Throwable) {
-                when(e) {
-                    is IOException -> emit(Resource.Error<List<MerchantData>>("Network Failure"))
-                    else -> emit(Resource.Error<List<MerchantData>>("Conversion Error"))
-                }
+                emit(Resource.Success(merchantsDataFromId))
+            } catch (e: Throwable) {
+                emit(Resource.Error(handleException(e).message + ": ${e.message}"))
             }
         }.flowOn(dispatcher)
     }

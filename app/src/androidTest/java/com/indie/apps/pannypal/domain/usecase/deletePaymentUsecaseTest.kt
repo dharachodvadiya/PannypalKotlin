@@ -74,7 +74,7 @@ class deletePaymentUsecaseTest {
 
         resultFlow.drop(1).collect { result ->
             assertTrue(result is Resource.Error)
-            assertEquals("Payment not deleted", (result as Resource.Error).message)
+            assertEquals("Fail to delete payment", (result as Resource.Error).message)
 
             val getPayment = paymentDao.getPaymentList(10, 0)
             assertEquals(1, getPayment.size)

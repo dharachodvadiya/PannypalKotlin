@@ -14,9 +14,11 @@ import com.indie.apps.pannypal.di.IoDispatcher
 import com.indie.apps.pannypal.repository.MerchantDataRepository
 import com.indie.apps.pannypal.repository.MerchantRepository
 import com.indie.apps.pannypal.repository.UserRepository
+import com.indie.apps.pannypal.util.Resource
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import org.junit.After
@@ -53,6 +55,10 @@ class addMerchantDataUsecaseTest {
     private lateinit var merchantDao: MerchantDao
     private lateinit var userDao: UserDao
 
+    private lateinit var user: User
+    private lateinit var merchant: Merchant
+    private lateinit var payment: Payment
+
     @Before
     fun setUp() {
         hiltAndroidRule.inject()
@@ -60,31 +66,40 @@ class addMerchantDataUsecaseTest {
         paymentDao = appDatabase.paymentDao()
         merchantDao = appDatabase.merchantDao()
         userDao = appDatabase.userDao()
+
+        user = User(id = 1, name = "Test User", currency = "AED")
+        merchant = Merchant(id = 1, name = "Merchant A")
+        payment = Payment(id = 1, name = "Debit Card")
+
+        runBlocking {
+        userDao.insert(user)
+        paymentDao.insert(payment)
+        merchantDao.insert(merchant)
+            }
     }
 
     @After
     fun tearDown() {
-        appDatabase.close()
+        runBlocking {
+            appDatabase.clearAllTables()
+            appDatabase.close()
+        }
     }
 
     @Test
     fun add_single_merchantData_update_merchantAmount_update_userAmount_test() = runBlocking {
-        val user = User(id = 1, name = "Test User", currency = "AED")
-        val merchant1 = Merchant(id = 1, name = "Merchant A")
-        val payment = Payment(id = 1, name = "Debit Card")
 
-        userDao.insert(user)
-        paymentDao.insert(payment)
-        merchantDao.insert(merchant1)
-
+        //Arrange Data
         val merchantData = MerchantData(
-            merchantId = merchant1.id,
+            merchantId = merchant.id,
             paymentId = payment.id,
             dateInMilli = System.currentTimeMillis(),
             details = "Sample transaction",
             amount = 100L
         )
-        val result = addMerchantDataUsecase(
+
+        //when
+        val resultFlow = addMerchantDataUsecase(
             merchantDataRepository = merchantDataRepository,
             merchantRepository = merchantRepository,
             userRepository = userRepository,
@@ -92,41 +107,45 @@ class addMerchantDataUsecaseTest {
             dispatcher = coroutineDispatcher
         ).invoke()
 
-        assert(result.toList().size == 2)
+        // Assert: Collect and verify the result
+        resultFlow.drop(1).collect{ result ->
+            when (result) {
+                is Resource.Success -> assertEquals(1L, result.data)
+                is Resource.Error -> fail("Unexpected Resource.Error: ${result.message}")
+                is Resource.Loading -> fail("Unexpected Resource.Loading")
+            }
+        }
 
+        // Assert user's updated amounts
         val getUser = userDao.getUser()
         getUser.run {
             assert(incomeAmount == 100L)
             assert(expenseAmount == 0L)
         }
 
+        // Assert merchant's updated amounts
         val getMerchants = merchantDao.getMerchantList(10, 0)
         assert(getMerchants.size == 1)
         getMerchants[0].run {
             assert(getMerchants[0].incomeAmount == 100L)
             assert(getMerchants[0].expenseAmount == 0L)
         }
-
     }
 
     @Test
     fun add_two_merchantData_update_merchantAmount_update_userAmount_test() = runBlocking {
-        val user = User(id = 1, name = "Test User", currency = "AED")
-        val merchant1 = Merchant(id = 1, name = "Merchant A")
-        val payment = Payment(id = 1, name = "Debit Card")
 
-        userDao.insert(user)
-        paymentDao.insert(payment)
-        merchantDao.insert(merchant1)
-
+        //Arrange data
         val merchantData1 = MerchantData(
-            merchantId = merchant1.id,
+            merchantId = merchant.id,
             paymentId = payment.id,
             dateInMilli = System.currentTimeMillis(),
             details = "Sample transaction",
             amount = 100L
         )
-        val result1 = addMerchantDataUsecase(
+
+        //when add first data
+        val resultFlow1 = addMerchantDataUsecase(
             merchantDataRepository = merchantDataRepository,
             merchantRepository = merchantRepository,
             userRepository = userRepository,
@@ -134,16 +153,25 @@ class addMerchantDataUsecaseTest {
             dispatcher = coroutineDispatcher
         ).invoke()
 
-        assert(result1.toList().size == 2)
+        // Assert: Collect and verify the result
+        resultFlow1.drop(1).collect { result ->
+            when (result) {
+                is Resource.Success -> assertEquals(1L, result.data)
+                is Resource.Error -> fail("Unexpected Resource.Error: ${result.message}")
+                is Resource.Loading -> fail("Unexpected Resource.Loading")
+            }
+        }
 
         val merchantData2 = MerchantData(
-            merchantId = merchant1.id,
+            merchantId = merchant.id,
             paymentId = payment.id,
             dateInMilli = System.currentTimeMillis(),
             details = "Sample transaction",
             amount = -50L
         )
-        val result2 = addMerchantDataUsecase(
+
+        //when add second data
+        val resultFlow2 = addMerchantDataUsecase(
             merchantDataRepository = merchantDataRepository,
             merchantRepository = merchantRepository,
             userRepository = userRepository,
@@ -151,15 +179,23 @@ class addMerchantDataUsecaseTest {
             dispatcher = coroutineDispatcher
         ).invoke()
 
-        assert(result2.toList().size == 2)
+        // Assert: Collect and verify the result
+        resultFlow2.drop(1).collect { result ->
+            when (result) {
+                is Resource.Success -> assertEquals(2L, result.data)
+                is Resource.Error -> fail("Unexpected Resource.Error: ${result.message}")
+                is Resource.Loading -> fail("Unexpected Resource.Loading")
+            }
+        }
 
+        // Assert user's updated amounts
         val getUser = userDao.getUser()
         getUser.run {
             assert(incomeAmount == 100L)
             assert(expenseAmount == 50L)
         }
 
-
+        // Assert merchant's updated amounts
         val getMerchants = merchantDao.getMerchantList(10, 0)
         assert(getMerchants.size == 1)
         getMerchants[0].run {
