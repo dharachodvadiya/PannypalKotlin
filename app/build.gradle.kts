@@ -62,6 +62,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.material:material-icons-extended:1.6.8")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
@@ -88,6 +89,13 @@ dependencies {
     androidTestImplementation("com.google.dagger:hilt-android-testing:$hilt_version")
     kaptAndroidTest("com.google.dagger:hilt-android-compiler:$hilt_version")
     androidTestAnnotationProcessor("com.google.dagger:hilt-android-compiler:$hilt_version")
+
+    val nav_version = "2.7.7"
+    // Testing Navigation
+    androidTestImplementation("androidx.navigation:navigation-testing:$nav_version")
+
+    // Jetpack Compose Integration
+    implementation("androidx.navigation:navigation-compose:$nav_version")
 
 }
 
