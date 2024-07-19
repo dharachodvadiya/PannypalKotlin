@@ -1,6 +1,5 @@
 package com.indie.apps.pannypal.presentation.ui.navigation
 
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -14,9 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,8 +21,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.indie.apps.pannypal.presentation.ui.component.PrimaryLinearGradientsColor
 import com.indie.apps.pannypal.presentation.ui.common.Util
+import com.indie.apps.pannypal.presentation.ui.component.LinearGradientsColor
+import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 
 
@@ -46,7 +43,7 @@ fun BottomNavigationBarCustom(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .background(
-                    brush = PrimaryLinearGradientsColor()
+                    brush = LinearGradientsColor(MyAppTheme.colors.button_gradient_blue)
                 )
         ) {
             tabs.forEach { item ->
@@ -70,7 +67,7 @@ fun BottomNavigationBarCustomItem(
             .border(
                 border = BorderStroke(
                     width = 1.dp,
-                    MaterialTheme.colorScheme.onPrimary
+                    MyAppTheme.colors.white
                 ),
                 shape = RoundedCornerShape(100.dp)
             )
@@ -92,13 +89,13 @@ fun BottomNavigationBarCustomItem(
         Icon(
             imageVector = if(isSelected) item.selectedIcon else item.unSelectedIcon,
             contentDescription = stringResource(item.title),
-            tint = if(isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onPrimary.copy(alpha = Util.InactiveTabOpacity)
+            tint = if(isSelected) MyAppTheme.colors.white else MyAppTheme.colors.inActive_light
         )
         if (isSelected) {
             Spacer(modifier = Modifier.width(5.dp))
             Text(
                 text = stringResource(item.title),
-                color = MaterialTheme.colorScheme.onPrimary)
+                color = MyAppTheme.colors.white)
         }
 
     }
@@ -145,18 +142,18 @@ fun BottomNavigationBarCustom1Item(
         Icon(
             imageVector = if(isSelected) item.selectedIcon else item.unSelectedIcon,
             contentDescription = stringResource(item.title),
-            tint = if(isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline.copy(alpha = Util.InactiveTabOpacity)
+            tint = if(isSelected) MyAppTheme.colors.brand else MyAppTheme.colors.inActive_dark
         )
         if (isSelected) {
             Spacer(modifier = Modifier.width(5.dp))
             Text(
                 text = stringResource(item.title),
-                color = MaterialTheme.colorScheme.primary)
+                color = MyAppTheme.colors.brand)
         }
 
     }
 }
-
+/*
 @Preview("dark theme", uiMode = UI_MODE_NIGHT_YES)
 @Composable
 private fun BottomNavPreviewDarkModeCustom() {
@@ -167,7 +164,7 @@ private fun BottomNavPreviewDarkModeCustom() {
             currentTab = BottomNavItem.OVERVIEW
         )
     }
-}
+}*/
 
 @Preview()
 @Composable
@@ -180,7 +177,7 @@ private fun BottomNavPreviewCustom() {
         )
     }
 }
-
+/*
 @Preview("dark theme", uiMode = UI_MODE_NIGHT_YES)
 @Composable
 private fun BottomNavPreviewDarkModeCustom1() {
@@ -191,7 +188,7 @@ private fun BottomNavPreviewDarkModeCustom1() {
             currentTab = BottomNavItem.OVERVIEW
         )
     }
-}
+}*/
 
 @Preview()
 @Composable

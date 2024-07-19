@@ -16,6 +16,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.indie.apps.pannypal.presentation.ui.navigation.BottomNavItem
 import com.indie.apps.pannypal.presentation.ui.navigation.BottomNavigationBarCustom
+import com.indie.apps.pannypal.presentation.ui.navigation.BottomNavigationBarCustom1
 import com.indie.apps.pannypal.presentation.ui.route.MerchantRoute
 import com.indie.apps.pannypal.presentation.ui.route.OverViewRoute
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
