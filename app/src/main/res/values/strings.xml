@@ -2,4 +2,5 @@
     <string name="app_name">PannyPal</string>
     <string name="overview">OverView</string>
     <string name="merchants">Merchants</string>
+    <string name="new_entry">New Entry</string>
 </resources>

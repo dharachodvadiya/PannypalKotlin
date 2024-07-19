@@ -17,6 +17,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
+@Immutable
+data class ExtendedColorScheme(
+    val income: ColorFamily,
+    val expense: ColorFamily,
+)
+
 private val lightScheme = lightColorScheme(
     primary = primaryLight,
     onPrimary = onPrimaryLight,
@@ -77,6 +83,48 @@ private val darkScheme = darkColorScheme(
     inverseSurface = inverseSurfaceDark,
     inverseOnSurface = inverseOnSurfaceDark,
     inversePrimary = inversePrimaryDark
+)
+
+val extendedLight = ExtendedColorScheme(
+    income = ColorFamily(
+        incomeLight,
+        onIncomeLight,
+        incomeContainerLight,
+        onIncomeContainerLight,
+    ),
+    expense = ColorFamily(
+        expenseLight,
+        onExpenseLight,
+        expenseContainerLight,
+        onExpenseContainerLight,
+    ),
+)
+
+val extendedDark = ExtendedColorScheme(
+    income = ColorFamily(
+        incomeDark,
+        onIncomeDark,
+        incomeContainerDark,
+        onIncomeContainerDark,
+    ),
+    expense = ColorFamily(
+        expenseDark,
+        onExpenseDark,
+        expenseContainerDark,
+        onExpenseContainerDark,
+    ),
+)
+
+@Immutable
+data class ColorFamily(
+    val color: Color,
+    val onColor: Color,
+    val colorContainer: Color,
+    val onColorContainer: Color
+)
+
+val unspecified_scheme = ColorFamily(
+    Color.Unspecified, Color.Unspecified, Color.Unspecified, Color.Unspecified
 )
 
 @Composable

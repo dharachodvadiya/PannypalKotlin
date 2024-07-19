@@ -1,23 +1,23 @@
 package com.indie.apps.pannypal.presentation
 
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.indie.apps.pannypal.presentation.ui.navigation.BottomNavItem
-import com.indie.apps.pannypal.presentation.ui.navigation.BottomNavigationBar
+import com.indie.apps.pannypal.presentation.ui.navigation.BottomNavigationBarCustom
+import com.indie.apps.pannypal.presentation.ui.route.MerchantRoute
+import com.indie.apps.pannypal.presentation.ui.route.OverViewRoute
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -43,7 +43,7 @@ fun PannyPalApp() {
 
         Scaffold(
             bottomBar = {
-                BottomNavigationBar(
+                BottomNavigationBarCustom(
                     tabs = BottomNavItem.values(),
                     onTabSelected = { newScreen ->
                         navController.navigate(newScreen.route) {
@@ -63,26 +63,31 @@ fun PannyPalApp() {
                 modifier = Modifier.padding(innerPadding)
             ) {
                 composable(route = BottomNavItem.OVERVIEW.route) {
-
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center)
-                    {
-                        Text(text = "OverView Screen")
-                    }
-
+                    OverViewRoute()
                 }
                 composable(route = BottomNavItem.MERCHANTS.route) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center)
-                    {
-                        Text(text = "Merchant Screen")
-                    }
+                    MerchantRoute()
                 }
             }
 
         }
+    }
+}
+
+
+@Preview("dark theme", uiMode = UI_MODE_NIGHT_YES)
+@Composable
+private fun MainscreenPreviewDarkMode() {
+    PannyPalTheme {
+        PannyPalApp()
+    }
+}
+
+@Preview()
+@Composable
+private fun MainscreenPreview() {
+    PannyPalTheme {
+        PannyPalApp()
     }
 }
 

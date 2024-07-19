@@ -1,11 +1,18 @@
 package com.indie.apps.pannypal.presentation.ui.navigation
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -18,61 +25,143 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.indie.apps.pannypal.presentation.ui.component.PrimaryLinearGradientsColor
+import com.indie.apps.pannypal.presentation.ui.common.Util
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 
 
 @Composable
-fun BottomNavigationBar(
+fun BottomNavigationBarCustom(
     tabs: Array<BottomNavItem>,
     onTabSelected: (BottomNavItem) -> Unit,
     currentTab: BottomNavItem
 ) {
     Surface(
         modifier = Modifier
-            .height(BottomNavHeight)
+            .height(Util.BottomNavHeight)
             .fillMaxWidth()
     ){
-        NavigationBar() {
+        Row(
+            horizontalArrangement = Arrangement.Absolute.SpaceAround,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .background(
+                    brush = PrimaryLinearGradientsColor()
+                )
+        ) {
             tabs.forEach { item ->
 
-                val isSelected = currentTab == item
-                NavigationBarItem(
-                    selected = isSelected,
-                    onClick = {
-                        onTabSelected(item)
-                    },
-                    icon = {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(
-                                imageVector = item.icon,
-                                contentDescription = stringResource(item.title)
-                            )
-                            if (isSelected) {
-                                Spacer(modifier = Modifier.width(5.dp))
-                                Text(text = stringResource(item.title))
-                            }
-
-                        }
-
-                    }
-
-                )
+                BottomNavigationBarCustomItem(item, onTabSelected, currentTab)
             }
         }
     }
 }
 
-private val BottomNavHeight = 56.dp
-private const val InactiveTabOpacity = 0.60f
+@Composable
+fun BottomNavigationBarCustomItem(
+    item: BottomNavItem,
+    onTabSelected: (BottomNavItem) -> Unit,
+    currentTab: BottomNavItem
+){
 
+    val isSelected = currentTab == item
+    val borderModifier = if (isSelected){
+        Modifier
+            .border(
+                border = BorderStroke(
+                    width = 1.dp,
+                    MaterialTheme.colorScheme.onPrimary
+                ),
+                shape = RoundedCornerShape(100.dp)
+            )
+            .padding(
+                horizontal = Util.BottomNavButtonHorizontalPadding,
+                vertical = Util.BottomNavButtonVerticalPadding)
+    }
+    else{
+        Modifier
+    }
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = borderModifier
+            .clickable {
+                onTabSelected(item)
+            }
+    ) {
+        Icon(
+            imageVector = if(isSelected) item.selectedIcon else item.unSelectedIcon,
+            contentDescription = stringResource(item.title),
+            tint = if(isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onPrimary.copy(alpha = Util.InactiveTabOpacity)
+        )
+        if (isSelected) {
+            Spacer(modifier = Modifier.width(5.dp))
+            Text(
+                text = stringResource(item.title),
+                color = MaterialTheme.colorScheme.onPrimary)
+        }
+
+    }
+}
+
+@Composable
+fun BottomNavigationBarCustom1(
+    tabs: Array<BottomNavItem>,
+    onTabSelected: (BottomNavItem) -> Unit,
+    currentTab: BottomNavItem
+) {
+    Surface(
+        modifier = Modifier
+            .height(Util.BottomNavHeight)
+            .fillMaxWidth()
+    ){
+        Row(
+            horizontalArrangement = Arrangement.Absolute.SpaceAround,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            tabs.forEach { item ->
+
+                BottomNavigationBarCustom1Item(item, onTabSelected, currentTab)
+            }
+        }
+    }
+}
+
+@Composable
+fun BottomNavigationBarCustom1Item(
+    item: BottomNavItem,
+    onTabSelected: (BottomNavItem) -> Unit,
+    currentTab: BottomNavItem
+){
+    val isSelected = currentTab == item
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .clickable {
+                onTabSelected(item)
+            }
+    ) {
+        Icon(
+            imageVector = if(isSelected) item.selectedIcon else item.unSelectedIcon,
+            contentDescription = stringResource(item.title),
+            tint = if(isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline.copy(alpha = Util.InactiveTabOpacity)
+        )
+        if (isSelected) {
+            Spacer(modifier = Modifier.width(5.dp))
+            Text(
+                text = stringResource(item.title),
+                color = MaterialTheme.colorScheme.primary)
+        }
+
+    }
+}
 
 @Preview("dark theme", uiMode = UI_MODE_NIGHT_YES)
 @Composable
-private fun BottomNavPreviewDarkMode() {
+private fun BottomNavPreviewDarkModeCustom() {
     PannyPalTheme {
-        BottomNavigationBar(
+        BottomNavigationBarCustom(
             tabs = BottomNavItem.values(),
             onTabSelected = {},
             currentTab = BottomNavItem.OVERVIEW
@@ -80,10 +169,35 @@ private fun BottomNavPreviewDarkMode() {
     }
 }
 
+@Preview()
 @Composable
-private fun BottomNavPreview() {
+private fun BottomNavPreviewCustom() {
     PannyPalTheme {
-        BottomNavigationBar(
+        BottomNavigationBarCustom(
+            tabs = BottomNavItem.values(),
+            onTabSelected = {},
+            currentTab = BottomNavItem.OVERVIEW
+        )
+    }
+}
+
+@Preview("dark theme", uiMode = UI_MODE_NIGHT_YES)
+@Composable
+private fun BottomNavPreviewDarkModeCustom1() {
+    PannyPalTheme {
+        BottomNavigationBarCustom1(
+            tabs = BottomNavItem.values(),
+            onTabSelected = {},
+            currentTab = BottomNavItem.OVERVIEW
+        )
+    }
+}
+
+@Preview()
+@Composable
+private fun BottomNavPreviewCustom1() {
+    PannyPalTheme {
+        BottomNavigationBarCustom1(
             tabs = BottomNavItem.values(),
             onTabSelected = {},
             currentTab = BottomNavItem.OVERVIEW
