@@ -1,5 +1,6 @@
 package com.indie.apps.pannypal.presentation.ui.navigation
 
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,10 +30,9 @@ fun BottomNavigationBar(
     Surface(
         modifier = Modifier
             .height(BottomNavHeight)
-            .fillMaxWidth(),
-        color = MaterialTheme.colorScheme.primary
+            .fillMaxWidth()
     ){
-        NavigationBar {
+        NavigationBar() {
             tabs.forEach { item ->
 
                 val isSelected = currentTab == item
@@ -67,7 +67,19 @@ fun BottomNavigationBar(
 private val BottomNavHeight = 56.dp
 private const val InactiveTabOpacity = 0.60f
 
-@Preview
+
+@Preview("dark theme", uiMode = UI_MODE_NIGHT_YES)
+@Composable
+private fun BottomNavPreviewDarkMode() {
+    PannyPalTheme {
+        BottomNavigationBar(
+            tabs = BottomNavItem.values(),
+            onTabSelected = {},
+            currentTab = BottomNavItem.OVERVIEW
+        )
+    }
+}
+
 @Composable
 private fun BottomNavPreview() {
     PannyPalTheme {
