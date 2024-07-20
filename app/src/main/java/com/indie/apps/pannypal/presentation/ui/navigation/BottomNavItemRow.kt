@@ -95,7 +95,8 @@ fun BottomNavigationBarCustomItem(
             Spacer(modifier = Modifier.width(5.dp))
             Text(
                 text = stringResource(item.title),
-                color = MyAppTheme.colors.white)
+                color = MyAppTheme.colors.white,
+                style = MyAppTheme.typography.Medium45_29)
         }
 
     }
@@ -148,7 +149,8 @@ fun BottomNavigationBarCustom1Item(
             Spacer(modifier = Modifier.width(5.dp))
             Text(
                 text = stringResource(item.title),
-                color = MyAppTheme.colors.brand)
+                color = MyAppTheme.colors.brand,
+                style = MyAppTheme.typography.Medium45_29)
         }
 
     }
@@ -166,7 +168,7 @@ private fun BottomNavPreviewDarkModeCustom() {
     }
 }*/
 
-@Preview()
+@Preview
 @Composable
 private fun BottomNavPreviewCustom() {
     PannyPalTheme {
@@ -190,7 +192,7 @@ private fun BottomNavPreviewDarkModeCustom1() {
     }
 }*/
 
-@Preview()
+@Preview
 @Composable
 private fun BottomNavPreviewCustom1() {
     PannyPalTheme {

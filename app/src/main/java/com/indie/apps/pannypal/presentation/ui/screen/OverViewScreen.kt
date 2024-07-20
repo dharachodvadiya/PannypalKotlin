@@ -16,6 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pannypal.R
 import com.indie.apps.pannypal.presentation.ui.component.PrimaryButton
+import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
 
 @Composable
 fun OverViewScreen() {
@@ -44,7 +45,8 @@ fun AppFloatingButton(onClick : () -> Unit)
                 contentDescription = "New Entry")
             Spacer(modifier = Modifier.width(5.dp))
             Text(
-                text = stringResource(R.string.new_entry)
+                text = stringResource(R.string.new_entry),
+                style = MyAppTheme.typography.Medium45_29
             )
         }
     }

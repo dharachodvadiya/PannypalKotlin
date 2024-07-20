@@ -1,19 +1,15 @@
 package com.indie.apps.pannypal.presentation.ui.theme
 
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 
 private val lightScheme = MyAppColors(
     button_gradient_blue = listOf(
@@ -85,6 +81,7 @@ private val darkScheme = MyAppColors(
 
 @Composable
 fun PannyPalTheme(
+    dpi : Float = 1f,
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
@@ -108,23 +105,51 @@ fun PannyPalTheme(
 
     val colors = if (darkTheme) darkScheme else lightScheme
 
-    ProvideMyAppColors(colors) {
+    ProvideMyAppTheme(
+        colors = colors,
+        typography = myAppTypography) {
         MaterialTheme(
             colorScheme = debugColors(darkTheme),
-            typography = AppTypography,
+            typography = typography,
             content = content
         )
     }
 }
 
+@Composable
+fun ProvideMyAppTheme(
+    colors: MyAppColors,
+    typography: MyAppTypography,
+    content: @Composable () -> Unit
+) {
+    CompositionLocalProvider(
+        LocalMyAppColors provides colors,
+        LocalMyAppTypography provides typography,
+        content = content)
+}
+
+
+
+
 object MyAppTheme {
     val colors: MyAppColors
         @Composable
         get() = LocalMyAppColors.current
+    val typography: MyAppTypography
+        @Composable
+        get() = LocalMyAppTypography.current
+}
+
+private val LocalMyAppColors = staticCompositionLocalOf<MyAppColors> {
+    error("No Pannypal ColorPalette provided")
+}
+
+private val LocalMyAppTypography = staticCompositionLocalOf<MyAppTypography> {
+    error("No Pannypal Typography provided")
 }
 
 /**
- * Jetsnack custom Color Palette
+ * Pannypal custom Color Palette
  */
 @Immutable
 data class MyAppColors(
@@ -158,18 +183,6 @@ data class MyAppColors(
 
     val isDark: Boolean
 )
-
-@Composable
-fun ProvideMyAppColors(
-    colors: MyAppColors,
-    content: @Composable () -> Unit
-) {
-    CompositionLocalProvider(LocalMyAppColors provides colors, content = content)
-}
-
-private val LocalMyAppColors = staticCompositionLocalOf<MyAppColors> {
-    error("No JetsnackColorPalette provided")
-}
 
 private val DarkColorScheme = darkColorScheme(
     primary = Blue.blue500.color
