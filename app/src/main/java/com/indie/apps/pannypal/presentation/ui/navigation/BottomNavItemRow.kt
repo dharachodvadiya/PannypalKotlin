@@ -31,10 +31,11 @@ import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 fun BottomNavigationBarCustom(
     tabs: Array<BottomNavItem>,
     onTabSelected: (BottomNavItem) -> Unit,
-    currentTab: BottomNavItem
+    currentTab: BottomNavItem,
+    modifier: Modifier = Modifier
 ) {
     Surface(
-        modifier = Modifier
+        modifier = modifier
             .height(Util.BottomNavHeight)
             .fillMaxWidth()
     ){
@@ -58,12 +59,13 @@ fun BottomNavigationBarCustom(
 fun BottomNavigationBarCustomItem(
     item: BottomNavItem,
     onTabSelected: (BottomNavItem) -> Unit,
-    currentTab: BottomNavItem
+    currentTab: BottomNavItem,
+    modifier: Modifier = Modifier
 ){
 
     val isSelected = currentTab == item
-    val borderModifier = if (isSelected){
-        Modifier
+    if (isSelected){
+        modifier
             .border(
                 border = BorderStroke(
                     width = 1.dp,
@@ -75,13 +77,10 @@ fun BottomNavigationBarCustomItem(
                 horizontal = Util.BottomNavButtonHorizontalPadding,
                 vertical = Util.BottomNavButtonVerticalPadding)
     }
-    else{
-        Modifier
-    }
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = borderModifier
+        modifier = modifier
             .clickable {
                 onTabSelected(item)
             }
@@ -106,10 +105,11 @@ fun BottomNavigationBarCustomItem(
 fun BottomNavigationBarCustom1(
     tabs: Array<BottomNavItem>,
     onTabSelected: (BottomNavItem) -> Unit,
-    currentTab: BottomNavItem
+    currentTab: BottomNavItem,
+    modifier: Modifier = Modifier
 ) {
     Surface(
-        modifier = Modifier
+        modifier = modifier
             .height(Util.BottomNavHeight)
             .fillMaxWidth()
     ){
@@ -129,13 +129,14 @@ fun BottomNavigationBarCustom1(
 fun BottomNavigationBarCustom1Item(
     item: BottomNavItem,
     onTabSelected: (BottomNavItem) -> Unit,
-    currentTab: BottomNavItem
+    currentTab: BottomNavItem,
+    modifier: Modifier = Modifier
 ){
     val isSelected = currentTab == item
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
+        modifier = modifier
             .clickable {
                 onTabSelected(item)
             }

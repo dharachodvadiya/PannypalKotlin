@@ -5,5 +5,5 @@ import com.indie.apps.pannypal.presentation.ui.screen.OverViewScreen
 
 @Composable
 fun OverViewRoute() {
-    OverViewScreen()
+    OverViewScreen(onNewEntry = {})
 }

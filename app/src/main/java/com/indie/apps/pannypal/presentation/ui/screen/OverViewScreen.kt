@@ -1,5 +1,6 @@
 package com.indie.apps.pannypal.presentation.ui.screen
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -18,24 +20,28 @@ import com.indie.apps.pannypal.R
 import com.indie.apps.pannypal.presentation.ui.component.PrimaryButton
 import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun OverViewScreen() {
+fun OverViewScreen(
+    onNewEntry : () -> Unit,
+    modifier: Modifier = Modifier) {
+    Scaffold(
+        floatingActionButton = {
+            AppFloatingButton(onClick = onNewEntry)
+        }
+    ){
 
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center)
-    {
-        Text(text = "OverView Screen")
     }
-    AppFloatingButton({})
 }
 
-
 @Composable
-fun AppFloatingButton(onClick : () -> Unit)
-{
+fun AppFloatingButton(
+    onClick : () -> Unit,
+    modifier: Modifier = Modifier
+){
     PrimaryButton(
-        onClick = onClick
+        onClick = onClick,
+        modifier = modifier
     ){
         Row(
             verticalAlignment = Alignment.CenterVertically
