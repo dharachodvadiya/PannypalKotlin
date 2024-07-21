@@ -1,79 +1,96 @@
 package com.indie.apps.pannypal.presentation.ui.component
 
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material.icons.filled.SouthWest
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldColors
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.graphics.takeOrElse
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pannypal.R
+import com.indie.apps.pannypal.presentation.ui.common.Util
+import com.indie.apps.pannypal.presentation.ui.component.custom.composable.ListItem
+import com.indie.apps.pannypal.presentation.ui.component.custom.composable.RoundImage
 import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 
 @Composable
-fun PrimaryButton(
+fun OverviewListItem(
     onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    content: @Composable RowScope.() -> Unit
+    modifier: Modifier = Modifier.fillMaxWidth(),
+    isDateShow: Boolean = false
 ) {
-    Surface(
-        onClick = onClick,
-        modifier = modifier
-            .semantics { role = Role.Button },
-        shape = RoundedCornerShape(dimensionResource(R.dimen.round_corner)),
-        contentColor = MyAppTheme.colors.white
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .background(brush = LinearGradientsColor(MyAppTheme.colors.gradientBlue))
-                .padding(
-                    horizontal = dimensionResource(R.dimen.button_horizontal_padding),
-                    vertical = dimensionResource(R.dimen.button_item_vertical_padding)
-                ),
-            content = content
+    Column(modifier = modifier.background(MyAppTheme.colors.white)) {
+        if (isDateShow) {
+            // TODO: change total color based on amount sum
+            val totalTextColor = MyAppTheme.colors.redBg
+
+            Text(
+                text = "Day",
+                style = MyAppTheme.typography.Semibold45,
+                color = MyAppTheme.colors.gray2
+            )
+            Text(
+                text = Util.getFormattedStringWithSymbole(0.0),
+                style = MyAppTheme.typography.Semibold52_5,
+                color = totalTextColor,
+                modifier = Modifier.padding(vertical = 5.dp)
+            )
+        }
+
+        // TODO: change Round Image Icon and bg color based on amount
+        val imageVector = Icons.Default.SouthWest
+        val bgColor = MyAppTheme.colors.redBg
+
+        ListItem(
+            onClick = onClick,
+            leadingIcon = {
+                RoundImage(
+                    imageVector = imageVector,
+                    tint = MyAppTheme.colors.white,
+                    backGround = bgColor,
+                    contentDescription = "person"
+                )
+            },
+            content = {
+                Column {
+                    Text(
+                        text = "Name",
+                        style = MyAppTheme.typography.Bold52_5,
+                        color = MyAppTheme.colors.black
+                    )
+                    Text(
+                        text = "Description",
+                        style = MyAppTheme.typography.Medium33,
+                        color = MyAppTheme.colors.gray2
+                    )
+                }
+            },
+            trailingContent = {
+                Text(
+                    text = Util.getFormattedStringWithSymbole(0.0),
+                    style = MyAppTheme.typography.Bold52_5,
+                    color = MyAppTheme.colors.black
+                )
+            },
+            isSetDivider = true
         )
     }
 
@@ -114,88 +131,6 @@ fun TopBarProfile(
     }
 }
 
-@Composable
-fun RoundImage(
-    imageVector: ImageVector,
-    tint: Color,
-    backGround: Color,
-    contentDescription: String,
-    modifier: Modifier = Modifier.size(dimensionResource(id = R.dimen.item_image))
-) {
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = modifier
-            .background(
-                color = backGround,
-                shape = CircleShape
-            )
-    ) {
-        Icon(
-            imageVector = imageVector,
-            contentDescription = contentDescription,
-            tint = tint
-        )
-    }
-}
-
-@Preview("dark theme", uiMode = UI_MODE_NIGHT_YES)
-@Composable
-private fun PrimaryButtonPreviewDarkMode() {
-    PannyPalTheme {
-        PrimaryButton(
-            onClick = {}
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "test"
-                )
-                Spacer(modifier = Modifier.width(5.dp))
-                Text(
-                    text = "test"
-                )
-            }
-        }
-    }
-}
-
-@Preview()
-@Composable
-private fun PrimaryButtonPreview() {
-    PannyPalTheme {
-        PrimaryButton(
-            onClick = {}
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "test"
-                )
-                Spacer(modifier = Modifier.width(5.dp))
-                Text(
-                    text = "test"
-                )
-            }
-        }
-    }
-}
-
-@Preview()
-@Composable
-private fun RoundImagePreview() {
-    PannyPalTheme {
-        RoundImage(
-            imageVector = Icons.Filled.Person,
-            tint = MyAppTheme.colors.white,
-            backGround = MyAppTheme.colors.brandBg,
-            contentDescription = "person"
-        )
-    }
-}
 
 @Preview(showBackground = true)
 @Composable
@@ -205,3 +140,10 @@ private fun TopbarProfilePreview() {
     }
 }
 
+@Preview
+@Composable
+private fun OverviewListItemPreview() {
+    PannyPalTheme {
+        OverviewListItem({})
+    }
+}

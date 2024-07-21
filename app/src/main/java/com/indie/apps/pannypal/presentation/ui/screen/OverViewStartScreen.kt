@@ -44,9 +44,9 @@ import androidx.compose.ui.unit.dp
 import com.indie.apps.pannypal.R
 import com.indie.apps.pannypal.presentation.ui.common.Util
 import com.indie.apps.pannypal.presentation.ui.component.OverviewListItem
-import com.indie.apps.pannypal.presentation.ui.component.PrimaryButton
 import com.indie.apps.pannypal.presentation.ui.component.TopBarProfile
 import com.indie.apps.pannypal.presentation.ui.component.VerticalGradientsColor
+import com.indie.apps.pannypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 
@@ -219,7 +219,7 @@ fun OverviewList(
         items(10) { index ->
 
             OverviewListItem(
-                onClick = { /*TODO*/ },
+                onClick = {},
                 isDateShow = (index % 3 == 0)
             )
         }
