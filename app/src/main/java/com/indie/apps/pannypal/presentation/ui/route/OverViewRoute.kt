@@ -5,5 +5,7 @@ import com.indie.apps.pannypal.presentation.ui.screen.OverViewScreen
 
 @Composable
 fun OverViewRoute() {
-    OverViewScreen(onNewEntry = {})
+    OverViewScreen(
+        onNewEntry = {},
+        onProfileClick = {})
 }

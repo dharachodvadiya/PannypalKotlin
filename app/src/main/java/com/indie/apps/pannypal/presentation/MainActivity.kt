@@ -37,7 +37,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun PannyPalApp() {
 
-    PannyPalTheme {
+    PannyPalTheme() {
         val navController = rememberNavController()
         val currentBackStack by navController.currentBackStackEntryAsState()
         val currentDestination = currentBackStack?.destination
@@ -74,15 +74,6 @@ fun PannyPalApp() {
             }
 
         }
-    }
-}
-
-
-@Preview("dark theme", uiMode = UI_MODE_NIGHT_YES)
-@Composable
-private fun MainscreenPreviewDarkMode() {
-    PannyPalTheme {
-        PannyPalApp()
     }
 }
 

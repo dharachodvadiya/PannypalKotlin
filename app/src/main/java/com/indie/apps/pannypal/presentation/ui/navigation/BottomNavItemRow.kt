@@ -18,10 +18,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.indie.apps.pannypal.presentation.ui.common.Util
+import com.indie.apps.pannypal.R
 import com.indie.apps.pannypal.presentation.ui.component.LinearGradientsColor
 import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
@@ -36,7 +40,7 @@ fun BottomNavigationBarCustom(
 ) {
     Surface(
         modifier = modifier
-            .height(Util.BottomNavHeight)
+            .height(dimensionResource(R.dimen.bottom_bar))
             .fillMaxWidth()
     ){
         Row(
@@ -44,7 +48,7 @@ fun BottomNavigationBarCustom(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .background(
-                    brush = LinearGradientsColor(MyAppTheme.colors.button_gradient_blue)
+                    brush = LinearGradientsColor(MyAppTheme.colors.gradientBlue)
                 )
         ) {
             tabs.forEach { item ->
@@ -62,42 +66,52 @@ fun BottomNavigationBarCustomItem(
     currentTab: BottomNavItem,
     modifier: Modifier = Modifier
 ){
-
-    val isSelected = currentTab == item
-    if (isSelected){
-        modifier
-            .border(
-                border = BorderStroke(
-                    width = 1.dp,
-                    MyAppTheme.colors.white
-                ),
-                shape = RoundedCornerShape(100.dp)
-            )
-            .padding(
-                horizontal = Util.BottomNavButtonHorizontalPadding,
-                vertical = Util.BottomNavButtonVerticalPadding)
-    }
-
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
+    Surface(
+        onClick = {
+            onTabSelected(item)
+        },
         modifier = modifier
-            .clickable {
-                onTabSelected(item)
-            }
-    ) {
-        Icon(
-            imageVector = if(isSelected) item.selectedIcon else item.unSelectedIcon,
-            contentDescription = stringResource(item.title),
-            tint = if(isSelected) MyAppTheme.colors.white else MyAppTheme.colors.inActive_light
-        )
-        if (isSelected) {
-            Spacer(modifier = Modifier.width(5.dp))
-            Text(
-                text = stringResource(item.title),
-                color = MyAppTheme.colors.white,
-                style = MyAppTheme.typography.Medium45_29)
+            .semantics { role = Role.Button },
+        shape = RoundedCornerShape(100.dp),
+        color = MyAppTheme.colors.transparent
+    ){
+        val isSelected = currentTab == item
+        val borderModifier = if (isSelected) {
+            Modifier
+                .border(
+                    BorderStroke(
+                        width = 1.dp,
+                        color = MyAppTheme.colors.white
+                    ),
+                    shape = RoundedCornerShape(100.dp)
+                )
+                .padding(
+                    horizontal = dimensionResource(R.dimen.bottom_bar_item_horizontal_padding),
+                    vertical = dimensionResource(R.dimen.bottom_bar_item_vertical_padding)
+                )
+        } else {
+            Modifier
         }
 
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = borderModifier
+
+        ) {
+            Icon(
+                imageVector = if(isSelected) item.selectedIcon else item.unSelectedIcon,
+                contentDescription = stringResource(item.title),
+                tint = if(isSelected) MyAppTheme.colors.white else MyAppTheme.colors.inactiveLight
+            )
+            if (isSelected) {
+                Spacer(modifier = Modifier.width(5.dp))
+                Text(
+                    text = stringResource(item.title),
+                    color = MyAppTheme.colors.white,
+                    style = MyAppTheme.typography.Medium45_29)
+            }
+
+        }
     }
 }
 
@@ -110,7 +124,7 @@ fun BottomNavigationBarCustom1(
 ) {
     Surface(
         modifier = modifier
-            .height(Util.BottomNavHeight)
+            .height(dimensionResource(R.dimen.bottom_bar))
             .fillMaxWidth()
     ){
         Row(
@@ -132,29 +146,36 @@ fun BottomNavigationBarCustom1Item(
     currentTab: BottomNavItem,
     modifier: Modifier = Modifier
 ){
-    val isSelected = currentTab == item
-
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
+    Surface(
+        onClick = {
+            onTabSelected(item)
+        },
         modifier = modifier
-            .clickable {
-                onTabSelected(item)
-            }
-    ) {
-        Icon(
-            imageVector = if(isSelected) item.selectedIcon else item.unSelectedIcon,
-            contentDescription = stringResource(item.title),
-            tint = if(isSelected) MyAppTheme.colors.brand else MyAppTheme.colors.inActive_dark
-        )
-        if (isSelected) {
-            Spacer(modifier = Modifier.width(5.dp))
-            Text(
-                text = stringResource(item.title),
-                color = MyAppTheme.colors.brand,
-                style = MyAppTheme.typography.Medium45_29)
-        }
+            .semantics { role = Role.Button },
+        shape = RoundedCornerShape(100.dp),
+        contentColor = MyAppTheme.colors.white
+    ){
+        val isSelected = currentTab == item
 
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Icon(
+                imageVector = if(isSelected) item.selectedIcon else item.unSelectedIcon,
+                contentDescription = stringResource(item.title),
+                tint = if(isSelected) MyAppTheme.colors.brand else MyAppTheme.colors.inactiveDark
+            )
+            if (isSelected) {
+                Spacer(modifier = Modifier.width(5.dp))
+                Text(
+                    text = stringResource(item.title),
+                    color = MyAppTheme.colors.brand,
+                    style = MyAppTheme.typography.Medium45_29)
+            }
+
+        }
     }
+
 }
 /*
 @Preview("dark theme", uiMode = UI_MODE_NIGHT_YES)

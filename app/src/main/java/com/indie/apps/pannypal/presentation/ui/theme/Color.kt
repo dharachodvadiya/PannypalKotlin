@@ -84,7 +84,7 @@ enum class Neutral(val color: Color) {
     Neutral0(Color(0xffffffff)),
     Neutral1(Color(0xbdffffff)),
     Neutral2(Color(0x61ffffff)),
-    Neutral3(Color(0x1fffffff)),
+    Neutral3(Color(0x0D000000)),
     Neutral4(Color(0x1f000000)),
     Neutral5(Color(0x61000000)),
     Neutral6(Color(0x99000000)),

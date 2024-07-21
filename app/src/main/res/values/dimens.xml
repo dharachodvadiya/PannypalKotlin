@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="top_bar">64dp</dimen>
+    <dimen name="bottom_bar">56dp</dimen>
+
+    <dimen name="bottom_bar_item_horizontal_padding">20dp</dimen>
+    <dimen name="bottom_bar_item_vertical_padding">6dp</dimen>
+
+    <dimen name="top_bar_profile">45dp</dimen>
+    <dimen name="padding">15dp</dimen>
+
+    <dimen name="item_image">40dp</dimen>
+    <dimen name="item_content_padding">15dp</dimen>
+
+    <dimen name="button_horizontal_padding">24dp</dimen>
+    <dimen name="button_item_vertical_padding">8dp</dimen>
+
+    <dimen name="round_corner">7dp</dimen>
+    <dimen name="shadow_elevation">5dp</dimen>
+</resources>

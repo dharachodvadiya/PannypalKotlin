@@ -13,3 +13,9 @@ fun LinearGradientsColor(colors : List<Color>) : Brush{
         end = Offset(Float.POSITIVE_INFINITY, 30f)
     )
 }
+
+fun VerticalGradientsColor(colors : List<Color>) : Brush{
+    return Brush.verticalGradient(
+        colors
+    )
+}

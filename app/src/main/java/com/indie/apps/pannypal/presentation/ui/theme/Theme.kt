@@ -12,76 +12,79 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
 private val lightScheme = MyAppColors(
-    button_gradient_blue = listOf(
+    gradientBlue = listOf(
         Blue.blue500.color,
         Ocen.ocen500.color
     ),
-    bg_gradient_green = listOf(
-        Green.green500.color,
+    gradientGreen = listOf(
+        Green.green50.color,
         Neutral.Neutral0.color
     ),
-    bg_gradient_red = listOf(
-        Red.red500.color,
+    gradientRed = listOf(
+        Red.red50.color,
         Neutral.Neutral0.color
     ),
     brand = Blue.blue500.color,
-    red_bg_light = Red.red100.color,
-    red_bg = Red.red500.color,
-    red_text = Red.red500.color,
-    green_bg_light = Green.green100.color,
-    green_bg = Green.green500.color,
-    green_text = Green.green500.color,
-    brand_bg = Blue.blue100.color,
+    redBgLight = Red.red100.color,
+    redBg = Red.red500.color,
+    redText = Red.red500.color,
+    greenBgLight = Green.green100.color,
+    greenBg = Green.green500.color,
+    greenText = Green.green500.color,
+    brandBg = Blue.blue50.color,
     black = Neutral.Neutral8.color,
     white = Neutral.Neutral0.color,
-    gray_1 = Neutral.Neutral2.color,
-    gray_2 = Neutral.Neutral3.color,
-    gray_3 = Neutral.Neutral4.color,
-    inActive_light = Neutral.Neutral1.color,
-    inActive_dark = Neutral.Neutral5.color,
+    gray0 = Neutral.Neutral3.color,
+    gray1 = Neutral.Neutral4.color,
+    gray2 = Neutral.Neutral5.color,
+    gray3 = Neutral.Neutral6.color,
+    inactiveLight = Neutral.Neutral1.color,
+    inactiveDark = Neutral.Neutral5.color,
     divider = Neutral.Neutral1.color,
-    field_bg = Neutral.Neutral1.color,
+    fieldBg = Neutral.Neutral1.color,
     data_bg = Neutral.Neutral2.color,
+    transparent = Color.Transparent,
     isDark = false
 )
 
 private val darkScheme = MyAppColors(
-    button_gradient_blue = listOf(
+    gradientBlue = listOf(
         Blue.blue500.color,
         Ocen.ocen500.color
     ),
-    bg_gradient_green = listOf(
+    gradientGreen = listOf(
         Green.green500.color,
         Neutral.Neutral0.color
     ),
-    bg_gradient_red = listOf(
+    gradientRed = listOf(
         Red.red500.color,
         Neutral.Neutral0.color
     ),
     brand = Blue.blue500.color,
-    red_bg_light = Red.red100.color,
-    red_bg = Red.red500.color,
-    red_text = Red.red500.color,
-    green_bg_light = Green.green100.color,
-    green_bg = Green.green500.color,
-    green_text = Green.green500.color,
-    brand_bg = Blue.blue100.color,
+    redBgLight = Red.red100.color,
+    redBg = Red.red500.color,
+    redText = Red.red500.color,
+    greenBgLight = Green.green100.color,
+    greenBg = Green.green500.color,
+    greenText = Green.green500.color,
+    brandBg = Blue.blue100.color,
     black = Neutral.Neutral8.color,
     white = Neutral.Neutral0.color,
-    gray_1 = Neutral.Neutral2.color,
-    gray_2 = Neutral.Neutral3.color,
-    gray_3 = Neutral.Neutral4.color,
-    inActive_light = Neutral.Neutral2.color,
-    inActive_dark = Neutral.Neutral4.color,
+    gray0 = Neutral.Neutral1.color,
+    gray1 = Neutral.Neutral2.color,
+    gray2 = Neutral.Neutral3.color,
+    gray3 = Neutral.Neutral4.color,
+    inactiveLight = Neutral.Neutral2.color,
+    inactiveDark = Neutral.Neutral4.color,
     divider = Neutral.Neutral1.color,
-    field_bg = Neutral.Neutral1.color,
+    fieldBg = Neutral.Neutral1.color,
     data_bg = Neutral.Neutral2.color,
+    transparent = Color.Transparent,
     isDark = false
 )
 
 @Composable
 fun PannyPalTheme(
-    dpi : Float = 1f,
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
@@ -153,43 +156,50 @@ private val LocalMyAppTypography = staticCompositionLocalOf<MyAppTypography> {
  */
 @Immutable
 data class MyAppColors(
-    val button_gradient_blue: List<Color>,
-    val bg_gradient_green: List<Color>,
-    val bg_gradient_red: List<Color>,
+    val gradientBlue: List<Color>,
+    val gradientGreen: List<Color>,
+    val gradientRed: List<Color>,
 
     val brand: Color,
 
-    val red_bg_light: Color,
-    val red_bg: Color,
-    val red_text: Color,
-    val green_bg_light: Color,
-    val green_bg: Color,
-    val green_text: Color,
-    val brand_bg: Color,
+    val redBgLight: Color,
+    val redBg: Color,
+    val redText: Color,
+    val greenBgLight: Color,
+    val greenBg: Color,
+    val greenText: Color,
+    val brandBg: Color,
 
     val black: Color,
     val white: Color,
 
-    val gray_1: Color,
-    val gray_2: Color,
-    val gray_3: Color,
+    val gray0: Color,
+    val gray1: Color,
+    val gray2: Color,
+    val gray3: Color,
 
-    val inActive_light: Color,
-    val inActive_dark: Color,
+    val inactiveLight: Color,
+    val inactiveDark: Color,
     val divider: Color,
 
-    val field_bg: Color,
+    val fieldBg: Color,
     val data_bg: Color,
+
+    val transparent: Color,
 
     val isDark: Boolean
 )
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Blue.blue500.color
+    primary = Blue.blue500.color,
+    background = Neutral.Neutral0.color
+
+
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Blue.blue500.color
+    primary = Blue.blue500.color,
+    background = Neutral.Neutral0.color
 )
 
 fun debugColors(
