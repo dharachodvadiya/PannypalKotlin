@@ -28,8 +28,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             PannyPalApp()
-
-
         }
     }
 }
@@ -41,36 +39,28 @@ fun PannyPalApp() {
         val navController = rememberNavController()
         val currentBackStack by navController.currentBackStackEntryAsState()
         val currentDestination = currentBackStack?.destination
-        val currentScreen =
-            BottomNavItem.values().find { it.route == currentDestination?.route } ?: BottomNavItem.OVERVIEW
+        val currentScreen = BottomNavItem.values().find { it.route == currentDestination?.route }
+            ?: BottomNavItem.OVERVIEW
 
-        Scaffold(
-            bottomBar = {
-                BottomNavigationBarCustom(
-                    tabs = BottomNavItem.values(),
-                    onTabSelected = { newScreen ->
-                        navController.navigate(newScreen.route) {
-                            launchSingleTop = true
-                            restoreState = true
-                            popUpTo(newScreen.route)
-                        }
-                    },
-                    currentTab = currentScreen
-                )
-            }
-        ) { innerPadding ->
+        Scaffold(bottomBar = {
+            BottomNavigationBarCustom(
+                tabs = BottomNavItem.values(), onTabSelected = { newScreen ->
+                    navController.navigate(newScreen.route) {
+                        launchSingleTop = true
+                        restoreState = true
+                        popUpTo(newScreen.route)
+                    }
+                }, currentTab = currentScreen
+            )
+        }) { innerPadding ->
 
             NavHost(
                 navController = navController,
                 startDestination = BottomNavItem.OVERVIEW.route,
                 modifier = Modifier.padding(innerPadding)
             ) {
-                composable(route = BottomNavItem.OVERVIEW.route) {
-                    OverViewRoute()
-                }
-                composable(route = BottomNavItem.MERCHANTS.route) {
-                    MerchantRoute()
-                }
+                OverViewRoute(navController)
+                MerchantRoute(navController)
             }
 
         }

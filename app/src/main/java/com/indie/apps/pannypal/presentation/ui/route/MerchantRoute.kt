@@ -6,13 +6,23 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.composable
+import androidx.navigation.navigation
+import com.indie.apps.pannypal.presentation.ui.navigation.BottomNavItem
+import com.indie.apps.pannypal.presentation.ui.navigation.MerchantNav
 
-@Composable
-fun MerchantRoute() {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center)
-    {
-        Text(text = "Merchant Screen")
+fun NavGraphBuilder.MerchantRoute(navController: NavHostController) {
+    navigation(
+        startDestination = MerchantNav.START.route,
+        route = BottomNavItem.MERCHANTS.route
+    ) {
+        composable(route = MerchantNav.START.route) {
+
+        }
+        composable(route = MerchantNav.DATA.route) {
+
+        }
     }
 }

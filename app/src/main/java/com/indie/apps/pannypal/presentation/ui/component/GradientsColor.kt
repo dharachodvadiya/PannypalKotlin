@@ -6,7 +6,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
 
-fun LinearGradientsColor(colors : List<Color>) : Brush{
+fun LinearGradientsColor(colors: List<Color>): Brush {
     return Brush.linearGradient(
         colors,
         start = Offset(0f, Float.POSITIVE_INFINITY),
@@ -14,7 +14,7 @@ fun LinearGradientsColor(colors : List<Color>) : Brush{
     )
 }
 
-fun VerticalGradientsColor(colors : List<Color>) : Brush{
+fun VerticalGradientsColor(colors: List<Color>): Brush {
     return Brush.verticalGradient(
         colors
     )

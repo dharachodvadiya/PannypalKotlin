@@ -54,10 +54,10 @@ import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 
 @Composable
 fun PrimaryButton(
-    onClick : () -> Unit,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
     content: @Composable RowScope.() -> Unit
-){
+) {
     Surface(
         onClick = onClick,
         modifier = modifier
@@ -83,14 +83,14 @@ fun PrimaryButton(
 fun TopBarProfile(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
-){
+) {
     Surface(
         onClick = onClick,
         modifier = modifier
             .semantics { role = Role.Button },
         shape = RoundedCornerShape(dimensionResource(R.dimen.round_corner)),
         contentColor = MyAppTheme.colors.gray1
-    ){
+    ) {
         Box(
             contentAlignment = Alignment.Center,
             modifier = modifier
@@ -103,7 +103,7 @@ fun TopBarProfile(
                     shape = RoundedCornerShape(dimensionResource(R.dimen.round_corner))
                 )
                 .background(MyAppTheme.colors.white)
-        ){
+        ) {
             Icon(
                 Icons.Filled.Person,
                 contentDescription = "Profile"
@@ -121,14 +121,15 @@ fun RoundImage(
     backGround: Color,
     contentDescription: String,
     modifier: Modifier = Modifier.size(dimensionResource(id = R.dimen.item_image))
-){
+) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
             .background(
                 color = backGround,
-                shape = CircleShape)
-    ){
+                shape = CircleShape
+            )
+    ) {
         Icon(
             imageVector = imageVector,
             contentDescription = contentDescription,
@@ -143,13 +144,14 @@ private fun PrimaryButtonPreviewDarkMode() {
     PannyPalTheme {
         PrimaryButton(
             onClick = {}
-        ){
+        ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically
-            ){
+            ) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = "test")
+                    contentDescription = "test"
+                )
                 Spacer(modifier = Modifier.width(5.dp))
                 Text(
                     text = "test"
@@ -165,13 +167,14 @@ private fun PrimaryButtonPreview() {
     PannyPalTheme {
         PrimaryButton(
             onClick = {}
-        ){
+        ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically
-            ){
+            ) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = "test")
+                    contentDescription = "test"
+                )
                 Spacer(modifier = Modifier.width(5.dp))
                 Text(
                     text = "test"
@@ -198,7 +201,7 @@ private fun RoundImagePreview() {
 @Composable
 private fun TopbarProfilePreview() {
     PannyPalTheme {
-        TopBarProfile(onClick = {  })
+        TopBarProfile(onClick = { })
     }
 }
 

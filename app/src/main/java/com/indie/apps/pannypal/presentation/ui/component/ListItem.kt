@@ -35,47 +35,48 @@ fun ListItem(
     leadingIcon: @Composable() (() -> Unit)? = null,
     content: @Composable() (() -> Unit),
     trailingContent: @Composable() (() -> Unit),
-    isSetDivider : Boolean = false,
+    isSetDivider: Boolean = false,
     dividerWidth: Float = 2f
-){
-    val bgColor = if(isSelected) MyAppTheme.colors.brandBg else MyAppTheme.colors.white
+) {
+    val bgColor = if (isSelected) MyAppTheme.colors.brandBg else MyAppTheme.colors.white
 
     Surface(
         onClick = onClick,
         modifier = modifier
-    ){
+    ) {
         Row(
             modifier = Modifier
                 .padding(vertical = 1.dp)
                 .background(bgColor),
             verticalAlignment = Alignment.CenterVertically,
-        ){
+        ) {
             if (leadingIcon != null) {
                 leadingIcon()
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.item_content_padding)))
             }
-            if(isSetDivider)
-            {
+            if (isSetDivider) {
                 val colorDivider = MyAppTheme.colors.gray1
-                Row(modifier = Modifier
-                    .weight(1f)
-                    .padding(start = 0.dp, bottom = 15.dp, top = 15.dp, end = 0.dp)
-                    .drawBehind {
-                        drawLine(
-                            colorDivider,
-                            Offset(0f, size.height + 35),
-                            Offset(size.width, size.height + 35),
-                            dividerWidth
-                        )
-                    },
-                    verticalAlignment = Alignment.CenterVertically) {
-                    Box(modifier = Modifier.weight(1f)){
+                Row(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 0.dp, bottom = 15.dp, top = 15.dp, end = 0.dp)
+                        .drawBehind {
+                            drawLine(
+                                colorDivider,
+                                Offset(0f, size.height + 35),
+                                Offset(size.width, size.height + 35),
+                                dividerWidth
+                            )
+                        },
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Box(modifier = Modifier.weight(1f)) {
                         content()
                     }
                     trailingContent()
                 }
-            }else{
-                Box(modifier = Modifier.weight(1f)){
+            } else {
+                Box(modifier = Modifier.weight(1f)) {
                     content()
                 }
                 trailingContent()
@@ -90,22 +91,23 @@ fun OverviewListItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier.fillMaxWidth(),
     isDateShow: Boolean = false
-){
+) {
     Column(modifier = modifier.background(MyAppTheme.colors.white)) {
-        if(isDateShow)
-        {
+        if (isDateShow) {
             // TODO: change total color based on amount sum
             val totalTextColor = MyAppTheme.colors.redBg
 
             Text(
                 text = "Day",
                 style = MyAppTheme.typography.Semibold45,
-                color = MyAppTheme.colors.gray2)
+                color = MyAppTheme.colors.gray2
+            )
             Text(
                 text = Util.getFormattedStringWithSymbole(0.0),
                 style = MyAppTheme.typography.Semibold52_5,
                 color = totalTextColor,
-                modifier = Modifier.padding(vertical = 5.dp))
+                modifier = Modifier.padding(vertical = 5.dp)
+            )
         }
 
         // TODO: change Round Image Icon and bg color based on amount
@@ -123,22 +125,25 @@ fun OverviewListItem(
                 )
             },
             content = {
-                Column{
+                Column {
                     Text(
                         text = "Name",
                         style = MyAppTheme.typography.Bold52_5,
-                        color = MyAppTheme.colors.black)
+                        color = MyAppTheme.colors.black
+                    )
                     Text(
                         text = "Description",
                         style = MyAppTheme.typography.Medium33,
-                        color = MyAppTheme.colors.gray2)
+                        color = MyAppTheme.colors.gray2
+                    )
                 }
             },
             trailingContent = {
                 Text(
                     text = Util.getFormattedStringWithSymbole(0.0),
                     style = MyAppTheme.typography.Bold52_5,
-                    color = MyAppTheme.colors.black)
+                    color = MyAppTheme.colors.black
+                )
             },
             isSetDivider = true
         )

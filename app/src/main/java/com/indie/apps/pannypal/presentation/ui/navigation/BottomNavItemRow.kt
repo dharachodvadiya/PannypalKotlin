@@ -42,7 +42,7 @@ fun BottomNavigationBarCustom(
         modifier = modifier
             .height(dimensionResource(R.dimen.bottom_bar))
             .fillMaxWidth()
-    ){
+    ) {
         Row(
             horizontalArrangement = Arrangement.Absolute.SpaceAround,
             verticalAlignment = Alignment.CenterVertically,
@@ -65,7 +65,7 @@ fun BottomNavigationBarCustomItem(
     onTabSelected: (BottomNavItem) -> Unit,
     currentTab: BottomNavItem,
     modifier: Modifier = Modifier
-){
+) {
     Surface(
         onClick = {
             onTabSelected(item)
@@ -74,7 +74,7 @@ fun BottomNavigationBarCustomItem(
             .semantics { role = Role.Button },
         shape = RoundedCornerShape(100.dp),
         color = MyAppTheme.colors.transparent
-    ){
+    ) {
         val isSelected = currentTab == item
         val borderModifier = if (isSelected) {
             Modifier
@@ -99,16 +99,17 @@ fun BottomNavigationBarCustomItem(
 
         ) {
             Icon(
-                imageVector = if(isSelected) item.selectedIcon else item.unSelectedIcon,
+                imageVector = if (isSelected) item.selectedIcon else item.unSelectedIcon,
                 contentDescription = stringResource(item.title),
-                tint = if(isSelected) MyAppTheme.colors.white else MyAppTheme.colors.inactiveLight
+                tint = if (isSelected) MyAppTheme.colors.white else MyAppTheme.colors.inactiveLight
             )
             if (isSelected) {
                 Spacer(modifier = Modifier.width(5.dp))
                 Text(
                     text = stringResource(item.title),
                     color = MyAppTheme.colors.white,
-                    style = MyAppTheme.typography.Medium45_29)
+                    style = MyAppTheme.typography.Medium45_29
+                )
             }
 
         }
@@ -126,7 +127,7 @@ fun BottomNavigationBarCustom1(
         modifier = modifier
             .height(dimensionResource(R.dimen.bottom_bar))
             .fillMaxWidth()
-    ){
+    ) {
         Row(
             horizontalArrangement = Arrangement.Absolute.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
@@ -145,7 +146,7 @@ fun BottomNavigationBarCustom1Item(
     onTabSelected: (BottomNavItem) -> Unit,
     currentTab: BottomNavItem,
     modifier: Modifier = Modifier
-){
+) {
     Surface(
         onClick = {
             onTabSelected(item)
@@ -154,23 +155,24 @@ fun BottomNavigationBarCustom1Item(
             .semantics { role = Role.Button },
         shape = RoundedCornerShape(100.dp),
         contentColor = MyAppTheme.colors.white
-    ){
+    ) {
         val isSelected = currentTab == item
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
-                imageVector = if(isSelected) item.selectedIcon else item.unSelectedIcon,
+                imageVector = if (isSelected) item.selectedIcon else item.unSelectedIcon,
                 contentDescription = stringResource(item.title),
-                tint = if(isSelected) MyAppTheme.colors.brand else MyAppTheme.colors.inactiveDark
+                tint = if (isSelected) MyAppTheme.colors.brand else MyAppTheme.colors.inactiveDark
             )
             if (isSelected) {
                 Spacer(modifier = Modifier.width(5.dp))
                 Text(
                     text = stringResource(item.title),
                     color = MyAppTheme.colors.brand,
-                    style = MyAppTheme.typography.Medium45_29)
+                    style = MyAppTheme.typography.Medium45_29
+                )
             }
 
         }

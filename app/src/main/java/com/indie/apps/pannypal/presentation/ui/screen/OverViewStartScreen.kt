@@ -51,10 +51,11 @@ import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 
 @Composable
-fun OverViewScreen(
-    onProfileClick : ()-> Unit,
-    onNewEntry : () -> Unit,
-    modifier: Modifier = Modifier) {
+fun OverViewStartScreen(
+    onProfileClick: () -> Unit,
+    onNewEntry: () -> Unit,
+    modifier: Modifier = Modifier
+) {
 
     Scaffold(
         topBar = {
@@ -81,19 +82,20 @@ fun OverViewScreen(
 
 @Composable
 fun AppFloatingButton(
-    onClick : () -> Unit,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier
-){
+) {
     PrimaryButton(
         onClick = onClick,
         modifier = modifier
-    ){
+    ) {
         Row(
             verticalAlignment = Alignment.CenterVertically
-        ){
+        ) {
             Icon(
                 imageVector = Icons.Default.Add,
-                contentDescription = "New Entry")
+                contentDescription = "New Entry"
+            )
             Spacer(modifier = Modifier.width(5.dp))
             Text(
                 text = stringResource(R.string.new_entry),
@@ -105,10 +107,10 @@ fun AppFloatingButton(
 
 @Composable
 fun OverViewTopBar(
-    onSearchTextChange: (String)-> Unit,
-    onProfileClick : ()-> Unit,
+    onSearchTextChange: (String) -> Unit,
+    onProfileClick: () -> Unit,
     modifier: Modifier = Modifier
-){
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
@@ -118,10 +120,10 @@ fun OverViewTopBar(
     ) {
         var isSearch by remember { mutableStateOf(false) }
 
-        if(!isSearch)
+        if (!isSearch)
             TopBarProfile(onClick = onProfileClick)
 
-        if(isSearch)
+        if (isSearch)
             CustomSearchView(
                 onTextChange = onSearchTextChange,
                 onBackClick = {
@@ -131,7 +133,7 @@ fun OverViewTopBar(
                     .weight(1f)
             )
 
-        if(!isSearch){
+        if (!isSearch) {
             Spacer(modifier = Modifier.weight(1f))
 
             IconButton(onClick = {
@@ -150,12 +152,13 @@ fun OverViewTopBar(
 
 @Composable
 fun BalanceView(
-    balance : Double,
+    balance: Double,
     modifier: Modifier = Modifier
-){
+) {
 
-    val colorStroke = if(balance>=0) MyAppTheme.colors.greenBg else MyAppTheme.colors.redBg
-    val colorGradient = if(balance>=0) MyAppTheme.colors.gradientGreen else MyAppTheme.colors.gradientRed
+    val colorStroke = if (balance >= 0) MyAppTheme.colors.greenBg else MyAppTheme.colors.redBg
+    val colorGradient =
+        if (balance >= 0) MyAppTheme.colors.gradientGreen else MyAppTheme.colors.gradientRed
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -208,16 +211,17 @@ fun BalanceView(
 @Composable
 fun OverviewList(
     modifier: Modifier = Modifier
-){
+) {
     LazyColumn(
         modifier = modifier
             .padding(horizontal = dimensionResource(id = R.dimen.padding))
-    ){
+    ) {
         items(10) { index ->
 
             OverviewListItem(
                 onClick = { /*TODO*/ },
-                isDateShow = (index % 3 == 0))
+                isDateShow = (index % 3 == 0)
+            )
         }
     }
 }
@@ -248,9 +252,11 @@ fun CustomSearchView(
                 unfocusedContainerColor = MyAppTheme.colors.transparent
             ),
             placeholder = {
-                Text(text = "Search",
+                Text(
+                    text = "Search",
                     style = MyAppTheme.typography.Regular57,
-                    color = MyAppTheme.colors.gray2)
+                    color = MyAppTheme.colors.gray2
+                )
             },
             singleLine = true,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
@@ -262,7 +268,7 @@ fun CustomSearchView(
                     modifier = Modifier.clickable {
                         if (textState.isNotEmpty()) {
                             textState = ""
-                        }else{
+                        } else {
                             onBackClick()
                         }
                     }
@@ -288,7 +294,6 @@ fun CustomSearchView(
         )
 
 
-
     }
 }
 
@@ -296,6 +301,6 @@ fun CustomSearchView(
 @Composable
 private fun OverViewScreenPreview() {
     PannyPalTheme {
-        OverViewScreen({},{})
+        OverViewStartScreen({}, {})
     }
 }
