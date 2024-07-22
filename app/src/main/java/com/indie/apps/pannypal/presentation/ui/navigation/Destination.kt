@@ -29,3 +29,10 @@ enum class BottomNavItem(
     OVERVIEW(R.string.overview, Icons.Filled.PieChart, Icons.Outlined.PieChart, "overview"),
     MERCHANTS(R.string.merchants, Icons.Filled.Person, Icons.Outlined.PersonOutline, "merchant"),
 }
+
+sealed class DialogNav(val route: String) {
+    data object SELECT_CONTACT : DialogNav("Dialog/SelectContact")
+    data object ADD_CONTACT : DialogNav("Dialog/AddContact")
+    data object EDIT_CONTACT : DialogNav("Dialog/EditContact")
+    data object ADD_PAYMENT : DialogNav("Dialog/AddPayment")
+}

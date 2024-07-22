@@ -227,7 +227,7 @@ fun OverviewListItem(
 }
 
 @Composable
-fun OverviewTopBarProfile(
+private fun OverviewTopBarProfile(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {

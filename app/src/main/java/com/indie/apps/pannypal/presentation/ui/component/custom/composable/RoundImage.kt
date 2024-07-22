@@ -10,18 +10,24 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.indie.apps.pannypal.R
+import com.indie.apps.pannypal.presentation.ui.component.linearGradientsBrush
 import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 
 @Composable
 fun RoundImage(
     imageVector: ImageVector,
-    tint: Color,
+    tint: Color = MyAppTheme.colors.white,
+    brush: Brush? = null,
     backGround: Color,
     contentDescription: String,
     modifier: Modifier = Modifier.size(dimensionResource(id = R.dimen.item_image))
@@ -34,11 +40,27 @@ fun RoundImage(
                 shape = CircleShape
             )
     ) {
-        Icon(
-            imageVector = imageVector,
-            contentDescription = contentDescription,
-            tint = tint
-        )
+        if (brush != null) {
+            Icon(
+                imageVector = imageVector,
+                contentDescription = contentDescription,
+                modifier = Modifier
+                    .graphicsLayer(alpha = 0.99f)
+                    .drawWithCache {
+                        onDrawWithContent {
+                            drawContent()
+                            drawRect(brush, blendMode = BlendMode.SrcAtop)
+                        }
+                    }
+            )
+        } else {
+            Icon(
+                imageVector = imageVector,
+                contentDescription = contentDescription,
+                tint = tint
+            )
+        }
+
     }
 }
 

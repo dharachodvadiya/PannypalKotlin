@@ -3,6 +3,7 @@ package com.indie.apps.pannypal.presentation.ui.component.custom.composable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -25,6 +26,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import com.indie.apps.pannypal.R
 import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
@@ -34,7 +37,8 @@ fun SearchView(
     trailingIcon: ImageVector? = null,
     onTextChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    bgColor: Color = MyAppTheme.colors.white
+    bgColor: Color = MyAppTheme.colors.white,
+    paddingValues: PaddingValues = PaddingValues(0.dp)
 ) {
     var textState by remember { mutableStateOf("") }
     Box(
@@ -42,7 +46,7 @@ fun SearchView(
             .clip(RoundedCornerShape(dimensionResource(R.dimen.round_corner)))
             .background(bgColor)
     ) {
-        TextField(
+        /*TextField(
             value = textState,
             onValueChange = {
                 textState = it
@@ -93,6 +97,45 @@ fun SearchView(
                 .fillMaxWidth()
                 .background(color = MyAppTheme.colors.transparent),
             textStyle = MyAppTheme.typography.Medium56
+        )*/
+
+        MyAppTextField(
+            value = textState,
+            onValueChange = {
+                textState = it
+                onTextChange(textState)
+            },
+            placeHolder = "Search",
+            imeAction = ImeAction.Search,
+            //keyboardActions = KeyboardActions(onSearch = { onSearchClick(text) }),
+            trailingIcon = {
+                if (textState.isNotEmpty()) {
+                    Icon(
+                        modifier = Modifier.clickable {
+                            if (textState.isNotEmpty()) {
+                                textState = ""
+                            }
+                        },
+                        imageVector = Icons.Filled.Close,
+                        contentDescription = "close"
+                    )
+                }else if(trailingIcon != null){
+                    Icon(
+                        modifier = Modifier.clickable {
+                            if (textState.isNotEmpty()) {
+                                textState = ""
+                            }
+                        },
+                        imageVector = trailingIcon,
+                        contentDescription = "search"
+                    )
+                }
+            },
+            modifier = Modifier
+                .fillMaxWidth(),
+            bgColor = MyAppTheme.colors.transparent,
+            textStyle = MyAppTheme.typography.Medium56,
+            paddingValues = paddingValues
         )
 
 

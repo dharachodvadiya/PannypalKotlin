@@ -6,9 +6,13 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -16,11 +20,14 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.PersonOutline
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,39 +36,48 @@ import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pannypal.R
+import com.indie.apps.pannypal.presentation.ui.component.custom.composable.MyAppTextField
+import com.indie.apps.pannypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.TopBar
 import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 
 @Composable
-fun MyAppTopBar(
+fun TopBarWithTitle(
+    isBackEnable: Boolean = true,
     title: String,
+    titleStyle: TextStyle = MyAppTheme.typography.Semibold57,
     onNavigationUp: () -> Unit,
     modifier: Modifier = Modifier,
     contentAlignment: Alignment = Alignment.CenterStart,
-    bgColor: Color = MyAppTheme.colors.white
+    bgColor: Color = MyAppTheme.colors.white,
+    trailingContent: @Composable() (() -> Unit)? = null
 ) {
     TopBar(
-        isBackEnable = true,
+        isBackEnable = isBackEnable,
         onBackClick = onNavigationUp,
         content = {
             Text(
                 text = title,
-                style = MyAppTheme.typography.Semibold57,
+                style = titleStyle,
                 color = MyAppTheme.colors.black
             )
         },
         modifier = modifier,
         contentAlignment = contentAlignment,
-        bgColor = bgColor
+        bgColor = bgColor,
+        trailingContent = trailingContent
     )
 }
 
@@ -115,84 +131,74 @@ fun UserProfile(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyAppTextField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    placeHolder: String = "Placeholder",
-    textStyle: TextStyle = MyAppTheme.typography.Medium56,
-    placeHolderTextStyle: TextStyle = MyAppTheme.typography.Regular51,
-    readOnly: Boolean = false,
-    trailingIcon: @Composable() (() -> Unit)? = null,
-    imeAction: ImeAction = ImeAction.Default,
-    keyboardType: KeyboardType = KeyboardType.Text,
-    modifier: Modifier = Modifier,
-    textModifier: Modifier = Modifier,
-    bgColor: Color = MyAppTheme.colors.white,
-    onDoneAction: (() -> Unit)? = null,
-    onNextAction: (() -> Unit)? = null,
-    paddingValues: PaddingValues = PaddingValues(0.dp)
+fun BottomSaveButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    Box(
+    PrimaryButton(
+        bgBrush = linearGradientsBrush(MyAppTheme.colors.gradientBlue),
         modifier = modifier
-            .clip(RoundedCornerShape(dimensionResource(R.dimen.round_corner)))
-            .background(bgColor)
-            .padding(vertical = 5.dp),
-        contentAlignment = Alignment.CenterStart
+            .fillMaxWidth()
+            .height(dimensionResource(id = R.dimen.button_height)),
+        onClick = onClick,
     ) {
-        val colors = TextFieldDefaults.colors(
-            cursorColor = MyAppTheme.colors.brand,
-            focusedIndicatorColor = MyAppTheme.colors.transparent,
-            unfocusedIndicatorColor = MyAppTheme.colors.transparent,
-            disabledIndicatorColor = MyAppTheme.colors.transparent,
-            focusedContainerColor = MyAppTheme.colors.transparent,
-            unfocusedContainerColor = MyAppTheme.colors.transparent
-        )
-
-        BasicTextField(
-            readOnly = readOnly,
-            value = value,
-            modifier = textModifier
-                .fillMaxWidth(),
-            onValueChange = onValueChange,
-            textStyle = textStyle,
-            keyboardOptions = KeyboardOptions(imeAction = imeAction, keyboardType = keyboardType),
-            keyboardActions = KeyboardActions(onDone = {onDoneAction}, onNext = {onNextAction}),
-            singleLine = true,
-            decorationBox = @Composable { innerTextField ->
-                // places leading icon, text field with label and placeholder, trailing icon
-                TextFieldDefaults.DecorationBox(
-                    value = value,
-                    innerTextField = innerTextField,
-                    placeholder = {
-                        Text(
-                            text = placeHolder,
-                            style = placeHolderTextStyle,
-                            color = MyAppTheme.colors.gray2
-                        )
-                    },
-                    trailingIcon = trailingIcon,
-                    enabled = true,
-                    interactionSource = remember { MutableInteractionSource()},
-                    visualTransformation = VisualTransformation.None,
-                    singleLine = true,
-                    colors = colors,
-                    contentPadding = paddingValues
-                )
-            }
+        Text(
+            text = stringResource(id = R.string.save),
+            style = MyAppTheme.typography.Bold49_5,
+            color = MyAppTheme.colors.white,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
         )
     }
-
-
 }
+
+@Composable
+fun DialogTextFieldItem(
+    imageVector: ImageVector,
+    textState: MutableState<String> = remember {
+        mutableStateOf("")
+    },
+    placeholder: Int,
+    keyboardType: KeyboardType = KeyboardType.Text,
+    modifier: Modifier = Modifier
+){
+    Row(
+        modifier = modifier
+            .padding(horizontal = dimensionResource(id = R.dimen.padding),
+                vertical = 7.dp)
+            .height(dimensionResource(id = R.dimen.new_entry_field_hight))
+            .background(
+                shape = RoundedCornerShape(dimensionResource(id = R.dimen.round_corner)),
+                color = MyAppTheme.colors.transparent
+            ),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+
+        Icon(imageVector = imageVector, contentDescription ="")
+        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.item_content_padding)))
+        MyAppTextField(
+            value = textState.value,
+            onValueChange = {textState.value = it},
+            placeHolder = stringResource(placeholder),
+            textStyle = MyAppTheme.typography.Medium46,
+            keyboardType = keyboardType,
+            placeHolderTextStyle = MyAppTheme.typography.Regular46,
+            modifier = Modifier.height(dimensionResource(id = R.dimen.new_entry_field_hight)),
+            bgColor = MyAppTheme.colors.gray0,
+            paddingValues = PaddingValues(horizontal = dimensionResource(id = R.dimen.item_content_padding))
+        )
+    }
+}
+
 
 @Preview()
 @Composable
 private fun MyAppTopBarPreview() {
     PannyPalTheme {
-        MyAppTopBar(
-            title = "title",
+        TopBarWithTitle(
+            isBackEnable = true,
+            title = "Title",
             onNavigationUp = { },
             contentAlignment = Alignment.Center
         )
@@ -207,13 +213,13 @@ private fun UserProfilePreview() {
     }
 }
 
-@Preview()
+@Preview(showBackground = true)
 @Composable
-private fun MyAppTextFieldPreview() {
+private fun DialogTextFieldItemPreview() {
     PannyPalTheme {
-        MyAppTextField(
-            value = "",
-            onValueChange = {}
-        )
+        DialogTextFieldItem(
+            imageVector = Icons.Default.PersonOutline,
+            placeholder = R.string.amount_placeholder)
     }
 }
+

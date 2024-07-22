@@ -25,7 +25,7 @@ fun ListItem(
     modifier: Modifier = Modifier.fillMaxWidth(),
     leadingIcon: @Composable() (() -> Unit)? = null,
     content: @Composable() (() -> Unit),
-    trailingContent: @Composable() (() -> Unit),
+    trailingContent: @Composable() (() -> Unit)? = null,
     isSetDivider: Boolean = false,
     dividerWidth: Float = 2f
 ) {
@@ -37,8 +37,8 @@ fun ListItem(
     ) {
         Row(
             modifier = Modifier
-                .padding(vertical = 1.dp)
-                .background(bgColor),
+                .background(bgColor)
+                .padding(vertical = 1.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             if (leadingIcon != null) {
@@ -64,13 +64,17 @@ fun ListItem(
                     Box(modifier = Modifier.weight(1f)) {
                         content()
                     }
-                    trailingContent()
+                    if (trailingContent != null) {
+                        trailingContent()
+                    }
                 }
             } else {
                 Box(modifier = Modifier.weight(1f)) {
                     content()
                 }
-                trailingContent()
+                if (trailingContent != null) {
+                    trailingContent()
+                }
             }
 
         }

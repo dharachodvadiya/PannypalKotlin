@@ -13,9 +13,9 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.indie.apps.pannypal.R
-import com.indie.apps.pannypal.presentation.ui.component.MyAppTopBar
+import com.indie.apps.pannypal.presentation.ui.component.BottomSaveButton
+import com.indie.apps.pannypal.presentation.ui.component.TopBarWithTitle
 import com.indie.apps.pannypal.presentation.ui.component.screen.NewEntryFieldItemSection
-import com.indie.apps.pannypal.presentation.ui.component.screen.NewEntrySaveButton
 import com.indie.apps.pannypal.presentation.ui.component.screen.NewEntryTopSelectionButton
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 
@@ -29,7 +29,7 @@ fun NewItemScreen(
 // TODO setProfile data
     Scaffold(
         topBar = {
-            MyAppTopBar(
+            TopBarWithTitle(
                 title = stringResource(id = R.string.new_item),
                 onNavigationUp = onNavigationUp,
                 contentAlignment = Alignment.Center
@@ -51,7 +51,7 @@ fun NewItemScreen(
                 onMerchantSelect = onMerchantSelect
             )
             Spacer(modifier = Modifier.weight(1f))
-            NewEntrySaveButton(
+            BottomSaveButton(
                 onClick = {},
                 modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.padding)))
         }

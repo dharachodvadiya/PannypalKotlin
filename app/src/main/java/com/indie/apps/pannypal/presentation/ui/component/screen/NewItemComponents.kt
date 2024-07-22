@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -46,7 +47,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pannypal.R
-import com.indie.apps.pannypal.presentation.ui.component.MyAppTextField
+import com.indie.apps.pannypal.presentation.ui.component.custom.composable.MyAppTextField
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pannypal.presentation.ui.component.linearGradientsBrush
 import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
@@ -86,7 +87,7 @@ fun NewEntryTopSelectionButton(
 }
 
 @Composable
-fun NewEntryButtonItem(
+private fun NewEntryButtonItem(
     @StringRes text: Int,
     onClick: () -> Unit,
     bgColor: Color,
@@ -160,7 +161,7 @@ fun NewEntryFieldItemSection(
 }
 
 @Composable
-fun NewEntrySelectableItem(
+private fun NewEntrySelectableItem(
     text: String? = null,
     @StringRes label: Int,
     @StringRes placeholder: Int,
@@ -229,7 +230,7 @@ fun NewEntrySelectableItem(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NewEntryDropDownList(
+private fun NewEntryDropDownList(
     @StringRes label: Int,
     @StringRes placeholder: Int,
     selectedValue: String,
@@ -247,7 +248,7 @@ fun NewEntryDropDownList(
     ) {
 
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 5.dp)
         ) {
@@ -264,8 +265,7 @@ fun NewEntryDropDownList(
                     .background(
                         shape = RoundedCornerShape(dimensionResource(id = R.dimen.round_corner)),
                         color = MyAppTheme.colors.gray0
-                    )
-                    .padding(top = 0.dp, bottom = 0.dp, start = dimensionResource(id = R.dimen.padding), end = 4.dp),
+                    ),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 MyAppTextField(
@@ -282,7 +282,8 @@ fun NewEntryDropDownList(
                     modifier = Modifier.weight(1f),
                     textModifier = Modifier
                         .fillMaxWidth()
-                        .menuAnchor()
+                        .menuAnchor(),
+                    paddingValues = PaddingValues(top = 0.dp, bottom = 0.dp, start = dimensionResource(id = R.dimen.padding), end = 4.dp),
                 )
 
                 PrimaryButton(
@@ -291,7 +292,6 @@ fun NewEntryDropDownList(
                         width = 1.dp,
                         color = MyAppTheme.colors.gray2
                     ),
-                    modifier = modifier,
                     onClick = onAddClick,
                 ){
                     Icon(
@@ -319,7 +319,7 @@ fun NewEntryDropDownList(
 }
 
 @Composable
-fun NewEntryTextFieldItem(
+private fun NewEntryTextFieldItem(
     textState: MutableState<String> = remember {
         mutableStateOf("")
     },
@@ -356,28 +356,6 @@ fun NewEntryTextFieldItem(
             keyboardType = keyboardType,
             placeHolderTextStyle = MyAppTheme.typography.Regular46,
             modifier = Modifier.height(dimensionResource(id = R.dimen.new_entry_field_hight))
-        )
-    }
-}
-
-@Composable
-fun NewEntrySaveButton(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    PrimaryButton(
-        bgBrush = linearGradientsBrush(MyAppTheme.colors.gradientBlue),
-        modifier = modifier
-            .fillMaxWidth()
-            .height(dimensionResource(id = R.dimen.button_height)),
-        onClick = onClick,
-    ) {
-        Text(
-            text = stringResource(id = R.string.save),
-            style = MyAppTheme.typography.Bold49_5,
-            color = MyAppTheme.colors.white,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth()
         )
     }
 }

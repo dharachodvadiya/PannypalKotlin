@@ -19,7 +19,6 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pannypal.R
-import com.indie.apps.pannypal.presentation.ui.component.screen.OverviewTopBarProfile
 import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 
@@ -43,9 +42,9 @@ fun TopBar(
             .padding(horizontal = dimensionResource(R.dimen.padding)),
         horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding))
     ) {
-        var iconSize = 0.dp
+        var rightPadding = 0.dp
         if (isBackEnable) {
-            iconSize = if (contentAlignment == Alignment.Center) (24.dp + dimensionResource(id = R.dimen.padding)) else 0.dp
+            rightPadding = if (contentAlignment == Alignment.Center) (24.dp + dimensionResource(id = R.dimen.padding)) else 0.dp
             Icon(
                 Icons.AutoMirrored.Filled.ArrowBack,
                 contentDescription = "Back",
@@ -60,7 +59,7 @@ fun TopBar(
         Box(
             modifier = Modifier
                 .weight(1f)
-                .padding(start = 0.dp, top = 0.dp, bottom = 0.dp, end = iconSize),
+                .padding(start = 0.dp, top = 0.dp, bottom = 0.dp, end = rightPadding),
             contentAlignment = contentAlignment
         )
         {
@@ -77,11 +76,11 @@ fun TopBar(
 
 @Preview()
 @Composable
-private fun SearchviewPreview() {
+private fun TopBarPreview() {
     PannyPalTheme {
         TopBar(
             isBackEnable = true,
-            leadingContent = { OverviewTopBarProfile({}) }
+            leadingContent = { }
         )
     }
 }

@@ -15,7 +15,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.NorthEast
 import androidx.compose.material.icons.filled.SouthWest
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -31,7 +30,6 @@ import com.indie.apps.pannypal.presentation.ui.common.Util
 import com.indie.apps.pannypal.presentation.ui.component.UserProfile
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.RoundImage
-import com.indie.apps.pannypal.presentation.ui.screen.ProfileScreen
 import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 
@@ -110,7 +108,7 @@ fun ProfileSection2(
 }
 
 @Composable
-fun ProfileLoginWithGoogleButton(
+private fun ProfileLoginWithGoogleButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -139,7 +137,7 @@ fun ProfileLoginWithGoogleButton(
 }
 
 @Composable
-fun ProfileAmountWithIcon(
+private fun ProfileAmountWithIcon(
     amount: Double,
     isPositive : Boolean,
     modifier: Modifier = Modifier
