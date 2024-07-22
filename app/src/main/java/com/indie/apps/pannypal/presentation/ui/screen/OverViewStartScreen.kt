@@ -6,8 +6,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.indie.apps.pannypal.presentation.ui.component.screen.AppFloatingButton
-import com.indie.apps.pannypal.presentation.ui.component.screen.BalanceView
+import com.indie.apps.pannypal.presentation.ui.component.screen.OverviewAppFloatingButton
+import com.indie.apps.pannypal.presentation.ui.component.screen.OverviewBalanceView
 import com.indie.apps.pannypal.presentation.ui.component.screen.OverviewList
 import com.indie.apps.pannypal.presentation.ui.component.screen.OverviewTopBar
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
@@ -26,7 +26,7 @@ fun OverViewStartScreen(
             )
         },
         floatingActionButton = {
-            AppFloatingButton(onClick = onNewEntry)
+            OverviewAppFloatingButton(onClick = onNewEntry)
         }
     ) { innerPadding ->
 
@@ -34,7 +34,7 @@ fun OverViewStartScreen(
             modifier = modifier
                 .padding(innerPadding)
         ) {
-            BalanceView(-10000.0)
+            OverviewBalanceView(-10000.0)
             OverviewList()
         }
     }

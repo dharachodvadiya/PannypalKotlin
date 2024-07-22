@@ -1,5 +1,6 @@
 package com.indie.apps.pannypal.presentation.ui.component.custom.composable
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,6 +18,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
@@ -31,6 +34,9 @@ import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 @Composable
 fun PrimaryButton(
     onClick: () -> Unit,
+    bgBrush: Brush? = null,
+    bgColor: Color = MyAppTheme.colors.brand,
+    borderStroke: BorderStroke? = null,
     modifier: Modifier = Modifier,
     content: @Composable RowScope.() -> Unit
 ) {
@@ -39,13 +45,20 @@ fun PrimaryButton(
         modifier = modifier
             .semantics { role = Role.Button },
         shape = RoundedCornerShape(dimensionResource(R.dimen.round_corner)),
-        contentColor = MyAppTheme.colors.white,
+        contentColor = MyAppTheme.colors.gray1,
+        border = borderStroke
     ) {
+
+        val buttonModifier = if(bgBrush != null)
+            {
+                Modifier.background(brush = bgBrush)
+            }else{
+                Modifier.background(color = bgColor)
+            }
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Absolute.Center,
-            modifier = Modifier
-                .background(brush = linearGradientsBrush(MyAppTheme.colors.gradientBlue))
+            modifier = buttonModifier
                 .padding(
                     horizontal = dimensionResource(R.dimen.button_horizontal_padding),
                     vertical = dimensionResource(R.dimen.button_item_vertical_padding)

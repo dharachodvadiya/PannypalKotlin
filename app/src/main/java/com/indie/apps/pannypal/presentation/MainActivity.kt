@@ -45,7 +45,6 @@ fun PannyPalApp() {
         }
             ?: BottomNavItem.OVERVIEW
 
-        Log.d("aaaaaa", "aaa " + currentScreen.route + "..." + currentDestination?.route)
         // State of bottomBar, set state to false, if current page route is "car_details"
         var bottomBarState = rememberSaveable { (mutableStateOf(true)) }
 

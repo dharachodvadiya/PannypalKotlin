@@ -17,10 +17,10 @@ fun NavGraphBuilder.MerchantRoute(
         route = BottomNavItem.MERCHANTS.route
     ) {
         composable(route = MerchantNav.START.route) {
-
+            bottomBarState.value = true
         }
         composable(route = MerchantNav.DATA.route) {
-
+            bottomBarState.value = false
         }
     }
 }

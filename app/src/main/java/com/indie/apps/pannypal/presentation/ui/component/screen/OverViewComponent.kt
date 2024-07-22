@@ -20,7 +20,6 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.NorthEast
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.SouthWest
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
@@ -49,6 +48,7 @@ import com.indie.apps.pannypal.presentation.ui.component.custom.composable.Prima
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.RoundImage
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.SearchView
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.TopBar
+import com.indie.apps.pannypal.presentation.ui.component.linearGradientsBrush
 import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 
@@ -63,7 +63,7 @@ fun OverviewTopBar(
     TopBar(
         isBackEnable = isSearch,
         onBackClick = { isSearch = false },
-        leadingContent = { if (!isSearch) TopBarProfile(onClick = onProfileClick) },
+        leadingContent = { if (!isSearch) OverviewTopBarProfile(onClick = onProfileClick) },
         content = {
             if (isSearch)
                 SearchView(
@@ -87,7 +87,7 @@ fun OverviewTopBar(
     )
 }
 @Composable
-fun BalanceView(
+fun OverviewBalanceView(
     balance: Double,
     modifier: Modifier = Modifier
 ) {
@@ -227,7 +227,7 @@ fun OverviewListItem(
 }
 
 @Composable
-fun TopBarProfile(
+fun OverviewTopBarProfile(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -262,11 +262,12 @@ fun TopBarProfile(
 }
 
 @Composable
-fun AppFloatingButton(
+fun OverviewAppFloatingButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     PrimaryButton(
+        bgBrush = linearGradientsBrush(MyAppTheme.colors.gradientBlue),
         onClick = onClick,
         modifier = modifier
     ) {
@@ -275,12 +276,14 @@ fun AppFloatingButton(
         ) {
             Icon(
                 imageVector = Icons.Default.Add,
-                contentDescription = "New Entry"
+                contentDescription = "New Entry",
+                tint = MyAppTheme.colors.white
             )
             Spacer(modifier = Modifier.width(5.dp))
             Text(
                 text = stringResource(R.string.new_entry),
-                style = MyAppTheme.typography.Medium45_29
+                style = MyAppTheme.typography.Medium45_29,
+                color = MyAppTheme.colors.white
             )
         }
     }
@@ -290,7 +293,7 @@ fun AppFloatingButton(
 @Composable
 private fun TopbarProfilePreview() {
     PannyPalTheme {
-        TopBarProfile(onClick = { })
+        OverviewTopBarProfile(onClick = { })
     }
 }
 

@@ -5,4 +5,17 @@
     <string name="new_entry">New Entry</string>
     <string name="balance">Balance</string>
     <string name="login_with_google">Login With Google</string>
+    <string name="profile">Profile</string>
+    <string name="new_item">Add New Entry</string>
+    <string name="received">Received</string>
+    <string name="spent">Spent</string>
+    <string name="merchant">Merchant</string>
+    <string name="amount">Amount</string>
+    <string name="payment_type">Payment Type</string>
+    <string name="description">Description</string>
+    <string name="save">Save</string>
+    <string name="add_merchant_placeholder">Add Merchant</string>
+    <string name="add_payment_type_placeholder">Select Payment Type</string>
+    <string name="amount_placeholder">Enter Amount</string>
+    <string name="description_placeholder">Enter Short Description</string>
 </resources>

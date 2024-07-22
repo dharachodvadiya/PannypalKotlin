@@ -15,7 +15,9 @@
     <dimen name="user_image_bg_size">108dp</dimen>
     <dimen name="user_image_size">60dp</dimen>
 
-    <dimen name="button_horizontal_padding">24dp</dimen>
+    <dimen name="new_entry_field_hight">55dp</dimen>
+
+    <dimen name="button_horizontal_padding">8dp</dimen>
     <dimen name="button_item_vertical_padding">8dp</dimen>
     <dimen name="button_height">54dp</dimen>
 

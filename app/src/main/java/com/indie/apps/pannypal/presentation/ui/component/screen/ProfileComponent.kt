@@ -4,10 +4,8 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,9 +14,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.NorthEast
-import androidx.compose.material.icons.filled.SouthEast
 import androidx.compose.material.icons.filled.SouthWest
-import androidx.compose.material3.Surface
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -26,20 +23,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.semantics.role
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pannypal.R
 import com.indie.apps.pannypal.presentation.ui.common.Util
 import com.indie.apps.pannypal.presentation.ui.component.UserProfile
+import com.indie.apps.pannypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.RoundImage
-import com.indie.apps.pannypal.presentation.ui.component.linearGradientsBrush
+import com.indie.apps.pannypal.presentation.ui.screen.ProfileScreen
 import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
+import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 
 @Composable
-fun UserProfileSection1(
+fun ProfileTopSection(
     modifier: Modifier = Modifier
 ){
 
@@ -71,48 +68,78 @@ fun UserProfileSection1(
 }
 
 @Composable
-fun LoginWithGoogleButton(
-    onClick: () -> Unit,
+fun ProfileSection2(
+    onLoginWithGoogle: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Surface(
-        onClick = onClick,
-        modifier = modifier
-            .semantics { role = Role.Button },
-        shape = RoundedCornerShape(dimensionResource(R.dimen.round_corner)),
-        contentColor = MyAppTheme.colors.black,
-        border = BorderStroke(
-            width = 1.dp,
-            color = MyAppTheme.colors.brand
-        )
-    ) {
-        Box(
+    Column(modifier = modifier) {
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Absolute.SpaceEvenly,
             modifier = Modifier
-                .background(MyAppTheme.colors.white)
-                .padding(
-                    horizontal = dimensionResource(R.dimen.button_horizontal_padding),
-                    vertical = dimensionResource(R.dimen.button_item_vertical_padding)
-                ),
-            contentAlignment = Alignment.CenterStart
-        ){
-            Image(
-                painter = painterResource(id = R.drawable.google),
-                contentDescription = "Google"
+                .fillMaxWidth()
+                .padding(vertical = 20.dp)
+        ) {
+            ProfileAmountWithIcon(
+                amount = 5.0,
+                isPositive = true
             )
-            Text(
-                text = stringResource(id = R.string.login_with_google),
-                style = MyAppTheme.typography.Bold49_5,
-                color = MyAppTheme.colors.black,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
+            Spacer(
+                modifier = Modifier
+                    .width(1.dp)
+                    .height(70.dp)
+                    .background(MyAppTheme.colors.gray1)
+            )
+            ProfileAmountWithIcon(
+                amount = -5.0,
+                isPositive = false
             )
         }
-    }
 
+        Spacer(modifier = Modifier.weight(1f))
+
+        ProfileLoginWithGoogleButton(
+            onClick = onLoginWithGoogle,
+            modifier = Modifier
+                .padding(dimensionResource(id = R.dimen.padding))
+                .fillMaxWidth()
+                .height(dimensionResource(id = R.dimen.button_height))
+        )
+    }
 }
 
 @Composable
-fun AmountWithIcon(
+fun ProfileLoginWithGoogleButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+
+    PrimaryButton(
+        bgColor = MyAppTheme.colors.white,
+        borderStroke = BorderStroke(
+            width = 1.dp,
+            color = MyAppTheme.colors.brand
+        ),
+        modifier = modifier,
+        onClick = onClick,
+    ){
+        Image(
+            painter = painterResource(id = R.drawable.google),
+            contentDescription = "Google"
+        )
+        Text(
+            text = stringResource(id = R.string.login_with_google),
+            style = MyAppTheme.typography.Bold49_5,
+            color = MyAppTheme.colors.black,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
+}
+
+@Composable
+fun ProfileAmountWithIcon(
     amount: Double,
     isPositive : Boolean,
     modifier: Modifier = Modifier
@@ -143,9 +170,21 @@ fun AmountWithIcon(
         )
         Spacer(modifier = Modifier.height(5.dp))
         Text(
-            text = Util.getFormattedStringWithSymbole(0.0),
+            text = Util.getFormattedStringWithSymbole(amount),
             style = MyAppTheme.typography.Bold52_5,
             color = MyAppTheme.colors.black
         )
     }
 }
+
+@Preview
+@Composable
+private fun ProfileLoginWithGoogleButtonPreview() {
+    PannyPalTheme {
+        ProfileLoginWithGoogleButton({}, modifier = Modifier
+            .padding(dimensionResource(id = R.dimen.padding))
+            .fillMaxWidth()
+            .height(dimensionResource(id = R.dimen.button_height)))
+    }
+}
+
