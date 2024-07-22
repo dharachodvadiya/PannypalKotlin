@@ -4,4 +4,5 @@
     <string name="merchants">Merchants</string>
     <string name="new_entry">New Entry</string>
     <string name="balance">Balance</string>
+    <string name="login_with_google">Login With Google</string>
 </resources>

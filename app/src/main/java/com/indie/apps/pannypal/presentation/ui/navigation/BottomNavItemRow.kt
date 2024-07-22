@@ -1,9 +1,9 @@
 package com.indie.apps.pannypal.presentation.ui.navigation
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -26,7 +26,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pannypal.R
-import com.indie.apps.pannypal.presentation.ui.component.LinearGradientsColor
+import com.indie.apps.pannypal.presentation.ui.component.linearGradientsBrush
 import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 
@@ -36,27 +36,32 @@ fun BottomNavigationBarCustom(
     tabs: Array<BottomNavItem>,
     onTabSelected: (BottomNavItem) -> Unit,
     currentTab: BottomNavItem,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    bottomBarState: Boolean = true
 ) {
-    Surface(
-        modifier = modifier
-            .height(dimensionResource(R.dimen.bottom_bar))
-            .fillMaxWidth()
-    ) {
-        Row(
-            horizontalArrangement = Arrangement.Absolute.SpaceAround,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .background(
-                    brush = LinearGradientsColor(MyAppTheme.colors.gradientBlue)
-                )
+    if(bottomBarState)
+    {
+        Surface(
+            modifier = modifier
+                .height(dimensionResource(R.dimen.bottom_bar))
+                .fillMaxWidth()
         ) {
-            tabs.forEach { item ->
+            Row(
+                horizontalArrangement = Arrangement.Absolute.SpaceAround,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .background(
+                        brush = linearGradientsBrush(MyAppTheme.colors.gradientBlue)
+                    )
+            ) {
 
-                BottomNavigationBarCustomItem(item, onTabSelected, currentTab)
+                tabs.forEach { item ->
+                    BottomNavigationBarCustomItem(item, onTabSelected, currentTab)
+                }
             }
         }
     }
+
 }
 
 @Composable

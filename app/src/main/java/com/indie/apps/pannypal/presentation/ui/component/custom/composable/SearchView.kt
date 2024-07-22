@@ -20,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.input.ImeAction
@@ -33,11 +34,13 @@ fun SearchView(
     trailingIcon: ImageVector? = null,
     onTextChange: (String) -> Unit,
     modifier: Modifier = Modifier,
+    bgColor: Color = MyAppTheme.colors.white
 ) {
     var textState by remember { mutableStateOf("") }
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(dimensionResource(R.dimen.round_corner)))
+            .background(bgColor)
     ) {
         TextField(
             value = textState,
@@ -88,7 +91,7 @@ fun SearchView(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .background(color = MyAppTheme.colors.white),
+                .background(color = MyAppTheme.colors.transparent),
             textStyle = MyAppTheme.typography.Medium56
         )
 

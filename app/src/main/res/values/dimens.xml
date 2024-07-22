@@ -12,8 +12,12 @@
     <dimen name="item_image">40dp</dimen>
     <dimen name="item_content_padding">15dp</dimen>
 
+    <dimen name="user_image_bg_size">108dp</dimen>
+    <dimen name="user_image_size">60dp</dimen>
+
     <dimen name="button_horizontal_padding">24dp</dimen>
     <dimen name="button_item_vertical_padding">8dp</dimen>
+    <dimen name="button_height">54dp</dimen>
 
     <dimen name="round_corner">7dp</dimen>
     <dimen name="shadow_elevation">5dp</dimen>

@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.NorthEast
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.SouthWest
@@ -42,7 +43,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pannypal.R
 import com.indie.apps.pannypal.presentation.ui.common.Util
-import com.indie.apps.pannypal.presentation.ui.component.VerticalGradientsColor
+import com.indie.apps.pannypal.presentation.ui.component.verticalGradientsBrush
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.ListItem
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.RoundImage
@@ -98,7 +99,7 @@ fun BalanceView(
         modifier = modifier
             .fillMaxWidth()
             .height(150.dp)
-            .background(brush = VerticalGradientsColor(colorGradient))
+            .background(brush = verticalGradientsBrush(colorGradient))
             .padding(dimensionResource(id = R.dimen.padding))
     ) {
         Surface(
@@ -186,7 +187,7 @@ fun OverviewListItem(
         }
 
         // TODO: change Round Image Icon and bg color based on amount
-        val imageVector = Icons.Default.SouthWest
+        val imageVector = Icons.Default.NorthEast
         val bgColor = MyAppTheme.colors.redBg
 
         ListItem(
@@ -196,7 +197,7 @@ fun OverviewListItem(
                     imageVector = imageVector,
                     tint = MyAppTheme.colors.white,
                     backGround = bgColor,
-                    contentDescription = "person"
+                    contentDescription = "amount"
                 )
             },
             content = {

@@ -1,6 +1,8 @@
 package com.indie.apps.pannypal.presentation.ui.component.custom.composable
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
@@ -22,7 +24,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pannypal.R
-import com.indie.apps.pannypal.presentation.ui.component.LinearGradientsColor
+import com.indie.apps.pannypal.presentation.ui.component.linearGradientsBrush
 import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 
@@ -37,12 +39,13 @@ fun PrimaryButton(
         modifier = modifier
             .semantics { role = Role.Button },
         shape = RoundedCornerShape(dimensionResource(R.dimen.round_corner)),
-        contentColor = MyAppTheme.colors.white
+        contentColor = MyAppTheme.colors.white,
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Absolute.Center,
             modifier = Modifier
-                .background(brush = LinearGradientsColor(MyAppTheme.colors.gradientBlue))
+                .background(brush = linearGradientsBrush(MyAppTheme.colors.gradientBlue))
                 .padding(
                     horizontal = dimensionResource(R.dimen.button_horizontal_padding),
                     vertical = dimensionResource(R.dimen.button_item_vertical_padding)
