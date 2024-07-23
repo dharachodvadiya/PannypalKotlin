@@ -23,4 +23,7 @@
     <string name="select_merchant">Select Merchant</string>
     <string name="add_payment">Add Payment Method</string>
     <string name="phone_number_placeholder">Phone Number</string>
+    <string name="total_amount">Total Amount</string>
+    <string name="edit_transaction">Edit</string>
+    <string name="delete_transaction">Delete</string>
 </resources>

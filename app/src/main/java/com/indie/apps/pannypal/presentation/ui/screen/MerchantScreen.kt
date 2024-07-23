@@ -18,6 +18,7 @@ import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 
 @Composable
 fun MerchantScreen(
+    onMerchantClick:() -> Unit,
     onAddClick: () -> Unit,
     onEditClick: () -> Unit,
     onDeleteClick: () -> Unit,
@@ -50,9 +51,15 @@ fun MerchantScreen(
 
                 MerchantListItem(
                     onClick = {
-                        //TODO
-                        //isDeletable = !isDeletable
-                       // isEditable = !isEditable
+                        if(!isEditable && !isDeletable)
+                        {
+                            onMerchantClick()
+                        }else{
+                            //TODO
+                            //isDeletable = !isDeletable
+                            // isEditable = !isEditable
+                        }
+
                     },
                     onLongClick = {
                         //TODO
@@ -71,6 +78,6 @@ fun MerchantScreen(
 @Composable
 private fun MerchantScreenPreview() {
     PannyPalTheme {
-        MerchantScreen({}, {}, {})
+        MerchantScreen({}, {}, {},{})
     }
 }

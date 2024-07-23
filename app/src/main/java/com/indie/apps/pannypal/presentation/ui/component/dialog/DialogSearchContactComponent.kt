@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pannypal.R
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.ListItem
@@ -123,15 +124,20 @@ private fun SearchMerchantListItem(
                 Text(
                     text = "Name",
                     style = MyAppTheme.typography.Semibold56,
-                    color = MyAppTheme.colors.black
+                    color = MyAppTheme.colors.black,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
                 Text(
                     text = "Description",
                     style = MyAppTheme.typography.Medium33,
-                    color = MyAppTheme.colors.gray2
+                    color = MyAppTheme.colors.gray2,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
         },
+        modifier = modifier,
         paddingValues = PaddingValues(
             horizontal = dimensionResource(id = R.dimen.padding),
             vertical = 5.dp)
