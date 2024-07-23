@@ -20,6 +20,7 @@ import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
 
 @Composable
 fun ListItem(
+    isClickable: Boolean = true,
     isSelected: Boolean = false,
     onClick: () -> Unit = {},
     modifier: Modifier = Modifier.fillMaxWidth(),
@@ -33,6 +34,7 @@ fun ListItem(
 
     Surface(
         onClick = onClick,
+        enabled = isClickable,
         modifier = modifier
     ) {
         Row(

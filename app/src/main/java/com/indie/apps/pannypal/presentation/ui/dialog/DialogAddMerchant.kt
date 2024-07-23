@@ -12,7 +12,7 @@ import com.indie.apps.pannypal.presentation.ui.component.dialog.AddDialogField
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 
 @Composable
-fun DialogAddContact(
+fun DialogAddMerchant(
     onNavigationUp: ()-> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -39,6 +39,6 @@ fun DialogAddContact(
 @Composable
 private fun MyAppDialogPreview() {
     PannyPalTheme {
-        DialogAddContact({})
+        DialogAddMerchant({})
     }
 }

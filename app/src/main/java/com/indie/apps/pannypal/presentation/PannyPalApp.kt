@@ -13,9 +13,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
-import com.indie.apps.pannypal.presentation.ui.dialog.DialogAddContact
+import com.indie.apps.pannypal.presentation.ui.dialog.DialogAddMerchant
 import com.indie.apps.pannypal.presentation.ui.dialog.DialogAddPayment
-import com.indie.apps.pannypal.presentation.ui.dialog.DialogSearchContact
+import com.indie.apps.pannypal.presentation.ui.dialog.DialogSearchMerchant
 import com.indie.apps.pannypal.presentation.ui.navigation.BottomNavItem
 import com.indie.apps.pannypal.presentation.ui.navigation.BottomNavigationBarCustom
 import com.indie.apps.pannypal.presentation.ui.navigation.DialogNav
@@ -62,26 +62,26 @@ fun PannyPalApp() {
                 MerchantRoute(navController, bottomBarState)
 
                 dialog(
-                    route = DialogNav.SELECT_CONTACT.route,
+                    route = DialogNav.SELECT_MERCHANT.route,
                     dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
                 ) {
-                    DialogSearchContact(
+                    DialogSearchMerchant(
                         onNavigationUp = {navController.navigateUp()},
                         onAddClick = {
-                            navController.navigate(DialogNav.ADD_CONTACT.route){
+                            navController.navigate(DialogNav.ADD_MERCHANT.route){
                                 navController.popBackStack()
                             }
                         }
                     )
                 }
-                dialog(route = DialogNav.ADD_CONTACT.route,
+                dialog(route = DialogNav.ADD_MERCHANT.route,
                     dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
                 ) {
-                    DialogAddContact(
+                    DialogAddMerchant(
                         onNavigationUp = {navController.navigateUp()}
                     )
                 }
-                dialog(route = DialogNav.EDIT_CONTACT.route,
+                dialog(route = DialogNav.EDIT_MERCHANT.route,
                     dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
                 ) {
                 }

@@ -22,4 +22,5 @@
     <string name="merchant_name_placeholder">Merchant Name</string>
     <string name="select_merchant">Select Merchant</string>
     <string name="add_payment">Add Payment Method</string>
+    <string name="phone_number_placeholder">Phone Number</string>
 </resources>

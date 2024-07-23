@@ -29,7 +29,7 @@ fun NavGraphBuilder.OverViewRoute(
             bottomBarState.value = false
             NewItemScreen(
                 onNavigationUp = { navController.navigateUp() },
-                onMerchantSelect = { navController.navigate(DialogNav.SELECT_CONTACT.route) },
+                onMerchantSelect = { navController.navigate(DialogNav.SELECT_MERCHANT.route) },
                 onPaymentAdd = { navController.navigate(DialogNav.ADD_PAYMENT.route) })
         }
         composable(route = OverviewNav.PROFILE.route) {

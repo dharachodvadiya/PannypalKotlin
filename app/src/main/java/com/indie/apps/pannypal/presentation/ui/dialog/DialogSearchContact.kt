@@ -9,7 +9,7 @@ import com.indie.apps.pannypal.presentation.ui.component.dialog.SearchDialogFiel
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 
 @Composable
-fun DialogSearchContact(
+fun DialogSearchMerchant(
     onNavigationUp: () -> Unit,
     onAddClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -33,6 +33,6 @@ fun DialogSearchContact(
 @Composable
 private fun MyAppDialogPreview() {
     PannyPalTheme {
-        DialogSearchContact({},{})
+        DialogSearchMerchant({},{})
     }
 }

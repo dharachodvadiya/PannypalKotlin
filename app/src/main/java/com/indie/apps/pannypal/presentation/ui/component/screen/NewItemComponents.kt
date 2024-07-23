@@ -182,7 +182,7 @@ private fun NewEntrySelectableItem(
         Row(
             modifier = Modifier
                 .padding(vertical = 5.dp)
-                .clickable { onAddClick }
+                .clickable { onAddClick() }
                 .height(dimensionResource(id = R.dimen.new_entry_field_hight))
                 .background(
                     shape = RoundedCornerShape(dimensionResource(id = R.dimen.round_corner)),

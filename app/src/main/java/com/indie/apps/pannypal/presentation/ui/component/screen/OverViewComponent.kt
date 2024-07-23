@@ -155,7 +155,6 @@ fun OverviewList(
         items(10) { index ->
 
             OverviewListItem(
-                onClick = {},
                 isDateShow = (index % 3 == 0)
             )
         }
@@ -164,7 +163,6 @@ fun OverviewList(
 
 @Composable
 fun OverviewListItem(
-    onClick: () -> Unit,
     modifier: Modifier = Modifier.fillMaxWidth(),
     isDateShow: Boolean = false
 ) {
@@ -191,7 +189,7 @@ fun OverviewListItem(
         val bgColor = MyAppTheme.colors.redBg
 
         ListItem(
-            onClick = onClick,
+            isClickable = false,
             leadingIcon = {
                 RoundImage(
                     imageVector = imageVector,
@@ -301,6 +299,6 @@ private fun TopbarProfilePreview() {
 @Composable
 private fun OverviewListItemPreview() {
     PannyPalTheme {
-        OverviewListItem({})
+        OverviewListItem()
     }
 }

@@ -31,8 +31,8 @@ enum class BottomNavItem(
 }
 
 sealed class DialogNav(val route: String) {
-    data object SELECT_CONTACT : DialogNav("Dialog/SelectContact")
-    data object ADD_CONTACT : DialogNav("Dialog/AddContact")
-    data object EDIT_CONTACT : DialogNav("Dialog/EditContact")
+    data object SELECT_MERCHANT : DialogNav("Dialog/SelectMerchant")
+    data object ADD_MERCHANT : DialogNav("Dialog/AddMerchant")
+    data object EDIT_MERCHANT : DialogNav("Dialog/EditMerchant")
     data object ADD_PAYMENT : DialogNav("Dialog/AddPayment")
 }
