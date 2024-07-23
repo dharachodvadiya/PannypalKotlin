@@ -43,6 +43,7 @@ fun PrimaryButton(
     Surface(
         onClick = onClick,
         modifier = modifier
+            .background(MyAppTheme.colors.transparent)
             .semantics { role = Role.Button },
         shape = RoundedCornerShape(dimensionResource(R.dimen.round_corner)),
         contentColor = MyAppTheme.colors.gray1,

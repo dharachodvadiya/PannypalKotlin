@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import com.indie.apps.pannypal.R
 import com.indie.apps.pannypal.presentation.ui.component.linearGradientsBrush
 import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
@@ -26,6 +27,7 @@ import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 @Composable
 fun RoundImage(
     imageVector: ImageVector,
+    imageVectorSize: Dp = dimensionResource(id = R.dimen.default_icon_size),
     tint: Color = MyAppTheme.colors.white,
     brush: Brush? = null,
     backGround: Color,
@@ -45,6 +47,7 @@ fun RoundImage(
                 imageVector = imageVector,
                 contentDescription = contentDescription,
                 modifier = Modifier
+                    .size(imageVectorSize)
                     .graphicsLayer(alpha = 0.99f)
                     .drawWithCache {
                         onDrawWithContent {

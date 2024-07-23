@@ -210,7 +210,7 @@ private fun NewEntrySelectableItem(
                 )
             }
             PrimaryButton(
-                bgColor = MyAppTheme.colors.transparent,
+                bgColor = MyAppTheme.colors.white,
                 borderStroke = BorderStroke(
                     width = 1.dp,
                     color = MyAppTheme.colors.gray2
@@ -287,7 +287,7 @@ private fun NewEntryDropDownList(
                 )
 
                 PrimaryButton(
-                    bgColor = MyAppTheme.colors.transparent,
+                    bgColor = MyAppTheme.colors.white,
                     borderStroke = BorderStroke(
                         width = 1.dp,
                         color = MyAppTheme.colors.gray2

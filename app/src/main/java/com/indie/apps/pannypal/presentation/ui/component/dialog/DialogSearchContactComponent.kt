@@ -132,9 +132,8 @@ private fun SearchMerchantListItem(
                 )
             }
         },
-        modifier = modifier
-            .padding(
-                horizontal = dimensionResource(id = R.dimen.padding),
-                vertical = 5.dp)
+        paddingValues = PaddingValues(
+            horizontal = dimensionResource(id = R.dimen.padding),
+            vertical = 5.dp)
     )
 }

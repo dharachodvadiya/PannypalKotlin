@@ -95,7 +95,7 @@ enum class Neutral(val color: Color) {
 
 
 enum class Blue(val color: Color) {
-    blue50(Color(0xFFF4FBFF)),
+    blue50(Color(0xFFE7F4FD)),
     blue100(Color(0xFFBDD8FF)),
     blue200(Color(0xFF91BEFF)),
     blue300(Color(0xFF64A3FF)),
