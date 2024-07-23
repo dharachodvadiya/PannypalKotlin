@@ -5,7 +5,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -14,8 +17,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.indie.apps.pannypal.R
 import com.indie.apps.pannypal.presentation.ui.component.BottomSaveButton
 import com.indie.apps.pannypal.presentation.ui.component.DialogTextFieldItem
@@ -33,27 +38,40 @@ fun MyAppDialog(
     modifier: Modifier = Modifier
 ) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
         modifier = modifier
             .fillMaxWidth()
-            .background(
-                color = MyAppTheme.colors.white,
-                shape = RoundedCornerShape(topStartPercent = 7, topEndPercent = 7)
-            )
     ) {
-        DialogTopbar(
-            isBackEnable = isBackEnable,
-            title = title,
-            onNavigationUp = onNavigationUp
-        )
+        Spacer(modifier = Modifier.weight(1f))
 
-        content()
-        if (bottomContent != null) {
-            bottomContent()
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .heightIn(
+                    min = dimensionResource(id = R.dimen.dialog_min_height),
+                    max = dimensionResource(id = R.dimen.dialog_max_height)
+                )
+                .background(
+                    color = MyAppTheme.colors.white,
+                    shape = RoundedCornerShape(topStartPercent = 7, topEndPercent = 7)
+                )
+        ) {
+            DialogTopbar(
+                isBackEnable = isBackEnable,
+                title = title,
+                onNavigationUp = {
+                    onNavigationUp()
+                }
+            )
+
+            content()
+            if (bottomContent != null) {
+                bottomContent()
+            }
+
         }
-
     }
+
 }
 
 @Composable
@@ -74,7 +92,9 @@ private fun DialogTopbar(
                     imageVector = Icons.Default.Close,
                     contentDescription = "close",
                     modifier = Modifier
-                        .clickable { onNavigationUp }
+                        .clickable {
+                            onNavigationUp()
+                        }
                 )
         },
         contentAlignment = if(isBackEnable) Alignment.Center else Alignment.CenterStart

@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.indie.apps.pannypal.presentation.ui.navigation.BottomNavItem
+import com.indie.apps.pannypal.presentation.ui.navigation.DialogNav
 import com.indie.apps.pannypal.presentation.ui.navigation.OverviewNav
 import com.indie.apps.pannypal.presentation.ui.screen.NewItemScreen
 import com.indie.apps.pannypal.presentation.ui.screen.OverViewStartScreen
@@ -28,8 +29,8 @@ fun NavGraphBuilder.OverViewRoute(
             bottomBarState.value = false
             NewItemScreen(
                 onNavigationUp = { navController.navigateUp() },
-                onMerchantSelect = {},
-                onPaymentAdd = {})
+                onMerchantSelect = { navController.navigate(DialogNav.SELECT_CONTACT.route) },
+                onPaymentAdd = { navController.navigate(DialogNav.ADD_PAYMENT.route) })
         }
         composable(route = OverviewNav.PROFILE.route) {
             bottomBarState.value = false

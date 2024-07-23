@@ -20,41 +20,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pannypal.R
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.ListItem
-import com.indie.apps.pannypal.presentation.ui.component.custom.composable.MyAppDialog
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.RoundImage
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.SearchView
 import com.indie.apps.pannypal.presentation.ui.component.linearGradientsBrush
-import com.indie.apps.pannypal.presentation.ui.component.screen.OverviewListItem
 import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
-import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 
 @Composable
-fun DialogSearchContact(
-    onNavigationUp: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-
-    MyAppDialog(
-        isBackEnable = true,
-        title = R.string.select_merchant,
-        onNavigationUp = onNavigationUp,
-        content = {
-            SearchDialogField(
-                onAddClick = {},
-                onTextChange = { }
-            )
-        },
-        modifier = modifier
-        )
-}
-
-@Composable
-private fun SearchDialogField(
+fun SearchDialogField(
     onAddClick: () -> Unit,
     onTextChange: (String) -> Unit,
 ) {
@@ -69,7 +45,7 @@ private fun SearchDialogField(
             modifier = Modifier
                 .padding(horizontal = dimensionResource(id = R.dimen.padding))
         ) {
-            items(10) { index ->
+            items(15) { index ->
 
                 SearchMerchantListItem({})
             }
@@ -83,7 +59,8 @@ private fun SearchDialogField(
 private fun SearchMerchantSearchview(
     onAddClick: () -> Unit,
     onTextChange: (String) -> Unit,
-    modifier: Modifier = Modifier)
+    modifier: Modifier = Modifier
+)
 {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -160,12 +137,4 @@ private fun SearchMerchantListItem(
                 horizontal = dimensionResource(id = R.dimen.padding),
                 vertical = 5.dp)
     )
-}
-
-@Preview()
-@Composable
-private fun MyAppDialogPreview() {
-    PannyPalTheme {
-        DialogSearchContact({})
-    }
 }

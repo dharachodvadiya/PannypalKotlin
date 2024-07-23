@@ -8,10 +8,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
+import com.indie.apps.pannypal.presentation.ui.dialog.DialogAddContact
+import com.indie.apps.pannypal.presentation.ui.dialog.DialogAddPayment
+import com.indie.apps.pannypal.presentation.ui.dialog.DialogSearchContact
 import com.indie.apps.pannypal.presentation.ui.navigation.BottomNavItem
 import com.indie.apps.pannypal.presentation.ui.navigation.BottomNavigationBarCustom
 import com.indie.apps.pannypal.presentation.ui.navigation.DialogNav
@@ -57,13 +61,31 @@ fun PannyPalApp() {
                 OverViewRoute(navController, bottomBarState)
                 MerchantRoute(navController, bottomBarState)
 
-                dialog(route = DialogNav.SELECT_CONTACT.route) {
+                dialog(
+                    route = DialogNav.SELECT_CONTACT.route,
+                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
+                ) {
+                    DialogSearchContact(
+                        onNavigationUp = {navController.navigateUp()}
+                    )
                 }
-                dialog(route = DialogNav.ADD_CONTACT.route) {
+                dialog(route = DialogNav.ADD_CONTACT.route,
+                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
+                ) {
+                    DialogAddContact(
+                        onNavigationUp = {navController.navigateUp()}
+                    )
                 }
-                dialog(route = DialogNav.EDIT_CONTACT.route) {
+                dialog(route = DialogNav.EDIT_CONTACT.route,
+                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
+                ) {
                 }
-                dialog(route = DialogNav.ADD_PAYMENT.route) {
+                dialog(route = DialogNav.ADD_PAYMENT.route,
+                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
+                ) {
+                    DialogAddPayment(
+                        onNavigationUp = {navController.navigateUp()}
+                    )
                 }
             }
 
