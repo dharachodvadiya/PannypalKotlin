@@ -5,25 +5,26 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.googlefonts.Font
-import androidx.compose.ui.text.googlefonts.GoogleFont
 import androidx.compose.ui.unit.sp
 import com.indie.apps.pannypal.R
 import org.intellij.lang.annotations.JdkConstants.FontStyle
 
-val provider = GoogleFont.Provider(
+/*val provider = GoogleFont.Provider(
     providerAuthority = "com.google.android.gms.fonts",
     providerPackage = "com.google.android.gms",
     certificates = R.array.com_google_android_gms_fonts_certs
-)
+)*/
 
 val displayFontFamily = FontFamily(
-    Font(
+  /*  Font(
         googleFont = GoogleFont("Heebo"),
         fontProvider = provider,
-    )
+    )*/
+
+    Font(R.font.hebbo_font, weight = FontWeight.Normal),
 )
 
 // Default Material 3 typography values
