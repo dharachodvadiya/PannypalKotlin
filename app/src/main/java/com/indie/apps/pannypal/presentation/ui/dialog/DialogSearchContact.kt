@@ -11,6 +11,7 @@ import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 @Composable
 fun DialogSearchContact(
     onNavigationUp: () -> Unit,
+    onAddClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -20,18 +21,18 @@ fun DialogSearchContact(
         onNavigationUp = onNavigationUp,
         content = {
             SearchDialogField(
-                onAddClick = {},
+                onAddClick = onAddClick,
                 onTextChange = { }
             )
         },
         modifier = modifier
-        )
+    )
 }
 
 @Preview()
 @Composable
 private fun MyAppDialogPreview() {
     PannyPalTheme {
-        DialogSearchContact({})
+        DialogSearchContact({},{})
     }
 }

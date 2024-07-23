@@ -66,7 +66,12 @@ fun PannyPalApp() {
                     dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
                 ) {
                     DialogSearchContact(
-                        onNavigationUp = {navController.navigateUp()}
+                        onNavigationUp = {navController.navigateUp()},
+                        onAddClick = {
+                            navController.navigate(DialogNav.ADD_CONTACT.route){
+                                navController.popBackStack()
+                            }
+                        }
                     )
                 }
                 dialog(route = DialogNav.ADD_CONTACT.route,
