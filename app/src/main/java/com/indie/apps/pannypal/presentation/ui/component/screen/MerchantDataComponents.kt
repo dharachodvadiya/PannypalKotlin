@@ -1,6 +1,7 @@
 package com.indie.apps.pannypal.presentation.ui.component.screen
 
 import android.icu.util.CurrencyAmount
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -40,8 +41,10 @@ import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
@@ -137,7 +140,7 @@ fun MerchantDataBottomBar(
             if (isEditable) {
                 MerchantDataBottomButton(
                     text = R.string.edit_transaction,
-                    imageVector = Icons.Default.Edit,
+                    painterRes = R.drawable.ic_edit,
                     bgBrush = linearGradientsBrush(MyAppTheme.colors.gradientBlue),
                     onClick = onEditClick,
                     modifier = Modifier.weight(1f)
@@ -148,7 +151,7 @@ fun MerchantDataBottomBar(
                 Spacer(modifier = Modifier.width(7.dp))
                 MerchantDataBottomButton(
                     text = R.string.delete_transaction,
-                    imageVector = Icons.Default.DeleteOutline,
+                    painterRes = R.drawable.ic_delete_top,
                     bgColor = MyAppTheme.colors.redBg,
                     onClick = onDeleteClick,
                     modifier = Modifier.weight(1f)
@@ -176,13 +179,15 @@ fun MerchantDataIncomeAmount(
 ) {
     Row(
         modifier = modifier
+            .padding(vertical = 2.dp)
             .fillMaxWidth()
-            .padding(vertical = 7.dp)
             .combinedClickable(
                 onClick = onClick,
                 onLongClick = onLongClick,
                 role = Role.Button
             )
+            .padding(vertical = 5.dp)
+
     ) {
 
         MerchantDataAmountItem(
@@ -205,12 +210,13 @@ fun MerchantDataExpenseAmount(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 7.dp)
+            .padding(vertical = 2.dp)
             .combinedClickable(
                 onClick = onClick,
                 onLongClick = onLongClick,
                 role = Role.Button
-            ),
+            )
+            .padding(vertical = 5.dp),
         horizontalArrangement = Arrangement.End
     ) {
 
@@ -221,6 +227,37 @@ fun MerchantDataExpenseAmount(
             colorStroke = MyAppTheme.colors.redBg
         )
 
+    }
+}
+
+@Composable
+fun MerchantDataDateItem(
+    date: String = "1 jan, 2023",
+    modifier: Modifier = Modifier,
+){
+    Row(
+        modifier= modifier.fillMaxWidth()
+            .padding(vertical = 5.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Spacer(
+            modifier = Modifier
+                .height(1.dp)
+                .weight(1f)
+                .background(color = MyAppTheme.colors.gray0))
+        Text(
+            text = date,
+            style = MyAppTheme.typography.Medium40,
+            color = MyAppTheme.colors.gray2,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.padding(horizontal = 3.dp)
+        )
+        Spacer(
+            modifier = Modifier
+                .height(2.dp)
+                .weight(1f)
+                .background(color = MyAppTheme.colors.gray0))
     }
 }
 
@@ -255,13 +292,13 @@ private fun MerchantDataAmountItem(
         ) {
             Text(
                 text = Util.getFormattedStringWithSymbole(amount),
-                style = MyAppTheme.typography.Semibold80,
+                style = MyAppTheme.typography.Semibold67_5,
                 color = MyAppTheme.colors.black
             )
             if (!description.isNullOrEmpty()) {
                 Text(
                     text = description,
-                    style = MyAppTheme.typography.Medium46,
+                    style = MyAppTheme.typography.Medium44,
                     color = MyAppTheme.colors.gray2,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
@@ -275,7 +312,7 @@ private fun MerchantDataAmountItem(
 @Composable
 private fun MerchantDataBottomButton(
     @StringRes text: Int,
-    imageVector: ImageVector,
+    @DrawableRes painterRes: Int,
     bgBrush: Brush? = null,
     bgColor: Color = MyAppTheme.colors.brand,
     onClick: () -> Unit,
@@ -289,11 +326,12 @@ private fun MerchantDataBottomButton(
         onClick = onClick,
     ) {
         Icon(
-            imageVector = imageVector,
+            painter = painterResource(painterRes),
             contentDescription = "",
-            tint = MyAppTheme.colors.white
+            tint = MyAppTheme.colors.white,
+            modifier = Modifier.size(25.dp)
         )
-        Spacer(modifier = Modifier.width(5.dp))
+        Spacer(modifier = Modifier.width(10.dp))
         Text(
             text = stringResource(text),
             style = MyAppTheme.typography.Bold49_5,
@@ -422,5 +460,13 @@ private fun MerchantDataExpenseAmountItemPreview() {
             onClick = {},
             onLongClick = {}
         )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun MerchantDataDateItemPreview() {
+    PannyPalTheme {
+        MerchantDataDateItem()
     }
 }

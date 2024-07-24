@@ -24,6 +24,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -73,19 +74,23 @@ fun MerchantTopBar(
                 Row {
                     if(isDeletable){
                         Icon(
-                            imageVector = Icons.Default.DeleteOutline,
+                            painter = painterResource(id = R.drawable.ic_delete_top),
                             contentDescription = "Delete",
                             tint = MyAppTheme.colors.black,
-                            modifier = Modifier.clickable { onDeleteClick() }
+                            modifier = Modifier
+                                .size(25.dp)
+                                .clickable { onDeleteClick() }
                         )
                     }
                     if(isEditable){
                         Spacer(modifier = Modifier.width(15.dp))
                         Icon(
-                            imageVector = Icons.Default.Edit,
+                            painter = painterResource(id = R.drawable.ic_edit),
                             contentDescription = "edit",
                             tint = MyAppTheme.colors.black,
-                            modifier = Modifier.clickable { onEditClick() }
+                            modifier = Modifier
+                                .size(25.dp)
+                                .clickable { onEditClick() }
                         )
                     }
                 }

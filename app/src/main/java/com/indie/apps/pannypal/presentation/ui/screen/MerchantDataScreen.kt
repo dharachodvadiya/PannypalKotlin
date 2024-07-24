@@ -11,6 +11,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.indie.apps.pannypal.R
 import com.indie.apps.pannypal.presentation.ui.component.screen.MerchantDataBottomBar
+import com.indie.apps.pannypal.presentation.ui.component.screen.MerchantDataDateItem
 import com.indie.apps.pannypal.presentation.ui.component.screen.MerchantDataExpenseAmount
 import com.indie.apps.pannypal.presentation.ui.component.screen.MerchantDataIncomeAmount
 import com.indie.apps.pannypal.presentation.ui.component.screen.MerchantDataTopBar
@@ -43,6 +44,8 @@ fun MerchantDataScreen(
 
                     if(index %3 == 0)
                     {
+                        MerchantDataDateItem()
+
                         MerchantDataIncomeAmount(
                             onClick = {},
                             onLongClick = {}
