@@ -36,6 +36,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.geometry.Offset
@@ -180,6 +181,7 @@ fun MerchantDataIncomeAmount(
     Row(
         modifier = modifier
             .padding(vertical = 2.dp)
+            .clip(RoundedCornerShape(dimensionResource(R.dimen.round_corner)))
             .fillMaxWidth()
             .combinedClickable(
                 onClick = onClick,
@@ -211,6 +213,7 @@ fun MerchantDataExpenseAmount(
         modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 2.dp)
+            .clip(RoundedCornerShape(dimensionResource(R.dimen.round_corner)))
             .combinedClickable(
                 onClick = onClick,
                 onLongClick = onLongClick,

@@ -9,6 +9,7 @@ import com.indie.apps.pannypal.presentation.ui.navigation.BottomNavItem
 import com.indie.apps.pannypal.presentation.ui.navigation.DialogNav
 import com.indie.apps.pannypal.presentation.ui.navigation.MerchantNav
 import com.indie.apps.pannypal.presentation.ui.screen.MerchantDataScreen
+import com.indie.apps.pannypal.presentation.ui.screen.MerchantProfileScreen
 import com.indie.apps.pannypal.presentation.ui.screen.MerchantScreen
 
 fun NavGraphBuilder.MerchantRoute(
@@ -32,6 +33,12 @@ fun NavGraphBuilder.MerchantRoute(
             bottomBarState.value = false
             MerchantDataScreen(
                 onProfileClick = {navController.navigate(MerchantNav.PROFILE.route)},
+                onNavigationUp = { navController.navigateUp() })
+        }
+
+        composable(route = MerchantNav.PROFILE.route) {
+            bottomBarState.value = false
+            MerchantProfileScreen(
                 onNavigationUp = { navController.navigateUp() })
         }
     }
