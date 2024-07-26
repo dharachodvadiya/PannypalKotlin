@@ -12,18 +12,42 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.indie.apps.pannypal.R
+import com.indie.apps.pannypal.data.entity.User
 import com.indie.apps.pannypal.presentation.ui.component.TopBarWithTitle
 import com.indie.apps.pannypal.presentation.ui.component.screen.ProfileSection2
 import com.indie.apps.pannypal.presentation.ui.component.screen.ProfileTopSection
 import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
+import com.indie.apps.pannypal.presentation.viewmodel.ProfileViewModel
+import com.indie.apps.pannypal.util.Resource
 
 @Composable
 fun ProfileScreen(
-    onNavigationUp: () -> Unit,
-    modifier: Modifier = Modifier
+    profileViewModel: ProfileViewModel = hiltViewModel(),
+    onNavigationUp: () -> Unit
 ) {
+    when(profileViewModel.userProfileUiState)
+    {
+        is Resource.Loading -> { LoadingScreen() }
+        is Resource.Success -> {
+            profileViewModel.userProfileUiState.data?.let {
+                ProfileScreenData(
+                    onNavigationUp = onNavigationUp,
+                    user = it
+                )
+            }
+        }
+        is Resource.Error -> {}
+    }
+}
+
+@Composable
+private fun ProfileScreenData(
+    onNavigationUp: () -> Unit,
+    user: User)
+{
     // TODO setProfile data
     Scaffold(
         topBar = {
@@ -39,12 +63,16 @@ fun ProfileScreen(
         val configuration = LocalConfiguration.current
         val screenHeight = configuration.screenHeightDp.dp
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxHeight()
                 .padding(padding)
         ) {
-            ProfileTopSection(Modifier.height(screenHeight * 0.3f))
+            ProfileTopSection(
+                totalAmount = (user.incomeAmount+user.expenseAmount).toDouble(),
+                modifier =  Modifier.height(screenHeight * 0.3f))
             ProfileSection2(
+                incomeAmpunt = user.incomeAmount.toDouble(),
+                expenseAmpunt = user.expenseAmount.toDouble(),
                 onLoginWithGoogle = {})
         }
 
@@ -57,6 +85,6 @@ fun ProfileScreen(
 @Composable
 private fun ProfileScreenPreview() {
     PannyPalTheme {
-        ProfileScreen({})
+        ProfileScreen(onNavigationUp = {})
     }
 }

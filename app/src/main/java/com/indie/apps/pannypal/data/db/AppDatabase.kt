@@ -15,6 +15,7 @@ import com.indie.apps.pannypal.data.entity.MerchantData
 import com.indie.apps.pannypal.data.entity.Payment
 import com.indie.apps.pannypal.data.entity.User
 import com.indie.apps.pannypal.repository.PaymentRepositoryImpl
+import com.indie.apps.pannypal.repository.UserRepositoryImpl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -72,6 +73,11 @@ abstract class AppDatabase : RoomDatabase() {
 
         @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
         suspend fun populateDatabase(db: AppDatabase) {
+
+            val user = User(name = "Me", currency = "AED")
+            val userDao = db.userDao()
+
+            UserRepositoryImpl(userDao).insert(user)
 
             val paymentDao = db.paymentDao()
             // Define your pre-added payment methods

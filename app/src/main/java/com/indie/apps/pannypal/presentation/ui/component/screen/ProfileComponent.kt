@@ -35,6 +35,7 @@ import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 
 @Composable
 fun ProfileTopSection(
+    totalAmount : Double = 0.0,
     modifier: Modifier = Modifier
 ){
 
@@ -58,7 +59,7 @@ fun ProfileTopSection(
         )
         Spacer(modifier = Modifier.height(5.dp))
         Text(
-            text = Util.getFormattedStringWithSymbole(0.0),
+            text = Util.getFormattedStringWithSymbole(totalAmount),
             style = MyAppTheme.typography.Semibold90,
             color = MyAppTheme.colors.black
         )
@@ -67,6 +68,8 @@ fun ProfileTopSection(
 
 @Composable
 fun ProfileSection2(
+    incomeAmpunt: Double = 0.0,
+    expenseAmpunt: Double = 0.0,
     onLoginWithGoogle: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -80,7 +83,7 @@ fun ProfileSection2(
                 .padding(vertical = 20.dp)
         ) {
             ProfileAmountWithIcon(
-                amount = 5.0,
+                amount = incomeAmpunt,
                 isPositive = true
             )
             Spacer(
@@ -90,7 +93,7 @@ fun ProfileSection2(
                     .background(MyAppTheme.colors.gray1)
             )
             ProfileAmountWithIcon(
-                amount = -5.0,
+                amount = -expenseAmpunt,
                 isPositive = false
             )
         }
