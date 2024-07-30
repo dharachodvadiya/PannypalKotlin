@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -13,6 +14,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.indie.apps.pannypal.R
 import com.indie.apps.pannypal.data.entity.User
 import com.indie.apps.pannypal.presentation.ui.component.TopBarWithTitle
@@ -28,17 +30,22 @@ fun ProfileScreen(
     profileViewModel: ProfileViewModel = hiltViewModel(),
     onNavigationUp: () -> Unit
 ) {
-    when(profileViewModel.userProfileUiState)
-    {
-        is Resource.Loading -> { LoadingScreen() }
+    val uiState by profileViewModel.uiState.collectAsStateWithLifecycle()
+
+    when (uiState) {
+        is Resource.Loading -> {
+            LoadingScreen()
+        }
+
         is Resource.Success -> {
-            profileViewModel.userProfileUiState.data?.let {
+            uiState.data?.let {
                 ProfileScreenData(
                     onNavigationUp = onNavigationUp,
                     user = it
                 )
             }
         }
+
         is Resource.Error -> {}
     }
 }
@@ -46,8 +53,8 @@ fun ProfileScreen(
 @Composable
 private fun ProfileScreenData(
     onNavigationUp: () -> Unit,
-    user: User)
-{
+    user: User
+) {
     // TODO setProfile data
     Scaffold(
         topBar = {
@@ -68,8 +75,9 @@ private fun ProfileScreenData(
                 .padding(padding)
         ) {
             ProfileTopSection(
-                totalAmount = (user.incomeAmount+user.expenseAmount).toDouble(),
-                modifier =  Modifier.height(screenHeight * 0.3f))
+                totalAmount = (user.incomeAmount + user.expenseAmount).toDouble(),
+                modifier = Modifier.height(screenHeight * 0.3f)
+            )
             ProfileSection2(
                 incomeAmpunt = user.incomeAmount.toDouble(),
                 expenseAmpunt = user.expenseAmount.toDouble(),
@@ -78,7 +86,6 @@ private fun ProfileScreenData(
 
     }
 }
-
 
 
 @Preview

@@ -1,9 +1,11 @@
 package com.indie.apps.pannypal.presentation.ui.screen
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
@@ -25,7 +27,9 @@ fun LoadingScreen(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier){
+        verticalArrangement = Arrangement.Center,
+        modifier = modifier
+            .fillMaxSize()){
 
         Image(painter = painterResource(id = R.drawable.icon_loading), contentDescription = "icon")
 Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.padding)))

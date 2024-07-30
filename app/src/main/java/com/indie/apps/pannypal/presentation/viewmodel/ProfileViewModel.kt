@@ -1,33 +1,61 @@
 package com.indie.apps.pannypal.presentation.viewmodel
 
-import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.indie.apps.pannypal.data.entity.User
 import com.indie.apps.pannypal.domain.usecase.getUserProfileUsecase
 import com.indie.apps.pannypal.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @HiltViewModel
-class ProfileViewModel @Inject constructor(private val userProfileUsecase: getUserProfileUsecase): ViewModel() {
+class ProfileViewModel @Inject constructor(private val userProfileUsecase: getUserProfileUsecase) :
+    ViewModel() {
 
-    var userProfileUiState: Resource<User> by mutableStateOf(Resource.Loading())
-        private set
+    val uiState = userProfileUsecase.loadData()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), Resource.Loading())
+
+    // var userProfileUiState: Resource<User> by mutableStateOf(Resource.Loading())
+    //    private set
+
+    /*private val _uiState = MutableStateFlow<Resource<User>>(Resource.Loading())
+    val uiState= _uiState.asStateFlow()*/
+
+    //private val trigger = MutableSharedFlow<Unit>(replay = 1)
+
+
+
+    /*val uiState = trigger.flatMapLatest { _ ->
+        userProfileUsecase
+            .loadData()
+    }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), Resource.Loading())
 
     init {
-        getData()
+        refresh()
     }
 
-    private fun getData() = viewModelScope.launch {
-        Log.d("aaaaaaa", "getData call")
-        userProfileUsecase.loadData().collect {
-            userProfileUiState = it
+    fun refresh() {
+        viewModelScope.launch {
+            trigger.emit(Unit)
         }
-    }
+    }*/
+
+    /* init {
+         getData()
+     }
+
+     private fun getData() = viewModelScope.launch {
+         Log.d("aaaaaaa", "getData call")
+
+         userProfileUsecase
+             .loadData()
+             .collect {
+             //userProfileUiState = it
+
+             _uiState.emit(it)
+         }
+     }*/
 
 }
