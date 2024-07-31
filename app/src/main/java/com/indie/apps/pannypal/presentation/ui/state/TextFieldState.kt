@@ -14,11 +14,11 @@ class TextFieldState(
 
     fun showErrors() = displayErrors
 
-    fun getError(): String? {
+    fun getError(): String {
         return if (showErrors()) {
             errorText
         } else {
-            null
+            ""
         }
     }
 

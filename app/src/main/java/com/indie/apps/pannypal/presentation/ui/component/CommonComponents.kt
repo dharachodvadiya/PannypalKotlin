@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -162,40 +163,51 @@ fun DialogTextFieldItem(
     keyboardType: KeyboardType = KeyboardType.Text,
     modifier: Modifier = Modifier
 ) {
-    Row(
+    Column(
         modifier = modifier
             .padding(
                 horizontal = dimensionResource(id = R.dimen.padding),
-                vertical = 7.dp
+                vertical = 5.dp
             )
-            .height(dimensionResource(id = R.dimen.new_entry_field_hight))
-            .background(
-                shape = RoundedCornerShape(dimensionResource(id = R.dimen.round_corner)),
-                color = MyAppTheme.colors.transparent
-            ),
-        verticalAlignment = Alignment.CenterVertically,
     ) {
+        Row(
+            modifier = Modifier
+                .height(dimensionResource(id = R.dimen.new_entry_field_hight))
+                .background(
+                    shape = RoundedCornerShape(dimensionResource(id = R.dimen.round_corner)),
+                    color = MyAppTheme.colors.transparent
+                ),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
 
-        Icon(imageVector = imageVector, contentDescription = "")
-        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.item_content_padding)))
-        MyAppTextField(
-            value = textState.text,
-            onValueChange = {
-                textState.text = it },
-            placeHolder = stringResource(placeholder),
-            textStyle = MyAppTheme.typography.Medium46,
-            keyboardType = keyboardType,
-            placeHolderTextStyle = MyAppTheme.typography.Regular46,
-            modifier = Modifier.height(dimensionResource(id = R.dimen.new_entry_field_hight)),
-            bgColor = MyAppTheme.colors.gray0,
-            paddingValues = PaddingValues(horizontal = dimensionResource(id = R.dimen.item_content_padding))
-        )
+            Icon(imageVector = imageVector, contentDescription = "")
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.item_content_padding)))
+            MyAppTextField(
+                value = textState.text,
+                onValueChange = {
+                    textState.setError(isShowError = false)
+                    textState.text = it },
+                placeHolder = stringResource(placeholder),
+                textStyle = MyAppTheme.typography.Medium46,
+                keyboardType = keyboardType,
+                placeHolderTextStyle = MyAppTheme.typography.Regular46,
+                modifier = Modifier.height(dimensionResource(id = R.dimen.new_entry_field_hight)),
+                bgColor = MyAppTheme.colors.gray0,
+                paddingValues = PaddingValues(horizontal = dimensionResource(id = R.dimen.item_content_padding))
+            )
+        }
+
+        Box(modifier = Modifier
+            .height(20.dp)
+            .fillMaxWidth())
+        {
+            TextFieldError(
+                textError = textState.getError())
+        }
     }
 
-    textState.getError()?.let { error ->
-        TextFieldError(
-            textError = error)
-    }
+
+
 }
 
 @Composable
@@ -209,7 +221,6 @@ internal fun TextFieldError(textError: String, modifier: Modifier = Modifier) {
             style = MyAppTheme.typography.Semibold40,
             textAlign = TextAlign.End
         )
-        Spacer(modifier = Modifier.width(16.dp))
     }
 }
 
