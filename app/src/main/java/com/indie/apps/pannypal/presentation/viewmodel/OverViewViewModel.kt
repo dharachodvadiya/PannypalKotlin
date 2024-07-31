@@ -1,6 +1,9 @@
 package com.indie.apps.pannypal.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class OverViewViewModel: ViewModel() {
+@HiltViewModel
+class OverViewViewModel @Inject constructor(): ViewModel() {
 }

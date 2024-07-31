@@ -50,6 +50,7 @@ import com.indie.apps.pannypal.R
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.MyAppTextField
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.TopBar
+import com.indie.apps.pannypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 
@@ -83,7 +84,7 @@ fun TopBarWithTitle(
 
 @Composable
 fun UserProfile(
-    borderWidth : Float = 0f,
+    borderWidth: Float = 0f,
     modifier: Modifier = Modifier
 ) {
     val iconGradient = MyAppTheme.colors.gradientBlue
@@ -156,17 +157,17 @@ fun BottomSaveButton(
 @Composable
 fun DialogTextFieldItem(
     imageVector: ImageVector,
-    textState: MutableState<String> = remember {
-        mutableStateOf("")
-    },
+    textState: TextFieldState = TextFieldState(),
     placeholder: Int,
     keyboardType: KeyboardType = KeyboardType.Text,
     modifier: Modifier = Modifier
-){
+) {
     Row(
         modifier = modifier
-            .padding(horizontal = dimensionResource(id = R.dimen.padding),
-                vertical = 7.dp)
+            .padding(
+                horizontal = dimensionResource(id = R.dimen.padding),
+                vertical = 7.dp
+            )
             .height(dimensionResource(id = R.dimen.new_entry_field_hight))
             .background(
                 shape = RoundedCornerShape(dimensionResource(id = R.dimen.round_corner)),
@@ -175,11 +176,12 @@ fun DialogTextFieldItem(
         verticalAlignment = Alignment.CenterVertically,
     ) {
 
-        Icon(imageVector = imageVector, contentDescription ="")
+        Icon(imageVector = imageVector, contentDescription = "")
         Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.item_content_padding)))
         MyAppTextField(
-            value = textState.value,
-            onValueChange = {textState.value = it},
+            value = textState.text,
+            onValueChange = {
+                textState.text = it },
             placeHolder = stringResource(placeholder),
             textStyle = MyAppTheme.typography.Medium46,
             keyboardType = keyboardType,
@@ -188,6 +190,26 @@ fun DialogTextFieldItem(
             bgColor = MyAppTheme.colors.gray0,
             paddingValues = PaddingValues(horizontal = dimensionResource(id = R.dimen.item_content_padding))
         )
+    }
+
+    textState.getError()?.let { error ->
+        TextFieldError(
+            textError = error)
+    }
+}
+
+@Composable
+internal fun TextFieldError(textError: String, modifier: Modifier = Modifier) {
+    Row(modifier = modifier.fillMaxWidth()) {
+
+        Text(
+            text = textError,
+            modifier = Modifier.weight(1f),
+            color = MyAppTheme.colors.redText,
+            style = MyAppTheme.typography.Semibold40,
+            textAlign = TextAlign.End
+        )
+        Spacer(modifier = Modifier.width(16.dp))
     }
 }
 
@@ -219,7 +241,8 @@ private fun DialogTextFieldItemPreview() {
     PannyPalTheme {
         DialogTextFieldItem(
             imageVector = Icons.Default.PersonOutline,
-            placeholder = R.string.amount_placeholder)
+            placeholder = R.string.amount_placeholder
+        )
     }
 }
 

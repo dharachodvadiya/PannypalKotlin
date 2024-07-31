@@ -11,7 +11,7 @@ import com.indie.apps.pannypal.presentation.ui.component.DialogTextFieldItem
 
 
 @Composable
-fun AddDialogField()
+fun AddMerchantDialogField()
 {
     Column {
         DialogTextFieldItem(

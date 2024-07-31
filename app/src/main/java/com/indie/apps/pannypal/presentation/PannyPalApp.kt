@@ -1,18 +1,26 @@
 package com.indie.apps.pannypal.presentation
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
+import com.indie.apps.pannypal.R
 import com.indie.apps.pannypal.presentation.ui.dialog.DialogAddMerchant
 import com.indie.apps.pannypal.presentation.ui.dialog.DialogAddPayment
 import com.indie.apps.pannypal.presentation.ui.dialog.DialogSearchMerchant
@@ -25,7 +33,8 @@ import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 
 @Composable
 fun PannyPalApp() {
-
+    val context = LocalContext.current
+    val paymentSaveToast = stringResource(id = R.string.payment_save_success_toast)
     PannyPalTheme() {
         val navController = rememberNavController()
         val currentBackStack by navController.currentBackStackEntryAsState()
@@ -39,7 +48,14 @@ fun PannyPalApp() {
         // State of bottomBar, set state to false, if current page route is "car_details"
         var bottomBarState = rememberSaveable { (mutableStateOf(true)) }
 
-        Scaffold(bottomBar = {
+        val scope = rememberCoroutineScope()
+        val snackbarHostState = remember { SnackbarHostState() }
+
+        Scaffold(
+            snackbarHost = {
+                SnackbarHost(hostState = snackbarHostState)
+            },
+            bottomBar = {
             BottomNavigationBarCustom(
                 tabs = BottomNavItem.values(), onTabSelected = { newScreen ->
                     navController.navigate(newScreen.route) {
@@ -89,13 +105,18 @@ fun PannyPalApp() {
                     dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
                 ) {
                     DialogAddPayment(
-                        onNavigationUp = {navController.navigateUp()}
+                        onNavigationUp = {navController.navigateUp()},
+                        onSaveSuccess = {
+                            navController.navigateUp()
+                            Toast.makeText(context, paymentSaveToast, Toast.LENGTH_SHORT).show()
+                        }
                     )
                 }
             }
 
         }
     }
+
 }
 
 @Preview()

@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -45,7 +46,7 @@ fun MyAppTextField(
     modifier: Modifier = Modifier,
     textModifier: Modifier = Modifier,
     bgColor: Color = MyAppTheme.colors.white,
-    onDoneAction: (() -> Unit)? = null,
+    onDoneAction: (() -> Unit)? = {},
     onNextAction: (() -> Unit)? = null,
     paddingValues: PaddingValues = PaddingValues(0.dp)
 ) {
@@ -56,6 +57,7 @@ fun MyAppTextField(
             .padding(vertical = 5.dp),
         contentAlignment = Alignment.CenterStart
     ) {
+        val keyboardController = LocalSoftwareKeyboardController.current
         val colors = TextFieldDefaults.colors(
             cursorColor = MyAppTheme.colors.brand,
             focusedIndicatorColor = MyAppTheme.colors.transparent,
@@ -73,7 +75,16 @@ fun MyAppTextField(
             onValueChange = onValueChange,
             textStyle = textStyle,
             keyboardOptions = KeyboardOptions(imeAction = imeAction, keyboardType = keyboardType),
-            keyboardActions = KeyboardActions(onDone = {onDoneAction}, onNext = {onNextAction}),
+            keyboardActions = KeyboardActions(onDone = {
+                keyboardController?.hide()
+                if (onDoneAction != null) {
+                    onDoneAction()
+                }
+            }, onNext = {
+                if (onNextAction != null) {
+                    onNextAction()
+                }
+            }),
             singleLine = true,
             decorationBox = @Composable { innerTextField ->
                 // places leading icon, text field with label and placeholder, trailing icon

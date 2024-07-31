@@ -5,6 +5,4 @@ import com.indie.apps.pannypal.data.db.AppDatabase
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class MyApplication : Application() {
-
-}
+class MyApplication : Application()

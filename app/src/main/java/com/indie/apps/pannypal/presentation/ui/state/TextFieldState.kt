@@ -1,0 +1,29 @@
+package com.indie.apps.pannypal.presentation.ui.state
+
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.listSaver
+import androidx.compose.runtime.setValue
+
+class TextFieldState(
+) {
+    var text: String by mutableStateOf("")
+    var errorText: String by mutableStateOf("")
+
+    private var displayErrors: Boolean by mutableStateOf(false)
+
+    fun showErrors() = displayErrors
+
+    fun getError(): String? {
+        return if (showErrors()) {
+            errorText
+        } else {
+            null
+        }
+    }
+
+    fun setError(errorText: String = "", isShowError : Boolean = false){
+        displayErrors = isShowError
+        this.errorText = errorText
+    }
+}

@@ -8,7 +8,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.indie.apps.pannypal.R
 import com.indie.apps.pannypal.presentation.ui.component.BottomSaveButton
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.MyAppDialog
-import com.indie.apps.pannypal.presentation.ui.component.dialog.AddDialogField
+import com.indie.apps.pannypal.presentation.ui.component.dialog.AddMerchantDialogField
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 
 @Composable
@@ -21,7 +21,7 @@ fun DialogAddMerchant(
         title = R.string.add_merchant,
         onNavigationUp = onNavigationUp,
         content = {
-            AddDialogField()
+            AddMerchantDialogField()
         },
         bottomContent = {
             BottomSaveButton(

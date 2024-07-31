@@ -8,11 +8,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.indie.apps.pannypal.R
 import com.indie.apps.pannypal.presentation.ui.component.DialogTextFieldItem
+import com.indie.apps.pannypal.presentation.ui.state.TextFieldState
 
 
 @Composable
-fun AddPaymentDialogField() {
+fun AddPaymentDialogField(
+    textPaymentState: TextFieldState
+) {
     DialogTextFieldItem(
+        textState = textPaymentState,
         imageVector = Icons.Default.Payment,
         placeholder = R.string.add_payment_type_placeholder
     )
