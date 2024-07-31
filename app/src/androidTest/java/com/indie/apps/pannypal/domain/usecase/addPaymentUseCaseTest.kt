@@ -58,9 +58,8 @@ class addPaymentUseCaseTest {
         //when
         val resultFlow = AddPaymentUseCase(
             paymentRepository = paymentRepository,
-            payment = payment,
             dispatcher = coroutineDispatcher
-        ).invoke()
+        ).addPayment(payment = payment)
 
         // Assert: Collect and verify the result
         resultFlow.drop(1).collect{ result ->

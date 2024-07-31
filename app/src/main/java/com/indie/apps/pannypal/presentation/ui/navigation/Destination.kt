@@ -36,4 +36,5 @@ sealed class DialogNav(val route: String) {
     data object ADD_MERCHANT : DialogNav("Dialog/AddMerchant")
     data object EDIT_MERCHANT : DialogNav("Dialog/EditMerchant")
     data object ADD_PAYMENT : DialogNav("Dialog/AddPayment")
+    data object CPP : DialogNav("Dialog/CountryCodePicker")
 }

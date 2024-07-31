@@ -3,13 +3,9 @@ package com.indie.apps.pannypal.presentation
 import android.widget.Toast
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -21,8 +17,10 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import com.indie.apps.pannypal.R
+import com.indie.apps.pannypal.presentation.ui.common.Util
 import com.indie.apps.pannypal.presentation.ui.dialog.DialogAddMerchant
 import com.indie.apps.pannypal.presentation.ui.dialog.DialogAddPayment
+import com.indie.apps.pannypal.presentation.ui.dialog.DialogCpp
 import com.indie.apps.pannypal.presentation.ui.dialog.DialogSearchMerchant
 import com.indie.apps.pannypal.presentation.ui.navigation.BottomNavItem
 import com.indie.apps.pannypal.presentation.ui.navigation.BottomNavigationBarCustom
@@ -51,18 +49,18 @@ fun PannyPalApp() {
 
         Scaffold(
             bottomBar = {
-            BottomNavigationBarCustom(
-                tabs = BottomNavItem.values(), onTabSelected = { newScreen ->
-                    navController.navigate(newScreen.route) {
-                        launchSingleTop = true
-                        restoreState = true
-                        popUpTo(newScreen.route)
-                    }
-                },
-                currentTab = currentScreen,
-                bottomBarState = bottomBarState.value
-            )
-        }) { innerPadding ->
+                BottomNavigationBarCustom(
+                    tabs = BottomNavItem.values(), onTabSelected = { newScreen ->
+                        navController.navigate(newScreen.route) {
+                            launchSingleTop = true
+                            restoreState = true
+                            popUpTo(newScreen.route)
+                        }
+                    },
+                    currentTab = currentScreen,
+                    bottomBarState = bottomBarState.value
+                )
+            }) { innerPadding ->
 
             NavHost(
                 navController = navController,
@@ -77,37 +75,66 @@ fun PannyPalApp() {
                     dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
                 ) {
                     DialogSearchMerchant(
-                        onNavigationUp = {navController.navigateUp()},
+                        onNavigationUp = { navController.navigateUp() },
                         onAddClick = {
-                            navController.navigate(DialogNav.ADD_MERCHANT.route){
+                            navController.navigate(DialogNav.ADD_MERCHANT.route) {
                                 navController.popBackStack()
                             }
                         }
                     )
                 }
-                dialog(route = DialogNav.ADD_MERCHANT.route,
+                dialog(
+                    route = DialogNav.ADD_MERCHANT.route,
                     dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
-                ) {
+                ) { backStackEntry ->
+                    // get data passed back from B
+                    val data: String? = backStackEntry
+                        .savedStateHandle
+                        .get<String>(Util.countryCode)
+
                     DialogAddMerchant(
-                        onNavigationUp = {navController.navigateUp()},
+                        onNavigationUp = { navController.navigateUp() },
                         onSaveSuccess = {
                             navController.navigateUp()
                             Toast.makeText(context, merchantSaveToast, Toast.LENGTH_SHORT).show()
-                        }
+                        },
+                        onCpp = {
+                            backStackEntry.savedStateHandle.remove<String>(Util.countryCode)
+                            navController.navigate(DialogNav.CPP.route)
+                        },
+                        code = data
                     )
                 }
-                dialog(route = DialogNav.EDIT_MERCHANT.route,
+                dialog(
+                    route = DialogNav.EDIT_MERCHANT.route,
                     dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
                 ) {
                 }
-                dialog(route = DialogNav.ADD_PAYMENT.route,
+                dialog(
+                    route = DialogNav.ADD_PAYMENT.route,
                     dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
                 ) {
                     DialogAddPayment(
-                        onNavigationUp = {navController.navigateUp()},
+                        onNavigationUp = { navController.navigateUp() },
                         onSaveSuccess = {
                             navController.navigateUp()
                             Toast.makeText(context, paymentSaveToast, Toast.LENGTH_SHORT).show()
+                        }
+                    )
+                }
+                dialog(
+                    route = DialogNav.CPP.route,
+                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
+                ) {
+                    DialogCpp(
+                        onNavigationUp = { navController.navigateUp() },
+                        onSelect = {
+                            // Pass data back to A
+                            navController.previousBackStackEntry
+                                ?.savedStateHandle
+                                ?.set(Util.countryCode, it.dial_code)
+
+                            navController.popBackStack()
                         }
                     )
                 }

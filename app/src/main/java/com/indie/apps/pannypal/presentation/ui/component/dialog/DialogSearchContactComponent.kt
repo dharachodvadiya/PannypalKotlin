@@ -61,8 +61,7 @@ private fun SearchMerchantSearchview(
     onAddClick: () -> Unit,
     onTextChange: (String) -> Unit,
     modifier: Modifier = Modifier
-)
-{
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
@@ -73,12 +72,16 @@ private fun SearchMerchantSearchview(
     ) {
         SearchView(
             trailingIcon = Icons.Default.Search,
-            onTextChange = onTextChange,
             bgColor = MyAppTheme.colors.gray0,
             modifier = Modifier
                 .weight(1f)
                 .height(40.dp),
-            paddingValues = PaddingValues(top = 0.dp, bottom = 0.dp, start = dimensionResource(id = R.dimen.padding), end = 0.dp),
+            paddingValues = PaddingValues(
+                top = 0.dp,
+                bottom = 0.dp,
+                start = dimensionResource(id = R.dimen.padding),
+                end = 0.dp
+            ),
         )
         Spacer(modifier = Modifier.width(5.dp))
 
@@ -89,7 +92,7 @@ private fun SearchMerchantSearchview(
                 color = MyAppTheme.colors.gray2
             ),
             onClick = onAddClick,
-        ){
+        ) {
             Icon(
                 imageVector = Icons.Default.Add,
                 contentDescription = "Add",
@@ -114,7 +117,7 @@ private fun SearchMerchantListItem(
         leadingIcon = {
             RoundImage(
                 imageVector = imageVector,
-                brush = linearGradientsBrush( MyAppTheme.colors.gradientBlue),
+                brush = linearGradientsBrush(MyAppTheme.colors.gradientBlue),
                 backGround = bgColor,
                 contentDescription = "person"
             )
@@ -140,6 +143,7 @@ private fun SearchMerchantListItem(
         modifier = modifier,
         paddingValues = PaddingValues(
             horizontal = dimensionResource(id = R.dimen.padding),
-            vertical = 5.dp)
+            vertical = 5.dp
+        )
     )
 }

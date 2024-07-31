@@ -6,19 +6,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -26,104 +17,50 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pannypal.R
+import com.indie.apps.pannypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 
 @Composable
 fun SearchView(
     trailingIcon: ImageVector? = null,
-    onTextChange: (String) -> Unit,
+    textState: TextFieldState = TextFieldState(),
     modifier: Modifier = Modifier,
     bgColor: Color = MyAppTheme.colors.white,
     paddingValues: PaddingValues = PaddingValues(0.dp)
 ) {
-    var textState by remember { mutableStateOf("") }
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(dimensionResource(R.dimen.round_corner)))
             .background(bgColor)
     ) {
-        /*TextField(
-            value = textState,
-            onValueChange = {
-                textState = it
-                onTextChange(textState)
-            },
-            colors = TextFieldDefaults.colors(
-                cursorColor = MyAppTheme.colors.brand,
-                focusedIndicatorColor = MyAppTheme.colors.transparent,
-                unfocusedIndicatorColor = MyAppTheme.colors.transparent,
-                disabledIndicatorColor = MyAppTheme.colors.transparent,
-                focusedContainerColor = MyAppTheme.colors.transparent,
-                unfocusedContainerColor = MyAppTheme.colors.transparent
-            ),
-            placeholder = {
-                Text(
-                    text = "Search",
-                    style = MyAppTheme.typography.Regular57,
-                    color = MyAppTheme.colors.gray2
-                )
-            },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-            //keyboardActions = KeyboardActions(onSearch = { onSearchClick(text) }),
-            trailingIcon = {
-                if (textState.isNotEmpty()) {
-                    Icon(
-                        modifier = Modifier.clickable {
-                            if (textState.isNotEmpty()) {
-                                textState = ""
-                            }
-                        },
-                        imageVector = Icons.Filled.Close,
-                        contentDescription = "close"
-                    )
-                }else if(trailingIcon != null){
-                    Icon(
-                        modifier = Modifier.clickable {
-                            if (textState.isNotEmpty()) {
-                                textState = ""
-                            }
-                        },
-                        imageVector = trailingIcon,
-                        contentDescription = "search"
-                    )
-                }
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(color = MyAppTheme.colors.transparent),
-            textStyle = MyAppTheme.typography.Medium56
-        )*/
 
         MyAppTextField(
-            value = textState,
+            value = textState.text,
             onValueChange = {
-                textState = it
-                onTextChange(textState)
+                textState.text = it
             },
             placeHolder = "Search",
             imeAction = ImeAction.Search,
             //keyboardActions = KeyboardActions(onSearch = { onSearchClick(text) }),
             trailingIcon = {
-                if (textState.isNotEmpty()) {
+                if (textState.text.isNotEmpty()) {
                     Icon(
                         modifier = Modifier.clickable {
-                            if (textState.isNotEmpty()) {
-                                textState = ""
+                            if (textState.text.isNotEmpty()) {
+                                textState.text = ""
                             }
                         },
                         imageVector = Icons.Filled.Close,
                         contentDescription = "close"
                     )
-                }else if(trailingIcon != null){
+                } else if (trailingIcon != null) {
                     Icon(
                         modifier = Modifier.clickable {
-                            if (textState.isNotEmpty()) {
-                                textState = ""
+                            if (textState.text.isNotEmpty()) {
+                                textState.text = ""
                             }
                         },
                         imageVector = trailingIcon,
@@ -146,8 +83,6 @@ fun SearchView(
 @Composable
 private fun SearchviewPreview() {
     PannyPalTheme {
-        SearchView(
-            onTextChange = { }
-        )
+        SearchView()
     }
 }

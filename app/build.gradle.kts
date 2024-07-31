@@ -65,6 +65,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:1.6.8")
     implementation("androidx.compose.ui:ui-text-google-fonts:1.6.8")
     implementation("androidx.lifecycle:lifecycle-runtime-compose-android:2.8.4")
+    implementation(project(":cpp"))
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
@@ -99,6 +100,7 @@ dependencies {
 
     // Jetpack Compose Integration
     implementation("androidx.navigation:navigation-compose:$nav_version")
+    implementation("com.googlecode.libphonenumber:libphonenumber:8.2.0")
 
 }
 

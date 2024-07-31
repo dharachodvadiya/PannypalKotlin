@@ -19,6 +19,9 @@ data class Merchant(
     @ColumnInfo(name = "phone_num")
     val phoneNumber: String? = null,
 
+    @ColumnInfo(name = "country_code")
+    val countryCode: String? = null,
+
     @ColumnInfo(name = "date_milli")
     val dateInMilli: Long = 0,
 

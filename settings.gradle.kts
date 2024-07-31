@@ -15,4 +15,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "PannyPal"
 include(":app")
- 
+include(":cpp")

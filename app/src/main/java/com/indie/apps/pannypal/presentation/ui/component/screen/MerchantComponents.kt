@@ -58,7 +58,6 @@ fun MerchantTopBar(
             {
                 SearchView(
                     trailingIcon = Icons.Default.Search,
-                    onTextChange = onSearchTextChange,
                     bgColor = MyAppTheme.colors.gray0,
                     modifier = Modifier
                         .height(dimensionResource(R.dimen.top_bar_profile)),
