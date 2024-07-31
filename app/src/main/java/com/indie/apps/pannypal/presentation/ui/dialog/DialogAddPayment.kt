@@ -20,18 +20,18 @@ import com.indie.apps.pannypal.presentation.ui.component.dialog.AddPaymentDialog
 import com.indie.apps.pannypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 import com.indie.apps.pannypal.presentation.viewmodel.AddPaymentViewModel
+import com.indie.apps.pannypal.util.ErrorMessage
 
 @Composable
 fun DialogAddPayment(
     addPaymentViewModel: AddPaymentViewModel = hiltViewModel(),
     onNavigationUp: () -> Unit,
-    onSaveSuccess: ()-> Unit,
+    onSaveSuccess: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-   // val paymentType by addPaymentViewModel.paymentType.collectAsStateWithLifecycle()
+    // val paymentType by addPaymentViewModel.paymentType.collectAsStateWithLifecycle()
 
-    val paymentTypeState by  remember{mutableStateOf(TextFieldState())}
-    val paymentExistErrorText = stringResource(id = R.string.payment_type_exist)
+    val paymentTypeState by remember { mutableStateOf(TextFieldState()) }
     MyAppDialog(
         title = R.string.add_payment,
         onNavigationUp = onNavigationUp,
@@ -47,11 +47,9 @@ fun DialogAddPayment(
                         payment = Payment(name = paymentTypeState.text.trim()),
                         onSuccess = onSaveSuccess,
                         onFail = {
-                            paymentTypeState.setError(
-                                errorText = paymentExistErrorText,
-                                isShowError = true
-                            )
+                            paymentTypeState.setError(ErrorMessage.PAYMENT_TYPE_EXIST)
                         }
+
                     )
                 },
                 modifier = Modifier.padding(dimensionResource(id = R.dimen.padding))

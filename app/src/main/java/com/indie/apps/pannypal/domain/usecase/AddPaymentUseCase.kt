@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
-class addPaymentUsecase @Inject constructor(
+class AddPaymentUseCase @Inject constructor(
     private val paymentRepository: PaymentRepository,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) {

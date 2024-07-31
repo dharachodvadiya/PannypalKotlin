@@ -2,24 +2,15 @@ package com.indie.apps.pannypal.domain.usecase
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.indie.apps.pannypal.data.dao.MerchantDao
-import com.indie.apps.pannypal.data.dao.MerchantDataDao
-import com.indie.apps.pannypal.data.dao.PaymentDao
-import com.indie.apps.pannypal.data.dao.UserDao
 import com.indie.apps.pannypal.data.db.AppDatabase
 import com.indie.apps.pannypal.data.entity.Merchant
-import com.indie.apps.pannypal.data.entity.MerchantData
-import com.indie.apps.pannypal.data.entity.Payment
-import com.indie.apps.pannypal.data.entity.User
 import com.indie.apps.pannypal.di.IoDispatcher
-import com.indie.apps.pannypal.repository.MerchantDataRepository
 import com.indie.apps.pannypal.repository.MerchantRepository
-import com.indie.apps.pannypal.repository.UserRepository
 import com.indie.apps.pannypal.util.Resource
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.drop
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.*
@@ -65,11 +56,10 @@ class addMerchantUsecaseTest {
         val merchant = Merchant(id = 1, name = "Merchant A")
 
         //when
-        val resultFlow = addMerchantUsecase(
+        val resultFlow = AddMerchantUseCase(
             merchantRepository = merchantRepository,
-            merchant = merchant,
             dispatcher = coroutineDispatcher
-        ).invoke()
+        ).addMerchant(merchant = merchant)
 
         // Assert: Collect and verify the result
         resultFlow.drop(1).collect{ result ->

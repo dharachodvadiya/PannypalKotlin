@@ -185,7 +185,7 @@ fun DialogTextFieldItem(
             MyAppTextField(
                 value = textState.text,
                 onValueChange = {
-                    textState.setError(isShowError = false)
+                    textState.disableError()
                     textState.text = it },
                 placeHolder = stringResource(placeholder),
                 textStyle = MyAppTheme.typography.Medium46,

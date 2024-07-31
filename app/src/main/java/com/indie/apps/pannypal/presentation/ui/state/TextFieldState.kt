@@ -22,8 +22,13 @@ class TextFieldState(
         }
     }
 
-    fun setError(errorText: String = "", isShowError : Boolean = false){
-        displayErrors = isShowError
+    fun setError(errorText: String){
+        displayErrors = true
         this.errorText = errorText
+    }
+
+    fun disableError(){
+        displayErrors = false
+        this.errorText = ""
     }
 }

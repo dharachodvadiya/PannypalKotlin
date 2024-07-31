@@ -27,6 +27,6 @@
     <string name="edit_transaction">Edit</string>
     <string name="delete_transaction">Delete</string>
     <string name="loading">Loading...</string>
-    <string name="payment_type_exist">Payment Type Exist</string>
     <string name="payment_save_success_toast">Payment Type Add Successfully</string>
+    <string name="merchant_save_success_toast">Merchant Add Successfully</string>
 </resources>

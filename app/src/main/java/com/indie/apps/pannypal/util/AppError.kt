@@ -17,3 +17,10 @@ fun handleException(e: Throwable): AppError {
         else -> AppError.ConversionError
     }
 }
+
+object ErrorMessage{
+    const val MERCHANT_NAME_EMPTY = "Enter Merchant Name"
+    const val MERCHANT_EXIST = "Merchant Already Exist"
+    const val PHONE_NO_INVALID = "Enter Valid Phone Number"
+    const val PAYMENT_TYPE_EXIST = "Payment Type Exist"
+}

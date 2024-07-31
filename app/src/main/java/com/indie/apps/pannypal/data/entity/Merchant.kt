@@ -13,6 +13,7 @@ data class Merchant(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
 
+    @ColumnInfo(collate = ColumnInfo.NOCASE)
     val name: String,
 
     @ColumnInfo(name = "phone_num")

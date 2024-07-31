@@ -35,6 +35,7 @@ import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 fun PannyPalApp() {
     val context = LocalContext.current
     val paymentSaveToast = stringResource(id = R.string.payment_save_success_toast)
+    val merchantSaveToast = stringResource(id = R.string.merchant_save_success_toast)
     PannyPalTheme() {
         val navController = rememberNavController()
         val currentBackStack by navController.currentBackStackEntryAsState()
@@ -48,13 +49,7 @@ fun PannyPalApp() {
         // State of bottomBar, set state to false, if current page route is "car_details"
         var bottomBarState = rememberSaveable { (mutableStateOf(true)) }
 
-        val scope = rememberCoroutineScope()
-        val snackbarHostState = remember { SnackbarHostState() }
-
         Scaffold(
-            snackbarHost = {
-                SnackbarHost(hostState = snackbarHostState)
-            },
             bottomBar = {
             BottomNavigationBarCustom(
                 tabs = BottomNavItem.values(), onTabSelected = { newScreen ->
@@ -94,7 +89,11 @@ fun PannyPalApp() {
                     dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
                 ) {
                     DialogAddMerchant(
-                        onNavigationUp = {navController.navigateUp()}
+                        onNavigationUp = {navController.navigateUp()},
+                        onSaveSuccess = {
+                            navController.navigateUp()
+                            Toast.makeText(context, merchantSaveToast, Toast.LENGTH_SHORT).show()
+                        }
                     )
                 }
                 dialog(route = DialogNav.EDIT_MERCHANT.route,

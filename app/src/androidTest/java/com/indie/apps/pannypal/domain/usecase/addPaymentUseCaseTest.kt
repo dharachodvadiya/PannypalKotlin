@@ -1,26 +1,16 @@
 package com.indie.apps.pannypal.domain.usecase
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.indie.apps.pannypal.data.dao.MerchantDao
-import com.indie.apps.pannypal.data.dao.MerchantDataDao
 import com.indie.apps.pannypal.data.dao.PaymentDao
-import com.indie.apps.pannypal.data.dao.UserDao
 import com.indie.apps.pannypal.data.db.AppDatabase
-import com.indie.apps.pannypal.data.entity.Merchant
-import com.indie.apps.pannypal.data.entity.MerchantData
 import com.indie.apps.pannypal.data.entity.Payment
-import com.indie.apps.pannypal.data.entity.User
 import com.indie.apps.pannypal.di.IoDispatcher
-import com.indie.apps.pannypal.repository.MerchantDataRepository
-import com.indie.apps.pannypal.repository.MerchantRepository
 import com.indie.apps.pannypal.repository.PaymentRepository
-import com.indie.apps.pannypal.repository.UserRepository
 import com.indie.apps.pannypal.util.Resource
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.drop
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.*
@@ -32,7 +22,7 @@ import javax.inject.Inject
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-class addPaymentUsecaseTest {
+class addPaymentUseCaseTest {
 
     @get:Rule
     var hiltAndroidRule = HiltAndroidRule(this)
@@ -66,7 +56,7 @@ class addPaymentUsecaseTest {
         val payment = Payment(id = 1, name = "Debit Card")
 
         //when
-        val resultFlow = addPaymentUsecase(
+        val resultFlow = AddPaymentUseCase(
             paymentRepository = paymentRepository,
             payment = payment,
             dispatcher = coroutineDispatcher
