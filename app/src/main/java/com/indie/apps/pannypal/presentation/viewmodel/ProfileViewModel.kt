@@ -2,7 +2,7 @@ package com.indie.apps.pannypal.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.indie.apps.pannypal.domain.usecase.getUserProfileUsecase
+import com.indie.apps.pannypal.domain.usecase.GetUserProfileUseCase
 import com.indie.apps.pannypal.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @HiltViewModel
-class ProfileViewModel @Inject constructor(private val userProfileUsecase: getUserProfileUsecase) :
+class ProfileViewModel @Inject constructor(private val userProfileUsecase: GetUserProfileUseCase) :
     ViewModel() {
 
     val uiState = userProfileUsecase.loadData()
