@@ -100,6 +100,7 @@ private fun SearchCcpSearchview(
                 .weight(1f)
                 .height(40.dp),
             paddingValues = PaddingValues(top = 0.dp, bottom = 0.dp, start = dimensionResource(id = R.dimen.padding), end = 0.dp),
+            onTextChange = {}
         )
     }
 }

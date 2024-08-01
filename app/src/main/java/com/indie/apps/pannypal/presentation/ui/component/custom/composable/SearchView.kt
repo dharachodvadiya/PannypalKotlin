@@ -27,6 +27,7 @@ import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 fun SearchView(
     trailingIcon: ImageVector? = null,
     textState: TextFieldState = TextFieldState(),
+    onTextChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     bgColor: Color = MyAppTheme.colors.white,
     paddingValues: PaddingValues = PaddingValues(0.dp)
@@ -41,6 +42,7 @@ fun SearchView(
             value = textState.text,
             onValueChange = {
                 textState.text = it
+                onTextChange(it)
             },
             placeHolder = "Search",
             imeAction = ImeAction.Search,
@@ -83,6 +85,6 @@ fun SearchView(
 @Composable
 private fun SearchviewPreview() {
     PannyPalTheme {
-        SearchView()
+        SearchView(onTextChange = {})
     }
 }

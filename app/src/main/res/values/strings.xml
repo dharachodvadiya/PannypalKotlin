@@ -30,4 +30,6 @@
     <string name="payment_save_success_toast">Payment Type Add Successfully</string>
     <string name="merchant_save_success_toast">Merchant Add Successfully</string>
     <string name="select_country">Select Country</string>
+    <string name="no_data_found">No Data Available</string>
+    <string name="no_details">No Details</string>
 </resources>

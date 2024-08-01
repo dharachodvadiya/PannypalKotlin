@@ -21,9 +21,17 @@ class SearchMerchantNameAndDetailListUseCase @Inject constructor(
 
             try {
                 emit(Resource.Loading())
+                println("aaaaaa start Loading search page = $page")
+
+                for(i in 1..5)
+                {
+                    println("aaaaaa Load search $i")
+                    kotlinx.coroutines.delay(500L)
+                }
                 val merchantDataWithName = merchantRepository.searchMerchantNameAndDetailList(searchQuery, Constant.QUERY_PAGE_SIZE,Constant.QUERY_PAGE_SIZE * (page-1))
                 emit(Resource.Success(merchantDataWithName))
             } catch (e: Throwable) {
+                println("aaaaaa catch search ${e.message}")
                 emit(Resource.Error(handleException(e).message + ": ${e.message}"))
             }
         }.flowOn(dispatcher)

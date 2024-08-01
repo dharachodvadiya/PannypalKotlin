@@ -57,6 +57,7 @@ fun MerchantTopBar(
             if(!isEditable && !isDeletable)
             {
                 SearchView(
+                    onTextChange = onSearchTextChange,
                     trailingIcon = Icons.Default.Search,
                     bgColor = MyAppTheme.colors.gray0,
                     modifier = Modifier

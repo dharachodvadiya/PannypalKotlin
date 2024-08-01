@@ -7,6 +7,7 @@ import com.google.i18n.phonenumbers.Phonenumber
 import java.text.DecimalFormat
 
 object Util {
+    const val SEARCH_NEWS_TIME_DELAY = 500L
 
     fun getFormattedStringWithSymbole(value: Double?): String {
         val format = DecimalFormat("##,##,##0.##")

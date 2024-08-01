@@ -1,33 +1,40 @@
 package com.indie.apps.pannypal.presentation.viewmodel
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.indie.apps.pannypal.data.entity.User
 import com.indie.apps.pannypal.domain.usecase.GetUserProfileUseCase
 import com.indie.apps.pannypal.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ProfileViewModel @Inject constructor(private val userProfileUsecase: GetUserProfileUseCase) :
+class ProfileViewModel @Inject constructor(private val userProfileUseCase: GetUserProfileUseCase) :
     ViewModel() {
 
-    val uiState = userProfileUsecase.loadData()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), Resource.Loading())
+   /* val uiState = userProfileUseCase.loadData()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), Resource.Loading())*/
 
-    // var userProfileUiState: Resource<User> by mutableStateOf(Resource.Loading())
-    //    private set
+     /*var uiState: Resource<User> by mutableStateOf(Resource.Loading())
+        private set*/
 
-    /*private val _uiState = MutableStateFlow<Resource<User>>(Resource.Loading())
-    val uiState= _uiState.asStateFlow()*/
+    private val _uiState = MutableStateFlow<Resource<User>>(Resource.Loading())
+    val uiState= _uiState.asStateFlow()
 
     //private val trigger = MutableSharedFlow<Unit>(replay = 1)
 
 
 
     /*val uiState = trigger.flatMapLatest { _ ->
-        userProfileUsecase
+        userProfileUseCase
             .loadData()
     }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), Resource.Loading())
@@ -42,20 +49,19 @@ class ProfileViewModel @Inject constructor(private val userProfileUsecase: GetUs
         }
     }*/
 
-    /* init {
+     init {
          getData()
      }
 
      private fun getData() = viewModelScope.launch {
-         Log.d("aaaaaaa", "getData call")
+         //Log.d("aaaaaaa", "getData call")
 
-         userProfileUsecase
+         userProfileUseCase
              .loadData()
              .collect {
-             //userProfileUiState = it
-
-             _uiState.emit(it)
+               //  uiState = it
+                 _uiState.emit(it)
          }
-     }*/
+     }
 
 }

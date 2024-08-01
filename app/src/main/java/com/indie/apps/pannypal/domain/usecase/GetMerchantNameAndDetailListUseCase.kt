@@ -21,9 +21,17 @@ class GetMerchantNameAndDetailListUseCase @Inject constructor(
 
             try {
                 emit(Resource.Loading())
+                println("aaaaaa start Loading page = $page")
+
+                for(i in 1..5)
+                {
+                    println("aaaaaa Load $i")
+                    kotlinx.coroutines.delay(500L)
+                }
                 val merchantDataWithName = merchantRepository.getMerchantNameAndDetailList(Constant.QUERY_PAGE_SIZE,Constant.QUERY_PAGE_SIZE * (page-1))
                 emit(Resource.Success(merchantDataWithName))
             }  catch (e: Throwable) {
+                println("aaaaaa catch ${e.message}")
                 emit(Resource.Error(handleException(e).message + ": ${e.message}"))
             }
         }.flowOn(dispatcher)

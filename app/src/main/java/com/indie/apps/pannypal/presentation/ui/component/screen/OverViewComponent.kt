@@ -68,6 +68,7 @@ fun OverviewTopBar(
         content = {
             if (isSearch)
                 SearchView(
+                    onTextChange = onSearchTextChange
                 )
         },
         trailingContent = {
