@@ -1,9 +1,13 @@
 package com.indie.apps.pannypal.presentation.viewmodel
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.indie.apps.pannypal.data.entity.Payment
 import com.indie.apps.pannypal.domain.usecase.AddPaymentUseCase
+import com.indie.apps.pannypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pannypal.util.ErrorMessage
 import com.indie.apps.pannypal.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,24 +18,21 @@ import javax.inject.Inject
 class AddPaymentViewModel @Inject constructor(private val addPaymentUseCase: AddPaymentUseCase) :
     ViewModel() {
 
-    /*private val _paymentType = MutableStateFlow("")
-    val paymentType = _paymentType.asStateFlow()
+    val paymentTypeState by mutableStateOf(TextFieldState())
 
-    fun setStudentName(name: String) {
-        _paymentType.tryEmit(name)
-    }*/
-
-    fun addPayment(payment: Payment,onSuccess: ()-> Unit, onFail: (String) -> Unit) {
+    fun addPayment(onSuccess: ()-> Unit) {
 
         viewModelScope.launch {
             addPaymentUseCase
-                .addPayment(payment)
+                .addPayment(Payment(name = paymentTypeState.text.trim()))
                 .collect {
                     when(it)
                     {
                         is Resource.Loading -> {}
                         is Resource.Success -> onSuccess()
-                        is Resource.Error -> onFail(ErrorMessage.PAYMENT_TYPE_EXIST)
+                        is Resource.Error -> {
+                            paymentTypeState.setError(ErrorMessage.PAYMENT_TYPE_EXIST)
+                        }
                     }
                 }
         }

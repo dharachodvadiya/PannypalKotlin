@@ -29,28 +29,18 @@ fun DialogAddPayment(
     onSaveSuccess: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // val paymentType by addPaymentViewModel.paymentType.collectAsStateWithLifecycle()
-
-    val paymentTypeState by remember { mutableStateOf(TextFieldState()) }
     MyAppDialog(
         title = R.string.add_payment,
         onNavigationUp = onNavigationUp,
         content = {
             AddPaymentDialogField(
-                textPaymentState = paymentTypeState
+                textPaymentState = addPaymentViewModel.paymentTypeState
             )
         },
         bottomContent = {
             BottomSaveButton(
                 onClick = {
-                    addPaymentViewModel.addPayment(
-                        payment = Payment(name = paymentTypeState.text.trim()),
-                        onSuccess = onSaveSuccess,
-                        onFail = {
-                            paymentTypeState.setError(ErrorMessage.PAYMENT_TYPE_EXIST)
-                        }
-
-                    )
+                    addPaymentViewModel.addPayment(onSuccess = onSaveSuccess)
                 },
                 modifier = Modifier.padding(dimensionResource(id = R.dimen.padding))
             )

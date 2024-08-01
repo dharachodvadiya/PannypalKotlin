@@ -99,7 +99,6 @@ fun PannyPalApp() {
                             Toast.makeText(context, merchantSaveToast, Toast.LENGTH_SHORT).show()
                         },
                         onCpp = {
-                            backStackEntry.savedStateHandle.remove<String>(Util.countryCode)
                             navController.navigate(DialogNav.CPP.route)
                         },
                         code = data
