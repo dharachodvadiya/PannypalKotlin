@@ -1,6 +1,5 @@
 package com.indie.apps.pannypal.presentation.ui.common
 
-import android.util.Log
 import com.google.i18n.phonenumbers.NumberParseException
 import com.google.i18n.phonenumbers.PhoneNumberUtil
 import com.google.i18n.phonenumbers.Phonenumber
@@ -10,6 +9,12 @@ object Util {
     const val SEARCH_NEWS_TIME_DELAY = 500L
     const val PAGE_SIZE = 20
     const val PAGE_PREFATCH_DISTANCE = 20
+
+    const val SAVE_STATE_COUNTRY_CODE = "code"
+
+    const val SAVE_STATE_MERCHANT_NAME_DESC = "merchant_name_desc"
+
+    const val SAVE_STATE_PAYMENT = "payment"
 
     fun getFormattedStringWithSymbole(value: Double?): String {
         val format = DecimalFormat("##,##,##0.##")
@@ -21,7 +26,7 @@ object Util {
         return format.format(value)
     }
 
-    const val countryCode = "code"
+
 
     fun isValidPhoneNumber(countryCode: String, phoneNumber: String?): Boolean {
         val phoneUtil: PhoneNumberUtil = PhoneNumberUtil.getInstance()

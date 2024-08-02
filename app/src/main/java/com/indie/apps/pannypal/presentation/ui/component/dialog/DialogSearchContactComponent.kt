@@ -45,7 +45,7 @@ data class MerchantNameAndDetailsList(val dataList: List<MerchantNameAndDetails>
 @Composable
 fun SearchDialogField(
     onAddClick: () -> Unit,
-    onItemClick: (MerchantNameAndDetails) -> Unit,
+    onItemClick: (MerchantNameAndDetails?) -> Unit,
     onTextChange: (String) -> Unit,
     textState: TextFieldState,
     dataList: LazyPagingItems<MerchantNameAndDetails>

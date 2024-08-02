@@ -103,7 +103,11 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:$nav_version")
     implementation("com.googlecode.libphonenumber:libphonenumber:8.2.0")
 
+    //pagining
     implementation("androidx.paging:paging-compose:3.3.1")
+
+    //gson
+    implementation("com.google.code.gson:gson:2.8.7")
 
 
 }

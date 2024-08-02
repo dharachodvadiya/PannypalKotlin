@@ -5,6 +5,10 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.google.gson.Gson
+import com.indie.apps.pannypal.data.entity.Payment
+import com.indie.apps.pannypal.data.module.MerchantNameAndDetails
+import com.indie.apps.pannypal.presentation.ui.common.Util
 import com.indie.apps.pannypal.presentation.ui.navigation.BottomNavItem
 import com.indie.apps.pannypal.presentation.ui.navigation.DialogNav
 import com.indie.apps.pannypal.presentation.ui.navigation.OverviewNav
@@ -25,12 +29,38 @@ fun NavGraphBuilder.OverViewRoute(
             OverViewStartScreen(onNewEntry = { navController.navigate(OverviewNav.NEW_ITEM.route) },
                 onProfileClick = { navController.navigate(OverviewNav.PROFILE.route) })
         }
-        composable(route = OverviewNav.NEW_ITEM.route) {
+        composable(route = OverviewNav.NEW_ITEM.route)
+        { backStackEntry ->
+            // get data passed back from B
+            val gsonStringMerchant: String? = backStackEntry
+                .savedStateHandle
+                .get<String>(Util.SAVE_STATE_MERCHANT_NAME_DESC)
+
+            val merchant: MerchantNameAndDetails? =
+                if (gsonStringMerchant != null) {
+                    Gson().fromJson(gsonStringMerchant, MerchantNameAndDetails::class.java)
+                } else null
+
+            val gsonStringPayment: String? = backStackEntry
+                .savedStateHandle
+                .get<String>(Util.SAVE_STATE_PAYMENT)
+
+            val payment: Payment? =
+                if (gsonStringPayment != null) {
+                    Gson().fromJson(gsonStringPayment, Payment::class.java)
+                } else null
+
+
+
+
             bottomBarState.value = false
             NewItemScreen(
                 onNavigationUp = { navController.navigateUp() },
                 onMerchantSelect = { navController.navigate(DialogNav.SELECT_MERCHANT.route) },
-                onPaymentAdd = { navController.navigate(DialogNav.ADD_PAYMENT.route) })
+                onPaymentAdd = { navController.navigate(DialogNav.ADD_PAYMENT.route) },
+                merchant = merchant,
+                payment = payment
+            )
         }
         composable(route = OverviewNav.PROFILE.route) {
             bottomBarState.value = false

@@ -13,6 +13,8 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.indie.apps.pannypal.R
+import com.indie.apps.pannypal.data.entity.Payment
+import com.indie.apps.pannypal.data.module.MerchantNameAndDetails
 import com.indie.apps.pannypal.presentation.ui.component.BottomSaveButton
 import com.indie.apps.pannypal.presentation.ui.component.TopBarWithTitle
 import com.indie.apps.pannypal.presentation.ui.component.screen.NewEntryFieldItemSection
@@ -24,7 +26,9 @@ fun NewItemScreen(
     onMerchantSelect:()-> Unit,
     onPaymentAdd: ()-> Unit,
     onNavigationUp: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    merchant: MerchantNameAndDetails? = null,
+    payment: Payment? = null,
 ){
 // TODO setProfile data
     Scaffold(
@@ -36,6 +40,14 @@ fun NewItemScreen(
             )
         }
     ) { padding ->
+
+        if (merchant != null) {
+            println("aaaaaa ${merchant.toString()}")
+        }
+
+        if (payment != null) {
+            println("aaaaaa ${payment.toString()}")
+        }
 
         var received = remember { (mutableStateOf(false)) }
         Column(

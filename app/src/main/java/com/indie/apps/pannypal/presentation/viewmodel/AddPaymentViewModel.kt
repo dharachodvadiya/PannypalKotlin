@@ -20,16 +20,17 @@ class AddPaymentViewModel @Inject constructor(private val addPaymentUseCase: Add
 
     val paymentTypeState by mutableStateOf(TextFieldState())
 
-    fun addPayment(onSuccess: ()-> Unit) {
+    fun addPayment(onSuccess: (Payment?)-> Unit) {
 
         viewModelScope.launch {
+            val payment = Payment(name = paymentTypeState.text.trim())
             addPaymentUseCase
-                .addPayment(Payment(name = paymentTypeState.text.trim()))
+                .addPayment(payment)
                 .collect {
                     when(it)
                     {
                         is Resource.Loading -> {}
-                        is Resource.Success -> onSuccess()
+                        is Resource.Success -> onSuccess(it.data?.let { it1 -> payment.copy(id = it1) })
                         is Resource.Error -> {
                             paymentTypeState.setError(ErrorMessage.PAYMENT_TYPE_EXIST)
                         }

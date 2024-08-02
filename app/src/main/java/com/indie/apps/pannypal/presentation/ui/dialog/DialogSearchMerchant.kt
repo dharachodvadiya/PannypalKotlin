@@ -6,6 +6,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.indie.apps.pannypal.R
+import com.indie.apps.pannypal.data.module.MerchantNameAndDetails
 import com.indie.apps.pannypal.presentation.ui.common.Util
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.MyAppDialog
 import com.indie.apps.pannypal.presentation.ui.component.dialog.SearchDialogField
@@ -21,6 +22,7 @@ fun DialogSearchMerchant(
     searchMerchantViewModel: SearchMerchantViewModel = hiltViewModel(),
     onNavigationUp: () -> Unit,
     onAddClick: () -> Unit,
+    onSelectMerchant: (MerchantNameAndDetails?) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -33,7 +35,7 @@ fun DialogSearchMerchant(
         content = {
             SearchDialogField(
                 onAddClick = onAddClick,
-                onItemClick = {},
+                onItemClick = onSelectMerchant,
                 textState = searchMerchantViewModel.searchTextState,
                 onTextChange = {
                     job?.cancel()
@@ -56,7 +58,8 @@ private fun MyAppDialogPreview() {
     PannyPalTheme {
         DialogSearchMerchant(
             onNavigationUp = {},
-            onAddClick = {}
+            onAddClick = {},
+            onSelectMerchant = {}
         )
     }
 }

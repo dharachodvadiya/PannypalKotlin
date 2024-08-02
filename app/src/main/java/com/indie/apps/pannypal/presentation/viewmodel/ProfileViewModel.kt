@@ -54,8 +54,6 @@ class ProfileViewModel @Inject constructor(private val userProfileUseCase: GetUs
      }
 
      private fun getData() = viewModelScope.launch {
-         //Log.d("aaaaaaa", "getData call")
-
          userProfileUseCase
              .loadData()
              .collect {

@@ -26,7 +26,7 @@ class AddMerchantViewModel @Inject constructor(
     val description by mutableStateOf(TextFieldState())
     var countryCode: String? by mutableStateOf(null)
 
-    fun addMerchant(onSuccess: () -> Unit) {
+    fun addMerchant(onSuccess: (Merchant?) -> Unit) {
 
         val isValidNum = Util.isValidPhoneNumber(
             countryCode = getLibCountries.first { it.countryPhoneCode == countryCode }.countryCode,
@@ -52,7 +52,7 @@ class AddMerchantViewModel @Inject constructor(
                     .collect {
                         when (it) {
                             is Resource.Loading -> {}
-                            is Resource.Success -> onSuccess()
+                            is Resource.Success -> onSuccess(merchant.copy(id = it.data!!))
                             is Resource.Error -> {
                                 merchantName.setError(ErrorMessage.PAYMENT_TYPE_EXIST)
                             }

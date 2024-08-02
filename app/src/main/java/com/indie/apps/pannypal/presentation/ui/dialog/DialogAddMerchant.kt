@@ -8,6 +8,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.indie.apps.pannypal.R
+import com.indie.apps.pannypal.data.entity.Merchant
 import com.indie.apps.pannypal.presentation.ui.component.BottomSaveButton
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.MyAppDialog
 import com.indie.apps.pannypal.presentation.ui.component.dialog.AddMerchantDialogField
@@ -19,7 +20,7 @@ import com.mcode.ccp.data.utils.getDefaultPhoneCode
 fun DialogAddMerchant(
     addMerchantViewModel: AddMerchantViewModel = hiltViewModel(),
     onNavigationUp: () -> Unit,
-    onSaveSuccess: () -> Unit,
+    onSaveSuccess: (Merchant?) -> Unit,
     onCpp: () -> Unit,
     modifier: Modifier = Modifier,
     code: String?
