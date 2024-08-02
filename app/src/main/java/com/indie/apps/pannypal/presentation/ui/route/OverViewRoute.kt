@@ -1,7 +1,6 @@
 package com.indie.apps.pannypal.presentation.ui.route
 
 import android.widget.Toast
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -22,13 +21,11 @@ import com.indie.apps.pannypal.presentation.ui.screen.OverViewStartScreen
 import com.indie.apps.pannypal.presentation.ui.screen.ProfileScreen
 
 
-@Composable
 fun NavGraphBuilder.OverViewRoute(
     navController: NavHostController,
     bottomBarState: MutableState<Boolean>
 ) {
-    val context = LocalContext.current
-    val merchantDataSaveToast = stringResource(id = R.string.merchant_data_save_success_message)
+
     navigation(
         startDestination = OverviewNav.START.route, route = BottomNavItem.OVERVIEW.route
     ) {
@@ -70,7 +67,6 @@ fun NavGraphBuilder.OverViewRoute(
                 merchant = merchant,
                 payment = payment,
                 onSaveSuccess = {
-                    Toast.makeText(context, merchantDataSaveToast, Toast.LENGTH_SHORT).show()
                     navController.navigateUp()
                 }
             )

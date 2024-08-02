@@ -1,5 +1,6 @@
 package com.indie.apps.pannypal.presentation.ui.screen
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -8,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,6 +37,9 @@ fun NewItemScreen(
 
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+    val merchantDataSaveToast = stringResource(id = R.string.merchant_data_save_success_message)
+
     val paymentList by newItemViewModel.paymentList.collectAsStateWithLifecycle()
 
     if (merchant != null) {
@@ -88,7 +93,10 @@ fun NewItemScreen(
             )
             Spacer(modifier = Modifier.weight(1f))
             BottomSaveButton(
-                onClick = { newItemViewModel.addMerchantData(onSuccess = onSaveSuccess) },
+                onClick = { newItemViewModel.addMerchantData(onSuccess = {
+                    onSaveSuccess()
+                    Toast.makeText(context, merchantDataSaveToast, Toast.LENGTH_SHORT).show()
+                }) },
                 enabled = newItemViewModel.enableButton,
                 modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.padding))
             )
