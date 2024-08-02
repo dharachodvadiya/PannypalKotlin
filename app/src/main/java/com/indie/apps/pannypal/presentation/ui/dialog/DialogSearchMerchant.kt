@@ -1,24 +1,16 @@
 package com.indie.apps.pannypal.presentation.ui.dialog
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.indie.apps.pannypal.R
-import com.indie.apps.pannypal.data.module.MerchantNameAndDetails
 import com.indie.apps.pannypal.presentation.ui.common.Util
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.MyAppDialog
-import com.indie.apps.pannypal.presentation.ui.component.dialog.MerchantNameAndDetailsList
 import com.indie.apps.pannypal.presentation.ui.component.dialog.SearchDialogField
-import com.indie.apps.pannypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 import com.indie.apps.pannypal.presentation.viewmodel.SearchMerchantViewModel
-import com.indie.apps.pannypal.util.Resource
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
@@ -31,22 +23,8 @@ fun DialogSearchMerchant(
     onAddClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val uiState by searchMerchantViewModel.uiState.collectAsStateWithLifecycle()
 
-    val dataList = remember { mutableStateOf(MerchantNameAndDetailsList()) }
-
-    val isLoading = remember {
-        mutableStateOf(false)
-    }
-
-    when(uiState){
-        is Resource.Loading -> isLoading.value = true
-        is Resource.Success ->{
-            dataList.value = MerchantNameAndDetailsList(uiState.data)
-            isLoading.value = false
-        }
-        is Resource.Error -> {}
-    }
+    val lazyPagingData = searchMerchantViewModel.pagedData.collectAsLazyPagingItems()
     var job: Job? = null
     MyAppDialog(
         isBackEnable = true,
@@ -55,18 +33,16 @@ fun DialogSearchMerchant(
         content = {
             SearchDialogField(
                 onAddClick = onAddClick,
-                onItemClick = {searchMerchantViewModel.loadMoreData()},
+                onItemClick = {},
                 textState = searchMerchantViewModel.searchTextState,
-                //onTextChange = {searchMerchantViewModel.searchData(it)},
                 onTextChange = {
                     job?.cancel()
                     job = MainScope().launch {
                         delay(Util.SEARCH_NEWS_TIME_DELAY)
-                        searchMerchantViewModel.searchData(it)
+                        searchMerchantViewModel.searchData()
                     }
                 },
-                data = dataList.value,
-                isLoading = isLoading.value
+                dataList = lazyPagingData
             )
         },
         modifier = modifier,

@@ -8,6 +8,8 @@ import java.text.DecimalFormat
 
 object Util {
     const val SEARCH_NEWS_TIME_DELAY = 500L
+    const val PAGE_SIZE = 20
+    const val PAGE_PREFATCH_DISTANCE = 20
 
     fun getFormattedStringWithSymbole(value: Double?): String {
         val format = DecimalFormat("##,##,##0.##")

@@ -77,6 +77,7 @@ dependencies {
     //Room
     val room_version = "2.6.1"
     implementation("androidx.room:room-runtime:$room_version")
+    implementation("androidx.room:room-paging:$room_version")
     annotationProcessor("androidx.room:room-compiler:$room_version")
     kapt("androidx.room:room-compiler:$room_version")
     implementation("androidx.room:room-ktx:$room_version")
@@ -101,6 +102,9 @@ dependencies {
     // Jetpack Compose Integration
     implementation("androidx.navigation:navigation-compose:$nav_version")
     implementation("com.googlecode.libphonenumber:libphonenumber:8.2.0")
+
+    implementation("androidx.paging:paging-compose:3.3.1")
+
 
 }
 
