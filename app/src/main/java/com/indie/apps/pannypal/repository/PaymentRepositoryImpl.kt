@@ -4,13 +4,16 @@ import com.indie.apps.pannypal.data.dao.PaymentDao
 import com.indie.apps.pannypal.data.entity.Payment
 import javax.inject.Inject
 
-class PaymentRepositoryImpl @Inject constructor(private val paymentDao: PaymentDao) : PaymentRepository {
+class PaymentRepositoryImpl @Inject constructor(private val paymentDao: PaymentDao) :
+    PaymentRepository {
 
-    override suspend fun deleteCustomPayment(paymentId: Long) = paymentDao.deleteCustomPayment(paymentId)
+    override suspend fun deleteCustomPayment(paymentId: Long) =
+        paymentDao.deleteCustomPayment(paymentId)
 
-    override suspend fun getPaymentList(limit: Int, offset: Int) = paymentDao.getPaymentList(limit, offset)
+    override fun getPaymentList() = paymentDao.getPaymentList()
 
-    override suspend fun insertPaymentList(payments: List<Payment>) = paymentDao.insertPaymentList(payments)
+    override suspend fun insertPaymentList(payments: List<Payment>) =
+        paymentDao.insertPaymentList(payments)
 
     override suspend fun searchPaymentList(
         searchQuery: String,

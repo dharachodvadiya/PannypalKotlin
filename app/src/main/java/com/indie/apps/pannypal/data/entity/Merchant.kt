@@ -29,10 +29,10 @@ data class Merchant(
     val details: String? = null,
 
     @ColumnInfo(name = "income_amt")
-    val incomeAmount: Long = 0,
+    val incomeAmount: Double = 0.0,
 
     @ColumnInfo(name = "expense_amt")
-    val expenseAmount: Long = 0,
+    val expenseAmount: Double = 0.0,
 )
 
 fun Merchant.toNameAndDetails() = MerchantNameAndDetails(id, name, details)

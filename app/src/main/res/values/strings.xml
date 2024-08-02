@@ -32,4 +32,5 @@
     <string name="select_country">Select Country</string>
     <string name="no_data_found">No Data Available</string>
     <string name="no_details">No Details</string>
+    <string name="merchant_data_save_success_message">Merchant Data Save Successfully</string>
 </resources>

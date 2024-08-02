@@ -16,13 +16,13 @@ data class User(
     val email: String? = null,
 
     @ColumnInfo(name = "last_sync_date_milli")
-    val lastSyncDateInMilli: Long =0,
+    val lastSyncDateInMilli: Long = 0,
 
     @ColumnInfo(name = "income_amt")
-    val incomeAmount: Long = 0,
+    val incomeAmount: Double = 0.0,
 
     @ColumnInfo(name = "expense_amt")
-    val expenseAmount: Long = 0,
+    val expenseAmount: Double = 0.0,
 
     val currency: String
 )

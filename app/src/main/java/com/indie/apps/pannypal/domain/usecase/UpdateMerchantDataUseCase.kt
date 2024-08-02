@@ -20,28 +20,29 @@ class UpdateMerchantDataUseCase @Inject constructor(
     private val userRepository: UserRepository,
     private val merchantDataNew: MerchantData,
     private val merchantDataOld: MerchantData,
-    @IoDispatcher private val dispatcher: CoroutineDispatcher) {
+    @IoDispatcher private val dispatcher: CoroutineDispatcher
+) {
 
-    suspend operator fun invoke() : Flow<Resource<Int>>{
-        return flow{
+    suspend operator fun invoke(): Flow<Resource<Int>> {
+        return flow {
 
             try {
                 emit(Resource.Loading<Int>())
                 val count = merchantDataRepository.update(merchantDataOld)
 
-                if(count >0){
+                if (count > 0) {
                     merchantDataNew.run {
-                        var newIncomeAmt = 0L
-                        var newExpenseAmt = 0L
+                        var newIncomeAmt = 0.0
+                        var newExpenseAmt = 0.0
 
                         merchantDataOld.run {
-                            when{
+                            when {
                                 amount < 0 -> newExpenseAmt -= (amount * -1)
                                 amount > 0 -> newIncomeAmt -= (amount)
                             }
                         }
 
-                        when{
+                        when {
                             amount < 0 -> newExpenseAmt += (amount * -1)
                             amount > 0 -> newIncomeAmt += (amount)
                         }
@@ -49,7 +50,7 @@ class UpdateMerchantDataUseCase @Inject constructor(
                         handleReflectedTableOperation(count, newIncomeAmt, newExpenseAmt)
 
                     }
-                }else{
+                } else {
                     emit(Resource.Error<Int>("Fail to update merchantData"))
                 }
 
@@ -60,7 +61,11 @@ class UpdateMerchantDataUseCase @Inject constructor(
         }.flowOn(dispatcher)
     }
 
-    private suspend fun FlowCollector<Resource<Int>>.handleReflectedTableOperation(affectedRowCount: Int, newIncome : Long, newExpense: Long ) {
+    private suspend fun FlowCollector<Resource<Int>>.handleReflectedTableOperation(
+        affectedRowCount: Int,
+        newIncome: Double,
+        newExpense: Double
+    ) {
         val updatedRowMerchant = merchantRepository.updateAmountWithDate(
             id = merchantDataNew.merchantId,
             incomeAmt = newIncome,

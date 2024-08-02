@@ -23,7 +23,10 @@ fun DialogAddPayment(
 ) {
     MyAppDialog(
         title = R.string.add_payment,
-        onNavigationUp = onNavigationUp,
+        onNavigationUp = {
+            if (addPaymentViewModel.enableButton)
+                onNavigationUp()
+        },
         content = {
             AddPaymentDialogField(
                 textPaymentState = addPaymentViewModel.paymentTypeState

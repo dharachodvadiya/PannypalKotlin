@@ -26,38 +26,50 @@ class AddMerchantViewModel @Inject constructor(
     val description by mutableStateOf(TextFieldState())
     var countryCode: String? by mutableStateOf(null)
 
+    var enableButton by (mutableStateOf(true))
+        private set
+
     fun addMerchant(onSuccess: (Merchant?) -> Unit) {
-
-        val isValidNum = Util.isValidPhoneNumber(
-            countryCode = getLibCountries.first { it.countryPhoneCode == countryCode }.countryCode,
-            phoneNumber = countryCode + phoneNumber.text
-        )
-
-        if (merchantName.text.isNullOrEmpty()) {
-            merchantName.setError(ErrorMessage.MERCHANT_NAME_EMPTY)
-        } else if (!phoneNumber.text.isNullOrEmpty() && !isValidNum) {
-            phoneNumber.setError(ErrorMessage.PHONE_NO_INVALID)
-        } else {
-
-            val merchant = Merchant(
-                name = merchantName.text.trim(),
-                phoneNumber = phoneNumber.text.trim(),
-                details = description.text.trim(),
-                countryCode = countryCode,
-                dateInMilli = System.currentTimeMillis()
+        if (enableButton) {
+            enableButton = false
+            val isValidNum = Util.isValidPhoneNumber(
+                countryCode = getLibCountries.first { it.countryPhoneCode == countryCode }.countryCode,
+                phoneNumber = countryCode + phoneNumber.text
             )
-            viewModelScope.launch {
-                addMerchantUseCase
-                    .addMerchant(merchant)
-                    .collect {
-                        when (it) {
-                            is Resource.Loading -> {}
-                            is Resource.Success -> onSuccess(merchant.copy(id = it.data!!))
-                            is Resource.Error -> {
-                                merchantName.setError(ErrorMessage.PAYMENT_TYPE_EXIST)
+
+            if (merchantName.text.trim().isNullOrEmpty()) {
+                merchantName.setError(ErrorMessage.MERCHANT_NAME_EMPTY)
+                enableButton = true
+            } else if (!phoneNumber.text.trim().isNullOrEmpty() && !isValidNum) {
+                phoneNumber.setError(ErrorMessage.PHONE_NO_INVALID)
+                enableButton = true
+            } else {
+
+                val merchant = Merchant(
+                    name = merchantName.text.trim(),
+                    phoneNumber = phoneNumber.text.trim(),
+                    details = description.text.trim(),
+                    countryCode = countryCode,
+                    dateInMilli = System.currentTimeMillis()
+                )
+                viewModelScope.launch {
+                    addMerchantUseCase
+                        .addMerchant(merchant)
+                        .collect {
+                            when (it) {
+                                is Resource.Loading -> {}
+                                is Resource.Success -> {
+                                    onSuccess(merchant.copy(id = it.data!!))
+                                    enableButton = true
+                                }
+
+                                is Resource.Error -> {
+                                    merchantName.setError(ErrorMessage.MERCHANT_EXIST)
+                                    enableButton = true
+                                }
                             }
                         }
-                    }
+                }
             }
         }
 

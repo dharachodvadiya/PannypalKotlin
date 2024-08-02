@@ -1,11 +1,16 @@
 package com.indie.apps.pannypal.presentation.ui.route
 
+import android.widget.Toast
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.google.gson.Gson
+import com.indie.apps.pannypal.R
 import com.indie.apps.pannypal.data.entity.Payment
 import com.indie.apps.pannypal.data.module.MerchantNameAndDetails
 import com.indie.apps.pannypal.presentation.ui.common.Util
@@ -17,10 +22,13 @@ import com.indie.apps.pannypal.presentation.ui.screen.OverViewStartScreen
 import com.indie.apps.pannypal.presentation.ui.screen.ProfileScreen
 
 
+@Composable
 fun NavGraphBuilder.OverViewRoute(
     navController: NavHostController,
     bottomBarState: MutableState<Boolean>
 ) {
+    val context = LocalContext.current
+    val merchantDataSaveToast = stringResource(id = R.string.merchant_data_save_success_message)
     navigation(
         startDestination = OverviewNav.START.route, route = BottomNavItem.OVERVIEW.route
     ) {
@@ -51,7 +59,8 @@ fun NavGraphBuilder.OverViewRoute(
                 } else null
 
 
-
+            backStackEntry.savedStateHandle.remove<String>(Util.SAVE_STATE_MERCHANT_NAME_DESC)
+            backStackEntry.savedStateHandle.remove<String>(Util.SAVE_STATE_PAYMENT)
 
             bottomBarState.value = false
             NewItemScreen(
@@ -59,7 +68,11 @@ fun NavGraphBuilder.OverViewRoute(
                 onMerchantSelect = { navController.navigate(DialogNav.SELECT_MERCHANT.route) },
                 onPaymentAdd = { navController.navigate(DialogNav.ADD_PAYMENT.route) },
                 merchant = merchant,
-                payment = payment
+                payment = payment,
+                onSaveSuccess = {
+                    Toast.makeText(context, merchantDataSaveToast, Toast.LENGTH_SHORT).show()
+                    navController.navigateUp()
+                }
             )
         }
         composable(route = OverviewNav.PROFILE.route) {

@@ -58,8 +58,8 @@ interface MerchantDao : BaseDao<Merchant> {
     )
     suspend fun updateAmountWithDate(
         id: Long,
-        incomeAmt: Long,
-        expenseAmt: Long,
+        incomeAmt: Double,
+        expenseAmt: Double,
         dateInMilli: Long
     ): Int
 }

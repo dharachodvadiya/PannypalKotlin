@@ -19,8 +19,8 @@ class MerchantRepositoryImpl @Inject constructor(private val merchantDao: Mercha
 
     override suspend fun updateAmountWithDate(
         id: Long,
-        incomeAmt: Long,
-        expenseAmt: Long,
+        incomeAmt: Double,
+        expenseAmt: Double,
         dateInMilli: Long
     ) = merchantDao.updateAmountWithDate(id, incomeAmt, expenseAmt, dateInMilli)
 

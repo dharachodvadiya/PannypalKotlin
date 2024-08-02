@@ -5,13 +5,14 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.indie.apps.pannypal.R
 import com.indie.apps.pannypal.data.entity.Payment
 import com.indie.apps.pannypal.data.module.MerchantNameAndDetails
@@ -20,52 +21,77 @@ import com.indie.apps.pannypal.presentation.ui.component.TopBarWithTitle
 import com.indie.apps.pannypal.presentation.ui.component.screen.NewEntryFieldItemSection
 import com.indie.apps.pannypal.presentation.ui.component.screen.NewEntryTopSelectionButton
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
+import com.indie.apps.pannypal.presentation.viewmodel.NewItemViewModel
 
 @Composable
 fun NewItemScreen(
-    onMerchantSelect:()-> Unit,
-    onPaymentAdd: ()-> Unit,
+    newItemViewModel: NewItemViewModel = hiltViewModel(),
+    onMerchantSelect: () -> Unit,
+    onPaymentAdd: () -> Unit,
     onNavigationUp: () -> Unit,
-    modifier: Modifier = Modifier,
+    onSaveSuccess: () -> Unit,
     merchant: MerchantNameAndDetails? = null,
     payment: Payment? = null,
-){
-// TODO setProfile data
+
+    modifier: Modifier = Modifier
+) {
+    val paymentList by newItemViewModel.paymentList.collectAsStateWithLifecycle()
+
+    if (merchant != null) {
+        newItemViewModel.setMerchantData(merchant)
+    }
+    if (payment != null) {
+        newItemViewModel.setPaymentData(payment)
+    }
+
     Scaffold(
         topBar = {
             TopBarWithTitle(
                 title = stringResource(id = R.string.new_item),
-                onNavigationUp = onNavigationUp,
+                onNavigationUp = {
+                    if (newItemViewModel.enableButton)
+                        onNavigationUp()
+                },
                 contentAlignment = Alignment.Center
             )
         }
     ) { padding ->
 
-        if (merchant != null) {
-            println("aaaaaa ${merchant.toString()}")
-        }
-
-        if (payment != null) {
-            println("aaaaaa ${payment.toString()}")
-        }
-
-        var received = remember { (mutableStateOf(false)) }
         Column(
             modifier = modifier
                 .padding(padding)
                 .padding(horizontal = dimensionResource(id = R.dimen.padding))
         ) {
-            NewEntryTopSelectionButton(received)
+            NewEntryTopSelectionButton(
+                received = newItemViewModel.received,
+                onReceivedChange = newItemViewModel::onReceivedChange
+            )
             NewEntryFieldItemSection(
                 modifier = Modifier
                     .padding(vertical = dimensionResource(id = R.dimen.padding)),
-                onPaymentAdd = onPaymentAdd,
-                onMerchantSelect = onMerchantSelect
+                onPaymentAdd = {
+                    if (newItemViewModel.enableButton)
+                        onPaymentAdd()
+                },
+                onMerchantSelect = {
+                    if (newItemViewModel.enableButton)
+                        onMerchantSelect()
+                },
+                merchantName = newItemViewModel.merchant?.name,
+                onPaymentSelect = newItemViewModel::onPaymentSelect,
+                paymentList = paymentList,
+                paymentName = newItemViewModel.payment?.name,
+                amount = newItemViewModel.amount,
+                description = newItemViewModel.description,
+                merchantError = newItemViewModel.merchantError,
+                paymentError = newItemViewModel.paymentError
             )
             Spacer(modifier = Modifier.weight(1f))
             BottomSaveButton(
-                onClick = {},
-                modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.padding)))
+                onClick = { newItemViewModel.addMerchantData(onSuccess = onSaveSuccess) },
+                enabled = newItemViewModel.enableButton,
+                modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.padding))
+            )
         }
     }
 }
@@ -74,6 +100,10 @@ fun NewItemScreen(
 @Composable
 private fun NewItemScreenPreview() {
     PannyPalTheme {
-        NewItemScreen({},{},{})
+        NewItemScreen(
+            onPaymentAdd = {},
+            onNavigationUp = {},
+            onMerchantSelect = {},
+            onSaveSuccess = {})
     }
 }

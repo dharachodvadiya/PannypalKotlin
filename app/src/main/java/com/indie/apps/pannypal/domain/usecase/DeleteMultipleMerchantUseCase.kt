@@ -17,23 +17,24 @@ class DeleteMultipleMerchantUseCase @Inject constructor(
     private val merchantRepository: MerchantRepository,
     private val merchantDataRepository: MerchantDataRepository,
     private val userRepository: UserRepository,
-    private val merchants : List<Merchant>,
-    @IoDispatcher private val dispatcher: CoroutineDispatcher) {
+    private val merchants: List<Merchant>,
+    @IoDispatcher private val dispatcher: CoroutineDispatcher
+) {
 
-    suspend operator fun invoke() : Flow<Resource<Int>>{
-        return flow{
+    suspend operator fun invoke(): Flow<Resource<Int>> {
+        return flow {
 
             try {
                 emit(Resource.Loading())
-                val ids = merchants.map{
+                val ids = merchants.map {
                     it.id
                 }
                 val merchantDeleteCount = merchantRepository.deleteMerchantWithIdList(ids)
 
-                if(merchantDeleteCount == ids.size){
+                if (merchantDeleteCount == ids.size) {
 
                     val (incomeAmt, expenseAmt) = merchants
-                        .fold(0L to 0L) { acc, merchant ->
+                        .fold(0.0 to 0.0) { acc, merchant ->
                             val (totalIncome, totalExpense) = acc
                             totalIncome + merchant.incomeAmount to totalExpense + merchant.expenseAmount
                         }
@@ -48,7 +49,7 @@ class DeleteMultipleMerchantUseCase @Inject constructor(
                         }
                     )
 
-                }else{
+                } else {
                     emit(Resource.Error("Fail to delete multiple merchant"))
                 }
 

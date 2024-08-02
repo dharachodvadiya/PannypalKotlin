@@ -8,6 +8,8 @@ import com.indie.apps.pannypal.repository.UserRepository
 import com.indie.apps.pannypal.util.Resource
 import com.indie.apps.pannypal.util.handleException
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
@@ -18,10 +20,10 @@ class AddMerchantDataUseCase @Inject constructor(
     private val merchantDataRepository: MerchantDataRepository,
     private val merchantRepository: MerchantRepository,
     private val userRepository: UserRepository,
-    private val merchantData: MerchantData,
-    @IoDispatcher private val dispatcher: CoroutineDispatcher) {
+    @IoDispatcher private val dispatcher: CoroutineDispatcher
+) {
 
-    suspend operator fun invoke(): Flow<Resource<Long>> {
+    suspend fun addData(merchantData: MerchantData): Flow<Resource<Long>> {
         return flow {
             emit(Resource.Loading())
 
@@ -29,7 +31,11 @@ class AddMerchantDataUseCase @Inject constructor(
                 val id = merchantDataRepository.insert(merchantData)
 
                 if (id > 0) {
-                    handleSuccessfulInsert(id)
+                    handleSuccessfulInsert(
+                        id = id,
+                        merchantId = merchantData.merchantId,
+                        amount = merchantData.amount
+                    )
                 } else {
                     emit(Resource.Error("Failed to insert MerchantData"))
                 }
@@ -39,19 +45,32 @@ class AddMerchantDataUseCase @Inject constructor(
         }.flowOn(dispatcher)
     }
 
-    private suspend fun FlowCollector<Resource<Long>>.handleSuccessfulInsert(id: Long) {
-        merchantData.run {
-            val updatedRowMerchant = merchantRepository.updateAmountWithDate(
-                id = merchantId,
-                incomeAmt = if(amount >= 0) amount else 0,
-                expenseAmt = if(amount <0) (amount * -1) else 0,
-                System.currentTimeMillis()
-            )
+    private suspend fun FlowCollector<Resource<Long>>.handleSuccessfulInsert(
+        id: Long,
+        merchantId: Long,
+        amount: Double
+    ) {
 
-            val updatedRowUser = userRepository.updateAmount(
-                incomeAmt = if(amount >= 0) amount else 0,
-                expenseAmt = if(amount <0) (amount * -1) else 0
-            )
+        coroutineScope {
+            val updatedRowMerchantDeferred = async {
+                merchantRepository.updateAmountWithDate(
+                    id = merchantId,
+                    incomeAmt = if (amount >= 0) amount else 0.0,
+                    expenseAmt = if (amount < 0) (amount * -1) else 0.0,
+                    System.currentTimeMillis()
+                )
+            }
+
+            val updatedRowUserDeferred = async {
+                userRepository.updateAmount(
+                    incomeAmt = if (amount >= 0) amount else 0.0,
+                    expenseAmt = if (amount < 0) (amount * -1) else 0.0
+                )
+            }
+            updatedRowMerchantDeferred.await()
+            updatedRowUserDeferred.await()
+            val updatedRowMerchant = updatedRowMerchantDeferred.getCompleted()
+            val updatedRowUser = updatedRowUserDeferred.getCompleted()
 
             emit(
                 when {
@@ -62,6 +81,8 @@ class AddMerchantDataUseCase @Inject constructor(
                 }
             )
         }
+
+
     }
 
 }

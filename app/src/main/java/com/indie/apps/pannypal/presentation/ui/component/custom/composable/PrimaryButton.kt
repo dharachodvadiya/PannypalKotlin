@@ -3,7 +3,6 @@ package com.indie.apps.pannypal.presentation.ui.component.custom.composable
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
@@ -27,7 +26,6 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pannypal.R
-import com.indie.apps.pannypal.presentation.ui.component.linearGradientsBrush
 import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 
@@ -38,24 +36,28 @@ fun PrimaryButton(
     bgColor: Color = MyAppTheme.colors.brand,
     borderStroke: BorderStroke? = null,
     modifier: Modifier = Modifier,
-    content: @Composable RowScope.() -> Unit
+    enabled: Boolean = true,
+    content: @Composable RowScope.() -> Unit,
 ) {
+    val containerColor = if (enabled) bgColor else MyAppTheme.colors.gray2
+    val contentColor =
+        if (enabled) MyAppTheme.colors.white else MyAppTheme.colors.white.copy(alpha = 0.1f)
     Surface(
         onClick = onClick,
+        enabled = enabled,
         modifier = modifier
             .background(MyAppTheme.colors.transparent)
             .semantics { role = Role.Button },
         shape = RoundedCornerShape(dimensionResource(R.dimen.round_corner)),
-        contentColor = MyAppTheme.colors.gray1,
+        contentColor = contentColor,
         border = borderStroke
     ) {
 
-        val buttonModifier = if(bgBrush != null)
-            {
-                Modifier.background(brush = bgBrush)
-            }else{
-                Modifier.background(color = bgColor)
-            }
+        val buttonModifier = if (bgBrush != null && enabled) {
+            Modifier.background(brush = bgBrush)
+        } else {
+            Modifier.background(color = containerColor)
+        }
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Absolute.Center,
@@ -76,6 +78,7 @@ fun PrimaryButton(
 private fun PrimaryButtonPreview() {
     PannyPalTheme {
         PrimaryButton(
+            enabled = false,
             onClick = {}
         ) {
             Row(

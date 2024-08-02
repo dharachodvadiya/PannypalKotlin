@@ -19,22 +19,22 @@ class DeleteSingleMerchantDataUseCase @Inject constructor(
     private val merchantRepository: MerchantRepository,
     private val userRepository: UserRepository,
     private val merchantData: MerchantData,
-    @IoDispatcher private val dispatcher: CoroutineDispatcher) {
+    @IoDispatcher private val dispatcher: CoroutineDispatcher
+) {
 
-    suspend operator fun invoke() : Flow<Resource<Int>>{
-        return flow{
+    suspend operator fun invoke(): Flow<Resource<Int>> {
+        return flow {
 
             try {
                 emit(Resource.Loading<Int>())
                 val count = merchantDataRepository.deleteMerchantDataWithId(merchantData.id)
 
-                if(count >0)
-                {
+                if (count > 0) {
                     merchantData.run {
-                        var newIncomeAmt = 0L
-                        var newExpenseAmt = 0L
+                        var newIncomeAmt = 0.0
+                        var newExpenseAmt = 0.0
 
-                        when{
+                        when {
                             amount < 0 -> newExpenseAmt -= (amount * -1)
                             amount > 0 -> newIncomeAmt -= (amount)
                         }
@@ -42,7 +42,7 @@ class DeleteSingleMerchantDataUseCase @Inject constructor(
                         handleReflectedTableOperation(count, newIncomeAmt, newExpenseAmt)
 
                     }
-                }else{
+                } else {
                     emit(Resource.Error("Fail to delete Single Merchant Data"))
                 }
 
@@ -52,7 +52,11 @@ class DeleteSingleMerchantDataUseCase @Inject constructor(
         }.flowOn(dispatcher)
     }
 
-    private suspend fun FlowCollector<Resource<Int>>.handleReflectedTableOperation(affectedRowCount: Int, newIncome : Long, newExpense: Long ) {
+    private suspend fun FlowCollector<Resource<Int>>.handleReflectedTableOperation(
+        affectedRowCount: Int,
+        newIncome: Double,
+        newExpense: Double
+    ) {
         merchantData.run {
             val updatedRowMerchant = merchantRepository.updateAmountWithDate(
                 id = merchantId,
@@ -68,7 +72,10 @@ class DeleteSingleMerchantDataUseCase @Inject constructor(
 
             emit(
                 when {
-                    updatedRowUser == 1 && updatedRowMerchant == 1 -> Resource.Success(affectedRowCount)
+                    updatedRowUser == 1 && updatedRowMerchant == 1 -> Resource.Success(
+                        affectedRowCount
+                    )
+
                     updatedRowUser == 1 && updatedRowMerchant == 0 -> Resource.Error("Fail to update Merchant Amount")
                     updatedRowUser == 0 && updatedRowMerchant == 1 -> Resource.Error("Fail to update User Amount")
                     else -> Resource.Error("Fail to update User And Merchant Amount")

@@ -28,25 +28,32 @@ fun DialogAddMerchant(
 
     addMerchantViewModel.countryCode = code ?: getDefaultPhoneCode(LocalContext.current)
 
-    MyAppDialog(title = R.string.add_merchant, onNavigationUp = onNavigationUp, content = {
-        AddMerchantDialogField(
-            nameState = addMerchantViewModel.merchantName,
-            phoneNoState = addMerchantViewModel.phoneNumber,
-            descState = addMerchantViewModel.description,
-            onCpp = {
-                onCpp()
-            },
-            countryCode = addMerchantViewModel.countryCode!!
-        )
-    }, bottomContent = {
-        BottomSaveButton(
-            onClick = {
-                addMerchantViewModel.addMerchant(
-                    onSuccess = onSaveSuccess
-                )
-            }, modifier = Modifier.padding(dimensionResource(id = R.dimen.padding))
-        )
-    }, modifier = modifier
+    MyAppDialog(title = R.string.add_merchant,
+        onNavigationUp = {
+            if (addMerchantViewModel.enableButton) onNavigationUp()
+        },
+        content = {
+            AddMerchantDialogField(
+                nameState = addMerchantViewModel.merchantName,
+                phoneNoState = addMerchantViewModel.phoneNumber,
+                descState = addMerchantViewModel.description,
+                onCpp = {
+                    if (addMerchantViewModel.enableButton)
+                        onCpp()
+                },
+                countryCode = addMerchantViewModel.countryCode!!
+            )
+        }, bottomContent = {
+            BottomSaveButton(
+                onClick = {
+                    addMerchantViewModel.addMerchant(
+                        onSuccess = onSaveSuccess
+                    )
+                },
+                enabled = addMerchantViewModel.enableButton,
+                modifier = Modifier.padding(dimensionResource(id = R.dimen.padding))
+            )
+        }, modifier = modifier
     )
 }
 

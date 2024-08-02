@@ -124,6 +124,7 @@ fun UserProfile(
 @Composable
 fun BottomSaveButton(
     onClick: () -> Unit,
+    enabled: Boolean = true,
     modifier: Modifier = Modifier
 ) {
     PrimaryButton(
@@ -132,6 +133,7 @@ fun BottomSaveButton(
             .fillMaxWidth()
             .height(dimensionResource(id = R.dimen.button_height)),
         onClick = onClick,
+        enabled = enabled
     ) {
         Text(
             text = stringResource(id = R.string.save),
@@ -175,7 +177,8 @@ fun DialogTextFieldItem(
                 value = textState.text,
                 onValueChange = {
                     textState.disableError()
-                    textState.text = it },
+                    textState.text = it
+                },
                 placeHolder = stringResource(placeholder),
                 textStyle = MyAppTheme.typography.Medium46,
                 keyboardType = keyboardType,
@@ -186,23 +189,20 @@ fun DialogTextFieldItem(
                 paddingValues = PaddingValues(horizontal = dimensionResource(id = R.dimen.item_content_padding))
             )
         }
-
-        Box(modifier = Modifier
-            .height(20.dp)
-            .fillMaxWidth())
-        {
-            TextFieldError(
-                textError = textState.getError())
-        }
+        TextFieldError(
+            textError = textState.getError()
+        )
     }
-
-
 
 }
 
 @Composable
 internal fun TextFieldError(textError: String, modifier: Modifier = Modifier) {
-    Row(modifier = modifier.fillMaxWidth()) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(20.dp)
+    ) {
 
         Text(
             text = textError,

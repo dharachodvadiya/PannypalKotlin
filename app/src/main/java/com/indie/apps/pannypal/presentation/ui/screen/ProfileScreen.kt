@@ -55,7 +55,6 @@ private fun ProfileScreenData(
     onNavigationUp: () -> Unit,
     user: User
 ) {
-    // TODO setProfile data
     Scaffold(
         topBar = {
             TopBarWithTitle(
@@ -75,12 +74,12 @@ private fun ProfileScreenData(
                 .padding(padding)
         ) {
             ProfileTopSection(
-                totalAmount = (user.incomeAmount + user.expenseAmount).toDouble(),
+                totalAmount = (user.incomeAmount - user.expenseAmount),
                 modifier = Modifier.height(screenHeight * 0.3f)
             )
             ProfileSection2(
-                incomeAmpunt = user.incomeAmount.toDouble(),
-                expenseAmpunt = user.expenseAmount.toDouble(),
+                incomeAmpunt = user.incomeAmount,
+                expenseAmpunt = user.expenseAmount,
                 onLoginWithGoogle = {})
         }
 
