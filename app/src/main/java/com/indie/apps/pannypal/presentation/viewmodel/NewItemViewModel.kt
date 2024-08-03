@@ -83,9 +83,10 @@ class NewItemViewModel @Inject constructor(
                 val merchantData = MerchantData(
                     merchantId = merchant!!.id,
                     paymentId = payment!!.id,
-                    amount = if (received) amount else amount * -1,
+                    amount = amount,
                     details = description.text.trim(),
-                    dateInMilli = System.currentTimeMillis()
+                    dateInMilli = System.currentTimeMillis(),
+                    type = if(received) 1 else -1
                 )
 
                 viewModelScope.launch {

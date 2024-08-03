@@ -35,8 +35,8 @@ class DeleteSingleMerchantDataUseCase @Inject constructor(
                         var newExpenseAmt = 0.0
 
                         when {
-                            amount < 0 -> newExpenseAmt -= (amount * -1)
-                            amount > 0 -> newIncomeAmt -= (amount)
+                            type < 0 -> newExpenseAmt += amount
+                            type > 0 -> newIncomeAmt += (amount)
                         }
 
                         handleReflectedTableOperation(count, newIncomeAmt, newExpenseAmt)
@@ -60,14 +60,14 @@ class DeleteSingleMerchantDataUseCase @Inject constructor(
         merchantData.run {
             val updatedRowMerchant = merchantRepository.updateAmountWithDate(
                 id = merchantId,
-                incomeAmt = newIncome,
-                expenseAmt = newExpense,
+                incomeAmt = -newIncome,
+                expenseAmt = -newExpense,
                 dateInMilli = System.currentTimeMillis()
             )
 
             val updatedRowUser = userRepository.updateAmount(
-                incomeAmt = newIncome,
-                expenseAmt = newExpense
+                incomeAmt = -newIncome,
+                expenseAmt = -newExpense
             )
 
             emit(

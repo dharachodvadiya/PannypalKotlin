@@ -37,13 +37,13 @@ class UpdateMerchantDataUseCase @Inject constructor(
 
                         merchantDataOld.run {
                             when {
-                                amount < 0 -> newExpenseAmt -= (amount * -1)
-                                amount > 0 -> newIncomeAmt -= (amount)
+                                type < 0 -> newExpenseAmt -= (amount)
+                                type > 0 -> newIncomeAmt -= (amount)
                             }
                         }
 
                         when {
-                            amount < 0 -> newExpenseAmt += (amount * -1)
+                            type < 0 -> newExpenseAmt += (amount)
                             amount > 0 -> newIncomeAmt += (amount)
                         }
 

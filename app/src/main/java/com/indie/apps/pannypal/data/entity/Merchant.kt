@@ -35,4 +35,4 @@ data class Merchant(
     val expenseAmount: Double = 0.0,
 )
 
-fun Merchant.toNameAndDetails() = MerchantNameAndDetails(id, name, details)
+fun Merchant.toMerchantNameAndDetails() = MerchantNameAndDetails(id, name, details)

@@ -9,6 +9,7 @@ import com.indie.apps.pannypal.repository.PaymentRepository
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import org.junit.After
@@ -56,15 +57,17 @@ class getPaymentListUseCaseTest {
         paymentDao.insert(payment1)
         paymentDao.insert(payment2)
 
-        val result = GetPaymentListUseCase(
+        val resFlow = GetPaymentListUseCase(
             paymentRepository = paymentRepository,
             dispatcher = coroutineDispatcher
-        ).loadData(1)
+        ).loadData().first()
+        assert(resFlow.size == 2)
 
-        assert(result.toList().size == 2)
 
-        val getPayment = paymentDao.getPaymentList(10, 0)
-        assert(getPayment.size == 2)
+
+        val it = paymentDao.getPaymentList().first()
+        assert(it.size == 2)
+
     }
 
 }

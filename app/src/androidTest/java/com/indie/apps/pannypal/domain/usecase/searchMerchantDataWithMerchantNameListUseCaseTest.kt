@@ -70,7 +70,8 @@ class searchMerchantDataWithMerchantNameListUseCaseTest {
                 paymentId = payment.id,
                 dateInMilli = System.currentTimeMillis(),
                 details = "$it Sample transaction ",
-                amount = it.toLong()
+                amount = it.toDouble(),
+                type = 1
             )
             )
         }

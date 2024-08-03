@@ -81,22 +81,22 @@ class updateMerchantDataUseCaseTest {
             paymentId = payment.id,
             dateInMilli = System.currentTimeMillis(),
             details = "Sample transaction",
-            amount = 100L
+            amount = 100.0,
+            type = 1
         )
         val result = AddMerchantDataUseCase(
             merchantDataRepository = merchantDataRepository,
             merchantRepository = merchantRepository,
             userRepository = userRepository,
-            merchantData = merchantData,
             dispatcher = coroutineDispatcher
-        ).invoke()
+        ).addData(merchantData)
 
         assert(result.toList().size == 2)
 
         val getMerchantsData = merchantDataDao.getMerchantDataList(10, 0)
         assert(getMerchantsData.size == 1)
 
-        val newMerchant = getMerchantsData[0].copy(amount = 20)
+        val newMerchant = getMerchantsData[0].copy(amount = 20.0, type = 1)
 
 
 
@@ -115,15 +115,15 @@ class updateMerchantDataUseCaseTest {
 
         val getUser = userDao.getUser()
         getUser.run {
-            assert(incomeAmount == 20L)
-            assert(expenseAmount == 0L)
+            assert(incomeAmount == 20.0)
+            assert(expenseAmount == 0.0)
         }
 
         val getMerchants = merchantDao.getMerchantList(10, 0)
         assert(getMerchants.size == 1)
         getMerchants[0].run {
-            assert(getMerchants[0].incomeAmount == 20L)
-            assert(getMerchants[0].expenseAmount == 0L)
+            assert(getMerchants[0].incomeAmount == 20.0)
+            assert(getMerchants[0].expenseAmount == 0.0)
         }
 
     }
@@ -143,22 +143,22 @@ class updateMerchantDataUseCaseTest {
             paymentId = payment.id,
             dateInMilli = System.currentTimeMillis(),
             details = "Sample transaction",
-            amount = -50L
+            amount = 50.0,
+            type = -1
         )
         val result = AddMerchantDataUseCase(
             merchantDataRepository = merchantDataRepository,
             merchantRepository = merchantRepository,
             userRepository = userRepository,
-            merchantData = merchantData,
             dispatcher = coroutineDispatcher
-        ).invoke()
+        ).addData(merchantData)
 
         assert(result.toList().size == 2)
 
         val getMerchantsData = merchantDataDao.getMerchantDataList(10, 0)
         assert(getMerchantsData.size == 1)
 
-        val newMerchant = getMerchantsData[0].copy(amount = -100L)
+        val newMerchant = getMerchantsData[0].copy(amount = 100.0, type = -1)
 
         val result1 = UpdateMerchantDataUseCase(
             merchantDataRepository = merchantDataRepository,
@@ -175,15 +175,15 @@ class updateMerchantDataUseCaseTest {
 
         val getUser = userDao.getUser()
         getUser.run {
-            assert(incomeAmount == 0L)
-            assert(expenseAmount == 100L)
+            assert(incomeAmount == 0.0)
+            assert(expenseAmount == 100.0)
         }
 
         val getMerchants = merchantDao.getMerchantList(10, 0)
         assert(getMerchants.size == 1)
         getMerchants[0].run {
-            assert(getMerchants[0].incomeAmount == 0L)
-            assert(getMerchants[0].expenseAmount == 100L)
+            assert(getMerchants[0].incomeAmount == 0.0)
+            assert(getMerchants[0].expenseAmount == 100.0)
         }
 
     }
@@ -203,22 +203,22 @@ class updateMerchantDataUseCaseTest {
             paymentId = payment.id,
             dateInMilli = System.currentTimeMillis(),
             details = "Sample transaction",
-            amount = -50L
+            amount = 50.0,
+            type = -1
         )
         val result = AddMerchantDataUseCase(
             merchantDataRepository = merchantDataRepository,
             merchantRepository = merchantRepository,
             userRepository = userRepository,
-            merchantData = merchantData,
             dispatcher = coroutineDispatcher
-        ).invoke()
+        ).addData(merchantData)
 
         assert(result.toList().size == 2)
 
         val getMerchantsData = merchantDataDao.getMerchantDataList(10, 0)
         assert(getMerchantsData.size == 1)
 
-        val newMerchant = getMerchantsData[0].copy(amount = 10)
+        val newMerchant = getMerchantsData[0].copy(amount = 10.0, type = 1)
 
         val result1 = UpdateMerchantDataUseCase(
             merchantDataRepository = merchantDataRepository,
@@ -235,15 +235,15 @@ class updateMerchantDataUseCaseTest {
 
         val getUser = userDao.getUser()
         getUser.run {
-            assert(incomeAmount == 10L)
-            assert(expenseAmount == 0L)
+            assert(incomeAmount == 10.0)
+            assert(expenseAmount == 0.0)
         }
 
         val getMerchants = merchantDao.getMerchantList(10, 0)
         assert(getMerchants.size == 1)
         getMerchants[0].run {
-            assert(getMerchants[0].incomeAmount == 10L)
-            assert(getMerchants[0].expenseAmount == 0L)
+            assert(getMerchants[0].incomeAmount == 10.0)
+            assert(getMerchants[0].expenseAmount == 0.0)
         }
 
     }
@@ -263,22 +263,22 @@ class updateMerchantDataUseCaseTest {
             paymentId = payment.id,
             dateInMilli = System.currentTimeMillis(),
             details = "Sample transaction",
-            amount = 70L
+            amount = 70.0,
+            type = 1
         )
         val result = AddMerchantDataUseCase(
             merchantDataRepository = merchantDataRepository,
             merchantRepository = merchantRepository,
             userRepository = userRepository,
-            merchantData = merchantData,
             dispatcher = coroutineDispatcher
-        ).invoke()
+        ).addData(merchantData)
 
         assert(result.toList().size == 2)
 
         val getMerchantsData = merchantDataDao.getMerchantDataList(10, 0)
         assert(getMerchantsData.size == 1)
 
-        val newMerchant = getMerchantsData[0].copy(amount = -100L)
+        val newMerchant = getMerchantsData[0].copy(amount = 100.0, type = -1)
 
         val result1 = UpdateMerchantDataUseCase(
             merchantDataRepository = merchantDataRepository,
@@ -295,15 +295,15 @@ class updateMerchantDataUseCaseTest {
 
         val getUser = userDao.getUser()
         getUser.run {
-            assert(incomeAmount == 0L)
-            assert(expenseAmount == 100L)
+            assert(incomeAmount == 0.0)
+            assert(expenseAmount == 100.0)
         }
 
         val getMerchants = merchantDao.getMerchantList(10, 0)
         assert(getMerchants.size == 1)
         getMerchants[0].run {
-            assert(getMerchants[0].incomeAmount == 0L)
-            assert(getMerchants[0].expenseAmount == 100L)
+            assert(getMerchants[0].incomeAmount == 0.0)
+            assert(getMerchants[0].expenseAmount == 100.0)
         }
 
     }

@@ -17,7 +17,7 @@ class GetUserProfileUseCase @Inject constructor(
 
     fun loadData() : Flow<Resource<User>>{
         return flow{
-
+            emit(Resource.Loading())
             try {
                 emit(Resource.Success(userRepository.getUser()))
             }catch (e: Throwable) {

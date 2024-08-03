@@ -16,14 +16,14 @@ class AddMerchantUseCase @Inject constructor(
     private val merchantRepository: MerchantRepository,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) {
-    suspend fun addMerchant(merchant: Merchant) : Flow<Resource<Long>>{
-        return flow{
-
+    suspend fun addMerchant(merchant: Merchant): Flow<Resource<Long>> {
+        return flow {
+            emit(Resource.Loading())
             try {
                 val id = merchantRepository.insert(merchant)
-                if(id >0){
+                if (id > 0) {
                     emit(Resource.Success(id))
-                }else{
+                } else {
                     emit(Resource.Error("Fail to add Merchant"))
                 }
 

@@ -77,10 +77,15 @@ dependencies {
     //Room
     val room_version = "2.6.1"
     implementation("androidx.room:room-runtime:$room_version")
+    testImplementation("androidx.room:room-runtime:$room_version")
     implementation("androidx.room:room-paging:$room_version")
+    testImplementation("androidx.room:room-paging:$room_version")
     annotationProcessor("androidx.room:room-compiler:$room_version")
+    testAnnotationProcessor("androidx.room:room-compiler:$room_version")
     kapt("androidx.room:room-compiler:$room_version")
+    kaptTest("androidx.room:room-compiler:$room_version")
     implementation("androidx.room:room-ktx:$room_version")
+    testImplementation("androidx.room:room-ktx:$room_version")
 
     //dagger-hilt
     val hilt_version = "2.48"

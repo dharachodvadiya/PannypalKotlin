@@ -11,6 +11,7 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.*
@@ -65,8 +66,9 @@ class deletePaymentUseCaseTest {
             assertTrue(result is Resource.Error)
             assertEquals("Fail to delete payment", (result as Resource.Error).message)
 
-            val getPayment = paymentDao.getPaymentList(10, 0)
-            assertEquals(1, getPayment.size)
+            val it = paymentDao.getPaymentList().first()
+            assertEquals(1, it.size)
+
         }
     }
 
@@ -85,8 +87,9 @@ class deletePaymentUseCaseTest {
             assertTrue(result is Resource.Success)
             assertEquals(1, (result as Resource.Success).data)
 
-            val getPayment = paymentDao.getPaymentList(10, 0)
-            assertEquals(0, getPayment.size)
+            val it = paymentDao.getPaymentList().first()
+            assertEquals(0, it.size)
+
         }
     }
 

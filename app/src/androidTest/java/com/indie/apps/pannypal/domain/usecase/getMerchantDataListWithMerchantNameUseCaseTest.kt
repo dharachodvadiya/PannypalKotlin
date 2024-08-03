@@ -71,7 +71,8 @@ class getMerchantDataListWithMerchantNameUseCaseTest {
                 paymentId = payment.id,
                 dateInMilli = System.currentTimeMillis(),
                 details = "Sample transaction $it",
-                amount = it.toLong()
+                amount = it.toDouble(),
+                type = 1
             )
             )
         }

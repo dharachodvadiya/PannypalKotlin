@@ -34,7 +34,8 @@ class AddMerchantDataUseCase @Inject constructor(
                     handleSuccessfulInsert(
                         id = id,
                         merchantId = merchantData.merchantId,
-                        amount = merchantData.amount
+                        amount = merchantData.amount,
+                        type = merchantData.type
                     )
                 } else {
                     emit(Resource.Error("Failed to insert MerchantData"))
@@ -48,23 +49,24 @@ class AddMerchantDataUseCase @Inject constructor(
     private suspend fun FlowCollector<Resource<Long>>.handleSuccessfulInsert(
         id: Long,
         merchantId: Long,
-        amount: Double
+        amount: Double,
+        type: Int
     ) {
 
         coroutineScope {
             val updatedRowMerchantDeferred = async {
                 merchantRepository.updateAmountWithDate(
                     id = merchantId,
-                    incomeAmt = if (amount >= 0) amount else 0.0,
-                    expenseAmt = if (amount < 0) (amount * -1) else 0.0,
+                    incomeAmt = if (type > 0) amount else 0.0,
+                    expenseAmt = if (type < 0) amount else 0.0,
                     System.currentTimeMillis()
                 )
             }
 
             val updatedRowUserDeferred = async {
                 userRepository.updateAmount(
-                    incomeAmt = if (amount >= 0) amount else 0.0,
-                    expenseAmt = if (amount < 0) (amount * -1) else 0.0
+                    incomeAmt = if (type > 0) amount else 0.0,
+                    expenseAmt = if (type < 0) (amount) else 0.0
                 )
             }
             updatedRowMerchantDeferred.await()

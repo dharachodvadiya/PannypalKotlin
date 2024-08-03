@@ -34,8 +34,8 @@ class DeleteMultipleMerchantDataUseCase @Inject constructor(
                     val (newIncomeAmt, newExpenseAmt) = merchantsData.fold(0.0 to 0.0) { acc, merchant ->
                         val (currentIncome, currentExpense) = acc
                         when {
-                            merchant.amount < 0 -> (currentIncome to (currentExpense - (merchant.amount * -1)))
-                            merchant.amount > 0 -> ((currentIncome - merchant.amount) to currentExpense)
+                            merchant.type < 0 -> (currentIncome to (currentExpense + merchant.amount))
+                            merchant.type > 0 -> ((currentIncome + merchant.amount) to currentExpense)
                             else -> acc
                         }
                     }
@@ -56,14 +56,14 @@ class DeleteMultipleMerchantDataUseCase @Inject constructor(
     private suspend fun FlowCollector<Resource<Int>>.handleReflectedTableOperation(affectedRowCount: Int, newIncome : Double, newExpense: Double ) {
         val updatedRowMerchant = merchantRepository.updateAmountWithDate(
             id = merchantsData[0].merchantId,
-            incomeAmt = newIncome,
-            expenseAmt = newExpense,
+            incomeAmt = -newIncome,
+            expenseAmt = -newExpense,
             dateInMilli = System.currentTimeMillis()
         )
 
         val updatedRowUser = userRepository.updateAmount(
-            incomeAmt = newIncome,
-            expenseAmt = newExpense
+            incomeAmt = -newIncome,
+            expenseAmt = -newExpense
         )
 
         emit(

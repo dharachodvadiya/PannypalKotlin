@@ -94,7 +94,8 @@ class addMerchantDataUseCaseTest {
             paymentId = payment.id,
             dateInMilli = System.currentTimeMillis(),
             details = "Sample transaction",
-            amount = 100L
+            amount = 100.0,
+            type = 1
         )
 
         //when
@@ -102,9 +103,8 @@ class addMerchantDataUseCaseTest {
             merchantDataRepository = merchantDataRepository,
             merchantRepository = merchantRepository,
             userRepository = userRepository,
-            merchantData = merchantData,
             dispatcher = coroutineDispatcher
-        ).invoke()
+        ).addData(merchantData)
 
         // Assert: Collect and verify the result
         resultFlow.drop(1).collect{ result ->
@@ -118,16 +118,16 @@ class addMerchantDataUseCaseTest {
         // Assert user's updated amounts
         val getUser = userDao.getUser()
         getUser.run {
-            assert(incomeAmount == 100L)
-            assert(expenseAmount == 0L)
+            assert(incomeAmount == 100.0)
+            assert(expenseAmount == 0.0)
         }
 
         // Assert merchant's updated amounts
         val getMerchants = merchantDao.getMerchantList(10, 0)
         assert(getMerchants.size == 1)
         getMerchants[0].run {
-            assert(getMerchants[0].incomeAmount == 100L)
-            assert(getMerchants[0].expenseAmount == 0L)
+            assert(getMerchants[0].incomeAmount == 100.0)
+            assert(getMerchants[0].expenseAmount == 0.0)
         }
     }
 
@@ -140,7 +140,8 @@ class addMerchantDataUseCaseTest {
             paymentId = payment.id,
             dateInMilli = System.currentTimeMillis(),
             details = "Sample transaction",
-            amount = 100L
+            amount = 100.0,
+            type = 1
         )
 
         //when add first data
@@ -148,9 +149,8 @@ class addMerchantDataUseCaseTest {
             merchantDataRepository = merchantDataRepository,
             merchantRepository = merchantRepository,
             userRepository = userRepository,
-            merchantData = merchantData1,
             dispatcher = coroutineDispatcher
-        ).invoke()
+        ).addData(merchantData1)
 
         // Assert: Collect and verify the result
         resultFlow1.drop(1).collect { result ->
@@ -166,7 +166,8 @@ class addMerchantDataUseCaseTest {
             paymentId = payment.id,
             dateInMilli = System.currentTimeMillis(),
             details = "Sample transaction",
-            amount = -50L
+            amount = 50.0,
+            type = -1
         )
 
         //when add second data
@@ -174,9 +175,8 @@ class addMerchantDataUseCaseTest {
             merchantDataRepository = merchantDataRepository,
             merchantRepository = merchantRepository,
             userRepository = userRepository,
-            merchantData = merchantData2,
             dispatcher = coroutineDispatcher
-        ).invoke()
+        ).addData(merchantData2)
 
         // Assert: Collect and verify the result
         resultFlow2.drop(1).collect { result ->
@@ -190,16 +190,16 @@ class addMerchantDataUseCaseTest {
         // Assert user's updated amounts
         val getUser = userDao.getUser()
         getUser.run {
-            assert(incomeAmount == 100L)
-            assert(expenseAmount == 50L)
+            assert(incomeAmount == 100.0)
+            assert(expenseAmount == 50.0)
         }
 
         // Assert merchant's updated amounts
         val getMerchants = merchantDao.getMerchantList(10, 0)
         assert(getMerchants.size == 1)
         getMerchants[0].run {
-            assert(incomeAmount == 100L)
-            assert(expenseAmount == 50L)
+            assert(incomeAmount == 100.0)
+            assert(expenseAmount == 50.0)
         }
 
     }

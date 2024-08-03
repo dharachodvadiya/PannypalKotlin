@@ -18,7 +18,7 @@ class AddPaymentUseCase @Inject constructor(
 
     suspend fun addPayment(payment: Payment): Flow<Resource<Long>> {
         return flow {
-
+            emit(Resource.Loading())
             try {
                 val id = paymentRepository.insert(payment)
                 if (id > 0) {

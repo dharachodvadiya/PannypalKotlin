@@ -9,6 +9,7 @@ import com.indie.apps.pannypal.repository.PaymentRepository
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import org.junit.After
@@ -65,7 +66,7 @@ class updatePaymentUseCaseTest {
         assert(result.toList().size == 2)
         assert(result.toList()[1].data == 1)
 
-        val getPayment = paymentDao.getPaymentList(10, 0)
+        val getPayment = paymentDao.getPaymentList().first()
         assert(getPayment.size == 1)
         assert(getPayment[0].name == "Cash")
     }

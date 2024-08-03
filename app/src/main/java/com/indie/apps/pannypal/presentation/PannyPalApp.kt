@@ -18,7 +18,7 @@ import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import com.google.gson.Gson
 import com.indie.apps.pannypal.R
-import com.indie.apps.pannypal.data.entity.toNameAndDetails
+import com.indie.apps.pannypal.data.entity.toMerchantNameAndDetails
 import com.indie.apps.pannypal.presentation.ui.common.Util
 import com.indie.apps.pannypal.presentation.ui.dialog.DialogAddMerchant
 import com.indie.apps.pannypal.presentation.ui.dialog.DialogAddPayment
@@ -115,7 +115,7 @@ fun PannyPalApp() {
                                     ?.savedStateHandle
                                     ?.set(
                                         Util.SAVE_STATE_MERCHANT_NAME_DESC,
-                                        Gson().toJson(it.toNameAndDetails())
+                                        Gson().toJson(it.toMerchantNameAndDetails())
                                     )
 
                             navController.popBackStack()

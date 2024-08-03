@@ -82,26 +82,26 @@ class deleteMultipleMerchantUseCaseTest {
             merchantId = merchant1.id,
             paymentId = payment.id,
             dateInMilli = System.currentTimeMillis(),
-            amount = 100L
+            amount = 100.0,
+            type = 1
         )
         val merchantData2 =MerchantData(
             merchantId = merchant2.id,
             paymentId = payment.id,
             dateInMilli = System.currentTimeMillis(),
-            amount = -10L
+            amount = 10.0,
+            type = -1
         )
 
         val result1 = AddMerchantDataUseCase(merchantDataRepository = merchantDataRepository,
             merchantRepository = merchantRepository,
             userRepository = userRepository,
-            merchantData = merchantData1,
-            dispatcher = coroutineDispatcher).invoke()
+            dispatcher = coroutineDispatcher).addData(merchantData1)
 
         val result2 = AddMerchantDataUseCase(merchantDataRepository = merchantDataRepository,
             merchantRepository = merchantRepository,
             userRepository = userRepository,
-            merchantData = merchantData2,
-            dispatcher = coroutineDispatcher).invoke()
+            dispatcher = coroutineDispatcher).addData(merchantData2)
 
 
         assert(result1.toList()[1].data != 0L)
@@ -109,8 +109,8 @@ class deleteMultipleMerchantUseCaseTest {
 
         val user1 = userDao.getUser()
         user1.run {
-            assert(incomeAmount == 100L)
-            assert(expenseAmount == 10L)
+            assert(incomeAmount == 100.0)
+            assert(expenseAmount == 10.0)
         }
 
         val merchants = merchantDao.getMerchantList(10,0)
@@ -138,8 +138,8 @@ class deleteMultipleMerchantUseCaseTest {
 
         val user2 = userDao.getUser()
         user2.run {
-            assert(incomeAmount == 0L)
-            assert(expenseAmount == 0L)
+            assert(incomeAmount == 0.0)
+            assert(expenseAmount == 0.0)
         }
 
     }

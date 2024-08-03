@@ -81,15 +81,15 @@ class deleteSingleMerchantDataUseCaseTest {
             paymentId = payment.id,
             dateInMilli = System.currentTimeMillis(),
             details = "Sample transaction",
-            amount = 100L
+            amount = 100.0,
+            type = 1
         )
         val result = AddMerchantDataUseCase(
             merchantDataRepository = merchantDataRepository,
             merchantRepository = merchantRepository,
             userRepository = userRepository,
-            merchantData = merchantData,
             dispatcher = coroutineDispatcher
-        ).invoke()
+        ).addData(merchantData)
 
         assert(result.toList().size == 2)
 
@@ -110,15 +110,15 @@ class deleteSingleMerchantDataUseCaseTest {
 
         val getUser = userDao.getUser()
         getUser.run {
-            assert(incomeAmount == 0L)
-            assert(expenseAmount == 0L)
+            assert(incomeAmount == 0.0)
+            assert(expenseAmount == 0.0)
         }
 
         val getMerchants = merchantDao.getMerchantList(10, 0)
         assert(getMerchants.size == 1)
         getMerchants[0].run {
-            assert(getMerchants[0].incomeAmount == 0L)
-            assert(getMerchants[0].expenseAmount == 0L)
+            assert(getMerchants[0].incomeAmount == 0.0)
+            assert(getMerchants[0].expenseAmount == 0.0)
         }
 
     }
@@ -138,15 +138,15 @@ class deleteSingleMerchantDataUseCaseTest {
             paymentId = payment.id,
             dateInMilli = System.currentTimeMillis(),
             details = "Sample transaction",
-            amount = -10L
+            amount = 10.0,
+            type = -1
         )
         val result = AddMerchantDataUseCase(
             merchantDataRepository = merchantDataRepository,
             merchantRepository = merchantRepository,
             userRepository = userRepository,
-            merchantData = merchantData,
             dispatcher = coroutineDispatcher
-        ).invoke()
+        ).addData(merchantData)
 
         assert(result.toList().size == 2)
 
@@ -167,15 +167,15 @@ class deleteSingleMerchantDataUseCaseTest {
 
         val getUser = userDao.getUser()
         getUser.run {
-            assert(incomeAmount == 0L)
-            assert(expenseAmount == 0L)
+            assert(incomeAmount == 0.0)
+            assert(expenseAmount == 0.0)
         }
 
         val getMerchants = merchantDao.getMerchantList(10, 0)
         assert(getMerchants.size == 1)
         getMerchants[0].run {
-            assert(getMerchants[0].incomeAmount == 0L)
-            assert(getMerchants[0].expenseAmount == 0L)
+            assert(getMerchants[0].incomeAmount == 0.0)
+            assert(getMerchants[0].expenseAmount == 0.0)
         }
 
     }

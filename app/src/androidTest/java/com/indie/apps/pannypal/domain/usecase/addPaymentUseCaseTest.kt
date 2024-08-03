@@ -10,7 +10,9 @@ import com.indie.apps.pannypal.util.Resource
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.*
@@ -71,8 +73,9 @@ class addPaymentUseCaseTest {
         }
 
         //Assert: verify operation
-        val getPayment = paymentDao.getPaymentList(10, 0)
-        assert(getPayment.size == 1)
+        val it = paymentDao.getPaymentList().first()
+        assert(it.size == 1)
+
     }
 
 }
