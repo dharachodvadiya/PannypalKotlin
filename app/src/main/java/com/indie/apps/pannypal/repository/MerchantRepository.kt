@@ -1,8 +1,10 @@
 package com.indie.apps.pannypal.repository
 
+import androidx.paging.PagingData
 import androidx.paging.PagingSource
 import com.indie.apps.pannypal.data.entity.Merchant
 import com.indie.apps.pannypal.data.module.MerchantNameAndDetails
+import kotlinx.coroutines.flow.Flow
 
 interface MerchantRepository : BaseRepository<Merchant> {
 
@@ -22,6 +24,7 @@ interface MerchantRepository : BaseRepository<Merchant> {
     ): Int
 
     fun searchMerchantNameAndDetailList(searchQuery: String): PagingSource<Int, MerchantNameAndDetails>
+    fun searchMerchantNameAndDetailListPaging(searchQuery: String): Flow<PagingData<MerchantNameAndDetails>>
 
     suspend fun searchMerchantList(searchQuery: String, limit: Int, offset: Int): List<Merchant>
 }

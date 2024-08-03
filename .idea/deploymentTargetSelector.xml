@@ -16,19 +16,19 @@
       <SelectionState runConfigName="cpp">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="deleteMultipleMerchantUseCaseTest">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
       <SelectionState runConfigName="Tests in 'com.indie.apps.pannypal.repository'">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="MerchantDataRepositoryImplTest">
+      <SelectionState runConfigName="populateDatabase_Test()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="PaymentRepositoryImplTest">
+      <SelectionState runConfigName="Tests in 'com.indie.apps.pannypal.domain.usecase'">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="delete_customPayment_test()">
+      <SelectionState runConfigName="get_payment_list_Test()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="getPaymentListUseCaseTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

@@ -1,5 +1,6 @@
 package com.indie.apps.pannypal.data.dao
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
@@ -45,12 +46,13 @@ interface MerchantDataDao : BaseDao<MerchantData> {
                 md.date_milli as dateInMilli, 
                 md.details, 
                 md.amount, 
+                md.type,
                 m.name as merchantName
         FROM merchant_data md
         INNER JOIN merchant m ON md.merchant_id = m.id
-        ORDER BY id DESC LIMIT :limit OFFSET :offset
+        ORDER BY id DESC
     """)
-    suspend fun getMerchantsDataWithMerchantNameList(limit: Int, offset: Int): List<MerchantDataWithName>
+    fun getMerchantsDataWithMerchantNameList(): PagingSource<Int,MerchantDataWithName>
 
     @Transaction
     @Query("""
@@ -59,11 +61,12 @@ interface MerchantDataDao : BaseDao<MerchantData> {
                 md.date_milli as dateInMilli, 
                 md.details, 
                 md.amount, 
+                md.type,
                 m.name as merchantName
         FROM merchant_data md
         INNER JOIN merchant m ON md.merchant_id = m.id
         WHERE m.name LIKE :searchQuery || '%' OR md.details LIKE :searchQuery || '%'
-        ORDER BY id DESC LIMIT :limit OFFSET :offset
+        ORDER BY id DESC
     """)
-    suspend fun searchMerchantDataWithMerchantNameList(searchQuery : String, limit: Int, offset: Int): List<MerchantDataWithName>
+    fun searchMerchantDataWithMerchantNameList(searchQuery : String): PagingSource<Int,MerchantDataWithName>
 }

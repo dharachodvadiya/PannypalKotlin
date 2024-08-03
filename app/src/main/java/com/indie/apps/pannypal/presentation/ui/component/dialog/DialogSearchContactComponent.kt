@@ -1,6 +1,7 @@
 package com.indie.apps.pannypal.presentation.ui.component.dialog
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -14,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -48,7 +50,9 @@ fun SearchDialogField(
     onItemClick: (MerchantNameAndDetails?) -> Unit,
     onTextChange: (String) -> Unit,
     textState: TextFieldState,
-    dataList: LazyPagingItems<MerchantNameAndDetails>
+    dataList: LazyPagingItems<MerchantNameAndDetails>,
+    isRefresh : Boolean = false,
+    isLoadMore : Boolean = false
 ) {
     Column {
 
@@ -57,24 +61,47 @@ fun SearchDialogField(
             textState = textState,
             onTextChange = onTextChange
         )
-        LazyColumn(
-            modifier = Modifier
-                .padding(horizontal = dimensionResource(id = R.dimen.padding))
-        ) {
-            items(
-                count = dataList.itemCount,
-                key = dataList.itemKey { item -> item.id },
-                contentType = dataList.itemContentType { "MerchantNameAndDetails" }
-            ) { index ->
-                val data = dataList[index]
-                if (data != null) {
-                    SearchMerchantListItem(
-                        item = data,
-                        onClick = { onItemClick(data) }
-                    )
+        if(isRefresh)
+        {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+            ){
+                CircularProgressIndicator()
+            }
+        }else{
+            LazyColumn(
+                modifier = Modifier
+                    .padding(horizontal = dimensionResource(id = R.dimen.padding))
+            ) {
+                items(
+                    count = dataList.itemCount,
+                    key = dataList.itemKey { item -> item.id },
+                    contentType = dataList.itemContentType { "MerchantNameAndDetails" }
+                ) { index ->
+                    val data = dataList[index]
+                    if (data != null) {
+                        SearchMerchantListItem(
+                            item = data,
+                            onClick = { onItemClick(data) }
+                        )
+
+                        if(isLoadMore && index == dataList.itemCount-1){
+                            Box(
+                                contentAlignment = Alignment.Center,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                            ){
+                                CircularProgressIndicator()
+                            }
+                        }
+                    }
                 }
             }
         }
+
     }
 }
 

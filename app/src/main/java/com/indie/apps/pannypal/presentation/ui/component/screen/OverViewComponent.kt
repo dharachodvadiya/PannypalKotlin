@@ -20,6 +20,8 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.NorthEast
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.SouthWest
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
@@ -41,25 +43,29 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
 import com.indie.apps.pannypal.R
+import com.indie.apps.pannypal.data.module.MerchantDataWithName
 import com.indie.apps.pannypal.presentation.ui.common.Util
-import com.indie.apps.pannypal.presentation.ui.component.verticalGradientsBrush
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.ListItem
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.RoundImage
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.SearchView
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.TopBar
 import com.indie.apps.pannypal.presentation.ui.component.linearGradientsBrush
+import com.indie.apps.pannypal.presentation.ui.component.verticalGradientsBrush
 import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 
 @Composable
 fun OverviewTopBar(
-    onSearchTextChange: (String) -> Unit,
+    //onSearchTextChange: (String) -> Unit,
     onProfileClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var isSearch by remember { mutableStateOf(false) }
+    /*var isSearch by remember { mutableStateOf(false) }
 
     TopBar(
         isBackEnable = isSearch,
@@ -85,8 +91,15 @@ fun OverviewTopBar(
             }
         },
         modifier = modifier
+    )*/
+
+    TopBar(
+        isBackEnable = false,
+        leadingContent = { OverviewTopBarProfile(onClick = onProfileClick) },
+        modifier = modifier
     )
 }
+
 @Composable
 fun OverviewBalanceView(
     balance: Double,
@@ -147,23 +160,50 @@ fun OverviewBalanceView(
 
 @Composable
 fun OverviewList(
-    modifier: Modifier = Modifier
+    dataList: LazyPagingItems<MerchantDataWithName>,
+    modifier: Modifier = Modifier,
+    isLoadMore : Boolean = false
 ) {
     LazyColumn(
         modifier = modifier
             .padding(horizontal = dimensionResource(id = R.dimen.padding))
     ) {
-        items(10) { index ->
+        /*items(10) { index ->
 
             OverviewListItem(
                 isDateShow = (index % 3 == 0)
             )
+        }
+*/
+        items(
+            count = dataList.itemCount,
+            key = dataList.itemKey { item -> item.id },
+            contentType = dataList.itemContentType { "MerchantDataWithName" }
+        ) { index ->
+            val data = dataList[index]
+            if (data != null) {
+                OverviewListItem(
+                    item = data
+                )
+
+                if(isLoadMore && index == dataList.itemCount)
+                {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ){
+                        CircularProgressIndicator()
+                    }
+                }
+            }
         }
     }
 }
 
 @Composable
 fun OverviewListItem(
+    item: MerchantDataWithName,
     modifier: Modifier = Modifier.fillMaxWidth(),
     isDateShow: Boolean = false
 ) {
@@ -186,8 +226,8 @@ fun OverviewListItem(
         }
 
         // TODO: change Round Image Icon and bg color based on amount
-        val imageVector = Icons.Default.NorthEast
-        val bgColor = MyAppTheme.colors.redBg
+        val imageVector = if (item.type < 0) Icons.Default.NorthEast else Icons.Default.SouthWest
+        val bgColor = if (item.type < 0) MyAppTheme.colors.redBg else MyAppTheme.colors.greenBg
 
         ListItem(
             isClickable = false,
@@ -202,14 +242,14 @@ fun OverviewListItem(
             content = {
                 Column {
                     Text(
-                        text = "Name",
+                        text = item.merchantName,
                         style = MyAppTheme.typography.Bold52_5,
                         color = MyAppTheme.colors.black,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
                     Text(
-                        text = "Description",
+                        text = if (item.details.isNullOrEmpty()) stringResource(id = R.string.no_details) else item.details,
                         style = MyAppTheme.typography.Medium33,
                         color = MyAppTheme.colors.gray2,
                         maxLines = 1,
@@ -219,7 +259,7 @@ fun OverviewListItem(
             },
             trailingContent = {
                 Text(
-                    text = Util.getFormattedStringWithSymbole(0.0),
+                    text = Util.getFormattedStringWithSymbole(if (item.type > 0) item.amount else item.amount * -1),
                     style = MyAppTheme.typography.Bold52_5,
                     color = MyAppTheme.colors.black
                 )
@@ -304,6 +344,6 @@ private fun TopbarProfilePreview() {
 @Composable
 private fun OverviewListItemPreview() {
     PannyPalTheme {
-        OverviewListItem()
+        // OverviewListItem()
     }
 }

@@ -13,14 +13,15 @@ import javax.inject.Inject
 
 class GetUserProfileUseCase @Inject constructor(
     private val userRepository: UserRepository,
-    @IoDispatcher private val dispatcher: CoroutineDispatcher) {
+    @IoDispatcher private val dispatcher: CoroutineDispatcher
+) {
 
-    fun loadData() : Flow<Resource<User>>{
-        return flow{
+    fun loadData(): Flow<Resource<User>> {
+        return flow {
             emit(Resource.Loading())
             try {
                 emit(Resource.Success(userRepository.getUser()))
-            }catch (e: Throwable) {
+            } catch (e: Throwable) {
                 emit(Resource.Error(handleException(e).message + ": ${e.message}"))
             }
         }

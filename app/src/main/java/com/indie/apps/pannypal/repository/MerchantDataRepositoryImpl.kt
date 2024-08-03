@@ -23,16 +23,12 @@ class MerchantDataRepositoryImpl @Inject constructor(private val merchantDataDao
         offset: Int
     ) = merchantDataDao.getMerchantDataListFromMerchantId(id, limit, offset)
 
-    override suspend fun getMerchantsDataWithMerchantNameList(
-        limit: Int,
-        offset: Int
-    ): List<MerchantDataWithName>  = merchantDataDao.getMerchantsDataWithMerchantNameList(limit, offset)
+    override fun getMerchantsDataWithMerchantNameList(
+    )= merchantDataDao.getMerchantsDataWithMerchantNameList()
 
-    override suspend fun searchMerchantDataWithMerchantNameList(
-        searchQuery: String,
-        limit: Int,
-        offset: Int
-    ) = merchantDataDao.searchMerchantDataWithMerchantNameList(searchQuery, limit, offset)
+    override fun searchMerchantDataWithMerchantNameList(
+        searchQuery: String
+    ) = merchantDataDao.searchMerchantDataWithMerchantNameList(searchQuery)
 
     override suspend fun insert(merchantData: MerchantData) = merchantDataDao.insert(merchantData)
 

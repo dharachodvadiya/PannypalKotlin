@@ -14,6 +14,7 @@ import com.indie.apps.pannypal.data.entity.Merchant
 import com.indie.apps.pannypal.data.entity.MerchantData
 import com.indie.apps.pannypal.data.entity.Payment
 import com.indie.apps.pannypal.data.entity.User
+import com.indie.apps.pannypal.repository.MerchantRepositoryImpl
 import com.indie.apps.pannypal.repository.PaymentRepositoryImpl
 import com.indie.apps.pannypal.repository.UserRepositoryImpl
 import kotlinx.coroutines.CoroutineScope
@@ -33,10 +34,10 @@ import kotlinx.coroutines.runBlocking
 )
 abstract class AppDatabase : RoomDatabase() {
 
-    abstract fun userDao() : UserDao
-    abstract fun paymentDao() : PaymentDao
-    abstract fun merchantDao() : MerchantDao
-    abstract fun merchantDataDao() : MerchantDataDao
+    abstract fun userDao(): UserDao
+    abstract fun paymentDao(): PaymentDao
+    abstract fun merchantDao(): MerchantDao
+    abstract fun merchantDataDao(): MerchantDataDao
 
     companion object {
         @Volatile
@@ -51,8 +52,8 @@ abstract class AppDatabase : RoomDatabase() {
                 )
                     .addCallback(CALLBACK)
                     .build().also {
-                    INSTANCE = it
-                }
+                        INSTANCE = it
+                    }
             }
         }
 
@@ -62,7 +63,7 @@ abstract class AppDatabase : RoomDatabase() {
 
                 val scope = CoroutineScope(Dispatchers.IO)
                 scope.launch {
-                    INSTANCE?.let {database  ->
+                    INSTANCE?.let { database ->
                         // Pre-populate the database on first creation
                         populateDatabase(database)
                     }
@@ -84,10 +85,16 @@ abstract class AppDatabase : RoomDatabase() {
             val preAddedPayments = listOf(
                 Payment(name = "Cash", preAdded = 1),
                 Payment(name = "Bank Transfer", preAdded = 1),
-                Payment(name = "Credit Card" , preAdded = 1)
+                Payment(name = "Credit Card", preAdded = 1)
             )
 
             PaymentRepositoryImpl(paymentDao).insertPaymentList(preAddedPayments)
+/*
+            val merchantDao = db.merchantDao()
+            for (i in 1..100) {
+                MerchantRepositoryImpl(merchantDao).insert(Merchant(name = "hello $i"))
+
+            }*/
 
         }
     }

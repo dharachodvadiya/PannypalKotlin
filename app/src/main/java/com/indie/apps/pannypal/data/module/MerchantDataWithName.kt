@@ -6,5 +6,6 @@ class MerchantDataWithName(
     val merchantName: String,
     val dateInMilli: Long,
     val details: String? = null,
-    val amount: Long,
+    val amount: Double,
+    val type: Int
 )

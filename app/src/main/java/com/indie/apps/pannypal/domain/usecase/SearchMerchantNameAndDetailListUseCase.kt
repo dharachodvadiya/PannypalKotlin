@@ -3,6 +3,7 @@ package com.indie.apps.pannypal.domain.usecase
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.indie.apps.pannypal.data.Paging.BasePagingSource
 import com.indie.apps.pannypal.di.IoDispatcher
 import com.indie.apps.pannypal.data.module.MerchantNameAndDetails
 import com.indie.apps.pannypal.presentation.ui.common.Util
@@ -32,5 +33,12 @@ class SearchMerchantNameAndDetailListUseCase @Inject constructor(
             .flow
             .flowOn(dispatcher)
     }
+
+  /*  fun loadData(searchQuery : String) : Flow<PagingData<MerchantNameAndDetails>>{
+
+        return merchantRepository
+            .searchMerchantNameAndDetailListPaging(searchQuery)
+            .flowOn(dispatcher)
+    }*/
 
 }

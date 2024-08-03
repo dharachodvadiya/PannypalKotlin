@@ -27,6 +27,10 @@ fun DialogSearchMerchant(
 ) {
 
     val lazyPagingData = searchMerchantViewModel.pagedData.collectAsLazyPagingItems()
+    searchMerchantViewModel.pagingState.update(lazyPagingData)
+
+    //val uiState by searchMerchantViewModel.uiState.collectAsStateWithLifecycle()
+
     var job: Job? = null
     MyAppDialog(
         isBackEnable = true,
@@ -44,7 +48,9 @@ fun DialogSearchMerchant(
                         searchMerchantViewModel.searchData()
                     }
                 },
-                dataList = lazyPagingData
+                dataList = lazyPagingData,
+                isRefresh = searchMerchantViewModel.pagingState.isRefresh,
+                isLoadMore = searchMerchantViewModel.pagingState.isLoadMore
             )
         },
         modifier = modifier,
