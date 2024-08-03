@@ -53,16 +53,19 @@ fun SearchView(
                         modifier = Modifier.clickable {
                             if (textState.text.isNotEmpty()) {
                                 textState.text = ""
+                                onTextChange("")
                             }
                         },
                         imageVector = Icons.Filled.Close,
                         contentDescription = "close"
                     )
+
                 } else if (trailingIcon != null) {
                     Icon(
                         modifier = Modifier.clickable {
                             if (textState.text.isNotEmpty()) {
                                 textState.text = ""
+                                onTextChange("")
                             }
                         },
                         imageVector = trailingIcon,
