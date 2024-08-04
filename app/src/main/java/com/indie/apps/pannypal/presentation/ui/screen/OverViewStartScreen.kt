@@ -29,8 +29,13 @@ fun OverViewStartScreen(
     onNewEntry: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val lazyPagingData = overViewViewModel.pagedData.collectAsLazyPagingItems()
-    overViewViewModel.pagingState.update(lazyPagingData)
+    val dataWithNameLazyPagingItems = overViewViewModel.pagedMerchantData.collectAsLazyPagingItems()
+    overViewViewModel.merchantDataWithNamePagingState.update(dataWithNameLazyPagingItems)
+
+    val dailyTotalLazyPagingItems =
+        overViewViewModel.pagedMerchantDataDailyTotal.collectAsLazyPagingItems()
+    overViewViewModel.merchantDataDailyTotalPagingState.update(dailyTotalLazyPagingItems)
+
 
     val uiState by overViewViewModel.uiState.collectAsStateWithLifecycle()
 
@@ -39,6 +44,7 @@ fun OverViewStartScreen(
         is Resource.Success -> {
             (uiState.data?.incomeAmount ?: 0.0) - (uiState.data?.expenseAmount ?: 0.0)
         }
+
         is Resource.Error -> 0.0
     }
 
@@ -53,7 +59,9 @@ fun OverViewStartScreen(
         Column(
             modifier = modifier.padding(innerPadding)
         ) {
-            if (overViewViewModel.pagingState.isRefresh) {
+            if (overViewViewModel.merchantDataWithNamePagingState.isRefresh ||
+                overViewViewModel.merchantDataDailyTotalPagingState.isRefresh
+            ) {
                 Box(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
@@ -65,7 +73,10 @@ fun OverViewStartScreen(
             } else {
                 OverviewBalanceView(amount)
                 OverviewList(
-                    dataList = lazyPagingData, isLoadMore = overViewViewModel.pagingState.isLoadMore
+                    dataList = dataWithNameLazyPagingItems,
+                    dailyTotalList = dailyTotalLazyPagingItems,
+                    isLoadMore = overViewViewModel.merchantDataWithNamePagingState.isLoadMore ||
+                            overViewViewModel.merchantDataDailyTotalPagingState.isLoadMore
                 )
             }
 

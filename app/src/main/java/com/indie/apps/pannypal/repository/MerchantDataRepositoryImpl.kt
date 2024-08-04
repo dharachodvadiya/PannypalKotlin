@@ -1,7 +1,9 @@
 package com.indie.apps.pannypal.repository
 
+import androidx.paging.PagingSource
 import com.indie.apps.pannypal.data.dao.MerchantDataDao
 import com.indie.apps.pannypal.data.entity.MerchantData
+import com.indie.apps.pannypal.data.module.MerchantDataDailyTotal
 import com.indie.apps.pannypal.data.module.MerchantDataWithName
 import javax.inject.Inject
 
@@ -24,11 +26,18 @@ class MerchantDataRepositoryImpl @Inject constructor(private val merchantDataDao
     ) = merchantDataDao.getMerchantDataListFromMerchantId(id, limit, offset)
 
     override fun getMerchantsDataWithMerchantNameList(
-    )= merchantDataDao.getMerchantsDataWithMerchantNameList()
+        timeZoneOffsetInMilli : Int
+    )= merchantDataDao.getMerchantsDataWithMerchantNameList(timeZoneOffsetInMilli)
 
     override fun searchMerchantDataWithMerchantNameList(
-        searchQuery: String
-    ) = merchantDataDao.searchMerchantDataWithMerchantNameList(searchQuery)
+        searchQuery: String,
+        timeZoneOffsetInMilli : Int
+    ) = merchantDataDao.searchMerchantDataWithMerchantNameList(searchQuery,timeZoneOffsetInMilli)
+
+    override fun getMerchantDataDailyTotalList(
+        timeZoneOffsetInMilli: Int
+    ) = merchantDataDao.getMerchantDataDailyTotalList(timeZoneOffsetInMilli)
+
 
     override suspend fun insert(merchantData: MerchantData) = merchantDataDao.insert(merchantData)
 

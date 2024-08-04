@@ -33,4 +33,6 @@
     <string name="no_data_found">No Data Available</string>
     <string name="no_details">No Details</string>
     <string name="merchant_data_save_success_message">Merchant Data Save Successfully</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
 </resources>

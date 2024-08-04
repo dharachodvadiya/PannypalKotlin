@@ -5,7 +5,9 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import com.indie.apps.pannypal.data.entity.MerchantData
+import com.indie.apps.pannypal.data.module.MerchantDataDailyTotal
 import com.indie.apps.pannypal.data.module.MerchantDataWithName
+import com.indie.apps.pannypal.util.Constant
 
 @Dao
 interface MerchantDataDao : BaseDao<MerchantData> {
@@ -44,6 +46,7 @@ interface MerchantDataDao : BaseDao<MerchantData> {
         SELECT md.id as id, 
                 md.merchant_id as merchantId, 
                 md.date_milli as dateInMilli, 
+                strftime('%d-%m-%Y', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') as day,
                 md.details, 
                 md.amount, 
                 md.type,
@@ -52,13 +55,15 @@ interface MerchantDataDao : BaseDao<MerchantData> {
         INNER JOIN merchant m ON md.merchant_id = m.id
         ORDER BY id DESC
     """)
-    fun getMerchantsDataWithMerchantNameList(): PagingSource<Int,MerchantDataWithName>
+
+    fun getMerchantsDataWithMerchantNameList(timeZoneOffsetInMilli : Int): PagingSource<Int,MerchantDataWithName>
 
     @Transaction
     @Query("""
         SELECT md.id as id, 
                 md.merchant_id as merchantId, 
                 md.date_milli as dateInMilli, 
+                strftime('%d-%m-%Y', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') as day,
                 md.details, 
                 md.amount, 
                 md.type,
@@ -68,5 +73,16 @@ interface MerchantDataDao : BaseDao<MerchantData> {
         WHERE m.name LIKE :searchQuery || '%' OR md.details LIKE :searchQuery || '%'
         ORDER BY id DESC
     """)
-    fun searchMerchantDataWithMerchantNameList(searchQuery : String): PagingSource<Int,MerchantDataWithName>
+    fun searchMerchantDataWithMerchantNameList(searchQuery : String, timeZoneOffsetInMilli : Int): PagingSource<Int,MerchantDataWithName>
+
+    @Query("""
+        SELECT 
+            strftime('%d-%m-%Y',  (date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') as day,
+            SUM(CASE WHEN type >= 0 THEN amount ELSE 0 END) as totalIncome,
+            SUM(CASE WHEN type < 0 THEN amount ELSE 0 END) as totalExpense
+        FROM merchant_data
+        GROUP BY day
+        ORDER BY day DESC
+    """)
+    fun getMerchantDataDailyTotalList(timeZoneOffsetInMilli : Int): PagingSource<Int, MerchantDataDailyTotal>
 }

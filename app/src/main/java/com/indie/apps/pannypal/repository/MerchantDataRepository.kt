@@ -2,6 +2,7 @@ package com.indie.apps.pannypal.repository
 
 import androidx.paging.PagingSource
 import com.indie.apps.pannypal.data.entity.MerchantData
+import com.indie.apps.pannypal.data.module.MerchantDataDailyTotal
 import com.indie.apps.pannypal.data.module.MerchantDataWithName
 
 interface MerchantDataRepository : BaseRepository<MerchantData>{
@@ -18,9 +19,9 @@ interface MerchantDataRepository : BaseRepository<MerchantData>{
 
     suspend fun getMerchantDataListFromMerchantId(merchantId: Long, limit: Int, offset: Int): List<MerchantData>
 
-    fun getMerchantsDataWithMerchantNameList(): PagingSource<Int,MerchantDataWithName>
+    fun getMerchantsDataWithMerchantNameList(timeZoneOffsetInMilli : Int): PagingSource<Int,MerchantDataWithName>
 
-    fun searchMerchantDataWithMerchantNameList(searchQuery : String): PagingSource<Int,MerchantDataWithName>
+    fun searchMerchantDataWithMerchantNameList(searchQuery : String,timeZoneOffsetInMilli : Int): PagingSource<Int,MerchantDataWithName>
 
-
+    fun getMerchantDataDailyTotalList(timeZoneOffsetInMilli : Int): PagingSource<Int,MerchantDataDailyTotal>
 }

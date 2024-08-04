@@ -47,6 +47,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import com.indie.apps.pannypal.R
+import com.indie.apps.pannypal.data.module.MerchantDataDailyTotal
 import com.indie.apps.pannypal.data.module.MerchantDataWithName
 import com.indie.apps.pannypal.presentation.ui.common.Util
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.ListItem
@@ -58,6 +59,7 @@ import com.indie.apps.pannypal.presentation.ui.component.linearGradientsBrush
 import com.indie.apps.pannypal.presentation.ui.component.verticalGradientsBrush
 import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
+import com.indie.apps.pannypal.util.Constant
 
 @Composable
 fun OverviewTopBar(
@@ -161,8 +163,9 @@ fun OverviewBalanceView(
 @Composable
 fun OverviewList(
     dataList: LazyPagingItems<MerchantDataWithName>,
+    dailyTotalList: LazyPagingItems<MerchantDataDailyTotal>,
     modifier: Modifier = Modifier,
-    isLoadMore : Boolean = false
+    isLoadMore: Boolean = false
 ) {
     LazyColumn(
         modifier = modifier
@@ -175,6 +178,7 @@ fun OverviewList(
             )
         }
 */
+        var totalListIndex = 0;
         items(
             count = dataList.itemCount,
             key = dataList.itemKey { item -> item.id },
@@ -182,17 +186,33 @@ fun OverviewList(
         ) { index ->
             val data = dataList[index]
             if (data != null) {
-                OverviewListItem(
-                    item = data
-                )
+                var isDateShow = false
 
-                if(isLoadMore && index == dataList.itemCount)
-                {
+                if(totalListIndex < dailyTotalList.itemCount){
+                    if(index == 0 || (data.day == dailyTotalList[totalListIndex]?.day &&
+                                dataList[index-1]?.day ?: "" != dailyTotalList[totalListIndex]?.day))
+                        isDateShow = true
+                }
+
+                Column(modifier = modifier.background(MyAppTheme.colors.white)) {
+                    if (isDateShow) {
+                        if(index != 0)
+                            Spacer(modifier = Modifier.height(13.dp))
+                        dailyTotalList[totalListIndex]?.let { OverviewListDateItem(it) }
+                        totalListIndex++
+                    }
+                    OverviewListItem(
+                        item = data
+                    )
+                }
+
+
+                if (isLoadMore && index == dataList.itemCount) {
                     Box(
                         contentAlignment = Alignment.Center,
                         modifier = Modifier
                             .fillMaxWidth()
-                    ){
+                    ) {
                         CircularProgressIndicator()
                     }
                 }
@@ -202,71 +222,80 @@ fun OverviewList(
 }
 
 @Composable
-fun OverviewListItem(
-    item: MerchantDataWithName,
-    modifier: Modifier = Modifier.fillMaxWidth(),
-    isDateShow: Boolean = false
+fun OverviewListDateItem(
+    item: MerchantDataDailyTotal,
+    modifier: Modifier = Modifier.fillMaxWidth()
 ) {
-    Column(modifier = modifier.background(MyAppTheme.colors.white)) {
-        if (isDateShow) {
-            // TODO: change total color based on amount sum
-            val totalTextColor = MyAppTheme.colors.redBg
-
-            Text(
-                text = "Day",
-                style = MyAppTheme.typography.Semibold45,
-                color = MyAppTheme.colors.gray2
-            )
-            Text(
-                text = Util.getFormattedStringWithSymbole(0.0),
-                style = MyAppTheme.typography.Semibold52_5,
-                color = totalTextColor,
-                modifier = Modifier.padding(vertical = 5.dp)
-            )
-        }
-
-        // TODO: change Round Image Icon and bg color based on amount
-        val imageVector = if (item.type < 0) Icons.Default.NorthEast else Icons.Default.SouthWest
-        val bgColor = if (item.type < 0) MyAppTheme.colors.redBg else MyAppTheme.colors.greenBg
-
-        ListItem(
-            isClickable = false,
-            leadingIcon = {
-                RoundImage(
-                    imageVector = imageVector,
-                    tint = MyAppTheme.colors.white,
-                    backGround = bgColor,
-                    contentDescription = "amount"
-                )
-            },
-            content = {
-                Column {
-                    Text(
-                        text = item.merchantName,
-                        style = MyAppTheme.typography.Bold52_5,
-                        color = MyAppTheme.colors.black,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                    Text(
-                        text = if (item.details.isNullOrEmpty()) stringResource(id = R.string.no_details) else item.details,
-                        style = MyAppTheme.typography.Medium33,
-                        color = MyAppTheme.colors.gray2,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
-            },
-            trailingContent = {
-                Text(
-                    text = Util.getFormattedStringWithSymbole(if (item.type > 0) item.amount else item.amount * -1),
-                    style = MyAppTheme.typography.Bold52_5,
-                    color = MyAppTheme.colors.black
-                )
-            },
-            isSetDivider = true
+    val dayString = if(item.day == Constant.getTodayDate())
+        stringResource(id = R.string.today)
+    else if(item.day == Constant.getYesterdayDate())
+        stringResource(id = R.string.yesterday)
+    else
+        item.day
+    val amount = item.totalIncome - item.totalExpense
+    val totalTextColor = if (amount >= 0) MyAppTheme.colors.greenText else MyAppTheme.colors.redText
+    Column(modifier = modifier) {
+        Text(
+            text = dayString,
+            style = MyAppTheme.typography.Semibold40,
+            color = MyAppTheme.colors.gray2
+        )
+        Text(
+            text = Util.getFormattedStringWithSymbole(amount),
+            style = MyAppTheme.typography.Semibold48,
+            color = totalTextColor,
+            modifier = Modifier.padding(vertical = 5.dp)
         )
     }
+
+}
+
+@Composable
+fun OverviewListItem(
+    item: MerchantDataWithName,
+    modifier: Modifier = Modifier.fillMaxWidth()
+) {
+    val imageVector = if (item.type < 0) Icons.Default.NorthEast else Icons.Default.SouthWest
+    val bgColor = if (item.type < 0) MyAppTheme.colors.redBg else MyAppTheme.colors.greenBg
+
+    ListItem(
+        isClickable = false,
+        leadingIcon = {
+            RoundImage(
+                imageVector = imageVector,
+                tint = MyAppTheme.colors.white,
+                backGround = bgColor,
+                contentDescription = "amount"
+            )
+        },
+        content = {
+            Column {
+                Text(
+                    text = item.merchantName,
+                    style = MyAppTheme.typography.Bold52_5,
+                    color = MyAppTheme.colors.black,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Text(
+                    text = if (item.details.isNullOrEmpty()) stringResource(id = R.string.no_details) else item.details,
+                    style = MyAppTheme.typography.Medium33,
+                    color = MyAppTheme.colors.gray2,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+        },
+        trailingContent = {
+            Text(
+                text = Util.getFormattedStringWithSymbole(if (item.type > 0) item.amount else item.amount * -1),
+                style = MyAppTheme.typography.Bold52_5,
+                color = MyAppTheme.colors.black
+            )
+        },
+        isSetDivider = true,
+        modifier = modifier
+    )
 }
 
 @Composable

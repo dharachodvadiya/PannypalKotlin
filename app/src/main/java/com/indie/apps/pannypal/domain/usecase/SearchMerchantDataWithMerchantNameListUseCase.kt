@@ -40,7 +40,7 @@ class SearchMerchantDataWithMerchantNameListUseCase @Inject constructor(
             PagingConfig(pageSize = Util.PAGE_SIZE,
                 prefetchDistance = Util.PAGE_PREFATCH_DISTANCE)
         ) {
-            merchantDataRepository.searchMerchantDataWithMerchantNameList(searchQuery)
+            merchantDataRepository.searchMerchantDataWithMerchantNameList(searchQuery,Constant.TIME_ZONE_OFFSET_IN_MILLI)
         }
             .flow
             .flowOn(dispatcher)
