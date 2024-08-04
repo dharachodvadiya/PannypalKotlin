@@ -8,9 +8,9 @@ import java.text.DecimalFormat
 object Util {
     const val SEARCH_NEWS_TIME_DELAY = 500L
     const val PAGE_SIZE = 20
-    const val PAGE_PREFATCH_DISTANCE = 20
-
+    const val PAGE_PREFETCH_DISTANCE = 20
     const val SAVE_STATE_COUNTRY_CODE = "code"
+    const val SAVE_STATE_EDIT_ID = "id"
 
     const val SAVE_STATE_MERCHANT_NAME_DESC = "merchant_name_desc"
 

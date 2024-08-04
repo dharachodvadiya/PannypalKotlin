@@ -89,12 +89,12 @@ abstract class AppDatabase : RoomDatabase() {
             )
 
             PaymentRepositoryImpl(paymentDao).insertPaymentList(preAddedPayments)
-/*
+
             val merchantDao = db.merchantDao()
             for (i in 1..100) {
                 MerchantRepositoryImpl(merchantDao).insert(Merchant(name = "hello $i"))
 
-            }*/
+            }
 
         }
     }

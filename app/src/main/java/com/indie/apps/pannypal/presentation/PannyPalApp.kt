@@ -104,6 +104,10 @@ fun PannyPalApp() {
                         .savedStateHandle
                         .get<String>(Util.SAVE_STATE_COUNTRY_CODE)
 
+                    val editId: Long? = backStackEntry
+                        .savedStateHandle
+                        .get<Long>(Util.SAVE_STATE_EDIT_ID)
+
                     DialogAddMerchant(
                         onNavigationUp = { navController.navigateUp() },
                         onSaveSuccess = {
@@ -123,7 +127,8 @@ fun PannyPalApp() {
                         onCpp = {
                             navController.navigate(DialogNav.CPP.route)
                         },
-                        code = data
+                        code = data,
+                        editId = editId
                     )
                 }
                 dialog(

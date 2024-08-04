@@ -35,4 +35,6 @@
     <string name="merchant_data_save_success_message">Merchant Data Save Successfully</string>
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
+    <string name="selected">Selected</string>
+    <string name="edit_merchant">Edit Merchant</string>
 </resources>

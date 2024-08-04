@@ -2,11 +2,9 @@ package com.indie.apps.pannypal.repository
 
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
-import androidx.paging.PagingSource
 import com.indie.apps.pannypal.data.Paging.BasePagingSource
 import com.indie.apps.pannypal.data.dao.MerchantDao
 import com.indie.apps.pannypal.data.entity.Merchant
-import com.indie.apps.pannypal.data.module.MerchantNameAndDetails
 import com.indie.apps.pannypal.presentation.ui.common.Util
 import javax.inject.Inject
 
@@ -38,15 +36,13 @@ class MerchantRepositoryImpl @Inject constructor(private val merchantDao: Mercha
         searchQuery: String
     ) =Pager(
             config = PagingConfig(pageSize = Util.PAGE_SIZE,
-                prefetchDistance = Util.PAGE_PREFATCH_DISTANCE),
+                prefetchDistance = Util.PAGE_PREFETCH_DISTANCE),
             pagingSourceFactory ={ BasePagingSource(merchantDao)}
         ).flow
 
-    override suspend fun searchMerchantList(
-        searchQuery: String,
-        limit: Int,
-        offset: Int
-    ) = merchantDao.searchMerchantList(searchQuery, limit, offset)
+    override fun searchMerchantList(
+        searchQuery: String
+    ) = merchantDao.searchMerchantList(searchQuery)
 
     override suspend fun insert(merchant: Merchant) = merchantDao.insert(merchant)
 

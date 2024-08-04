@@ -13,22 +13,24 @@ import com.indie.apps.pannypal.presentation.ui.component.BottomSaveButton
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.MyAppDialog
 import com.indie.apps.pannypal.presentation.ui.component.dialog.AddMerchantDialogField
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
-import com.indie.apps.pannypal.presentation.viewmodel.AddMerchantViewModel
+import com.indie.apps.pannypal.presentation.viewmodel.AddEditMerchantViewModel
 import com.mcode.ccp.data.utils.getDefaultPhoneCode
 
 @Composable
 fun DialogAddMerchant(
-    addMerchantViewModel: AddMerchantViewModel = hiltViewModel(),
+    addMerchantViewModel: AddEditMerchantViewModel = hiltViewModel(),
     onNavigationUp: () -> Unit,
     onSaveSuccess: (Merchant?) -> Unit,
     onCpp: () -> Unit,
     modifier: Modifier = Modifier,
-    code: String?
+    code: String?,
+    editId: Long? = null,
 ) {
 
     addMerchantViewModel.countryCode = code ?: getDefaultPhoneCode(LocalContext.current)
+    addMerchantViewModel.setEditId(editId) // always call after set country code
 
-    MyAppDialog(title = R.string.add_merchant,
+    MyAppDialog(title = if(editId == null) R.string.add_merchant else R.string.edit_merchant,
         onNavigationUp = {
             if (addMerchantViewModel.enableButton) onNavigationUp()
         },
@@ -46,7 +48,7 @@ fun DialogAddMerchant(
         }, bottomContent = {
             BottomSaveButton(
                 onClick = {
-                    addMerchantViewModel.addMerchant(
+                    addMerchantViewModel.addOrEditMerchant(
                         onSuccess = onSaveSuccess
                     )
                 },

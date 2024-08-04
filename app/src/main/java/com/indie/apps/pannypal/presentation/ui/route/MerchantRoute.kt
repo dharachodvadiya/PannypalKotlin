@@ -5,6 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.indie.apps.pannypal.presentation.ui.common.Util
 import com.indie.apps.pannypal.presentation.ui.navigation.BottomNavItem
 import com.indie.apps.pannypal.presentation.ui.navigation.DialogNav
 import com.indie.apps.pannypal.presentation.ui.navigation.MerchantNav
@@ -25,14 +26,21 @@ fun NavGraphBuilder.MerchantRoute(
             MerchantScreen(
                 onMerchantClick = { navController.navigate(MerchantNav.DATA.route) },
                 onAddClick = { navController.navigate(DialogNav.ADD_MERCHANT.route) },
-                onEditClick = { navController.navigate(DialogNav.EDIT_MERCHANT.route) },
+                onEditClick = {
+
+                    navController.navigate(DialogNav.ADD_MERCHANT.route)
+
+                    navController.currentBackStackEntry
+                        ?.savedStateHandle
+                        ?.set(Util.SAVE_STATE_EDIT_ID, it)
+                },
                 onDeleteClick = {}
             )
         }
         composable(route = MerchantNav.DATA.route) {
             bottomBarState.value = false
             MerchantDataScreen(
-                onProfileClick = {navController.navigate(MerchantNav.PROFILE.route)},
+                onProfileClick = { navController.navigate(MerchantNav.PROFILE.route) },
                 onNavigationUp = { navController.navigateUp() })
         }
 

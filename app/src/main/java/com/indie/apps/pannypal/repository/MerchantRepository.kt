@@ -26,5 +26,5 @@ interface MerchantRepository : BaseRepository<Merchant> {
     fun searchMerchantNameAndDetailList(searchQuery: String): PagingSource<Int, MerchantNameAndDetails>
     fun searchMerchantNameAndDetailListPaging(searchQuery: String): Flow<PagingData<MerchantNameAndDetails>>
 
-    suspend fun searchMerchantList(searchQuery: String, limit: Int, offset: Int): List<Merchant>
+    fun searchMerchantList(searchQuery: String): PagingSource<Int, Merchant>
 }
