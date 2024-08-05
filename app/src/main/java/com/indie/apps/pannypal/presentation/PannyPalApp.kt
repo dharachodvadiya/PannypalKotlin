@@ -36,6 +36,7 @@ fun PannyPalApp() {
     val context = LocalContext.current
     val paymentSaveToast = stringResource(id = R.string.payment_save_success_toast)
     val merchantSaveToast = stringResource(id = R.string.merchant_save_success_toast)
+    val merchantEditToast = stringResource(id = R.string.merchant_edit_success_message)
     PannyPalTheme() {
         val navController = rememberNavController()
         val currentBackStack by navController.currentBackStackEntryAsState()
@@ -81,7 +82,7 @@ fun PannyPalApp() {
                             navController.navigateUp()
                         },
                         onAddClick = {
-                            navController.navigate(DialogNav.ADD_MERCHANT.route) {
+                            navController.navigate(DialogNav.ADD_EDIT_MERCHANT.route) {
                                 navController.popBackStack()
                             }
                         },
@@ -96,7 +97,7 @@ fun PannyPalApp() {
                     )
                 }
                 dialog(
-                    route = DialogNav.ADD_MERCHANT.route,
+                    route = DialogNav.ADD_EDIT_MERCHANT.route,
                     dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
                 ) { backStackEntry ->
                     // get data passed back from B
@@ -110,16 +111,20 @@ fun PannyPalApp() {
 
                     DialogAddMerchant(
                         onNavigationUp = { navController.navigateUp() },
-                        onSaveSuccess = {
+                        onSaveSuccess = { merchat, isEdit ->
                             //navController.navigateUp()
-                            Toast.makeText(context, merchantSaveToast, Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                context,
+                                if (isEdit) merchantEditToast else merchantSaveToast,
+                                Toast.LENGTH_SHORT
+                            ).show()
 
-                            if (it != null) {
+                            if (merchat != null) {
                                 navController.previousBackStackEntry
                                     ?.savedStateHandle
                                     ?.set(
                                         Util.SAVE_STATE_MERCHANT_NAME_DESC,
-                                        Gson().toJson(it.toMerchantNameAndDetails())
+                                        Gson().toJson(merchat.toMerchantNameAndDetails())
                                     )
 
                                 navController.previousBackStackEntry

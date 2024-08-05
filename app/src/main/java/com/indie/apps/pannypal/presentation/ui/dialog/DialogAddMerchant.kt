@@ -20,7 +20,7 @@ import com.mcode.ccp.data.utils.getDefaultPhoneCode
 fun DialogAddMerchant(
     addMerchantViewModel: AddEditMerchantViewModel = hiltViewModel(),
     onNavigationUp: () -> Unit,
-    onSaveSuccess: (Merchant?) -> Unit,
+    onSaveSuccess: (Merchant?, Boolean) -> Unit,
     onCpp: () -> Unit,
     modifier: Modifier = Modifier,
     code: String?,
@@ -30,7 +30,7 @@ fun DialogAddMerchant(
     addMerchantViewModel.countryCode = code ?: getDefaultPhoneCode(LocalContext.current)
     addMerchantViewModel.setEditId(editId) // always call after set country code
 
-    MyAppDialog(title = if(editId == null) R.string.add_merchant else R.string.edit_merchant,
+    MyAppDialog(title = if (editId == null) R.string.add_merchant else R.string.edit_merchant,
         onNavigationUp = {
             if (addMerchantViewModel.enableButton) onNavigationUp()
         },
@@ -64,7 +64,7 @@ fun DialogAddMerchant(
 @Composable
 private fun MyAppDialogPreview() {
     PannyPalTheme {
-        DialogAddMerchant(onNavigationUp = {}, onSaveSuccess = {}, onCpp = {}, code = null
+        DialogAddMerchant(onNavigationUp = {}, onSaveSuccess = { a, b -> }, onCpp = {}, code = null
         )
     }
 }

@@ -36,6 +36,10 @@ fun NavGraphBuilder.OverViewRoute(
         }
         composable(route = OverviewNav.NEW_ITEM.route)
         { backStackEntry ->
+
+            val context = LocalContext.current
+            val merchantDataSaveToast = stringResource(id = R.string.merchant_data_save_success_message)
+
             // get data passed back from B
             val gsonStringMerchant: String? = backStackEntry
                 .savedStateHandle
@@ -67,6 +71,7 @@ fun NavGraphBuilder.OverViewRoute(
                 merchant = merchant,
                 payment = payment,
                 onSaveSuccess = {
+                    Toast.makeText(context, merchantDataSaveToast, Toast.LENGTH_SHORT).show()
                     navController.navigateUp()
                 }
             )

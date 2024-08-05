@@ -43,4 +43,5 @@
     <string name="merchant_data_delete_success_message">Delete Merchant Data Successfully</string>
     <string name="merchant_delete_success_message">Merchants Delete Successfully</string>
     <string name="merchant_edit_success_message">Merchant Edit Successfully</string>
+    <string name="edit_merchant_data">Edit Entry</string>
 </resources>

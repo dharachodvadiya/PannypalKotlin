@@ -62,7 +62,7 @@ class AddEditMerchantViewModel @Inject constructor(
 
     }
 
-    fun addOrEditMerchant(onSuccess: (Merchant?) -> Unit) {
+    fun addOrEditMerchant(onSuccess: (Merchant?, Boolean) -> Unit) {
         if (enableButton) {
             enableButton = false
             val isValidNum = Util.isValidPhoneNumber(
@@ -99,7 +99,7 @@ class AddEditMerchantViewModel @Inject constructor(
                                     when (it) {
                                         is Resource.Loading -> {}
                                         is Resource.Success -> {
-                                            onSuccess(merchant.copy(id = editId!!))
+                                            onSuccess(merchant.copy(id = editId!!), true)
                                             enableButton = true
                                         }
 
@@ -126,7 +126,7 @@ class AddEditMerchantViewModel @Inject constructor(
                                 when (it) {
                                     is Resource.Loading -> {}
                                     is Resource.Success -> {
-                                        onSuccess(merchant.copy(id = it.data!!))
+                                        onSuccess(merchant.copy(id = it.data!!), false)
                                         enableButton = true
                                     }
 

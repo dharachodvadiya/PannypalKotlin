@@ -34,7 +34,7 @@ enum class BottomNavItem(
 
 sealed class DialogNav(val route: String) {
     data object SELECT_MERCHANT : DialogNav("Dialog/SelectMerchant")
-    data object ADD_MERCHANT : DialogNav("Dialog/AddMerchant")
+    data object ADD_EDIT_MERCHANT : DialogNav("Dialog/AddMerchant")
     data object ADD_PAYMENT : DialogNav("Dialog/AddPayment")
     data object CPP : DialogNav("Dialog/CountryCodePicker")
 }

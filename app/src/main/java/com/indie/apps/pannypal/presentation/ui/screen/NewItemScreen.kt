@@ -37,9 +37,6 @@ fun NewItemScreen(
 
     modifier: Modifier = Modifier
 ) {
-    val context = LocalContext.current
-    val merchantDataSaveToast = stringResource(id = R.string.merchant_data_save_success_message)
-
     val paymentList by newItemViewModel.paymentList.collectAsStateWithLifecycle()
 
     if (merchant != null) {
@@ -95,7 +92,6 @@ fun NewItemScreen(
             BottomSaveButton(
                 onClick = { newItemViewModel.addMerchantData(onSuccess = {
                     onSaveSuccess()
-                    Toast.makeText(context, merchantDataSaveToast, Toast.LENGTH_SHORT).show()
                 }) },
                 enabled = newItemViewModel.enableButton,
                 modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.padding))
