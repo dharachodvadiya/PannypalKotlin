@@ -34,7 +34,8 @@ fun NavGraphBuilder.MerchantRoute(
             bottomBarState.value = true
             MerchantScreen(
                 isEditAddSuccess = isEditAddSuccess?: false,
-                onMerchantClick = { navController.navigate(MerchantNav.DATA.route) },
+                onMerchantClick = {
+                    navController.navigate(MerchantNav.DATA.route.replace("{${Util.PARAM_MERCHANT_ID}}", it.toString())) },
                 onAddClick = { navController.navigate(DialogNav.ADD_MERCHANT.route) },
                 onEditClick = {
 

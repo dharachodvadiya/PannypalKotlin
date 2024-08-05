@@ -3,13 +3,13 @@ package com.indie.apps.pannypal.presentation.viewmodel
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.indie.apps.pannypal.data.entity.Merchant
 import com.indie.apps.pannypal.domain.usecase.DeleteMultipleMerchantUseCase
-import com.indie.apps.pannypal.domain.usecase.GetMerchantDataListFromMerchantIdUseCase
 import com.indie.apps.pannypal.domain.usecase.SearchMerchantListUseCase
 import com.indie.apps.pannypal.presentation.ui.state.PagingState
 import com.indie.apps.pannypal.presentation.ui.state.TextFieldState
@@ -34,6 +34,9 @@ class MerchantViewModel @Inject constructor(
 
     var selectedList = mutableStateListOf<Long>()
     private set
+
+    var isEditable by mutableStateOf(false)
+    var isDeletable by mutableStateOf(false)
 
     val pagedData = trigger
         .flatMapLatest {
@@ -60,18 +63,9 @@ class MerchantViewModel @Inject constructor(
         }
     }
 
-    fun setSelectItem(id: Long)
-    {
-        if(selectedList.contains(id))
-            selectedList.remove(id)
-        else
-            selectedList.add(id)
-    }
-
     fun setEditAddSuccess()
     {
-        println("aaaaa set edit/Add success")
-        selectedList.clear()
+        clearSelection()
         clearSearch()
         scrollIndex = 0
         scrollOffset = 0
@@ -95,7 +89,7 @@ class MerchantViewModel @Inject constructor(
 
     fun onNavigationUp(onSuccess : ()->Unit)
     {
-        selectedList.clear()
+        clearSelection()
         onSuccess()
     }
 
@@ -108,7 +102,7 @@ class MerchantViewModel @Inject constructor(
                     when (it) {
                         is Resource.Loading -> {}
                         is Resource.Success -> {
-                            selectedList.clear()
+                            clearSelection()
                             onSuccess()
                         }
 
@@ -119,4 +113,49 @@ class MerchantViewModel @Inject constructor(
         }
 
     }
+
+    fun onItemClick(id : Long, callBack : (Long)-> Unit)
+    {
+        if (!isEditable && !isDeletable) {
+            callBack(id)
+        } else {
+            setSelectItem(id)
+        }
+    }
+
+    fun onItemLongClick(id : Long)
+    {
+        setSelectItem(id)
+    }
+    private fun setSelectItem(id: Long)
+    {
+        if(selectedList.contains(id))
+            selectedList.remove(id)
+        else
+            selectedList.add(id)
+
+        changeUpdateState()
+    }
+
+    private fun clearSelection()
+    {
+        selectedList.clear()
+        changeUpdateState()
+    }
+
+    private fun changeUpdateState()
+    {
+        val selectedCount = selectedList.size
+        if (selectedCount == 1) {
+            isEditable = true
+            isDeletable = true
+        } else if (selectedCount > 1) {
+            isEditable = false
+            isDeletable = true
+        } else {
+            isEditable = false
+            isDeletable = false
+        }
+    }
+
 }

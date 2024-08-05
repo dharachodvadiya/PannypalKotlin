@@ -8,6 +8,9 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableDoubleStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,10 +42,14 @@ fun OverViewStartScreen(
 
     val uiState by overViewViewModel.uiState.collectAsStateWithLifecycle()
 
-    val amount = when (uiState) {
+    var amount by remember {
+        mutableDoubleStateOf(0.0)
+    }
+
+    when (uiState) {
         is Resource.Loading -> 0.0
         is Resource.Success -> {
-            (uiState.data?.incomeAmount ?: 0.0) - (uiState.data?.expenseAmount ?: 0.0)
+            amount = (uiState.data?.incomeAmount ?: 0.0) - (uiState.data?.expenseAmount ?: 0.0)
         }
 
         is Resource.Error -> 0.0

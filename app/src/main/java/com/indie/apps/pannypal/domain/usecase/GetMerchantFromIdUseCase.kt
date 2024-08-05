@@ -17,14 +17,20 @@ class GetMerchantFromIdUseCase @Inject constructor(
 
     fun getData(id: Long) : Flow<Resource<Merchant>>{
         return flow{
-
-            try {
-                emit(Resource.Loading())
-                val merchantFromId = merchantRepository.getMerchantFromId(id)
-                emit(Resource.Success(merchantFromId))
-            }catch (e: Throwable) {
-                emit(Resource.Error(handleException(e).message + ": ${e.message}"))
+            if(id != 0L)
+            {
+                try {
+                    emit(Resource.Loading())
+                    val merchantFromId = merchantRepository.getMerchantFromId(id)
+                    emit(Resource.Success(merchantFromId))
+                }catch (e: Throwable) {
+                    emit(Resource.Error(handleException(e).message + ": ${e.message}"))
+                }
+            }else{
+                emit(Resource.Error("Data Not Found"))
             }
+
+
         }.flowOn(dispatcher)
     }
 

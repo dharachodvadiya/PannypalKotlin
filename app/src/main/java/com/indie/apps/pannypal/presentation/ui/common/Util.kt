@@ -15,10 +15,12 @@ object Util {
     const val PAGE_PREFETCH_DISTANCE = 20
 
     const val SAVE_STATE_COUNTRY_CODE = "code"
-    const val SAVE_STATE_EDIT_ID = "id"
+    const val SAVE_STATE_EDIT_ID = "edit_id"
     const val SAVE_STATE_ADD_EDIT_SUCCESS = "edit"
     const val SAVE_STATE_MERCHANT_NAME_DESC = "merchant_name_desc"
     const val SAVE_STATE_PAYMENT = "payment"
+    const val PARAM_MERCHANT_ID = "merchant_id"
+
 
     val TIME_ZONE_OFFSET_IN_MILLI = TimeZone.getDefault().rawOffset
 
@@ -45,20 +47,19 @@ object Util {
         }
     }
 
+    fun getDateFromMillis(timeInMillis : Long, formatter : SimpleDateFormat = SimpleDateFormat("dd-MM-yyyy")): String {
 
+        val calendar: Calendar = Calendar.getInstance()
+        calendar.timeInMillis = timeInMillis
+        return formatter.format(calendar.time)
+    }
 
-    fun getTodayDate(): String {
-
-        val formatter = SimpleDateFormat("dd-MM-yyyy")
-
+    fun getTodayDate(formatter : SimpleDateFormat = SimpleDateFormat("dd-MM-yyyy")): String {
         val calendar: Calendar = Calendar.getInstance()
         return formatter.format(calendar.time)
     }
 
-    fun getYesterdayDate(): String {
-
-        val formatter = SimpleDateFormat("dd-MM-yyyy")
-
+    fun getYesterdayDate(formatter : SimpleDateFormat = SimpleDateFormat("dd-MM-yyyy")): String {
         val calendar: Calendar = Calendar.getInstance()
         calendar.add(Calendar.DATE, -1)
         return formatter.format(calendar.time)

@@ -1,25 +1,41 @@
 package com.indie.apps.pannypal.presentation.ui.screen
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import com.indie.apps.pannypal.R
+import com.indie.apps.pannypal.data.entity.Merchant
+import com.indie.apps.pannypal.presentation.ui.common.Util
 import com.indie.apps.pannypal.presentation.ui.component.screen.MerchantDataBottomBar
 import com.indie.apps.pannypal.presentation.ui.component.screen.MerchantDataDateItem
 import com.indie.apps.pannypal.presentation.ui.component.screen.MerchantDataExpenseAmount
 import com.indie.apps.pannypal.presentation.ui.component.screen.MerchantDataIncomeAmount
 import com.indie.apps.pannypal.presentation.ui.component.screen.MerchantDataTopBar
+import com.indie.apps.pannypal.presentation.ui.component.screen.MerchantListItem
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 import com.indie.apps.pannypal.presentation.viewmodel.MerchantDataViewModel
+import com.indie.apps.pannypal.util.Resource
 
 @Composable
 fun MerchantDataScreen(
@@ -30,11 +46,32 @@ fun MerchantDataScreen(
 ) {
 
     val merchantState by merchantDataViewModel.merchantState.collectAsStateWithLifecycle()
+
+    var merchant : Merchant? by remember {
+        mutableStateOf(null)
+    }
+
+    when (merchantState) {
+        is Resource.Loading -> null
+        is Resource.Success -> {merchant = merchantState.data}
+
+        is Resource.Error -> null
+    }
+
+    val lazyPagingData = merchantDataViewModel.pagedData.collectAsLazyPagingItems()
+    merchantDataViewModel.pagingState.update(lazyPagingData)
+
     Scaffold(
         topBar = {
             MerchantDataTopBar(
+                selectCount = merchantDataViewModel.selectedList.size,
+                name = merchant?.name ?: "",
+                description = merchant?.details ?: "",
                 onClick =onProfileClick,
-                onNavigationUp = onNavigationUp
+                onNavigationUp = onNavigationUp,
+                onCloseClick = {
+                    merchantDataViewModel.clearSelection()
+                }
             )
         }
     ){padding->
@@ -42,32 +79,94 @@ fun MerchantDataScreen(
             modifier = modifier
                 .padding(padding)
         ) {
-            LazyColumn(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = dimensionResource(id = R.dimen.padding))
+
+            if (merchantDataViewModel.pagingState.isRefresh
             ) {
-                items(15) { index ->
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                ) {
+                    CircularProgressIndicator()
+                }
+            }else {
 
-                    if(index %3 == 0)
-                    {
-                        MerchantDataDateItem()
+                val scrollState: LazyListState = rememberLazyListState(
+                    merchantDataViewModel.scrollIndex,
+                    merchantDataViewModel.scrollOffset
+                )
 
-                        MerchantDataIncomeAmount(
-                            onClick = {},
-                            onLongClick = {}
-                        )
-                    }else{
-                        MerchantDataExpenseAmount(
-                            onClick = {},
-                            onLongClick = {}
-                        )
+                // after each scroll, update values in ViewModel
+                LaunchedEffect(key1 = scrollState.isScrollInProgress) {
+                    if (!scrollState.isScrollInProgress) {
+                        merchantDataViewModel.scrollIndex = scrollState.firstVisibleItemIndex
+                        merchantDataViewModel.scrollOffset =
+                            scrollState.firstVisibleItemScrollOffset
+                    }
+                }
+
+                LazyColumn(
+                    reverseLayout = true,
+                    state = scrollState,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = dimensionResource(id = R.dimen.padding))
+                ) {
+                    items(count = lazyPagingData.itemCount,
+                        key = lazyPagingData.itemKey { item -> item.id }
+                    ) { index ->
+
+
+                        val data = lazyPagingData[index]
+                        if (data != null) {
+                            val currentDate = Util.getDateFromMillis(data.dateInMilli)
+                            val previousDate = if(index != lazyPagingData.itemCount -1) lazyPagingData[index+1]?.let {
+                                Util.getDateFromMillis(
+                                    it.dateInMilli)
+                            } else ""
+
+                            if (data.type >= 0) {
+                                MerchantDataIncomeAmount(
+                                    isSelected = merchantDataViewModel.selectedList.contains(data.id),
+                                    data = data,
+                                    onClick = { merchantDataViewModel.onItemClick(data.id) },
+                                    onLongClick = { merchantDataViewModel.onItemLongClick(data.id) }
+                                )
+                            } else {
+                                MerchantDataExpenseAmount(
+                                    isSelected = merchantDataViewModel.selectedList.contains(data.id),
+                                    data = data,
+                                    onClick = { merchantDataViewModel.onItemClick(data.id)},
+                                    onLongClick = { merchantDataViewModel.onItemLongClick(data.id) }
+                                )
+                            }
+
+                            if(currentDate != previousDate)
+                            {
+                                MerchantDataDateItem(
+                                    dateMillis = data.dateInMilli
+                                )
+                            }
+                        }
+
+                        if (merchantDataViewModel.pagingState.isLoadMore && index == lazyPagingData.itemCount) {
+                            Box(
+                                contentAlignment = Alignment.Center,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                            ) {
+                                CircularProgressIndicator()
+                            }
+                        }
                     }
                 }
             }
             MerchantDataBottomBar(
-                isEditable = false,
-                isDeletable = false,
+                totalIncome = merchant?.incomeAmount ?: 0.0,
+                totalExpense = merchant?.expenseAmount ?: 0.0,
+                isEditable = merchantDataViewModel.isEditable,
+                isDeletable = merchantDataViewModel.isDeletable,
                 onEditClick = {},
                 onDeleteClick = {}
             )

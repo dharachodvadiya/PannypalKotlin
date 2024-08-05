@@ -28,5 +28,11 @@ class PagingState<T : Any>() {
             is LoadState.Error -> false
             is LoadState.NotLoading -> false
         }
+
+        isLoadMore = when (lazyPagingData.loadState.prepend) {
+            is LoadState.Loading -> true
+            is LoadState.Error -> false
+            is LoadState.NotLoading -> false
+        }
     }
 }

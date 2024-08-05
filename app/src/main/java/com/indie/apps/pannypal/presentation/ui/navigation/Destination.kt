@@ -8,6 +8,7 @@ import androidx.compose.material.icons.outlined.PersonOutline
 import androidx.compose.material.icons.outlined.PieChart
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.indie.apps.pannypal.R
+import com.indie.apps.pannypal.presentation.ui.common.Util
 
 enum class OverviewNav(val route: String) {
     START("overview/start"),
@@ -17,7 +18,7 @@ enum class OverviewNav(val route: String) {
 
 sealed class MerchantNav(val route: String) {
     data object START : MerchantNav("merchant/start")
-    data object DATA : MerchantNav("merchant/merchant_data")
+    data object DATA : MerchantNav("merchant/merchant_data/{${Util.PARAM_MERCHANT_ID}}")
     data object PROFILE : MerchantNav("merchant/merchant_profile")
 }
 

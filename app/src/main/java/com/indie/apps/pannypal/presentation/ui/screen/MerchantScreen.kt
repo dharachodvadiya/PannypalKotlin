@@ -43,7 +43,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun MerchantScreen(
     merchantViewModel: MerchantViewModel = hiltViewModel(),
-    onMerchantClick: () -> Unit,
+    onMerchantClick: (Long) -> Unit,
     onAddClick: () -> Unit,
     onEditClick: (Long) -> Unit,
     isEditAddSuccess: Boolean = false,
@@ -63,29 +63,13 @@ fun MerchantScreen(
 
     var openAlertDialog by remember { mutableStateOf(false) }
 
-    var isEditable by remember { mutableStateOf(false) }
-    var isDeletable by remember { mutableStateOf(false) }
-
-    val selectedCount = merchantViewModel.selectedList.size
-
-    if (selectedCount == 1) {
-        isEditable = true
-        isDeletable = true
-    } else if (selectedCount > 1) {
-        isEditable = false
-        isDeletable = true
-    } else {
-        isEditable = false
-        isDeletable = false
-    }
-
     var job: Job? = null
     Scaffold(topBar = {
         MerchantTopBar(
-            title = if (selectedCount > 0) "$selectedCount " + stringResource(id = R.string.selected) else "",
+            title = if (merchantViewModel.selectedList.size > 0) "${merchantViewModel.selectedList.size} " + stringResource(id = R.string.selected) else "",
             textState = merchantViewModel.searchTextState,
-            isEditable = isEditable,
-            isDeletable = isDeletable,
+            isEditable = merchantViewModel.isEditable,
+            isDeletable = merchantViewModel.isDeletable,
             onAddClick = { merchantViewModel.onAddClick { onAddClick() } },
             onEditClick = { merchantViewModel.onEditClick { onEditClick(it) } },
             onDeleteClick = { merchantViewModel.onDeleteClick { openAlertDialog = true } },
@@ -137,16 +121,9 @@ fun MerchantScreen(
                         MerchantListItem(
                             item = data,
                             isSelected = merchantViewModel.selectedList.contains(data.id),
-                            onClick = {
-                                if (!isEditable && !isDeletable) {
-                                    onMerchantClick()
-                                } else {
-                                    merchantViewModel.setSelectItem(data.id)
-                                }
-
-                            }, onLongClick = {
-                                merchantViewModel.setSelectItem(data.id)
-                            })
+                            onClick = { merchantViewModel.onItemClick(data.id) {onMerchantClick(it)} },
+                            onLongClick = { merchantViewModel.onItemLongClick(data.id) }
+                        )
 
                         if (merchantViewModel.pagingState.isLoadMore && index == lazyPagingData.itemCount - 1) {
                             Box(
