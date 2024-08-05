@@ -26,6 +26,9 @@ class MerchantViewModel @Inject constructor(
     private val deleteMultipleMerchantUseCase: DeleteMultipleMerchantUseCase
 ) : ViewModel() {
 
+    var scrollIndex: Int by mutableStateOf(0)
+    var scrollOffset: Int by mutableStateOf(0)
+
     val searchTextState by mutableStateOf(TextFieldState())
     private val trigger = MutableSharedFlow<Unit>(replay = 1)
 
@@ -70,7 +73,8 @@ class MerchantViewModel @Inject constructor(
         println("aaaaa set edit/Add success")
         selectedList.clear()
         clearSearch()
-        //reset scroll
+        scrollIndex = 0
+        scrollOffset = 0
     }
 
     fun onEditClick(onSuccess : (Long)->Unit)
@@ -104,7 +108,6 @@ class MerchantViewModel @Inject constructor(
                     when (it) {
                         is Resource.Loading -> {}
                         is Resource.Success -> {
-                            //remember scroll
                             selectedList.clear()
                             onSuccess()
                         }

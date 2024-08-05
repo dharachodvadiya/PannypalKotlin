@@ -109,7 +109,22 @@ fun MerchantScreen(
                 CircularProgressIndicator()
             }
         } else {
+
+            val scrollState: LazyListState = rememberLazyListState(
+                merchantViewModel.scrollIndex,
+                merchantViewModel.scrollOffset
+            )
+
+            // after each scroll, update values in ViewModel
+            LaunchedEffect(key1 = scrollState.isScrollInProgress) {
+                if (!scrollState.isScrollInProgress) {
+                    merchantViewModel.scrollIndex = scrollState.firstVisibleItemIndex
+                    merchantViewModel.scrollOffset = scrollState.firstVisibleItemScrollOffset
+                }
+            }
+
             LazyColumn(
+                state = scrollState,
                 modifier = modifier
                     .padding(innerPadding)
             ) {
