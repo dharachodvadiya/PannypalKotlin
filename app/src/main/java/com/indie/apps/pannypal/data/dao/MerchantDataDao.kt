@@ -5,6 +5,7 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import com.indie.apps.pannypal.data.entity.MerchantData
+import com.indie.apps.pannypal.data.module.IncomeAndExpense
 import com.indie.apps.pannypal.data.module.MerchantDataDailyTotal
 import com.indie.apps.pannypal.data.module.MerchantDataWithName
 
@@ -84,4 +85,14 @@ interface MerchantDataDao : BaseDao<MerchantData> {
         ORDER BY day DESC
     """)
     fun getMerchantDataDailyTotalList(timeZoneOffsetInMilli : Int): PagingSource<Int, MerchantDataDailyTotal>
+
+    @Transaction
+    @Query("""
+        SELECT
+            SUM(CASE WHEN type >= 0 THEN amount ELSE 0 END) as totalIncome,
+            SUM(CASE WHEN type < 0 THEN amount ELSE 0 END) as totalExpense
+        FROM merchant_data
+        WHERE ID IN (:ids)
+    """)
+    suspend fun getTotalIncomeAndeExpenseFromIds(ids : List<Long>): IncomeAndExpense
 }

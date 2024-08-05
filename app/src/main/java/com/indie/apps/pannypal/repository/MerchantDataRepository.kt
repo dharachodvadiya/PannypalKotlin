@@ -2,6 +2,7 @@ package com.indie.apps.pannypal.repository
 
 import androidx.paging.PagingSource
 import com.indie.apps.pannypal.data.entity.MerchantData
+import com.indie.apps.pannypal.data.module.IncomeAndExpense
 import com.indie.apps.pannypal.data.module.MerchantDataDailyTotal
 import com.indie.apps.pannypal.data.module.MerchantDataWithName
 
@@ -14,6 +15,8 @@ interface MerchantDataRepository : BaseRepository<MerchantData>{
     suspend fun deleteMerchantDataWithMerchantIdList(idList: List<Long>) : Int
 
     suspend fun deleteMerchantDataWithMerchantId(id : Long) : Int
+
+    suspend fun getTotalIncomeAndeExpenseFromIds(ids: List<Long>) : IncomeAndExpense
 
     fun getMerchantDataList(): PagingSource<Int,MerchantData>
 

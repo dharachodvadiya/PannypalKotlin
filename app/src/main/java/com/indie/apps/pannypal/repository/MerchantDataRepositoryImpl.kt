@@ -17,6 +17,9 @@ class MerchantDataRepositoryImpl @Inject constructor(private val merchantDataDao
 
     override suspend fun deleteMerchantDataWithMerchantId(id: Long) = merchantDataDao.deleteMerchantDataWithMerchantId(id)
 
+    override suspend fun getTotalIncomeAndeExpenseFromIds(ids: List<Long>) =
+        merchantDataDao.getTotalIncomeAndeExpenseFromIds(ids)
+
     override fun getMerchantDataList() = merchantDataDao.getMerchantDataList()
 
     override fun getMerchantDataListFromMerchantId(

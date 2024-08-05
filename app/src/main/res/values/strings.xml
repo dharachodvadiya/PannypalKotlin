@@ -40,4 +40,7 @@
     <string name="delete_item_dialog_text">Are you sure to delete this item??</string>
     <string name="delete_dialog_title">Delete</string>
     <string name="no_name">No Name</string>
+    <string name="merchant_data_delete_success_message">Delete Merchant Data Successfully</string>
+    <string name="merchant_delete_success_message">Merchants Delete Successfully</string>
+    <string name="merchant_edit_success_message">Merchant Edit Successfully</string>
 </resources>

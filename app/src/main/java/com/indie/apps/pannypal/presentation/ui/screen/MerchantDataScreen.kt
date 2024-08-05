@@ -1,5 +1,6 @@
 package com.indie.apps.pannypal.presentation.ui.screen
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,7 +19,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -27,6 +30,7 @@ import androidx.paging.compose.itemKey
 import com.indie.apps.pannypal.R
 import com.indie.apps.pannypal.data.entity.Merchant
 import com.indie.apps.pannypal.presentation.ui.common.Util
+import com.indie.apps.pannypal.presentation.ui.component.DeleteAlertDialog
 import com.indie.apps.pannypal.presentation.ui.component.screen.MerchantDataBottomBar
 import com.indie.apps.pannypal.presentation.ui.component.screen.MerchantDataDateItem
 import com.indie.apps.pannypal.presentation.ui.component.screen.MerchantDataExpenseAmount
@@ -60,6 +64,8 @@ fun MerchantDataScreen(
 
     val lazyPagingData = merchantDataViewModel.pagedData.collectAsLazyPagingItems()
     merchantDataViewModel.pagingState.update(lazyPagingData)
+
+    var openAlertDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -168,7 +174,24 @@ fun MerchantDataScreen(
                 isEditable = merchantDataViewModel.isEditable,
                 isDeletable = merchantDataViewModel.isDeletable,
                 onEditClick = {},
-                onDeleteClick = {}
+                onDeleteClick = {openAlertDialog = true}
+            )
+
+        }
+        val context = LocalContext.current
+        val merchantDataDeleteToast = stringResource(id = R.string.merchant_data_delete_success_message)
+
+        if (openAlertDialog) {
+            DeleteAlertDialog(
+                dialogTitle = R.string.delete_dialog_title,
+                dialogText = R.string.delete_item_dialog_text,
+                onConfirmation = {
+                    merchantDataViewModel.onDeleteDialogClick {
+                        openAlertDialog = false
+                        Toast.makeText(context, merchantDataDeleteToast, Toast.LENGTH_SHORT).show()
+                    }
+                },
+                onDismissRequest = { openAlertDialog = false }
             )
         }
     }

@@ -1,6 +1,5 @@
 package com.indie.apps.pannypal.domain.usecase
 
-import com.indie.apps.pannypal.data.entity.MerchantData
 import com.indie.apps.pannypal.di.IoDispatcher
 import com.indie.apps.pannypal.repository.MerchantDataRepository
 import com.indie.apps.pannypal.repository.MerchantRepository
@@ -8,6 +7,8 @@ import com.indie.apps.pannypal.repository.UserRepository
 import com.indie.apps.pannypal.util.Resource
 import com.indie.apps.pannypal.util.handleException
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
@@ -18,31 +19,38 @@ class DeleteMultipleMerchantDataUseCase @Inject constructor(
     private val merchantDataRepository: MerchantDataRepository,
     private val merchantRepository: MerchantRepository,
     private val userRepository: UserRepository,
-    private val merchantsData: List<MerchantData>,
-    @IoDispatcher private val dispatcher: CoroutineDispatcher) {
+    @IoDispatcher private val dispatcher: CoroutineDispatcher
+) {
 
-    suspend operator fun invoke() : Flow<Resource<Int>>{
-        return flow{
+    suspend fun deleteData(merchantId : Long,ids: List<Long>): Flow<Resource<Int>> {
+        return flow {
 
             try {
-                emit(Resource.Loading<Int>())
+                emit(Resource.Loading())
+                val incomeAndExpense = merchantDataRepository.getTotalIncomeAndeExpenseFromIds(ids)
+                val merchantDataDeleteCount =
+                    merchantDataRepository.deleteMerchantDataWithIdList(ids)
 
-                val ids = merchantsData.map{ it.id }
-                val count = merchantDataRepository.deleteMerchantDataWithIdList(ids)
+                if (merchantDataDeleteCount == ids.size) {
+                    /* val (newIncomeAmt, newExpenseAmt) = merchantsData.fold(0.0 to 0.0) { acc, merchant ->
+                         val (currentIncome, currentExpense) = acc
+                         when {
+                             merchant.type < 0 -> (currentIncome to (currentExpense + merchant.amount))
+                             merchant.type > 0 -> ((currentIncome + merchant.amount) to currentExpense)
+                             else -> acc
+                         }
+                     }
 
-                if(count == ids.size){
-                    val (newIncomeAmt, newExpenseAmt) = merchantsData.fold(0.0 to 0.0) { acc, merchant ->
-                        val (currentIncome, currentExpense) = acc
-                        when {
-                            merchant.type < 0 -> (currentIncome to (currentExpense + merchant.amount))
-                            merchant.type > 0 -> ((currentIncome + merchant.amount) to currentExpense)
-                            else -> acc
-                        }
-                    }
+                     handleReflectedTableOperation(count, newIncomeAmt, newExpenseAmt)*/
 
-                    handleReflectedTableOperation(count, newIncomeAmt, newExpenseAmt)
+                    handleReflectedTableOperation(
+                        merchantId,
+                        merchantDataDeleteCount,
+                        incomeAndExpense.totalIncome,
+                        incomeAndExpense.totalExpense
+                    )
 
-                }else{
+                } else {
                     emit(Resource.Error<Int>("Fail to delete Multiple Merchant Data"))
                 }
 
@@ -53,27 +61,46 @@ class DeleteMultipleMerchantDataUseCase @Inject constructor(
         }.flowOn(dispatcher)
     }
 
-    private suspend fun FlowCollector<Resource<Int>>.handleReflectedTableOperation(affectedRowCount: Int, newIncome : Double, newExpense: Double ) {
-        val updatedRowMerchant = merchantRepository.updateAmountWithDate(
-            id = merchantsData[0].merchantId,
-            incomeAmt = -newIncome,
-            expenseAmt = -newExpense,
-            dateInMilli = System.currentTimeMillis()
-        )
+    private suspend fun FlowCollector<Resource<Int>>.handleReflectedTableOperation(
+        merchantId : Long,
+        affectedRowCount: Int,
+        newIncome: Double,
+        newExpense: Double
+    ) {
 
-        val updatedRowUser = userRepository.updateAmount(
-            incomeAmt = -newIncome,
-            expenseAmt = -newExpense
-        )
-
-        emit(
-            when {
-                updatedRowUser == 1 && updatedRowMerchant == 1 -> Resource.Success(affectedRowCount)
-                updatedRowUser == 1 && updatedRowMerchant == 0 -> Resource.Error("Fail to update Merchant Amount")
-                updatedRowUser == 0 && updatedRowMerchant == 1 -> Resource.Error("Fail to update User Amount")
-                else -> Resource.Error("Fail to update User And Merchant Amount")
+        coroutineScope {
+            val updatedRowMerchantDeferred = async {
+                merchantRepository.updateAmountWithDate(
+                    id = merchantId,
+                    incomeAmt = -newIncome,
+                    expenseAmt = -newExpense,
+                    dateInMilli = System.currentTimeMillis()
+                )
             }
-        )
+
+            val updatedRowUserDeferred = async {
+                userRepository.updateAmount(
+                    incomeAmt = -newIncome,
+                    expenseAmt = -newExpense
+                )
+            }
+            updatedRowMerchantDeferred.await()
+            updatedRowUserDeferred.await()
+            val updatedRowMerchant = updatedRowMerchantDeferred.getCompleted()
+            val updatedRowUser = updatedRowUserDeferred.getCompleted()
+
+            emit(
+                when {
+                    updatedRowUser == 1 && updatedRowMerchant == 1 -> Resource.Success(
+                        affectedRowCount
+                    )
+
+                    updatedRowUser == 1 && updatedRowMerchant == 0 -> Resource.Error("Fail to update Merchant Amount")
+                    updatedRowUser == 0 && updatedRowMerchant == 1 -> Resource.Error("Fail to update User Amount")
+                    else -> Resource.Error("Fail to update User And Merchant Amount")
+                }
+            )
+        }
     }
 
 }

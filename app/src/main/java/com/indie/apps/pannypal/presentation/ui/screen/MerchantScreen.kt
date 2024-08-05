@@ -1,32 +1,28 @@
 package com.indie.apps.pannypal.presentation.ui.screen
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import com.indie.apps.pannypal.R
 import com.indie.apps.pannypal.presentation.ui.common.Util
@@ -49,6 +45,9 @@ fun MerchantScreen(
     isEditAddSuccess: Boolean = false,
     modifier: Modifier = Modifier
 ) {
+    val contex = LocalContext.current
+    val merchantDeleteToast = stringResource(id = R.string.merchant_delete_success_message)
+    val merchantEditToast = stringResource(id = R.string.merchant_edit_success_message)
     val lazyPagingData = merchantViewModel.pagedData.collectAsLazyPagingItems()
     merchantViewModel.pagingState.update(lazyPagingData)
 
@@ -58,7 +57,10 @@ fun MerchantScreen(
 
     if (isEditAddSuccess != isEditSuccessState) {
         isEditSuccessState = isEditAddSuccess
-        if (isEditSuccessState) merchantViewModel.setEditAddSuccess()
+        if (isEditSuccessState) {
+            Toast.makeText(contex, merchantEditToast, Toast.LENGTH_SHORT).show()
+            merchantViewModel.setEditAddSuccess()
+        }
     }
 
     var openAlertDialog by remember { mutableStateOf(false) }
@@ -66,7 +68,9 @@ fun MerchantScreen(
     var job: Job? = null
     Scaffold(topBar = {
         MerchantTopBar(
-            title = if (merchantViewModel.selectedList.size > 0) "${merchantViewModel.selectedList.size} " + stringResource(id = R.string.selected) else "",
+            title = if (merchantViewModel.selectedList.size > 0) "${merchantViewModel.selectedList.size} " + stringResource(
+                id = R.string.selected
+            ) else "",
             textState = merchantViewModel.searchTextState,
             isEditable = merchantViewModel.isEditable,
             isDeletable = merchantViewModel.isDeletable,
@@ -121,7 +125,7 @@ fun MerchantScreen(
                         MerchantListItem(
                             item = data,
                             isSelected = merchantViewModel.selectedList.contains(data.id),
-                            onClick = { merchantViewModel.onItemClick(data.id) {onMerchantClick(it)} },
+                            onClick = { merchantViewModel.onItemClick(data.id) { onMerchantClick(it) } },
                             onLongClick = { merchantViewModel.onItemLongClick(data.id) }
                         )
 
@@ -138,6 +142,7 @@ fun MerchantScreen(
             }
         }
 
+
         if (openAlertDialog) {
             DeleteAlertDialog(
                 dialogTitle = R.string.delete_dialog_title,
@@ -145,6 +150,7 @@ fun MerchantScreen(
                 onConfirmation = {
                     merchantViewModel.onDeleteDialogClick {
                         openAlertDialog = false
+                        Toast.makeText(contex, merchantDeleteToast, Toast.LENGTH_SHORT).show()
                     }
                 },
                 onDismissRequest = { openAlertDialog = false }

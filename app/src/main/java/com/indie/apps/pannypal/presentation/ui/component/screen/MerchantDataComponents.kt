@@ -248,7 +248,7 @@ fun MerchantDataIncomeAmount(
 
         MerchantDataAmountItem(
             amount = data.amount,
-            description = if(data.details.isNullOrEmpty()) stringResource(id = R.string.no_details) else data.details,
+            description = data.details,
             contentAlignment = Alignment.Start,
             colorStroke = MyAppTheme.colors.greenBg
         )
@@ -284,7 +284,7 @@ fun MerchantDataExpenseAmount(
 
         MerchantDataAmountItem(
             amount = data.amount *-1,
-            description = if(data.details.isNullOrEmpty()) stringResource(id = R.string.no_details) else data.details,
+            description = data.details,
             contentAlignment = Alignment.End,
             colorStroke = MyAppTheme.colors.redBg
         )
