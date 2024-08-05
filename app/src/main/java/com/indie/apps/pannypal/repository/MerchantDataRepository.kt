@@ -15,9 +15,9 @@ interface MerchantDataRepository : BaseRepository<MerchantData>{
 
     suspend fun deleteMerchantDataWithMerchantId(id : Long) : Int
 
-    suspend fun getMerchantDataList(limit: Int, offset: Int): List<MerchantData>
+    fun getMerchantDataList(): PagingSource<Int,MerchantData>
 
-    suspend fun getMerchantDataListFromMerchantId(merchantId: Long, limit: Int, offset: Int): List<MerchantData>
+    fun getMerchantDataListFromMerchantId(merchantId: Long):  PagingSource<Int,MerchantData>
 
     fun getMerchantsDataWithMerchantNameList(timeZoneOffsetInMilli : Int): PagingSource<Int,MerchantDataWithName>
 

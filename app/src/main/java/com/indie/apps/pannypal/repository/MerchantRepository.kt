@@ -13,7 +13,7 @@ interface MerchantRepository : BaseRepository<Merchant> {
 
     suspend fun deleteMerchantWithIdList(idList: List<Long>): Int
 
-    suspend fun getMerchantList(limit: Int, offset: Int): List<Merchant>
+    fun getMerchantList(): PagingSource<Int,Merchant>
 
     suspend fun getMerchantFromId(id: Long): Merchant
 

@@ -15,11 +15,9 @@ class PaymentRepositoryImpl @Inject constructor(private val paymentDao: PaymentD
     override suspend fun insertPaymentList(payments: List<Payment>) =
         paymentDao.insertPaymentList(payments)
 
-    override suspend fun searchPaymentList(
+    override fun searchPaymentList(
         searchQuery: String,
-        limit: Int,
-        offset: Int
-    ) = paymentDao.searchPaymentList(searchQuery, limit, offset)
+    ) = paymentDao.searchPaymentList(searchQuery)
 
     override suspend fun insert(payment: Payment) = paymentDao.insert(payment)
 

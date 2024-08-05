@@ -59,7 +59,6 @@ import com.indie.apps.pannypal.presentation.ui.component.linearGradientsBrush
 import com.indie.apps.pannypal.presentation.ui.component.verticalGradientsBrush
 import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
-import com.indie.apps.pannypal.util.Constant
 
 @Composable
 fun OverviewTopBar(
@@ -226,9 +225,9 @@ fun OverviewListDateItem(
     item: MerchantDataDailyTotal,
     modifier: Modifier = Modifier.fillMaxWidth()
 ) {
-    val dayString = if(item.day == Constant.getTodayDate())
+    val dayString = if(item.day == Util.getTodayDate())
         stringResource(id = R.string.today)
-    else if(item.day == Constant.getYesterdayDate())
+    else if(item.day == Util.getYesterdayDate())
         stringResource(id = R.string.yesterday)
     else
         item.day

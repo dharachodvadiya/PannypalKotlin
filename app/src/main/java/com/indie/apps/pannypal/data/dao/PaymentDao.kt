@@ -1,5 +1,6 @@
 package com.indie.apps.pannypal.data.dao
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
@@ -24,8 +25,8 @@ interface PaymentDao : BaseDao<Payment> {
     fun getPaymentList(): Flow<List<Payment>>
 
     @Transaction
-    @Query("SELECT * FROM payment_type WHERE name LIKE :searchQuery || '%' LIMIT :limit OFFSET :offset")
-    suspend fun searchPaymentList(searchQuery: String, limit: Int, offset: Int): List<Payment>
+    @Query("SELECT * FROM payment_type WHERE name LIKE :searchQuery || '%'")
+    fun searchPaymentList(searchQuery: String): PagingSource<Int, Payment>
 
     @Insert
     suspend fun insertPaymentList(payments: List<Payment>): List<Long>

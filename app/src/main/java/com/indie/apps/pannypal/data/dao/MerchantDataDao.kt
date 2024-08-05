@@ -7,7 +7,6 @@ import androidx.room.Transaction
 import com.indie.apps.pannypal.data.entity.MerchantData
 import com.indie.apps.pannypal.data.module.MerchantDataDailyTotal
 import com.indie.apps.pannypal.data.module.MerchantDataWithName
-import com.indie.apps.pannypal.util.Constant
 
 @Dao
 interface MerchantDataDao : BaseDao<MerchantData> {
@@ -34,12 +33,12 @@ interface MerchantDataDao : BaseDao<MerchantData> {
     suspend fun deleteMerchantDataWithMerchantId(id: Long) : Int
 
     @Transaction
-    @Query("SELECT * FROM merchant_data ORDER BY id DESC LIMIT :limit OFFSET :offset")
-    suspend fun getMerchantDataList(limit: Int, offset: Int): List<MerchantData>
+    @Query("SELECT * FROM merchant_data ORDER BY id DESC")
+    fun getMerchantDataList(): PagingSource<Int,MerchantData>
 
     @Transaction
-    @Query("SELECT * FROM merchant_data where merchant_id = :merchantId ORDER BY id DESC LIMIT :limit OFFSET :offset")
-    suspend fun getMerchantDataListFromMerchantId(merchantId: Long, limit: Int, offset: Int): List<MerchantData>
+    @Query("SELECT * FROM merchant_data where merchant_id = :merchantId ORDER BY id DESC")
+    fun getMerchantDataListFromMerchantId(merchantId: Long):  PagingSource<Int,MerchantData>
 
     @Transaction
     @Query("""

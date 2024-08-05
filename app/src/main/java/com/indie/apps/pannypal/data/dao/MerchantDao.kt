@@ -30,8 +30,8 @@ interface MerchantDao : BaseDao<Merchant> {
     suspend fun getMerchantFromId(id: Long): Merchant
 
     @Transaction
-    @Query("SELECT * FROM merchant ORDER BY date_milli DESC LIMIT :limit OFFSET :offset")
-    suspend fun getMerchantList(limit: Int, offset: Int): List<Merchant>
+    @Query("SELECT * FROM merchant ORDER BY date_milli DESC")
+    fun getMerchantList(): PagingSource<Int,Merchant>
 
     @Transaction
     @Query("SELECT id, name, details FROM merchant WHERE name LIKE  '%' || :searchQuery || '%' OR details LIKE  '%' || :searchQuery || '%'ORDER BY date_milli DESC LIMIT :limit OFFSET :offset")

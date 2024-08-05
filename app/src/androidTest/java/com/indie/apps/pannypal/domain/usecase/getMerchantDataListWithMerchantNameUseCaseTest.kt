@@ -11,7 +11,6 @@ import com.indie.apps.pannypal.data.entity.Payment
 import com.indie.apps.pannypal.data.module.MerchantDataWithName
 import com.indie.apps.pannypal.di.IoDispatcher
 import com.indie.apps.pannypal.repository.MerchantDataRepository
-import com.indie.apps.pannypal.util.Constant
 import com.indie.apps.pannypal.util.Resource
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest

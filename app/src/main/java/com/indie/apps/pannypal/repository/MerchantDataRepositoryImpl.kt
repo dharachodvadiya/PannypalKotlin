@@ -17,13 +17,11 @@ class MerchantDataRepositoryImpl @Inject constructor(private val merchantDataDao
 
     override suspend fun deleteMerchantDataWithMerchantId(id: Long) = merchantDataDao.deleteMerchantDataWithMerchantId(id)
 
-    override suspend fun getMerchantDataList(limit: Int, offset: Int) = merchantDataDao.getMerchantDataList(limit, offset)
+    override fun getMerchantDataList() = merchantDataDao.getMerchantDataList()
 
-    override suspend fun getMerchantDataListFromMerchantId(
+    override fun getMerchantDataListFromMerchantId(
         id: Long,
-        limit: Int,
-        offset: Int
-    ) = merchantDataDao.getMerchantDataListFromMerchantId(id, limit, offset)
+    ) = merchantDataDao.getMerchantDataListFromMerchantId(id)
 
     override fun getMerchantsDataWithMerchantNameList(
         timeZoneOffsetInMilli : Int

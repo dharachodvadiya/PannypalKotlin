@@ -15,7 +15,7 @@ class GetMerchantFromIdUseCase @Inject constructor(
     private val merchantRepository: MerchantRepository,
     @IoDispatcher private val dispatcher: CoroutineDispatcher) {
 
-    suspend fun getData(id: Long) : Flow<Resource<Merchant>>{
+    fun getData(id: Long) : Flow<Resource<Merchant>>{
         return flow{
 
             try {

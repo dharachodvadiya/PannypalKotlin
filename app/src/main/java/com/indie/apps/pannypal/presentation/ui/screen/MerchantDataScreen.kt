@@ -6,9 +6,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.indie.apps.pannypal.R
 import com.indie.apps.pannypal.presentation.ui.component.screen.MerchantDataBottomBar
 import com.indie.apps.pannypal.presentation.ui.component.screen.MerchantDataDateItem
@@ -16,13 +19,17 @@ import com.indie.apps.pannypal.presentation.ui.component.screen.MerchantDataExpe
 import com.indie.apps.pannypal.presentation.ui.component.screen.MerchantDataIncomeAmount
 import com.indie.apps.pannypal.presentation.ui.component.screen.MerchantDataTopBar
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
+import com.indie.apps.pannypal.presentation.viewmodel.MerchantDataViewModel
 
 @Composable
 fun MerchantDataScreen(
+    merchantDataViewModel: MerchantDataViewModel = hiltViewModel(),
     onProfileClick: () -> Unit,
     onNavigationUp: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+
+    val merchantState by merchantDataViewModel.merchantState.collectAsStateWithLifecycle()
     Scaffold(
         topBar = {
             MerchantDataTopBar(
@@ -72,6 +79,9 @@ fun MerchantDataScreen(
 @Composable
 private fun MerchantDataScreenPreview() {
     PannyPalTheme {
-        MerchantDataScreen({},{})
+        MerchantDataScreen(
+            onProfileClick = {},
+            onNavigationUp = {}
+        )
     }
 }

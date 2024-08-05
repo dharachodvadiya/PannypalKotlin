@@ -7,7 +7,6 @@ import com.indie.apps.pannypal.data.module.MerchantDataDailyTotal
 import com.indie.apps.pannypal.di.IoDispatcher
 import com.indie.apps.pannypal.presentation.ui.common.Util
 import com.indie.apps.pannypal.repository.MerchantDataRepository
-import com.indie.apps.pannypal.util.Constant
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
@@ -26,7 +25,7 @@ class GetMerchantDataDailyTotalUseCase @Inject constructor(
                 prefetchDistance = Util.PAGE_PREFETCH_DISTANCE
             )
         ) {
-            merchantDataRepository.getMerchantDataDailyTotalList(Constant.TIME_ZONE_OFFSET_IN_MILLI)
+            merchantDataRepository.getMerchantDataDailyTotalList(Util.TIME_ZONE_OFFSET_IN_MILLI)
         }
             .flow
             .flowOn(dispatcher)

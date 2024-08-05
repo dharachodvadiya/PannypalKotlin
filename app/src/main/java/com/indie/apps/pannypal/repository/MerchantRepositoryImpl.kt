@@ -17,8 +17,8 @@ class MerchantRepositoryImpl @Inject constructor(private val merchantDao: Mercha
     override suspend fun deleteMerchantWithIdList(idList: List<Long>) =
         merchantDao.deleteMerchantWithIdList(idList)
 
-    override suspend fun getMerchantList(limit: Int, offset: Int) =
-        merchantDao.getMerchantList(limit, offset)
+    override fun getMerchantList() =
+        merchantDao.getMerchantList()
 
     override suspend fun getMerchantFromId(id: Long) = merchantDao.getMerchantFromId(id)
 
