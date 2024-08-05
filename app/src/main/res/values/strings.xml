@@ -37,4 +37,6 @@
     <string name="yesterday">Yesterday</string>
     <string name="selected">Selected</string>
     <string name="edit_merchant">Edit Merchant</string>
+    <string name="delete_item_dialog_text">Are you sure to delete this item??</string>
+    <string name="delete_dialog_title">Delete</string>
 </resources>

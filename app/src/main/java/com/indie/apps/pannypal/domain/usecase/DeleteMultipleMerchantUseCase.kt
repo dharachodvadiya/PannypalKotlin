@@ -8,6 +8,8 @@ import com.indie.apps.pannypal.repository.UserRepository
 import com.indie.apps.pannypal.util.Resource
 import com.indie.apps.pannypal.util.handleException
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -17,37 +19,40 @@ class DeleteMultipleMerchantUseCase @Inject constructor(
     private val merchantRepository: MerchantRepository,
     private val merchantDataRepository: MerchantDataRepository,
     private val userRepository: UserRepository,
-    private val merchants: List<Merchant>,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) {
 
-    suspend operator fun invoke(): Flow<Resource<Int>> {
+    suspend fun deleteData(ids: List<Long>): Flow<Resource<Int>> {
         return flow {
 
             try {
                 emit(Resource.Loading())
-                val ids = merchants.map {
-                    it.id
-                }
+                val incomeAndExpense = merchantRepository.getTotalIncomeAndeExpenseFromIds(ids)
                 val merchantDeleteCount = merchantRepository.deleteMerchantWithIdList(ids)
 
                 if (merchantDeleteCount == ids.size) {
 
-                    val (incomeAmt, expenseAmt) = merchants
-                        .fold(0.0 to 0.0) { acc, merchant ->
-                            val (totalIncome, totalExpense) = acc
-                            totalIncome + merchant.incomeAmount to totalExpense + merchant.expenseAmount
+                    coroutineScope {
+                        val deletedRowMerchantDataDeferred = async {
+                            merchantDataRepository.deleteMerchantDataWithMerchantIdList(ids)
                         }
 
-                    merchantDataRepository.deleteMerchantDataWithMerchantIdList(ids)
-                    val updatedRowUser = userRepository.updateAmount(-incomeAmt, -expenseAmt)
-
-                    emit(
-                        when {
-                            updatedRowUser == 1 -> Resource.Success(merchantDeleteCount)
-                            else -> Resource.Error("Fail to update User Amount")
+                        val updatedUserDeferred = async {
+                            userRepository.updateAmount(-incomeAndExpense.totalIncome, -incomeAndExpense.totalExpense)
                         }
-                    )
+
+                        deletedRowMerchantDataDeferred.await()
+                        updatedUserDeferred.await()
+
+                        emit(
+                            when {
+                                updatedUserDeferred.getCompleted() == 1 -> Resource.Success(merchantDeleteCount)
+                                else -> Resource.Error("Fail to update User Amount")
+                            }
+                        )
+                    }
+
+
 
                 } else {
                     emit(Resource.Error("Fail to delete multiple merchant"))

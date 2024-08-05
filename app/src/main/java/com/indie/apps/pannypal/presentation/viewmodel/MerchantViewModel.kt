@@ -8,9 +8,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.indie.apps.pannypal.data.entity.Merchant
+import com.indie.apps.pannypal.domain.usecase.DeleteMultipleMerchantUseCase
+import com.indie.apps.pannypal.domain.usecase.GetMerchantDataListFromMerchantIdUseCase
 import com.indie.apps.pannypal.domain.usecase.SearchMerchantListUseCase
 import com.indie.apps.pannypal.presentation.ui.state.PagingState
 import com.indie.apps.pannypal.presentation.ui.state.TextFieldState
+import com.indie.apps.pannypal.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -19,7 +22,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MerchantViewModel @Inject constructor(
-    searchMerchantListUseCase: SearchMerchantListUseCase
+    searchMerchantListUseCase: SearchMerchantListUseCase,
+    private val deleteMultipleMerchantUseCase: DeleteMultipleMerchantUseCase
 ) : ViewModel() {
 
     val searchTextState by mutableStateOf(TextFieldState())
@@ -61,24 +65,27 @@ class MerchantViewModel @Inject constructor(
             selectedList.add(id)
     }
 
+    fun setEditAddSuccess()
+    {
+        println("aaaaa set edit/Add success")
+        selectedList.clear()
+        clearSearch()
+        //reset scroll
+    }
+
     fun onEditClick(onSuccess : (Long)->Unit)
     {
         val id = selectedList[0]
-        clearSearch()
-        selectedList.clear()
         onSuccess(id)
     }
 
     fun onDeleteClick(onSuccess : ()->Unit)
     {
-        clearSearch()
-        selectedList.clear()
         onSuccess()
     }
 
     fun onAddClick(onSuccess : ()->Unit)
     {
-        clearSearch()
         onSuccess()
     }
 
@@ -86,5 +93,27 @@ class MerchantViewModel @Inject constructor(
     {
         selectedList.clear()
         onSuccess()
+    }
+
+    fun onDeleteDialogClick(onSuccess : ()->Unit)
+    {
+        viewModelScope.launch {
+            deleteMultipleMerchantUseCase
+                .deleteData(selectedList)
+                .collect {
+                    when (it) {
+                        is Resource.Loading -> {}
+                        is Resource.Success -> {
+                            //remember scroll
+                            selectedList.clear()
+                            onSuccess()
+                        }
+
+                        is Resource.Error -> {
+                        }
+                    }
+                }
+        }
+
     }
 }

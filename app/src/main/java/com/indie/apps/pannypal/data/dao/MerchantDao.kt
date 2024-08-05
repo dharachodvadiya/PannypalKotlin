@@ -5,6 +5,8 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import com.indie.apps.pannypal.data.entity.Merchant
+import com.indie.apps.pannypal.data.module.IncomeAndExpense
+import com.indie.apps.pannypal.data.module.MerchantDataWithName
 import com.indie.apps.pannypal.data.module.MerchantNameAndDetails
 
 @Dao
@@ -32,7 +34,7 @@ interface MerchantDao : BaseDao<Merchant> {
     suspend fun getMerchantList(limit: Int, offset: Int): List<Merchant>
 
     @Transaction
-    @Query("SELECT id, name, details FROM merchant WHERE name LIKE :searchQuery || '%' OR details LIKE :searchQuery || '%'ORDER BY date_milli DESC LIMIT :limit OFFSET :offset")
+    @Query("SELECT id, name, details FROM merchant WHERE name LIKE  '%' || :searchQuery || '%' OR details LIKE  '%' || :searchQuery || '%'ORDER BY date_milli DESC LIMIT :limit OFFSET :offset")
     suspend fun searchMerchantNameAndDetailList(
         searchQuery: String,
         limit: Int,
@@ -40,11 +42,11 @@ interface MerchantDao : BaseDao<Merchant> {
     ): List<MerchantNameAndDetails>
 
     @Transaction
-    @Query("SELECT id, name, details FROM merchant WHERE name LIKE :searchQuery || '%' OR details LIKE :searchQuery || '%'ORDER BY date_milli DESC")
+    @Query("SELECT id, name, details FROM merchant WHERE name LIKE  '%' || :searchQuery || '%' OR details LIKE  '%' || :searchQuery || '%'ORDER BY date_milli DESC")
     fun searchMerchantNameAndDetailList(searchQuery: String): PagingSource<Int, MerchantNameAndDetails>
 
     @Transaction
-    @Query("SELECT * FROM merchant WHERE name LIKE :searchQuery || '%' OR details LIKE :searchQuery || '%' ORDER BY date_milli DESC")
+    @Query("SELECT * FROM merchant WHERE name LIKE  '%' || :searchQuery || '%' OR details LIKE  '%' || :searchQuery || '%' ORDER BY date_milli DESC")
     fun searchMerchantList(searchQuery: String): PagingSource<Int,Merchant>
 
 
@@ -62,4 +64,15 @@ interface MerchantDao : BaseDao<Merchant> {
         expenseAmt: Double,
         dateInMilli: Long
     ): Int
+
+    @Transaction
+    @Query("""
+        SELECT
+            SUM(income_amt) as totalIncome,
+            SUM(expense_amt) as totalExpense
+        FROM merchant
+        WHERE ID IN (:ids)
+    """)
+    suspend fun getTotalIncomeAndeExpenseFromIds(ids : List<Long>): IncomeAndExpense
+
 }

@@ -5,6 +5,7 @@ import androidx.paging.PagingConfig
 import com.indie.apps.pannypal.data.Paging.BasePagingSource
 import com.indie.apps.pannypal.data.dao.MerchantDao
 import com.indie.apps.pannypal.data.entity.Merchant
+import com.indie.apps.pannypal.data.module.IncomeAndExpense
 import com.indie.apps.pannypal.presentation.ui.common.Util
 import javax.inject.Inject
 
@@ -21,6 +22,9 @@ class MerchantRepositoryImpl @Inject constructor(private val merchantDao: Mercha
 
     override suspend fun getMerchantFromId(id: Long) = merchantDao.getMerchantFromId(id)
 
+    override suspend fun getTotalIncomeAndeExpenseFromIds(ids: List<Long>) =
+        merchantDao.getTotalIncomeAndeExpenseFromIds(ids)
+
     override suspend fun updateAmountWithDate(
         id: Long,
         incomeAmt: Double,
@@ -34,11 +38,13 @@ class MerchantRepositoryImpl @Inject constructor(private val merchantDao: Mercha
 
     override fun searchMerchantNameAndDetailListPaging(
         searchQuery: String
-    ) =Pager(
-            config = PagingConfig(pageSize = Util.PAGE_SIZE,
-                prefetchDistance = Util.PAGE_PREFETCH_DISTANCE),
-            pagingSourceFactory ={ BasePagingSource(merchantDao)}
-        ).flow
+    ) = Pager(
+        config = PagingConfig(
+            pageSize = Util.PAGE_SIZE,
+            prefetchDistance = Util.PAGE_PREFETCH_DISTANCE
+        ),
+        pagingSourceFactory = { BasePagingSource(merchantDao) }
+    ).flow
 
     override fun searchMerchantList(
         searchQuery: String

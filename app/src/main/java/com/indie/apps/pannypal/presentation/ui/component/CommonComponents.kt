@@ -18,8 +18,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PersonOutline
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -212,6 +214,52 @@ internal fun TextFieldError(textError: String, modifier: Modifier = Modifier) {
             textAlign = TextAlign.End
         )
     }
+}
+
+@Composable
+fun DeleteAlertDialog(
+    onDismissRequest: () -> Unit,
+    onConfirmation: () -> Unit,
+    dialogTitle: Int,
+    dialogText: Int
+) {
+    AlertDialog(
+        title = {
+            Text(
+                text = stringResource(id = dialogTitle),
+                style = MyAppTheme.typography.Semibold80,
+                color = MyAppTheme.colors.black
+            )
+        },
+        text = {
+            Text(
+                text = stringResource(id = dialogText),
+                style = MyAppTheme.typography.Semibold57,
+                color = MyAppTheme.colors.gray2
+            )
+        },
+        onDismissRequest = {
+            onDismissRequest()
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onConfirmation()
+                }
+            ) {
+                Text("Confirm")
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = {
+                    onDismissRequest()
+                }
+            ) {
+                Text("Dismiss")
+            }
+        }
+    )
 }
 
 

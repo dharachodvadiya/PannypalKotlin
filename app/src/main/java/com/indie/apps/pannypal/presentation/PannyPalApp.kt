@@ -114,13 +114,18 @@ fun PannyPalApp() {
                             //navController.navigateUp()
                             Toast.makeText(context, merchantSaveToast, Toast.LENGTH_SHORT).show()
 
-                            if (it != null)
+                            if (it != null) {
                                 navController.previousBackStackEntry
                                     ?.savedStateHandle
                                     ?.set(
                                         Util.SAVE_STATE_MERCHANT_NAME_DESC,
                                         Gson().toJson(it.toMerchantNameAndDetails())
                                     )
+
+                                navController.previousBackStackEntry
+                                    ?.savedStateHandle
+                                    ?.set(Util.SAVE_STATE_ADD_EDIT_SUCCESS, true)
+                            }
 
                             navController.popBackStack()
                         },
@@ -130,11 +135,6 @@ fun PannyPalApp() {
                         code = data,
                         editId = editId
                     )
-                }
-                dialog(
-                    route = DialogNav.EDIT_MERCHANT.route,
-                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
-                ) {
                 }
                 dialog(
                     route = DialogNav.ADD_PAYMENT.route,

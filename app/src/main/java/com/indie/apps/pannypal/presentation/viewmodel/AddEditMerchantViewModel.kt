@@ -35,6 +35,8 @@ class AddEditMerchantViewModel @Inject constructor(
 
     private var editId: Long? = null
 
+    private var editMerchant : Merchant? = null
+
     fun setEditId(id: Long?) {
         editId = id
         if(editId != null)
@@ -45,13 +47,13 @@ class AddEditMerchantViewModel @Inject constructor(
                     .collect {
                         if(it is Resource.Success && it.data != null)
                         {
-                            val data = it.data
+                            editMerchant = it.data
 
-                            merchantName.text = data.name
-                            phoneNumber.text = data.phoneNumber ?: ""
-                            description.text = data.details ?: ""
-                            if(!data.countryCode.isNullOrEmpty())
-                                countryCode = data.countryCode
+                            merchantName.text = it.data.name
+                            phoneNumber.text = it.data.phoneNumber ?: ""
+                            description.text = it.data.details ?: ""
+                            if(!it.data.countryCode.isNullOrEmpty())
+                                countryCode = it.data.countryCode
                         }
                     }
             }
@@ -79,32 +81,36 @@ class AddEditMerchantViewModel @Inject constructor(
 
                 viewModelScope.launch {
 
-                    if (editId != null) {
-                        val merchant = Merchant(
-                            id = editId!!,
-                            name = merchantName.text.trim(),
-                            phoneNumber = phoneNumber.text.trim(),
-                            details = description.text.trim(),
-                            countryCode = countryCode,
-                            dateInMilli = System.currentTimeMillis()
-                        )
+                    if (editId != null ) {
+                        if(editMerchant != null)
+                        {
+                            val merchant = editMerchant!!.copy(
+                                id = editId!!,
+                                name = merchantName.text.trim(),
+                                phoneNumber = phoneNumber.text.trim(),
+                                details = description.text.trim(),
+                                countryCode = countryCode,
+                                dateInMilli = System.currentTimeMillis()
+                            )
 
-                        updateMerchantUseCase
-                            .updateData(merchant)
-                            .collect {
-                                when (it) {
-                                    is Resource.Loading -> {}
-                                    is Resource.Success -> {
-                                        onSuccess(merchant.copy(id = editId!!))
-                                        enableButton = true
-                                    }
+                            updateMerchantUseCase
+                                .updateData(merchant)
+                                .collect {
+                                    when (it) {
+                                        is Resource.Loading -> {}
+                                        is Resource.Success -> {
+                                            onSuccess(merchant.copy(id = editId!!))
+                                            enableButton = true
+                                        }
 
-                                    is Resource.Error -> {
-                                        merchantName.setError(ErrorMessage.MERCHANT_EXIST)
-                                        enableButton = true
+                                        is Resource.Error -> {
+                                            merchantName.setError(ErrorMessage.MERCHANT_EXIST)
+                                            enableButton = true
+                                        }
                                     }
                                 }
-                            }
+                        }
+
                     }else{
                         val merchant = Merchant(
                             name = merchantName.text.trim(),

@@ -93,6 +93,10 @@ fun MyAppTextField(
                 if (onNextAction != null) {
                     onNextAction()
                 }
+            }, onSearch = {
+                keyboardController?.hide()
+            }, onSend = {
+                keyboardController?.hide()
             }),
             singleLine = true,
             decorationBox = @Composable { innerTextField ->

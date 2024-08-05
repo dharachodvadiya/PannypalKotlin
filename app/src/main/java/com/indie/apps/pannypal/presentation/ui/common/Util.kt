@@ -11,6 +11,7 @@ object Util {
     const val PAGE_PREFETCH_DISTANCE = 20
     const val SAVE_STATE_COUNTRY_CODE = "code"
     const val SAVE_STATE_EDIT_ID = "id"
+    const val SAVE_STATE_ADD_EDIT_SUCCESS = "edit"
 
     const val SAVE_STATE_MERCHANT_NAME_DESC = "merchant_name_desc"
 

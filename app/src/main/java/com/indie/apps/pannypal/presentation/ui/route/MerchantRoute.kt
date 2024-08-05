@@ -21,9 +21,19 @@ fun NavGraphBuilder.MerchantRoute(
         startDestination = MerchantNav.START.route,
         route = BottomNavItem.MERCHANTS.route
     ) {
-        composable(route = MerchantNav.START.route) {
+        composable(route = MerchantNav.START.route) {backStackEntry ->
+            // get data passed back from B
+            val isEditAddSuccess: Boolean? = backStackEntry
+                .savedStateHandle
+                .get<Boolean>(Util.SAVE_STATE_ADD_EDIT_SUCCESS)
+
+            backStackEntry
+                .savedStateHandle
+                .remove<Boolean>(Util.SAVE_STATE_ADD_EDIT_SUCCESS)
+
             bottomBarState.value = true
             MerchantScreen(
+                isEditAddSuccess = isEditAddSuccess?: false,
                 onMerchantClick = { navController.navigate(MerchantNav.DATA.route) },
                 onAddClick = { navController.navigate(DialogNav.ADD_MERCHANT.route) },
                 onEditClick = {
@@ -33,8 +43,7 @@ fun NavGraphBuilder.MerchantRoute(
                     navController.currentBackStackEntry
                         ?.savedStateHandle
                         ?.set(Util.SAVE_STATE_EDIT_ID, it)
-                },
-                onDeleteClick = {}
+                }
             )
         }
         composable(route = MerchantNav.DATA.route) {

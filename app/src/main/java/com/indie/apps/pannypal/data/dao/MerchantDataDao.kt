@@ -70,7 +70,7 @@ interface MerchantDataDao : BaseDao<MerchantData> {
                 m.name as merchantName
         FROM merchant_data md
         INNER JOIN merchant m ON md.merchant_id = m.id
-        WHERE m.name LIKE :searchQuery || '%' OR md.details LIKE :searchQuery || '%'
+        WHERE m.name LIKE  '%' || :searchQuery || '%' OR md.details LIKE  '%' || :searchQuery || '%'
         ORDER BY id DESC
     """)
     fun searchMerchantDataWithMerchantNameList(searchQuery : String, timeZoneOffsetInMilli : Int): PagingSource<Int,MerchantDataWithName>
