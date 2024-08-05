@@ -13,9 +13,9 @@ interface MerchantRepository : BaseRepository<Merchant> {
 
     suspend fun deleteMerchantWithIdList(idList: List<Long>): Int
 
-    fun getMerchantList(): PagingSource<Int,Merchant>
+    fun getMerchantList(): PagingSource<Int, Merchant>
 
-    suspend fun getMerchantFromId(id: Long): Merchant
+    fun getMerchantFromId(id: Long): Flow<Merchant>
 
     suspend fun getTotalIncomeAndeExpenseFromIds(ids: List<Long>): IncomeAndExpense
 

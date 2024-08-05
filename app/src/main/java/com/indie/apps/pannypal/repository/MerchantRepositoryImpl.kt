@@ -5,7 +5,6 @@ import androidx.paging.PagingConfig
 import com.indie.apps.pannypal.data.Paging.BasePagingSource
 import com.indie.apps.pannypal.data.dao.MerchantDao
 import com.indie.apps.pannypal.data.entity.Merchant
-import com.indie.apps.pannypal.data.module.IncomeAndExpense
 import com.indie.apps.pannypal.presentation.ui.common.Util
 import javax.inject.Inject
 
@@ -20,7 +19,7 @@ class MerchantRepositoryImpl @Inject constructor(private val merchantDao: Mercha
     override fun getMerchantList() =
         merchantDao.getMerchantList()
 
-    override suspend fun getMerchantFromId(id: Long) = merchantDao.getMerchantFromId(id)
+    override fun getMerchantFromId(id: Long) = merchantDao.getMerchantFromId(id)
 
     override suspend fun getTotalIncomeAndeExpenseFromIds(ids: List<Long>) =
         merchantDao.getTotalIncomeAndeExpenseFromIds(ids)

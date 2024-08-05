@@ -6,8 +6,8 @@ import androidx.room.Query
 import androidx.room.Transaction
 import com.indie.apps.pannypal.data.entity.Merchant
 import com.indie.apps.pannypal.data.module.IncomeAndExpense
-import com.indie.apps.pannypal.data.module.MerchantDataWithName
 import com.indie.apps.pannypal.data.module.MerchantNameAndDetails
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MerchantDao : BaseDao<Merchant> {
@@ -27,11 +27,11 @@ interface MerchantDao : BaseDao<Merchant> {
 
     @Transaction
     @Query("SELECT * FROM merchant where id = :id")
-    suspend fun getMerchantFromId(id: Long): Merchant
+    fun getMerchantFromId(id: Long): Flow<Merchant>
 
     @Transaction
     @Query("SELECT * FROM merchant ORDER BY date_milli DESC")
-    fun getMerchantList(): PagingSource<Int,Merchant>
+    fun getMerchantList(): PagingSource<Int, Merchant>
 
     @Transaction
     @Query("SELECT id, name, details FROM merchant WHERE name LIKE  '%' || :searchQuery || '%' OR details LIKE  '%' || :searchQuery || '%'ORDER BY date_milli DESC LIMIT :limit OFFSET :offset")
@@ -47,7 +47,7 @@ interface MerchantDao : BaseDao<Merchant> {
 
     @Transaction
     @Query("SELECT * FROM merchant WHERE name LIKE  '%' || :searchQuery || '%' OR details LIKE  '%' || :searchQuery || '%' ORDER BY date_milli DESC")
-    fun searchMerchantList(searchQuery: String): PagingSource<Int,Merchant>
+    fun searchMerchantList(searchQuery: String): PagingSource<Int, Merchant>
 
 
     @Transaction
@@ -66,13 +66,15 @@ interface MerchantDao : BaseDao<Merchant> {
     ): Int
 
     @Transaction
-    @Query("""
+    @Query(
+        """
         SELECT
             SUM(income_amt) as totalIncome,
             SUM(expense_amt) as totalExpense
         FROM merchant
         WHERE ID IN (:ids)
-    """)
-    suspend fun getTotalIncomeAndeExpenseFromIds(ids : List<Long>): IncomeAndExpense
+    """
+    )
+    suspend fun getTotalIncomeAndeExpenseFromIds(ids: List<Long>): IncomeAndExpense
 
 }

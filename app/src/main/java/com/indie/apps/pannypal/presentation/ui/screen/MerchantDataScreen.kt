@@ -3,7 +3,6 @@ package com.indie.apps.pannypal.presentation.ui.screen
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -28,7 +27,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.indie.apps.pannypal.R
-import com.indie.apps.pannypal.data.entity.Merchant
 import com.indie.apps.pannypal.presentation.ui.common.Util
 import com.indie.apps.pannypal.presentation.ui.component.DeleteAlertDialog
 import com.indie.apps.pannypal.presentation.ui.component.screen.MerchantDataBottomBar
@@ -36,31 +34,19 @@ import com.indie.apps.pannypal.presentation.ui.component.screen.MerchantDataDate
 import com.indie.apps.pannypal.presentation.ui.component.screen.MerchantDataExpenseAmount
 import com.indie.apps.pannypal.presentation.ui.component.screen.MerchantDataIncomeAmount
 import com.indie.apps.pannypal.presentation.ui.component.screen.MerchantDataTopBar
-import com.indie.apps.pannypal.presentation.ui.component.screen.MerchantListItem
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 import com.indie.apps.pannypal.presentation.viewmodel.MerchantDataViewModel
-import com.indie.apps.pannypal.util.Resource
 
 @Composable
 fun MerchantDataScreen(
     merchantDataViewModel: MerchantDataViewModel = hiltViewModel(),
     onProfileClick: () -> Unit,
     onNavigationUp: () -> Unit,
+    onEditClick: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
-    val merchantState by merchantDataViewModel.merchantState.collectAsStateWithLifecycle()
-
-    var merchant : Merchant? by remember {
-        mutableStateOf(null)
-    }
-
-    when (merchantState) {
-        is Resource.Loading -> null
-        is Resource.Success -> {merchant = merchantState.data}
-
-        is Resource.Error -> null
-    }
+    val merchant by merchantDataViewModel.merchantState.collectAsStateWithLifecycle()
 
     val lazyPagingData = merchantDataViewModel.pagedData.collectAsLazyPagingItems()
     merchantDataViewModel.pagingState.update(lazyPagingData)
@@ -73,14 +59,14 @@ fun MerchantDataScreen(
                 selectCount = merchantDataViewModel.selectedList.size,
                 name = merchant?.name ?: "",
                 description = merchant?.details ?: "",
-                onClick =onProfileClick,
+                onClick = onProfileClick,
                 onNavigationUp = onNavigationUp,
                 onCloseClick = {
                     merchantDataViewModel.clearSelection()
                 }
             )
         }
-    ){padding->
+    ) { padding ->
         Column(
             modifier = modifier
                 .padding(padding)
@@ -96,7 +82,7 @@ fun MerchantDataScreen(
                 ) {
                     CircularProgressIndicator()
                 }
-            }else {
+            } else {
 
                 val scrollState: LazyListState = rememberLazyListState(
                     merchantDataViewModel.scrollIndex,
@@ -127,10 +113,12 @@ fun MerchantDataScreen(
                         val data = lazyPagingData[index]
                         if (data != null) {
                             val currentDate = Util.getDateFromMillis(data.dateInMilli)
-                            val previousDate = if(index != lazyPagingData.itemCount -1) lazyPagingData[index+1]?.let {
-                                Util.getDateFromMillis(
-                                    it.dateInMilli)
-                            } else ""
+                            val previousDate =
+                                if (index != lazyPagingData.itemCount - 1) lazyPagingData[index + 1]?.let {
+                                    Util.getDateFromMillis(
+                                        it.dateInMilli
+                                    )
+                                } else ""
 
                             if (data.type >= 0) {
                                 MerchantDataIncomeAmount(
@@ -143,13 +131,12 @@ fun MerchantDataScreen(
                                 MerchantDataExpenseAmount(
                                     isSelected = merchantDataViewModel.selectedList.contains(data.id),
                                     data = data,
-                                    onClick = { merchantDataViewModel.onItemClick(data.id)},
+                                    onClick = { merchantDataViewModel.onItemClick(data.id) },
                                     onLongClick = { merchantDataViewModel.onItemLongClick(data.id) }
                                 )
                             }
 
-                            if(currentDate != previousDate)
-                            {
+                            if (currentDate != previousDate) {
                                 MerchantDataDateItem(
                                     dateMillis = data.dateInMilli
                                 )
@@ -173,13 +160,14 @@ fun MerchantDataScreen(
                 totalExpense = merchant?.expenseAmount ?: 0.0,
                 isEditable = merchantDataViewModel.isEditable,
                 isDeletable = merchantDataViewModel.isDeletable,
-                onEditClick = {},
-                onDeleteClick = {openAlertDialog = true}
+                onEditClick = { merchantDataViewModel.onEditClick { onEditClick(it) } },
+                onDeleteClick = { openAlertDialog = true }
             )
 
         }
         val context = LocalContext.current
-        val merchantDataDeleteToast = stringResource(id = R.string.merchant_data_delete_success_message)
+        val merchantDataDeleteToast =
+            stringResource(id = R.string.merchant_data_delete_success_message)
 
         if (openAlertDialog) {
             DeleteAlertDialog(
@@ -203,7 +191,8 @@ private fun MerchantDataScreenPreview() {
     PannyPalTheme {
         MerchantDataScreen(
             onProfileClick = {},
-            onNavigationUp = {}
+            onNavigationUp = {},
+            onEditClick = {}
         )
     }
 }

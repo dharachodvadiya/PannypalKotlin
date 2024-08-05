@@ -10,7 +10,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.indie.apps.pannypal.data.entity.MerchantData
 import com.indie.apps.pannypal.domain.usecase.DeleteMultipleMerchantDataUseCase
-import com.indie.apps.pannypal.domain.usecase.DeleteMultipleMerchantUseCase
 import com.indie.apps.pannypal.domain.usecase.GetMerchantDataListFromMerchantIdUseCase
 import com.indie.apps.pannypal.domain.usecase.GetMerchantFromIdUseCase
 import com.indie.apps.pannypal.presentation.ui.common.Util
@@ -43,7 +42,7 @@ class MerchantDataViewModel @Inject constructor(
 
     val merchantState = getMerchantFromIdUseCase
         .getData(merchantId)
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), Resource.Loading())
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), null)
 
     val pagedData = getMerchantDataListFromMerchantId
         .loadData(merchantId)
@@ -52,8 +51,7 @@ class MerchantDataViewModel @Inject constructor(
     val pagingState by mutableStateOf(PagingState<MerchantData>())
 
 
-    fun onItemClick(id : Long)
-    {
+    fun onItemClick(id: Long) {
         if (!isEditable && !isDeletable) {
             //callBack(id)
         } else {
@@ -61,13 +59,12 @@ class MerchantDataViewModel @Inject constructor(
         }
     }
 
-    fun onItemLongClick(id : Long)
-    {
+    fun onItemLongClick(id: Long) {
         setSelectItem(id)
     }
-    private fun setSelectItem(id: Long)
-    {
-        if(selectedList.contains(id))
+
+    private fun setSelectItem(id: Long) {
+        if (selectedList.contains(id))
             selectedList.remove(id)
         else
             selectedList.add(id)
@@ -75,14 +72,12 @@ class MerchantDataViewModel @Inject constructor(
         changeUpdateState()
     }
 
-    fun clearSelection()
-    {
+    fun clearSelection() {
         selectedList.clear()
         changeUpdateState()
     }
 
-    private fun changeUpdateState()
-    {
+    private fun changeUpdateState() {
         val selectedCount = selectedList.size
         if (selectedCount == 1) {
             isEditable = true
@@ -96,11 +91,10 @@ class MerchantDataViewModel @Inject constructor(
         }
     }
 
-    fun onDeleteDialogClick(onSuccess : ()->Unit)
-    {
+    fun onDeleteDialogClick(onSuccess: () -> Unit) {
         viewModelScope.launch {
             deleteMultipleMerchantDataUseCase
-                .deleteData(merchantId,selectedList)
+                .deleteData(merchantId, selectedList)
                 .collect {
                     when (it) {
                         is Resource.Loading -> {}
@@ -113,6 +107,14 @@ class MerchantDataViewModel @Inject constructor(
                         }
                     }
                 }
+        }
+
+    }
+
+    fun onEditClick(onSuccess: (Long) -> Unit) {
+        if (selectedList.size > 0) {
+            onSuccess(selectedList[0])
+            clearSelection()
         }
 
     }

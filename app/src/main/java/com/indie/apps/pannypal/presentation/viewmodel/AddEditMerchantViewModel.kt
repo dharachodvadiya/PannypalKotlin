@@ -35,25 +35,23 @@ class AddEditMerchantViewModel @Inject constructor(
 
     private var editId: Long? = null
 
-    private var editMerchant : Merchant? = null
+    private var editMerchant: Merchant? = null
 
     fun setEditId(id: Long?) {
         editId = id
-        if(editId != null)
-        {
+        if (editId != null) {
             viewModelScope.launch {
                 getMerchantFromIdUseCase
                     .getData(editId!!)
                     .collect {
-                        if(it is Resource.Success && it.data != null)
-                        {
-                            editMerchant = it.data
+                        if (it != null) {
+                            editMerchant = it
 
-                            merchantName.text = it.data.name
-                            phoneNumber.text = it.data.phoneNumber ?: ""
-                            description.text = it.data.details ?: ""
-                            if(!it.data.countryCode.isNullOrEmpty())
-                                countryCode = it.data.countryCode
+                            merchantName.text = it.name
+                            phoneNumber.text = it.phoneNumber ?: ""
+                            description.text = it.details ?: ""
+                            if (!it.countryCode.isNullOrEmpty())
+                                countryCode = it.countryCode
                         }
                     }
             }
@@ -81,9 +79,8 @@ class AddEditMerchantViewModel @Inject constructor(
 
                 viewModelScope.launch {
 
-                    if (editId != null ) {
-                        if(editMerchant != null)
-                        {
+                    if (editId != null) {
+                        if (editMerchant != null) {
                             val merchant = editMerchant!!.copy(
                                 id = editId!!,
                                 name = merchantName.text.trim(),
@@ -111,7 +108,7 @@ class AddEditMerchantViewModel @Inject constructor(
                                 }
                         }
 
-                    }else{
+                    } else {
                         val merchant = Merchant(
                             name = merchantName.text.trim(),
                             phoneNumber = phoneNumber.text.trim(),

@@ -1,9 +1,7 @@
 package com.indie.apps.pannypal.presentation.ui.component.screen
 
-import android.icu.util.CurrencyAmount
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -12,11 +10,8 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -25,12 +20,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.DeleteOutline
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -39,21 +30,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.draw.drawWithCache
-import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.semantics.role
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -64,7 +47,6 @@ import com.indie.apps.pannypal.presentation.ui.common.Util
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.ListItem
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.RoundImage
-import com.indie.apps.pannypal.presentation.ui.component.custom.composable.SearchView
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.TopBar
 import com.indie.apps.pannypal.presentation.ui.component.linearGradientsBrush
 import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
@@ -77,12 +59,12 @@ fun MerchantDataTopBar(
     name: String = "",
     description: String = "",
     onClick: () -> Unit,
-    onCloseClick : ()-> Unit = {},
+    onCloseClick: () -> Unit = {},
     onNavigationUp: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     TopBar(
-        isBackEnable = selectCount ==0,
+        isBackEnable = selectCount == 0,
         onBackClick = onNavigationUp,
         content = {
             MerchantDataTopBarItem(
@@ -103,7 +85,7 @@ private fun MerchantDataTopBarItem(
     name: String = "",
     description: String = "",
     onClick: () -> Unit,
-    onCloseClick : ()-> Unit = {},
+    onCloseClick: () -> Unit = {},
     modifier: Modifier = Modifier.fillMaxWidth()
 ) {
     val imageVector = Icons.Default.Person
@@ -113,8 +95,7 @@ private fun MerchantDataTopBarItem(
     ListItem(
         onClick = onClick,
         leadingIcon = {
-            if(selectCount >0)
-            {
+            if (selectCount > 0) {
                 Icon(
                     imageVector = Icons.Default.Close,
                     contentDescription = "Close",
@@ -122,7 +103,7 @@ private fun MerchantDataTopBarItem(
                         onCloseClick()
                     }
                 )
-            }else {
+            } else {
                 RoundImage(
                     imageVector = imageVector,
                     brush = linearGradientsBrush(MyAppTheme.colors.gradientBlue),
@@ -135,8 +116,7 @@ private fun MerchantDataTopBarItem(
         },
         content = {
             Column {
-                if(selectCount >0)
-                {
+                if (selectCount > 0) {
                     Text(
                         text = "$selectCount ${stringResource(id = R.string.selected)}",
                         style = MyAppTheme.typography.Semibold56,
@@ -144,16 +124,15 @@ private fun MerchantDataTopBarItem(
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
-                }else{
+                } else {
                     Text(
-                        text = if(name.isNullOrEmpty()) stringResource(id = R.string.no_name) else name,
+                        text = if (name.isNullOrEmpty()) stringResource(id = R.string.no_name) else name,
                         style = MyAppTheme.typography.Semibold56,
                         color = MyAppTheme.colors.black,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
-                    if(!description.isNullOrEmpty())
-                    {
+                    if (!description.isNullOrEmpty()) {
                         Text(
                             text = description,
                             style = MyAppTheme.typography.Medium44,
@@ -212,10 +191,13 @@ fun MerchantDataBottomBar(
             totalIncome = totalIncome,
             totalExpense = totalExpense,
             modifier = modifier
-                .padding(top = 7.dp,
+                .padding(
+                    top = 7.dp,
                     bottom = 0.dp,
                     start = 0.dp,
-                    end = 0.dp))
+                    end = 0.dp
+                )
+        )
     }
 
 }
@@ -229,7 +211,7 @@ fun MerchantDataIncomeAmount(
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val bgColor = if(isSelected) MyAppTheme.colors.brandBg  else MyAppTheme.colors.white
+    val bgColor = if (isSelected) MyAppTheme.colors.brandBg else MyAppTheme.colors.white
 
     Row(
         modifier = modifier
@@ -259,13 +241,13 @@ fun MerchantDataIncomeAmount(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MerchantDataExpenseAmount(
-    isSelected:Boolean = false,
+    isSelected: Boolean = false,
     data: MerchantData,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val bgColor = if(isSelected) MyAppTheme.colors.brandBg  else MyAppTheme.colors.white
+    val bgColor = if (isSelected) MyAppTheme.colors.brandBg else MyAppTheme.colors.white
 
     Row(
         modifier = modifier
@@ -283,7 +265,7 @@ fun MerchantDataExpenseAmount(
     ) {
 
         MerchantDataAmountItem(
-            amount = data.amount *-1,
+            amount = data.amount * -1,
             description = data.details,
             contentAlignment = Alignment.End,
             colorStroke = MyAppTheme.colors.redBg
@@ -294,11 +276,11 @@ fun MerchantDataExpenseAmount(
 
 @Composable
 fun MerchantDataDateItem(
-    dateMillis : Long = 0,
+    dateMillis: Long = 0,
     modifier: Modifier = Modifier,
-){
+) {
     Row(
-        modifier= modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 5.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -307,7 +289,8 @@ fun MerchantDataDateItem(
             modifier = Modifier
                 .height(1.dp)
                 .weight(1f)
-                .background(color = MyAppTheme.colors.gray0))
+                .background(color = MyAppTheme.colors.gray0)
+        )
         Text(
             text = Util.getDateFromMillis(dateMillis, SimpleDateFormat("dd MMMM yyyy")),
             style = MyAppTheme.typography.Medium40,
@@ -320,7 +303,8 @@ fun MerchantDataDateItem(
             modifier = Modifier
                 .height(2.dp)
                 .weight(1f)
-                .background(color = MyAppTheme.colors.gray0))
+                .background(color = MyAppTheme.colors.gray0)
+        )
     }
 }
 
@@ -427,9 +411,17 @@ private fun MerchantDataBottomTotal(
             .padding(horizontal = dimensionResource(id = R.dimen.padding)),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        MerchantDataTotalIncomeExpense(amount = totalIncome, modifier = Modifier.weight(1f))
+        MerchantDataTotalIncomeExpense(
+            amount = totalIncome,
+            modifier = Modifier.weight(1f),
+            strokeColor = MyAppTheme.colors.greenBg
+        )
         Spacer(modifier = Modifier.width(7.dp))
-        MerchantDataTotalIncomeExpense(amount = totalExpense *-1, modifier = Modifier.weight(1f))
+        MerchantDataTotalIncomeExpense(
+            amount = totalExpense * -1,
+            modifier = Modifier.weight(1f),
+            strokeColor = MyAppTheme.colors.redBg
+        )
         Spacer(modifier = Modifier.width(7.dp))
         MerchantDataTotal(amount = totalIncome - totalExpense, modifier = Modifier.weight(1f))
     }
@@ -438,10 +430,9 @@ private fun MerchantDataBottomTotal(
 @Composable
 private fun MerchantDataTotalIncomeExpense(
     amount: Double = 0.0,
+    strokeColor: Color,
     modifier: Modifier = Modifier
 ) {
-    val strokeColor = if (amount >= 0) MyAppTheme.colors.greenBg else MyAppTheme.colors.redBg
-
     Box(
         modifier = modifier
             .height(dimensionResource(id = R.dimen.top_bar_profile))

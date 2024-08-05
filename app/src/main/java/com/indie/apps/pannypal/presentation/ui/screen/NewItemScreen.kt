@@ -1,6 +1,5 @@
 package com.indie.apps.pannypal.presentation.ui.screen
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -9,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,7 +29,7 @@ fun NewItemScreen(
     onMerchantSelect: () -> Unit,
     onPaymentAdd: () -> Unit,
     onNavigationUp: () -> Unit,
-    onSaveSuccess: () -> Unit,
+    onSaveSuccess: (Boolean) -> Unit,
     merchant: MerchantNameAndDetails? = null,
     payment: Payment? = null,
 
@@ -90,9 +88,11 @@ fun NewItemScreen(
             )
             Spacer(modifier = Modifier.weight(1f))
             BottomSaveButton(
-                onClick = { newItemViewModel.addMerchantData(onSuccess = {
-                    onSaveSuccess()
-                }) },
+                onClick = {
+                    newItemViewModel.addOrEditMerchantData(onSuccess = {
+                        onSaveSuccess(it)
+                    })
+                },
                 enabled = newItemViewModel.enableButton,
                 modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.padding))
             )

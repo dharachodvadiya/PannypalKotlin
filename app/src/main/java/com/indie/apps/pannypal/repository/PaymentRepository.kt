@@ -8,6 +8,8 @@ interface PaymentRepository : BaseRepository<Payment> {
 
     suspend fun deleteCustomPayment(paymentId: Long): Int
 
+    suspend fun getPaymentFromId(paymentId: Long): Payment
+
     fun getPaymentList(): Flow<List<Payment>>
 
     suspend fun insertPaymentList(payments: List<Payment>): List<Long>

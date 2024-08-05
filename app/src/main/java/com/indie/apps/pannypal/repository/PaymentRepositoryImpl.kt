@@ -10,6 +10,9 @@ class PaymentRepositoryImpl @Inject constructor(private val paymentDao: PaymentD
     override suspend fun deleteCustomPayment(paymentId: Long) =
         paymentDao.deleteCustomPayment(paymentId)
 
+    override suspend fun getPaymentFromId(paymentId: Long) =
+        paymentDao.getPaymentFromId(paymentId)
+
     override fun getPaymentList() = paymentDao.getPaymentList()
 
     override suspend fun insertPaymentList(payments: List<Payment>) =
