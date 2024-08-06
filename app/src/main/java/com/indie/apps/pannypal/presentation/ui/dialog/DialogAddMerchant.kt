@@ -2,11 +2,13 @@ package com.indie.apps.pannypal.presentation.ui.dialog
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.indie.apps.pannypal.R
 import com.indie.apps.pannypal.data.entity.Merchant
 import com.indie.apps.pannypal.presentation.ui.component.BottomSaveButton
@@ -27,23 +29,29 @@ fun DialogAddMerchant(
     editId: Long? = null,
 ) {
 
-    addMerchantViewModel.countryCode = code ?: getDefaultPhoneCode(LocalContext.current)
+    val countryCode by addMerchantViewModel.countryCode.collectAsStateWithLifecycle()
+    addMerchantViewModel.setCountryCode(code ?: getDefaultPhoneCode(LocalContext.current))
     addMerchantViewModel.setEditId(editId) // always call after set country code
+
+    val enableButton by addMerchantViewModel.enableButton.collectAsStateWithLifecycle()
+    val merchantName by addMerchantViewModel.merchantName.collectAsStateWithLifecycle()
+    val phoneNumber by addMerchantViewModel.phoneNumber.collectAsStateWithLifecycle()
+    val description by addMerchantViewModel.description.collectAsStateWithLifecycle()
 
     MyAppDialog(title = if (editId == null) R.string.add_merchant else R.string.edit_merchant,
         onNavigationUp = {
-            if (addMerchantViewModel.enableButton) onNavigationUp()
+            if (enableButton) onNavigationUp()
         },
         content = {
             AddMerchantDialogField(
-                nameState = addMerchantViewModel.merchantName,
-                phoneNoState = addMerchantViewModel.phoneNumber,
-                descState = addMerchantViewModel.description,
+                nameState = merchantName,
+                phoneNoState = phoneNumber,
+                descState = description,
                 onCpp = {
-                    if (addMerchantViewModel.enableButton)
+                    if (enableButton)
                         onCpp()
                 },
-                countryCode = addMerchantViewModel.countryCode!!
+                countryCode = countryCode
             )
         }, bottomContent = {
             BottomSaveButton(
@@ -52,7 +60,7 @@ fun DialogAddMerchant(
                         onSuccess = onSaveSuccess
                     )
                 },
-                enabled = addMerchantViewModel.enableButton,
+                enabled = enableButton,
                 modifier = Modifier.padding(dimensionResource(id = R.dimen.padding))
             )
         }, modifier = modifier

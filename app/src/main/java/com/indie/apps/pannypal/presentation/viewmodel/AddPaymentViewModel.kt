@@ -1,8 +1,5 @@
 package com.indie.apps.pannypal.presentation.viewmodel
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.indie.apps.pannypal.data.entity.Payment
@@ -11,6 +8,7 @@ import com.indie.apps.pannypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pannypal.util.ErrorMessage
 import com.indie.apps.pannypal.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,20 +16,19 @@ import javax.inject.Inject
 class AddPaymentViewModel @Inject constructor(private val addPaymentUseCase: AddPaymentUseCase) :
     ViewModel() {
 
-    val paymentTypeState by mutableStateOf(TextFieldState())
-    var enableButton by (mutableStateOf(true))
-        private set
+    val paymentTypeState = MutableStateFlow(TextFieldState())
+    val enableButton = MutableStateFlow(true)
 
     fun addPayment(onSuccess: (Payment?) -> Unit) {
 
-        if (enableButton) {
-            enableButton = false
-            if (paymentTypeState.text.trim().isNullOrEmpty()) {
-                paymentTypeState.setError(ErrorMessage.AMOUNT_PAYMENT_TYPE)
-                enableButton = true
+        if (enableButton.value) {
+            enableButton.value = false
+            if (paymentTypeState.value.text.trim().isNullOrEmpty()) {
+                paymentTypeState.value.setError(ErrorMessage.AMOUNT_PAYMENT_TYPE)
+                enableButton.value = true
             } else {
                 viewModelScope.launch {
-                    val payment = Payment(name = paymentTypeState.text.trim())
+                    val payment = Payment(name = paymentTypeState.value.text.trim())
                     addPaymentUseCase
                         .addPayment(payment)
                         .collect {
@@ -44,12 +41,12 @@ class AddPaymentViewModel @Inject constructor(private val addPaymentUseCase: Add
                                         )
                                     })
 
-                                    enableButton = true
+                                    enableButton.value = true
                                 }
 
                                 is Resource.Error -> {
-                                    paymentTypeState.setError(ErrorMessage.PAYMENT_TYPE_EXIST)
-                                    enableButton = true
+                                    paymentTypeState.value.setError(ErrorMessage.PAYMENT_TYPE_EXIST)
+                                    enableButton.value = true
                                 }
                             }
                         }

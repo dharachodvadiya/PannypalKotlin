@@ -4,8 +4,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.indie.apps.pannypal.data.entity.Merchant
-import com.indie.apps.pannypal.data.entity.User
-import com.indie.apps.pannypal.domain.usecase.GetMerchantDataFromIdUseCase
 import com.indie.apps.pannypal.domain.usecase.GetMerchantFromIdUseCase
 import com.indie.apps.pannypal.presentation.ui.common.Util
 import com.indie.apps.pannypal.util.Resource
@@ -19,10 +17,10 @@ import javax.inject.Inject
 class MerchantProfileViewModel @Inject constructor(
     private val getMerchantFromIdUseCase: GetMerchantFromIdUseCase,
     private val savedStateHandle: SavedStateHandle
-): ViewModel() {
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow<Resource<Merchant>>(Resource.Loading())
-    val uiState= _uiState.asStateFlow()
+    val uiState = _uiState.asStateFlow()
 
     init {
         getData()

@@ -1,9 +1,11 @@
 package com.indie.apps.pannypal.presentation.ui.dialog
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.indie.apps.pannypal.R
 import com.indie.apps.pannypal.data.module.MerchantNameAndDetails
@@ -27,9 +29,9 @@ fun DialogSearchMerchant(
 ) {
 
     val lazyPagingData = searchMerchantViewModel.pagedData.collectAsLazyPagingItems()
-    searchMerchantViewModel.pagingState.update(lazyPagingData)
-
-    //val uiState by searchMerchantViewModel.uiState.collectAsStateWithLifecycle()
+    val pagingState by searchMerchantViewModel.pagingState.collectAsStateWithLifecycle()
+    pagingState.update(lazyPagingData)
+    val uiState by searchMerchantViewModel.searchTextState.collectAsStateWithLifecycle()
 
     var job: Job? = null
     MyAppDialog(
@@ -40,7 +42,7 @@ fun DialogSearchMerchant(
             SearchDialogField(
                 onAddClick = onAddClick,
                 onItemClick = onSelectMerchant,
-                textState = searchMerchantViewModel.searchTextState,
+                textState = uiState,
                 onTextChange = {
                     job?.cancel()
                     job = MainScope().launch {
@@ -49,8 +51,8 @@ fun DialogSearchMerchant(
                     }
                 },
                 dataList = lazyPagingData,
-                isRefresh = searchMerchantViewModel.pagingState.isRefresh,
-                isLoadMore = searchMerchantViewModel.pagingState.isLoadMore
+                isRefresh = pagingState.isRefresh,
+                isLoadMore = pagingState.isLoadMore
             )
         },
         modifier = modifier,

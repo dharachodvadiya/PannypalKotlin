@@ -22,6 +22,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.indie.apps.pannypal.R
@@ -49,7 +50,15 @@ fun MerchantScreen(
     val merchantDeleteToast = stringResource(id = R.string.merchant_delete_success_message)
     val merchantEditToast = stringResource(id = R.string.merchant_edit_success_message)
     val lazyPagingData = merchantViewModel.pagedData.collectAsLazyPagingItems()
-    merchantViewModel.pagingState.update(lazyPagingData)
+    val pagingState by merchantViewModel.pagingState.collectAsStateWithLifecycle()
+    pagingState.update(lazyPagingData)
+
+    val searchTextState by merchantViewModel.searchTextState.collectAsStateWithLifecycle()
+    val isEditable by merchantViewModel.isEditable.collectAsStateWithLifecycle()
+    val isDeletable by merchantViewModel.isDeletable.collectAsStateWithLifecycle()
+    val scrollOffset by merchantViewModel.scrollOffset.collectAsStateWithLifecycle()
+    val scrollIndex by merchantViewModel.scrollIndex.collectAsStateWithLifecycle()
+    val selectedList = merchantViewModel.selectedList
 
     var isEditSuccessState by remember {
         mutableStateOf(false)
@@ -68,12 +77,12 @@ fun MerchantScreen(
     var job: Job? = null
     Scaffold(topBar = {
         MerchantTopBar(
-            title = if (merchantViewModel.selectedList.size > 0) "${merchantViewModel.selectedList.size} " + stringResource(
+            title = if (selectedList.size > 0) "${selectedList.size} " + stringResource(
                 id = R.string.selected
             ) else "",
-            textState = merchantViewModel.searchTextState,
-            isEditable = merchantViewModel.isEditable,
-            isDeletable = merchantViewModel.isDeletable,
+            textState = searchTextState,
+            isEditable = isEditable,
+            isDeletable = isDeletable,
             onAddClick = { merchantViewModel.onAddClick { onAddClick() } },
             onEditClick = { merchantViewModel.onEditClick { onEditClick(it) } },
             onDeleteClick = { merchantViewModel.onDeleteClick { openAlertDialog = true } },
@@ -87,7 +96,7 @@ fun MerchantScreen(
             })
     }) { innerPadding ->
 
-        if (merchantViewModel.pagingState.isRefresh) {
+        if (pagingState.isRefresh) {
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
@@ -99,15 +108,17 @@ fun MerchantScreen(
         } else {
 
             val scrollState: LazyListState = rememberLazyListState(
-                merchantViewModel.scrollIndex,
-                merchantViewModel.scrollOffset
+                scrollIndex,
+                scrollOffset
             )
 
             // after each scroll, update values in ViewModel
             LaunchedEffect(key1 = scrollState.isScrollInProgress) {
                 if (!scrollState.isScrollInProgress) {
-                    merchantViewModel.scrollIndex = scrollState.firstVisibleItemIndex
-                    merchantViewModel.scrollOffset = scrollState.firstVisibleItemScrollOffset
+                    merchantViewModel.setScrollVal(
+                        scrollIndex = scrollState.firstVisibleItemIndex,
+                        scrollOffset = scrollState.firstVisibleItemScrollOffset
+                    )
                 }
             }
 
@@ -124,12 +135,12 @@ fun MerchantScreen(
 
                         MerchantListItem(
                             item = data,
-                            isSelected = merchantViewModel.selectedList.contains(data.id),
+                            isSelected = selectedList.contains(data.id),
                             onClick = { merchantViewModel.onItemClick(data.id) { onMerchantClick(it) } },
                             onLongClick = { merchantViewModel.onItemLongClick(data.id) }
                         )
 
-                        if (merchantViewModel.pagingState.isLoadMore && index == lazyPagingData.itemCount - 1) {
+                        if (pagingState.isLoadMore && index == lazyPagingData.itemCount - 1) {
                             Box(
                                 contentAlignment = Alignment.Center,
                                 modifier = Modifier.fillMaxWidth()

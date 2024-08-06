@@ -1,8 +1,5 @@
 package com.indie.apps.pannypal.presentation.viewmodel
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.indie.apps.pannypal.data.entity.User
@@ -10,9 +7,7 @@ import com.indie.apps.pannypal.domain.usecase.GetUserProfileUseCase
 import com.indie.apps.pannypal.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,7 +22,7 @@ class ProfileViewModel @Inject constructor(private val userProfileUseCase: GetUs
         private set*/
 
     private val _uiState = MutableStateFlow<Resource<User>>(Resource.Loading())
-    val uiState= _uiState.asStateFlow()
+    val uiState = _uiState.asStateFlow()
 
     //private val trigger = MutableSharedFlow<Unit>(replay = 1)
 

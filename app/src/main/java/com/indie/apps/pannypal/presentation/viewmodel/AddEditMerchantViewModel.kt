@@ -1,8 +1,5 @@
 package com.indie.apps.pannypal.presentation.viewmodel
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.indie.apps.pannypal.data.entity.Merchant
@@ -15,6 +12,7 @@ import com.indie.apps.pannypal.util.ErrorMessage
 import com.indie.apps.pannypal.util.Resource
 import com.mcode.ccp.data.utils.getLibCountries
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,13 +23,12 @@ class AddEditMerchantViewModel @Inject constructor(
     private val getMerchantFromIdUseCase: GetMerchantFromIdUseCase
 ) : ViewModel() {
 
-    val merchantName by mutableStateOf(TextFieldState())
-    val phoneNumber by mutableStateOf(TextFieldState())
-    val description by mutableStateOf(TextFieldState())
-    var countryCode: String? by mutableStateOf(null)
+    val merchantName = MutableStateFlow(TextFieldState())
+    val phoneNumber = MutableStateFlow(TextFieldState())
+    val description = MutableStateFlow(TextFieldState())
+    val countryCode = MutableStateFlow("")
 
-    var enableButton by (mutableStateOf(true))
-        private set
+    val enableButton = MutableStateFlow(true)
 
     private var editId: Long? = null
 
@@ -47,11 +44,11 @@ class AddEditMerchantViewModel @Inject constructor(
                         if (it != null) {
                             editMerchant = it
 
-                            merchantName.text = it.name
-                            phoneNumber.text = it.phoneNumber ?: ""
-                            description.text = it.details ?: ""
+                            merchantName.value.text = it.name
+                            phoneNumber.value.text = it.phoneNumber ?: ""
+                            description.value.text = it.details ?: ""
                             if (!it.countryCode.isNullOrEmpty())
-                                countryCode = it.countryCode
+                                countryCode.value = it.countryCode
                         }
                     }
             }
@@ -60,20 +57,24 @@ class AddEditMerchantViewModel @Inject constructor(
 
     }
 
+    fun setCountryCode(code: String) {
+        countryCode.value = code
+    }
+
     fun addOrEditMerchant(onSuccess: (Merchant?, Boolean) -> Unit) {
-        if (enableButton) {
-            enableButton = false
+        if (enableButton.value) {
+            enableButton.value = false
             val isValidNum = Util.isValidPhoneNumber(
-                countryCode = getLibCountries.first { it.countryPhoneCode == countryCode }.countryCode,
-                phoneNumber = countryCode + phoneNumber.text
+                countryCode = getLibCountries.first { it.countryPhoneCode == countryCode.value }.countryCode,
+                phoneNumber = countryCode.value + phoneNumber.value.text
             )
 
-            if (merchantName.text.trim().isNullOrEmpty()) {
-                merchantName.setError(ErrorMessage.MERCHANT_NAME_EMPTY)
-                enableButton = true
-            } else if (!phoneNumber.text.trim().isNullOrEmpty() && !isValidNum) {
-                phoneNumber.setError(ErrorMessage.PHONE_NO_INVALID)
-                enableButton = true
+            if (merchantName.value.text.trim().isNullOrEmpty()) {
+                merchantName.value.setError(ErrorMessage.MERCHANT_NAME_EMPTY)
+                enableButton.value = true
+            } else if (!phoneNumber.value.text.trim().isNullOrEmpty() && !isValidNum) {
+                phoneNumber.value.setError(ErrorMessage.PHONE_NO_INVALID)
+                enableButton.value = true
             } else {
 
 
@@ -83,10 +84,10 @@ class AddEditMerchantViewModel @Inject constructor(
                         if (editMerchant != null) {
                             val merchant = editMerchant!!.copy(
                                 id = editId!!,
-                                name = merchantName.text.trim(),
-                                phoneNumber = phoneNumber.text.trim(),
-                                details = description.text.trim(),
-                                countryCode = countryCode,
+                                name = merchantName.value.text.trim(),
+                                phoneNumber = phoneNumber.value.text.trim(),
+                                details = description.value.text.trim(),
+                                countryCode = countryCode.value,
                                 dateInMilli = System.currentTimeMillis()
                             )
 
@@ -97,12 +98,12 @@ class AddEditMerchantViewModel @Inject constructor(
                                         is Resource.Loading -> {}
                                         is Resource.Success -> {
                                             onSuccess(merchant.copy(id = editId!!), true)
-                                            enableButton = true
+                                            enableButton.value = true
                                         }
 
                                         is Resource.Error -> {
-                                            merchantName.setError(ErrorMessage.MERCHANT_EXIST)
-                                            enableButton = true
+                                            merchantName.value.setError(ErrorMessage.MERCHANT_EXIST)
+                                            enableButton.value = true
                                         }
                                     }
                                 }
@@ -110,10 +111,10 @@ class AddEditMerchantViewModel @Inject constructor(
 
                     } else {
                         val merchant = Merchant(
-                            name = merchantName.text.trim(),
-                            phoneNumber = phoneNumber.text.trim(),
-                            details = description.text.trim(),
-                            countryCode = countryCode,
+                            name = merchantName.value.text.trim(),
+                            phoneNumber = phoneNumber.value.text.trim(),
+                            details = description.value.text.trim(),
+                            countryCode = countryCode.value,
                             dateInMilli = System.currentTimeMillis()
                         )
 
@@ -124,12 +125,12 @@ class AddEditMerchantViewModel @Inject constructor(
                                     is Resource.Loading -> {}
                                     is Resource.Success -> {
                                         onSuccess(merchant.copy(id = it.data!!), false)
-                                        enableButton = true
+                                        enableButton.value = true
                                     }
 
                                     is Resource.Error -> {
-                                        merchantName.setError(ErrorMessage.MERCHANT_EXIST)
-                                        enableButton = true
+                                        merchantName.value.setError(ErrorMessage.MERCHANT_EXIST)
+                                        enableButton.value = true
                                     }
                                 }
                             }

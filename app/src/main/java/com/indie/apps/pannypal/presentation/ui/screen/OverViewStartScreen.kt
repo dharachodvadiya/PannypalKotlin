@@ -33,11 +33,14 @@ fun OverViewStartScreen(
     modifier: Modifier = Modifier
 ) {
     val dataWithNameLazyPagingItems = overViewViewModel.pagedMerchantData.collectAsLazyPagingItems()
-    overViewViewModel.merchantDataWithNamePagingState.update(dataWithNameLazyPagingItems)
+    val merchantDataWithNamePagingState by overViewViewModel.merchantDataWithNamePagingState.collectAsStateWithLifecycle()
+    merchantDataWithNamePagingState.update(dataWithNameLazyPagingItems)
 
     val dailyTotalLazyPagingItems =
         overViewViewModel.pagedMerchantDataDailyTotal.collectAsLazyPagingItems()
-    overViewViewModel.merchantDataDailyTotalPagingState.update(dailyTotalLazyPagingItems)
+    val merchantDataDailyTotalPagingState by
+    overViewViewModel.merchantDataDailyTotalPagingState.collectAsStateWithLifecycle()
+    merchantDataDailyTotalPagingState.update(dailyTotalLazyPagingItems)
 
 
     val uiState by overViewViewModel.uiState.collectAsStateWithLifecycle()
@@ -66,8 +69,8 @@ fun OverViewStartScreen(
         Column(
             modifier = modifier.padding(innerPadding)
         ) {
-            if (overViewViewModel.merchantDataWithNamePagingState.isRefresh ||
-                overViewViewModel.merchantDataDailyTotalPagingState.isRefresh
+            if (merchantDataWithNamePagingState.isRefresh ||
+                merchantDataDailyTotalPagingState.isRefresh
             ) {
                 Box(
                     contentAlignment = Alignment.Center,
@@ -82,8 +85,8 @@ fun OverViewStartScreen(
                 OverviewList(
                     dataList = dataWithNameLazyPagingItems,
                     dailyTotalList = dailyTotalLazyPagingItems,
-                    isLoadMore = overViewViewModel.merchantDataWithNamePagingState.isLoadMore ||
-                            overViewViewModel.merchantDataDailyTotalPagingState.isLoadMore
+                    isLoadMore = merchantDataWithNamePagingState.isLoadMore ||
+                            merchantDataDailyTotalPagingState.isLoadMore
                 )
             }
 

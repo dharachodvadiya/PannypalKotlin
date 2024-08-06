@@ -123,8 +123,8 @@ fun NavGraphBuilder.MerchantRoute(
                 onNavigationUp = { navController.navigateUp() },
                 onMerchantSelect = { navController.navigate(DialogNav.SELECT_MERCHANT.route) },
                 onPaymentAdd = { navController.navigate(DialogNav.ADD_PAYMENT.route) },
-                merchant = merchant,
-                payment = payment,
+                merchantData = merchant,
+                paymentData = payment,
                 onSaveSuccess = {
                     Toast.makeText(context, merchantDataSaveToast, Toast.LENGTH_SHORT).show()
                     navController.navigateUp()

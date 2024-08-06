@@ -47,16 +47,22 @@ fun MerchantDataScreen(
 ) {
 
     val merchant by merchantDataViewModel.merchantState.collectAsStateWithLifecycle()
+    val selectedList = merchantDataViewModel.selectedList
+    val scrollIndex by merchantDataViewModel.scrollIndex.collectAsStateWithLifecycle()
+    val scrollOffset by merchantDataViewModel.scrollOffset.collectAsStateWithLifecycle()
+    val isEditable by merchantDataViewModel.isEditable.collectAsStateWithLifecycle()
+    val isDeletable by merchantDataViewModel.isDeletable.collectAsStateWithLifecycle()
 
     val lazyPagingData = merchantDataViewModel.pagedData.collectAsLazyPagingItems()
-    merchantDataViewModel.pagingState.update(lazyPagingData)
+    val pagingState by merchantDataViewModel.pagingState.collectAsStateWithLifecycle()
+    pagingState.update(lazyPagingData)
 
     var openAlertDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
             MerchantDataTopBar(
-                selectCount = merchantDataViewModel.selectedList.size,
+                selectCount = selectedList.size,
                 name = merchant?.name ?: "",
                 description = merchant?.details ?: "",
                 onClick = { merchant?.let { onProfileClick(it.id) } },
@@ -72,7 +78,7 @@ fun MerchantDataScreen(
                 .padding(padding)
         ) {
 
-            if (merchantDataViewModel.pagingState.isRefresh
+            if (pagingState.isRefresh
             ) {
                 Box(
                     contentAlignment = Alignment.Center,
@@ -85,16 +91,18 @@ fun MerchantDataScreen(
             } else {
 
                 val scrollState: LazyListState = rememberLazyListState(
-                    merchantDataViewModel.scrollIndex,
-                    merchantDataViewModel.scrollOffset
+                    scrollIndex,
+                    scrollOffset
                 )
 
                 // after each scroll, update values in ViewModel
                 LaunchedEffect(key1 = scrollState.isScrollInProgress) {
                     if (!scrollState.isScrollInProgress) {
-                        merchantDataViewModel.scrollIndex = scrollState.firstVisibleItemIndex
-                        merchantDataViewModel.scrollOffset =
-                            scrollState.firstVisibleItemScrollOffset
+
+                        merchantDataViewModel.setScrollVal(
+                            scrollIndex = scrollState.firstVisibleItemIndex,
+                            scrollOffset = scrollState.firstVisibleItemScrollOffset
+                        )
                     }
                 }
 
@@ -122,14 +130,14 @@ fun MerchantDataScreen(
 
                             if (data.type >= 0) {
                                 MerchantDataIncomeAmount(
-                                    isSelected = merchantDataViewModel.selectedList.contains(data.id),
+                                    isSelected = selectedList.contains(data.id),
                                     data = data,
                                     onClick = { merchantDataViewModel.onItemClick(data.id) },
                                     onLongClick = { merchantDataViewModel.onItemLongClick(data.id) }
                                 )
                             } else {
                                 MerchantDataExpenseAmount(
-                                    isSelected = merchantDataViewModel.selectedList.contains(data.id),
+                                    isSelected = selectedList.contains(data.id),
                                     data = data,
                                     onClick = { merchantDataViewModel.onItemClick(data.id) },
                                     onLongClick = { merchantDataViewModel.onItemLongClick(data.id) }
@@ -143,7 +151,7 @@ fun MerchantDataScreen(
                             }
                         }
 
-                        if (merchantDataViewModel.pagingState.isLoadMore && index == lazyPagingData.itemCount) {
+                        if (pagingState.isLoadMore && index == lazyPagingData.itemCount) {
                             Box(
                                 contentAlignment = Alignment.Center,
                                 modifier = Modifier
@@ -158,8 +166,8 @@ fun MerchantDataScreen(
             MerchantDataBottomBar(
                 totalIncome = merchant?.incomeAmount ?: 0.0,
                 totalExpense = merchant?.expenseAmount ?: 0.0,
-                isEditable = merchantDataViewModel.isEditable,
-                isDeletable = merchantDataViewModel.isDeletable,
+                isEditable = isEditable,
+                isDeletable = isDeletable,
                 onEditClick = { merchantDataViewModel.onEditClick { onEditClick(it) } },
                 onDeleteClick = { openAlertDialog = true }
             )

@@ -1,9 +1,6 @@
 package com.indie.apps.pannypal.presentation.viewmodel
 
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,6 +13,7 @@ import com.indie.apps.pannypal.presentation.ui.common.Util
 import com.indie.apps.pannypal.presentation.ui.state.PagingState
 import com.indie.apps.pannypal.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -31,14 +29,14 @@ class MerchantDataViewModel @Inject constructor(
 
     private val merchantId = savedStateHandle?.get<String>(Util.PARAM_MERCHANT_ID)?.toLong() ?: 0
 
-    var scrollIndex: Int by mutableStateOf(0)
-    var scrollOffset: Int by mutableStateOf(0)
+    var scrollIndex = MutableStateFlow(0)
+    var scrollOffset = MutableStateFlow(0)
 
     var selectedList = mutableStateListOf<Long>()
         private set
 
-    var isEditable by mutableStateOf(false)
-    var isDeletable by mutableStateOf(false)
+    var isEditable = MutableStateFlow(false)
+    var isDeletable = MutableStateFlow(false)
 
     val merchantState = getMerchantFromIdUseCase
         .getData(merchantId)
@@ -48,11 +46,15 @@ class MerchantDataViewModel @Inject constructor(
         .loadData(merchantId)
         .cachedIn(viewModelScope)
 
-    val pagingState by mutableStateOf(PagingState<MerchantData>())
+    val pagingState = MutableStateFlow(PagingState<MerchantData>())
 
+    fun setScrollVal(scrollIndex: Int, scrollOffset: Int) {
+        this.scrollIndex.value = scrollIndex
+        this.scrollOffset.value = scrollOffset
+    }
 
     fun onItemClick(id: Long) {
-        if (!isEditable && !isDeletable) {
+        if (!isEditable.value && !isDeletable.value) {
             //callBack(id)
         } else {
             setSelectItem(id)
@@ -80,14 +82,14 @@ class MerchantDataViewModel @Inject constructor(
     private fun changeUpdateState() {
         val selectedCount = selectedList.size
         if (selectedCount == 1) {
-            isEditable = true
-            isDeletable = true
+            isEditable.value = true
+            isDeletable.value = true
         } else if (selectedCount > 1) {
-            isEditable = false
-            isDeletable = true
+            isEditable.value = false
+            isDeletable.value = true
         } else {
-            isEditable = false
-            isDeletable = false
+            isEditable.value = false
+            isDeletable.value = false
         }
     }
 

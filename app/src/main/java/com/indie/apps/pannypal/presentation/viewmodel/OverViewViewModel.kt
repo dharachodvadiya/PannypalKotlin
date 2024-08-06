@@ -1,8 +1,5 @@
 package com.indie.apps.pannypal.presentation.viewmodel
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
@@ -16,6 +13,7 @@ import com.indie.apps.pannypal.presentation.ui.state.PagingState
 import com.indie.apps.pannypal.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
@@ -36,13 +34,13 @@ class OverViewViewModel @Inject constructor(
         getMerchantDataListWithMerchantNameUseCase
             .loadData()
             .cachedIn(viewModelScope)
-    var merchantDataWithNamePagingState by mutableStateOf(PagingState<MerchantDataWithName>())
+    var merchantDataWithNamePagingState = MutableStateFlow(PagingState<MerchantDataWithName>())
 
     val pagedMerchantDataDailyTotal: Flow<PagingData<MerchantDataDailyTotal>> =
         getMerchantDataDailyTotalUseCase
             .loadData()
             .cachedIn(viewModelScope)
-    var merchantDataDailyTotalPagingState by mutableStateOf(PagingState<MerchantDataDailyTotal>())
+    var merchantDataDailyTotalPagingState = MutableStateFlow(PagingState<MerchantDataDailyTotal>())
 
     //private val trigger = MutableSharedFlow<Unit>(replay = 1)
 

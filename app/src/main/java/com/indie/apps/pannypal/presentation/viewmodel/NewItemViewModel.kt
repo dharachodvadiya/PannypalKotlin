@@ -1,14 +1,10 @@
 package com.indie.apps.pannypal.presentation.viewmodel
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.indie.apps.pannypal.data.entity.MerchantData
 import com.indie.apps.pannypal.data.entity.Payment
-import com.indie.apps.pannypal.data.entity.User
 import com.indie.apps.pannypal.data.entity.toMerchantNameAndDetails
 import com.indie.apps.pannypal.data.module.MerchantNameAndDetails
 import com.indie.apps.pannypal.domain.usecase.AddMerchantDataUseCase
@@ -22,10 +18,8 @@ import com.indie.apps.pannypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pannypal.util.ErrorMessage
 import com.indie.apps.pannypal.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -39,30 +33,25 @@ class NewItemViewModel @Inject constructor(
     private val getMerchantFromIdUseCase: GetMerchantFromIdUseCase,
     private val getPaymentFromIdUseCase: GetPaymentFromIdUseCase,
     private val savedStateHandle: SavedStateHandle
-) :
-    ViewModel() {
+) : ViewModel() {
 
     private val merchantEditId =
         savedStateHandle?.get<String>(Util.PARAM_EDIT_MERCHANT_DATA_ID)?.toLong() ?: 0
     private var editMerchantData: MerchantData? = null
 
-    var merchant: MerchantNameAndDetails? by mutableStateOf(null)
-        private set
+    val merchant = MutableStateFlow<MerchantNameAndDetails?>(null)
 
-    var payment: Payment? by mutableStateOf(null)
-        private set
+    val payment = MutableStateFlow<Payment?>(null)
 
-    var received by (mutableStateOf(false))
-        private set
+    val received = MutableStateFlow(false)
 
-    var enableButton by (mutableStateOf(true))
-        private set
+    val enableButton = MutableStateFlow(true)
 
-    val amount by mutableStateOf(TextFieldState())
-    val description by mutableStateOf(TextFieldState())
+    val amount = MutableStateFlow(TextFieldState())
+    val description = MutableStateFlow(TextFieldState())
 
-    var merchantError: String by mutableStateOf("")
-    var paymentError: String by mutableStateOf("")
+    var merchantError = MutableStateFlow("")
+    var paymentError = MutableStateFlow("")
 
     val paymentList = getPaymentListUseCase.loadData()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
@@ -78,24 +67,28 @@ class NewItemViewModel @Inject constructor(
             viewModelScope.launch {
 
                 try {
-                    getMerchantDataFromIdUseCase
-                        .getData(merchantEditId)
-                        .collect {
-                            when(it)
-                            {
-                                is Resource.Loading -> { uiState.value = Resource.Loading()}
-                                is Resource.Error -> { uiState.value = Resource.Error("")}
-                                is Resource.Success-> {
-                                    if(it.data != null)
-                                    {
-                                        editMerchantData = it.data
-                                        received = if (editMerchantData!!.type == 1) true else false
-                                        amount.text = Util.getFormattedString(editMerchantData!!.amount)
-                                        description.text = editMerchantData!!.details.toString()
+                    getMerchantDataFromIdUseCase.getData(merchantEditId).collect {
+                            when (it) {
+                                is Resource.Loading -> {
+                                    uiState.value = Resource.Loading()
+                                }
 
-                                        launch  {
-                                            getPaymentFromIdUseCase
-                                                .getData(editMerchantData!!.paymentId)
+                                is Resource.Error -> {
+                                    uiState.value = Resource.Error("")
+                                }
+
+                                is Resource.Success -> {
+                                    if (it.data != null) {
+                                        editMerchantData = it.data
+                                        received.value =
+                                            if (editMerchantData!!.type == 1) true else false
+                                        amount.value.text =
+                                            Util.getFormattedString(editMerchantData!!.amount)
+                                        description.value.text =
+                                            editMerchantData!!.details.toString()
+
+                                        launch {
+                                            getPaymentFromIdUseCase.getData(editMerchantData!!.paymentId)
                                                 .collect {
                                                     if (it is Resource.Success && it.data != null) {
                                                         setPaymentData(it.data)
@@ -104,8 +97,7 @@ class NewItemViewModel @Inject constructor(
                                         }
 
                                         launch {
-                                            getMerchantFromIdUseCase
-                                                .getData(editMerchantData!!.merchantId)
+                                            getMerchantFromIdUseCase.getData(editMerchantData!!.merchantId)
                                                 .collect {
                                                     if (it != null) {
                                                         setMerchantData(it.toMerchantNameAndDetails())
@@ -114,108 +106,102 @@ class NewItemViewModel @Inject constructor(
                                         }
 
                                         uiState.value = Resource.Success(Unit)
-                                    }else{
+                                    } else {
                                         uiState.value = Resource.Error("Not found")
                                     }
                                 }
                             }
                         }
-                }catch (e : Exception)
-                {
+                } catch (e: Exception) {
                     uiState.value = Resource.Error("${e.localizedMessage}")
                 }
             }
-        }else{
+        } else {
             uiState.value = Resource.Success(Unit)
         }
     }
 
     fun onReceivedChange(isReceived: Boolean) {
-        received = isReceived
+        received.value = isReceived
     }
 
     fun onPaymentSelect(data: Payment) {
-        paymentError = ""
-        payment = data
+        paymentError.value = ""
+        payment.value = data
     }
 
     fun setMerchantData(data: MerchantNameAndDetails) {
-        merchantError = ""
-        merchant = data
+        merchantError.value = ""
+        merchant.value = data
     }
 
     fun setPaymentData(data: Payment) {
-        paymentError = ""
-        payment = data
+        paymentError.value = ""
+        payment.value = data
     }
 
     fun addOrEditMerchantData(onSuccess: (Boolean) -> Unit) {
-        if (enableButton) {
-            enableButton = false
-            if (amount.text.trim().isNullOrEmpty()) {
-                amount.setError(ErrorMessage.AMOUNT_EMPTY)
-                enableButton = true
+        if (enableButton.value) {
+            enableButton.value = false
+            if (amount.value.text.trim().isNullOrEmpty()) {
+                amount.value.setError(ErrorMessage.AMOUNT_EMPTY)
+                enableButton.value = true
             } else if (merchant == null) {
-                merchantError = ErrorMessage.SELECT_MERCHANT
-                enableButton = true
+                merchantError.value = ErrorMessage.SELECT_MERCHANT
+                enableButton.value = true
             } else if (payment == null) {
-                paymentError = ErrorMessage.SELECT_PAYMENT
-                enableButton = true
+                paymentError.value = ErrorMessage.SELECT_PAYMENT
+                enableButton.value = true
             } else {
-                val amount = amount.text.toDouble()
+                val amount = amount.value.text.toDouble()
 
                 if (merchantEditId == 0L) {
                     val merchantData = MerchantData(
-                        merchantId = merchant!!.id,
-                        paymentId = payment!!.id,
+                        merchantId = merchant.value!!.id,
+                        paymentId = payment.value!!.id,
                         amount = amount,
-                        details = description.text.trim(),
+                        details = description.value.text.trim(),
                         dateInMilli = System.currentTimeMillis(),
-                        type = if (received) 1 else -1
+                        type = if (received.value) 1 else -1
                     )
 
                     viewModelScope.launch {
-                        addMerchantDataUseCase
-                            .addData(merchantData)
-                            .collect {
+                        addMerchantDataUseCase.addData(merchantData).collect {
                                 when (it) {
                                     is Resource.Loading -> {}
                                     is Resource.Success -> {
-                                        enableButton = true
+                                        enableButton.value = true
                                         onSuccess(false)
                                     }
 
                                     is Resource.Error -> {
-                                        enableButton = true
+                                        enableButton.value = true
                                     }
                                 }
                             }
                     }
                 } else {
                     val merchantData = editMerchantData!!.copy(
-                        merchantId = merchant!!.id,
-                        paymentId = payment!!.id,
+                        merchantId = merchant.value!!.id,
+                        paymentId = payment.value!!.id,
                         amount = amount,
-                        details = description.text.trim(),
-                        type = if (received) 1 else -1
+                        details = description.value.text.trim(),
+                        type = if (received.value) 1 else -1
                     )
 
                     viewModelScope.launch {
-                        updateMerchantDataUseCase
-                            .updateData(
-                                merchantDataNew = merchantData,
-                                merchantDataOld = editMerchantData!!
-                            )
-                            .collect {
+                        updateMerchantDataUseCase.updateData(
+                                merchantDataNew = merchantData, merchantDataOld = editMerchantData!!
+                            ).collect {
                                 when (it) {
                                     is Resource.Loading -> {}
                                     is Resource.Success -> {
-                                        enableButton = true
+                                        enableButton.value = true
                                         onSuccess(true)
                                     }
 
                                     is Resource.Error -> {
-                                        enableButton = true
+                                        enableButton.value = true
                                     }
                                 }
                             }

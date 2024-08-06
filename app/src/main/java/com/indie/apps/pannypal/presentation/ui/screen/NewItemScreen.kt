@@ -31,21 +31,29 @@ fun NewItemScreen(
     onPaymentAdd: () -> Unit,
     onNavigationUp: () -> Unit,
     onSaveSuccess: (Boolean) -> Unit,
-    merchant: MerchantNameAndDetails? = null,
-    payment: Payment? = null,
+    merchantData: MerchantNameAndDetails? = null,
+    paymentData: Payment? = null,
 
     modifier: Modifier = Modifier
 ) {
-    if (merchant != null) {
-        newItemViewModel.setMerchantData(merchant)
+    if (merchantData != null) {
+        newItemViewModel.setMerchantData(merchantData)
     }
-    if (payment != null) {
-        newItemViewModel.setPaymentData(payment)
+    if (paymentData != null) {
+        newItemViewModel.setPaymentData(paymentData)
     }
 
     val paymentList by newItemViewModel.paymentList.collectAsStateWithLifecycle()
 
     val uiState by newItemViewModel.uiState.collectAsStateWithLifecycle()
+    val enableButton by newItemViewModel.enableButton.collectAsStateWithLifecycle()
+    val received by newItemViewModel.received.collectAsStateWithLifecycle()
+    val merchant by newItemViewModel.merchant.collectAsStateWithLifecycle()
+    val payment by newItemViewModel.payment.collectAsStateWithLifecycle()
+    val amount by newItemViewModel.amount.collectAsStateWithLifecycle()
+    val description by newItemViewModel.description.collectAsStateWithLifecycle()
+    val merchantError by newItemViewModel.merchantError.collectAsStateWithLifecycle()
+    val paymentError by newItemViewModel.paymentError.collectAsStateWithLifecycle()
 
     when (uiState) {
         is Resource.Loading -> {
@@ -57,7 +65,7 @@ fun NewItemScreen(
             Scaffold(topBar = {
                 TopBarWithTitle(
                     title = stringResource(id = R.string.new_item), onNavigationUp = {
-                        if (newItemViewModel.enableButton) onNavigationUp()
+                        if (enableButton) onNavigationUp()
                     }, contentAlignment = Alignment.Center
                 )
             }) { padding ->
@@ -68,25 +76,25 @@ fun NewItemScreen(
                         .padding(horizontal = dimensionResource(id = R.dimen.padding))
                 ) {
                     NewEntryTopSelectionButton(
-                        received = newItemViewModel.received,
+                        received = received,
                         onReceivedChange = newItemViewModel::onReceivedChange
                     )
                     NewEntryFieldItemSection(
                         modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.padding)),
                         onPaymentAdd = {
-                            if (newItemViewModel.enableButton) onPaymentAdd()
+                            if (enableButton) onPaymentAdd()
                         },
                         onMerchantSelect = {
-                            if (newItemViewModel.enableButton) onMerchantSelect()
+                            if (enableButton) onMerchantSelect()
                         },
-                        merchantName = newItemViewModel.merchant?.name,
+                        merchantName = merchant?.name,
                         onPaymentSelect = newItemViewModel::onPaymentSelect,
                         paymentList = paymentList,
-                        paymentName = newItemViewModel.payment?.name,
-                        amount = newItemViewModel.amount,
-                        description = newItemViewModel.description,
-                        merchantError = newItemViewModel.merchantError,
-                        paymentError = newItemViewModel.paymentError
+                        paymentName = payment?.name,
+                        amount = amount,
+                        description = description,
+                        merchantError = merchantError,
+                        paymentError = paymentError
                     )
                     Spacer(modifier = Modifier.weight(1f))
                     BottomSaveButton(
@@ -95,7 +103,7 @@ fun NewItemScreen(
                                 onSaveSuccess(it)
                             })
                         },
-                        enabled = newItemViewModel.enableButton,
+                        enabled = enableButton,
                         modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.padding))
                     )
                 }

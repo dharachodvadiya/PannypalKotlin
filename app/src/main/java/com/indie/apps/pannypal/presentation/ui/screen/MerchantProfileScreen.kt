@@ -11,7 +11,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -21,18 +20,17 @@ import com.indie.apps.pannypal.data.entity.Merchant
 import com.indie.apps.pannypal.presentation.ui.component.TopBarWithTitle
 import com.indie.apps.pannypal.presentation.ui.component.screen.MerchantProfileBottomSection
 import com.indie.apps.pannypal.presentation.ui.component.screen.MerchantProfileTopSection
-import com.indie.apps.pannypal.presentation.ui.component.screen.ProfileSection2
-import com.indie.apps.pannypal.presentation.ui.component.screen.ProfileTopSection
 import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 import com.indie.apps.pannypal.presentation.viewmodel.MerchantProfileViewModel
 import com.indie.apps.pannypal.util.Resource
 
 @Composable
-fun  MerchantProfileScreen(
+fun MerchantProfileScreen(
     merchantProfileViewModel: MerchantProfileViewModel = hiltViewModel(),
     onNavigationUp: () -> Unit,
-    modifier: Modifier = Modifier) {
+    modifier: Modifier = Modifier
+) {
 
     val uiState by merchantProfileViewModel.uiState.collectAsStateWithLifecycle()
 
@@ -64,7 +62,7 @@ fun MerchantProfileData(
     onNavigationUp: () -> Unit,
     merchant: Merchant,
     modifier: Modifier = Modifier
-){
+) {
     Scaffold(
         topBar = {
             TopBarWithTitle(
@@ -90,7 +88,7 @@ fun MerchantProfileData(
                 Modifier.height(screenHeight * 0.35f)
             )
             MerchantProfileBottomSection(
-                phoneNo = if(merchant.phoneNumber.isNullOrEmpty()) "" else "${merchant.countryCode} ${merchant.phoneNumber}"
+                phoneNo = if (merchant.phoneNumber.isNullOrEmpty()) "" else "${merchant.countryCode} ${merchant.phoneNumber}"
             )
         }
 
