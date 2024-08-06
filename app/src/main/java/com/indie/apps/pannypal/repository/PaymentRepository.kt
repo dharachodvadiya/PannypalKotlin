@@ -1,14 +1,18 @@
 package com.indie.apps.pannypal.repository
 
+import androidx.paging.PagingSource
 import com.indie.apps.pannypal.data.entity.Payment
+import kotlinx.coroutines.flow.Flow
 
-interface PaymentRepository : BaseRepository<Payment>{
+interface PaymentRepository : BaseRepository<Payment> {
 
-    suspend fun deleteCustomPayment(paymentId: Long) : Int
+    suspend fun deleteCustomPayment(paymentId: Long): Int
 
-    suspend fun getPaymentList(limit: Int, offset: Int): List<Payment>
+    suspend fun getPaymentFromId(paymentId: Long): Payment
 
-    suspend fun insertPaymentList(payments: List<Payment>) : List<Long>
+    fun getPaymentList(): Flow<List<Payment>>
 
-    suspend fun searchPaymentList(searchQuery : String, limit: Int, offset: Int): List<Payment>
+    suspend fun insertPaymentList(payments: List<Payment>): List<Long>
+
+    fun searchPaymentList(searchQuery: String): PagingSource<Int, Payment>
 }

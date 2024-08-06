@@ -63,7 +63,8 @@ class MerchantDataRepositoryImplTest {
                 paymentId = payment.id,
                 dateInMilli = System.currentTimeMillis(),
                 details = "Sample transaction $it",
-                amount = it.toLong()
+                amount = it.toDouble(),
+                type = 1
             ))
         }
 
@@ -73,7 +74,7 @@ class MerchantDataRepositoryImplTest {
         //Then
         assertNotNull(merchantsData)
         assertEquals(10, merchantsData.size)
-        assertEquals(30L, merchantsData[0].amount)
+        assert(30.toDouble() ==  merchantsData[0].amount)
 
         // When (with offset)
         merchantsData = merchantDataDao.getMerchantDataList(10,5)
@@ -81,6 +82,6 @@ class MerchantDataRepositoryImplTest {
         //Then
         assertNotNull(merchantsData)
         assertEquals(10, merchantsData.size)
-        assertEquals(25L, merchantsData[0].amount)
+        assert(25.toDouble() == merchantsData[0].amount)
     }
 }

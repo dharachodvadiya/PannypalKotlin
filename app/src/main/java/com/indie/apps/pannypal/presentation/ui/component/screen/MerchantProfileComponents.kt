@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.outlined.Phone
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -25,13 +24,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pannypal.R
-import com.indie.apps.pannypal.presentation.ui.common.Util
 import com.indie.apps.pannypal.presentation.ui.component.UserProfile
 import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 
 @Composable
 fun MerchantProfileTopSection(
+    name: String ="",
+    description: String = "",
     modifier: Modifier = Modifier
 ){
 
@@ -45,12 +45,12 @@ fun MerchantProfileTopSection(
         UserProfile(borderWidth = 1f)
         Spacer(modifier = Modifier.height(20.dp))
         Text(
-            text = "Name",
+            text = name,
             style = MyAppTheme.typography.Semibold60,
             color = MyAppTheme.colors.black
         )
         Text(
-            text = "description",
+            text = description.ifEmpty { stringResource(id = R.string.no_details) },
             style = MyAppTheme.typography.Medium40,
             color = MyAppTheme.colors.gray2,
             textAlign = TextAlign.Center,
@@ -61,6 +61,7 @@ fun MerchantProfileTopSection(
 
 @Composable
 fun MerchantProfileBottomSection(
+    phoneNo : String = "",
     modifier: Modifier = Modifier
 ){
     Row(
@@ -83,7 +84,7 @@ fun MerchantProfileBottomSection(
                 color = MyAppTheme.colors.gray2
             )
             Text(
-                text = "+00 000000000",
+                text = phoneNo.ifEmpty { stringResource(id = R.string.phone_number_not_added) },
                 style = MyAppTheme.typography.Semibold50,
                 color = MyAppTheme.colors.black
             )

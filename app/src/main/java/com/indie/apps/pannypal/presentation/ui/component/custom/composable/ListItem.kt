@@ -33,9 +33,9 @@ fun ListItem(
     onClick: () -> Unit = {},
     onLongClick: () -> Unit = {},
     modifier: Modifier = Modifier.fillMaxWidth(),
-    leadingIcon: @Composable() (() -> Unit)? = null,
-    content: @Composable() (() -> Unit),
-    trailingContent: @Composable() (() -> Unit)? = null,
+    leadingIcon: @Composable (() -> Unit)? = null,
+    content: @Composable (() -> Unit),
+    trailingContent: @Composable (() -> Unit)? = null,
     isSetDivider: Boolean = false,
     dividerWidth: Float = 2f,
     paddingValues: PaddingValues = PaddingValues(0.dp)
@@ -69,12 +69,12 @@ fun ListItem(
                 Row(
                     modifier = Modifier
                         .weight(1f)
-                        .padding(start = 0.dp, bottom = 15.dp, top = 15.dp, end = 0.dp)
+                        .padding(start = 0.dp, bottom = 7.dp, top = 7.dp, end = 0.dp)
                         .drawBehind {
                             drawLine(
                                 colorDivider,
-                                Offset(0f, size.height + 35),
-                                Offset(size.width, size.height + 35),
+                                Offset(0f, size.height + 20),
+                                Offset(size.width, size.height + 20),
                                 dividerWidth
                             )
                         },

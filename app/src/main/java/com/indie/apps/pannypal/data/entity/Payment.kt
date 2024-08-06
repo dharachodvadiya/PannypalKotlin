@@ -13,6 +13,7 @@ data class Payment(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
 
+    @ColumnInfo(collate = ColumnInfo.NOCASE)
     val name: String,
 
     @ColumnInfo(name = "pre_added")

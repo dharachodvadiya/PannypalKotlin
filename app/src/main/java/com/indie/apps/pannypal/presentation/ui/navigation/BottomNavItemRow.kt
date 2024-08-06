@@ -1,6 +1,5 @@
 package com.indie.apps.pannypal.presentation.ui.navigation
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -202,7 +201,7 @@ private fun BottomNavPreviewDarkModeCustom() {
 private fun BottomNavPreviewCustom() {
     PannyPalTheme {
         BottomNavigationBarCustom(
-            tabs = BottomNavItem.values(),
+            tabs = BottomNavItem.entries.toTypedArray(),
             onTabSelected = {},
             currentTab = BottomNavItem.OVERVIEW
         )
@@ -226,7 +225,7 @@ private fun BottomNavPreviewDarkModeCustom1() {
 private fun BottomNavPreviewCustom1() {
     PannyPalTheme {
         BottomNavigationBarCustom1(
-            tabs = BottomNavItem.values(),
+            tabs = BottomNavItem.entries.toTypedArray(),
             onTabSelected = {},
             currentTab = BottomNavItem.OVERVIEW
         )

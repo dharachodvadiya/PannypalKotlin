@@ -2,10 +2,13 @@ package com.indie.apps.pannypal.presentation.ui.component.custom.composable
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
@@ -19,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -39,23 +43,30 @@ fun MyAppTextField(
     textStyle: TextStyle = MyAppTheme.typography.Medium56,
     placeHolderTextStyle: TextStyle = MyAppTheme.typography.Regular51,
     readOnly: Boolean = false,
-    trailingIcon: @Composable() (() -> Unit)? = null,
+    trailingIcon: @Composable (() -> Unit)? = null,
+    textLeadingContent: @Composable (() -> Unit)? = null,
     imeAction: ImeAction = ImeAction.Default,
     keyboardType: KeyboardType = KeyboardType.Text,
     modifier: Modifier = Modifier,
     textModifier: Modifier = Modifier,
     bgColor: Color = MyAppTheme.colors.white,
-    onDoneAction: (() -> Unit)? = null,
+    onDoneAction: (() -> Unit)? = {},
     onNextAction: (() -> Unit)? = null,
     paddingValues: PaddingValues = PaddingValues(0.dp)
 ) {
-    Box(
+    Row(
         modifier = modifier
             .clip(RoundedCornerShape(dimensionResource(R.dimen.round_corner)))
             .background(bgColor)
             .padding(vertical = 5.dp),
-        contentAlignment = Alignment.CenterStart
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
     ) {
+        if (textLeadingContent != null) {
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.item_content_padding)))
+            textLeadingContent()
+        }
+        val keyboardController = LocalSoftwareKeyboardController.current
         val colors = TextFieldDefaults.colors(
             cursorColor = MyAppTheme.colors.brand,
             focusedIndicatorColor = MyAppTheme.colors.transparent,
@@ -73,7 +84,20 @@ fun MyAppTextField(
             onValueChange = onValueChange,
             textStyle = textStyle,
             keyboardOptions = KeyboardOptions(imeAction = imeAction, keyboardType = keyboardType),
-            keyboardActions = KeyboardActions(onDone = {onDoneAction}, onNext = {onNextAction}),
+            keyboardActions = KeyboardActions(onDone = {
+                keyboardController?.hide()
+                if (onDoneAction != null) {
+                    onDoneAction()
+                }
+            }, onNext = {
+                if (onNextAction != null) {
+                    onNextAction()
+                }
+            }, onSearch = {
+                keyboardController?.hide()
+            }, onSend = {
+                keyboardController?.hide()
+            }),
             singleLine = true,
             decorationBox = @Composable { innerTextField ->
                 // places leading icon, text field with label and placeholder, trailing icon
@@ -102,7 +126,7 @@ fun MyAppTextField(
 
 }
 
-@Preview()
+@Preview
 @Composable
 private fun MyAppTextFieldPreview() {
     PannyPalTheme {

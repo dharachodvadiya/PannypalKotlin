@@ -1,9 +1,7 @@
 package com.indie.apps.pannypal.presentation.ui.component.screen
 
-import android.icu.util.CurrencyAmount
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -12,11 +10,8 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -25,11 +20,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.DeleteOutline
-import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -38,45 +30,50 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.semantics.role
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pannypal.R
+import com.indie.apps.pannypal.data.entity.MerchantData
 import com.indie.apps.pannypal.presentation.ui.common.Util
+import com.indie.apps.pannypal.presentation.ui.component.custom.composable.AutoSizeText
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.ListItem
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.RoundImage
-import com.indie.apps.pannypal.presentation.ui.component.custom.composable.SearchView
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.TopBar
 import com.indie.apps.pannypal.presentation.ui.component.linearGradientsBrush
 import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
+import java.text.SimpleDateFormat
 
 @Composable
 fun MerchantDataTopBar(
+    selectCount: Int = 0,
+    name: String = "",
+    description: String = "",
     onClick: () -> Unit,
+    onCloseClick: () -> Unit = {},
     onNavigationUp: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     TopBar(
-        isBackEnable = true,
+        isBackEnable = selectCount == 0,
         onBackClick = onNavigationUp,
         content = {
             MerchantDataTopBarItem(
-                onClick = onClick
+                selectCount = selectCount,
+                name = name,
+                description = description,
+                onClick = onClick,
+                onCloseClick = onCloseClick
             )
         },
         modifier = modifier
@@ -85,7 +82,11 @@ fun MerchantDataTopBar(
 
 @Composable
 private fun MerchantDataTopBarItem(
+    selectCount: Int = 0,
+    name: String = "",
+    description: String = "",
     onClick: () -> Unit,
+    onCloseClick: () -> Unit = {},
     modifier: Modifier = Modifier.fillMaxWidth()
 ) {
     val imageVector = Icons.Default.Person
@@ -95,31 +96,55 @@ private fun MerchantDataTopBarItem(
     ListItem(
         onClick = onClick,
         leadingIcon = {
-            RoundImage(
-                imageVector = imageVector,
-                brush = linearGradientsBrush(MyAppTheme.colors.gradientBlue),
-                backGround = bgColor,
-                contentDescription = "person",
-                modifier = Modifier.size(50.dp),
-                imageVectorSize = 27.dp
-            )
+            if (selectCount > 0) {
+                Icon(
+                    imageVector = Icons.Default.Close,
+                    contentDescription = "Close",
+                    modifier = Modifier.clickable {
+                        onCloseClick()
+                    }
+                )
+            } else {
+                RoundImage(
+                    imageVector = imageVector,
+                    brush = linearGradientsBrush(MyAppTheme.colors.gradientBlue),
+                    backGround = bgColor,
+                    contentDescription = "person",
+                    modifier = Modifier.size(50.dp),
+                    imageVectorSize = 27.dp
+                )
+            }
         },
         content = {
             Column {
-                Text(
-                    text = "Name",
-                    style = MyAppTheme.typography.Semibold56,
-                    color = MyAppTheme.colors.black,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Text(
-                    text = "Description",
-                    style = MyAppTheme.typography.Medium44,
-                    color = MyAppTheme.colors.gray2,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+                if (selectCount > 0) {
+                    Text(
+                        text = "$selectCount ${stringResource(id = R.string.selected_text)}",
+                        style = MyAppTheme.typography.Semibold56,
+                        color = MyAppTheme.colors.black,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                } else {
+                    Text(
+                        text = name.ifEmpty { stringResource(id = R.string.no_name) },
+                        style = MyAppTheme.typography.Semibold56,
+                        color = MyAppTheme.colors.black,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    if (description.isNotEmpty()) {
+                        Text(
+                            text = description,
+                            style = MyAppTheme.typography.Medium44,
+                            color = MyAppTheme.colors.gray2,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+
+                }
+
             }
         },
         modifier = modifier
@@ -128,6 +153,8 @@ private fun MerchantDataTopBarItem(
 
 @Composable
 fun MerchantDataBottomBar(
+    totalIncome: Double = 0.0,
+    totalExpense: Double = 0.0,
     isEditable: Boolean = false,
     isDeletable: Boolean = false,
     onEditClick: () -> Unit,
@@ -162,11 +189,16 @@ fun MerchantDataBottomBar(
 
     } else {
         MerchantDataBottomTotal(
+            totalIncome = totalIncome,
+            totalExpense = totalExpense,
             modifier = modifier
-                .padding(top = 7.dp,
+                .padding(
+                    top = 7.dp,
                     bottom = 0.dp,
                     start = 0.dp,
-                    end = 0.dp))
+                    end = 0.dp
+                )
+        )
     }
 
 }
@@ -174,12 +206,17 @@ fun MerchantDataBottomBar(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MerchantDataIncomeAmount(
+    isSelected: Boolean = false,
+    data: MerchantData,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val bgColor = if (isSelected) MyAppTheme.colors.brandBg else MyAppTheme.colors.white
+
     Row(
         modifier = modifier
+            .background(bgColor)
             .padding(vertical = 2.dp)
             .clip(RoundedCornerShape(dimensionResource(R.dimen.round_corner)))
             .fillMaxWidth()
@@ -193,8 +230,8 @@ fun MerchantDataIncomeAmount(
     ) {
 
         MerchantDataAmountItem(
-            amount = 50.0,
-            description = "fdsdas fsFD dzfdss fsdfsFS fSfdfadsf",
+            amount = data.amount,
+            description = data.details,
             contentAlignment = Alignment.Start,
             colorStroke = MyAppTheme.colors.greenBg
         )
@@ -205,12 +242,17 @@ fun MerchantDataIncomeAmount(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MerchantDataExpenseAmount(
+    isSelected: Boolean = false,
+    data: MerchantData,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val bgColor = if (isSelected) MyAppTheme.colors.brandBg else MyAppTheme.colors.white
+
     Row(
         modifier = modifier
+            .background(bgColor)
             .fillMaxWidth()
             .padding(vertical = 2.dp)
             .clip(RoundedCornerShape(dimensionResource(R.dimen.round_corner)))
@@ -224,8 +266,8 @@ fun MerchantDataExpenseAmount(
     ) {
 
         MerchantDataAmountItem(
-            amount = -50.0,
-            description = "dfsdfs fssaa dasdasdadfsdfsdasdasadzXZ",
+            amount = data.amount * -1,
+            description = data.details,
             contentAlignment = Alignment.End,
             colorStroke = MyAppTheme.colors.redBg
         )
@@ -235,11 +277,12 @@ fun MerchantDataExpenseAmount(
 
 @Composable
 fun MerchantDataDateItem(
-    date: String = "1 jan, 2023",
+    dateMillis: Long = 0,
     modifier: Modifier = Modifier,
-){
+) {
     Row(
-        modifier= modifier.fillMaxWidth()
+        modifier = modifier
+            .fillMaxWidth()
             .padding(vertical = 5.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -247,9 +290,10 @@ fun MerchantDataDateItem(
             modifier = Modifier
                 .height(1.dp)
                 .weight(1f)
-                .background(color = MyAppTheme.colors.gray0))
+                .background(color = MyAppTheme.colors.gray0)
+        )
         Text(
-            text = date,
+            text = Util.getDateFromMillis(dateMillis, SimpleDateFormat("dd MMMM yyyy")),
             style = MyAppTheme.typography.Medium40,
             color = MyAppTheme.colors.gray2,
             maxLines = 1,
@@ -260,7 +304,8 @@ fun MerchantDataDateItem(
             modifier = Modifier
                 .height(2.dp)
                 .weight(1f)
-                .background(color = MyAppTheme.colors.gray0))
+                .background(color = MyAppTheme.colors.gray0)
+        )
     }
 }
 
@@ -293,15 +338,16 @@ private fun MerchantDataAmountItem(
                 .padding(horizontal = 10.dp),
             horizontalAlignment = contentAlignment
         ) {
-            Text(
-                text = Util.getFormattedStringWithSymbole(amount),
+            AutoSizeText(
+                text = Util.getFormattedStringWithSymbol(amount),
                 style = MyAppTheme.typography.Semibold67_5,
-                color = MyAppTheme.colors.black
+                color = MyAppTheme.colors.black,
+                maxLines = 2,
             )
             if (!description.isNullOrEmpty()) {
                 Text(
                     text = description,
-                    style = MyAppTheme.typography.Medium44,
+                    style = MyAppTheme.typography.Medium40,
                     color = MyAppTheme.colors.gray2,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
@@ -346,6 +392,8 @@ private fun MerchantDataBottomButton(
 
 @Composable
 private fun MerchantDataBottomTotal(
+    totalIncome: Double = 0.0,
+    totalExpense: Double = 0.0,
     modifier: Modifier = Modifier
 ) {
 
@@ -365,21 +413,28 @@ private fun MerchantDataBottomTotal(
             .padding(horizontal = dimensionResource(id = R.dimen.padding)),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        MerchantDataTotalIncomeExpense(amount = 5.0, modifier = Modifier.weight(1f))
+        MerchantDataTotalIncomeExpense(
+            amount = totalIncome,
+            modifier = Modifier.weight(1f),
+            strokeColor = MyAppTheme.colors.greenBg
+        )
         Spacer(modifier = Modifier.width(7.dp))
-        MerchantDataTotalIncomeExpense(amount = -7.0, modifier = Modifier.weight(1f))
+        MerchantDataTotalIncomeExpense(
+            amount = totalExpense * -1,
+            modifier = Modifier.weight(1f),
+            strokeColor = MyAppTheme.colors.redBg
+        )
         Spacer(modifier = Modifier.width(7.dp))
-        MerchantDataTotal(amount = 10.0, modifier = Modifier.weight(1f))
+        MerchantDataTotal(amount = totalIncome - totalExpense, modifier = Modifier.weight(1f))
     }
 }
 
 @Composable
 private fun MerchantDataTotalIncomeExpense(
     amount: Double = 0.0,
+    strokeColor: Color,
     modifier: Modifier = Modifier
 ) {
-    val strokeColor = if (amount >= 0) MyAppTheme.colors.greenBg else MyAppTheme.colors.redBg
-
     Box(
         modifier = modifier
             .height(dimensionResource(id = R.dimen.top_bar_profile))
@@ -394,10 +449,12 @@ private fun MerchantDataTotalIncomeExpense(
             ),
         contentAlignment = Alignment.Center
     ) {
-        Text(
-            text = Util.getFormattedStringWithSymbole(0.0),
+        AutoSizeText(
+            text = Util.getFormattedStringWithSymbol(amount),
             style = MyAppTheme.typography.Semibold50,
-            color = MyAppTheme.colors.black
+            color = MyAppTheme.colors.black,
+            maxLines = 2,
+            modifier = Modifier.padding(5.dp)
         )
     }
 }
@@ -412,10 +469,11 @@ private fun MerchantDataTotal(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.End
     ) {
-        Text(
-            text = Util.getFormattedStringWithSymbole(0.0),
+        AutoSizeText(
+            text = Util.getFormattedStringWithSymbol(amount),
             style = MyAppTheme.typography.Semibold56,
             color = MyAppTheme.colors.black,
+            maxLines = 2
         )
         Text(
             text = stringResource(id = R.string.total_amount),
@@ -448,10 +506,10 @@ private fun MerchantDataBottomBarPreview() {
 @Composable
 private fun MerchantDataIncomeAmountItemPreview() {
     PannyPalTheme {
-        MerchantDataIncomeAmount(
+        /*MerchantDataIncomeAmount(
             onClick = {},
             onLongClick = {}
-        )
+        )*/
     }
 }
 
@@ -459,10 +517,10 @@ private fun MerchantDataIncomeAmountItemPreview() {
 @Composable
 private fun MerchantDataExpenseAmountItemPreview() {
     PannyPalTheme {
-        MerchantDataExpenseAmount(
+        /*MerchantDataExpenseAmount(
             onClick = {},
             onLongClick = {}
-        )
+        )*/
     }
 }
 

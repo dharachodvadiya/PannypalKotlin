@@ -26,4 +26,24 @@
     <string name="total_amount">Total Amount</string>
     <string name="edit_transaction">Edit</string>
     <string name="delete_transaction">Delete</string>
+    <string name="loading">Loading...</string>
+    <string name="payment_save_success_toast">Payment Type Add Successfully</string>
+    <string name="merchant_save_success_toast">Merchant Add Successfully</string>
+    <string name="select_country">Select Country</string>
+    <string name="no_data_found">No Data Available</string>
+    <string name="no_details">No Details</string>
+    <string name="merchant_data_save_success_message">Merchant Data Save Successfully</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="selected_text">Selected</string>
+    <string name="edit_merchant">Edit Merchant</string>
+    <string name="delete_item_dialog_text">Are you sure to delete this item??</string>
+    <string name="delete_dialog_title">Delete</string>
+    <string name="no_name">No Name</string>
+    <string name="merchant_data_delete_success_message">Delete Merchant Data Successfully</string>
+    <string name="merchant_delete_success_message">Merchants Delete Successfully</string>
+    <string name="merchant_edit_success_message">Merchant Edit Successfully</string>
+    <string name="edit_merchant_data">Edit Entry</string>
+    <string name="merchant_data_edit_success_message">Merchant Data Edit Successfully</string>
+    <string name="phone_number_not_added">Not Added</string>
 </resources>

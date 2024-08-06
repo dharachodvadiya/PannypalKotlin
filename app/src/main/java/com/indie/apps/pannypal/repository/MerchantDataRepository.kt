@@ -1,25 +1,35 @@
 package com.indie.apps.pannypal.repository
 
+import androidx.paging.PagingSource
 import com.indie.apps.pannypal.data.entity.MerchantData
+import com.indie.apps.pannypal.data.module.IncomeAndExpense
+import com.indie.apps.pannypal.data.module.MerchantDataDailyTotal
 import com.indie.apps.pannypal.data.module.MerchantDataWithName
 
-interface MerchantDataRepository : BaseRepository<MerchantData>{
+interface MerchantDataRepository : BaseRepository<MerchantData> {
 
-    suspend fun deleteMerchantDataWithId(id: Long) : Int
+    suspend fun deleteMerchantDataWithId(id: Long): Int
 
-    suspend fun deleteMerchantDataWithIdList(idList: List<Long>) : Int
+    suspend fun deleteMerchantDataWithIdList(idList: List<Long>): Int
 
-    suspend fun deleteMerchantDataWithMerchantIdList(idList: List<Long>) : Int
+    suspend fun deleteMerchantDataWithMerchantIdList(idList: List<Long>): Int
 
-    suspend fun deleteMerchantDataWithMerchantId(id : Long) : Int
+    suspend fun deleteMerchantDataWithMerchantId(id: Long): Int
 
-    suspend fun getMerchantDataList(limit: Int, offset: Int): List<MerchantData>
+    suspend fun getTotalIncomeAndeExpenseFromIds(ids: List<Long>): IncomeAndExpense
 
-    suspend fun getMerchantDataListFromMerchantId(merchantId: Long, limit: Int, offset: Int): List<MerchantData>
+    suspend fun getMerchantDataFromId(id: Long): MerchantData
 
-    suspend fun getMerchantsDataWithMerchantNameList(limit: Int, offset: Int): List<MerchantDataWithName>
+    fun getMerchantDataList(): PagingSource<Int, MerchantData>
 
-    suspend fun searchMerchantDataWithMerchantNameList(searchQuery : String, limit: Int, offset: Int): List<MerchantDataWithName>
+    fun getMerchantDataListFromMerchantId(merchantId: Long): PagingSource<Int, MerchantData>
 
+    fun getMerchantsDataWithMerchantNameList(timeZoneOffsetInMilli: Int): PagingSource<Int, MerchantDataWithName>
 
+    fun searchMerchantDataWithMerchantNameList(
+        searchQuery: String,
+        timeZoneOffsetInMilli: Int
+    ): PagingSource<Int, MerchantDataWithName>
+
+    fun getMerchantDataDailyTotalList(timeZoneOffsetInMilli: Int): PagingSource<Int, MerchantDataDailyTotal>
 }

@@ -1,13 +1,12 @@
 package com.indie.apps.pannypal.data.dao
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
-import androidx.room.Update
 import com.indie.apps.pannypal.data.entity.Payment
-import com.indie.apps.pannypal.data.entity.User
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PaymentDao : BaseDao<Payment> {
@@ -19,16 +18,20 @@ interface PaymentDao : BaseDao<Payment> {
 
     //delete only custom payment method
     @Query("DELETE FROM payment_type WHERE id = :paymentId AND pre_added = 0")
-    suspend fun deleteCustomPayment(paymentId: Long) : Int
+    suspend fun deleteCustomPayment(paymentId: Long): Int
 
     @Transaction
-    @Query("SELECT * FROM payment_type LIMIT :limit OFFSET :offset")
-    suspend fun getPaymentList(limit: Int, offset: Int): List<Payment>
+    @Query("SELECT * FROM payment_type")
+    fun getPaymentList(): Flow<List<Payment>>
 
     @Transaction
-    @Query("SELECT * FROM payment_type WHERE name LIKE :searchQuery || '%' LIMIT :limit OFFSET :offset")
-    suspend fun searchPaymentList(searchQuery : String, limit: Int, offset: Int): List<Payment>
+    @Query("SELECT * FROM payment_type where id = :id")
+    suspend fun getPaymentFromId(id: Long): Payment
+
+    @Transaction
+    @Query("SELECT * FROM payment_type WHERE name LIKE :searchQuery || '%'")
+    fun searchPaymentList(searchQuery: String): PagingSource<Int, Payment>
 
     @Insert
-    suspend fun insertPaymentList(payments: List<Payment>) : List<Long>
+    suspend fun insertPaymentList(payments: List<Payment>): List<Long>
 }

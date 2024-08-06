@@ -2,18 +2,15 @@ package com.indie.apps.pannypal.repository
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.indie.apps.pannypal.data.dao.PaymentDao
-import com.indie.apps.pannypal.data.dao.UserDao
 import com.indie.apps.pannypal.data.db.AppDatabase
 import com.indie.apps.pannypal.data.entity.Payment
-import com.indie.apps.pannypal.data.entity.User
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.After
-import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
-
 import org.junit.Test
 import org.junit.runner.RunWith
 import javax.inject.Inject
@@ -51,8 +48,10 @@ class PaymentRepositoryImplTest {
         paymentDao.deleteCustomPayment(1)
 
         //then
-        val payments = paymentDao.getPaymentList(10,0)
-        assert(payments.size == 3)
+        val paymentList = paymentDao.getPaymentList().first()
+        assert(paymentList.size == 3)
+
+
 
         //inserting custom data
         paymentDao.insert(Payment(name = "debitCard"))
@@ -62,8 +61,9 @@ class PaymentRepositoryImplTest {
         paymentDao.deleteCustomPayment(4)
 
         //then
-        val payments1 = paymentDao.getPaymentList(10,0)
-        assert(payments1.size == 4)
+
+        assert(paymentDao.getPaymentList().first().size == 4)
+
     }
 
     @Test
@@ -73,11 +73,12 @@ class PaymentRepositoryImplTest {
         paymentDao.insert(Payment(name = "debitCard1"))
 
         //when
-        val payments = paymentDao.getPaymentList(10, 0)
+        val it = paymentDao.getPaymentList().first()
 
         //then
-        assert(payments.isNotEmpty())
-        assert(payments.size == 2) // Assuming 3 pre-added payments
-        assert(payments.any { it.name == "debitCard" })
+        assert(it.isNotEmpty())
+        assert(it.size == 2) // Assuming 3 pre-added payments
+        assert(it.any {it1-> it1.name == "debitCard" })
+
     }
 }

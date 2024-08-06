@@ -9,14 +9,18 @@ import androidx.room.PrimaryKey
 @Entity(
     tableName = "merchant_data",
     foreignKeys = [
-        ForeignKey(entity = Merchant::class,
+        ForeignKey(
+            entity = Merchant::class,
             parentColumns = ["id"],
             childColumns = ["merchant_id"],
-            onDelete = ForeignKey.CASCADE),
-        ForeignKey(entity = Payment::class,
+            onDelete = ForeignKey.CASCADE
+        ),
+        ForeignKey(
+            entity = Payment::class,
             parentColumns = ["id"],
             childColumns = ["payment_id"],
-            onDelete = ForeignKey.NO_ACTION)
+            onDelete = ForeignKey.NO_ACTION
+        )
     ],
     indices = [
         Index(value = ["merchant_id"]),
@@ -25,7 +29,7 @@ import androidx.room.PrimaryKey
 )
 data class MerchantData(
     @PrimaryKey(autoGenerate = true)
-    val id: Long= 0,
+    val id: Long = 0,
 
     @ColumnInfo(name = "merchant_id")
     val merchantId: Long,
@@ -38,7 +42,9 @@ data class MerchantData(
 
     val details: String? = null,
 
-    val amount: Long,
+    val amount: Double,
+
+    val type: Int, // -1 for expense, 1 for income
 
 
-)
+    )

@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import com.indie.apps.pannypal.R
 import com.indie.apps.pannypal.presentation.ui.common.Util
 import com.indie.apps.pannypal.presentation.ui.component.UserProfile
+import com.indie.apps.pannypal.presentation.ui.component.custom.composable.AutoSizeText
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.RoundImage
 import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
@@ -35,8 +36,9 @@ import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 
 @Composable
 fun ProfileTopSection(
+    totalAmount: Double = 0.0,
     modifier: Modifier = Modifier
-){
+) {
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -57,16 +59,30 @@ fun ProfileTopSection(
             color = MyAppTheme.colors.black
         )
         Spacer(modifier = Modifier.height(5.dp))
-        Text(
-            text = Util.getFormattedStringWithSymbole(0.0),
+        /*Text(
+            text = Util.getFormattedStringWithSymbol(totalAmount),
             style = MyAppTheme.typography.Semibold90,
-            color = MyAppTheme.colors.black
+            color = MyAppTheme.colors.black,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            fontSize = TextUnit.Unspecified,
+            modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.padding))
+        )*/
+
+        AutoSizeText(
+            text = Util.getFormattedStringWithSymbol(totalAmount),
+            style = MyAppTheme.typography.Semibold90,
+            color = MyAppTheme.colors.black,
+            maxLines = 1,
+            modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.padding))
         )
     }
 }
 
 @Composable
 fun ProfileSection2(
+    incomeAmount: Double = 0.0,
+    expenseAmount: Double = 0.0,
     onLoginWithGoogle: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -80,8 +96,9 @@ fun ProfileSection2(
                 .padding(vertical = 20.dp)
         ) {
             ProfileAmountWithIcon(
-                amount = 5.0,
-                isPositive = true
+                amount = incomeAmount,
+                isPositive = true,
+                modifier = Modifier.fillMaxWidth(0.4f)
             )
             Spacer(
                 modifier = Modifier
@@ -90,8 +107,9 @@ fun ProfileSection2(
                     .background(MyAppTheme.colors.gray1)
             )
             ProfileAmountWithIcon(
-                amount = -5.0,
-                isPositive = false
+                amount = -expenseAmount,
+                isPositive = false,
+                modifier = Modifier.fillMaxWidth(0.4f)
             )
         }
 
@@ -121,7 +139,7 @@ private fun ProfileLoginWithGoogleButton(
         ),
         modifier = modifier,
         onClick = onClick,
-    ){
+    ) {
         Image(
             painter = painterResource(id = R.drawable.google),
             contentDescription = "Google"
@@ -139,9 +157,9 @@ private fun ProfileLoginWithGoogleButton(
 @Composable
 private fun ProfileAmountWithIcon(
     amount: Double,
-    isPositive : Boolean,
+    isPositive: Boolean,
     modifier: Modifier = Modifier
-){
+) {
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -149,9 +167,8 @@ private fun ProfileAmountWithIcon(
         modifier = modifier
     ) {
 
-        val imageVector = if(isPositive) Icons.Default.SouthWest else Icons.Default.NorthEast
-        val bgColor = if(isPositive)MyAppTheme.colors.greenBg else MyAppTheme.colors.redBg
-        val text = if(isPositive) "Earned" else "Spent"
+        val imageVector = if (isPositive) Icons.Default.SouthWest else Icons.Default.NorthEast
+        val bgColor = if (isPositive) MyAppTheme.colors.greenBg else MyAppTheme.colors.redBg
 
         RoundImage(
             imageVector = imageVector,
@@ -167,10 +184,12 @@ private fun ProfileAmountWithIcon(
             color = MyAppTheme.colors.gray2
         )
         Spacer(modifier = Modifier.height(5.dp))
-        Text(
-            text = Util.getFormattedStringWithSymbole(amount),
+        AutoSizeText(
+            text = Util.getFormattedStringWithSymbol(amount),
+            //minTextSize = 10.sp,
             style = MyAppTheme.typography.Bold52_5,
-            color = MyAppTheme.colors.black
+            color = MyAppTheme.colors.black,
+            maxLines = 2
         )
     }
 }
@@ -179,10 +198,12 @@ private fun ProfileAmountWithIcon(
 @Composable
 private fun ProfileLoginWithGoogleButtonPreview() {
     PannyPalTheme {
-        ProfileLoginWithGoogleButton({}, modifier = Modifier
-            .padding(dimensionResource(id = R.dimen.padding))
-            .fillMaxWidth()
-            .height(dimensionResource(id = R.dimen.button_height)))
+        ProfileLoginWithGoogleButton(
+            {}, modifier = Modifier
+                .padding(dimensionResource(id = R.dimen.padding))
+                .fillMaxWidth()
+                .height(dimensionResource(id = R.dimen.button_height))
+        )
     }
 }
 

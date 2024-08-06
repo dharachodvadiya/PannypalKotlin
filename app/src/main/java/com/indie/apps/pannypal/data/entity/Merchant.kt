@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.indie.apps.pannypal.data.module.MerchantNameAndDetails
 
 @Entity(
     tableName = "merchant",
@@ -13,10 +14,14 @@ data class Merchant(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
 
+    @ColumnInfo(collate = ColumnInfo.NOCASE)
     val name: String,
 
     @ColumnInfo(name = "phone_num")
     val phoneNumber: String? = null,
+
+    @ColumnInfo(name = "country_code")
+    val countryCode: String? = null,
 
     @ColumnInfo(name = "date_milli")
     val dateInMilli: Long = 0,
@@ -24,8 +29,10 @@ data class Merchant(
     val details: String? = null,
 
     @ColumnInfo(name = "income_amt")
-    val incomeAmount: Long = 0,
+    val incomeAmount: Double = 0.0,
 
     @ColumnInfo(name = "expense_amt")
-    val expenseAmount: Long = 0,
+    val expenseAmount: Double = 0.0,
 )
+
+fun Merchant.toMerchantNameAndDetails() = MerchantNameAndDetails(id, name, details)

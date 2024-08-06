@@ -1,13 +1,11 @@
 package com.indie.apps.pannypal.data.db
 
-import android.content.Context
-import androidx.room.Room
-import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.indie.apps.pannypal.data.dao.PaymentDao
 import com.indie.apps.pannypal.data.entity.Payment
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Before
@@ -48,12 +46,12 @@ class AppDatabaseTest {
         AppDatabase.populateDatabase(appDatabase)
 
         //Then
-        val payments = paymentDao.getPaymentList(10,0)
+        val result = paymentDao.getPaymentList().first()
 
         // Assertions
-        assert(payments.isNotEmpty())
+        assert(result.isNotEmpty())
         expectedPayments.forEach { expectedPayment ->
-            assert(payments.any { it.name == expectedPayment.name })
+            assert(result.any { it.name == expectedPayment.name })
         }
     }
 

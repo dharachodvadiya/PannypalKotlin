@@ -1,6 +1,7 @@
 package com.indie.apps.pannypal.presentation.ui.component.dialog
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -14,55 +15,103 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
 import com.indie.apps.pannypal.R
+import com.indie.apps.pannypal.data.module.MerchantNameAndDetails
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.ListItem
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.RoundImage
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.SearchView
 import com.indie.apps.pannypal.presentation.ui.component.linearGradientsBrush
+import com.indie.apps.pannypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
+
+/*
+
+@Immutable
+data class MerchantNameAndDetailsList(val dataList: List<MerchantNameAndDetails>? = null)
+*/
 
 @Composable
 fun SearchDialogField(
     onAddClick: () -> Unit,
+    onItemClick: (MerchantNameAndDetails?) -> Unit,
     onTextChange: (String) -> Unit,
+    textState: TextFieldState,
+    dataList: LazyPagingItems<MerchantNameAndDetails>,
+    isRefresh : Boolean = false,
+    isLoadMore : Boolean = false
 ) {
     Column {
 
-        SearchMerchantSearchview(
+        SearchMerchantSearchView(
             onAddClick = onAddClick,
+            textState = textState,
             onTextChange = onTextChange
         )
+        if(isRefresh)
+        {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+            ){
+                CircularProgressIndicator()
+            }
+        }else{
+            LazyColumn(
+                modifier = Modifier
+                    .padding(horizontal = dimensionResource(id = R.dimen.padding))
+            ) {
+                items(
+                    count = dataList.itemCount,
+                    key = dataList.itemKey { item -> item.id },
+                    contentType = dataList.itemContentType { "MerchantNameAndDetails" }
+                ) { index ->
+                    val data = dataList[index]
+                    if (data != null) {
+                        SearchMerchantListItem(
+                            item = data,
+                            onClick = { onItemClick(data) }
+                        )
 
-        LazyColumn(
-            modifier = Modifier
-                .padding(horizontal = dimensionResource(id = R.dimen.padding))
-        ) {
-            items(15) { index ->
-
-                SearchMerchantListItem({})
+                        if(isLoadMore && index == dataList.itemCount-1){
+                            Box(
+                                contentAlignment = Alignment.Center,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                            ){
+                                CircularProgressIndicator()
+                            }
+                        }
+                    }
+                }
             }
         }
-
 
     }
 }
 
 @Composable
-private fun SearchMerchantSearchview(
+private fun SearchMerchantSearchView(
     onAddClick: () -> Unit,
     onTextChange: (String) -> Unit,
+    textState: TextFieldState,
     modifier: Modifier = Modifier
-)
-{
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
@@ -73,12 +122,18 @@ private fun SearchMerchantSearchview(
     ) {
         SearchView(
             trailingIcon = Icons.Default.Search,
-            onTextChange = onTextChange,
             bgColor = MyAppTheme.colors.gray0,
             modifier = Modifier
                 .weight(1f)
                 .height(40.dp),
-            paddingValues = PaddingValues(top = 0.dp, bottom = 0.dp, start = dimensionResource(id = R.dimen.padding), end = 0.dp),
+            paddingValues = PaddingValues(
+                top = 0.dp,
+                bottom = 0.dp,
+                start = dimensionResource(id = R.dimen.padding),
+                end = 0.dp
+            ),
+            textState = textState,
+            onTextChange = onTextChange
         )
         Spacer(modifier = Modifier.width(5.dp))
 
@@ -89,7 +144,7 @@ private fun SearchMerchantSearchview(
                 color = MyAppTheme.colors.gray2
             ),
             onClick = onAddClick,
-        ){
+        ) {
             Icon(
                 imageVector = Icons.Default.Add,
                 contentDescription = "Add",
@@ -102,6 +157,7 @@ private fun SearchMerchantSearchview(
 
 @Composable
 private fun SearchMerchantListItem(
+    item: MerchantNameAndDetails,
     onClick: () -> Unit,
     modifier: Modifier = Modifier.fillMaxWidth()
 ) {
@@ -114,7 +170,7 @@ private fun SearchMerchantListItem(
         leadingIcon = {
             RoundImage(
                 imageVector = imageVector,
-                brush = linearGradientsBrush( MyAppTheme.colors.gradientBlue),
+                brush = linearGradientsBrush(MyAppTheme.colors.gradientBlue),
                 backGround = bgColor,
                 contentDescription = "person"
             )
@@ -122,14 +178,14 @@ private fun SearchMerchantListItem(
         content = {
             Column {
                 Text(
-                    text = "Name",
+                    text = item.name,
                     style = MyAppTheme.typography.Semibold56,
                     color = MyAppTheme.colors.black,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
-                    text = "Description",
+                    text = if (item.details.isNullOrEmpty()) stringResource(id = R.string.no_details) else item.details,
                     style = MyAppTheme.typography.Medium33,
                     color = MyAppTheme.colors.gray2,
                     maxLines = 1,
@@ -140,6 +196,7 @@ private fun SearchMerchantListItem(
         modifier = modifier,
         paddingValues = PaddingValues(
             horizontal = dimensionResource(id = R.dimen.padding),
-            vertical = 5.dp)
+            vertical = 5.dp
+        )
     )
 }

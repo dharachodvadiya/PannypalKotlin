@@ -6,8 +6,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -20,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.indie.apps.pannypal.R
 import com.indie.apps.pannypal.presentation.ui.component.BottomSaveButton
 import com.indie.apps.pannypal.presentation.ui.component.DialogTextFieldItem
@@ -34,7 +33,8 @@ fun MyAppDialog(
     isBackEnable: Boolean = false,
     onNavigationUp: ()-> Unit,
     content: @Composable () -> Unit,
-    bottomContent: @Composable() (() -> Unit)? = null,
+    bottomContent: @Composable (() -> Unit)? = null,
+    isFixHeight: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -43,20 +43,27 @@ fun MyAppDialog(
     ) {
         Spacer(modifier = Modifier.weight(1f))
 
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier
+        val heightModifier = if(isFixHeight){
+            Modifier.height(dimensionResource(id = R.dimen.dialog_max_height))
+        }else{
+            Modifier
                 .heightIn(
                     min = dimensionResource(id = R.dimen.dialog_min_height),
                     max = dimensionResource(id = R.dimen.dialog_max_height)
                 )
+        }
+
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .then(heightModifier)
                 .background(
                     color = MyAppTheme.colors.white,
                     shape = RoundedCornerShape(topStartPercent = 7, topEndPercent = 7)
                 )
         ) {
-            DialogTopbar(
+            DialogTopBar(
                 isBackEnable = isBackEnable,
                 title = title,
                 onNavigationUp = {
@@ -65,6 +72,11 @@ fun MyAppDialog(
             )
 
             content()
+            
+            if(isFixHeight)
+            {
+                Spacer(modifier = Modifier.weight(1f))
+            }
             if (bottomContent != null) {
                 bottomContent()
             }
@@ -75,7 +87,7 @@ fun MyAppDialog(
 }
 
 @Composable
-private fun DialogTopbar(
+private fun DialogTopBar(
     @StringRes title: Int,
     isBackEnable: Boolean = false,
     onNavigationUp: ()-> Unit,
@@ -101,7 +113,7 @@ private fun DialogTopbar(
     )
 }
 
-@Preview()
+@Preview
 @Composable
 private fun MyAppDialogPreview() {
     PannyPalTheme {
