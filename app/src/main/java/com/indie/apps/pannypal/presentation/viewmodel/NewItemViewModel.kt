@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.indie.apps.pannypal.data.entity.MerchantData
 import com.indie.apps.pannypal.data.entity.Payment
+import com.indie.apps.pannypal.data.entity.User
 import com.indie.apps.pannypal.data.entity.toMerchantNameAndDetails
 import com.indie.apps.pannypal.data.module.MerchantNameAndDetails
 import com.indie.apps.pannypal.domain.usecase.AddMerchantDataUseCase
@@ -22,7 +23,9 @@ import com.indie.apps.pannypal.util.ErrorMessage
 import com.indie.apps.pannypal.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -64,6 +67,8 @@ class NewItemViewModel @Inject constructor(
     val paymentList = getPaymentListUseCase.loadData()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
 
+    val uiState = MutableStateFlow<Resource<Unit>>(Resource.Loading())
+
     init {
         setEditData()
     }
@@ -72,46 +77,56 @@ class NewItemViewModel @Inject constructor(
         if (merchantEditId != 0L) {
             viewModelScope.launch {
 
-                getMerchantDataFromIdUseCase
-                    .getData(merchantEditId)
-                    .collect {
-                        if (it is Resource.Success && it.data != null) {
-                            editMerchantData = it.data
-                            received = if (editMerchantData!!.type == 1) true else false
-                            amount.text = editMerchantData!!.amount.toString()
-                            description.text = editMerchantData!!.details.toString()
+                try {
+                    getMerchantDataFromIdUseCase
+                        .getData(merchantEditId)
+                        .collect {
+                            when(it)
+                            {
+                                is Resource.Loading -> { uiState.value = Resource.Loading()}
+                                is Resource.Error -> { uiState.value = Resource.Error("")}
+                                is Resource.Success-> {
+                                    if(it.data != null)
+                                    {
+                                        editMerchantData = it.data
+                                        received = if (editMerchantData!!.type == 1) true else false
+                                        amount.text = Util.getFormattedString(editMerchantData!!.amount)
+                                        description.text = editMerchantData!!.details.toString()
 
-                            val paymentDeffer = async {
-                                getPaymentFromIdUseCase
-                                    .getData(editMerchantData!!.paymentId)
-                                    .collect {
-                                        if (it is Resource.Success && it.data != null) {
-                                            setPaymentData(it.data)
+                                        launch  {
+                                            getPaymentFromIdUseCase
+                                                .getData(editMerchantData!!.paymentId)
+                                                .collect {
+                                                    if (it is Resource.Success && it.data != null) {
+                                                        setPaymentData(it.data)
+                                                    }
+                                                }
                                         }
-                                    }
 
-                            }
-
-                            val merchantDeffer = async {
-                                getMerchantFromIdUseCase
-                                    .getData(editMerchantData!!.merchantId)
-                                    .collect {
-                                        if (it != null) {
-                                            setMerchantData(it.toMerchantNameAndDetails())
+                                        launch {
+                                            getMerchantFromIdUseCase
+                                                .getData(editMerchantData!!.merchantId)
+                                                .collect {
+                                                    if (it != null) {
+                                                        setMerchantData(it.toMerchantNameAndDetails())
+                                                    }
+                                                }
                                         }
+
+                                        uiState.value = Resource.Success(Unit)
+                                    }else{
+                                        uiState.value = Resource.Error("Not found")
                                     }
+                                }
                             }
-
-                            paymentDeffer.await()
-                            merchantDeffer.await()
-
-
                         }
-                    }
-
-                /**/
-
+                }catch (e : Exception)
+                {
+                    uiState.value = Resource.Error("${e.localizedMessage}")
+                }
             }
+        }else{
+            uiState.value = Resource.Success(Unit)
         }
     }
 

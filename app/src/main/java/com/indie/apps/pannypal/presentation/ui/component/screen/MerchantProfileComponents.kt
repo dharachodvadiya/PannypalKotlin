@@ -32,6 +32,8 @@ import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 
 @Composable
 fun MerchantProfileTopSection(
+    name: String ="",
+    description: String = "",
     modifier: Modifier = Modifier
 ){
 
@@ -45,12 +47,12 @@ fun MerchantProfileTopSection(
         UserProfile(borderWidth = 1f)
         Spacer(modifier = Modifier.height(20.dp))
         Text(
-            text = "Name",
+            text = name,
             style = MyAppTheme.typography.Semibold60,
             color = MyAppTheme.colors.black
         )
         Text(
-            text = "description",
+            text = if(description.isNullOrEmpty()) stringResource(id = R.string.no_details) else description,
             style = MyAppTheme.typography.Medium40,
             color = MyAppTheme.colors.gray2,
             textAlign = TextAlign.Center,
@@ -61,6 +63,7 @@ fun MerchantProfileTopSection(
 
 @Composable
 fun MerchantProfileBottomSection(
+    phoneNo : String = "",
     modifier: Modifier = Modifier
 ){
     Row(
@@ -83,7 +86,7 @@ fun MerchantProfileBottomSection(
                 color = MyAppTheme.colors.gray2
             )
             Text(
-                text = "+00 000000000",
+                text = if(phoneNo.isNullOrEmpty()) stringResource(id = R.string.phone_number_not_added) else phoneNo,
                 style = MyAppTheme.typography.Semibold50,
                 color = MyAppTheme.colors.black
             )

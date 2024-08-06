@@ -22,6 +22,7 @@ import com.indie.apps.pannypal.presentation.ui.component.screen.NewEntryFieldIte
 import com.indie.apps.pannypal.presentation.ui.component.screen.NewEntryTopSelectionButton
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 import com.indie.apps.pannypal.presentation.viewmodel.NewItemViewModel
+import com.indie.apps.pannypal.util.Resource
 
 @Composable
 fun NewItemScreen(
@@ -35,8 +36,6 @@ fun NewItemScreen(
 
     modifier: Modifier = Modifier
 ) {
-    val paymentList by newItemViewModel.paymentList.collectAsStateWithLifecycle()
-
     if (merchant != null) {
         newItemViewModel.setMerchantData(merchant)
     }
@@ -44,68 +43,78 @@ fun NewItemScreen(
         newItemViewModel.setPaymentData(payment)
     }
 
-    Scaffold(
-        topBar = {
-            TopBarWithTitle(
-                title = stringResource(id = R.string.new_item),
-                onNavigationUp = {
-                    if (newItemViewModel.enableButton)
-                        onNavigationUp()
-                },
-                contentAlignment = Alignment.Center
-            )
-        }
-    ) { padding ->
+    val paymentList by newItemViewModel.paymentList.collectAsStateWithLifecycle()
 
-        Column(
-            modifier = modifier
-                .padding(padding)
-                .padding(horizontal = dimensionResource(id = R.dimen.padding))
-        ) {
-            NewEntryTopSelectionButton(
-                received = newItemViewModel.received,
-                onReceivedChange = newItemViewModel::onReceivedChange
-            )
-            NewEntryFieldItemSection(
-                modifier = Modifier
-                    .padding(vertical = dimensionResource(id = R.dimen.padding)),
-                onPaymentAdd = {
-                    if (newItemViewModel.enableButton)
-                        onPaymentAdd()
-                },
-                onMerchantSelect = {
-                    if (newItemViewModel.enableButton)
-                        onMerchantSelect()
-                },
-                merchantName = newItemViewModel.merchant?.name,
-                onPaymentSelect = newItemViewModel::onPaymentSelect,
-                paymentList = paymentList,
-                paymentName = newItemViewModel.payment?.name,
-                amount = newItemViewModel.amount,
-                description = newItemViewModel.description,
-                merchantError = newItemViewModel.merchantError,
-                paymentError = newItemViewModel.paymentError
-            )
-            Spacer(modifier = Modifier.weight(1f))
-            BottomSaveButton(
-                onClick = {
-                    newItemViewModel.addOrEditMerchantData(onSuccess = {
-                        onSaveSuccess(it)
-                    })
-                },
-                enabled = newItemViewModel.enableButton,
-                modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.padding))
-            )
+    val uiState by newItemViewModel.uiState.collectAsStateWithLifecycle()
+
+    when (uiState) {
+        is Resource.Loading -> {
+            LoadingScreen()
+        }
+
+        is Resource.Success -> {
+
+            Scaffold(topBar = {
+                TopBarWithTitle(
+                    title = stringResource(id = R.string.new_item), onNavigationUp = {
+                        if (newItemViewModel.enableButton) onNavigationUp()
+                    }, contentAlignment = Alignment.Center
+                )
+            }) { padding ->
+
+                Column(
+                    modifier = modifier
+                        .padding(padding)
+                        .padding(horizontal = dimensionResource(id = R.dimen.padding))
+                ) {
+                    NewEntryTopSelectionButton(
+                        received = newItemViewModel.received,
+                        onReceivedChange = newItemViewModel::onReceivedChange
+                    )
+                    NewEntryFieldItemSection(
+                        modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.padding)),
+                        onPaymentAdd = {
+                            if (newItemViewModel.enableButton) onPaymentAdd()
+                        },
+                        onMerchantSelect = {
+                            if (newItemViewModel.enableButton) onMerchantSelect()
+                        },
+                        merchantName = newItemViewModel.merchant?.name,
+                        onPaymentSelect = newItemViewModel::onPaymentSelect,
+                        paymentList = paymentList,
+                        paymentName = newItemViewModel.payment?.name,
+                        amount = newItemViewModel.amount,
+                        description = newItemViewModel.description,
+                        merchantError = newItemViewModel.merchantError,
+                        paymentError = newItemViewModel.paymentError
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    BottomSaveButton(
+                        onClick = {
+                            newItemViewModel.addOrEditMerchantData(onSuccess = {
+                                onSaveSuccess(it)
+                            })
+                        },
+                        enabled = newItemViewModel.enableButton,
+                        modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.padding))
+                    )
+                }
+            }
+        }
+
+        is Resource.Error -> {
+            LoadingScreen()
         }
     }
+
+
 }
 
 @Preview
 @Composable
 private fun NewItemScreenPreview() {
     PannyPalTheme {
-        NewItemScreen(
-            onPaymentAdd = {},
+        NewItemScreen(onPaymentAdd = {},
             onNavigationUp = {},
             onMerchantSelect = {},
             onSaveSuccess = {})

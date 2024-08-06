@@ -45,4 +45,5 @@
     <string name="merchant_edit_success_message">Merchant Edit Successfully</string>
     <string name="edit_merchant_data">Edit Entry</string>
     <string name="merchant_data_edit_success_message">Merchant Data Edit Successfully</string>
+    <string name="phone_number_not_added">Not Added</string>
 </resources>

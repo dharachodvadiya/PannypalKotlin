@@ -64,7 +64,12 @@ fun NavGraphBuilder.MerchantRoute(
         composable(route = MerchantNav.DATA.route) {
             bottomBarState.value = false
             MerchantDataScreen(
-                onProfileClick = { navController.navigate(MerchantNav.PROFILE.route) },
+                onProfileClick = {
+                    navController.navigate(MerchantNav.PROFILE.route.replace(
+                        "{${Util.PARAM_MERCHANT_ID}}",
+                        it.toString()
+                    ))
+                                 },
                 onNavigationUp = { navController.navigateUp() },
                 onEditClick = {
                     println("aaaaaa edit merchant")

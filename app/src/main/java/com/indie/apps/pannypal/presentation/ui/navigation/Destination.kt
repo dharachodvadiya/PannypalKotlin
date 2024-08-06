@@ -19,7 +19,7 @@ enum class OverviewNav(val route: String) {
 sealed class MerchantNav(val route: String) {
     data object START : MerchantNav("merchant/start")
     data object DATA : MerchantNav("merchant/merchant_data/{${Util.PARAM_MERCHANT_ID}}")
-    data object PROFILE : MerchantNav("merchant/merchant_profile")
+    data object PROFILE : MerchantNav("merchant/merchant_profile/{${Util.PARAM_MERCHANT_ID}}")
     data object EDIT_DATA :
         MerchantNav("merchant/edit_merchant_data/{${Util.PARAM_EDIT_MERCHANT_DATA_ID}}")
 }

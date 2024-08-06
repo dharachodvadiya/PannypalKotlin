@@ -40,7 +40,7 @@ import com.indie.apps.pannypal.presentation.viewmodel.MerchantDataViewModel
 @Composable
 fun MerchantDataScreen(
     merchantDataViewModel: MerchantDataViewModel = hiltViewModel(),
-    onProfileClick: () -> Unit,
+    onProfileClick: (Long) -> Unit,
     onNavigationUp: () -> Unit,
     onEditClick: (Long) -> Unit,
     modifier: Modifier = Modifier
@@ -59,7 +59,7 @@ fun MerchantDataScreen(
                 selectCount = merchantDataViewModel.selectedList.size,
                 name = merchant?.name ?: "",
                 description = merchant?.details ?: "",
-                onClick = onProfileClick,
+                onClick = { merchant?.let { onProfileClick(it.id) } },
                 onNavigationUp = onNavigationUp,
                 onCloseClick = {
                     merchantDataViewModel.clearSelection()
