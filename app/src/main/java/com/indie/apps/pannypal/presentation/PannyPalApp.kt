@@ -1,6 +1,8 @@
 package com.indie.apps.pannypal.presentation
 
 import android.widget.Toast
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -68,6 +70,12 @@ fun PannyPalApp() {
             NavHost(
                 navController = navController,
                 startDestination = BottomNavItem.OVERVIEW.route,
+                enterTransition = {
+                    EnterTransition.None
+                },
+                exitTransition = {
+                    ExitTransition.None
+                },
                 modifier = Modifier.padding(innerPadding)
             ) {
                 overViewRoute(navController, bottomBarState)
