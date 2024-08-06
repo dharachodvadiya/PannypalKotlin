@@ -48,7 +48,6 @@ fun MerchantScreen(
 ) {
     val context = LocalContext.current
     val merchantDeleteToast = stringResource(id = R.string.merchant_delete_success_message)
-    val merchantEditToast = stringResource(id = R.string.merchant_edit_success_message)
     val lazyPagingData = merchantViewModel.pagedData.collectAsLazyPagingItems()
     val pagingState by merchantViewModel.pagingState.collectAsStateWithLifecycle()
     pagingState.update(lazyPagingData)
@@ -67,7 +66,6 @@ fun MerchantScreen(
     if (isEditAddSuccess != isEditSuccessState) {
         isEditSuccessState = isEditAddSuccess
         if (isEditSuccessState) {
-            Toast.makeText(context, merchantEditToast, Toast.LENGTH_SHORT).show()
             merchantViewModel.setEditAddSuccess()
         }
     }

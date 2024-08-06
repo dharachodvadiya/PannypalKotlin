@@ -18,6 +18,7 @@ import com.indie.apps.pannypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pannypal.util.ErrorMessage
 import com.indie.apps.pannypal.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
@@ -95,11 +96,12 @@ class NewItemViewModel @Inject constructor(
                                                     }
                                                 }
                                         }
-
-                                        launch {
+                                        var merchantJob : Job? = null
+                                        merchantJob = launch {
                                             getMerchantFromIdUseCase.getData(editMerchantData!!.merchantId)
                                                 .collect {
                                                     setMerchantData(it.toMerchantNameAndDetails())
+                                                    merchantJob?.cancel()
                                                 }
                                         }
 

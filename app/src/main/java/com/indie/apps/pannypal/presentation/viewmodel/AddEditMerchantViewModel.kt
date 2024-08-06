@@ -85,8 +85,7 @@ class AddEditMerchantViewModel @Inject constructor(
                                 name = merchantName.value.text.trim(),
                                 phoneNumber = phoneNumber.value.text.trim(),
                                 details = description.value.text.trim(),
-                                countryCode = countryCode.value,
-                                dateInMilli = System.currentTimeMillis()
+                                countryCode = countryCode.value
                             )
 
                             updateMerchantUseCase
