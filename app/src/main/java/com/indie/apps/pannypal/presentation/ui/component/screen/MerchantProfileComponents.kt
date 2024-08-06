@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.outlined.Phone
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -25,7 +24,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pannypal.R
-import com.indie.apps.pannypal.presentation.ui.common.Util
 import com.indie.apps.pannypal.presentation.ui.component.UserProfile
 import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
@@ -52,7 +50,7 @@ fun MerchantProfileTopSection(
             color = MyAppTheme.colors.black
         )
         Text(
-            text = if(description.isNullOrEmpty()) stringResource(id = R.string.no_details) else description,
+            text = description.ifEmpty { stringResource(id = R.string.no_details) },
             style = MyAppTheme.typography.Medium40,
             color = MyAppTheme.colors.gray2,
             textAlign = TextAlign.Center,
@@ -86,7 +84,7 @@ fun MerchantProfileBottomSection(
                 color = MyAppTheme.colors.gray2
             )
             Text(
-                text = if(phoneNo.isNullOrEmpty()) stringResource(id = R.string.phone_number_not_added) else phoneNo,
+                text = phoneNo.ifEmpty { stringResource(id = R.string.phone_number_not_added) },
                 style = MyAppTheme.typography.Semibold50,
                 color = MyAppTheme.colors.black
             )

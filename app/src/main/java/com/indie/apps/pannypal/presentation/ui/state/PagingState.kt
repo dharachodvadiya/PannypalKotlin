@@ -2,13 +2,11 @@ package com.indie.apps.pannypal.presentation.ui.state
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.paging.LoadState
-import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 
-class PagingState<T : Any>() {
+class PagingState<T : Any> {
     var isRefresh by mutableStateOf(false)
     private set
 

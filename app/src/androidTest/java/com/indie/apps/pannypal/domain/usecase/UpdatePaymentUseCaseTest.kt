@@ -6,15 +6,13 @@ import com.indie.apps.pannypal.data.db.AppDatabase
 import com.indie.apps.pannypal.data.entity.Payment
 import com.indie.apps.pannypal.di.IoDispatcher
 import com.indie.apps.pannypal.repository.PaymentRepository
-import com.indie.apps.pannypal.util.Resource
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import org.junit.After
-import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -23,7 +21,7 @@ import javax.inject.Inject
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-class deletePaymentUseCaseTest {
+class UpdatePaymentUseCaseTest {
 
     @get:Rule
     var hiltAndroidRule = HiltAndroidRule(this)
@@ -52,45 +50,25 @@ class deletePaymentUseCaseTest {
     }
 
     @Test
-    fun delete_preAdded_payment_test() = runBlocking {
-        val payment = Payment(id = 1, name = "Debit Card", 1)
-        val paymentWithId  = payment.copy(id=paymentDao.insert(payment))
-
-        val resultFlow = DeletePaymentUseCase(
-            paymentRepository = paymentRepository,
-            payment = paymentWithId,
-            dispatcher = coroutineDispatcher
-        ).invoke()
-
-        resultFlow.drop(1).collect { result ->
-            assertTrue(result is Resource.Error)
-            assertEquals("Fail to delete payment", (result as Resource.Error).message)
-
-            val it = paymentDao.getPaymentList().first()
-            assertEquals(1, it.size)
-
-        }
-    }
-
-    @Test
-    fun delete_custom_payment_test() = runBlocking {
+    fun update_payment_test() = runBlocking {
         val payment = Payment(id = 1, name = "Debit Card")
-        val paymentWithId  = payment.copy(id=paymentDao.insert(payment))
 
-        val resultFlow = DeletePaymentUseCase(
+        paymentDao.insert(payment)
+
+        val payment1 = payment.copy(name = "Cash")
+
+        val result = UpdatePaymentUseCase(
             paymentRepository = paymentRepository,
-            payment = paymentWithId,
+            payment = payment1,
             dispatcher = coroutineDispatcher
         ).invoke()
 
-        resultFlow.drop(1).collect { result ->
-            assertTrue(result is Resource.Success)
-            assertEquals(1, (result as Resource.Success).data)
+        assert(result.toList().size == 2)
+        assert(result.toList()[1].data == 1)
 
-            val it = paymentDao.getPaymentList().first()
-            assertEquals(0, it.size)
-
-        }
+        val getPayment = paymentDao.getPaymentList().first()
+        assert(getPayment.size == 1)
+        assert(getPayment[0].name == "Cash")
     }
 
 }

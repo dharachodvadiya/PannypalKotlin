@@ -73,7 +73,7 @@ fun PrimaryButton(
 }
 
 
-@Preview()
+@Preview
 @Composable
 private fun PrimaryButtonPreview() {
     PannyPalTheme {

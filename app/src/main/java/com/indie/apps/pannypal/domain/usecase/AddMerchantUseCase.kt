@@ -1,6 +1,5 @@
 package com.indie.apps.pannypal.domain.usecase
 
-import android.util.Log
 import com.indie.apps.pannypal.data.entity.Merchant
 import com.indie.apps.pannypal.di.IoDispatcher
 import com.indie.apps.pannypal.repository.MerchantRepository

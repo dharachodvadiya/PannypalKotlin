@@ -25,13 +25,13 @@ object Util {
 
     val TIME_ZONE_OFFSET_IN_MILLI = TimeZone.getDefault().rawOffset
 
-    fun getFormattedStringWithSymbole(value: Double?): String {
+    fun getFormattedStringWithSymbol(value: Double?): String {
         val format = DecimalFormat("##,##,##0.##")
         return format.format(value) + " ₹"
     }
 
     fun getFormattedString(value: Double?): String {
-        val format = java.text.DecimalFormat("##0.##")
+        val format = DecimalFormat("##0.##")
         return format.format(value)
     }
 
@@ -43,7 +43,7 @@ object Util {
                 phoneUtil.parse(phoneNumber, countryCode)
             return phoneUtil.isValidNumber(swissNumberProto)
         } catch (e: NumberParseException) {
-            System.err.println("NumberParseException was thrown: " + e.toString())
+            System.err.println("NumberParseException was thrown: $e")
             return false
         }
     }

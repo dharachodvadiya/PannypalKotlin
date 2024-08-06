@@ -20,7 +20,6 @@ import com.indie.apps.pannypal.repository.UserRepositoryImpl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 @Database(
     entities = [
@@ -57,7 +56,7 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
-        private val CALLBACK = object : RoomDatabase.Callback() {
+        private val CALLBACK = object : Callback() {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
 

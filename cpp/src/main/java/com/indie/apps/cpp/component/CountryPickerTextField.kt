@@ -1,33 +1,19 @@
-package com.mcode.ccp.component
+package com.indie.apps.cpp.component
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.gestures.forEachGesture
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldColors
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.input.pointer.PointerEvent
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.changedToUp
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.semantics
-import com.mcode.ccp.utils.Country
-import com.mcode.ccp.utils.countryList
 import kotlinx.coroutines.coroutineScope
 
-@OptIn(ExperimentalMaterial3Api::class)
+/*@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CountryTextField(
     label: String = "",
@@ -47,7 +33,7 @@ fun CountryTextField(
             .expandable(menuLabel = label, onExpandedChange = onExpandedChange),
         readOnly = true,
         isError = isError,
-        label = { /*Text(label)*/ },
+        label = { *//*Text(label)*//* },
         value = if (selectedCountry == null) countryValue else "${selectedCountry.dial_code} ${selectedCountry.name}",
         onValueChange = {},
         colors = colors,
@@ -65,7 +51,7 @@ fun CountryTextField(
             )
         }
     )
-}
+}*/
 
 @SuppressLint("ModifierFactoryUnreferencedReceiver")
 @Composable

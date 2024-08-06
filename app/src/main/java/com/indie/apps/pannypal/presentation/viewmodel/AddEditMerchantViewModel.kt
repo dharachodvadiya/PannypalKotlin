@@ -10,7 +10,7 @@ import com.indie.apps.pannypal.presentation.ui.common.Util
 import com.indie.apps.pannypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pannypal.util.ErrorMessage
 import com.indie.apps.pannypal.util.Resource
-import com.mcode.ccp.data.utils.getLibCountries
+import com.indie.apps.cpp.data.utils.getLibCountries
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -41,15 +41,13 @@ class AddEditMerchantViewModel @Inject constructor(
                 getMerchantFromIdUseCase
                     .getData(editId!!)
                     .collect {
-                        if (it != null) {
-                            editMerchant = it
+                        editMerchant = it
 
-                            merchantName.value.text = it.name
-                            phoneNumber.value.text = it.phoneNumber ?: ""
-                            description.value.text = it.details ?: ""
-                            if (!it.countryCode.isNullOrEmpty())
-                                countryCode.value = it.countryCode
-                        }
+                        merchantName.value.text = it.name
+                        phoneNumber.value.text = it.phoneNumber ?: ""
+                        description.value.text = it.details ?: ""
+                        if (!it.countryCode.isNullOrEmpty())
+                            countryCode.value = it.countryCode
                     }
             }
         }
@@ -69,10 +67,10 @@ class AddEditMerchantViewModel @Inject constructor(
                 phoneNumber = countryCode.value + phoneNumber.value.text
             )
 
-            if (merchantName.value.text.trim().isNullOrEmpty()) {
+            if (merchantName.value.text.trim().isEmpty()) {
                 merchantName.value.setError(ErrorMessage.MERCHANT_NAME_EMPTY)
                 enableButton.value = true
-            } else if (!phoneNumber.value.text.trim().isNullOrEmpty() && !isValidNum) {
+            } else if (phoneNumber.value.text.trim().isNotEmpty() && !isValidNum) {
                 phoneNumber.value.setError(ErrorMessage.PHONE_NO_INVALID)
                 enableButton.value = true
             } else {

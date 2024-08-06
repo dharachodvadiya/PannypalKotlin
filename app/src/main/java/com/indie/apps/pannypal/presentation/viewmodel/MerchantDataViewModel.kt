@@ -21,13 +21,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MerchantDataViewModel @Inject constructor(
-    private val getMerchantFromIdUseCase: GetMerchantFromIdUseCase,
-    private val getMerchantDataListFromMerchantId: GetMerchantDataListFromMerchantIdUseCase,
+    getMerchantFromIdUseCase: GetMerchantFromIdUseCase,
+    getMerchantDataListFromMerchantId: GetMerchantDataListFromMerchantIdUseCase,
     private val deleteMultipleMerchantDataUseCase: DeleteMultipleMerchantDataUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val merchantId = savedStateHandle?.get<String>(Util.PARAM_MERCHANT_ID)?.toLong() ?: 0
+    private val merchantId = savedStateHandle.get<String>(Util.PARAM_MERCHANT_ID)?.toLong() ?: 0
 
     var scrollIndex = MutableStateFlow(0)
     var scrollOffset = MutableStateFlow(0)

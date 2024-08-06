@@ -1,11 +1,11 @@
-package com.mcode.ccp.data.utils
+package com.indie.apps.cpp.data.utils
 
 import android.content.Context
 import android.telephony.TelephonyManager
 import androidx.compose.ui.text.intl.Locale
 import com.google.i18n.phonenumbers.PhoneNumberUtil
 import com.google.i18n.phonenumbers.Phonenumber
-import com.mcode.ccp.data.CountryData
+import com.indie.apps.cpp.data.CountryData
 
 fun getDefaultLangCode(context: Context): String {
     val localeCode: TelephonyManager =

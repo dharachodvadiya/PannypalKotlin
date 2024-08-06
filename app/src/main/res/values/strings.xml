@@ -35,7 +35,7 @@
     <string name="merchant_data_save_success_message">Merchant Data Save Successfully</string>
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
-    <string name="selected">Selected</string>
+    <string name="selected_text">Selected</string>
     <string name="edit_merchant">Edit Merchant</string>
     <string name="delete_item_dialog_text">Are you sure to delete this item??</string>
     <string name="delete_dialog_title">Delete</string>

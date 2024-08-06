@@ -12,15 +12,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,19 +24,15 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pannypal.R
-import com.indie.apps.pannypal.presentation.ui.component.custom.composable.ListItem
-import com.indie.apps.pannypal.presentation.ui.component.custom.composable.RoundImage
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.SearchView
-import com.indie.apps.pannypal.presentation.ui.component.linearGradientsBrush
 import com.indie.apps.pannypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
-import com.mcode.ccp.data.utils.getFlags
-import com.mcode.ccp.utils.Country
-import com.mcode.ccp.utils.countryList
-import com.mcode.ccp.utils.searchCountry
+import com.indie.apps.cpp.data.utils.getFlags
+import com.indie.apps.cpp.utils.Country
+import com.indie.apps.cpp.utils.countryList
+import com.indie.apps.cpp.utils.searchCountry
 import java.util.Locale
 
 @Composable
@@ -55,7 +47,7 @@ fun CppDialogField(
         )
         val context = LocalContext.current
         val countries = remember { countryList(context) }
-        var mcountriesList = countries.toList()
+        val countriesList = countries.toList()
 
         LazyColumn(
             modifier = Modifier
@@ -63,9 +55,9 @@ fun CppDialogField(
         ) {
             items(
                 if (searchState.text.isEmpty()) {
-                    mcountriesList
+                    countriesList
                 } else {
-                    mcountriesList.searchCountry(searchState.text)
+                    countriesList.searchCountry(searchState.text)
                 }
             ){country ->
                 SearchCppListItem(
@@ -111,7 +103,7 @@ private fun SearchCppListItem(
     onClick: (Country) -> Unit,
     modifier: Modifier = Modifier.fillMaxWidth()
 ) {
-    var code = country.code.lowercase(Locale.ROOT)
+    val code = country.code.lowercase(Locale.ROOT)
     Row(modifier = modifier
         .clickable {
             onClick(country)
@@ -128,7 +120,7 @@ private fun SearchCppListItem(
                 .width(20.dp)
         )
         Text(
-            text = "${country.name}",
+            text = country.name,
             modifier = Modifier
                 .padding(start = 8.dp)
                 .weight(2f),

@@ -33,7 +33,7 @@ fun MyAppDialog(
     isBackEnable: Boolean = false,
     onNavigationUp: ()-> Unit,
     content: @Composable () -> Unit,
-    bottomContent: @Composable() (() -> Unit)? = null,
+    bottomContent: @Composable (() -> Unit)? = null,
     isFixHeight: Boolean = false,
     modifier: Modifier = Modifier
 ) {
@@ -63,7 +63,7 @@ fun MyAppDialog(
                     shape = RoundedCornerShape(topStartPercent = 7, topEndPercent = 7)
                 )
         ) {
-            DialogTopbar(
+            DialogTopBar(
                 isBackEnable = isBackEnable,
                 title = title,
                 onNavigationUp = {
@@ -87,7 +87,7 @@ fun MyAppDialog(
 }
 
 @Composable
-private fun DialogTopbar(
+private fun DialogTopBar(
     @StringRes title: Int,
     isBackEnable: Boolean = false,
     onNavigationUp: ()-> Unit,
@@ -113,7 +113,7 @@ private fun DialogTopbar(
     )
 }
 
-@Preview()
+@Preview
 @Composable
 private fun MyAppDialogPreview() {
     PannyPalTheme {

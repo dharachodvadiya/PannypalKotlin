@@ -23,7 +23,7 @@ class AddPaymentViewModel @Inject constructor(private val addPaymentUseCase: Add
 
         if (enableButton.value) {
             enableButton.value = false
-            if (paymentTypeState.value.text.trim().isNullOrEmpty()) {
+            if (paymentTypeState.value.text.trim().isEmpty()) {
                 paymentTypeState.value.setError(ErrorMessage.AMOUNT_PAYMENT_TYPE)
                 enableButton.value = true
             } else {

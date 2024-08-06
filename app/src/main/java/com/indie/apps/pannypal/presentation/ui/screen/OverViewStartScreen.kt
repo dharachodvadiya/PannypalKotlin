@@ -50,12 +50,12 @@ fun OverViewStartScreen(
     }
 
     when (uiState) {
-        is Resource.Loading -> 0.0
+        is Resource.Loading -> {}
         is Resource.Success -> {
             amount = (uiState.data?.incomeAmount ?: 0.0) - (uiState.data?.expenseAmount ?: 0.0)
         }
 
-        is Resource.Error -> 0.0
+        is Resource.Error -> {}
     }
 
     Scaffold(topBar = {

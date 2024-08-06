@@ -1,6 +1,5 @@
 package com.indie.apps.pannypal.domain.usecase
 
-import com.indie.apps.pannypal.data.entity.Merchant
 import com.indie.apps.pannypal.di.IoDispatcher
 import com.indie.apps.pannypal.repository.MerchantDataRepository
 import com.indie.apps.pannypal.repository.MerchantRepository
@@ -8,6 +7,7 @@ import com.indie.apps.pannypal.repository.UserRepository
 import com.indie.apps.pannypal.util.Resource
 import com.indie.apps.pannypal.util.handleException
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -22,6 +22,7 @@ class DeleteMultipleMerchantUseCase @Inject constructor(
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) {
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     suspend fun deleteData(ids: List<Long>): Flow<Resource<Int>> {
         return flow {
 

@@ -32,11 +32,11 @@ class NewItemViewModel @Inject constructor(
     private val getMerchantDataFromIdUseCase: GetMerchantDataFromIdUseCase,
     private val getMerchantFromIdUseCase: GetMerchantFromIdUseCase,
     private val getPaymentFromIdUseCase: GetPaymentFromIdUseCase,
-    private val savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val merchantEditId =
-        savedStateHandle?.get<String>(Util.PARAM_EDIT_MERCHANT_DATA_ID)?.toLong() ?: 0
+        savedStateHandle.get<String>(Util.PARAM_EDIT_MERCHANT_DATA_ID)?.toLong() ?: 0
     private var editMerchantData: MerchantData? = null
 
     val merchant = MutableStateFlow<MerchantNameAndDetails?>(null)
@@ -62,13 +62,13 @@ class NewItemViewModel @Inject constructor(
         setEditData()
     }
 
-    fun setEditData() {
+    private fun setEditData() {
         if (merchantEditId != 0L) {
             viewModelScope.launch {
 
                 try {
-                    getMerchantDataFromIdUseCase.getData(merchantEditId).collect {
-                            when (it) {
+                    getMerchantDataFromIdUseCase.getData(merchantEditId).collect { it ->
+                        when (it) {
                                 is Resource.Loading -> {
                                     uiState.value = Resource.Loading()
                                 }
@@ -81,7 +81,7 @@ class NewItemViewModel @Inject constructor(
                                     if (it.data != null) {
                                         editMerchantData = it.data
                                         received.value =
-                                            if (editMerchantData!!.type == 1) true else false
+                                            editMerchantData!!.type == 1
                                         amount.value.text =
                                             Util.getFormattedString(editMerchantData!!.amount)
                                         description.value.text =
@@ -99,9 +99,7 @@ class NewItemViewModel @Inject constructor(
                                         launch {
                                             getMerchantFromIdUseCase.getData(editMerchantData!!.merchantId)
                                                 .collect {
-                                                    if (it != null) {
-                                                        setMerchantData(it.toMerchantNameAndDetails())
-                                                    }
+                                                    setMerchantData(it.toMerchantNameAndDetails())
                                                 }
                                         }
 
@@ -113,7 +111,7 @@ class NewItemViewModel @Inject constructor(
                             }
                         }
                 } catch (e: Exception) {
-                    uiState.value = Resource.Error("${e.localizedMessage}")
+                    uiState.value = Resource.Error(e.message ?: "unexpected" )
                 }
             }
         } else {
@@ -143,13 +141,13 @@ class NewItemViewModel @Inject constructor(
     fun addOrEditMerchantData(onSuccess: (Boolean) -> Unit) {
         if (enableButton.value) {
             enableButton.value = false
-            if (amount.value.text.trim().isNullOrEmpty()) {
+            if (amount.value.text.trim().isEmpty()) {
                 amount.value.setError(ErrorMessage.AMOUNT_EMPTY)
                 enableButton.value = true
-            } else if (merchant == null) {
+            } else if (merchant.value == null) {
                 merchantError.value = ErrorMessage.SELECT_MERCHANT
                 enableButton.value = true
-            } else if (payment == null) {
+            } else if (payment.value == null) {
                 paymentError.value = ErrorMessage.SELECT_PAYMENT
                 enableButton.value = true
             } else {

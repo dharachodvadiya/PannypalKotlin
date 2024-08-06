@@ -1,11 +1,11 @@
 package com.indie.apps.pannypal.domain.usecase
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.indie.apps.pannypal.data.dao.MerchantDao
+import com.indie.apps.pannypal.data.dao.PaymentDao
 import com.indie.apps.pannypal.data.db.AppDatabase
-import com.indie.apps.pannypal.data.entity.Merchant
+import com.indie.apps.pannypal.data.entity.Payment
 import com.indie.apps.pannypal.di.IoDispatcher
-import com.indie.apps.pannypal.repository.MerchantRepository
+import com.indie.apps.pannypal.repository.PaymentRepository
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.CoroutineDispatcher
@@ -20,7 +20,7 @@ import javax.inject.Inject
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-class updateMerchantUseCaseTest {
+class SearchPaymentListUseCaseTest {
 
     @get:Rule
     var hiltAndroidRule = HiltAndroidRule(this)
@@ -29,18 +29,18 @@ class updateMerchantUseCaseTest {
     lateinit var appDatabase: AppDatabase
 
     @Inject
-    lateinit var merchantRepository: MerchantRepository
+    lateinit var paymentRepository: PaymentRepository
 
     @IoDispatcher
     @Inject
     lateinit var coroutineDispatcher: CoroutineDispatcher
 
-    private lateinit var merchantDao: MerchantDao
+    private lateinit var paymentDao: PaymentDao
 
     @Before
     fun setUp() {
         hiltAndroidRule.inject()
-        merchantDao = appDatabase.merchantDao()
+        paymentDao = appDatabase.paymentDao()
     }
 
     @After
@@ -49,26 +49,21 @@ class updateMerchantUseCaseTest {
     }
 
     @Test
-    fun update_merchant_without_amount_test() = runBlocking {
-        val merchant1 = Merchant(id = 1, name = "Merchant A")
+    fun search_payment_list_with_page_test() = runBlocking {
+        val payment1 = Payment(id = 1, name = "Debit Card")
+        val payment2 = Payment(id = 2, name = "Cash")
 
-        merchantDao.insert(merchant1)
+        paymentDao.insert(payment1)
+        paymentDao.insert(payment2)
 
-        val merchant1Updated = merchant1.copy(name = "Merchant B", details = "test detail")
-
-        val result = UpdateMerchantUseCase(
-            merchantRepository = merchantRepository,
-            merchant = merchant1Updated,
+        val result = SearchPaymentListUseCase(
+            paymentRepository = paymentRepository,
             dispatcher = coroutineDispatcher
-        ).invoke()
+        ).loadData("ca",1)
 
         assert(result.toList().size == 2)
-        assert(result.toList()[1].data == 1)
 
-        val getMerchants = merchantDao.getMerchantList(10, 0)
-        assert(getMerchants.size == 1)
-        assert(getMerchants[0].name == "Merchant B")
-        assert(getMerchants[0].details == "test detail")
+        assert(result.toList()[1].data!!.size == 1)
 
     }
 

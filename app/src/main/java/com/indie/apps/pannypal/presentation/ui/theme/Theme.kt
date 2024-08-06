@@ -42,7 +42,7 @@ private val lightScheme = MyAppColors(
     inactiveDark = Neutral.Neutral5.color,
     divider = Neutral.Neutral1.color,
     fieldBg = Neutral.Neutral1.color,
-    data_bg = Neutral.Neutral2.color,
+    dataBg = Neutral.Neutral2.color,
     transparent = Color.Transparent,
     isDark = false
 )
@@ -78,7 +78,7 @@ private val darkScheme = MyAppColors(
     inactiveDark = Neutral.Neutral4.color,
     divider = Neutral.Neutral1.color,
     fieldBg = Neutral.Neutral1.color,
-    data_bg = Neutral.Neutral2.color,
+    dataBg = Neutral.Neutral2.color,
     transparent = Color.Transparent,
     isDark = false
 )
@@ -183,7 +183,7 @@ data class MyAppColors(
     val divider: Color,
 
     val fieldBg: Color,
-    val data_bg: Color,
+    val dataBg: Color,
 
     val transparent: Color,
 
@@ -205,9 +205,9 @@ private val LightColorScheme = lightColorScheme(
 fun debugColors(
     darkTheme: Boolean
 ): ColorScheme {
-    if(darkTheme)
-        return DarkColorScheme
+    return if(darkTheme)
+        DarkColorScheme
     else{
-        return LightColorScheme
+        LightColorScheme
     }
 }

@@ -28,7 +28,7 @@ import javax.inject.Inject
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-class deleteSingleMerchantUseCaseTest {
+class DeleteSingleMerchantUseCaseTest {
 
     @get:Rule
     var hiltAndroidRule = HiltAndroidRule(this)

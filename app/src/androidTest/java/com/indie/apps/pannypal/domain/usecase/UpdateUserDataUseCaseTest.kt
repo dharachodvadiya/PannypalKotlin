@@ -1,15 +1,14 @@
 package com.indie.apps.pannypal.domain.usecase
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.indie.apps.pannypal.data.dao.PaymentDao
+import com.indie.apps.pannypal.data.dao.UserDao
 import com.indie.apps.pannypal.data.db.AppDatabase
-import com.indie.apps.pannypal.data.entity.Payment
+import com.indie.apps.pannypal.data.entity.User
 import com.indie.apps.pannypal.di.IoDispatcher
-import com.indie.apps.pannypal.repository.PaymentRepository
+import com.indie.apps.pannypal.repository.UserRepository
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import org.junit.After
@@ -21,7 +20,7 @@ import javax.inject.Inject
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-class updatePaymentUseCaseTest {
+class UpdateUserDataUseCaseTest {
 
     @get:Rule
     var hiltAndroidRule = HiltAndroidRule(this)
@@ -30,18 +29,18 @@ class updatePaymentUseCaseTest {
     lateinit var appDatabase: AppDatabase
 
     @Inject
-    lateinit var paymentRepository: PaymentRepository
+    lateinit var userRepository: UserRepository
 
     @IoDispatcher
     @Inject
     lateinit var coroutineDispatcher: CoroutineDispatcher
 
-    private lateinit var paymentDao: PaymentDao
+    private lateinit var userDao: UserDao
 
     @Before
     fun setUp() {
         hiltAndroidRule.inject()
-        paymentDao = appDatabase.paymentDao()
+        userDao = appDatabase.userDao()
     }
 
     @After
@@ -50,25 +49,25 @@ class updatePaymentUseCaseTest {
     }
 
     @Test
-    fun update_payment_test() = runBlocking {
-        val payment = Payment(id = 1, name = "Debit Card")
+    fun update_user_without_amount_test() = runBlocking {
+        val user = User(id = 1, name = "Test User", currency = "AED")
 
-        paymentDao.insert(payment)
+        userDao.insert(user)
 
-        val payment1 = payment.copy(name = "Cash")
+        val userWithEmail = user.copy(email = "test@gmail.com")
 
-        val result = UpdatePaymentUseCase(
-            paymentRepository = paymentRepository,
-            payment = payment1,
+        val result = UpdateUserDataUseCase(
+            userRepository = userRepository,
+            userWithEmail,
             dispatcher = coroutineDispatcher
         ).invoke()
 
         assert(result.toList().size == 2)
-        assert(result.toList()[1].data == 1)
 
-        val getPayment = paymentDao.getPaymentList().first()
-        assert(getPayment.size == 1)
-        assert(getPayment[0].name == "Cash")
+        val getUser = userDao.getUser()
+        getUser.run {
+            assert(getUser.email == "test@gmail.com")
+        }
     }
 
 }

@@ -10,10 +10,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.indie.apps.pannypal.R
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.MyAppDialog
 import com.indie.apps.pannypal.presentation.ui.component.dialog.CppDialogField
-import com.indie.apps.pannypal.presentation.ui.component.dialog.SearchDialogField
 import com.indie.apps.pannypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
-import com.mcode.ccp.utils.Country
+import com.indie.apps.cpp.utils.Country
 
 @SuppressLint("RememberReturnType")
 @Composable
@@ -38,7 +37,7 @@ fun DialogCpp(
     )
 }
 
-@Preview()
+@Preview
 @Composable
 private fun DialogCppPreview() {
     PannyPalTheme {

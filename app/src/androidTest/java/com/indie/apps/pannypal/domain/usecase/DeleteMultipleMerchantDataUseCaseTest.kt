@@ -32,7 +32,7 @@ import javax.inject.Inject
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-class deleteMultipleMerchantDataUseCaseTest {
+class DeleteMultipleMerchantDataUseCaseTest {
 
     @get:Rule
     var hiltAndroidRule = HiltAndroidRule(this)

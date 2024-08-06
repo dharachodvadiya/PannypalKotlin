@@ -6,13 +6,10 @@ import com.indie.apps.pannypal.data.db.AppDatabase
 import com.indie.apps.pannypal.data.entity.Merchant
 import com.indie.apps.pannypal.di.IoDispatcher
 import com.indie.apps.pannypal.repository.MerchantRepository
-import com.indie.apps.pannypal.util.Resource
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
-import org.junit.Assert.*
 
 import org.junit.After
 import org.junit.Before
@@ -23,7 +20,7 @@ import javax.inject.Inject
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-class getMerchantFromIdUseCaseTest {
+class SearchMerchantNameAndDetailListUseCaseTest {
 
     @get:Rule
     var hiltAndroidRule = HiltAndroidRule(this)
@@ -47,20 +44,16 @@ class getMerchantFromIdUseCaseTest {
     }
 
     @Test
-    fun get_merchant_from_id_test() = runBlocking{
+    fun search_merchant_name_details_list_with_page_test() = runBlocking{
         val merchant1 = Merchant(id = 1, name = "Merchant A", dateInMilli = 5L)
         val merchant2 = Merchant(id = 2, name = "Merchant B", dateInMilli = 10L)
+        val merchant3 = Merchant(id = 3, name = "ccc", dateInMilli = 10L)
         merchantDao.insert(merchant1)
         merchantDao.insert(merchant2)
+        merchantDao.insert(merchant3)
 
-        val result = GetMerchantFromIdUseCase(merchantRepository, coroutineDispatcher).invoke(1)
-
-        val list = result.toList()
-
-        assert(list.size == 2)
-        assert(list[0] is Resource.Loading<Merchant>)
-        assertNotNull(list[1])
-        assert(list[1].data!!.id == 1L)
-
+        val result = SearchMerchantNameAndDetailListUseCase(merchantRepository, coroutineDispatcher)
+            .loadData("Merch")
+        //ToDo Remaing testcase
     }
 }

@@ -78,8 +78,8 @@ private fun ProfileScreenData(
                 modifier = Modifier.height(screenHeight * 0.3f)
             )
             ProfileSection2(
-                incomeAmpunt = user.incomeAmount,
-                expenseAmpunt = user.expenseAmount,
+                incomeAmount = user.incomeAmount,
+                expenseAmount = user.expenseAmount,
                 onLoginWithGoogle = {})
         }
 

@@ -59,7 +59,7 @@ fun ProfileTopSection(
         )
         Spacer(modifier = Modifier.height(5.dp))
         Text(
-            text = Util.getFormattedStringWithSymbole(totalAmount),
+            text = Util.getFormattedStringWithSymbol(totalAmount),
             style = MyAppTheme.typography.Semibold90,
             color = MyAppTheme.colors.black
         )
@@ -68,8 +68,8 @@ fun ProfileTopSection(
 
 @Composable
 fun ProfileSection2(
-    incomeAmpunt: Double = 0.0,
-    expenseAmpunt: Double = 0.0,
+    incomeAmount: Double = 0.0,
+    expenseAmount: Double = 0.0,
     onLoginWithGoogle: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -83,7 +83,7 @@ fun ProfileSection2(
                 .padding(vertical = 20.dp)
         ) {
             ProfileAmountWithIcon(
-                amount = incomeAmpunt,
+                amount = incomeAmount,
                 isPositive = true
             )
             Spacer(
@@ -93,7 +93,7 @@ fun ProfileSection2(
                     .background(MyAppTheme.colors.gray1)
             )
             ProfileAmountWithIcon(
-                amount = -expenseAmpunt,
+                amount = -expenseAmount,
                 isPositive = false
             )
         }
@@ -154,7 +154,6 @@ private fun ProfileAmountWithIcon(
 
         val imageVector = if(isPositive) Icons.Default.SouthWest else Icons.Default.NorthEast
         val bgColor = if(isPositive)MyAppTheme.colors.greenBg else MyAppTheme.colors.redBg
-        val text = if(isPositive) "Earned" else "Spent"
 
         RoundImage(
             imageVector = imageVector,
@@ -171,7 +170,7 @@ private fun ProfileAmountWithIcon(
         )
         Spacer(modifier = Modifier.height(5.dp))
         Text(
-            text = Util.getFormattedStringWithSymbole(amount),
+            text = Util.getFormattedStringWithSymbol(amount),
             style = MyAppTheme.typography.Bold52_5,
             color = MyAppTheme.colors.black
         )

@@ -25,9 +25,9 @@ import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 @Composable
 fun TopBar(
     onBackClick: () -> Unit = {},
-    leadingContent: @Composable() (() -> Unit)? = null,
-    content: @Composable() (() -> Unit)? = null,
-    trailingContent: @Composable() (() -> Unit)? = null,
+    leadingContent: @Composable (() -> Unit)? = null,
+    content: @Composable (() -> Unit)? = null,
+    trailingContent: @Composable (() -> Unit)? = null,
     modifier: Modifier = Modifier.background(MyAppTheme.colors.transparent),
     isBackEnable: Boolean = true,
     contentAlignment: Alignment = Alignment.CenterStart,
@@ -74,7 +74,7 @@ fun TopBar(
     }
 }
 
-@Preview()
+@Preview
 @Composable
 private fun TopBarPreview() {
     PannyPalTheme {

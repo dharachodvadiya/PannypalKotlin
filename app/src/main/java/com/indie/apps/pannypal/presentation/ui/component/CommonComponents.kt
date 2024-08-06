@@ -54,7 +54,7 @@ fun TopBarWithTitle(
     modifier: Modifier = Modifier,
     contentAlignment: Alignment = Alignment.CenterStart,
     bgColor: Color = MyAppTheme.colors.white,
-    trailingContent: @Composable() (() -> Unit)? = null
+    trailingContent: @Composable (() -> Unit)? = null
 ) {
     TopBar(
         isBackEnable = isBackEnable,
@@ -154,7 +154,7 @@ fun DialogTextFieldItem(
     placeholder: Int,
     keyboardType: KeyboardType = KeyboardType.Text,
     modifier: Modifier = Modifier,
-    textLeadingContent: @Composable() (() -> Unit)? = null
+    textLeadingContent: @Composable (() -> Unit)? = null
 ) {
     Column(
         modifier = modifier
@@ -165,7 +165,7 @@ fun DialogTextFieldItem(
     ) {
         Row(
             modifier = Modifier
-                .height(dimensionResource(id = R.dimen.new_entry_field_hight))
+                .height(dimensionResource(id = R.dimen.new_entry_field_height))
                 .background(
                     shape = RoundedCornerShape(dimensionResource(id = R.dimen.round_corner)),
                     color = MyAppTheme.colors.transparent
@@ -186,7 +186,7 @@ fun DialogTextFieldItem(
                 keyboardType = keyboardType,
                 textLeadingContent = textLeadingContent,
                 placeHolderTextStyle = MyAppTheme.typography.Regular46,
-                modifier = Modifier.height(dimensionResource(id = R.dimen.new_entry_field_hight)),
+                modifier = Modifier.height(dimensionResource(id = R.dimen.new_entry_field_height)),
                 bgColor = MyAppTheme.colors.gray0,
                 paddingValues = PaddingValues(horizontal = dimensionResource(id = R.dimen.item_content_padding))
             )
@@ -263,7 +263,7 @@ fun DeleteAlertDialog(
 }
 
 
-@Preview()
+@Preview
 @Composable
 private fun MyAppTopBarPreview() {
     PannyPalTheme {

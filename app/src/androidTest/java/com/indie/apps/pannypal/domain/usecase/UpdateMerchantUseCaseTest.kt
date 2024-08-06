@@ -1,11 +1,11 @@
 package com.indie.apps.pannypal.domain.usecase
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.indie.apps.pannypal.data.dao.UserDao
+import com.indie.apps.pannypal.data.dao.MerchantDao
 import com.indie.apps.pannypal.data.db.AppDatabase
-import com.indie.apps.pannypal.data.entity.User
+import com.indie.apps.pannypal.data.entity.Merchant
 import com.indie.apps.pannypal.di.IoDispatcher
-import com.indie.apps.pannypal.repository.UserRepository
+import com.indie.apps.pannypal.repository.MerchantRepository
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.CoroutineDispatcher
@@ -20,7 +20,7 @@ import javax.inject.Inject
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-class updateUserDataUseCaseTest {
+class UpdateMerchantUseCaseTest {
 
     @get:Rule
     var hiltAndroidRule = HiltAndroidRule(this)
@@ -29,18 +29,18 @@ class updateUserDataUseCaseTest {
     lateinit var appDatabase: AppDatabase
 
     @Inject
-    lateinit var userRepository: UserRepository
+    lateinit var merchantRepository: MerchantRepository
 
     @IoDispatcher
     @Inject
     lateinit var coroutineDispatcher: CoroutineDispatcher
 
-    private lateinit var userDao: UserDao
+    private lateinit var merchantDao: MerchantDao
 
     @Before
     fun setUp() {
         hiltAndroidRule.inject()
-        userDao = appDatabase.userDao()
+        merchantDao = appDatabase.merchantDao()
     }
 
     @After
@@ -49,25 +49,27 @@ class updateUserDataUseCaseTest {
     }
 
     @Test
-    fun update_user_without_amount_test() = runBlocking {
-        val user = User(id = 1, name = "Test User", currency = "AED")
+    fun update_merchant_without_amount_test() = runBlocking {
+        val merchant1 = Merchant(id = 1, name = "Merchant A")
 
-        userDao.insert(user)
+        merchantDao.insert(merchant1)
 
-        val userWithEmail = user.copy(email = "test@gmail.com")
+        val merchant1Updated = merchant1.copy(name = "Merchant B", details = "test detail")
 
-        val result = UpdateUserDataUseCase(
-            userRepository = userRepository,
-            userWithEmail,
+        val result = UpdateMerchantUseCase(
+            merchantRepository = merchantRepository,
+            merchant = merchant1Updated,
             dispatcher = coroutineDispatcher
         ).invoke()
 
         assert(result.toList().size == 2)
+        assert(result.toList()[1].data == 1)
 
-        val getUser = userDao.getUser()
-        getUser.run {
-            assert(getUser.email == "test@gmail.com")
-        }
+        val getMerchants = merchantDao.getMerchantList(10, 0)
+        assert(getMerchants.size == 1)
+        assert(getMerchants[0].name == "Merchant B")
+        assert(getMerchants[0].details == "test detail")
+
     }
 
 }

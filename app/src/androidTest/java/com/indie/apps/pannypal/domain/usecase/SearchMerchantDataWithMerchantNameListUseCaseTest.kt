@@ -28,7 +28,7 @@ import javax.inject.Inject
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-class searchMerchantDataWithMerchantNameListUseCaseTest {
+class SearchMerchantDataWithMerchantNameListUseCaseTest {
 
     @get:Rule
     var hiltAndroidRule = HiltAndroidRule(this)

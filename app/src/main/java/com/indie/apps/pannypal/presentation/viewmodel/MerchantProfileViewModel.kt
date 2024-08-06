@@ -28,7 +28,7 @@ class MerchantProfileViewModel @Inject constructor(
 
     private fun getData() = viewModelScope.launch {
         getMerchantFromIdUseCase
-            .getData(savedStateHandle?.get<String>(Util.PARAM_MERCHANT_ID)?.toLong() ?: 0)
+            .getData(savedStateHandle.get<String>(Util.PARAM_MERCHANT_ID)?.toLong() ?: 0)
             .collect {
                 //  uiState = it
                 _uiState.emit(Resource.Success(it))

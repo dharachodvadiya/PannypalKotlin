@@ -8,6 +8,7 @@ import com.indie.apps.pannypal.repository.UserRepository
 import com.indie.apps.pannypal.util.Resource
 import com.indie.apps.pannypal.util.handleException
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -46,6 +47,7 @@ class AddMerchantDataUseCase @Inject constructor(
         }.flowOn(dispatcher)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     private suspend fun FlowCollector<Resource<Long>>.handleSuccessfulInsert(
         id: Long,
         merchantId: Long,

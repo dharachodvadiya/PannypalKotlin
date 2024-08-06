@@ -118,7 +118,7 @@ private fun MerchantDataTopBarItem(
             Column {
                 if (selectCount > 0) {
                     Text(
-                        text = "$selectCount ${stringResource(id = R.string.selected)}",
+                        text = "$selectCount ${stringResource(id = R.string.selected_text)}",
                         style = MyAppTheme.typography.Semibold56,
                         color = MyAppTheme.colors.black,
                         maxLines = 1,
@@ -126,13 +126,13 @@ private fun MerchantDataTopBarItem(
                     )
                 } else {
                     Text(
-                        text = if (name.isNullOrEmpty()) stringResource(id = R.string.no_name) else name,
+                        text = name.ifEmpty { stringResource(id = R.string.no_name) },
                         style = MyAppTheme.typography.Semibold56,
                         color = MyAppTheme.colors.black,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
-                    if (!description.isNullOrEmpty()) {
+                    if (description.isNotEmpty()) {
                         Text(
                             text = description,
                             style = MyAppTheme.typography.Medium44,
@@ -338,7 +338,7 @@ private fun MerchantDataAmountItem(
             horizontalAlignment = contentAlignment
         ) {
             Text(
-                text = Util.getFormattedStringWithSymbole(amount),
+                text = Util.getFormattedStringWithSymbol(amount),
                 style = MyAppTheme.typography.Semibold67_5,
                 color = MyAppTheme.colors.black
             )
@@ -448,7 +448,7 @@ private fun MerchantDataTotalIncomeExpense(
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = Util.getFormattedStringWithSymbole(amount),
+            text = Util.getFormattedStringWithSymbol(amount),
             style = MyAppTheme.typography.Semibold50,
             color = MyAppTheme.colors.black
         )
@@ -466,7 +466,7 @@ private fun MerchantDataTotal(
         horizontalAlignment = Alignment.End
     ) {
         Text(
-            text = Util.getFormattedStringWithSymbole(amount),
+            text = Util.getFormattedStringWithSymbol(amount),
             style = MyAppTheme.typography.Semibold56,
             color = MyAppTheme.colors.black,
         )

@@ -20,9 +20,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class OverViewViewModel @Inject constructor(
-    private val userProfileUseCase: GetUserProfileUseCase,
-    private val getMerchantDataListWithMerchantNameUseCase: GetMerchantDataListWithMerchantNameUseCase,
-    private val getMerchantDataDailyTotalUseCase: GetMerchantDataDailyTotalUseCase
+    userProfileUseCase: GetUserProfileUseCase,
+    getMerchantDataListWithMerchantNameUseCase: GetMerchantDataListWithMerchantNameUseCase,
+    getMerchantDataDailyTotalUseCase: GetMerchantDataDailyTotalUseCase
 ) : ViewModel() {
 
     //val searchTextState by mutableStateOf(TextFieldState())
@@ -43,16 +43,6 @@ class OverViewViewModel @Inject constructor(
     var merchantDataDailyTotalPagingState = MutableStateFlow(PagingState<MerchantDataDailyTotal>())
 
     //private val trigger = MutableSharedFlow<Unit>(replay = 1)
-
-    init {
-        /*pagedData = trigger
-            .flatMapLatest {
-                getMerchantDataListWithMerchantNameUseCase.loadData()
-            }
-            .cachedIn(viewModelScope)*/
-
-        //searchData()
-    }
 
     /*fun searchData() {
         viewModelScope.launch {

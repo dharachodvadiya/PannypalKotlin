@@ -205,7 +205,7 @@ private fun NewEntrySelectableItem(
             modifier = Modifier
                 .padding(vertical = 5.dp)
                 .clickable { onAddClick() }
-                .height(dimensionResource(id = R.dimen.new_entry_field_hight))
+                .height(dimensionResource(id = R.dimen.new_entry_field_height))
                 .background(
                     shape = RoundedCornerShape(dimensionResource(id = R.dimen.round_corner)),
                     color = MyAppTheme.colors.gray0
@@ -265,7 +265,7 @@ private fun NewEntryDropDownList(
     onValueChangedEvent: (Payment) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var expanded = remember { mutableStateOf(false) }
+    val expanded = remember { mutableStateOf(false) }
 
     ExposedDropdownMenuBox(
         expanded = expanded.value,
@@ -286,7 +286,7 @@ private fun NewEntryDropDownList(
                 modifier = Modifier
                     .padding(vertical = 5.dp)
                     .clickable { expanded.value = !expanded.value }
-                    .height(dimensionResource(id = R.dimen.new_entry_field_hight))
+                    .height(dimensionResource(id = R.dimen.new_entry_field_height))
                     .background(
                         shape = RoundedCornerShape(dimensionResource(id = R.dimen.round_corner)),
                         color = MyAppTheme.colors.gray0
@@ -391,7 +391,7 @@ private fun NewEntryTextFieldItem(
             textStyle = MyAppTheme.typography.Medium46,
             keyboardType = keyboardType,
             placeHolderTextStyle = MyAppTheme.typography.Regular46,
-            modifier = Modifier.height(dimensionResource(id = R.dimen.new_entry_field_hight))
+            modifier = Modifier.height(dimensionResource(id = R.dimen.new_entry_field_height))
         )
     }
 }

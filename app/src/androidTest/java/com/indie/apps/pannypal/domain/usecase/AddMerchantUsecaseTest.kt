@@ -1,18 +1,16 @@
 package com.indie.apps.pannypal.domain.usecase
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.indie.apps.pannypal.data.dao.PaymentDao
+import com.indie.apps.pannypal.data.dao.MerchantDao
 import com.indie.apps.pannypal.data.db.AppDatabase
-import com.indie.apps.pannypal.data.entity.Payment
+import com.indie.apps.pannypal.data.entity.Merchant
 import com.indie.apps.pannypal.di.IoDispatcher
-import com.indie.apps.pannypal.repository.PaymentRepository
+import com.indie.apps.pannypal.repository.MerchantRepository
 import com.indie.apps.pannypal.util.Resource
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.drop
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.*
@@ -24,7 +22,7 @@ import javax.inject.Inject
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-class addPaymentUseCaseTest {
+class AddMerchantUseCaseTest {
 
     @get:Rule
     var hiltAndroidRule = HiltAndroidRule(this)
@@ -33,18 +31,18 @@ class addPaymentUseCaseTest {
     lateinit var appDatabase: AppDatabase
 
     @Inject
-    lateinit var paymentRepository: PaymentRepository
+    lateinit var merchantRepository: MerchantRepository
 
     @IoDispatcher
     @Inject
     lateinit var coroutineDispatcher: CoroutineDispatcher
 
-    private lateinit var paymentDao: PaymentDao
+    private lateinit var merchantDao: MerchantDao
 
     @Before
     fun setUp() {
         hiltAndroidRule.inject()
-        paymentDao = appDatabase.paymentDao()
+        merchantDao = appDatabase.merchantDao()
     }
 
     @After
@@ -53,15 +51,15 @@ class addPaymentUseCaseTest {
     }
 
     @Test
-    fun add_payment_test() = runBlocking {
-        //prepare test data
-        val payment = Payment(id = 1, name = "Debit Card")
+    fun add_merchant_test() = runBlocking {
+        //Arrange data
+        val merchant = Merchant(id = 1, name = "Merchant A")
 
         //when
-        val resultFlow = AddPaymentUseCase(
-            paymentRepository = paymentRepository,
+        val resultFlow = AddMerchantUseCase(
+            merchantRepository = merchantRepository,
             dispatcher = coroutineDispatcher
-        ).addPayment(payment = payment)
+        ).addMerchant(merchant = merchant)
 
         // Assert: Collect and verify the result
         resultFlow.drop(1).collect{ result ->
@@ -72,10 +70,9 @@ class addPaymentUseCaseTest {
             }
         }
 
-        //Assert: verify operation
-        val it = paymentDao.getPaymentList().first()
-        assert(it.size == 1)
-
+        //Assert: Verify after operation
+        val getMerchants = merchantDao.getMerchantList(10, 0)
+        assert(getMerchants.size == 1)
     }
 
 }

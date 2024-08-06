@@ -43,8 +43,8 @@ fun MyAppTextField(
     textStyle: TextStyle = MyAppTheme.typography.Medium56,
     placeHolderTextStyle: TextStyle = MyAppTheme.typography.Regular51,
     readOnly: Boolean = false,
-    trailingIcon: @Composable() (() -> Unit)? = null,
-    textLeadingContent: @Composable() (() -> Unit)? = null,
+    trailingIcon: @Composable (() -> Unit)? = null,
+    textLeadingContent: @Composable (() -> Unit)? = null,
     imeAction: ImeAction = ImeAction.Default,
     keyboardType: KeyboardType = KeyboardType.Text,
     modifier: Modifier = Modifier,
@@ -126,7 +126,7 @@ fun MyAppTextField(
 
 }
 
-@Preview()
+@Preview
 @Composable
 private fun MyAppTextFieldPreview() {
     PannyPalTheme {

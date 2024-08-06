@@ -4,15 +4,11 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.indie.apps.pannypal.data.entity.Payment
-import com.indie.apps.pannypal.data.module.MerchantDataWithName
 import com.indie.apps.pannypal.di.IoDispatcher
 import com.indie.apps.pannypal.presentation.ui.common.Util
 import com.indie.apps.pannypal.repository.PaymentRepository
-import com.indie.apps.pannypal.util.Resource
-import com.indie.apps.pannypal.util.handleException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 

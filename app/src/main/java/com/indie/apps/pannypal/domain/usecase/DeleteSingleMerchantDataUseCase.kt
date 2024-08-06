@@ -26,7 +26,7 @@ class DeleteSingleMerchantDataUseCase @Inject constructor(
         return flow {
 
             try {
-                emit(Resource.Loading<Int>())
+                emit(Resource.Loading())
                 val count = merchantDataRepository.deleteMerchantDataWithId(merchantData.id)
 
                 if (count > 0) {

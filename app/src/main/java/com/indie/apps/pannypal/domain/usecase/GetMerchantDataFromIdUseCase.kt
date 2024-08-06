@@ -1,10 +1,8 @@
 package com.indie.apps.pannypal.domain.usecase
 
-import com.indie.apps.pannypal.data.entity.Merchant
 import com.indie.apps.pannypal.data.entity.MerchantData
 import com.indie.apps.pannypal.di.IoDispatcher
 import com.indie.apps.pannypal.repository.MerchantDataRepository
-import com.indie.apps.pannypal.repository.MerchantRepository
 import com.indie.apps.pannypal.util.Resource
 import com.indie.apps.pannypal.util.handleException
 import kotlinx.coroutines.CoroutineDispatcher

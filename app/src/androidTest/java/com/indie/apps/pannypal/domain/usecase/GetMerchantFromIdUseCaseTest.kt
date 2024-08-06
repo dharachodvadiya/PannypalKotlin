@@ -23,7 +23,7 @@ import javax.inject.Inject
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-class getMerchantListUseCaseTest {
+class GetMerchantFromIdUseCaseTest {
 
     @get:Rule
     var hiltAndroidRule = HiltAndroidRule(this)
@@ -47,20 +47,20 @@ class getMerchantListUseCaseTest {
     }
 
     @Test
-    fun get_merchant_list_with_page_test() = runBlocking{
+    fun get_merchant_from_id_test() = runBlocking{
         val merchant1 = Merchant(id = 1, name = "Merchant A", dateInMilli = 5L)
         val merchant2 = Merchant(id = 2, name = "Merchant B", dateInMilli = 10L)
         merchantDao.insert(merchant1)
         merchantDao.insert(merchant2)
 
-        val result = GetMerchantListUseCase(merchantRepository, coroutineDispatcher).loadData(1)
+        val result = GetMerchantFromIdUseCase(merchantRepository, coroutineDispatcher).invoke(1)
 
         val list = result.toList()
 
         assert(list.size == 2)
-        assert(list[0] is Resource.Loading<List<Merchant>>)
+        assert(list[0] is Resource.Loading<Merchant>)
         assertNotNull(list[1])
-        assert(list[1].data?.get(0)!!.name == "Merchant B")
+        assert(list[1].data!!.id == 1L)
 
     }
 }

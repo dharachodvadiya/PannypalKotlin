@@ -2,15 +2,12 @@ package com.indie.apps.pannypal.presentation.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.staticCompositionLocalOf
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.indie.apps.pannypal.R
-import org.intellij.lang.annotations.JdkConstants.FontStyle
 
 /*val provider = GoogleFont.Provider(
     providerAuthority = "com.google.android.gms.fonts",

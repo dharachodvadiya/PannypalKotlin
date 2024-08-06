@@ -20,7 +20,6 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import com.indie.apps.pannypal.R
-import com.indie.apps.pannypal.presentation.ui.component.linearGradientsBrush
 import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 
@@ -67,7 +66,7 @@ fun RoundImage(
     }
 }
 
-@Preview()
+@Preview
 @Composable
 private fun RoundImagePreview() {
     PannyPalTheme {

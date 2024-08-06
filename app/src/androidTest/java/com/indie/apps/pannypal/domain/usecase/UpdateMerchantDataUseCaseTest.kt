@@ -28,7 +28,7 @@ import javax.inject.Inject
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-class deleteSingleMerchantDataUseCaseTest {
+class UpdateMerchantDataUseCaseTest {
 
     @get:Rule
     var hiltAndroidRule = HiltAndroidRule(this)
@@ -67,7 +67,7 @@ class deleteSingleMerchantDataUseCaseTest {
     }
 
     @Test
-    fun delete_single_merchantData_income_update_merchant_income_update_user_income_test() = runBlocking {
+    fun update_merchantData_old_income_new_income_value_update_merchantIncome_update_userIncome_test() = runBlocking {
         val user = User(id = 1, name = "Test User", currency = "AED")
         val merchant1 = Merchant(id = 1, name = "Merchant A")
         val payment = Payment(id = 1, name = "Debit Card")
@@ -96,11 +96,16 @@ class deleteSingleMerchantDataUseCaseTest {
         val getMerchantsData = merchantDataDao.getMerchantDataList(10, 0)
         assert(getMerchantsData.size == 1)
 
-        val result1 = DeleteSingleMerchantDataUseCase(
+        val newMerchant = getMerchantsData[0].copy(amount = 20.0, type = 1)
+
+
+
+        val result1 = UpdateMerchantDataUseCase(
             merchantDataRepository = merchantDataRepository,
             merchantRepository = merchantRepository,
             userRepository = userRepository,
-            merchantData = getMerchantsData[0],
+            merchantDataOld = getMerchantsData[0],
+            merchantDataNew = newMerchant,
             dispatcher = coroutineDispatcher
         ).invoke()
 
@@ -110,21 +115,21 @@ class deleteSingleMerchantDataUseCaseTest {
 
         val getUser = userDao.getUser()
         getUser.run {
-            assert(incomeAmount == 0.0)
+            assert(incomeAmount == 20.0)
             assert(expenseAmount == 0.0)
         }
 
         val getMerchants = merchantDao.getMerchantList(10, 0)
         assert(getMerchants.size == 1)
         getMerchants[0].run {
-            assert(getMerchants[0].incomeAmount == 0.0)
+            assert(getMerchants[0].incomeAmount == 20.0)
             assert(getMerchants[0].expenseAmount == 0.0)
         }
 
     }
 
     @Test
-    fun delete_single_merchantData_expense_update_merchant_expense_update_user_expense_test() = runBlocking {
+    fun update_merchantData_old_expense_new_expense_value_update_merchantExpense_update_userExpense_test() = runBlocking {
         val user = User(id = 1, name = "Test User", currency = "AED")
         val merchant1 = Merchant(id = 1, name = "Merchant A")
         val payment = Payment(id = 1, name = "Debit Card")
@@ -138,7 +143,7 @@ class deleteSingleMerchantDataUseCaseTest {
             paymentId = payment.id,
             dateInMilli = System.currentTimeMillis(),
             details = "Sample transaction",
-            amount = 10.0,
+            amount = 50.0,
             type = -1
         )
         val result = AddMerchantDataUseCase(
@@ -153,11 +158,14 @@ class deleteSingleMerchantDataUseCaseTest {
         val getMerchantsData = merchantDataDao.getMerchantDataList(10, 0)
         assert(getMerchantsData.size == 1)
 
-        val result1 = DeleteSingleMerchantDataUseCase(
+        val newMerchant = getMerchantsData[0].copy(amount = 100.0, type = -1)
+
+        val result1 = UpdateMerchantDataUseCase(
             merchantDataRepository = merchantDataRepository,
             merchantRepository = merchantRepository,
             userRepository = userRepository,
-            merchantData = getMerchantsData[0],
+            merchantDataOld = getMerchantsData[0],
+            merchantDataNew = newMerchant,
             dispatcher = coroutineDispatcher
         ).invoke()
 
@@ -168,14 +176,134 @@ class deleteSingleMerchantDataUseCaseTest {
         val getUser = userDao.getUser()
         getUser.run {
             assert(incomeAmount == 0.0)
-            assert(expenseAmount == 0.0)
+            assert(expenseAmount == 100.0)
         }
 
         val getMerchants = merchantDao.getMerchantList(10, 0)
         assert(getMerchants.size == 1)
         getMerchants[0].run {
             assert(getMerchants[0].incomeAmount == 0.0)
+            assert(getMerchants[0].expenseAmount == 100.0)
+        }
+
+    }
+
+    @Test
+    fun update_MerchantData_old_expense_new_income_value_update_merchantIncomeExpense_update_user_expense_test() = runBlocking {
+        val user = User(id = 1, name = "Test User", currency = "AED")
+        val merchant1 = Merchant(id = 1, name = "Merchant A")
+        val payment = Payment(id = 1, name = "Debit Card")
+
+        userDao.insert(user)
+        paymentDao.insert(payment)
+        merchantDao.insert(merchant1)
+
+        val merchantData = MerchantData(
+            merchantId = merchant1.id,
+            paymentId = payment.id,
+            dateInMilli = System.currentTimeMillis(),
+            details = "Sample transaction",
+            amount = 50.0,
+            type = -1
+        )
+        val result = AddMerchantDataUseCase(
+            merchantDataRepository = merchantDataRepository,
+            merchantRepository = merchantRepository,
+            userRepository = userRepository,
+            dispatcher = coroutineDispatcher
+        ).addData(merchantData)
+
+        assert(result.toList().size == 2)
+
+        val getMerchantsData = merchantDataDao.getMerchantDataList(10, 0)
+        assert(getMerchantsData.size == 1)
+
+        val newMerchant = getMerchantsData[0].copy(amount = 10.0, type = 1)
+
+        val result1 = UpdateMerchantDataUseCase(
+            merchantDataRepository = merchantDataRepository,
+            merchantRepository = merchantRepository,
+            userRepository = userRepository,
+            merchantDataOld = getMerchantsData[0],
+            merchantDataNew = newMerchant,
+            dispatcher = coroutineDispatcher
+        ).invoke()
+
+        val resList = result1.toList()
+        assert(resList.size == 2)
+        assert(resList[1].data == 1)
+
+        val getUser = userDao.getUser()
+        getUser.run {
+            assert(incomeAmount == 10.0)
+            assert(expenseAmount == 0.0)
+        }
+
+        val getMerchants = merchantDao.getMerchantList(10, 0)
+        assert(getMerchants.size == 1)
+        getMerchants[0].run {
+            assert(getMerchants[0].incomeAmount == 10.0)
             assert(getMerchants[0].expenseAmount == 0.0)
+        }
+
+    }
+
+    @Test
+    fun update_MerchantData_old_income_new_expense_value_update_merchantIncomeExpense_update_user_expense_test() = runBlocking {
+        val user = User(id = 1, name = "Test User", currency = "AED")
+        val merchant1 = Merchant(id = 1, name = "Merchant A")
+        val payment = Payment(id = 1, name = "Debit Card")
+
+        userDao.insert(user)
+        paymentDao.insert(payment)
+        merchantDao.insert(merchant1)
+
+        val merchantData = MerchantData(
+            merchantId = merchant1.id,
+            paymentId = payment.id,
+            dateInMilli = System.currentTimeMillis(),
+            details = "Sample transaction",
+            amount = 70.0,
+            type = 1
+        )
+        val result = AddMerchantDataUseCase(
+            merchantDataRepository = merchantDataRepository,
+            merchantRepository = merchantRepository,
+            userRepository = userRepository,
+            dispatcher = coroutineDispatcher
+        ).addData(merchantData)
+
+        assert(result.toList().size == 2)
+
+        val getMerchantsData = merchantDataDao.getMerchantDataList(10, 0)
+        assert(getMerchantsData.size == 1)
+
+        val newMerchant = getMerchantsData[0].copy(amount = 100.0, type = -1)
+
+        val result1 = UpdateMerchantDataUseCase(
+            merchantDataRepository = merchantDataRepository,
+            merchantRepository = merchantRepository,
+            userRepository = userRepository,
+            merchantDataOld = getMerchantsData[0],
+            merchantDataNew = newMerchant,
+            dispatcher = coroutineDispatcher
+        ).invoke()
+
+        val resList = result1.toList()
+        assert(resList.size == 2)
+        assert(resList[1].data == 1)
+
+        val getUser = userDao.getUser()
+        getUser.run {
+            assert(incomeAmount == 0.0)
+            assert(expenseAmount == 100.0)
+        }
+
+        val getMerchants = merchantDao.getMerchantList(10, 0)
+        assert(getMerchants.size == 1)
+        getMerchants[0].run {
+            assert(getMerchants[0].incomeAmount == 0.0)
+            assert(getMerchants[0].expenseAmount == 100.0)
         }
 
     }

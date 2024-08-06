@@ -33,9 +33,9 @@ fun ListItem(
     onClick: () -> Unit = {},
     onLongClick: () -> Unit = {},
     modifier: Modifier = Modifier.fillMaxWidth(),
-    leadingIcon: @Composable() (() -> Unit)? = null,
-    content: @Composable() (() -> Unit),
-    trailingContent: @Composable() (() -> Unit)? = null,
+    leadingIcon: @Composable (() -> Unit)? = null,
+    content: @Composable (() -> Unit),
+    trailingContent: @Composable (() -> Unit)? = null,
     isSetDivider: Boolean = false,
     dividerWidth: Float = 2f,
     paddingValues: PaddingValues = PaddingValues(0.dp)

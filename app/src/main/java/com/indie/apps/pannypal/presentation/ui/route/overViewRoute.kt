@@ -21,7 +21,7 @@ import com.indie.apps.pannypal.presentation.ui.screen.OverViewStartScreen
 import com.indie.apps.pannypal.presentation.ui.screen.ProfileScreen
 
 
-fun NavGraphBuilder.OverViewRoute(
+fun NavGraphBuilder.overViewRoute(
     navController: NavHostController,
     bottomBarState: MutableState<Boolean>
 ) {

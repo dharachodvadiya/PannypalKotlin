@@ -11,6 +11,7 @@ import com.indie.apps.pannypal.presentation.ui.state.PagingState
 import com.indie.apps.pannypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pannypal.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -35,6 +36,7 @@ class MerchantViewModel @Inject constructor(
     var isEditable = MutableStateFlow(false)
     var isDeletable = MutableStateFlow(false)
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     val pagedData = trigger
         .flatMapLatest {
             searchMerchantListUseCase.loadData(searchTextState.value.text)
@@ -53,8 +55,8 @@ class MerchantViewModel @Inject constructor(
         }
     }
 
-    fun clearSearch() {
-        if (!searchTextState.value.text.trim().isNullOrEmpty()) {
+    private fun clearSearch() {
+        if (searchTextState.value.text.trim().isNotEmpty()) {
             searchTextState.value.text = ""
             searchData()
         }

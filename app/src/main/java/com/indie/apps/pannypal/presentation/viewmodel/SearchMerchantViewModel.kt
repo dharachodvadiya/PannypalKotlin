@@ -8,6 +8,7 @@ import com.indie.apps.pannypal.domain.usecase.SearchMerchantNameAndDetailListUse
 import com.indie.apps.pannypal.presentation.ui.state.PagingState
 import com.indie.apps.pannypal.presentation.ui.state.TextFieldState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -22,6 +23,7 @@ class SearchMerchantViewModel @Inject constructor(
     val searchTextState = MutableStateFlow(TextFieldState())
     private val trigger = MutableSharedFlow<Unit>(replay = 1)
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     val pagedData = trigger
         .flatMapLatest {
             searchMerchantNameAndDetailListUseCase.loadData(searchTextState.value.text)

@@ -1,4 +1,4 @@
-package com.indie.apps.pannypal.data.Paging
+package com.indie.apps.pannypal.data.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
@@ -15,9 +15,6 @@ open class BasePagingSource @Inject constructor(
         return try {
             val entities = merchantDao.searchMerchantNameAndDetailList("",params.loadSize, page * params.loadSize)
 
-            println("aaaa start loading $page")
-            delay(5000L)
-            println("aaaa end loading")
             LoadResult.Page(
                 data = entities,
                 prevKey = if (page == 0) null else page - 1,

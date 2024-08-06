@@ -27,8 +27,8 @@ import com.indie.apps.pannypal.presentation.ui.dialog.DialogSearchMerchant
 import com.indie.apps.pannypal.presentation.ui.navigation.BottomNavItem
 import com.indie.apps.pannypal.presentation.ui.navigation.BottomNavigationBarCustom
 import com.indie.apps.pannypal.presentation.ui.navigation.DialogNav
-import com.indie.apps.pannypal.presentation.ui.route.MerchantRoute
-import com.indie.apps.pannypal.presentation.ui.route.OverViewRoute
+import com.indie.apps.pannypal.presentation.ui.route.merchantRoute
+import com.indie.apps.pannypal.presentation.ui.route.overViewRoute
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 
 @Composable
@@ -37,23 +37,23 @@ fun PannyPalApp() {
     val paymentSaveToast = stringResource(id = R.string.payment_save_success_toast)
     val merchantSaveToast = stringResource(id = R.string.merchant_save_success_toast)
     val merchantEditToast = stringResource(id = R.string.merchant_edit_success_message)
-    PannyPalTheme() {
+    PannyPalTheme {
         val navController = rememberNavController()
         val currentBackStack by navController.currentBackStackEntryAsState()
         val currentDestination = currentBackStack?.destination
-        val currentScreen = BottomNavItem.values().find {
+        val currentScreen = BottomNavItem.entries.find {
             currentDestination?.route?.startsWith(it.route + "/")
                 ?: false
         }
             ?: BottomNavItem.OVERVIEW
 
         // State of bottomBar, set state to false, if current page route is "car_details"
-        var bottomBarState = rememberSaveable { (mutableStateOf(true)) }
+        val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
 
         Scaffold(
             bottomBar = {
                 BottomNavigationBarCustom(
-                    tabs = BottomNavItem.values(), onTabSelected = { newScreen ->
+                    tabs = BottomNavItem.entries.toTypedArray(), onTabSelected = { newScreen ->
                         navController.navigate(newScreen.route) {
                             launchSingleTop = true
                             restoreState = true
@@ -70,8 +70,8 @@ fun PannyPalApp() {
                 startDestination = BottomNavItem.OVERVIEW.route,
                 modifier = Modifier.padding(innerPadding)
             ) {
-                OverViewRoute(navController, bottomBarState)
-                MerchantRoute(navController, bottomBarState)
+                overViewRoute(navController, bottomBarState)
+                merchantRoute(navController, bottomBarState)
 
                 dialog(
                     route = DialogNav.SELECT_MERCHANT.route,
@@ -111,7 +111,7 @@ fun PannyPalApp() {
 
                     DialogAddMerchant(
                         onNavigationUp = { navController.navigateUp() },
-                        onSaveSuccess = { merchat, isEdit ->
+                        onSaveSuccess = { merchant, isEdit ->
                             //navController.navigateUp()
                             Toast.makeText(
                                 context,
@@ -119,12 +119,12 @@ fun PannyPalApp() {
                                 Toast.LENGTH_SHORT
                             ).show()
 
-                            if (merchat != null) {
+                            if (merchant != null) {
                                 navController.previousBackStackEntry
                                     ?.savedStateHandle
                                     ?.set(
                                         Util.SAVE_STATE_MERCHANT_NAME_DESC,
-                                        Gson().toJson(merchat.toMerchantNameAndDetails())
+                                        Gson().toJson(merchant.toMerchantNameAndDetails())
                                     )
 
                                 navController.previousBackStackEntry
@@ -170,7 +170,7 @@ fun PannyPalApp() {
                             // Pass data back to A
                             navController.previousBackStackEntry
                                 ?.savedStateHandle
-                                ?.set(Util.SAVE_STATE_COUNTRY_CODE, it.dial_code)
+                                ?.set(Util.SAVE_STATE_COUNTRY_CODE, it.dialCode)
 
                             navController.popBackStack()
                         }
@@ -183,9 +183,9 @@ fun PannyPalApp() {
 
 }
 
-@Preview()
+@Preview
 @Composable
-private fun MainscreenPreview() {
+private fun MainScreenPreview() {
     PannyPalTheme {
         PannyPalApp()
     }

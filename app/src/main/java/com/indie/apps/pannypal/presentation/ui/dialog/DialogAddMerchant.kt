@@ -16,7 +16,7 @@ import com.indie.apps.pannypal.presentation.ui.component.custom.composable.MyApp
 import com.indie.apps.pannypal.presentation.ui.component.dialog.AddMerchantDialogField
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 import com.indie.apps.pannypal.presentation.viewmodel.AddEditMerchantViewModel
-import com.mcode.ccp.data.utils.getDefaultPhoneCode
+import com.indie.apps.cpp.data.utils.getDefaultPhoneCode
 
 @Composable
 fun DialogAddMerchant(
@@ -68,7 +68,7 @@ fun DialogAddMerchant(
 }
 
 
-@Preview()
+@Preview
 @Composable
 private fun MyAppDialogPreview() {
     PannyPalTheme {

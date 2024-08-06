@@ -1,4 +1,4 @@
-package com.mcode.ccp.data.utils
+package com.indie.apps.cpp.data.utils
 
 import com.indie.apps.cpp.R
 

@@ -19,18 +19,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.NorthEast
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.SouthWest
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -53,7 +47,6 @@ import com.indie.apps.pannypal.presentation.ui.common.Util
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.ListItem
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.RoundImage
-import com.indie.apps.pannypal.presentation.ui.component.custom.composable.SearchView
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.TopBar
 import com.indie.apps.pannypal.presentation.ui.component.linearGradientsBrush
 import com.indie.apps.pannypal.presentation.ui.component.verticalGradientsBrush
@@ -146,7 +139,7 @@ fun OverviewBalanceView(
                         color = MyAppTheme.colors.gray3
                     )
                     Text(
-                        text = Util.getFormattedStringWithSymbole(balance),
+                        text = Util.getFormattedStringWithSymbol(balance),
                         style = MyAppTheme.typography.Semibold97_5,
                         color = MyAppTheme.colors.black
                     )
@@ -177,7 +170,7 @@ fun OverviewList(
             )
         }
 */
-        var totalListIndex = 0;
+        var totalListIndex = 0
         items(
             count = dataList.itemCount,
             key = dataList.itemKey { item -> item.id },
@@ -189,7 +182,9 @@ fun OverviewList(
 
                 if(totalListIndex < dailyTotalList.itemCount){
                     if(index == 0 || (data.day == dailyTotalList[totalListIndex]?.day &&
-                                dataList[index-1]?.day ?: "" != dailyTotalList[totalListIndex]?.day))
+                                (dataList[index - 1]?.day
+                                    ?: "") != dailyTotalList[totalListIndex]?.day)
+                    )
                         isDateShow = true
                 }
 
@@ -225,12 +220,11 @@ fun OverviewListDateItem(
     item: MerchantDataDailyTotal,
     modifier: Modifier = Modifier.fillMaxWidth()
 ) {
-    val dayString = if(item.day == Util.getTodayDate())
-        stringResource(id = R.string.today)
-    else if(item.day == Util.getYesterdayDate())
-        stringResource(id = R.string.yesterday)
-    else
-        item.day
+    val dayString = when (item.day) {
+        Util.getTodayDate() -> stringResource(id = R.string.today)
+        Util.getYesterdayDate() -> stringResource(id = R.string.yesterday)
+        else -> item.day
+    }
     val amount = item.totalIncome - item.totalExpense
     val totalTextColor = if (amount >= 0) MyAppTheme.colors.greenText else MyAppTheme.colors.redText
     Column(modifier = modifier) {
@@ -240,7 +234,7 @@ fun OverviewListDateItem(
             color = MyAppTheme.colors.gray2
         )
         Text(
-            text = Util.getFormattedStringWithSymbole(amount),
+            text = Util.getFormattedStringWithSymbol(amount),
             style = MyAppTheme.typography.Semibold48,
             color = totalTextColor,
             modifier = Modifier.padding(vertical = 5.dp)
@@ -287,7 +281,7 @@ fun OverviewListItem(
         },
         trailingContent = {
             Text(
-                text = Util.getFormattedStringWithSymbole(if (item.type > 0) item.amount else item.amount * -1),
+                text = Util.getFormattedStringWithSymbol(if (item.type > 0) item.amount else item.amount * -1),
                 style = MyAppTheme.typography.Bold52_5,
                 color = MyAppTheme.colors.black
             )
@@ -362,7 +356,7 @@ fun OverviewAppFloatingButton(
 
 @Preview(showBackground = true)
 @Composable
-private fun TopbarProfilePreview() {
+private fun TopBarProfilePreview() {
     PannyPalTheme {
         OverviewTopBarProfile(onClick = { })
     }

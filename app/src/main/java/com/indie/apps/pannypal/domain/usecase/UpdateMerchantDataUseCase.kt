@@ -8,6 +8,7 @@ import com.indie.apps.pannypal.repository.UserRepository
 import com.indie.apps.pannypal.util.Resource
 import com.indie.apps.pannypal.util.handleException
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -41,7 +42,7 @@ class UpdateMerchantDataUseCase @Inject constructor(
                         merchantDataNew = merchantDataNew
                     )
                 } else {
-                    emit(Resource.Error<Int>("Fail to update merchantData"))
+                    emit(Resource.Error("Fail to update merchantData"))
                 }
 
 
@@ -51,6 +52,7 @@ class UpdateMerchantDataUseCase @Inject constructor(
         }.flowOn(dispatcher)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     private suspend fun FlowCollector<Resource<Int>>.handleReflectedTableOperation(
         affectedRowCount: Int,
         merchantDataNew: MerchantData,

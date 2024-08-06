@@ -60,7 +60,7 @@ fun DialogSearchMerchant(
     )
 }
 
-@Preview()
+@Preview
 @Composable
 private fun MyAppDialogPreview() {
     PannyPalTheme {

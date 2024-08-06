@@ -21,7 +21,7 @@ import com.indie.apps.pannypal.presentation.ui.screen.MerchantProfileScreen
 import com.indie.apps.pannypal.presentation.ui.screen.MerchantScreen
 import com.indie.apps.pannypal.presentation.ui.screen.NewItemScreen
 
-fun NavGraphBuilder.MerchantRoute(
+fun NavGraphBuilder.merchantRoute(
     navController: NavHostController,
     bottomBarState: MutableState<Boolean>
 ) {
@@ -72,7 +72,6 @@ fun NavGraphBuilder.MerchantRoute(
                                  },
                 onNavigationUp = { navController.navigateUp() },
                 onEditClick = {
-                    println("aaaaaa edit merchant")
                     navController.navigate(
                         MerchantNav.EDIT_DATA.route.replace(
                             "{${Util.PARAM_EDIT_MERCHANT_DATA_ID}}",

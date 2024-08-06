@@ -30,7 +30,7 @@ import javax.inject.Inject
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-class addMerchantDataUseCaseTest {
+class AddMerchantDataUseCaseTest {
 
     @get:Rule
     var hiltAndroidRule = HiltAndroidRule(this)

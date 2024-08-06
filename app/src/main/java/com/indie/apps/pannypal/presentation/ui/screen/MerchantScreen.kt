@@ -46,7 +46,7 @@ fun MerchantScreen(
     isEditAddSuccess: Boolean = false,
     modifier: Modifier = Modifier
 ) {
-    val contex = LocalContext.current
+    val context = LocalContext.current
     val merchantDeleteToast = stringResource(id = R.string.merchant_delete_success_message)
     val merchantEditToast = stringResource(id = R.string.merchant_edit_success_message)
     val lazyPagingData = merchantViewModel.pagedData.collectAsLazyPagingItems()
@@ -67,7 +67,7 @@ fun MerchantScreen(
     if (isEditAddSuccess != isEditSuccessState) {
         isEditSuccessState = isEditAddSuccess
         if (isEditSuccessState) {
-            Toast.makeText(contex, merchantEditToast, Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, merchantEditToast, Toast.LENGTH_SHORT).show()
             merchantViewModel.setEditAddSuccess()
         }
     }
@@ -78,7 +78,7 @@ fun MerchantScreen(
     Scaffold(topBar = {
         MerchantTopBar(
             title = if (selectedList.size > 0) "${selectedList.size} " + stringResource(
-                id = R.string.selected
+                id = R.string.selected_text
             ) else "",
             textState = searchTextState,
             isEditable = isEditable,
@@ -161,7 +161,7 @@ fun MerchantScreen(
                 onConfirmation = {
                     merchantViewModel.onDeleteDialogClick {
                         openAlertDialog = false
-                        Toast.makeText(contex, merchantDeleteToast, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, merchantDeleteToast, Toast.LENGTH_SHORT).show()
                     }
                 },
                 onDismissRequest = { openAlertDialog = false }

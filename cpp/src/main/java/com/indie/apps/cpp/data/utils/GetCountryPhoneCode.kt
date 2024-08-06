@@ -1,6 +1,6 @@
-package com.mcode.ccp.data.utils
+package com.indie.apps.cpp.data.utils
 
-import com.mcode.ccp.data.CountryData
+import com.indie.apps.cpp.data.CountryData
 
 var getLibCountries: List<CountryData> = mutableListOf(
     CountryData("ad", "+376", "Andorra"),

@@ -1,4 +1,4 @@
-package com.mcode.ccp.data
+package com.indie.apps.cpp.data
 
 import com.indie.apps.cpp.R
 import java.util.Locale

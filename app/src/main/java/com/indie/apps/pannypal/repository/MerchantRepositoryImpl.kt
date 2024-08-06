@@ -2,7 +2,7 @@ package com.indie.apps.pannypal.repository
 
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
-import com.indie.apps.pannypal.data.Paging.BasePagingSource
+import com.indie.apps.pannypal.data.paging.BasePagingSource
 import com.indie.apps.pannypal.data.dao.MerchantDao
 import com.indie.apps.pannypal.data.entity.Merchant
 import com.indie.apps.pannypal.presentation.ui.common.Util
