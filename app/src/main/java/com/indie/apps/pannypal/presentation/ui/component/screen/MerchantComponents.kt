@@ -18,16 +18,19 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pannypal.R
 import com.indie.apps.pannypal.data.entity.Merchant
 import com.indie.apps.pannypal.presentation.ui.common.Util
+import com.indie.apps.pannypal.presentation.ui.component.custom.composable.AutoSizeText
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.ListItem
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.RoundImage
@@ -176,8 +179,13 @@ fun MerchantListItem(
             Text(
                 text = Util.getFormattedStringWithSymbol(amount),
                 style = MyAppTheme.typography.Semibold50,
-                color = amountColor
+                color = amountColor,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.fillMaxWidth(0.5f),
+                textAlign = TextAlign.Right,
+                maxLines = 1
             )
+
         },
         isSetDivider = false,
         modifier = modifier,

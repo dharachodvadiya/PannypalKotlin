@@ -34,6 +34,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -44,6 +45,7 @@ import com.indie.apps.pannypal.R
 import com.indie.apps.pannypal.data.module.MerchantDataDailyTotal
 import com.indie.apps.pannypal.data.module.MerchantDataWithName
 import com.indie.apps.pannypal.presentation.ui.common.Util
+import com.indie.apps.pannypal.presentation.ui.component.custom.composable.AutoSizeText
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.ListItem
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.RoundImage
@@ -138,10 +140,12 @@ fun OverviewBalanceView(
                         style = MyAppTheme.typography.Semibold67_5,
                         color = MyAppTheme.colors.gray3
                     )
-                    Text(
+                    AutoSizeText(
                         text = Util.getFormattedStringWithSymbol(balance),
                         style = MyAppTheme.typography.Semibold97_5,
-                        color = MyAppTheme.colors.black
+                        color = MyAppTheme.colors.black,
+                        maxLines = 2,
+                        modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding))
                     )
                 }
             }
@@ -233,10 +237,11 @@ fun OverviewListDateItem(
             style = MyAppTheme.typography.Semibold40,
             color = MyAppTheme.colors.gray2
         )
-        Text(
+        AutoSizeText(
             text = Util.getFormattedStringWithSymbol(amount),
             style = MyAppTheme.typography.Semibold48,
             color = totalTextColor,
+            maxLines = 1,
             modifier = Modifier.padding(vertical = 5.dp)
         )
     }
@@ -283,8 +288,11 @@ fun OverviewListItem(
             Text(
                 text = Util.getFormattedStringWithSymbol(if (item.type > 0) item.amount else item.amount * -1),
                 style = MyAppTheme.typography.Bold52_5,
-                color = MyAppTheme.colors.black
-            )
+                color = MyAppTheme.colors.black,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.fillMaxWidth(0.5f),
+                textAlign = TextAlign.Right,
+                maxLines = 1            )
         },
         isSetDivider = true,
         modifier = modifier

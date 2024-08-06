@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import com.indie.apps.pannypal.R
 import com.indie.apps.pannypal.data.entity.MerchantData
 import com.indie.apps.pannypal.presentation.ui.common.Util
+import com.indie.apps.pannypal.presentation.ui.component.custom.composable.AutoSizeText
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.ListItem
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.RoundImage
@@ -337,10 +338,11 @@ private fun MerchantDataAmountItem(
                 .padding(horizontal = 10.dp),
             horizontalAlignment = contentAlignment
         ) {
-            Text(
+            AutoSizeText(
                 text = Util.getFormattedStringWithSymbol(amount),
                 style = MyAppTheme.typography.Semibold67_5,
-                color = MyAppTheme.colors.black
+                color = MyAppTheme.colors.black,
+                maxLines = 2,
             )
             if (!description.isNullOrEmpty()) {
                 Text(
@@ -447,10 +449,12 @@ private fun MerchantDataTotalIncomeExpense(
             ),
         contentAlignment = Alignment.Center
     ) {
-        Text(
+        AutoSizeText(
             text = Util.getFormattedStringWithSymbol(amount),
             style = MyAppTheme.typography.Semibold50,
-            color = MyAppTheme.colors.black
+            color = MyAppTheme.colors.black,
+            maxLines = 2,
+            modifier = Modifier.padding(5.dp)
         )
     }
 }
@@ -465,10 +469,11 @@ private fun MerchantDataTotal(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.End
     ) {
-        Text(
+        AutoSizeText(
             text = Util.getFormattedStringWithSymbol(amount),
             style = MyAppTheme.typography.Semibold56,
             color = MyAppTheme.colors.black,
+            maxLines = 2
         )
         Text(
             text = stringResource(id = R.string.total_amount),
