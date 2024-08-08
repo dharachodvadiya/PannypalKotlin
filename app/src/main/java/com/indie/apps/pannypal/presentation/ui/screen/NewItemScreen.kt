@@ -121,7 +121,7 @@ fun NewItemScreen(
 @Preview
 @Composable
 private fun NewItemScreenPreview() {
-    PannyPalTheme {
+    PannyPalTheme(darkTheme = true) {
         NewItemScreen(onPaymentAdd = {},
             onNavigationUp = {},
             onMerchantSelect = {},

@@ -42,7 +42,7 @@ fun LoadingScreen(
 @Preview
 @Composable
 private fun LoadingScreenPreview() {
-    PannyPalTheme {
+    PannyPalTheme(darkTheme = true) {
         LoadingScreen()
     }
 }

@@ -365,7 +365,7 @@ fun OverviewAppFloatingButton(
 @Preview(showBackground = true)
 @Composable
 private fun TopBarProfilePreview() {
-    PannyPalTheme {
+    PannyPalTheme(darkTheme = true) {
         OverviewTopBarProfile(onClick = { })
     }
 }
@@ -373,7 +373,7 @@ private fun TopBarProfilePreview() {
 @Preview
 @Composable
 private fun OverviewListItemPreview() {
-    PannyPalTheme {
+    PannyPalTheme(darkTheme = true) {
         // OverviewListItem()
     }
 }

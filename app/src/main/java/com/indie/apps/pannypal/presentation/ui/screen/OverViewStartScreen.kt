@@ -97,7 +97,7 @@ fun OverViewStartScreen(
 @Preview
 @Composable
 private fun OverViewScreenPreview() {
-    PannyPalTheme {
+    PannyPalTheme(darkTheme = true) {
         OverViewStartScreen(onProfileClick = {}, onNewEntry = {})
     }
 }

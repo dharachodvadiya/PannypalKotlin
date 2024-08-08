@@ -40,7 +40,7 @@ fun DialogCpp(
 @Preview
 @Composable
 private fun DialogCppPreview() {
-    PannyPalTheme {
+    PannyPalTheme(darkTheme = true) {
         //DialogCpp({},{})
     }
 }

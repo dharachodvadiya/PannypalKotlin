@@ -116,7 +116,7 @@ private fun DialogTopBar(
 @Preview
 @Composable
 private fun MyAppDialogPreview() {
-    PannyPalTheme {
+    PannyPalTheme(darkTheme = true) {
         MyAppDialog(
             title = R.string.add_merchant,
             onNavigationUp = {},

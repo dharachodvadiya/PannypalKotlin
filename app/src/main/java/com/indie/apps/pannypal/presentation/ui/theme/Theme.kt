@@ -49,38 +49,38 @@ private val lightScheme = MyAppColors(
 
 private val darkScheme = MyAppColors(
     gradientBlue = listOf(
-        Blue.blue500.color,
-        Ocen.ocen500.color
+        Brand.Black.color,
+        DarkBlue.DarkBlue6.color
     ),
     gradientGreen = listOf(
-        Green.green500.color,
+        Green.green50.color,
         Neutral.Neutral0.color
     ),
     gradientRed = listOf(
-        Red.red500.color,
+        Red.red50.color,
         Neutral.Neutral0.color
     ),
-    brand = Blue.blue500.color,
+    brand = DarkBlue.DarkBlue6.color,
     redBgLight = Red.red100.color,
     redBg = Red.red500.color,
     redText = Red.red500.color,
     greenBgLight = Green.green100.color,
     greenBg = Green.green500.color,
     greenText = Green.green500.color,
-    brandBg = Blue.blue100.color,
-    black = Neutral.Neutral8.color,
-    white = Neutral.Neutral0.color,
-    gray0 = Neutral.Neutral1.color,
-    gray1 = Neutral.Neutral2.color,
-    gray2 = Neutral.Neutral3.color,
-    gray3 = Neutral.Neutral4.color,
-    inactiveLight = Neutral.Neutral2.color,
-    inactiveDark = Neutral.Neutral4.color,
-    divider = Neutral.Neutral1.color,
-    fieldBg = Neutral.Neutral1.color,
-    dataBg = Neutral.Neutral2.color,
+    brandBg = Blue.blue50.color,
+    black = Brand.White.color,
+    white = Brand.Black.color,
+    gray0 = Brand.Gray0.color,
+    gray1 = Brand.Gray1.color,
+    gray2 = Brand.Gray2.color,
+    gray3 = Brand.Gray3.color,
+    inactiveLight = Neutral.Neutral1.color,
+    inactiveDark = Neutral.Neutral5.color,
+    divider = Brand.Gray1.color,
+    fieldBg = Brand.Gray1.color,
+    dataBg = Brand.Gray1.color,
     transparent = Color.Transparent,
-    isDark = false
+    isDark = true
 )
 
 @Composable

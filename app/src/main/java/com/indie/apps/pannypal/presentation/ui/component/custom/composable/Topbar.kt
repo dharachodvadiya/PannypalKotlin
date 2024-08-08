@@ -77,7 +77,7 @@ fun TopBar(
 @Preview
 @Composable
 private fun TopBarPreview() {
-    PannyPalTheme {
+    PannyPalTheme(darkTheme = true) {
         TopBar(
             isBackEnable = true,
             leadingContent = { }

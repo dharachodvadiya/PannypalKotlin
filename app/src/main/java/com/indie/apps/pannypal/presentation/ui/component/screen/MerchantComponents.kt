@@ -199,7 +199,7 @@ fun MerchantListItem(
 @Preview(showBackground = true)
 @Composable
 private fun MerchantTopBarPreview() {
-    PannyPalTheme {
+    PannyPalTheme(darkTheme = true) {
         MerchantTopBar(
             textState = TextFieldState(),
             onAddClick = {},
@@ -214,7 +214,7 @@ private fun MerchantTopBarPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun MerchantListItemPreview() {
-    PannyPalTheme {
+    PannyPalTheme(darkTheme = true) {
 
     }
 }

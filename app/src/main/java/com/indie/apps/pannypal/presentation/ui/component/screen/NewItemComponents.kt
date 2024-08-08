@@ -399,7 +399,7 @@ private fun NewEntryTextFieldItem(
 @Preview(showBackground = true)
 @Composable
 private fun TNewEntryFieldItemSectionPreview() {
-    PannyPalTheme {
+    PannyPalTheme(darkTheme = true) {
         NewEntryFieldItemSection(
             onMerchantSelect = {},
             onPaymentAdd = {},

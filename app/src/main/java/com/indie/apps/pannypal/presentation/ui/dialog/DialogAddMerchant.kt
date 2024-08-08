@@ -71,7 +71,7 @@ fun DialogAddMerchant(
 @Preview
 @Composable
 private fun MyAppDialogPreview() {
-    PannyPalTheme {
+    PannyPalTheme(darkTheme = true) {
         DialogAddMerchant(onNavigationUp = {}, onSaveSuccess = { a, b -> }, onCpp = {}, code = null
         )
     }

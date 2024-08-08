@@ -173,7 +173,7 @@ fun MerchantScreen(
 @Preview
 @Composable
 private fun MerchantScreenPreview() {
-    PannyPalTheme {
+    PannyPalTheme(darkTheme = true) {
         MerchantScreen(onAddClick = {}, onEditClick = {}, onMerchantClick = {})
     }
 }

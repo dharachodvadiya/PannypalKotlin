@@ -51,7 +51,7 @@ fun DialogAddPayment(
 @Preview
 @Composable
 private fun MyAppDialogPreview() {
-    PannyPalTheme {
+    PannyPalTheme(darkTheme = true) {
         DialogAddPayment(
             onNavigationUp = {},
             onSaveSuccess = {}

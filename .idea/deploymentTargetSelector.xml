@@ -16,6 +16,9 @@
       <SelectionState runConfigName="cpp">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
+      <SelectionState runConfigName="delete_multiple_merchant_delete_merchantDataFromMerchantId_update_userAmount_test()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
     </selectionStates>
   </component>
 </project>

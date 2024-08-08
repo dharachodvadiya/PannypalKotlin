@@ -63,7 +63,7 @@ fun DialogSearchMerchant(
 @Preview
 @Composable
 private fun MyAppDialogPreview() {
-    PannyPalTheme {
+    PannyPalTheme(darkTheme = true) {
         DialogSearchMerchant(
             onNavigationUp = {},
             onAddClick = {},

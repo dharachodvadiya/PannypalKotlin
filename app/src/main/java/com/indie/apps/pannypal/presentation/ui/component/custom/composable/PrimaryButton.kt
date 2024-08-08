@@ -76,7 +76,7 @@ fun PrimaryButton(
 @Preview
 @Composable
 private fun PrimaryButtonPreview() {
-    PannyPalTheme {
+    PannyPalTheme(darkTheme = true) {
         PrimaryButton(
             enabled = false,
             onClick = {}

@@ -486,7 +486,7 @@ private fun MerchantDataTotal(
 @Preview(showBackground = true)
 @Composable
 private fun MerchantDataTopBarPreview() {
-    PannyPalTheme {
+    PannyPalTheme(darkTheme = true) {
         MerchantDataTopBar(onClick = { /*TODO*/ }, onNavigationUp = { /*TODO*/ })
     }
 }
@@ -494,7 +494,7 @@ private fun MerchantDataTopBarPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun MerchantDataBottomBarPreview() {
-    PannyPalTheme {
+    PannyPalTheme(darkTheme = true) {
         MerchantDataBottomBar(
             onEditClick = {},
             onDeleteClick = {}
@@ -505,7 +505,7 @@ private fun MerchantDataBottomBarPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun MerchantDataIncomeAmountItemPreview() {
-    PannyPalTheme {
+    PannyPalTheme(darkTheme = true) {
         /*MerchantDataIncomeAmount(
             onClick = {},
             onLongClick = {}
@@ -516,7 +516,7 @@ private fun MerchantDataIncomeAmountItemPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun MerchantDataExpenseAmountItemPreview() {
-    PannyPalTheme {
+    PannyPalTheme(darkTheme = true) {
         /*MerchantDataExpenseAmount(
             onClick = {},
             onLongClick = {}
@@ -527,7 +527,7 @@ private fun MerchantDataExpenseAmountItemPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun MerchantDataDateItemPreview() {
-    PannyPalTheme {
+    PannyPalTheme(darkTheme = true) {
         MerchantDataDateItem()
     }
 }

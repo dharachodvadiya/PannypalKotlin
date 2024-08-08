@@ -98,7 +98,7 @@ fun MerchantProfileData(
 @Preview
 @Composable
 private fun MerchantProfileScreenPreview() {
-    PannyPalTheme {
+    PannyPalTheme(darkTheme = true) {
         MerchantProfileScreen(
             onNavigationUp = {}
         )

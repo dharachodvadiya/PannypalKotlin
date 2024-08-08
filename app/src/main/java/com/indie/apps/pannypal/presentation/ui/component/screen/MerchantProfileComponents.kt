@@ -96,7 +96,7 @@ fun MerchantProfileBottomSection(
 @Preview(showBackground = true)
 @Composable
 private fun MerchantProfileTopSectionPreview() {
-    PannyPalTheme {
+    PannyPalTheme(darkTheme = true) {
         MerchantProfileTopSection()
     }
 }
@@ -104,7 +104,7 @@ private fun MerchantProfileTopSectionPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun MerchantProfileBottomSectionPreview() {
-    PannyPalTheme {
+    PannyPalTheme(darkTheme = true) {
         MerchantProfileBottomSection()
     }
 }

@@ -129,7 +129,7 @@ fun MyAppTextField(
 @Preview
 @Composable
 private fun MyAppTextFieldPreview() {
-    PannyPalTheme {
+    PannyPalTheme(darkTheme = true) {
         MyAppTextField(
             value = "",
             onValueChange = {}

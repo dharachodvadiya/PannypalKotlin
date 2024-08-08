@@ -90,7 +90,7 @@ private fun ProfileScreenData(
 @Preview
 @Composable
 private fun ProfileScreenPreview() {
-    PannyPalTheme {
+    PannyPalTheme(darkTheme = true) {
         ProfileScreen(onNavigationUp = {})
     }
 }

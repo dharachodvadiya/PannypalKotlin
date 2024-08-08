@@ -196,7 +196,7 @@ fun MerchantDataScreen(
 @Preview
 @Composable
 private fun MerchantDataScreenPreview() {
-    PannyPalTheme {
+    PannyPalTheme(darkTheme = true) {
         MerchantDataScreen(
             onProfileClick = {},
             onNavigationUp = {},

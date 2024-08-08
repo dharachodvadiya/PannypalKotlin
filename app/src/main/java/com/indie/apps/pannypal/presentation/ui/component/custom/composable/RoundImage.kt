@@ -69,7 +69,7 @@ fun RoundImage(
 @Preview
 @Composable
 private fun RoundImagePreview() {
-    PannyPalTheme {
+    PannyPalTheme(darkTheme = true) {
         RoundImage(
             imageVector = Icons.Filled.Person,
             tint = MyAppTheme.colors.white,

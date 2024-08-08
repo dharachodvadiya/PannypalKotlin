@@ -87,7 +87,7 @@ fun SearchView(
 @Preview
 @Composable
 private fun SearchViewPreview() {
-    PannyPalTheme {
+    PannyPalTheme(darkTheme = true) {
         SearchView(onTextChange = {})
     }
 }

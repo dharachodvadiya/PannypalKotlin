@@ -39,7 +39,7 @@ fun PannyPalApp() {
     val paymentSaveToast = stringResource(id = R.string.payment_save_success_toast)
     val merchantSaveToast = stringResource(id = R.string.merchant_save_success_toast)
     val merchantEditToast = stringResource(id = R.string.merchant_edit_success_message)
-    PannyPalTheme {
+    PannyPalTheme(darkTheme = true) {
         val navController = rememberNavController()
         val currentBackStack by navController.currentBackStackEntryAsState()
         val currentDestination = currentBackStack?.destination
@@ -194,7 +194,7 @@ fun PannyPalApp() {
 @Preview
 @Composable
 private fun MainScreenPreview() {
-    PannyPalTheme {
+    PannyPalTheme(darkTheme = true) {
         PannyPalApp()
     }
 }

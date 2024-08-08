@@ -187,7 +187,7 @@ fun BottomNavigationBarCustom1Item(
 @Preview("dark theme", uiMode = UI_MODE_NIGHT_YES)
 @Composable
 private fun BottomNavPreviewDarkModeCustom() {
-    PannyPalTheme {
+    PannyPalTheme(darkTheme = true) {
         BottomNavigationBarCustom(
             tabs = BottomNavItem.values(),
             onTabSelected = {},
@@ -199,7 +199,7 @@ private fun BottomNavPreviewDarkModeCustom() {
 @Preview
 @Composable
 private fun BottomNavPreviewCustom() {
-    PannyPalTheme {
+    PannyPalTheme(darkTheme = true) {
         BottomNavigationBarCustom(
             tabs = BottomNavItem.entries.toTypedArray(),
             onTabSelected = {},
@@ -211,7 +211,7 @@ private fun BottomNavPreviewCustom() {
 @Preview("dark theme", uiMode = UI_MODE_NIGHT_YES)
 @Composable
 private fun BottomNavPreviewDarkModeCustom1() {
-    PannyPalTheme {
+    PannyPalTheme(darkTheme = true) {
         BottomNavigationBarCustom1(
             tabs = BottomNavItem.values(),
             onTabSelected = {},
@@ -223,7 +223,7 @@ private fun BottomNavPreviewDarkModeCustom1() {
 @Preview
 @Composable
 private fun BottomNavPreviewCustom1() {
-    PannyPalTheme {
+    PannyPalTheme(darkTheme = true) {
         BottomNavigationBarCustom1(
             tabs = BottomNavItem.entries.toTypedArray(),
             onTabSelected = {},

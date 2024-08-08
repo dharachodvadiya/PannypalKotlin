@@ -197,7 +197,7 @@ private fun ProfileAmountWithIcon(
 @Preview
 @Composable
 private fun ProfileLoginWithGoogleButtonPreview() {
-    PannyPalTheme {
+    PannyPalTheme(darkTheme = true) {
         ProfileLoginWithGoogleButton(
             {}, modifier = Modifier
                 .padding(dimensionResource(id = R.dimen.padding))

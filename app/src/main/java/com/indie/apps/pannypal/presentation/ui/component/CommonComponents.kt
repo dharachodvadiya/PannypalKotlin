@@ -266,7 +266,7 @@ fun DeleteAlertDialog(
 @Preview
 @Composable
 private fun MyAppTopBarPreview() {
-    PannyPalTheme {
+    PannyPalTheme(darkTheme = true) {
         TopBarWithTitle(
             isBackEnable = true,
             title = "Title",
@@ -279,7 +279,7 @@ private fun MyAppTopBarPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun UserProfilePreview() {
-    PannyPalTheme {
+    PannyPalTheme(darkTheme = true) {
         UserProfile()
     }
 }
@@ -287,7 +287,7 @@ private fun UserProfilePreview() {
 @Preview(showBackground = true)
 @Composable
 private fun DialogTextFieldItemPreview() {
-    PannyPalTheme {
+    PannyPalTheme(darkTheme = true) {
         DialogTextFieldItem(
             imageVector = Icons.Default.PersonOutline,
             placeholder = R.string.amount_placeholder
