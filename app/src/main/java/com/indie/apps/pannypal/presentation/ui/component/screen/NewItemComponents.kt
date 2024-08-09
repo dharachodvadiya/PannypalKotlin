@@ -91,8 +91,8 @@ private fun NewEntryButtonItem(
     selected: Boolean = false,
     modifier: Modifier = Modifier,
 ) {
-    val btnBgColor = if (selected) bgColor else MyAppTheme.colors.gray0
-    val btnContentColor = if (selected) MyAppTheme.colors.white else MyAppTheme.colors.gray1
+    val btnBgColor = if (selected) bgColor else MyAppTheme.colors.itemBg
+    val btnContentColor = if (selected) MyAppTheme.colors.black else MyAppTheme.colors.gray1
     PrimaryButton(
         bgColor = btnBgColor,
         onClick = onClick,
@@ -132,7 +132,7 @@ fun NewEntryFieldItemSection(
 ) {
     Column(
         modifier = modifier
-            .background(MyAppTheme.colors.white),
+            .background(MyAppTheme.colors.transparent),
     ) {
         NewEntrySelectableItem(
             text = merchantName,
@@ -199,7 +199,7 @@ private fun NewEntrySelectableItem(
         Text(
             text = stringResource(id = label),
             style = MyAppTheme.typography.Medium46,
-            color = MyAppTheme.colors.gray2
+            color = MyAppTheme.colors.gray1
         )
         Row(
             modifier = Modifier
@@ -208,7 +208,7 @@ private fun NewEntrySelectableItem(
                 .height(dimensionResource(id = R.dimen.new_entry_field_height))
                 .background(
                     shape = RoundedCornerShape(dimensionResource(id = R.dimen.round_corner)),
-                    color = MyAppTheme.colors.gray0
+                    color = MyAppTheme.colors.itemBg
                 )
                 .padding(
                     top = 0.dp,
@@ -239,7 +239,7 @@ private fun NewEntrySelectableItem(
                 bgColor = MyAppTheme.colors.white,
                 borderStroke = BorderStroke(
                     width = 1.dp,
-                    color = MyAppTheme.colors.gray2
+                    color = MyAppTheme.colors.gray1
                 ),
                 modifier = modifier,
                 onClick = onAddClick,
@@ -247,7 +247,7 @@ private fun NewEntrySelectableItem(
                 Icon(
                     imageVector = imageVector,
                     contentDescription = "Add",
-                    tint = MyAppTheme.colors.gray2
+                    tint = MyAppTheme.colors.gray1
                 )
             }
         }
@@ -280,7 +280,7 @@ private fun NewEntryDropDownList(
             Text(
                 text = stringResource(id = label),
                 style = MyAppTheme.typography.Medium46,
-                color = MyAppTheme.colors.gray2
+                color = MyAppTheme.colors.gray1
             )
             Row(
                 modifier = Modifier
@@ -289,7 +289,7 @@ private fun NewEntryDropDownList(
                     .height(dimensionResource(id = R.dimen.new_entry_field_height))
                     .background(
                         shape = RoundedCornerShape(dimensionResource(id = R.dimen.round_corner)),
-                        color = MyAppTheme.colors.gray0
+                        color = MyAppTheme.colors.itemBg
                     ),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -320,7 +320,7 @@ private fun NewEntryDropDownList(
                     bgColor = MyAppTheme.colors.white,
                     borderStroke = BorderStroke(
                         width = 1.dp,
-                        color = MyAppTheme.colors.gray2
+                        color = MyAppTheme.colors.gray1
                     ),
                     onClick = {
                         onAddClick()
@@ -330,7 +330,7 @@ private fun NewEntryDropDownList(
                     Icon(
                         imageVector = Icons.Default.Add,
                         contentDescription = "Add",
-                        tint = MyAppTheme.colors.gray2
+                        tint = MyAppTheme.colors.gray1
                     )
                 }
             }
@@ -379,7 +379,7 @@ private fun NewEntryTextFieldItem(
         Text(
             text = stringResource(id = label),
             style = MyAppTheme.typography.Medium46,
-            color = MyAppTheme.colors.gray2
+            color = MyAppTheme.colors.gray1
         )
         MyAppTextField(
             value = textState.text,

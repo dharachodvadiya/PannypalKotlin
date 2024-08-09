@@ -1,6 +1,7 @@
 package com.indie.apps.pannypal.presentation.ui.screen
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -15,6 +16,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.indie.apps.pannypal.R
+import com.indie.apps.pannypal.presentation.ui.component.backgroundGradientsBrush
 import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 
@@ -27,6 +29,7 @@ fun LoadingScreen(
         verticalArrangement = Arrangement.Center,
         modifier = modifier
             .fillMaxSize()
+            .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
     ) {
 
         Image(painter = painterResource(id = R.drawable.icon_loading), contentDescription = "icon")

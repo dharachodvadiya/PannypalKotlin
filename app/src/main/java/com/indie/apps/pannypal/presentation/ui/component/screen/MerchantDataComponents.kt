@@ -49,7 +49,6 @@ import com.indie.apps.pannypal.presentation.ui.component.custom.composable.ListI
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.RoundImage
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.TopBar
-import com.indie.apps.pannypal.presentation.ui.component.linearGradientsBrush
 import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 import java.text.SimpleDateFormat
@@ -90,7 +89,7 @@ private fun MerchantDataTopBarItem(
     modifier: Modifier = Modifier.fillMaxWidth()
 ) {
     val imageVector = Icons.Default.Person
-    val bgColor = MyAppTheme.colors.brandBg
+    val bgColor = MyAppTheme.colors.lightBlue2
 
 
     ListItem(
@@ -107,7 +106,8 @@ private fun MerchantDataTopBarItem(
             } else {
                 RoundImage(
                     imageVector = imageVector,
-                    brush = linearGradientsBrush(MyAppTheme.colors.gradientBlue),
+                    //brush = linearGradientsBrush(MyAppTheme.colors.gradientBlue),
+                    tint = MyAppTheme.colors.black,
                     backGround = bgColor,
                     contentDescription = "person",
                     modifier = Modifier.size(50.dp),
@@ -147,7 +147,8 @@ private fun MerchantDataTopBarItem(
 
             }
         },
-        modifier = modifier
+        modifier = modifier,
+        itemBgColor = MyAppTheme.colors.transparent
     )
 }
 
@@ -169,7 +170,8 @@ fun MerchantDataBottomBar(
                 MerchantDataBottomButton(
                     text = R.string.edit_transaction,
                     painterRes = R.drawable.ic_edit,
-                    bgBrush = linearGradientsBrush(MyAppTheme.colors.gradientBlue),
+                    //bgBrush = linearGradientsBrush(MyAppTheme.colors.gradientBlue),
+                    bgColor = MyAppTheme.colors.buttonBg,
                     onClick = onEditClick,
                     modifier = Modifier.weight(1f)
                 )
@@ -212,7 +214,7 @@ fun MerchantDataIncomeAmount(
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val bgColor = if (isSelected) MyAppTheme.colors.brandBg else MyAppTheme.colors.white
+    val bgColor = if (isSelected) MyAppTheme.colors.itemSelectedBg else MyAppTheme.colors.transparent
 
     Row(
         modifier = modifier
@@ -248,7 +250,7 @@ fun MerchantDataExpenseAmount(
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val bgColor = if (isSelected) MyAppTheme.colors.brandBg else MyAppTheme.colors.white
+    val bgColor = if (isSelected) MyAppTheme.colors.itemSelectedBg else MyAppTheme.colors.transparent
 
     Row(
         modifier = modifier
@@ -295,7 +297,7 @@ fun MerchantDataDateItem(
         Text(
             text = Util.getDateFromMillis(dateMillis, SimpleDateFormat("dd MMMM yyyy")),
             style = MyAppTheme.typography.Medium40,
-            color = MyAppTheme.colors.gray2,
+            color = MyAppTheme.colors.gray1,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.padding(horizontal = 3.dp)
@@ -319,9 +321,10 @@ private fun MerchantDataAmountItem(
 ) {
     Surface(
         modifier = modifier
+            .padding(horizontal = dimensionResource(id = R.dimen.padding))
             .widthIn(min = 150.dp, max = 250.dp),
         shape = RoundedCornerShape(dimensionResource(id = R.dimen.round_corner)),
-        color = MyAppTheme.colors.gray0
+        color = MyAppTheme.colors.itemBg
     )
     {
         Column(
@@ -377,14 +380,14 @@ private fun MerchantDataBottomButton(
         Icon(
             painter = painterResource(painterRes),
             contentDescription = "",
-            tint = MyAppTheme.colors.white,
+            tint = MyAppTheme.colors.black,
             modifier = Modifier.size(25.dp)
         )
         Spacer(modifier = Modifier.width(10.dp))
         Text(
             text = stringResource(text),
             style = MyAppTheme.typography.Bold49_5,
-            color = MyAppTheme.colors.white,
+            color = MyAppTheme.colors.black,
             textAlign = TextAlign.Center
         )
     }
@@ -408,7 +411,7 @@ private fun MerchantDataBottomTotal(
                     bottomStart = 0.dp,
                     bottomEnd = 0.dp
                 ),
-                color = MyAppTheme.colors.gray0
+                color = MyAppTheme.colors.bottomBg
             )
             .padding(horizontal = dimensionResource(id = R.dimen.padding)),
         verticalAlignment = Alignment.CenterVertically
@@ -440,7 +443,7 @@ private fun MerchantDataTotalIncomeExpense(
             .height(dimensionResource(id = R.dimen.top_bar_profile))
             .background(
                 shape = RoundedCornerShape(dimensionResource(id = R.dimen.round_corner)),
-                color = MyAppTheme.colors.white
+                color = MyAppTheme.colors.transparent
             )
             .border(
                 width = 2.dp,
@@ -453,7 +456,7 @@ private fun MerchantDataTotalIncomeExpense(
             text = Util.getFormattedStringWithSymbol(amount),
             style = MyAppTheme.typography.Semibold50,
             color = MyAppTheme.colors.black,
-            maxLines = 2,
+            maxLines = 1,
             modifier = Modifier.padding(5.dp)
         )
     }
@@ -473,12 +476,12 @@ private fun MerchantDataTotal(
             text = Util.getFormattedStringWithSymbol(amount),
             style = MyAppTheme.typography.Semibold56,
             color = MyAppTheme.colors.black,
-            maxLines = 2
+            maxLines = 1
         )
         Text(
             text = stringResource(id = R.string.total_amount),
             style = MyAppTheme.typography.Medium40,
-            color = MyAppTheme.colors.gray2
+            color = MyAppTheme.colors.gray1
         )
     }
 }

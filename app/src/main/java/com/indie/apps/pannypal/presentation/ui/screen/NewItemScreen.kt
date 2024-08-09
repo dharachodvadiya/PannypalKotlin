@@ -1,7 +1,9 @@
 package com.indie.apps.pannypal.presentation.ui.screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -18,8 +20,10 @@ import com.indie.apps.pannypal.data.entity.Payment
 import com.indie.apps.pannypal.data.module.MerchantNameAndDetails
 import com.indie.apps.pannypal.presentation.ui.component.BottomSaveButton
 import com.indie.apps.pannypal.presentation.ui.component.TopBarWithTitle
+import com.indie.apps.pannypal.presentation.ui.component.backgroundGradientsBrush
 import com.indie.apps.pannypal.presentation.ui.component.screen.NewEntryFieldItemSection
 import com.indie.apps.pannypal.presentation.ui.component.screen.NewEntryTopSelectionButton
+import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 import com.indie.apps.pannypal.presentation.viewmodel.NewItemViewModel
 import com.indie.apps.pannypal.util.Resource
@@ -72,6 +76,8 @@ fun NewItemScreen(
 
                 Column(
                     modifier = modifier
+                        .fillMaxSize()
+                        .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
                         .padding(padding)
                         .padding(horizontal = dimensionResource(id = R.dimen.padding))
                 ) {

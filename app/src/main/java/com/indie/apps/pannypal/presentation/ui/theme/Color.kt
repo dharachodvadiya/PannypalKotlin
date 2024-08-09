@@ -35,7 +35,9 @@ enum class DarkBlue(val color: Color) {
     DarkBlue3(Color(0xFF607698)),
     DarkBlue4(Color(0xFF425779)),
     DarkBlue5(Color(0xFF2F4365)),
-    DarkBlue6(Color(0xFF223759))
+    DarkBlue6(Color(0xFF223759)),
+    DarkBlue7(Color(0xFF1B283D)),
+    DarkBlue8(Color(0xFF1F242D)),
 }
 
 enum class Brand(val color: Color) {
@@ -44,7 +46,9 @@ enum class Brand(val color: Color) {
     Gray1(Color(0xFFACACAC)),
     Gray2(Color(0xFF6B6A6A)),
     Gray3(Color(0xFF3F3E3E)),
-    Black(Color(0xFF16161D))
+    Gray4(Color(0xFF3F3E3E)),
+    Black(Color(0xFF16161D)),
+    Blue1(Color(0xFF317EDB))
 }
 
 

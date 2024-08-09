@@ -31,7 +31,7 @@ import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 fun MyAppDialog(
     @StringRes title: Int,
     isBackEnable: Boolean = false,
-    onNavigationUp: ()-> Unit,
+    onNavigationUp: () -> Unit,
     content: @Composable () -> Unit,
     bottomContent: @Composable (() -> Unit)? = null,
     isFixHeight: Boolean = false,
@@ -43,9 +43,9 @@ fun MyAppDialog(
     ) {
         Spacer(modifier = Modifier.weight(1f))
 
-        val heightModifier = if(isFixHeight){
+        val heightModifier = if (isFixHeight) {
             Modifier.height(dimensionResource(id = R.dimen.dialog_max_height))
-        }else{
+        } else {
             Modifier
                 .heightIn(
                     min = dimensionResource(id = R.dimen.dialog_min_height),
@@ -59,7 +59,7 @@ fun MyAppDialog(
             modifier = Modifier
                 .then(heightModifier)
                 .background(
-                    color = MyAppTheme.colors.white,
+                    color = MyAppTheme.colors.bottomBg,
                     shape = RoundedCornerShape(topStartPercent = 7, topEndPercent = 7)
                 )
         ) {
@@ -72,9 +72,8 @@ fun MyAppDialog(
             )
 
             content()
-            
-            if(isFixHeight)
-            {
+
+            if (isFixHeight) {
                 Spacer(modifier = Modifier.weight(1f))
             }
             if (bottomContent != null) {
@@ -90,8 +89,8 @@ fun MyAppDialog(
 private fun DialogTopBar(
     @StringRes title: Int,
     isBackEnable: Boolean = false,
-    onNavigationUp: ()-> Unit,
-){
+    onNavigationUp: () -> Unit,
+) {
     TopBarWithTitle(
         isBackEnable = isBackEnable,
         title = stringResource(title),
@@ -99,7 +98,7 @@ private fun DialogTopBar(
         onNavigationUp = onNavigationUp,
         bgColor = MyAppTheme.colors.transparent,
         trailingContent = {
-            if(!isBackEnable)
+            if (!isBackEnable)
                 Icon(
                     imageVector = Icons.Default.Close,
                     contentDescription = "close",
@@ -109,7 +108,7 @@ private fun DialogTopBar(
                         }
                 )
         },
-        contentAlignment = if(isBackEnable) Alignment.Center else Alignment.CenterStart
+        contentAlignment = if (isBackEnable) Alignment.Center else Alignment.CenterStart
     )
 }
 
@@ -123,7 +122,8 @@ private fun MyAppDialogPreview() {
             content = {
                 DialogTextFieldItem(
                     imageVector = Icons.Default.PersonOutline,
-                    placeholder = R.string.merchant_name_placeholder)
+                    placeholder = R.string.merchant_name_placeholder
+                )
             },
             bottomContent = {
                 BottomSaveButton(

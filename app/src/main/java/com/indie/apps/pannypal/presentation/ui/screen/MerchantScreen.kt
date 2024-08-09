@@ -1,6 +1,8 @@
 package com.indie.apps.pannypal.presentation.ui.screen
 
 import android.widget.Toast
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,6 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -28,8 +31,10 @@ import androidx.paging.compose.itemKey
 import com.indie.apps.pannypal.R
 import com.indie.apps.pannypal.presentation.ui.common.Util
 import com.indie.apps.pannypal.presentation.ui.component.DeleteAlertDialog
+import com.indie.apps.pannypal.presentation.ui.component.backgroundGradientsBrush
 import com.indie.apps.pannypal.presentation.ui.component.screen.MerchantListItem
 import com.indie.apps.pannypal.presentation.ui.component.screen.MerchantTopBar
+import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 import com.indie.apps.pannypal.presentation.viewmodel.MerchantViewModel
 import kotlinx.coroutines.Job
@@ -98,6 +103,7 @@ fun MerchantScreen(
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
+                    .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
                     .padding(innerPadding)
                     .fillMaxSize()
             ) {
@@ -123,7 +129,11 @@ fun MerchantScreen(
             LazyColumn(
                 state = scrollState,
                 modifier = modifier
+                    .fillMaxSize()
+                    .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
                     .padding(innerPadding)
+                    .padding(horizontal = dimensionResource(id = R.dimen.padding)),
+                verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.item_inner_padding))
             ) {
                 items(count = lazyPagingData.itemCount,
                     key = lazyPagingData.itemKey { item -> item.id }
@@ -141,7 +151,9 @@ fun MerchantScreen(
                         if (pagingState.isLoadMore && index == lazyPagingData.itemCount - 1) {
                             Box(
                                 contentAlignment = Alignment.Center,
-                                modifier = Modifier.fillMaxWidth()
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .background(MyAppTheme.colors.transparent)
                             ) {
                                 CircularProgressIndicator()
                             }

@@ -20,6 +20,14 @@ fun linearGradientsBrush(colors: List<Color>): Brush {
     )
 }
 
+fun backgroundGradientsBrush(colors: List<Color>): Brush {
+    return Brush.linearGradient(
+        colors,
+        start = Offset(200f, 300f),
+        end = Offset(800f, 600f)
+    )
+}
+
 fun verticalGradientsBrush(colors: List<Color>): Brush {
     return Brush.verticalGradient(
         colors

@@ -46,7 +46,7 @@ fun ProfileTopSection(
         modifier = modifier
             .fillMaxWidth()
             .background(
-                color = MyAppTheme.colors.brandBg,
+                color = MyAppTheme.colors.itemBg,
                 shape = RoundedCornerShape(bottomStartPercent = 20, bottomEndPercent = 20)
             )
     ) {
@@ -56,7 +56,7 @@ fun ProfileTopSection(
         Text(
             text = "Balance",
             style = MyAppTheme.typography.Semibold60,
-            color = MyAppTheme.colors.black
+            color = MyAppTheme.colors.gray1
         )
         Spacer(modifier = Modifier.height(5.dp))
         /*Text(
@@ -73,6 +73,7 @@ fun ProfileTopSection(
             text = Util.getFormattedStringWithSymbol(totalAmount),
             style = MyAppTheme.typography.Semibold90,
             color = MyAppTheme.colors.black,
+            alignment = Alignment.Center,
             maxLines = 1,
             modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.padding))
         )
@@ -132,7 +133,7 @@ private fun ProfileLoginWithGoogleButton(
 ) {
 
     PrimaryButton(
-        bgColor = MyAppTheme.colors.white,
+        bgColor = MyAppTheme.colors.buttonBg,
         borderStroke = BorderStroke(
             width = 1.dp,
             color = MyAppTheme.colors.brand
@@ -172,7 +173,7 @@ private fun ProfileAmountWithIcon(
 
         RoundImage(
             imageVector = imageVector,
-            tint = MyAppTheme.colors.white,
+            tint = MyAppTheme.colors.black,
             backGround = bgColor,
             contentDescription = "amount"
         )

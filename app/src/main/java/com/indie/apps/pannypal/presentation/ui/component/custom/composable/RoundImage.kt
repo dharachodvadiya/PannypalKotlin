@@ -27,7 +27,7 @@ import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 fun RoundImage(
     imageVector: ImageVector,
     imageVectorSize: Dp = dimensionResource(id = R.dimen.default_icon_size),
-    tint: Color = MyAppTheme.colors.white,
+    tint: Color = MyAppTheme.colors.black,
     brush: Brush? = null,
     backGround: Color,
     contentDescription: String,

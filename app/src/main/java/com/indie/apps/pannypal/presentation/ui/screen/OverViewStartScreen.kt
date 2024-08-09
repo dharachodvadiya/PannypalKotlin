@@ -1,7 +1,9 @@
 package com.indie.apps.pannypal.presentation.ui.screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
@@ -17,10 +19,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.indie.apps.pannypal.presentation.ui.component.backgroundGradientsBrush
 import com.indie.apps.pannypal.presentation.ui.component.screen.OverviewAppFloatingButton
 import com.indie.apps.pannypal.presentation.ui.component.screen.OverviewBalanceView
 import com.indie.apps.pannypal.presentation.ui.component.screen.OverviewList
 import com.indie.apps.pannypal.presentation.ui.component.screen.OverviewTopBar
+import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 import com.indie.apps.pannypal.presentation.viewmodel.OverViewViewModel
 import com.indie.apps.pannypal.util.Resource
@@ -67,7 +71,10 @@ fun OverViewStartScreen(
     }) { innerPadding ->
 
         Column(
-            modifier = modifier.padding(innerPadding)
+            modifier = modifier
+                .fillMaxSize()
+                .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
+                .padding(innerPadding)
         ) {
             if (merchantDataWithNamePagingState.isRefresh ||
                 merchantDataDailyTotalPagingState.isRefresh

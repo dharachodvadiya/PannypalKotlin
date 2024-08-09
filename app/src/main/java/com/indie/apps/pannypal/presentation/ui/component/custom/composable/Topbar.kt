@@ -28,10 +28,10 @@ fun TopBar(
     leadingContent: @Composable (() -> Unit)? = null,
     content: @Composable (() -> Unit)? = null,
     trailingContent: @Composable (() -> Unit)? = null,
-    modifier: Modifier = Modifier.background(MyAppTheme.colors.transparent),
+    modifier: Modifier = Modifier,
     isBackEnable: Boolean = true,
     contentAlignment: Alignment = Alignment.CenterStart,
-    bgColor: Color = MyAppTheme.colors.white
+    bgColor: Color = MyAppTheme.colors.transparent
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,

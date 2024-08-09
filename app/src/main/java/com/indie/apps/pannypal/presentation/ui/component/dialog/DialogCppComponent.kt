@@ -13,32 +13,30 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.indie.apps.pannypal.R
-import com.indie.apps.pannypal.presentation.ui.component.custom.composable.SearchView
-import com.indie.apps.pannypal.presentation.ui.state.TextFieldState
-import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.cpp.data.utils.getFlags
 import com.indie.apps.cpp.utils.Country
 import com.indie.apps.cpp.utils.countryList
 import com.indie.apps.cpp.utils.searchCountry
+import com.indie.apps.pannypal.R
+import com.indie.apps.pannypal.presentation.ui.component.custom.composable.SearchView
+import com.indie.apps.pannypal.presentation.ui.state.TextFieldState
+import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
 import java.util.Locale
 
 @Composable
 fun CppDialogField(
     onSelect: (Country) -> Unit,
-    searchState : TextFieldState,
+    searchState: TextFieldState,
 ) {
     Column {
 
@@ -59,7 +57,7 @@ fun CppDialogField(
                 } else {
                     countriesList.searchCountry(searchState.text)
                 }
-            ){country ->
+            ) { country ->
                 SearchCppListItem(
                     country = country,
                     onClick = onSelect
@@ -72,10 +70,9 @@ fun CppDialogField(
 
 @Composable
 private fun SearchCcpSearchview(
-    searchState : TextFieldState,
+    searchState: TextFieldState,
     modifier: Modifier = Modifier
-)
-{
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
@@ -87,11 +84,16 @@ private fun SearchCcpSearchview(
         SearchView(
             trailingIcon = Icons.Default.Search,
             textState = searchState,
-            bgColor = MyAppTheme.colors.gray0,
+            bgColor = MyAppTheme.colors.lightBlue2,
             modifier = Modifier
                 .weight(1f)
                 .height(40.dp),
-            paddingValues = PaddingValues(top = 0.dp, bottom = 0.dp, start = dimensionResource(id = R.dimen.padding), end = 0.dp),
+            paddingValues = PaddingValues(
+                top = 0.dp,
+                bottom = 0.dp,
+                start = dimensionResource(id = R.dimen.padding),
+                end = 0.dp
+            ),
             onTextChange = {}
         )
     }
@@ -127,7 +129,7 @@ private fun SearchCppListItem(
             style = MyAppTheme.typography.Regular44
         )
     }
-    Divider(
+    /*Divider(
         color = Color.LightGray, thickness = 0.5.dp
-    )
+    )*/
 }

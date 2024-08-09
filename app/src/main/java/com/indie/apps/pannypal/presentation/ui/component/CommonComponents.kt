@@ -25,10 +25,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawWithCache
-import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -53,7 +50,7 @@ fun TopBarWithTitle(
     onNavigationUp: () -> Unit,
     modifier: Modifier = Modifier,
     contentAlignment: Alignment = Alignment.CenterStart,
-    bgColor: Color = MyAppTheme.colors.white,
+    bgColor: Color = MyAppTheme.colors.transparent,
     trailingContent: @Composable (() -> Unit)? = null
 ) {
     TopBar(
@@ -84,7 +81,7 @@ fun UserProfile(
             .border(
                 BorderStroke(
                     width = borderWidth.dp,
-                    color = MyAppTheme.colors.gray0
+                    color = MyAppTheme.colors.gray2
                 ),
                 shape = CircleShape
             )
@@ -96,13 +93,13 @@ fun UserProfile(
             .then(borderModifier)
             .size(dimensionResource(id = R.dimen.user_image_bg_size))
             .shadow(
-                color = MyAppTheme.colors.gray0,
+                color = MyAppTheme.colors.brandBg,
                 offsetX = (4).dp,
                 offsetY = (5).dp,
                 blurRadius = 5.dp,
             )
             .background(
-                color = MyAppTheme.colors.white,
+                color = MyAppTheme.colors.lightBlue2,
                 shape = CircleShape
             ),
         contentAlignment = Alignment.Center
@@ -112,13 +109,14 @@ fun UserProfile(
             contentDescription = "User",
             modifier = Modifier
                 .size(dimensionResource(id = R.dimen.user_image_size))
-                .graphicsLayer(alpha = 0.99f)
+                /*.graphicsLayer(alpha = 0.99f)
                 .drawWithCache {
                     onDrawWithContent {
                         drawContent()
                         drawRect(linearGradientsBrush(iconGradient), blendMode = BlendMode.SrcAtop)
                     }
-                }
+                }*/,
+            tint = MyAppTheme.colors.black
         )
     }
 }
@@ -130,7 +128,8 @@ fun BottomSaveButton(
     modifier: Modifier = Modifier
 ) {
     PrimaryButton(
-        bgBrush = linearGradientsBrush(MyAppTheme.colors.gradientBlue),
+        //bgBrush = linearGradientsBrush(MyAppTheme.colors.gradientBlue),
+        bgColor = MyAppTheme.colors.buttonBg,
         modifier = modifier
             .fillMaxWidth()
             .height(dimensionResource(id = R.dimen.button_height)),
@@ -140,7 +139,7 @@ fun BottomSaveButton(
         Text(
             text = stringResource(id = R.string.save),
             style = MyAppTheme.typography.Bold49_5,
-            color = MyAppTheme.colors.white,
+            color = MyAppTheme.colors.black,
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()
         )
@@ -187,7 +186,7 @@ fun DialogTextFieldItem(
                 textLeadingContent = textLeadingContent,
                 placeHolderTextStyle = MyAppTheme.typography.Regular46,
                 modifier = Modifier.height(dimensionResource(id = R.dimen.new_entry_field_height)),
-                bgColor = MyAppTheme.colors.gray0,
+                bgColor = MyAppTheme.colors.itemBg,
                 paddingValues = PaddingValues(horizontal = dimensionResource(id = R.dimen.item_content_padding))
             )
         }

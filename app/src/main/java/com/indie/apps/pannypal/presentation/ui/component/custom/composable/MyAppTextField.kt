@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.TextStyle
@@ -49,7 +50,7 @@ fun MyAppTextField(
     keyboardType: KeyboardType = KeyboardType.Text,
     modifier: Modifier = Modifier,
     textModifier: Modifier = Modifier,
-    bgColor: Color = MyAppTheme.colors.white,
+    bgColor: Color = MyAppTheme.colors.transparent,
     onDoneAction: (() -> Unit)? = {},
     onNextAction: (() -> Unit)? = null,
     paddingValues: PaddingValues = PaddingValues(0.dp)
@@ -68,7 +69,6 @@ fun MyAppTextField(
         }
         val keyboardController = LocalSoftwareKeyboardController.current
         val colors = TextFieldDefaults.colors(
-            cursorColor = MyAppTheme.colors.brand,
             focusedIndicatorColor = MyAppTheme.colors.transparent,
             unfocusedIndicatorColor = MyAppTheme.colors.transparent,
             disabledIndicatorColor = MyAppTheme.colors.transparent,
@@ -82,7 +82,7 @@ fun MyAppTextField(
             modifier = textModifier
                 .fillMaxWidth(),
             onValueChange = onValueChange,
-            textStyle = textStyle,
+            textStyle = textStyle.copy(color = MyAppTheme.colors.black),
             keyboardOptions = KeyboardOptions(imeAction = imeAction, keyboardType = keyboardType),
             keyboardActions = KeyboardActions(onDone = {
                 keyboardController?.hide()
@@ -98,6 +98,7 @@ fun MyAppTextField(
             }, onSend = {
                 keyboardController?.hide()
             }),
+            cursorBrush = SolidColor(MyAppTheme.colors.lightBlue1),
             singleLine = true,
             decorationBox = @Composable { innerTextField ->
                 // places leading icon, text field with label and placeholder, trailing icon
@@ -108,7 +109,7 @@ fun MyAppTextField(
                         Text(
                             text = placeHolder,
                             style = placeHolderTextStyle,
-                            color = MyAppTheme.colors.gray2
+                            color = MyAppTheme.colors.gray1
                         )
                     },
                     trailingIcon = trailingIcon,
@@ -117,7 +118,7 @@ fun MyAppTextField(
                     visualTransformation = VisualTransformation.None,
                     singleLine = true,
                     colors = colors,
-                    contentPadding = paddingValues
+                    contentPadding = paddingValues,
                 )
             }
         )

@@ -125,20 +125,27 @@ fun BottomNavigationBarCustom1(
     tabs: Array<BottomNavItem>,
     onTabSelected: (BottomNavItem) -> Unit,
     currentTab: BottomNavItem,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    bottomBarState: Boolean = true
 ) {
-    Surface(
-        modifier = modifier
-            .height(dimensionResource(R.dimen.bottom_bar))
-            .fillMaxWidth()
-    ) {
-        Row(
-            horizontalArrangement = Arrangement.Absolute.SpaceAround,
-            verticalAlignment = Alignment.CenterVertically
+    if(bottomBarState) {
+        Surface(
+            modifier = modifier
+                .height(dimensionResource(R.dimen.bottom_bar))
+                .fillMaxWidth()
         ) {
-            tabs.forEach { item ->
+            Row(
+                horizontalArrangement = Arrangement.Absolute.SpaceAround,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .background(
+                        color = MyAppTheme.colors.bottomBg
+                    )
+            ) {
+                tabs.forEach { item ->
 
-                BottomNavigationBarCustom1Item(item, onTabSelected, currentTab)
+                    BottomNavigationBarCustom1Item(item, onTabSelected, currentTab)
+                }
             }
         }
     }
@@ -158,23 +165,24 @@ fun BottomNavigationBarCustom1Item(
         modifier = modifier
             .semantics { role = Role.Button },
         shape = RoundedCornerShape(100.dp),
-        contentColor = MyAppTheme.colors.white
+        //contentColor = MyAppTheme.colors.transparent
     ) {
         val isSelected = currentTab == item
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.background(MyAppTheme.colors.bottomBg)
         ) {
             Icon(
                 imageVector = if (isSelected) item.selectedIcon else item.unSelectedIcon,
                 contentDescription = stringResource(item.title),
-                tint = if (isSelected) MyAppTheme.colors.brand else MyAppTheme.colors.inactiveDark
+                tint = if (isSelected) MyAppTheme.colors.lightBlue1 else MyAppTheme.colors.inactiveDark
             )
             if (isSelected) {
                 Spacer(modifier = Modifier.width(5.dp))
                 Text(
                     text = stringResource(item.title),
-                    color = MyAppTheme.colors.brand,
+                    color = MyAppTheme.colors.lightBlue1,
                     style = MyAppTheme.typography.Medium45_29
                 )
             }
@@ -187,7 +195,7 @@ fun BottomNavigationBarCustom1Item(
 @Preview("dark theme", uiMode = UI_MODE_NIGHT_YES)
 @Composable
 private fun BottomNavPreviewDarkModeCustom() {
-    PannyPalTheme(darkTheme = true) {
+    PannyPalTheme {
         BottomNavigationBarCustom(
             tabs = BottomNavItem.values(),
             onTabSelected = {},
@@ -199,7 +207,7 @@ private fun BottomNavPreviewDarkModeCustom() {
 @Preview
 @Composable
 private fun BottomNavPreviewCustom() {
-    PannyPalTheme(darkTheme = true) {
+    PannyPalTheme {
         BottomNavigationBarCustom(
             tabs = BottomNavItem.entries.toTypedArray(),
             onTabSelected = {},
@@ -211,7 +219,7 @@ private fun BottomNavPreviewCustom() {
 @Preview("dark theme", uiMode = UI_MODE_NIGHT_YES)
 @Composable
 private fun BottomNavPreviewDarkModeCustom1() {
-    PannyPalTheme(darkTheme = true) {
+    PannyPalTheme {
         BottomNavigationBarCustom1(
             tabs = BottomNavItem.values(),
             onTabSelected = {},

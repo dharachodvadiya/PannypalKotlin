@@ -1,6 +1,7 @@
 package com.indie.apps.pannypal.presentation.ui.component.dialog
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -34,7 +35,6 @@ import com.indie.apps.pannypal.presentation.ui.component.custom.composable.ListI
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.RoundImage
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.SearchView
-import com.indie.apps.pannypal.presentation.ui.component.linearGradientsBrush
 import com.indie.apps.pannypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
 
@@ -51,8 +51,8 @@ fun SearchDialogField(
     onTextChange: (String) -> Unit,
     textState: TextFieldState,
     dataList: LazyPagingItems<MerchantNameAndDetails>,
-    isRefresh : Boolean = false,
-    isLoadMore : Boolean = false
+    isRefresh: Boolean = false,
+    isLoadMore: Boolean = false
 ) {
     Column {
 
@@ -61,20 +61,21 @@ fun SearchDialogField(
             textState = textState,
             onTextChange = onTextChange
         )
-        if(isRefresh)
-        {
+        if (isRefresh) {
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
-            ){
+
+            ) {
                 CircularProgressIndicator()
             }
-        }else{
+        } else {
             LazyColumn(
                 modifier = Modifier
-                    .padding(horizontal = dimensionResource(id = R.dimen.padding))
+                    .padding(horizontal = dimensionResource(id = R.dimen.padding)),
+                verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.item_padding))
             ) {
                 items(
                     count = dataList.itemCount,
@@ -88,12 +89,12 @@ fun SearchDialogField(
                             onClick = { onItemClick(data) }
                         )
 
-                        if(isLoadMore && index == dataList.itemCount-1){
+                        if (isLoadMore && index == dataList.itemCount - 1) {
                             Box(
                                 contentAlignment = Alignment.Center,
                                 modifier = Modifier
                                     .fillMaxWidth()
-                            ){
+                            ) {
                                 CircularProgressIndicator()
                             }
                         }
@@ -122,7 +123,7 @@ private fun SearchMerchantSearchView(
     ) {
         SearchView(
             trailingIcon = Icons.Default.Search,
-            bgColor = MyAppTheme.colors.gray0,
+            bgColor = MyAppTheme.colors.lightBlue2,
             modifier = Modifier
                 .weight(1f)
                 .height(40.dp),
@@ -162,7 +163,7 @@ private fun SearchMerchantListItem(
     modifier: Modifier = Modifier.fillMaxWidth()
 ) {
     val imageVector = Icons.Default.Person
-    val bgColor = MyAppTheme.colors.brandBg
+    val bgColor = MyAppTheme.colors.lightBlue2
 
 
     ListItem(
@@ -170,7 +171,8 @@ private fun SearchMerchantListItem(
         leadingIcon = {
             RoundImage(
                 imageVector = imageVector,
-                brush = linearGradientsBrush(MyAppTheme.colors.gradientBlue),
+                //brush = linearGradientsBrush(MyAppTheme.colors.gradientBlue),
+                tint = MyAppTheme.colors.black,
                 backGround = bgColor,
                 contentDescription = "person"
             )
@@ -187,7 +189,7 @@ private fun SearchMerchantListItem(
                 Text(
                     text = if (item.details.isNullOrEmpty()) stringResource(id = R.string.no_details) else item.details,
                     style = MyAppTheme.typography.Medium33,
-                    color = MyAppTheme.colors.gray2,
+                    color = MyAppTheme.colors.gray1,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -195,8 +197,8 @@ private fun SearchMerchantListItem(
         },
         modifier = modifier,
         paddingValues = PaddingValues(
-            horizontal = dimensionResource(id = R.dimen.padding),
-            vertical = 5.dp
-        )
+            horizontal = dimensionResource(id = R.dimen.padding)
+        ),
+        itemBgColor = MyAppTheme.colors.transparent
     )
 }

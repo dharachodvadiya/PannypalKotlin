@@ -27,7 +27,7 @@ import com.indie.apps.pannypal.presentation.ui.dialog.DialogAddPayment
 import com.indie.apps.pannypal.presentation.ui.dialog.DialogCpp
 import com.indie.apps.pannypal.presentation.ui.dialog.DialogSearchMerchant
 import com.indie.apps.pannypal.presentation.ui.navigation.BottomNavItem
-import com.indie.apps.pannypal.presentation.ui.navigation.BottomNavigationBarCustom
+import com.indie.apps.pannypal.presentation.ui.navigation.BottomNavigationBarCustom1
 import com.indie.apps.pannypal.presentation.ui.navigation.DialogNav
 import com.indie.apps.pannypal.presentation.ui.route.merchantRoute
 import com.indie.apps.pannypal.presentation.ui.route.overViewRoute
@@ -54,7 +54,7 @@ fun PannyPalApp() {
 
         Scaffold(
             bottomBar = {
-                BottomNavigationBarCustom(
+                BottomNavigationBarCustom1(
                     tabs = BottomNavItem.entries.toTypedArray(), onTabSelected = { newScreen ->
                         navController.navigate(newScreen.route) {
                             launchSingleTop = true

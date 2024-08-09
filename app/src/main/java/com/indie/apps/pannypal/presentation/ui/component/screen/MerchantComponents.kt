@@ -18,7 +18,6 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -30,13 +29,11 @@ import androidx.compose.ui.unit.dp
 import com.indie.apps.pannypal.R
 import com.indie.apps.pannypal.data.entity.Merchant
 import com.indie.apps.pannypal.presentation.ui.common.Util
-import com.indie.apps.pannypal.presentation.ui.component.custom.composable.AutoSizeText
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.ListItem
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.RoundImage
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.SearchView
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.TopBar
-import com.indie.apps.pannypal.presentation.ui.component.linearGradientsBrush
 import com.indie.apps.pannypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
@@ -64,7 +61,7 @@ fun MerchantTopBar(
                     textState = textState,
                     onTextChange = onSearchTextChange,
                     trailingIcon = Icons.Default.Search,
-                    bgColor = MyAppTheme.colors.gray0,
+                    bgColor = MyAppTheme.colors.lightBlue2,
                     modifier = Modifier
                         .height(dimensionResource(R.dimen.top_bar_profile)),
                     paddingValues = PaddingValues(top = 0.dp, bottom = 0.dp, start = dimensionResource(id = R.dimen.padding), end = 0.dp)
@@ -110,7 +107,7 @@ fun MerchantTopBar(
                     bgColor = MyAppTheme.colors.white,
                     borderStroke = BorderStroke(
                         width = 1.dp,
-                        color = MyAppTheme.colors.gray2
+                        color = MyAppTheme.colors.gray1
                     ),
                     onClick = onAddClick,
                     modifier = Modifier
@@ -119,7 +116,7 @@ fun MerchantTopBar(
                     Icon(
                         imageVector = Icons.Default.Add,
                         contentDescription = "Add",
-                        tint = MyAppTheme.colors.gray2
+                        tint = MyAppTheme.colors.gray1
                     )
                 }
             }
@@ -139,7 +136,7 @@ fun MerchantListItem(
     modifier: Modifier = Modifier.fillMaxWidth()
 ) {
     val imageVector = if(isSelected) Icons.Default.Done else Icons.Default.Person
-    val iconBgColor = if(isSelected) MyAppTheme.colors.gray1  else MyAppTheme.colors.brandBg
+    val iconBgColor = if(isSelected) MyAppTheme.colors.brand  else MyAppTheme.colors.lightBlue2
     val amount = item.incomeAmount - item.expenseAmount
     val amountColor = if(amount >= 0) MyAppTheme.colors.greenText else MyAppTheme.colors.redText
 
@@ -151,7 +148,8 @@ fun MerchantListItem(
             RoundImage(
                 imageVector = imageVector,
                 imageVectorSize = 27.dp,
-                brush = linearGradientsBrush(MyAppTheme.colors.gradientBlue),
+                //brush = linearGradientsBrush(MyAppTheme.colors.gradientBlue),
+                tint = MyAppTheme.colors.black,
                 backGround = iconBgColor,
                 contentDescription = "person",
                 modifier = Modifier.size(50.dp)
@@ -189,9 +187,6 @@ fun MerchantListItem(
         },
         isSetDivider = false,
         modifier = modifier,
-        paddingValues = PaddingValues(
-            horizontal = dimensionResource(id = R.dimen.padding),
-            vertical = 7.dp),
         isSelected = isSelected
     )
 }

@@ -1,6 +1,7 @@
 package com.indie.apps.pannypal.presentation.ui.screen
 
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,7 +20,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -29,11 +29,13 @@ import androidx.paging.compose.itemKey
 import com.indie.apps.pannypal.R
 import com.indie.apps.pannypal.presentation.ui.common.Util
 import com.indie.apps.pannypal.presentation.ui.component.DeleteAlertDialog
+import com.indie.apps.pannypal.presentation.ui.component.backgroundGradientsBrush
 import com.indie.apps.pannypal.presentation.ui.component.screen.MerchantDataBottomBar
 import com.indie.apps.pannypal.presentation.ui.component.screen.MerchantDataDateItem
 import com.indie.apps.pannypal.presentation.ui.component.screen.MerchantDataExpenseAmount
 import com.indie.apps.pannypal.presentation.ui.component.screen.MerchantDataIncomeAmount
 import com.indie.apps.pannypal.presentation.ui.component.screen.MerchantDataTopBar
+import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 import com.indie.apps.pannypal.presentation.viewmodel.MerchantDataViewModel
 
@@ -75,6 +77,7 @@ fun MerchantDataScreen(
     ) { padding ->
         Column(
             modifier = modifier
+                .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
                 .padding(padding)
         ) {
 
@@ -85,6 +88,7 @@ fun MerchantDataScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
+                        .background(MyAppTheme.colors.transparent)
                 ) {
                     CircularProgressIndicator()
                 }
@@ -111,7 +115,6 @@ fun MerchantDataScreen(
                     state = scrollState,
                     modifier = Modifier
                         .weight(1f)
-                        .padding(horizontal = dimensionResource(id = R.dimen.padding))
                 ) {
                     items(count = lazyPagingData.itemCount,
                         key = lazyPagingData.itemKey { item -> item.id }
@@ -156,6 +159,7 @@ fun MerchantDataScreen(
                                 contentAlignment = Alignment.Center,
                                 modifier = Modifier
                                     .fillMaxWidth()
+                                    .background(MyAppTheme.colors.transparent)
                             ) {
                                 CircularProgressIndicator()
                             }

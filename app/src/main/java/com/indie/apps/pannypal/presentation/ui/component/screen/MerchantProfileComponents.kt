@@ -40,6 +40,10 @@ fun MerchantProfileTopSection(
         verticalArrangement = Arrangement.Center,
         modifier = modifier
             .fillMaxWidth()
+            .background(
+                color = MyAppTheme.colors.itemBg,
+                shape = RoundedCornerShape(bottomStartPercent = 20, bottomEndPercent = 20)
+            )
     ) {
 
         UserProfile(borderWidth = 1f)
@@ -52,7 +56,7 @@ fun MerchantProfileTopSection(
         Text(
             text = description.ifEmpty { stringResource(id = R.string.no_details) },
             style = MyAppTheme.typography.Medium40,
-            color = MyAppTheme.colors.gray2,
+            color = MyAppTheme.colors.gray1,
             textAlign = TextAlign.Center,
             modifier = Modifier.widthIn(min = 0.dp, max =  200.dp)
         )
@@ -67,9 +71,10 @@ fun MerchantProfileBottomSection(
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .padding(horizontal = dimensionResource(id = R.dimen.padding))
             .background(
                 shape = RoundedCornerShape(dimensionResource(id = R.dimen.round_corner)),
-                color = MyAppTheme.colors.gray0
+                color = MyAppTheme.colors.bottomBg
             )
             .padding(dimensionResource(id = R.dimen.padding)),
         verticalAlignment = Alignment.CenterVertically
@@ -81,7 +86,7 @@ fun MerchantProfileBottomSection(
             Text(
                 text = stringResource(id = R.string.phone_number_placeholder),
                 style = MyAppTheme.typography.Medium40,
-                color = MyAppTheme.colors.gray2
+                color = MyAppTheme.colors.gray1
             )
             Text(
                 text = phoneNo.ifEmpty { stringResource(id = R.string.phone_number_not_added) },

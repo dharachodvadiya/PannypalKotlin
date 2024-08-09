@@ -19,6 +19,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
@@ -38,9 +39,10 @@ fun ListItem(
     trailingContent: @Composable (() -> Unit)? = null,
     isSetDivider: Boolean = false,
     dividerWidth: Float = 2f,
-    paddingValues: PaddingValues = PaddingValues(0.dp)
+    paddingValues: PaddingValues = PaddingValues(0.dp),
+    itemBgColor : Color = MyAppTheme.colors.itemBg
 ) {
-    val bgColor = if (isSelected) MyAppTheme.colors.brandBg else MyAppTheme.colors.white
+    val bgColor = if (isSelected) MyAppTheme.colors.itemSelectedBg else itemBgColor
     val shape = RoundedCornerShape(dimensionResource(R.dimen.round_corner))
     Surface(
         modifier = modifier
@@ -51,13 +53,15 @@ fun ListItem(
                 onLongClick = onLongClick,
                 enabled = isClickable,
                 role = Role.Button
-            )
+            ),
+        color = MyAppTheme.colors.transparent
+
     ) {
         Row(
             modifier = Modifier
                 .background(bgColor)
                 .padding(paddingValues)
-                .padding(vertical = 1.dp),
+                .padding(dimensionResource(id = R.dimen.item_inner_padding)),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             if (leadingIcon != null) {

@@ -3,6 +3,7 @@ package com.indie.apps.pannypal.presentation.ui.component.screen
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -50,8 +51,6 @@ import com.indie.apps.pannypal.presentation.ui.component.custom.composable.ListI
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.RoundImage
 import com.indie.apps.pannypal.presentation.ui.component.custom.composable.TopBar
-import com.indie.apps.pannypal.presentation.ui.component.linearGradientsBrush
-import com.indie.apps.pannypal.presentation.ui.component.verticalGradientsBrush
 import com.indie.apps.pannypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
 
@@ -109,14 +108,14 @@ fun OverviewBalanceView(
         modifier = modifier
             .fillMaxWidth()
             .height(150.dp)
-            .background(brush = verticalGradientsBrush(colorGradient))
+            //.background(brush = verticalGradientsBrush(colorGradient))
             .padding(dimensionResource(id = R.dimen.padding))
     ) {
         Surface(
             modifier = Modifier
                 .fillMaxSize(),
             shape = RoundedCornerShape(dimensionResource(id = R.dimen.round_corner)),
-            color = MyAppTheme.colors.white,
+            color = MyAppTheme.colors.lightBlue2,
             shadowElevation = dimensionResource(id = R.dimen.shadow_elevation)
         ) {
             Box(
@@ -138,7 +137,7 @@ fun OverviewBalanceView(
                     Text(
                         text = stringResource(id = R.string.balance),
                         style = MyAppTheme.typography.Semibold67_5,
-                        color = MyAppTheme.colors.gray3
+                        color = MyAppTheme.colors.gray0
                     )
                     AutoSizeText(
                         text = Util.getFormattedStringWithSymbol(balance),
@@ -165,7 +164,8 @@ fun OverviewList(
 ) {
     LazyColumn(
         modifier = modifier
-            .padding(horizontal = dimensionResource(id = R.dimen.padding))
+            .padding(horizontal = dimensionResource(id = R.dimen.padding)),
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.item_padding))
     ) {
         /*items(10) { index ->
 
@@ -184,17 +184,17 @@ fun OverviewList(
             if (data != null) {
                 var isDateShow = false
 
-                if(totalListIndex < dailyTotalList.itemCount){
-                    if(index == 0 || (data.day == dailyTotalList[totalListIndex]?.day &&
+                if (totalListIndex < dailyTotalList.itemCount) {
+                    if (index == 0 || (data.day == dailyTotalList[totalListIndex]?.day &&
                                 (dataList[index - 1]?.day
                                     ?: "") != dailyTotalList[totalListIndex]?.day)
                     )
                         isDateShow = true
                 }
 
-                Column(modifier = modifier.background(MyAppTheme.colors.white)) {
+                Column() {
                     if (isDateShow) {
-                        if(index != 0)
+                        if (index != 0)
                             Spacer(modifier = Modifier.height(13.dp))
                         dailyTotalList[totalListIndex]?.let { OverviewListDateItem(it) }
                         totalListIndex++
@@ -235,7 +235,7 @@ fun OverviewListDateItem(
         Text(
             text = dayString,
             style = MyAppTheme.typography.Semibold40,
-            color = MyAppTheme.colors.gray2
+            color = MyAppTheme.colors.gray1
         )
         AutoSizeText(
             text = Util.getFormattedStringWithSymbol(amount),
@@ -261,7 +261,7 @@ fun OverviewListItem(
         leadingIcon = {
             RoundImage(
                 imageVector = imageVector,
-                tint = MyAppTheme.colors.white,
+                tint = MyAppTheme.colors.black,
                 backGround = bgColor,
                 contentDescription = "amount"
             )
@@ -278,7 +278,7 @@ fun OverviewListItem(
                 Text(
                     text = if (item.details.isNullOrEmpty()) stringResource(id = R.string.no_details) else item.details,
                     style = MyAppTheme.typography.Medium33,
-                    color = MyAppTheme.colors.gray2,
+                    color = MyAppTheme.colors.gray1,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -292,9 +292,10 @@ fun OverviewListItem(
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.fillMaxWidth(0.5f),
                 textAlign = TextAlign.Right,
-                maxLines = 1            )
+                maxLines = 1
+            )
         },
-        isSetDivider = true,
+        isSetDivider = false,
         modifier = modifier
     )
 }
@@ -340,7 +341,8 @@ fun OverviewAppFloatingButton(
     modifier: Modifier = Modifier
 ) {
     PrimaryButton(
-        bgBrush = linearGradientsBrush(MyAppTheme.colors.gradientBlue),
+        //bgBrush = linearGradientsBrush(MyAppTheme.colors.gradientBlue),
+        bgColor = MyAppTheme.colors.buttonBg,
         onClick = onClick,
         modifier = modifier
     ) {
@@ -350,13 +352,13 @@ fun OverviewAppFloatingButton(
             Icon(
                 imageVector = Icons.Default.Add,
                 contentDescription = "New Entry",
-                tint = MyAppTheme.colors.white
+                tint = MyAppTheme.colors.gray1
             )
             Spacer(modifier = Modifier.width(5.dp))
             Text(
                 text = stringResource(R.string.new_entry),
                 style = MyAppTheme.typography.Medium45_29,
-                color = MyAppTheme.colors.white
+                color = MyAppTheme.colors.gray1
             )
         }
     }

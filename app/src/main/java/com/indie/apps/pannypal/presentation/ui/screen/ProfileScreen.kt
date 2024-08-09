@@ -1,5 +1,6 @@
 package com.indie.apps.pannypal.presentation.ui.screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
@@ -61,7 +62,7 @@ private fun ProfileScreenData(
                 title = stringResource(id = R.string.profile),
                 onNavigationUp = onNavigationUp,
                 contentAlignment = Alignment.Center,
-                bgColor = MyAppTheme.colors.brandBg
+                bgColor = MyAppTheme.colors.itemBg
             )
         }
     ) { padding ->
@@ -71,6 +72,7 @@ private fun ProfileScreenData(
         Column(
             modifier = Modifier
                 .fillMaxHeight()
+                .background(MyAppTheme.colors.brandBg)
                 .padding(padding)
         ) {
             ProfileTopSection(

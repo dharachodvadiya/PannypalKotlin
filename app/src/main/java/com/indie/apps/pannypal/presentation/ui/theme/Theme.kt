@@ -16,6 +16,10 @@ private val lightScheme = MyAppColors(
         Blue.blue500.color,
         Ocen.ocen500.color
     ),
+    gradientBg = listOf(
+        Blue.blue500.color,
+        Ocen.ocen500.color
+    ),
     gradientGreen = listOf(
         Green.green50.color,
         Neutral.Neutral0.color
@@ -41,8 +45,12 @@ private val lightScheme = MyAppColors(
     inactiveLight = Neutral.Neutral1.color,
     inactiveDark = Neutral.Neutral5.color,
     divider = Neutral.Neutral1.color,
-    fieldBg = Neutral.Neutral1.color,
-    dataBg = Neutral.Neutral2.color,
+    itemSelectedBg = Neutral.Neutral1.color,
+    itemBg = Neutral.Neutral2.color,
+    bottomBg = Neutral.Neutral2.color,
+    lightBlue1 = Neutral.Neutral8.color,
+    lightBlue2 = Neutral.Neutral8.color,
+    buttonBg = Blue.blue500.color,
     transparent = Color.Transparent,
     isDark = false
 )
@@ -51,6 +59,10 @@ private val darkScheme = MyAppColors(
     gradientBlue = listOf(
         Brand.Black.color,
         DarkBlue.DarkBlue6.color
+    ),
+    gradientBg = listOf(
+        DarkBlue.DarkBlue6.color,
+        Brand.Black.color
     ),
     gradientGreen = listOf(
         Green.green50.color,
@@ -67,7 +79,7 @@ private val darkScheme = MyAppColors(
     greenBgLight = Green.green100.color,
     greenBg = Green.green500.color,
     greenText = Green.green500.color,
-    brandBg = Blue.blue50.color,
+    brandBg = Brand.Black.color,
     black = Brand.White.color,
     white = Brand.Black.color,
     gray0 = Brand.Gray0.color,
@@ -75,10 +87,14 @@ private val darkScheme = MyAppColors(
     gray2 = Brand.Gray2.color,
     gray3 = Brand.Gray3.color,
     inactiveLight = Neutral.Neutral1.color,
-    inactiveDark = Neutral.Neutral5.color,
+    inactiveDark = Brand.Gray2.color,
     divider = Brand.Gray1.color,
-    fieldBg = Brand.Gray1.color,
-    dataBg = Brand.Gray1.color,
+    itemSelectedBg = DarkBlue.DarkBlue4.color,
+    itemBg = DarkBlue.DarkBlue7.color,
+    bottomBg = DarkBlue.DarkBlue8.color,
+    lightBlue1 = Brand.Blue1.color,
+    lightBlue2 = DarkBlue.DarkBlue4.color,
+    buttonBg = DarkBlue.DarkBlue5.color,
     transparent = Color.Transparent,
     isDark = true
 )
@@ -157,6 +173,7 @@ private val LocalMyAppTypography = staticCompositionLocalOf<MyAppTypography> {
 @Immutable
 data class MyAppColors(
     val gradientBlue: List<Color>,
+    val gradientBg: List<Color>,
     val gradientGreen: List<Color>,
     val gradientRed: List<Color>,
 
@@ -182,8 +199,14 @@ data class MyAppColors(
     val inactiveDark: Color,
     val divider: Color,
 
-    val fieldBg: Color,
-    val dataBg: Color,
+    val itemSelectedBg: Color,
+    val itemBg: Color,
+
+    val bottomBg: Color,
+    val lightBlue1: Color,
+    val lightBlue2: Color,
+
+    val buttonBg: Color,
 
     val transparent: Color,
 
