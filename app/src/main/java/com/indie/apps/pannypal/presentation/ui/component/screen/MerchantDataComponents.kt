@@ -110,7 +110,6 @@ private fun MerchantDataTopBarItem(
                     tint = MyAppTheme.colors.black,
                     backGround = bgColor,
                     contentDescription = "person",
-                    modifier = Modifier.size(50.dp),
                     imageVectorSize = 27.dp
                 )
             }
@@ -120,7 +119,7 @@ private fun MerchantDataTopBarItem(
                 if (selectCount > 0) {
                     Text(
                         text = "$selectCount ${stringResource(id = R.string.selected_text)}",
-                        style = MyAppTheme.typography.Semibold56,
+                        style = MyAppTheme.typography.Semibold52_5,
                         color = MyAppTheme.colors.black,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
@@ -128,7 +127,7 @@ private fun MerchantDataTopBarItem(
                 } else {
                     Text(
                         text = name.ifEmpty { stringResource(id = R.string.no_name) },
-                        style = MyAppTheme.typography.Semibold56,
+                        style = MyAppTheme.typography.Semibold52_5,
                         color = MyAppTheme.colors.black,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
@@ -297,7 +296,7 @@ fun MerchantDataDateItem(
         Text(
             text = Util.getDateFromMillis(dateMillis, SimpleDateFormat("dd MMMM yyyy")),
             style = MyAppTheme.typography.Medium40,
-            color = MyAppTheme.colors.gray1,
+            color = MyAppTheme.colors.gray2,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.padding(horizontal = 3.dp)
@@ -337,13 +336,13 @@ private fun MerchantDataAmountItem(
                         25f
                     )
                 }
-                .padding(5.dp)
-                .padding(horizontal = 10.dp),
+                .padding(10.dp),
+                //.padding(horizontal = 10.dp),
             horizontalAlignment = contentAlignment
         ) {
             AutoSizeText(
                 text = Util.getFormattedStringWithSymbol(amount),
-                style = MyAppTheme.typography.Semibold67_5,
+                style = MyAppTheme.typography.Regular51,
                 color = MyAppTheme.colors.black,
                 maxLines = 2,
             )
@@ -474,14 +473,14 @@ private fun MerchantDataTotal(
     ) {
         AutoSizeText(
             text = Util.getFormattedStringWithSymbol(amount),
-            style = MyAppTheme.typography.Semibold56,
+            style = MyAppTheme.typography.Semibold52_5,
             color = MyAppTheme.colors.black,
             maxLines = 1
         )
         Text(
             text = stringResource(id = R.string.total_amount),
             style = MyAppTheme.typography.Medium40,
-            color = MyAppTheme.colors.gray1
+            color = MyAppTheme.colors.gray2
         )
     }
 }

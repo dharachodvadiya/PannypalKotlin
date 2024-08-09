@@ -71,7 +71,7 @@ fun ProfileTopSection(
 
         AutoSizeText(
             text = Util.getFormattedStringWithSymbol(totalAmount),
-            style = MyAppTheme.typography.Semibold90,
+            style = MyAppTheme.typography.Regular77_5,
             color = MyAppTheme.colors.black,
             alignment = Alignment.Center,
             maxLines = 1,
@@ -188,7 +188,7 @@ private fun ProfileAmountWithIcon(
         AutoSizeText(
             text = Util.getFormattedStringWithSymbol(amount),
             //minTextSize = 10.sp,
-            style = MyAppTheme.typography.Bold52_5,
+            style = MyAppTheme.typography.Regular51,
             color = MyAppTheme.colors.black,
             maxLines = 2
         )

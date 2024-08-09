@@ -69,7 +69,7 @@ fun MerchantTopBar(
             }else{
                 Text(
                     text = title,
-                    style = MyAppTheme.typography.Semibold57,
+                    style = MyAppTheme.typography.Semibold52_5,
                     color = MyAppTheme.colors.black
                 )
             }
@@ -159,7 +159,7 @@ fun MerchantListItem(
             Column {
                 Text(
                     text = item.name,
-                    style = MyAppTheme.typography.Semibold56,
+                    style = MyAppTheme.typography.Semibold52_5,
                     color = MyAppTheme.colors.black,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
@@ -176,7 +176,7 @@ fun MerchantListItem(
         trailingContent = {
             Text(
                 text = Util.getFormattedStringWithSymbol(amount),
-                style = MyAppTheme.typography.Semibold50,
+                style = MyAppTheme.typography.Regular51,
                 color = amountColor,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.fillMaxWidth(0.5f),

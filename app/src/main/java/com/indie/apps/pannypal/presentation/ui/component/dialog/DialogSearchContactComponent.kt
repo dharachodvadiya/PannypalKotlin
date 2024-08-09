@@ -181,7 +181,7 @@ private fun SearchMerchantListItem(
             Column {
                 Text(
                     text = item.name,
-                    style = MyAppTheme.typography.Semibold56,
+                    style = MyAppTheme.typography.Semibold52_5,
                     color = MyAppTheme.colors.black,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis

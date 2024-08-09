@@ -141,7 +141,7 @@ fun OverviewBalanceView(
                     )
                     AutoSizeText(
                         text = Util.getFormattedStringWithSymbol(balance),
-                        style = MyAppTheme.typography.Semibold97_5,
+                        style = MyAppTheme.typography.Regular77_5,
                         color = MyAppTheme.colors.black,
                         maxLines = 2,
                         modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding))
@@ -239,7 +239,7 @@ fun OverviewListDateItem(
         )
         AutoSizeText(
             text = Util.getFormattedStringWithSymbol(amount),
-            style = MyAppTheme.typography.Semibold48,
+            style = MyAppTheme.typography.Regular46,
             color = totalTextColor,
             maxLines = 1,
             modifier = Modifier.padding(vertical = 5.dp)
@@ -270,7 +270,7 @@ fun OverviewListItem(
             Column {
                 Text(
                     text = item.merchantName,
-                    style = MyAppTheme.typography.Bold52_5,
+                    style = MyAppTheme.typography.Semibold52_5,
                     color = MyAppTheme.colors.black,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
@@ -287,7 +287,7 @@ fun OverviewListItem(
         trailingContent = {
             Text(
                 text = Util.getFormattedStringWithSymbol(if (item.type > 0) item.amount else item.amount * -1),
-                style = MyAppTheme.typography.Bold52_5,
+                style = MyAppTheme.typography.Regular51,
                 color = MyAppTheme.colors.black,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.fillMaxWidth(0.5f),

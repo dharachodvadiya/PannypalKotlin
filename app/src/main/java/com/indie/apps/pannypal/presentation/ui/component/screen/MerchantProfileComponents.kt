@@ -86,7 +86,7 @@ fun MerchantProfileBottomSection(
             Text(
                 text = stringResource(id = R.string.phone_number_placeholder),
                 style = MyAppTheme.typography.Medium40,
-                color = MyAppTheme.colors.gray1
+                color = MyAppTheme.colors.gray2
             )
             Text(
                 text = phoneNo.ifEmpty { stringResource(id = R.string.phone_number_not_added) },
