@@ -1,6 +1,7 @@
 package com.indie.apps.pannypal.presentation.ui.route
 
 import android.widget.Toast
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -23,7 +24,8 @@ import com.indie.apps.pannypal.presentation.ui.screen.ProfileScreen
 
 fun NavGraphBuilder.overViewRoute(
     navController: NavHostController,
-    bottomBarState: MutableState<Boolean>
+    bottomBarState: MutableState<Boolean>,
+    innerPadding : PaddingValues
 ) {
 
     navigation(
@@ -32,7 +34,8 @@ fun NavGraphBuilder.overViewRoute(
         composable(route = OverviewNav.START.route) {
             bottomBarState.value = true
             OverViewStartScreen(onNewEntry = { navController.navigate(OverviewNav.NEW_ITEM.route) },
-                onProfileClick = { navController.navigate(OverviewNav.PROFILE.route) })
+                onProfileClick = { navController.navigate(OverviewNav.PROFILE.route) },
+                bottomPadding = innerPadding)
         }
         composable(route = OverviewNav.NEW_ITEM.route)
         { backStackEntry ->

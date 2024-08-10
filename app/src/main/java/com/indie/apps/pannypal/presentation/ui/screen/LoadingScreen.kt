@@ -32,8 +32,8 @@ fun LoadingScreen(
             .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
     ) {
 
-        Image(painter = painterResource(id = R.drawable.icon_loading), contentDescription = "icon")
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.padding)))
+        //Image(painter = painterResource(id = R.drawable.icon_loading), contentDescription = "icon")
+        //Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.padding)))
         Text(
             text = stringResource(id = R.string.loading),
             style = MyAppTheme.typography.Semibold60,

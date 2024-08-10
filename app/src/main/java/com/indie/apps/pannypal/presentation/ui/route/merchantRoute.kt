@@ -1,6 +1,7 @@
 package com.indie.apps.pannypal.presentation.ui.route
 
 import android.widget.Toast
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -23,7 +24,8 @@ import com.indie.apps.pannypal.presentation.ui.screen.NewItemScreen
 
 fun NavGraphBuilder.merchantRoute(
     navController: NavHostController,
-    bottomBarState: MutableState<Boolean>
+    bottomBarState: MutableState<Boolean>,
+    innerPadding : PaddingValues
 ) {
     navigation(
         startDestination = MerchantNav.START.route,
@@ -58,7 +60,8 @@ fun NavGraphBuilder.merchantRoute(
                     navController.currentBackStackEntry
                         ?.savedStateHandle
                         ?.set(Util.SAVE_STATE_EDIT_ID, it)
-                }
+                },
+                bottomPadding = innerPadding
             )
         }
         composable(route = MerchantNav.DATA.route) {

@@ -4,6 +4,7 @@ import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -24,6 +25,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -49,6 +51,7 @@ fun MerchantScreen(
     onAddClick: () -> Unit,
     onEditClick: (Long) -> Unit,
     isEditAddSuccess: Boolean = false,
+    bottomPadding: PaddingValues,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -104,6 +107,7 @@ fun MerchantScreen(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
+                    .padding(bottomPadding)
                     .padding(innerPadding)
                     .fillMaxSize()
             ) {
@@ -133,7 +137,8 @@ fun MerchantScreen(
                     .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
                     .padding(innerPadding)
                     .padding(horizontal = dimensionResource(id = R.dimen.padding)),
-                verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.item_inner_padding))
+                verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.item_inner_padding)),
+                contentPadding = bottomPadding
             ) {
                 items(count = lazyPagingData.itemCount,
                     key = lazyPagingData.itemKey { item -> item.id }
@@ -186,6 +191,6 @@ fun MerchantScreen(
 @Composable
 private fun MerchantScreenPreview() {
     PannyPalTheme(darkTheme = true) {
-        MerchantScreen(onAddClick = {}, onEditClick = {}, onMerchantClick = {})
+        MerchantScreen(onAddClick = {}, onEditClick = {}, onMerchantClick = {}, bottomPadding = PaddingValues(0.dp))
     }
 }

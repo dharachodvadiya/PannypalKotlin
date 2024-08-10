@@ -3,6 +3,7 @@ package com.indie.apps.pannypal.presentation.ui.screen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -16,6 +17,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -34,6 +36,7 @@ fun OverViewStartScreen(
     overViewViewModel: OverViewViewModel = hiltViewModel(),
     onProfileClick: () -> Unit,
     onNewEntry: () -> Unit,
+    bottomPadding: PaddingValues,
     modifier: Modifier = Modifier
 ) {
     val dataWithNameLazyPagingItems = overViewViewModel.pagedMerchantData.collectAsLazyPagingItems()
@@ -74,6 +77,7 @@ fun OverViewStartScreen(
             modifier = modifier
                 .fillMaxSize()
                 .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
+                .padding(bottomPadding)
                 .padding(innerPadding)
         ) {
             if (merchantDataWithNamePagingState.isRefresh ||
@@ -105,6 +109,6 @@ fun OverViewStartScreen(
 @Composable
 private fun OverViewScreenPreview() {
     PannyPalTheme(darkTheme = true) {
-        OverViewStartScreen(onProfileClick = {}, onNewEntry = {})
+        OverViewStartScreen(onProfileClick = {}, onNewEntry = {}, bottomPadding = PaddingValues(0.dp))
     }
 }

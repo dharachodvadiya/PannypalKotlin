@@ -75,11 +75,10 @@ fun PannyPalApp() {
                 },
                 exitTransition = {
                     ExitTransition.None
-                },
-                modifier = Modifier.padding(innerPadding)
+                }
             ) {
-                overViewRoute(navController, bottomBarState)
-                merchantRoute(navController, bottomBarState)
+                overViewRoute(navController, bottomBarState,innerPadding)
+                merchantRoute(navController, bottomBarState,innerPadding)
 
                 dialog(
                     route = DialogNav.SELECT_MERCHANT.route,
