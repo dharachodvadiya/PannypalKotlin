@@ -6,6 +6,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -160,12 +161,14 @@ fun OverviewList(
     dataList: LazyPagingItems<MerchantDataWithName>,
     dailyTotalList: LazyPagingItems<MerchantDataDailyTotal>,
     modifier: Modifier = Modifier,
-    isLoadMore: Boolean = false
+    isLoadMore: Boolean = false,
+    bottomPadding: PaddingValues
 ) {
     LazyColumn(
         modifier = modifier
             .padding(horizontal = dimensionResource(id = R.dimen.padding)),
-        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.item_padding))
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.item_padding)),
+        contentPadding = bottomPadding
     ) {
         /*items(10) { index ->
 

@@ -22,7 +22,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.indie.apps.pannypal.presentation.ui.component.backgroundGradientsBrush
-import com.indie.apps.pannypal.presentation.ui.component.screen.OverviewAppFloatingButton
 import com.indie.apps.pannypal.presentation.ui.component.screen.OverviewBalanceView
 import com.indie.apps.pannypal.presentation.ui.component.screen.OverviewList
 import com.indie.apps.pannypal.presentation.ui.component.screen.OverviewTopBar
@@ -65,19 +64,20 @@ fun OverViewStartScreen(
         is Resource.Error -> {}
     }
 
-    Scaffold(topBar = {
-        OverviewTopBar(
-            onProfileClick = onProfileClick
-        )
-    }, floatingActionButton = {
+    Scaffold(
+        topBar = {
+            OverviewTopBar(
+                onProfileClick = onProfileClick
+            )
+        }/*, floatingActionButton = {
         OverviewAppFloatingButton(onClick = onNewEntry)
-    }) { innerPadding ->
+    }*/
+    ) { innerPadding ->
 
         Column(
             modifier = modifier
                 .fillMaxSize()
                 .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
-                .padding(bottomPadding)
                 .padding(innerPadding)
         ) {
             if (merchantDataWithNamePagingState.isRefresh ||
@@ -97,7 +97,8 @@ fun OverViewStartScreen(
                     dataList = dataWithNameLazyPagingItems,
                     dailyTotalList = dailyTotalLazyPagingItems,
                     isLoadMore = merchantDataWithNamePagingState.isLoadMore ||
-                            merchantDataDailyTotalPagingState.isLoadMore
+                            merchantDataDailyTotalPagingState.isLoadMore,
+                    bottomPadding = bottomPadding
                 )
             }
 
@@ -109,6 +110,10 @@ fun OverViewStartScreen(
 @Composable
 private fun OverViewScreenPreview() {
     PannyPalTheme(darkTheme = true) {
-        OverViewStartScreen(onProfileClick = {}, onNewEntry = {}, bottomPadding = PaddingValues(0.dp))
+        OverViewStartScreen(
+            onProfileClick = {},
+            onNewEntry = {},
+            bottomPadding = PaddingValues(0.dp)
+        )
     }
 }

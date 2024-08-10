@@ -291,7 +291,7 @@ fun MerchantDataDateItem(
             modifier = Modifier
                 .height(1.dp)
                 .weight(1f)
-                .background(color = MyAppTheme.colors.gray0)
+                .background(color = MyAppTheme.colors.gray2)
         )
         Text(
             text = Util.getDateFromMillis(dateMillis, SimpleDateFormat("dd MMMM yyyy")),
@@ -303,9 +303,9 @@ fun MerchantDataDateItem(
         )
         Spacer(
             modifier = Modifier
-                .height(2.dp)
+                .height(1.dp)
                 .weight(1f)
-                .background(color = MyAppTheme.colors.gray0)
+                .background(color = MyAppTheme.colors.gray2)
         )
     }
 }

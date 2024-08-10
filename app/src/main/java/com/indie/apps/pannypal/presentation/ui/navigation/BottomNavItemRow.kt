@@ -153,6 +153,7 @@ fun BottomNavigationBarCustom1(
     tabs: Array<BottomNavItem>,
     onTabSelected: (BottomNavItem) -> Unit,
     currentTab: BottomNavItem,
+    onAddClick: ()-> Unit,
     modifier: Modifier = Modifier,
     bottomBarState: Boolean = true
 ) {
@@ -186,7 +187,8 @@ fun BottomNavigationBarCustom1(
                     .zIndex(1f)
                     .size(circleRadius * 2)
                     .clip(CircleShape)
-                    .background(MyAppTheme.colors.lightBlue2),
+                    .background(MyAppTheme.colors.lightBlue2)
+                    .clickable(onClick = onAddClick, enabled = true, role = Role.Button)
             ) {
                 Icon(Icons.Default.Add, "Add", tint = MyAppTheme.colors.black)
             }
@@ -300,7 +302,8 @@ private fun BottomNavPreviewCustom1() {
         BottomNavigationBarCustom1(
             tabs = BottomNavItem.entries.toTypedArray(),
             onTabSelected = {},
-            currentTab = BottomNavItem.OVERVIEW
+            currentTab = BottomNavItem.OVERVIEW,
+            onAddClick = {}
         )
     }
 }

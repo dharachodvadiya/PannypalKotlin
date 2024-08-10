@@ -29,6 +29,7 @@ import com.indie.apps.pannypal.presentation.ui.dialog.DialogSearchMerchant
 import com.indie.apps.pannypal.presentation.ui.navigation.BottomNavItem
 import com.indie.apps.pannypal.presentation.ui.navigation.BottomNavigationBarCustom1
 import com.indie.apps.pannypal.presentation.ui.navigation.DialogNav
+import com.indie.apps.pannypal.presentation.ui.navigation.OverviewNav
 import com.indie.apps.pannypal.presentation.ui.route.merchantRoute
 import com.indie.apps.pannypal.presentation.ui.route.overViewRoute
 import com.indie.apps.pannypal.presentation.ui.theme.PannyPalTheme
@@ -62,6 +63,7 @@ fun PannyPalApp() {
                             popUpTo(newScreen.route)
                         }
                     },
+                    onAddClick = {navController.navigate(OverviewNav.NEW_ITEM.route)},
                     currentTab = currentScreen,
                     bottomBarState = bottomBarState.value
                 )
