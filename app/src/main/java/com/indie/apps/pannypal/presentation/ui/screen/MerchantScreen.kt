@@ -103,16 +103,16 @@ fun MerchantScreen(
     }) { innerPadding ->
 
         if (pagingState.isRefresh) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
-                    .padding(bottomPadding)
-                    .padding(innerPadding)
-                    .fillMaxSize()
-            ) {
-                CircularProgressIndicator()
-            }
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
+                        .padding(bottomPadding)
+                        .padding(innerPadding)
+                        .fillMaxSize()
+                ) {
+                    CircularProgressIndicator()
+                }
         } else {
 
             val scrollState: LazyListState = rememberLazyListState(
