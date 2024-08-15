@@ -13,6 +13,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "PannyPal"
+rootProject.name = "PennyPal"
 include(":app")
 include(":cpp")

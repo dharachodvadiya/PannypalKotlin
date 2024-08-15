@@ -6,17 +6,17 @@ plugins {
 }
 
 android {
-    namespace = "com.indie.apps.pannypal"
+    namespace = "com.indie.apps.pennypal"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.indie.apps.pannypal"
+        applicationId = "com.indie.apps.pennypal"
         minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "com.indie.apps.pannypal.CustomTestRunner"
+        testInstrumentationRunner = "com.indie.apps.pennypal.CustomTestRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
