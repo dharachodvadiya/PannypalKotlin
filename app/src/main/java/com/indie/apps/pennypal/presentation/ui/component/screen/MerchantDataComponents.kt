@@ -422,7 +422,7 @@ private fun MerchantDataBottomTotal(
         )
         Spacer(modifier = Modifier.width(7.dp))
         MerchantDataTotalIncomeExpense(
-            amount = totalExpense * -1,
+            amount = totalExpense,
             modifier = Modifier.weight(1f),
             strokeColor = MyAppTheme.colors.redBg
         )
