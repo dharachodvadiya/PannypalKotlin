@@ -33,17 +33,35 @@ fun NavGraphBuilder.merchantRoute(
     ) {
         composable(route = MerchantNav.START.route) { backStackEntry ->
             // get data passed back from B
-            val isEditAddSuccess: Boolean? = backStackEntry
+            val isAddSuccess: Boolean? = backStackEntry
                 .savedStateHandle
-                .get<Boolean>(Util.SAVE_STATE_ADD_EDIT_SUCCESS)
+                .get<Boolean>(Util.SAVE_STATE_ADD_SUCCESS)
+
+            val isEditSuccess: Boolean? = backStackEntry
+                .savedStateHandle
+                .get<Boolean>(Util.SAVE_STATE_EDIT_SUCCESS)
+
+            val editAddId: Long? = backStackEntry
+                .savedStateHandle
+                .get<Long>(Util.SAVE_STATE_ADD_EDIT_SUCCESS_ID)
 
             backStackEntry
                 .savedStateHandle
-                .remove<Boolean>(Util.SAVE_STATE_ADD_EDIT_SUCCESS)
+                .remove<Boolean>(Util.SAVE_STATE_EDIT_SUCCESS)
+
+            backStackEntry
+                .savedStateHandle
+                .remove<Boolean>(Util.SAVE_STATE_ADD_SUCCESS)
+
+            backStackEntry
+                .savedStateHandle
+                .remove<Long>(Util.SAVE_STATE_ADD_EDIT_SUCCESS_ID)
 
             bottomBarState.value = true
             MerchantScreen(
-                isEditAddSuccess = isEditAddSuccess ?: false,
+                isAddSuccess = isAddSuccess ?: false,
+                isEditSuccess = isEditSuccess ?: false,
+                editAddId = editAddId ?: -1,
                 onMerchantClick = {
                     navController.navigate(
                         MerchantNav.DATA.route.replace(

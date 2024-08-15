@@ -62,11 +62,16 @@ class MerchantViewModel @Inject constructor(
         }
     }
 
-    fun setEditAddSuccess() {
+    fun addSuccess() {
         clearSelection()
         clearSearch()
-        //scrollIndex.value = 0
-        //scrollOffset.value = 0
+        scrollIndex.value = 0
+        scrollOffset.value = 0
+    }
+
+    fun editSuccess() {
+        clearSelection()
+        clearSearch()
     }
 
     fun onEditClick(onSuccess: (Long) -> Unit) {

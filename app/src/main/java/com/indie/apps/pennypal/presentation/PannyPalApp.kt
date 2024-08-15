@@ -134,9 +134,22 @@ fun PennyPalApp() {
                                         Gson().toJson(merchant.toMerchantNameAndDetails())
                                     )
 
+                                if(isEdit)
+                                {
+                                    navController.previousBackStackEntry
+                                        ?.savedStateHandle
+                                        ?.set(Util.SAVE_STATE_EDIT_SUCCESS, true)
+                                }else{
+                                    navController.previousBackStackEntry
+                                        ?.savedStateHandle
+                                        ?.set(Util.SAVE_STATE_ADD_SUCCESS, true)
+                                }
+
+
+
                                 navController.previousBackStackEntry
                                     ?.savedStateHandle
-                                    ?.set(Util.SAVE_STATE_ADD_EDIT_SUCCESS, true)
+                                    ?.set(Util.SAVE_STATE_ADD_EDIT_SUCCESS_ID, merchant.id)
                             }
 
                             navController.popBackStack()

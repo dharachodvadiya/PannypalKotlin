@@ -16,7 +16,9 @@ object Util {
 
     const val SAVE_STATE_COUNTRY_CODE = "code"
     const val SAVE_STATE_EDIT_ID = "edit_id"
-    const val SAVE_STATE_ADD_EDIT_SUCCESS = "edit"
+    const val SAVE_STATE_ADD_SUCCESS = "add_success"
+    const val SAVE_STATE_EDIT_SUCCESS = "edit_success"
+    const val SAVE_STATE_ADD_EDIT_SUCCESS_ID = "edit_add_id"
     const val SAVE_STATE_MERCHANT_NAME_DESC = "merchant_name_desc"
     const val SAVE_STATE_PAYMENT = "payment"
     const val PARAM_MERCHANT_ID = "merchant_id"

@@ -1,6 +1,9 @@
 package com.indie.apps.pennypal.presentation.ui.screen
 
 import android.widget.Toast
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,9 +21,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -44,13 +49,16 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MerchantScreen(
     merchantViewModel: MerchantViewModel = hiltViewModel(),
     onMerchantClick: (Long) -> Unit,
     onAddClick: () -> Unit,
     onEditClick: (Long) -> Unit,
-    isEditAddSuccess: Boolean = false,
+    isEditSuccess: Boolean = false,
+    isAddSuccess: Boolean = false,
+    editAddId : Long = 1L,
     bottomPadding: PaddingValues,
     modifier: Modifier = Modifier
 ) {
@@ -67,15 +75,36 @@ fun MerchantScreen(
     val scrollIndex by merchantViewModel.scrollIndex.collectAsStateWithLifecycle()
     val selectedList = merchantViewModel.selectedList
 
-    var isEditSuccessState by remember {
+   /* var isEditSuccessState by remember {
         mutableStateOf(false)
+    }*/
+
+    var addItemId by remember {
+        mutableStateOf(-1L)
     }
 
-    if (isEditAddSuccess != isEditSuccessState) {
+    /*if (isEditAddSuccess != isEditSuccessState) {
         isEditSuccessState = isEditAddSuccess
         if (isEditSuccessState) {
+            addOrEditItemId = editAddId
             merchantViewModel.setEditAddSuccess()
         }
+    }*/
+    LaunchedEffect(isAddSuccess) {
+        if(isAddSuccess)
+        {
+            merchantViewModel.addSuccess()
+            addItemId = editAddId
+        }
+
+    }
+
+    LaunchedEffect(isEditSuccess) {
+        if(isEditSuccess)
+        {
+            merchantViewModel.editSuccess()
+        }
+
     }
 
     var openAlertDialog by remember { mutableStateOf(false) }
@@ -130,6 +159,8 @@ fun MerchantScreen(
                 }
             }
 
+            val scope = rememberCoroutineScope()
+
             LazyColumn(
                 state = scrollState,
                 modifier = modifier
@@ -143,14 +174,31 @@ fun MerchantScreen(
                 items(count = lazyPagingData.itemCount,
                     key = lazyPagingData.itemKey { item -> item.id }
                 ) { index ->
+                    val itemAnimateScale = remember {
+                        Animatable(0f)
+                    }
+
                     val data = lazyPagingData[index]
                     if (data != null) {
+
+                        val modifierAdd : Modifier = if(addItemId == data.id)
+                        {
+                            scope.launch {
+                                itemAnimateScale.animateTo(targetValue = 1f, animationSpec = tween(50))
+                            }
+                            if(itemAnimateScale.value == 1f) addItemId = -1
+
+                            Modifier.scale(itemAnimateScale.value)
+                        }else{
+                            Modifier
+                        }
 
                         MerchantListItem(
                             item = data,
                             isSelected = selectedList.contains(data.id),
                             onClick = { merchantViewModel.onItemClick(data.id) { onMerchantClick(it) } },
-                            onLongClick = { merchantViewModel.onItemLongClick(data.id) }
+                            onLongClick = { merchantViewModel.onItemLongClick(data.id) },
+                            modifier = modifierAdd
                         )
 
                         if (pagingState.isLoadMore && index == lazyPagingData.itemCount - 1) {
