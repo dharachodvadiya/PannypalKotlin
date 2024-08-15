@@ -27,7 +27,7 @@ object Util {
 
     fun getFormattedStringWithSymbol(value: Double?): String {
         val format = DecimalFormat("##,##,##0.##")
-        return format.format(value) + " ₹"
+        return "₹ " + format.format(value)
     }
 
     fun getFormattedString(value: Double?): String {

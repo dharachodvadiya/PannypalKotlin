@@ -99,7 +99,7 @@ fun ProfileSection2(
             ProfileAmountWithIcon(
                 amount = incomeAmount,
                 isPositive = true,
-                modifier = Modifier.fillMaxWidth(0.4f)
+                modifier = Modifier.width(150.dp)
             )
             Spacer(
                 modifier = Modifier
@@ -108,9 +108,9 @@ fun ProfileSection2(
                     .background(MyAppTheme.colors.gray1)
             )
             ProfileAmountWithIcon(
-                amount = -expenseAmount,
+                amount = expenseAmount,
                 isPositive = false,
-                modifier = Modifier.fillMaxWidth(0.4f)
+                modifier = Modifier.width(150.dp)
             )
         }
 
@@ -190,6 +190,7 @@ private fun ProfileAmountWithIcon(
             //minTextSize = 10.sp,
             style = MyAppTheme.typography.Regular51,
             color = MyAppTheme.colors.black,
+            alignment = Alignment.Center,
             maxLines = 2
         )
     }
@@ -199,12 +200,14 @@ private fun ProfileAmountWithIcon(
 @Composable
 private fun ProfileLoginWithGoogleButtonPreview() {
     PannyPalTheme(darkTheme = true) {
-        ProfileLoginWithGoogleButton(
+        /*ProfileLoginWithGoogleButton(
             {}, modifier = Modifier
                 .padding(dimensionResource(id = R.dimen.padding))
                 .fillMaxWidth()
                 .height(dimensionResource(id = R.dimen.button_height))
-        )
+        )*/
+
+        ProfileSection2(onLoginWithGoogle = { /*TODO*/ })
     }
 }
 
