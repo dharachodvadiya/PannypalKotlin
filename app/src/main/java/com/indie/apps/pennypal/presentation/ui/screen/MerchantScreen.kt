@@ -4,7 +4,6 @@ import android.widget.Toast
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -37,7 +36,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.presentation.ui.component.DeleteAlertDialog
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.screen.MerchantListItem
@@ -45,6 +43,7 @@ import com.indie.apps.pennypal.presentation.ui.component.screen.MerchantTopBar
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.presentation.viewmodel.MerchantViewModel
+import com.indie.apps.pennypal.util.Util
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
@@ -108,6 +107,13 @@ fun MerchantScreen(
         if (isEditSuccess) {
             merchantViewModel.editSuccess()
             //editItemId = editAddId
+        }
+
+    }
+
+    LaunchedEffect(isAddMerchantDataSuccess) {
+        if (isAddMerchantDataSuccess) {
+            merchantViewModel.addMerchantDataSuccess()
         }
 
     }
@@ -206,9 +212,8 @@ fun MerchantScreen(
                                     )
                                 }
                                 Modifier.scale(itemAnimateScale.value)
-                            } else if (merchantViewModel.deleteAnimRun.value && selectedList.contains(
-                                    data.id
-                                )
+                            } else if (merchantViewModel.deleteAnimRun.value &&
+                                selectedList.contains(data.id)
                             ) {
                                 scope.launch {
                                     itemAnimateScaleDown.animateTo(
@@ -217,7 +222,9 @@ fun MerchantScreen(
                                     )
                                 }
                                 Modifier.scale(itemAnimateScaleDown.value)
-                            } else if (editAddId == data.id && merchantViewModel.editAnimRun.value) {
+                            } else if ((editAddId == data.id && merchantViewModel.editAnimRun.value) ||
+                                (merchantId == data.id && merchantViewModel.addDataAnimRun.value)
+                            ) {
                                 scope.launch {
                                     itemAnimateColor.animateTo(
                                         targetValue = targetAnimColor,

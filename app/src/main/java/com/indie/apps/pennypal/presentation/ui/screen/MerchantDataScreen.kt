@@ -1,6 +1,8 @@
 package com.indie.apps.pennypal.presentation.ui.screen
 
 import android.widget.Toast
+import androidx.compose.animation.Animatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,9 +18,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -27,7 +31,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.presentation.ui.component.DeleteAlertDialog
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.screen.MerchantDataBottomBar
@@ -38,6 +41,8 @@ import com.indie.apps.pennypal.presentation.ui.component.screen.MerchantDataTopB
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.presentation.viewmodel.MerchantDataViewModel
+import com.indie.apps.pennypal.util.Util
+import kotlinx.coroutines.launch
 
 @Composable
 fun MerchantDataScreen(
@@ -45,6 +50,8 @@ fun MerchantDataScreen(
     onProfileClick: (Long) -> Unit,
     onNavigationUp: () -> Unit,
     onEditClick: (Long) -> Unit,
+    isEditMerchantDataSuccess: Boolean = false,
+    merchantDataId: Long = 1L,
     modifier: Modifier = Modifier
 ) {
 
@@ -60,6 +67,13 @@ fun MerchantDataScreen(
     pagingState.update(lazyPagingData)
 
     var openAlertDialog by remember { mutableStateOf(false) }
+
+    LaunchedEffect(isEditMerchantDataSuccess) {
+        if (isEditMerchantDataSuccess) {
+            merchantDataViewModel.editMerchantDataSuccess()
+        }
+
+    }
 
     Scaffold(
         topBar = {
@@ -110,6 +124,8 @@ fun MerchantDataScreen(
                     }
                 }
 
+                val scope = rememberCoroutineScope()
+
                 LazyColumn(
                     reverseLayout = true,
                     state = scrollState,
@@ -120,9 +136,48 @@ fun MerchantDataScreen(
                         key = lazyPagingData.itemKey { item -> item.id }
                     ) { index ->
 
+                        val baseColor = MyAppTheme.colors.itemBg
+                        val targetAnimColor = MyAppTheme.colors.lightBlue1
+
+                        val itemAnimateColor = remember {
+                            Animatable(baseColor)
+                        }
+
+                        val itemAnimateScaleDown = remember {
+                            androidx.compose.animation.core.Animatable(1f)
+                        }
 
                         val data = lazyPagingData[index]
                         if (data != null) {
+
+                            val modifierAdd: Modifier =
+                                if (merchantDataId == data.id && merchantDataViewModel.editDataAnimRun.value) {
+                                    scope.launch {
+                                        itemAnimateColor.animateTo(
+                                            targetValue = targetAnimColor,
+                                            animationSpec = tween()
+                                        )
+                                        itemAnimateColor.animateTo(
+                                            targetValue = baseColor,
+                                            animationSpec = tween()
+                                        )
+                                    }
+                                    Modifier
+                                } else if (merchantDataViewModel.deleteAnimRun.value &&
+                                    selectedList.contains(data.id)
+                                ) {
+                                    scope.launch {
+                                        itemAnimateScaleDown.animateTo(
+                                            targetValue = 0.0f,
+                                            animationSpec = tween(60)
+                                        )
+                                    }
+                                    Modifier.scale(itemAnimateScaleDown.value)
+                                } else {
+                                    Modifier
+                                }
+
+
                             val currentDate = Util.getDateFromMillis(data.dateInMilli)
                             val previousDate =
                                 if (index != lazyPagingData.itemCount - 1) lazyPagingData[index + 1]?.let {
@@ -136,14 +191,18 @@ fun MerchantDataScreen(
                                     isSelected = selectedList.contains(data.id),
                                     data = data,
                                     onClick = { merchantDataViewModel.onItemClick(data.id) },
-                                    onLongClick = { merchantDataViewModel.onItemLongClick(data.id) }
+                                    onLongClick = { merchantDataViewModel.onItemLongClick(data.id) },
+                                    itemBgColor = itemAnimateColor.value,
+                                    modifier = modifierAdd
                                 )
                             } else {
                                 MerchantDataExpenseAmount(
                                     isSelected = selectedList.contains(data.id),
                                     data = data,
                                     onClick = { merchantDataViewModel.onItemClick(data.id) },
-                                    onLongClick = { merchantDataViewModel.onItemLongClick(data.id) }
+                                    onLongClick = { merchantDataViewModel.onItemLongClick(data.id) },
+                                    itemBgColor = itemAnimateColor.value,
+                                    modifier = modifierAdd
                                 )
                             }
 

@@ -108,7 +108,6 @@ class MerchantViewModel @Inject constructor(
 
     fun addMerchantDataSuccess() {
 
-        println("aaaaaa addMerchantDataSuccess ")
         clearSelection()
         clearSearch()
         scrollIndex.value = 0
@@ -116,10 +115,10 @@ class MerchantViewModel @Inject constructor(
 
         addDataAnimRun.value = true
 
-        /*viewModelScope.launch {
+        viewModelScope.launch {
             delay(Util.LIST_ITEM_ANIM_DELAY)
             addDataAnimRun.value = false
-        }*/
+        }
     }
 
     fun onEditClick(onSuccess: (Long) -> Unit) {
@@ -188,7 +187,6 @@ class MerchantViewModel @Inject constructor(
     }
 
     fun clearSelection() {
-        println("aaaaa clear selection")
         selectedList.clear()
         changeUpdateState()
     }

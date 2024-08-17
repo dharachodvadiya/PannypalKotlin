@@ -43,7 +43,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.entity.MerchantData
-import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.AutoSizeText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListItem
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
@@ -51,6 +50,7 @@ import com.indie.apps.pennypal.presentation.ui.component.custom.composable.Round
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.TopBar
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
+import com.indie.apps.pennypal.util.Util
 import java.text.SimpleDateFormat
 
 @Composable
@@ -211,9 +211,11 @@ fun MerchantDataIncomeAmount(
     data: MerchantData,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
+    itemBgColor: Color,
     modifier: Modifier = Modifier
 ) {
-    val bgColor = if (isSelected) MyAppTheme.colors.itemSelectedBg else MyAppTheme.colors.transparent
+    val bgColor =
+        if (isSelected) MyAppTheme.colors.itemSelectedBg else MyAppTheme.colors.transparent
 
     Row(
         modifier = modifier
@@ -234,7 +236,8 @@ fun MerchantDataIncomeAmount(
             amount = data.amount,
             description = data.details,
             contentAlignment = Alignment.Start,
-            colorStroke = MyAppTheme.colors.greenBg
+            colorStroke = MyAppTheme.colors.greenBg,
+            itemBgColor = itemBgColor
         )
 
     }
@@ -247,9 +250,11 @@ fun MerchantDataExpenseAmount(
     data: MerchantData,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
+    itemBgColor: Color,
     modifier: Modifier = Modifier
 ) {
-    val bgColor = if (isSelected) MyAppTheme.colors.itemSelectedBg else MyAppTheme.colors.transparent
+    val bgColor =
+        if (isSelected) MyAppTheme.colors.itemSelectedBg else MyAppTheme.colors.transparent
 
     Row(
         modifier = modifier
@@ -270,7 +275,8 @@ fun MerchantDataExpenseAmount(
             amount = data.amount * -1,
             description = data.details,
             contentAlignment = Alignment.End,
-            colorStroke = MyAppTheme.colors.redBg
+            colorStroke = MyAppTheme.colors.redBg,
+            itemBgColor = itemBgColor
         )
 
     }
@@ -316,14 +322,15 @@ private fun MerchantDataAmountItem(
     description: String? = null,
     modifier: Modifier = Modifier,
     contentAlignment: Alignment.Horizontal,
-    colorStroke: Color = MyAppTheme.colors.black
+    colorStroke: Color = MyAppTheme.colors.black,
+    itemBgColor: Color
 ) {
     Surface(
         modifier = modifier
             .padding(horizontal = dimensionResource(id = R.dimen.padding))
             .widthIn(min = 150.dp, max = 250.dp),
         shape = RoundedCornerShape(dimensionResource(id = R.dimen.round_corner)),
-        color = MyAppTheme.colors.itemBg
+        color = itemBgColor
     )
     {
         Column(
@@ -337,7 +344,7 @@ private fun MerchantDataAmountItem(
                     )
                 }
                 .padding(10.dp),
-                //.padding(horizontal = 10.dp),
+            //.padding(horizontal = 10.dp),
             horizontalAlignment = contentAlignment
         ) {
             AutoSizeText(

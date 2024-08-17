@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.remember
@@ -34,9 +35,9 @@ import com.indie.apps.pennypal.util.Resource
 fun OverViewStartScreen(
     overViewViewModel: OverViewViewModel = hiltViewModel(),
     onProfileClick: () -> Unit,
-    onNewEntry: () -> Unit,
     bottomPadding: PaddingValues,
     addEditMerchantDataId: Long,
+    isAddMerchantDataSuccess: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     val dataWithNameLazyPagingItems = overViewViewModel.pagedMerchantData.collectAsLazyPagingItems()
@@ -63,6 +64,13 @@ fun OverViewStartScreen(
         }
 
         is Resource.Error -> {}
+    }
+
+    LaunchedEffect(isAddMerchantDataSuccess) {
+        if (isAddMerchantDataSuccess) {
+            overViewViewModel.addMerchantDataSuccess()
+        }
+
     }
 
     Scaffold(
@@ -100,7 +108,8 @@ fun OverViewStartScreen(
                     isLoadMore = merchantDataWithNamePagingState.isLoadMore ||
                             merchantDataDailyTotalPagingState.isLoadMore,
                     bottomPadding = bottomPadding,
-                    addEditMerchantDataId = addEditMerchantDataId
+                    merchantDataId = addEditMerchantDataId,
+                    isAddMerchantDataSuccess = isAddMerchantDataSuccess
                 )
             }
 
@@ -114,7 +123,6 @@ private fun OverViewScreenPreview() {
     PennyPalTheme(darkTheme = true) {
         OverViewStartScreen(
             onProfileClick = {},
-            onNewEntry = {},
             bottomPadding = PaddingValues(0.dp),
             addEditMerchantDataId = -1
         )

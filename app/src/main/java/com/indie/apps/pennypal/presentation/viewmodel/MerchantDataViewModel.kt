@@ -4,17 +4,22 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.indie.apps.pennypal.data.entity.MerchantData
 import com.indie.apps.pennypal.domain.usecase.DeleteMultipleMerchantDataUseCase
 import com.indie.apps.pennypal.domain.usecase.GetMerchantDataListFromMerchantIdUseCase
 import com.indie.apps.pennypal.domain.usecase.GetMerchantFromIdUseCase
-import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.presentation.ui.state.PagingState
 import com.indie.apps.pennypal.util.Resource
+import com.indie.apps.pennypal.util.Util
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -38,15 +43,50 @@ class MerchantDataViewModel @Inject constructor(
     var isEditable = MutableStateFlow(false)
     var isDeletable = MutableStateFlow(false)
 
+    var editDataAnimRun = MutableStateFlow(false)
+    var deleteAnimRun = MutableStateFlow(false)
+    lateinit var previousData: PagingData<MerchantData>
+
     val merchantState = getMerchantFromIdUseCase
         .getData(merchantId)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), null)
 
-    val pagedData = getMerchantDataListFromMerchantId
-        .loadData(merchantId)
+    private val trigger = MutableSharedFlow<Unit>(replay = 1)
+
+    val pagedData = trigger
+        .flatMapLatest {
+            getMerchantDataListFromMerchantId.loadData(merchantId)
+        }
+        .map { item ->
+
+            if (!deleteAnimRun.value) {
+                previousData = item
+            }
+            previousData
+        }
         .cachedIn(viewModelScope)
 
     val pagingState = MutableStateFlow(PagingState<MerchantData>())
+
+    init {
+
+        loadData()
+    }
+
+    fun loadData() {
+        viewModelScope.launch {
+            trigger.emit(Unit)
+        }
+    }
+
+    fun editMerchantDataSuccess() {
+        editDataAnimRun.value = true
+
+        viewModelScope.launch {
+            delay(Util.LIST_ITEM_ANIM_DELAY)
+            editDataAnimRun.value = false
+        }
+    }
 
     fun setScrollVal(scrollIndex: Int, scrollOffset: Int) {
         this.scrollIndex.value = scrollIndex
@@ -94,6 +134,7 @@ class MerchantDataViewModel @Inject constructor(
     }
 
     fun onDeleteDialogClick(onSuccess: () -> Unit) {
+        deleteAnimRun.value = true
         viewModelScope.launch {
             deleteMultipleMerchantDataUseCase
                 .deleteData(merchantId, selectedList)
@@ -101,8 +142,12 @@ class MerchantDataViewModel @Inject constructor(
                     when (it) {
                         is Resource.Loading -> {}
                         is Resource.Success -> {
-                            clearSelection()
                             onSuccess()
+
+                            delay(Util.LIST_ITEM_ANIM_DELAY)
+                            deleteAnimRun.value = false
+                            clearSelection()
+                            loadData()
                         }
 
                         is Resource.Error -> {

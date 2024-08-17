@@ -1,5 +1,7 @@
 package com.indie.apps.pennypal.presentation.ui.component.screen
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -27,9 +29,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -46,7 +51,6 @@ import androidx.paging.compose.itemKey
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.module.MerchantDataDailyTotal
 import com.indie.apps.pennypal.data.module.MerchantDataWithName
-import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.AutoSizeText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListItem
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
@@ -54,6 +58,8 @@ import com.indie.apps.pennypal.presentation.ui.component.custom.composable.Round
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.TopBar
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
+import com.indie.apps.pennypal.util.Util
+import kotlinx.coroutines.launch
 
 @Composable
 fun OverviewTopBar(
@@ -162,22 +168,18 @@ fun OverviewList(
     dailyTotalList: LazyPagingItems<MerchantDataDailyTotal>,
     modifier: Modifier = Modifier,
     isLoadMore: Boolean = false,
-    addEditMerchantDataId: Long,
+    isAddMerchantDataSuccess: Boolean = false,
+    merchantDataId: Long = 1L,
     bottomPadding: PaddingValues
 ) {
+    val scope = rememberCoroutineScope()
     LazyColumn(
         modifier = modifier
             .padding(horizontal = dimensionResource(id = R.dimen.padding)),
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.item_padding)),
         contentPadding = bottomPadding
     ) {
-        /*items(10) { index ->
 
-            OverviewListItem(
-                isDateShow = (index % 3 == 0)
-            )
-        }
-*/
         var totalListIndex = 0
         items(
             count = dataList.itemCount,
@@ -196,6 +198,23 @@ fun OverviewList(
                         isDateShow = true
                 }
 
+                val itemAnimateScale = remember {
+                    Animatable(0f)
+                }
+
+                val modifierAdd: Modifier =
+                    if (merchantDataId == data.id && isAddMerchantDataSuccess) {
+                        scope.launch {
+                            itemAnimateScale.animateTo(
+                                targetValue = 1f,
+                                animationSpec = tween(50)
+                            )
+                        }
+                        Modifier.scale(itemAnimateScale.value)
+                    } else {
+                        Modifier
+                    }
+
                 Column() {
                     if (isDateShow) {
                         if (index != 0)
@@ -204,7 +223,8 @@ fun OverviewList(
                         totalListIndex++
                     }
                     OverviewListItem(
-                        item = data
+                        item = data,
+                        modifier = modifierAdd
                     )
                 }
 

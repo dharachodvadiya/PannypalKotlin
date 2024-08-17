@@ -37,24 +37,17 @@ fun NavGraphBuilder.overViewRoute(
                 .savedStateHandle
                 .get<Long>(Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_ID)
 
-            backStackEntry
+            val isAddMerchantDataSuccess: Boolean? = backStackEntry
                 .savedStateHandle
-                .remove<Long>(Util.SAVE_STATE_MERCHANT_ADD_EDIT_ID)
-
-            backStackEntry
-                .savedStateHandle
-                .remove<Long>(Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_ID)
-
-            backStackEntry
-                .savedStateHandle
-                .remove<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_SUCCESS)
+                .get<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_SUCCESS)
 
             bottomBarState.value = true
+
             OverViewStartScreen(
-                onNewEntry = { navController.navigate(OverviewNav.NEW_ITEM.route) },
                 onProfileClick = { navController.navigate(OverviewNav.PROFILE.route) },
                 bottomPadding = innerPadding,
-                addEditMerchantDataId = merchantDataId ?: -1
+                addEditMerchantDataId = merchantDataId ?: -1,
+                isAddMerchantDataSuccess = isAddMerchantDataSuccess ?: false
             )
         }
         composable(route = OverviewNav.NEW_ITEM.route)
@@ -86,6 +79,10 @@ fun NavGraphBuilder.overViewRoute(
 
             backStackEntry.savedStateHandle.remove<String>(Util.SAVE_STATE_MERCHANT_NAME_DESC)
             backStackEntry.savedStateHandle.remove<String>(Util.SAVE_STATE_PAYMENT)
+
+            navController.previousBackStackEntry?.savedStateHandle?.remove<Long>(Util.SAVE_STATE_MERCHANT_ADD_EDIT_ID)
+            navController.previousBackStackEntry?.savedStateHandle?.remove<Long>(Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_ID)
+            navController.previousBackStackEntry?.savedStateHandle?.remove<Long>(Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_SUCCESS)
 
             bottomBarState.value = false
             NewItemScreen(
