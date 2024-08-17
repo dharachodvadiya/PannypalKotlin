@@ -13,7 +13,7 @@ import com.indie.apps.pennypal.domain.usecase.GetMerchantFromIdUseCase
 import com.indie.apps.pennypal.domain.usecase.GetPaymentFromIdUseCase
 import com.indie.apps.pennypal.domain.usecase.GetPaymentListUseCase
 import com.indie.apps.pennypal.domain.usecase.UpdateMerchantDataUseCase
-import com.indie.apps.pennypal.presentation.ui.common.Util
+import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.util.ErrorMessage
 import com.indie.apps.pennypal.util.Resource
@@ -140,7 +140,7 @@ class NewItemViewModel @Inject constructor(
         payment.value = data
     }
 
-    fun addOrEditMerchantData(onSuccess: (Boolean) -> Unit) {
+    fun addOrEditMerchantData(onSuccess: (Boolean, Long, Long) -> Unit) {
         if (enableButton.value) {
             enableButton.value = false
             if (amount.value.text.trim().isEmpty()) {
@@ -171,7 +171,7 @@ class NewItemViewModel @Inject constructor(
                                     is Resource.Loading -> {}
                                     is Resource.Success -> {
                                         enableButton.value = true
-                                        onSuccess(false)
+                                        onSuccess(false, it.data?:-1, merchantData.merchantId)
                                     }
 
                                     is Resource.Error -> {
@@ -197,7 +197,7 @@ class NewItemViewModel @Inject constructor(
                                     is Resource.Loading -> {}
                                     is Resource.Success -> {
                                         enableButton.value = true
-                                        onSuccess(true)
+                                        onSuccess(true, merchantData.id, merchantData.merchantId)
                                     }
 
                                     is Resource.Error -> {

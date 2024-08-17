@@ -5,7 +5,7 @@ import androidx.paging.PagingConfig
 import com.indie.apps.pennypal.data.paging.BasePagingSource
 import com.indie.apps.pennypal.data.dao.MerchantDao
 import com.indie.apps.pennypal.data.entity.Merchant
-import com.indie.apps.pennypal.presentation.ui.common.Util
+import com.indie.apps.pennypal.util.Util
 import javax.inject.Inject
 
 class MerchantRepositoryImpl @Inject constructor(private val merchantDao: MerchantDao) :

@@ -34,7 +34,7 @@ fun NewItemScreen(
     onMerchantSelect: () -> Unit,
     onPaymentAdd: () -> Unit,
     onNavigationUp: () -> Unit,
-    onSaveSuccess: (Boolean) -> Unit,
+    onSaveSuccess: (Boolean, Long, Long) -> Unit,
     merchantData: MerchantNameAndDetails? = null,
     paymentData: Payment? = null,
 
@@ -105,9 +105,7 @@ fun NewItemScreen(
                     Spacer(modifier = Modifier.weight(1f))
                     BottomSaveButton(
                         onClick = {
-                            newItemViewModel.addOrEditMerchantData(onSuccess = {
-                                onSaveSuccess(it)
-                            })
+                            newItemViewModel.addOrEditMerchantData(onSuccess = onSaveSuccess)
                         },
                         enabled = enableButton,
                         modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.padding))
@@ -131,6 +129,6 @@ private fun NewItemScreenPreview() {
         NewItemScreen(onPaymentAdd = {},
             onNavigationUp = {},
             onMerchantSelect = {},
-            onSaveSuccess = {})
+            onSaveSuccess = {a,b,c -> })
     }
 }

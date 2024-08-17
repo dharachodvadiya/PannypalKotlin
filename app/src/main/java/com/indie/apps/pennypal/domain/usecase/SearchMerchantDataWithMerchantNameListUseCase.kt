@@ -5,7 +5,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.indie.apps.pennypal.di.IoDispatcher
 import com.indie.apps.pennypal.data.module.MerchantDataWithName
-import com.indie.apps.pennypal.presentation.ui.common.Util
+import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.repository.MerchantDataRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -35,7 +35,7 @@ class SearchMerchantDataWithMerchantNameListUseCase @Inject constructor(
             PagingConfig(pageSize = Util.PAGE_SIZE,
                 prefetchDistance = Util.PAGE_PREFETCH_DISTANCE)
         ) {
-            merchantDataRepository.searchMerchantDataWithMerchantNameList(searchQuery,Util.TIME_ZONE_OFFSET_IN_MILLI)
+            merchantDataRepository.searchMerchantDataWithMerchantNameList(searchQuery, Util.TIME_ZONE_OFFSET_IN_MILLI)
         }
             .flow
             .flowOn(dispatcher)

@@ -3,6 +3,7 @@ package com.indie.apps.pennypal.presentation.viewmodel
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.indie.apps.pennypal.data.entity.Merchant
 import com.indie.apps.pennypal.domain.usecase.DeleteMultipleMerchantUseCase
@@ -10,11 +11,14 @@ import com.indie.apps.pennypal.domain.usecase.SearchMerchantListUseCase
 import com.indie.apps.pennypal.presentation.ui.state.PagingState
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.util.Resource
+import com.indie.apps.pennypal.util.Util
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -36,13 +40,27 @@ class MerchantViewModel @Inject constructor(
     var isEditable = MutableStateFlow(false)
     var isDeletable = MutableStateFlow(false)
 
+    var deleteAnimRun = MutableStateFlow(false)
+    var addAnimRun = MutableStateFlow(false)
+    var addDataAnimRun = MutableStateFlow(false)
+    var editAnimRun = MutableStateFlow(false)
+    lateinit var previousData: PagingData<Merchant>
+
     @OptIn(ExperimentalCoroutinesApi::class)
     val pagedData = trigger
         .flatMapLatest {
             searchMerchantListUseCase.loadData(searchTextState.value.text)
         }
+        .map { item ->
+
+            if (!deleteAnimRun.value) {
+                previousData = item
+            }
+            previousData
+        }
         .cachedIn(viewModelScope)
     val pagingState = MutableStateFlow(PagingState<Merchant>())
+
 
     init {
 
@@ -67,11 +85,41 @@ class MerchantViewModel @Inject constructor(
         clearSearch()
         scrollIndex.value = 0
         scrollOffset.value = 0
+
+        addAnimRun.value = true
+
+        viewModelScope.launch {
+            delay(Util.LIST_ITEM_ANIM_DELAY)
+            addAnimRun.value = false
+        }
     }
 
     fun editSuccess() {
         clearSelection()
+        //clearSearch()
+
+        editAnimRun.value = true
+
+        viewModelScope.launch {
+            delay(Util.LIST_ITEM_ANIM_DELAY)
+            editAnimRun.value = false
+        }
+    }
+
+    fun addMerchantDataSuccess() {
+
+        println("aaaaaa addMerchantDataSuccess ")
+        clearSelection()
         clearSearch()
+        scrollIndex.value = 0
+        scrollOffset.value = 0
+
+        addDataAnimRun.value = true
+
+        /*viewModelScope.launch {
+            delay(Util.LIST_ITEM_ANIM_DELAY)
+            addDataAnimRun.value = false
+        }*/
     }
 
     fun onEditClick(onSuccess: (Long) -> Unit) {
@@ -93,6 +141,7 @@ class MerchantViewModel @Inject constructor(
     }
 
     fun onDeleteDialogClick(onSuccess: () -> Unit) {
+        deleteAnimRun.value = true
         viewModelScope.launch {
             deleteMultipleMerchantUseCase
                 .deleteData(selectedList)
@@ -100,8 +149,13 @@ class MerchantViewModel @Inject constructor(
                     when (it) {
                         is Resource.Loading -> {}
                         is Resource.Success -> {
-                            clearSelection()
                             onSuccess()
+
+                            delay(Util.LIST_ITEM_ANIM_DELAY)
+                            deleteAnimRun.value = false
+                            clearSelection()
+                            searchData()
+
                         }
 
                         is Resource.Error -> {
@@ -133,7 +187,8 @@ class MerchantViewModel @Inject constructor(
         changeUpdateState()
     }
 
-    private fun clearSelection() {
+    fun clearSelection() {
+        println("aaaaa clear selection")
         selectedList.clear()
         changeUpdateState()
     }

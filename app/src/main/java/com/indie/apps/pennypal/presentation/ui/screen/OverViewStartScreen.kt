@@ -36,6 +36,7 @@ fun OverViewStartScreen(
     onProfileClick: () -> Unit,
     onNewEntry: () -> Unit,
     bottomPadding: PaddingValues,
+    addEditMerchantDataId: Long,
     modifier: Modifier = Modifier
 ) {
     val dataWithNameLazyPagingItems = overViewViewModel.pagedMerchantData.collectAsLazyPagingItems()
@@ -98,7 +99,8 @@ fun OverViewStartScreen(
                     dailyTotalList = dailyTotalLazyPagingItems,
                     isLoadMore = merchantDataWithNamePagingState.isLoadMore ||
                             merchantDataDailyTotalPagingState.isLoadMore,
-                    bottomPadding = bottomPadding
+                    bottomPadding = bottomPadding,
+                    addEditMerchantDataId = addEditMerchantDataId
                 )
             }
 
@@ -113,7 +115,8 @@ private fun OverViewScreenPreview() {
         OverViewStartScreen(
             onProfileClick = {},
             onNewEntry = {},
-            bottomPadding = PaddingValues(0.dp)
+            bottomPadding = PaddingValues(0.dp),
+            addEditMerchantDataId = -1
         )
     }
 }

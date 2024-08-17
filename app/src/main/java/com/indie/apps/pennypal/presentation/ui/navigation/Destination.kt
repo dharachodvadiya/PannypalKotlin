@@ -8,7 +8,7 @@ import androidx.compose.material.icons.outlined.PersonOutline
 import androidx.compose.material.icons.outlined.PieChart
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.presentation.ui.common.Util
+import com.indie.apps.pennypal.util.Util
 
 enum class OverviewNav(val route: String) {
     START("overview/start"),

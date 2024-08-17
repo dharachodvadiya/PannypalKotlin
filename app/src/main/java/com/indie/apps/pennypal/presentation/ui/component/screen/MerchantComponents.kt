@@ -19,6 +19,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -28,7 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.entity.Merchant
-import com.indie.apps.pennypal.presentation.ui.common.Util
+import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListItem
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
@@ -133,6 +134,7 @@ fun MerchantListItem(
     onLongClick: ()-> Unit = {},
     onClick: ()-> Unit,
     isSelected : Boolean = false,
+    itemBgColor : Color,
     modifier: Modifier = Modifier.fillMaxWidth()
 ) {
     val imageVector = if(isSelected) Icons.Default.Done else Icons.Default.Person
@@ -187,7 +189,8 @@ fun MerchantListItem(
         },
         isSetDivider = false,
         modifier = modifier,
-        isSelected = isSelected
+        isSelected = isSelected,
+        itemBgColor = itemBgColor
     )
 }
 

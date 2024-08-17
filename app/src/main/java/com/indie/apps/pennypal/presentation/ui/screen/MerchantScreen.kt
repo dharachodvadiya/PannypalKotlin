@@ -1,6 +1,7 @@
 package com.indie.apps.pennypal.presentation.ui.screen
 
 import android.widget.Toast
+import androidx.compose.animation.Animatable
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -36,7 +37,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.presentation.ui.common.Util
+import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.presentation.ui.component.DeleteAlertDialog
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.screen.MerchantListItem
@@ -49,7 +50,6 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MerchantScreen(
     merchantViewModel: MerchantViewModel = hiltViewModel(),
@@ -58,7 +58,9 @@ fun MerchantScreen(
     onEditClick: (Long) -> Unit,
     isEditSuccess: Boolean = false,
     isAddSuccess: Boolean = false,
-    editAddId : Long = 1L,
+    isAddMerchantDataSuccess: Boolean = false,
+    editAddId: Long = 1L,
+    merchantId: Long = 1L,
     bottomPadding: PaddingValues,
     modifier: Modifier = Modifier
 ) {
@@ -75,13 +77,17 @@ fun MerchantScreen(
     val scrollIndex by merchantViewModel.scrollIndex.collectAsStateWithLifecycle()
     val selectedList = merchantViewModel.selectedList
 
-   /* var isEditSuccessState by remember {
-        mutableStateOf(false)
-    }*/
+    /* var isEditSuccessState by remember {
+         mutableStateOf(false)
+     }*/
 
-    var addItemId by remember {
+    /*var addItemId by remember {
         mutableStateOf(-1L)
     }
+
+    var editItemId by remember {
+        mutableStateOf(-1L)
+    }*/
 
     /*if (isEditAddSuccess != isEditSuccessState) {
         isEditSuccessState = isEditAddSuccess
@@ -91,18 +97,17 @@ fun MerchantScreen(
         }
     }*/
     LaunchedEffect(isAddSuccess) {
-        if(isAddSuccess)
-        {
+        if (isAddSuccess) {
             merchantViewModel.addSuccess()
-            addItemId = editAddId
+            //addItemId = editAddId
         }
 
     }
 
     LaunchedEffect(isEditSuccess) {
-        if(isEditSuccess)
-        {
+        if (isEditSuccess) {
             merchantViewModel.editSuccess()
+            //editItemId = editAddId
         }
 
     }
@@ -132,16 +137,16 @@ fun MerchantScreen(
     }) { innerPadding ->
 
         if (pagingState.isRefresh) {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
-                        .padding(bottomPadding)
-                        .padding(innerPadding)
-                        .fillMaxSize()
-                ) {
-                    CircularProgressIndicator()
-                }
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
+                    .padding(bottomPadding)
+                    .padding(innerPadding)
+                    .fillMaxSize()
+            ) {
+                CircularProgressIndicator()
+            }
         } else {
 
             val scrollState: LazyListState = rememberLazyListState(
@@ -178,27 +183,63 @@ fun MerchantScreen(
                         Animatable(0f)
                     }
 
+                    val itemAnimateScaleDown = remember {
+                        Animatable(1f)
+                    }
+
+                    val baseColor = MyAppTheme.colors.itemBg
+                    val targetAnimColor = MyAppTheme.colors.lightBlue1
+
+                    val itemAnimateColor = remember {
+                        Animatable(baseColor)
+                    }
+
                     val data = lazyPagingData[index]
                     if (data != null) {
 
-                        val modifierAdd : Modifier = if(addItemId == data.id)
-                        {
-                            scope.launch {
-                                itemAnimateScale.animateTo(targetValue = 1f, animationSpec = tween(50))
+                        val modifierAdd: Modifier =
+                            if (editAddId == data.id && merchantViewModel.addAnimRun.value) {
+                                scope.launch {
+                                    itemAnimateScale.animateTo(
+                                        targetValue = 1f,
+                                        animationSpec = tween(50)
+                                    )
+                                }
+                                Modifier.scale(itemAnimateScale.value)
+                            } else if (merchantViewModel.deleteAnimRun.value && selectedList.contains(
+                                    data.id
+                                )
+                            ) {
+                                scope.launch {
+                                    itemAnimateScaleDown.animateTo(
+                                        targetValue = 0.0f,
+                                        animationSpec = tween(50)
+                                    )
+                                }
+                                Modifier.scale(itemAnimateScaleDown.value)
+                            } else if (editAddId == data.id && merchantViewModel.editAnimRun.value) {
+                                scope.launch {
+                                    itemAnimateColor.animateTo(
+                                        targetValue = targetAnimColor,
+                                        animationSpec = tween()
+                                    )
+                                    itemAnimateColor.animateTo(
+                                        targetValue = baseColor,
+                                        animationSpec = tween()
+                                    )
+                                }
+                                Modifier
+                            } else {
+                                Modifier
                             }
-                            if(itemAnimateScale.value == 1f) addItemId = -1
-
-                            Modifier.scale(itemAnimateScale.value)
-                        }else{
-                            Modifier
-                        }
 
                         MerchantListItem(
                             item = data,
                             isSelected = selectedList.contains(data.id),
                             onClick = { merchantViewModel.onItemClick(data.id) { onMerchantClick(it) } },
                             onLongClick = { merchantViewModel.onItemLongClick(data.id) },
-                            modifier = modifierAdd
+                            modifier = modifierAdd,
+                            itemBgColor = itemAnimateColor.value
                         )
 
                         if (pagingState.isLoadMore && index == lazyPagingData.itemCount - 1) {
@@ -239,6 +280,11 @@ fun MerchantScreen(
 @Composable
 private fun MerchantScreenPreview() {
     PennyPalTheme(darkTheme = true) {
-        MerchantScreen(onAddClick = {}, onEditClick = {}, onMerchantClick = {}, bottomPadding = PaddingValues(0.dp))
+        MerchantScreen(
+            onAddClick = {},
+            onEditClick = {},
+            onMerchantClick = {},
+            bottomPadding = PaddingValues(0.dp)
+        )
     }
 }

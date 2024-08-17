@@ -6,7 +6,7 @@ import com.indie.apps.pennypal.data.entity.Merchant
 import com.indie.apps.pennypal.domain.usecase.AddMerchantUseCase
 import com.indie.apps.pennypal.domain.usecase.GetMerchantFromIdUseCase
 import com.indie.apps.pennypal.domain.usecase.UpdateMerchantUseCase
-import com.indie.apps.pennypal.presentation.ui.common.Util
+import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.util.ErrorMessage
 import com.indie.apps.pennypal.util.Resource

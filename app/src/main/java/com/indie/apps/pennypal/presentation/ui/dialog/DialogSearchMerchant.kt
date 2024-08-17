@@ -9,7 +9,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
-import com.indie.apps.pennypal.presentation.ui.common.Util
+import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.MyAppDialog
 import com.indie.apps.pennypal.presentation.ui.component.dialog.SearchDialogField
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme

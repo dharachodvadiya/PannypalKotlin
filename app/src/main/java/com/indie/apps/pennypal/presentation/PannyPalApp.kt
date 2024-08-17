@@ -19,7 +19,7 @@ import androidx.navigation.compose.rememberNavController
 import com.google.gson.Gson
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.entity.toMerchantNameAndDetails
-import com.indie.apps.pennypal.presentation.ui.common.Util
+import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.presentation.ui.dialog.DialogAddMerchant
 import com.indie.apps.pennypal.presentation.ui.dialog.DialogAddPayment
 import com.indie.apps.pennypal.presentation.ui.dialog.DialogCpp

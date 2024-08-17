@@ -1,4 +1,4 @@
-package com.indie.apps.pennypal.presentation.ui.common
+package com.indie.apps.pennypal.util
 
 import com.google.i18n.phonenumbers.NumberParseException
 import com.google.i18n.phonenumbers.PhoneNumberUtil
@@ -11,6 +11,8 @@ import java.util.TimeZone
 object Util {
     const val SEARCH_NEWS_TIME_DELAY = 500L
 
+    const val LIST_ITEM_ANIM_DELAY = 400L
+
     const val PAGE_SIZE = 20
     const val PAGE_PREFETCH_DISTANCE = 20
 
@@ -21,6 +23,9 @@ object Util {
     const val SAVE_STATE_ADD_EDIT_SUCCESS_ID = "edit_add_id"
     const val SAVE_STATE_MERCHANT_NAME_DESC = "merchant_name_desc"
     const val SAVE_STATE_PAYMENT = "payment"
+    const val SAVE_STATE_MERCHANT_DATA_ADD_EDIT_ID = "merchant_data_add_edit_id"
+    const val SAVE_STATE_MERCHANT_ADD_EDIT_ID = "merchant_add_edit_id"
+    const val SAVE_STATE_MERCHANT_DATA_ADD_EDIT_SUCCESS = "merchant_add_edit_success"
     const val PARAM_MERCHANT_ID = "merchant_id"
     const val PARAM_EDIT_MERCHANT_DATA_ID = "edit_merchant_data_id"
 

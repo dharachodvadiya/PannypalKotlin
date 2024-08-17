@@ -9,7 +9,7 @@ import com.indie.apps.pennypal.data.entity.MerchantData
 import com.indie.apps.pennypal.domain.usecase.DeleteMultipleMerchantDataUseCase
 import com.indie.apps.pennypal.domain.usecase.GetMerchantDataListFromMerchantIdUseCase
 import com.indie.apps.pennypal.domain.usecase.GetMerchantFromIdUseCase
-import com.indie.apps.pennypal.presentation.ui.common.Util
+import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.presentation.ui.state.PagingState
 import com.indie.apps.pennypal.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
