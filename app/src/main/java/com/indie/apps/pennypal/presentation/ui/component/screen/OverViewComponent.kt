@@ -170,6 +170,7 @@ fun OverviewList(
     isLoadMore: Boolean = false,
     isAddMerchantDataSuccess: Boolean = false,
     merchantDataId: Long = 1L,
+    onAnimStop: () -> Unit,
     bottomPadding: PaddingValues
 ) {
     val scope = rememberCoroutineScope()
@@ -209,6 +210,9 @@ fun OverviewList(
                                 targetValue = 1f,
                                 animationSpec = tween(50)
                             )
+                        }
+                        if (itemAnimateScale.value == 1f) {
+                            onAnimStop()
                         }
                         Modifier.scale(itemAnimateScale.value)
                     } else {

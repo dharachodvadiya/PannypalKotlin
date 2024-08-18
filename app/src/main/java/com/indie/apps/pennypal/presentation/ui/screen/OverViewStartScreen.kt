@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -75,8 +74,7 @@ fun OverViewStartScreen(
         mutableStateOf(-1L)
     }
 
-    if(isAddDataSuccess != isAddMerchantDataSuccess)
-    {
+    if (isAddDataSuccess != isAddMerchantDataSuccess) {
         if (isAddMerchantDataSuccess) {
             addDataId = addEditMerchantDataId
             overViewViewModel.addMerchantDataSuccess()
@@ -84,13 +82,13 @@ fun OverViewStartScreen(
         isAddDataSuccess = isAddMerchantDataSuccess
     }
 
-   /* LaunchedEffect(isAddMerchantDataSuccess) {
+    /* LaunchedEffect(isAddMerchantDataSuccess) {
 
-        if (isAddMerchantDataSuccess) {
-            overViewViewModel.addMerchantDataSuccess()
-        }
+         if (isAddMerchantDataSuccess) {
+             overViewViewModel.addMerchantDataSuccess()
+         }
 
-    }*/
+     }*/
 
     Scaffold(
         topBar = {
@@ -128,7 +126,10 @@ fun OverViewStartScreen(
                             merchantDataDailyTotalPagingState.isLoadMore,
                     bottomPadding = bottomPadding,
                     merchantDataId = addDataId,
-                    isAddMerchantDataSuccess = overViewViewModel.addDataAnimRun.value
+                    isAddMerchantDataSuccess = overViewViewModel.addDataAnimRun.value,
+                    onAnimStop = {
+                        overViewViewModel.addMerchantDataSuccessAnimStop()
+                    }
                 )
             }
 

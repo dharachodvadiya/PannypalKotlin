@@ -80,7 +80,7 @@ class MerchantViewModel @Inject constructor(
         }
     }
 
-    fun addSuccess() {
+    fun addMerchantSuccess() {
         clearSelection()
         clearSearch()
         scrollIndex.value = 0
@@ -94,11 +94,11 @@ class MerchantViewModel @Inject constructor(
         }*/
     }
 
-    fun addSuccessAnimStop() {
+    fun addMerchantSuccessAnimStop() {
         addAnimRun.value = false
     }
 
-    fun editSuccess() {
+    fun editMerchantSuccess() {
         clearSelection()
         //clearSearch()
 
@@ -169,9 +169,7 @@ class MerchantViewModel @Inject constructor(
 
     }
 
-    fun onDeleteAnimStop()
-    {
-        println("aaaaaa viewmodel stop")
+    fun onDeleteAnimStop() {
         deleteAnimRun.value = false
         clearSelection()
         searchData()

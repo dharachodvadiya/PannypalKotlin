@@ -96,21 +96,20 @@ fun MerchantScreen(
         }
     }*/
 
-    var isAddSuccessState by remember {
+    var isAddMerchantSuccessState by remember {
         mutableStateOf(false)
     }
 
-    var addId by remember {
+    var addMerchantId by remember {
         mutableStateOf(-1L)
     }
 
-    if(isAddSuccessState != isAddSuccess)
-    {
+    if (isAddMerchantSuccessState != isAddSuccess) {
         if (isAddSuccess) {
-            addId = editAddId
-            merchantViewModel.addSuccess()
+            addMerchantId = editAddId
+            merchantViewModel.addMerchantSuccess()
         }
-        isAddSuccessState = isAddSuccess
+        isAddMerchantSuccessState = isAddSuccess
     }
 
     /*LaunchedEffect(isAddSuccess) {
@@ -121,32 +120,7 @@ fun MerchantScreen(
 
     }*/
 
-    var isEditSuccessState by remember {
-        mutableStateOf(false)
-    }
-
-    var editId by remember {
-        mutableStateOf(-1L)
-    }
-
-    if(isEditSuccessState != isEditSuccess)
-    {
-        if (isEditSuccess) {
-            editId = editAddId
-            merchantViewModel.editSuccess()
-        }
-        isEditSuccessState = isEditSuccess
-    }
-
-   /* LaunchedEffect(isEditSuccess) {
-        if (isEditSuccess) {
-            merchantViewModel.editSuccess()
-            //editItemId = editAddId
-        }
-
-    }*/
-
-    var isAddMerchantDataSuccessState by remember {
+    var isEditMerchantSuccessState by remember {
         mutableStateOf(false)
     }
 
@@ -154,10 +128,33 @@ fun MerchantScreen(
         mutableStateOf(-1L)
     }
 
-    if(isAddMerchantDataSuccessState != isAddMerchantDataSuccess)
-    {
+    if (isEditMerchantSuccessState != isEditSuccess) {
+        if (isEditSuccess) {
+            editMerchantId = editAddId
+            merchantViewModel.editMerchantSuccess()
+        }
+        isEditMerchantSuccessState = isEditSuccess
+    }
+
+    /* LaunchedEffect(isEditSuccess) {
+         if (isEditSuccess) {
+             merchantViewModel.editSuccess()
+             //editItemId = editAddId
+         }
+
+     }*/
+
+    var isAddMerchantDataSuccessState by remember {
+        mutableStateOf(false)
+    }
+
+    var addMerchantDataId by remember {
+        mutableStateOf(-1L)
+    }
+
+    if (isAddMerchantDataSuccessState != isAddMerchantDataSuccess) {
         if (isAddMerchantDataSuccess) {
-            editMerchantId = merchantId
+            addMerchantDataId = merchantId
             merchantViewModel.addMerchantDataSuccess()
         }
         isAddMerchantDataSuccessState = isAddMerchantDataSuccess
@@ -256,16 +253,15 @@ fun MerchantScreen(
                     if (data != null) {
 
                         val modifierAdd: Modifier =
-                            if (addId == data.id && merchantViewModel.addAnimRun.value) {
+                            if (addMerchantId == data.id && merchantViewModel.addAnimRun.value) {
                                 scope.launch {
                                     itemAnimateScale.animateTo(
                                         targetValue = 1f,
                                         animationSpec = tween(50)
                                     )
                                 }
-                                if(itemAnimateScale.value == 1f)
-                                {
-                                    merchantViewModel.addSuccessAnimStop()
+                                if (itemAnimateScale.value == 1f) {
+                                    merchantViewModel.addMerchantSuccessAnimStop()
                                 }
                                 Modifier.scale(itemAnimateScale.value)
                             } else if (merchantViewModel.deleteAnimRun.value &&
@@ -277,13 +273,12 @@ fun MerchantScreen(
                                         animationSpec = tween(50)
                                     )
                                 }
-                                if(itemAnimateScaleDown.value < 0.02)
-                                {
+                                if (itemAnimateScaleDown.value < 0.02) {
                                     merchantViewModel.onDeleteAnimStop()
                                 }
                                 Modifier.scale(itemAnimateScaleDown.value)
-                            } else if ((editId == data.id && merchantViewModel.editAnimRun.value) ||
-                                (editMerchantId == data.id && merchantViewModel.addDataAnimRun.value)
+                            } else if ((editMerchantId == data.id && merchantViewModel.editAnimRun.value) ||
+                                (addMerchantDataId == data.id && merchantViewModel.addDataAnimRun.value)
                             ) {
                                 scope.launch {
                                     itemAnimateColor.animateTo(

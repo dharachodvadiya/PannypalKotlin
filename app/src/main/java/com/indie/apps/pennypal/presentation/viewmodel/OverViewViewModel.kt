@@ -11,14 +11,11 @@ import com.indie.apps.pennypal.domain.usecase.GetMerchantDataListWithMerchantNam
 import com.indie.apps.pennypal.domain.usecase.GetUserProfileUseCase
 import com.indie.apps.pennypal.presentation.ui.state.PagingState
 import com.indie.apps.pennypal.util.Resource
-import com.indie.apps.pennypal.util.Util
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -59,10 +56,15 @@ class OverViewViewModel @Inject constructor(
     fun addMerchantDataSuccess() {
 
         addDataAnimRun.value = true
+        /*
+                viewModelScope.launch {
+                    delay(Util.LIST_ITEM_ANIM_DELAY)
+                    addDataAnimRun.value = false
+                }*/
+    }
 
-        viewModelScope.launch {
-            delay(Util.LIST_ITEM_ANIM_DELAY)
-            addDataAnimRun.value = false
-        }
+
+    fun addMerchantDataSuccessAnimStop() {
+        addDataAnimRun.value = false
     }
 }
