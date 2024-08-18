@@ -82,7 +82,7 @@ fun NavGraphBuilder.overViewRoute(
 
             navController.previousBackStackEntry?.savedStateHandle?.remove<Long>(Util.SAVE_STATE_MERCHANT_ADD_EDIT_ID)
             navController.previousBackStackEntry?.savedStateHandle?.remove<Long>(Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_ID)
-            navController.previousBackStackEntry?.savedStateHandle?.remove<Long>(Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_SUCCESS)
+            navController.previousBackStackEntry?.savedStateHandle?.remove<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_SUCCESS)
 
             bottomBarState.value = false
             NewItemScreen(

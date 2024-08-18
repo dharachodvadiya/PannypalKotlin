@@ -143,11 +143,10 @@ class MerchantDataViewModel @Inject constructor(
                         is Resource.Loading -> {}
                         is Resource.Success -> {
                             onSuccess()
-
-                            delay(Util.LIST_ITEM_ANIM_DELAY)
+                            /*delay(Util.LIST_ITEM_ANIM_DELAY)
                             deleteAnimRun.value = false
                             clearSelection()
-                            loadData()
+                            loadData()*/
                         }
 
                         is Resource.Error -> {
@@ -156,6 +155,12 @@ class MerchantDataViewModel @Inject constructor(
                 }
         }
 
+    }
+
+    fun onDeleteAnimStop() {
+        deleteAnimRun.value = false
+        clearSelection()
+        loadData()
     }
 
     fun onEditClick(onSuccess: (Long) -> Unit) {

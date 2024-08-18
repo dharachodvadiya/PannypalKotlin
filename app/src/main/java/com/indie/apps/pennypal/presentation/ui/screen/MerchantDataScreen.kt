@@ -169,8 +169,12 @@ fun MerchantDataScreen(
                                     scope.launch {
                                         itemAnimateScaleDown.animateTo(
                                             targetValue = 0.0f,
-                                            animationSpec = tween(60)
+                                            animationSpec = tween(50),
                                         )
+                                    }
+                                    if(itemAnimateScaleDown.value < 0.05)
+                                    {
+                                        merchantDataViewModel.onDeleteAnimStop()
                                     }
                                     Modifier.scale(itemAnimateScaleDown.value)
                                 } else {

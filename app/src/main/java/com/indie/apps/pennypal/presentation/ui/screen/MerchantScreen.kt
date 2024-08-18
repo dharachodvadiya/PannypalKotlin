@@ -211,6 +211,10 @@ fun MerchantScreen(
                                         animationSpec = tween(50)
                                     )
                                 }
+                                if(itemAnimateScale.value == 1f)
+                                {
+                                    merchantViewModel.addSuccessAnimStop()
+                                }
                                 Modifier.scale(itemAnimateScale.value)
                             } else if (merchantViewModel.deleteAnimRun.value &&
                                 selectedList.contains(data.id)
@@ -220,6 +224,10 @@ fun MerchantScreen(
                                         targetValue = 0.0f,
                                         animationSpec = tween(50)
                                     )
+                                }
+                                if(itemAnimateScaleDown.value < 0.02)
+                                {
+                                    merchantViewModel.onDeleteAnimStop()
                                 }
                                 Modifier.scale(itemAnimateScaleDown.value)
                             } else if ((editAddId == data.id && merchantViewModel.editAnimRun.value) ||
