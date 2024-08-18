@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -66,12 +67,30 @@ fun OverViewStartScreen(
         is Resource.Error -> {}
     }
 
-    LaunchedEffect(isAddMerchantDataSuccess) {
+    var isAddDataSuccess by remember {
+        mutableStateOf(false)
+    }
+
+    var addDataId by remember {
+        mutableStateOf(-1L)
+    }
+
+    if(isAddDataSuccess != isAddMerchantDataSuccess)
+    {
+        if (isAddMerchantDataSuccess) {
+            addDataId = addEditMerchantDataId
+            overViewViewModel.addMerchantDataSuccess()
+        }
+        isAddDataSuccess = isAddMerchantDataSuccess
+    }
+
+   /* LaunchedEffect(isAddMerchantDataSuccess) {
+
         if (isAddMerchantDataSuccess) {
             overViewViewModel.addMerchantDataSuccess()
         }
 
-    }
+    }*/
 
     Scaffold(
         topBar = {
@@ -108,8 +127,8 @@ fun OverViewStartScreen(
                     isLoadMore = merchantDataWithNamePagingState.isLoadMore ||
                             merchantDataDailyTotalPagingState.isLoadMore,
                     bottomPadding = bottomPadding,
-                    merchantDataId = addEditMerchantDataId,
-                    isAddMerchantDataSuccess = isAddMerchantDataSuccess
+                    merchantDataId = addDataId,
+                    isAddMerchantDataSuccess = overViewViewModel.addDataAnimRun.value
                 )
             }
 

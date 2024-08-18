@@ -68,12 +68,29 @@ fun MerchantDataScreen(
 
     var openAlertDialog by remember { mutableStateOf(false) }
 
-    LaunchedEffect(isEditMerchantDataSuccess) {
+    var isEditMerchantDataSuccessState by remember {
+        mutableStateOf(false)
+    }
+
+    var editMerchantId by remember {
+        mutableStateOf(-1L)
+    }
+
+    if(isEditMerchantDataSuccessState != isEditMerchantDataSuccess)
+    {
+        if (isEditMerchantDataSuccess) {
+            editMerchantId = merchantDataId
+            merchantDataViewModel.editMerchantDataSuccess()
+        }
+        isEditMerchantDataSuccessState = isEditMerchantDataSuccess
+    }
+
+    /*LaunchedEffect(isEditMerchantDataSuccess) {
         if (isEditMerchantDataSuccess) {
             merchantDataViewModel.editMerchantDataSuccess()
         }
 
-    }
+    }*/
 
     Scaffold(
         topBar = {
@@ -151,7 +168,7 @@ fun MerchantDataScreen(
                         if (data != null) {
 
                             val modifierAdd: Modifier =
-                                if (merchantDataId == data.id && merchantDataViewModel.editDataAnimRun.value) {
+                                if (editMerchantId == data.id && merchantDataViewModel.editDataAnimRun.value) {
                                     scope.launch {
                                         itemAnimateColor.animateTo(
                                             targetValue = targetAnimColor,

@@ -43,6 +43,11 @@ fun NavGraphBuilder.overViewRoute(
 
             bottomBarState.value = true
 
+            backStackEntry.savedStateHandle?.remove<Long>(Util.SAVE_STATE_MERCHANT_ADD_EDIT_ID)
+            backStackEntry.savedStateHandle?.remove<Long>(Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_ID)
+            backStackEntry.savedStateHandle?.remove<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_SUCCESS)
+
+
             OverViewStartScreen(
                 onProfileClick = { navController.navigate(OverviewNav.PROFILE.route) },
                 bottomPadding = innerPadding,
@@ -79,10 +84,6 @@ fun NavGraphBuilder.overViewRoute(
 
             backStackEntry.savedStateHandle.remove<String>(Util.SAVE_STATE_MERCHANT_NAME_DESC)
             backStackEntry.savedStateHandle.remove<String>(Util.SAVE_STATE_PAYMENT)
-
-            navController.previousBackStackEntry?.savedStateHandle?.remove<Long>(Util.SAVE_STATE_MERCHANT_ADD_EDIT_ID)
-            navController.previousBackStackEntry?.savedStateHandle?.remove<Long>(Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_ID)
-            navController.previousBackStackEntry?.savedStateHandle?.remove<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_SUCCESS)
 
             bottomBarState.value = false
             NewItemScreen(
