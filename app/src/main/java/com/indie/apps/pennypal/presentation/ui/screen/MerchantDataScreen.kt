@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.screen
 
+import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.core.tween
@@ -44,6 +45,7 @@ import com.indie.apps.pennypal.presentation.viewmodel.MerchantDataViewModel
 import com.indie.apps.pennypal.util.Util
 import kotlinx.coroutines.launch
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun MerchantDataScreen(
     merchantDataViewModel: MerchantDataViewModel = hiltViewModel(),
@@ -61,6 +63,8 @@ fun MerchantDataScreen(
     val scrollOffset by merchantDataViewModel.scrollOffset.collectAsStateWithLifecycle()
     val isEditable by merchantDataViewModel.isEditable.collectAsStateWithLifecycle()
     val isDeletable by merchantDataViewModel.isDeletable.collectAsStateWithLifecycle()
+    val editDataAnimRun by merchantDataViewModel.editDataAnimRun.collectAsStateWithLifecycle()
+    val deleteAnimRun by merchantDataViewModel.deleteAnimRun.collectAsStateWithLifecycle()
 
     val lazyPagingData = merchantDataViewModel.pagedData.collectAsLazyPagingItems()
     val pagingState by merchantDataViewModel.pagingState.collectAsStateWithLifecycle()
@@ -168,7 +172,7 @@ fun MerchantDataScreen(
                         if (data != null) {
 
                             val modifierAdd: Modifier =
-                                if (editMerchantId == data.id && merchantDataViewModel.editDataAnimRun.value) {
+                                if (editMerchantId == data.id && editDataAnimRun) {
                                     scope.launch {
                                         itemAnimateColor.animateTo(
                                             targetValue = targetAnimColor,
@@ -180,7 +184,7 @@ fun MerchantDataScreen(
                                         )
                                     }
                                     Modifier
-                                } else if (merchantDataViewModel.deleteAnimRun.value &&
+                                } else if (deleteAnimRun &&
                                     selectedList.contains(data.id)
                                 ) {
                                     scope.launch {

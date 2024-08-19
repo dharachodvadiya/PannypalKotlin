@@ -88,14 +88,15 @@ class MerchantViewModel @Inject constructor(
 
         addAnimRun.value = true
 
-        /*viewModelScope.launch {
+        viewModelScope.launch {
             delay(Util.LIST_ITEM_ANIM_DELAY)
-            addAnimRun.value = false
-        }*/
+            addMerchantSuccessAnimStop()
+        }
     }
 
     fun addMerchantSuccessAnimStop() {
-        addAnimRun.value = false
+        if(addAnimRun.value)
+            addAnimRun.value = false
     }
 
     fun editMerchantSuccess() {
@@ -154,10 +155,8 @@ class MerchantViewModel @Inject constructor(
                         is Resource.Success -> {
                             onSuccess()
 
-                            /*delay(Util.LIST_ITEM_ANIM_DELAY)
-                            deleteAnimRun.value = false
-                            clearSelection()
-                            searchData()*/
+                            delay(Util.LIST_ITEM_ANIM_DELAY)
+                            onDeleteAnimStop()
 
                         }
 
@@ -170,9 +169,13 @@ class MerchantViewModel @Inject constructor(
     }
 
     fun onDeleteAnimStop() {
-        deleteAnimRun.value = false
-        clearSelection()
-        searchData()
+        if(deleteAnimRun.value)
+        {
+            deleteAnimRun.value = false
+            clearSelection()
+            searchData()
+        }
+
     }
 
     fun onItemClick(id: Long, callBack: (Long) -> Unit) {

@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.screen
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,6 +32,7 @@ import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.presentation.viewmodel.OverViewViewModel
 import com.indie.apps.pennypal.util.Resource
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun OverViewStartScreen(
     overViewViewModel: OverViewViewModel = hiltViewModel(),
@@ -52,6 +54,7 @@ fun OverViewStartScreen(
 
 
     val uiState by overViewViewModel.uiState.collectAsStateWithLifecycle()
+    val addDataAnimRun by overViewViewModel.addDataAnimRun.collectAsStateWithLifecycle()
 
     var amount by remember {
         mutableDoubleStateOf(0.0)
@@ -126,7 +129,7 @@ fun OverViewStartScreen(
                             merchantDataDailyTotalPagingState.isLoadMore,
                     bottomPadding = bottomPadding,
                     merchantDataId = addDataId,
-                    isAddMerchantDataSuccess = overViewViewModel.addDataAnimRun.value,
+                    isAddMerchantDataSuccess = addDataAnimRun,
                     onAnimStop = {
                         overViewViewModel.addMerchantDataSuccessAnimStop()
                     }

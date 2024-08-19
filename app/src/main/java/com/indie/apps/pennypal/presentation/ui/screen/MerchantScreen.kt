@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.screen
 
+import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.core.Animatable
@@ -49,6 +50,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun MerchantScreen(
     merchantViewModel: MerchantViewModel = hiltViewModel(),
@@ -75,6 +77,12 @@ fun MerchantScreen(
     val scrollOffset by merchantViewModel.scrollOffset.collectAsStateWithLifecycle()
     val scrollIndex by merchantViewModel.scrollIndex.collectAsStateWithLifecycle()
     val selectedList = merchantViewModel.selectedList
+
+    val addAnimRun by merchantViewModel.addAnimRun.collectAsStateWithLifecycle()
+    val addDataAnimRun by merchantViewModel.addDataAnimRun.collectAsStateWithLifecycle()
+    val editAnimRun by merchantViewModel.editAnimRun.collectAsStateWithLifecycle()
+    val deleteAnimRun by merchantViewModel.deleteAnimRun.collectAsStateWithLifecycle()
+
 
     /* var isEditSuccessState by remember {
          mutableStateOf(false)
@@ -253,7 +261,7 @@ fun MerchantScreen(
                     if (data != null) {
 
                         val modifierAdd: Modifier =
-                            if (addMerchantId == data.id && merchantViewModel.addAnimRun.value) {
+                            if (addMerchantId == data.id && addAnimRun) {
                                 scope.launch {
                                     itemAnimateScale.animateTo(
                                         targetValue = 1f,
@@ -264,7 +272,7 @@ fun MerchantScreen(
                                     merchantViewModel.addMerchantSuccessAnimStop()
                                 }
                                 Modifier.scale(itemAnimateScale.value)
-                            } else if (merchantViewModel.deleteAnimRun.value &&
+                            } else if (deleteAnimRun &&
                                 selectedList.contains(data.id)
                             ) {
                                 scope.launch {
@@ -277,8 +285,8 @@ fun MerchantScreen(
                                     merchantViewModel.onDeleteAnimStop()
                                 }
                                 Modifier.scale(itemAnimateScaleDown.value)
-                            } else if ((editMerchantId == data.id && merchantViewModel.editAnimRun.value) ||
-                                (addMerchantDataId == data.id && merchantViewModel.addDataAnimRun.value)
+                            } else if ((editMerchantId == data.id && editAnimRun) ||
+                                (addMerchantDataId == data.id && addDataAnimRun)
                             ) {
                                 scope.launch {
                                     itemAnimateColor.animateTo(

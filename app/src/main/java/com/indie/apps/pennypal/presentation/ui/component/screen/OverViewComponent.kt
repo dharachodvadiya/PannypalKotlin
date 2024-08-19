@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.component.screen
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
@@ -162,6 +163,7 @@ fun OverviewBalanceView(
 
 }
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun OverviewList(
     dataList: LazyPagingItems<MerchantDataWithName>,

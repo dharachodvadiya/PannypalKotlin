@@ -22,15 +22,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.onPlaced
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -38,7 +35,6 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.indie.apps.pennypal.R
@@ -56,8 +52,7 @@ fun BottomNavigationBarCustom(
     modifier: Modifier = Modifier,
     bottomBarState: Boolean = true
 ) {
-    if(bottomBarState)
-    {
+    if (bottomBarState) {
         Surface(
             modifier = modifier
                 .height(dimensionResource(R.dimen.bottom_bar))
@@ -143,20 +138,19 @@ fun BottomNavigationBarCustom1(
     tabs: Array<BottomNavItem>,
     onTabSelected: (BottomNavItem) -> Unit,
     currentTab: BottomNavItem,
-    onAddClick: ()-> Unit,
+    onAddClick: () -> Unit,
     modifier: Modifier = Modifier,
     bottomBarState: Boolean = true
 ) {
-    if(bottomBarState) {
+    if (bottomBarState) {
+        val configuration = LocalConfiguration.current
+        val density = LocalDensity.current
 
-        var barSize by remember { mutableStateOf(IntSize(0, 0)) }
-        val offsetStep = remember(barSize) {
-            barSize.width.toFloat() / (3 * 2)
-        }
+        val offsetStep = (with(density) { configuration.screenWidthDp.dp.roundToPx() }) / (3 * 2)
         val offset = offsetStep + 2 * offsetStep
         val circleRadius = 26.dp
         val barShape = BarShape(
-            offset = offset,
+            offset = offset.toFloat(),
             circleRadius = circleRadius,
             cornerRadius = 0.dp,
         )
@@ -187,7 +181,6 @@ fun BottomNavigationBarCustom1(
                 horizontalArrangement = Arrangement.Absolute.SpaceAround,
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
-                    .onPlaced { barSize = it.size }
                     .graphicsLayer {
                         shape = barShape
                         clip = true
@@ -199,7 +192,7 @@ fun BottomNavigationBarCustom1(
                 tabs.forEach { item ->
                     BottomNavigationBarCustom1Item(
                         item = item,
-                        onTabSelected = {onTabSelected(item)},
+                        onTabSelected = { onTabSelected(item) },
                         currentTab = currentTab,
                     )
                 }
@@ -235,14 +228,14 @@ fun BottomNavigationBarCustom1Item(
                 contentDescription = stringResource(item.title),
                 tint = if (isSelected) MyAppTheme.colors.lightBlue1 else MyAppTheme.colors.inactiveDark
             )
-           /* if (isSelected) {
-                Spacer(modifier = Modifier.width(5.dp))
-                Text(
-                    text = stringResource(item.title),
-                    color = MyAppTheme.colors.lightBlue1,
-                    style = MyAppTheme.typography.Medium45_29
-                )
-            }*/
+            /* if (isSelected) {
+                 Spacer(modifier = Modifier.width(5.dp))
+                 Text(
+                     text = stringResource(item.title),
+                     color = MyAppTheme.colors.lightBlue1,
+                     style = MyAppTheme.typography.Medium45_29
+                 )
+             }*/
 
         }
     }
