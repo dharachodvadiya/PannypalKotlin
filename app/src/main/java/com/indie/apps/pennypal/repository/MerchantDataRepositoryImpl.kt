@@ -43,8 +43,10 @@ class MerchantDataRepositoryImpl @Inject constructor(private val merchantDataDao
         timeZoneOffsetInMilli: Int
     ) = merchantDataDao.getMerchantDataDailyTotalList(timeZoneOffsetInMilli)
 
-
     override suspend fun insert(merchantData: MerchantData) = merchantDataDao.insert(merchantData)
 
     override suspend fun update(merchantData: MerchantData) = merchantDataDao.update(merchantData)
+
+    override fun getMerchantDataWithNameWithDayTotal(timeZoneOffsetInMilli: Int) =
+        merchantDataDao.getCombinedDataWithLimit(timeZoneOffsetInMilli)
 }

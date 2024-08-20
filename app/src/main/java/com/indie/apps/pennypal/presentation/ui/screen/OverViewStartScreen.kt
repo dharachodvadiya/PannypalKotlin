@@ -42,15 +42,20 @@ fun OverViewStartScreen(
     isAddMerchantDataSuccess: Boolean = false,
     modifier: Modifier = Modifier
 ) {
-    val dataWithNameLazyPagingItems = overViewViewModel.pagedMerchantData.collectAsLazyPagingItems()
-    val merchantDataWithNamePagingState by overViewViewModel.merchantDataWithNamePagingState.collectAsStateWithLifecycle()
-    merchantDataWithNamePagingState.update(dataWithNameLazyPagingItems)
+    /* val dataWithNameLazyPagingItems = overViewViewModel.pagedMerchantData.collectAsLazyPagingItems()
+     val merchantDataWithNamePagingState by overViewViewModel.merchantDataWithNamePagingState.collectAsStateWithLifecycle()
+     merchantDataWithNamePagingState.update(dataWithNameLazyPagingItems)*/
 
-    val dailyTotalLazyPagingItems =
-        overViewViewModel.pagedMerchantDataDailyTotal.collectAsLazyPagingItems()
-    val merchantDataDailyTotalPagingState by
-    overViewViewModel.merchantDataDailyTotalPagingState.collectAsStateWithLifecycle()
-    merchantDataDailyTotalPagingState.update(dailyTotalLazyPagingItems)
+    val dataWithDayLazyPagingItems =
+        overViewViewModel.pagedMerchantDataWithDay.collectAsLazyPagingItems()
+    val merchantDataWithDayPagingState by overViewViewModel.merchantDataWithDayPagingState.collectAsStateWithLifecycle()
+    merchantDataWithDayPagingState.update(dataWithDayLazyPagingItems)
+
+    /* val dailyTotalLazyPagingItems =
+         overViewViewModel.pagedMerchantDataDailyTotal.collectAsLazyPagingItems()
+     val merchantDataDailyTotalPagingState by
+     overViewViewModel.merchantDataDailyTotalPagingState.collectAsStateWithLifecycle()
+     merchantDataDailyTotalPagingState.update(dailyTotalLazyPagingItems)*/
 
 
     val uiState by overViewViewModel.uiState.collectAsStateWithLifecycle()
@@ -109,8 +114,7 @@ fun OverViewStartScreen(
                 .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
                 .padding(innerPadding)
         ) {
-            if (merchantDataWithNamePagingState.isRefresh ||
-                merchantDataDailyTotalPagingState.isRefresh
+            if (merchantDataWithDayPagingState.isRefresh
             ) {
                 Box(
                     contentAlignment = Alignment.Center,
@@ -123,10 +127,8 @@ fun OverViewStartScreen(
             } else {
                 OverviewBalanceView(amount)
                 OverviewList(
-                    dataList = dataWithNameLazyPagingItems,
-                    dailyTotalList = dailyTotalLazyPagingItems,
-                    isLoadMore = merchantDataWithNamePagingState.isLoadMore ||
-                            merchantDataDailyTotalPagingState.isLoadMore,
+                    dataWithDayList = dataWithDayLazyPagingItems,
+                    isLoadMore = merchantDataWithDayPagingState.isLoadMore,
                     bottomPadding = bottomPadding,
                     merchantDataId = addDataId,
                     isAddMerchantDataSuccess = addDataAnimRun,

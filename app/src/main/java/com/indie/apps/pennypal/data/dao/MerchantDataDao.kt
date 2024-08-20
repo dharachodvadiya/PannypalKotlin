@@ -8,6 +8,7 @@ import com.indie.apps.pennypal.data.entity.MerchantData
 import com.indie.apps.pennypal.data.module.IncomeAndExpense
 import com.indie.apps.pennypal.data.module.MerchantDataDailyTotal
 import com.indie.apps.pennypal.data.module.MerchantDataWithName
+import com.indie.apps.pennypal.data.module.MerchantDataWithNameWithDayTotal
 
 @Dao
 interface MerchantDataDao : BaseDao<MerchantData> {
@@ -91,7 +92,8 @@ interface MerchantDataDao : BaseDao<MerchantData> {
         SELECT 
             strftime('%d-%m-%Y',  (date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') as day,
             SUM(CASE WHEN type >= 0 THEN amount ELSE 0 END) as totalIncome,
-            SUM(CASE WHEN type < 0 THEN amount ELSE 0 END) as totalExpense
+            SUM(CASE WHEN type < 0 THEN amount ELSE 0 END) as totalExpense,
+            MAX(id) as lastId
         FROM merchant_data
         GROUP BY day
         ORDER BY day DESC
@@ -110,4 +112,71 @@ interface MerchantDataDao : BaseDao<MerchantData> {
     """
     )
     suspend fun getTotalIncomeAndeExpenseFromIds(ids: List<Long>): IncomeAndExpense
+
+    @Query(
+        """
+        WITH DailyTotals AS (
+            SELECT 
+                strftime('%d-%m-%Y', (date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') as day,
+                SUM(CASE WHEN type >= 0 THEN amount ELSE 0 END) as totalIncome,
+                SUM(CASE WHEN type < 0 THEN amount ELSE 0 END) as totalExpense,
+                NULL as id,          -- Placeholder for DailyTotals
+                NULL as merchantId,          -- Placeholder for DailyTotals
+                MAX(date_milli) as dateInMilli,          -- Placeholder for DailyTotals
+                NULL as amount,      -- Placeholder for DailyTotals
+                NULL as details,     -- Placeholder for DailyTotals
+                NULL as type,     -- Placeholder for DailyTotals
+                NULL as merchantName -- Placeholder for DailyTotals
+            FROM 
+                merchant_data
+            GROUP BY day
+        ),
+        Records AS (
+            SELECT 
+                md.id as id, 
+                md.merchant_id as merchantId, 
+                md.date_milli as dateInMilli, 
+                strftime('%d-%m-%Y', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') as day,
+                md.details, 
+                md.amount, 
+                md.type,
+                m.name as merchantName,
+                NULL as totalIncome,  -- Placeholder for Records
+                NULL as totalExpense  -- Placeholder for Records
+            FROM 
+                merchant_data md
+            INNER JOIN 
+                merchant m ON md.merchant_id = m.id
+        )
+        SELECT 
+            id,
+            merchantId,
+            dateInMilli,
+            day,
+            details,
+            amount,
+            type,
+            merchantName,
+            totalIncome,
+            totalExpense
+        FROM DailyTotals
+        UNION ALL
+        SELECT 
+            id,
+            merchantId,
+            dateInMilli,
+            day,
+            details,
+            amount,
+            type,
+            merchantName,
+            totalIncome,
+            totalExpense
+        FROM Records
+        ORDER BY dateInMilli DESC
+        """
+    )
+    fun getCombinedDataWithLimit(
+        timeZoneOffsetInMilli: Int
+    ): PagingSource<Int, MerchantDataWithNameWithDayTotal>
 }

@@ -48,10 +48,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemContentType
-import androidx.paging.compose.itemKey
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.module.MerchantDataDailyTotal
 import com.indie.apps.pennypal.data.module.MerchantDataWithName
+import com.indie.apps.pennypal.data.module.MerchantDataWithNameWithDayTotal
+import com.indie.apps.pennypal.data.module.toMerchantDataDailyTotal
+import com.indie.apps.pennypal.data.module.toMerchantDataWithName
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.AutoSizeText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListItem
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
@@ -166,8 +168,7 @@ fun OverviewBalanceView(
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun OverviewList(
-    dataList: LazyPagingItems<MerchantDataWithName>,
-    dailyTotalList: LazyPagingItems<MerchantDataDailyTotal>,
+    dataWithDayList: LazyPagingItems<MerchantDataWithNameWithDayTotal>,
     modifier: Modifier = Modifier,
     isLoadMore: Boolean = false,
     isAddMerchantDataSuccess: Boolean = false,
@@ -183,7 +184,7 @@ fun OverviewList(
         contentPadding = bottomPadding
     ) {
 
-        var totalListIndex = 0
+        /*var totalListIndex = 0
         items(
             count = dataList.itemCount,
             key = dataList.itemKey { item -> item.id },
@@ -245,7 +246,93 @@ fun OverviewList(
                     }
                 }
             }
+        }*/
+
+        items(
+            count = dataWithDayList.itemCount,
+            contentType = dataWithDayList.itemContentType { "Any" }
+        ) { index ->
+            val data = dataWithDayList[index]
+            if (data != null) {
+
+                val itemAnimateScale = remember {
+                    Animatable(0f)
+                }
+
+                val modifierAdd: Modifier =
+                    if (merchantDataId == data.id && isAddMerchantDataSuccess) {
+                        scope.launch {
+                            itemAnimateScale.animateTo(
+                                targetValue = 1f,
+                                animationSpec = tween(50)
+                            )
+                        }
+                        if (itemAnimateScale.value == 1f) {
+                            onAnimStop()
+                        }
+                        Modifier.scale(itemAnimateScale.value)
+                    } else {
+                        Modifier
+                    }
+
+                if(data.id == null)
+                {
+                    if (index != 0)
+                        Spacer(modifier = Modifier.height(13.dp))
+                    OverviewListDateItem(data.toMerchantDataDailyTotal())
+                }else{
+                    OverviewListItem(
+                        item = data.toMerchantDataWithName(),
+                        modifier = modifierAdd
+                    )
+                }
+                /*when (data) {
+                    is MerchantDataDailyTotal -> OverviewListDateItem(data)
+
+                    is MerchantDataWithName -> {
+
+                        val itemAnimateScale = remember {
+                            Animatable(0f)
+                        }
+
+                        val modifierAdd: Modifier =
+                            if (merchantDataId == data.id && isAddMerchantDataSuccess) {
+                                scope.launch {
+                                    itemAnimateScale.animateTo(
+                                        targetValue = 1f,
+                                        animationSpec = tween(50)
+                                    )
+                                }
+                                if (itemAnimateScale.value == 1f) {
+                                    onAnimStop()
+                                }
+                                Modifier.scale(itemAnimateScale.value)
+                            } else {
+                                Modifier
+                            }
+
+                        OverviewListItem(
+                            item = data,
+                            modifier = modifierAdd
+                        )
+                    }
+                }*/
+
+                if (isLoadMore && index == dataWithDayList.itemCount) {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
+            }
+
+
         }
+
+
     }
 }
 
