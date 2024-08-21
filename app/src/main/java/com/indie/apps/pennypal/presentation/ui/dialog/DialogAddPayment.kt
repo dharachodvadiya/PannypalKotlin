@@ -2,7 +2,11 @@ package com.indie.apps.pennypal.presentation.ui.dialog
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,6 +29,26 @@ fun DialogAddPayment(
 ) {
     val enableButton by addPaymentViewModel.enableButton.collectAsStateWithLifecycle()
     val paymentTypeState by addPaymentViewModel.paymentTypeState.collectAsStateWithLifecycle()
+
+    /*var showAnimatedDialog by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        showAnimatedDialog = true
+    }*/
+
+    /*val scope = rememberCoroutineScope()
+    AnimatedVisibility(
+        visible = showAnimatedDialog,
+        enter = slideInVertically { fullHeight -> (fullHeight + fullHeight / 2) } +
+                expandVertically(
+                    // Expand from the top.
+                    expandFrom = Alignment.Top
+                ) +
+                fadeIn(
+                    initialAlpha = 0.5f
+                ),
+        exit = slideOutVertically { fullHeight -> (fullHeight + fullHeight / 2) } + fadeOut()
+    ) {*/
     MyAppDialog(
         title = R.string.add_payment,
         onNavigationUp = {
@@ -46,6 +70,7 @@ fun DialogAddPayment(
         },
         modifier = modifier
     )
+    //}
 }
 
 @Preview

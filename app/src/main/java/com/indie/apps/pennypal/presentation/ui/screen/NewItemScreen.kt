@@ -1,15 +1,24 @@
 package com.indie.apps.pennypal.presentation.ui.screen
 
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusEvent
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,6 +32,7 @@ import com.indie.apps.pennypal.presentation.ui.component.TopBarWithTitle
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.screen.NewEntryFieldItemSection
 import com.indie.apps.pennypal.presentation.ui.component.screen.NewEntryTopSelectionButton
+import com.indie.apps.pennypal.presentation.ui.state.rememberImeState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.presentation.viewmodel.NewItemViewModel
@@ -59,6 +69,10 @@ fun NewItemScreen(
     val merchantError by newItemViewModel.merchantError.collectAsStateWithLifecycle()
     val paymentError by newItemViewModel.paymentError.collectAsStateWithLifecycle()
 
+    val focusManager = LocalFocusManager.current
+
+    var haveFocus by remember { mutableStateOf(false) }
+
     when (uiState) {
         is Resource.Loading -> {
             LoadingScreen()
@@ -74,12 +88,25 @@ fun NewItemScreen(
                 )
             }) { padding ->
 
+                val imeState by rememberImeState({})
+                val scrollState = rememberScrollState()
+
+                LaunchedEffect(key1 = imeState) {
+                    if (imeState && haveFocus) {
+                        scrollState.animateScrollTo(scrollState.maxValue, tween(300))
+                    }
+                }
+
                 Column(
                     modifier = modifier
                         .fillMaxSize()
                         .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
                         .padding(padding)
                         .padding(horizontal = dimensionResource(id = R.dimen.padding))
+                        .verticalScroll(scrollState)
+                        .onFocusEvent {
+                            haveFocus = it.isFocused
+                        }
                 ) {
                     NewEntryTopSelectionButton(
                         received = received,
@@ -88,10 +115,16 @@ fun NewItemScreen(
                     NewEntryFieldItemSection(
                         modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.padding)),
                         onPaymentAdd = {
-                            if (enableButton) onPaymentAdd()
+                            if (enableButton) {
+                                focusManager.clearFocus()
+                                onPaymentAdd()
+                            }
                         },
                         onMerchantSelect = {
-                            if (enableButton) onMerchantSelect()
+                            if (enableButton) {
+                                focusManager.clearFocus()
+                                onMerchantSelect()
+                            }
                         },
                         merchantName = merchant?.name,
                         onPaymentSelect = newItemViewModel::onPaymentSelect,
@@ -129,6 +162,6 @@ private fun NewItemScreenPreview() {
         NewItemScreen(onPaymentAdd = {},
             onNavigationUp = {},
             onMerchantSelect = {},
-            onSaveSuccess = {a,b,c -> })
+            onSaveSuccess = { a, b, c -> })
     }
 }

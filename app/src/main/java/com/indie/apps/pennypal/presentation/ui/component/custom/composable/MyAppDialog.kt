@@ -6,9 +6,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -39,18 +40,17 @@ fun MyAppDialog(
 ) {
     Column(
         modifier = modifier
-            .fillMaxWidth()
+            .fillMaxSize()
+            .imePadding(),
+        verticalArrangement = Arrangement.Bottom
     ) {
-        Spacer(modifier = Modifier.weight(1f))
-
         val heightModifier = if (isFixHeight) {
             Modifier.height(dimensionResource(id = R.dimen.dialog_max_height))
         } else {
-            Modifier
-                .heightIn(
-                    min = dimensionResource(id = R.dimen.dialog_min_height),
-                    max = dimensionResource(id = R.dimen.dialog_max_height)
-                )
+            Modifier.heightIn(
+                min = dimensionResource(id = R.dimen.dialog_min_height),
+                max = dimensionResource(id = R.dimen.dialog_max_height)
+            )
         }
 
         Column(
@@ -79,10 +79,8 @@ fun MyAppDialog(
             if (bottomContent != null) {
                 bottomContent()
             }
-
         }
     }
-
 }
 
 @Composable
@@ -105,8 +103,7 @@ private fun DialogTopBar(
                     modifier = Modifier
                         .clickable {
                             onNavigationUp()
-                        }
-                )
+                        })
         },
         contentAlignment = if (isBackEnable) Alignment.Center else Alignment.CenterStart
     )
@@ -116,19 +113,14 @@ private fun DialogTopBar(
 @Composable
 private fun MyAppDialogPreview() {
     PennyPalTheme(darkTheme = true) {
-        MyAppDialog(
-            title = R.string.add_merchant,
-            onNavigationUp = {},
-            content = {
-                DialogTextFieldItem(
-                    imageVector = Icons.Default.PersonOutline,
-                    placeholder = R.string.merchant_name_placeholder
-                )
-            },
-            bottomContent = {
-                BottomSaveButton(
-                    onClick = {}
-                )
-            })
+        MyAppDialog(title = R.string.add_merchant, onNavigationUp = {}, content = {
+            DialogTextFieldItem(
+                imageVector = Icons.Default.PersonOutline,
+                placeholder = R.string.merchant_name_placeholder
+            )
+        }, bottomContent = {
+            BottomSaveButton(onClick = {})
+        })
     }
 }
+

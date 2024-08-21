@@ -1,5 +1,7 @@
 package com.indie.apps.pennypal.util
 
+import android.content.Context
+import android.util.DisplayMetrics
 import com.google.i18n.phonenumbers.NumberParseException
 import com.google.i18n.phonenumbers.PhoneNumberUtil
 import com.google.i18n.phonenumbers.Phonenumber
@@ -76,4 +78,7 @@ object Util {
         calendar.add(Calendar.DATE, -1)
         return formatter.format(calendar.time)
     }
+
+    fun Float.pxToDp(context: Context): Float =
+        (this / (context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT))
 }
