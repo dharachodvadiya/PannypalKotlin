@@ -3,11 +3,13 @@ package com.indie.apps.pennypal.presentation.ui.component
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -28,11 +30,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.MyAppTextField
@@ -75,7 +79,7 @@ fun UserProfile(
     borderWidth: Float = 0f,
     modifier: Modifier = Modifier
 ) {
-    val iconGradient = MyAppTheme.colors.gradientBlue
+    MyAppTheme.colors.gradientBlue
     val borderModifier = if (borderWidth > 0) {
         Modifier
             .border(
@@ -109,13 +113,13 @@ fun UserProfile(
             contentDescription = "User",
             modifier = Modifier
                 .size(dimensionResource(id = R.dimen.user_image_size))
-                /*.graphicsLayer(alpha = 0.99f)
-                .drawWithCache {
-                    onDrawWithContent {
-                        drawContent()
-                        drawRect(linearGradientsBrush(iconGradient), blendMode = BlendMode.SrcAtop)
-                    }
-                }*/,
+            /*.graphicsLayer(alpha = 0.99f)
+            .drawWithCache {
+                onDrawWithContent {
+                    drawContent()
+                    drawRect(linearGradientsBrush(iconGradient), blendMode = BlendMode.SrcAtop)
+                }
+            }*/,
             tint = MyAppTheme.colors.black
         )
     }
@@ -261,6 +265,51 @@ fun DeleteAlertDialog(
     )
 }
 
+@Composable
+fun NoDataMessage(
+    title: String,
+    details: String,
+    painterRes: Int = R.drawable.receipt_long_off,
+    iconSize: Dp = 50.dp,
+    titleTextStyle: TextStyle = MyAppTheme.typography.Regular51,
+    detailsTextStyle: TextStyle = MyAppTheme.typography.Regular44,
+    modifier: Modifier = Modifier.fillMaxSize()
+) {
+    Box(
+        modifier = modifier
+            .background(MyAppTheme.colors.transparent),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            modifier = Modifier.fillMaxWidth(0.75f),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.item_inner_padding))
+        ) {
+
+            Icon(
+                painter = painterResource(painterRes),
+                contentDescription = "no transaction",
+                tint = MyAppTheme.colors.gray2,
+                modifier = Modifier.size(iconSize)
+            )
+
+            Text(
+                text = title,
+                style = titleTextStyle,
+                color = MyAppTheme.colors.gray2,
+                textAlign = TextAlign.Center
+            )
+            Text(
+                text = details,
+                style = detailsTextStyle,
+                color = MyAppTheme.colors.gray3,
+                textAlign = TextAlign.Center
+            )
+
+        }
+    }
+}
+
 
 @Preview
 @Composable
@@ -290,6 +339,17 @@ private fun DialogTextFieldItemPreview() {
         DialogTextFieldItem(
             imageVector = Icons.Default.PersonOutline,
             placeholder = R.string.amount_placeholder
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun NoTransactionMessagePreview() {
+    PennyPalTheme(darkTheme = true) {
+        NoDataMessage(
+            title = "No Transactions Yet",
+            details = "Your latest transaction will appear here. Track your spending and income.start now."
         )
     }
 }

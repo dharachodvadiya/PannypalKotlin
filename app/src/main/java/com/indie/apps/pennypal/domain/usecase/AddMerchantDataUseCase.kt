@@ -49,15 +49,12 @@ class AddMerchantDataUseCase @Inject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private suspend fun FlowCollector<Resource<Long>>.handleSuccessfulInsert(
-        id: Long,
-        merchantId: Long,
-        amount: Double,
-        type: Int
+        id: Long, merchantId: Long, amount: Double, type: Int
     ) {
 
         coroutineScope {
             val updatedRowMerchantDeferred = async {
-                merchantRepository.updateAmountWithDate(
+                merchantRepository.addAmountWithDate(
                     id = merchantId,
                     incomeAmt = if (type > 0) amount else 0.0,
                     expenseAmt = if (type < 0) amount else 0.0,

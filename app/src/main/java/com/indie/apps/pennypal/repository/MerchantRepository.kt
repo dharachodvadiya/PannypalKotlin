@@ -22,6 +22,12 @@ interface MerchantRepository : BaseRepository<Merchant> {
     suspend fun updateAmountWithDate(
         id: Long,
         incomeAmt: Double,
+        expenseAmt: Double
+    ): Int
+
+    suspend fun addAmountWithDate(
+        id: Long,
+        incomeAmt: Double,
         expenseAmt: Double,
         dateInMilli: Long
     ): Int

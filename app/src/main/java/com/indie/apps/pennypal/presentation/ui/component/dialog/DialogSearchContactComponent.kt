@@ -31,6 +31,7 @@ import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
+import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListItem
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
@@ -71,6 +72,15 @@ fun SearchDialogField(
             ) {
                 CircularProgressIndicator()
             }
+        } else if (dataList.itemCount == 0) {
+            NoDataMessage(
+                title = stringResource(id = R.string.no_merchants),
+                details = stringResource(id = R.string.no_merchants_details),
+                iconSize = 50.dp,
+                painterRes = R.drawable.person_off,
+                titleTextStyle = MyAppTheme.typography.Regular46,
+                detailsTextStyle = MyAppTheme.typography.Regular44
+            )
         } else {
             LazyColumn(
                 modifier = Modifier

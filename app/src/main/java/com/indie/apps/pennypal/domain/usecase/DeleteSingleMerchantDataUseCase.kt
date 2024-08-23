@@ -61,8 +61,7 @@ class DeleteSingleMerchantDataUseCase @Inject constructor(
             val updatedRowMerchant = merchantRepository.updateAmountWithDate(
                 id = merchantId,
                 incomeAmt = -newIncome,
-                expenseAmt = -newExpense,
-                dateInMilli = System.currentTimeMillis()
+                expenseAmt = -newExpense
             )
 
             val updatedRowUser = userRepository.updateAmount(

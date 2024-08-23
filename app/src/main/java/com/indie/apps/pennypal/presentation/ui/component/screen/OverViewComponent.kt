@@ -54,6 +54,7 @@ import com.indie.apps.pennypal.data.module.MerchantDataWithName
 import com.indie.apps.pennypal.data.module.MerchantDataWithNameWithDayTotal
 import com.indie.apps.pennypal.data.module.toMerchantDataDailyTotal
 import com.indie.apps.pennypal.data.module.toMerchantDataWithName
+import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.AutoSizeText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListItem
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
@@ -112,8 +113,7 @@ fun OverviewBalanceView(
 ) {
 
     val colorStroke = if (balance >= 0) MyAppTheme.colors.greenBg else MyAppTheme.colors.redBg
-    val colorGradient =
-        if (balance >= 0) MyAppTheme.colors.gradientGreen else MyAppTheme.colors.gradientRed
+
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -177,162 +177,171 @@ fun OverviewList(
     bottomPadding: PaddingValues
 ) {
     val scope = rememberCoroutineScope()
-    LazyColumn(
-        modifier = modifier
-            .padding(horizontal = dimensionResource(id = R.dimen.padding)),
-        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.item_padding)),
-        contentPadding = bottomPadding
-    ) {
+    if (dataWithDayList.itemCount == 0) {
+        NoDataMessage(
+            title = stringResource(id = R.string.no_transactions_yet),
+            details = stringResource(id = R.string.latest_transactions_appear_here),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottomPadding)
+        )
+    } else {
+        LazyColumn(
+            modifier = modifier
+                .padding(horizontal = dimensionResource(id = R.dimen.padding)),
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.item_padding)),
+            contentPadding = bottomPadding
+        ) {
 
-        /*var totalListIndex = 0
-        items(
-            count = dataList.itemCount,
-            key = dataList.itemKey { item -> item.id },
-            contentType = dataList.itemContentType { "MerchantDataWithName" }
-        ) { index ->
-            val data = dataList[index]
-            if (data != null) {
-                var isDateShow = false
+            /*var totalListIndex = 0
+            items(
+                count = dataList.itemCount,
+                key = dataList.itemKey { item -> item.id },
+                contentType = dataList.itemContentType { "MerchantDataWithName" }
+            ) { index ->
+                val data = dataList[index]
+                if (data != null) {
+                    var isDateShow = false
 
-                if (totalListIndex < dailyTotalList.itemCount) {
-                    if (index == 0 || (data.day == dailyTotalList[totalListIndex]?.day &&
-                                (dataList[index - 1]?.day
-                                    ?: "") != dailyTotalList[totalListIndex]?.day)
-                    )
-                        isDateShow = true
-                }
-
-                val itemAnimateScale = remember {
-                    Animatable(0f)
-                }
-
-                val modifierAdd: Modifier =
-                    if (merchantDataId == data.id && isAddMerchantDataSuccess) {
-                        scope.launch {
-                            itemAnimateScale.animateTo(
-                                targetValue = 1f,
-                                animationSpec = tween(50)
-                            )
-                        }
-                        if (itemAnimateScale.value == 1f) {
-                            onAnimStop()
-                        }
-                        Modifier.scale(itemAnimateScale.value)
-                    } else {
-                        Modifier
+                    if (totalListIndex < dailyTotalList.itemCount) {
+                        if (index == 0 || (data.day == dailyTotalList[totalListIndex]?.day &&
+                                    (dataList[index - 1]?.day
+                                        ?: "") != dailyTotalList[totalListIndex]?.day)
+                        )
+                            isDateShow = true
                     }
 
-                Column() {
-                    if (isDateShow) {
-                        if (index != 0)
-                            Spacer(modifier = Modifier.height(13.dp))
-                        dailyTotalList[totalListIndex]?.let { OverviewListDateItem(it) }
-                        totalListIndex++
-                    }
-                    OverviewListItem(
-                        item = data,
-                        modifier = modifierAdd
-                    )
-                }
-
-
-                if (isLoadMore && index == dataList.itemCount) {
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    ) {
-                        CircularProgressIndicator()
-                    }
-                }
-            }
-        }*/
-
-        items(
-            count = dataWithDayList.itemCount,
-            contentType = dataWithDayList.itemContentType { "Any" }
-        ) { index ->
-            val data = dataWithDayList[index]
-            if (data != null) {
-
-                val itemAnimateScale = remember {
-                    Animatable(0f)
-                }
-
-                val modifierAdd: Modifier =
-                    if (merchantDataId == data.id && isAddMerchantDataSuccess) {
-                        scope.launch {
-                            itemAnimateScale.animateTo(
-                                targetValue = 1f,
-                                animationSpec = tween(Util.ADD_ITEM_ANIM_TIME)
-                            )
-                        }
-                        if (itemAnimateScale.value == 1f) {
-                            onAnimStop()
-                        }
-                        Modifier.scale(itemAnimateScale.value)
-                    } else {
-                        Modifier
+                    val itemAnimateScale = remember {
+                        Animatable(0f)
                     }
 
-                if(data.id == null)
-                {
-                    if (index != 0)
-                        Spacer(modifier = Modifier.height(13.dp))
-                    OverviewListDateItem(data.toMerchantDataDailyTotal())
-                }else{
-                    OverviewListItem(
-                        item = data.toMerchantDataWithName(),
-                        modifier = modifierAdd
-                    )
-                }
-                /*when (data) {
-                    is MerchantDataDailyTotal -> OverviewListDateItem(data)
-
-                    is MerchantDataWithName -> {
-
-                        val itemAnimateScale = remember {
-                            Animatable(0f)
-                        }
-
-                        val modifierAdd: Modifier =
-                            if (merchantDataId == data.id && isAddMerchantDataSuccess) {
-                                scope.launch {
-                                    itemAnimateScale.animateTo(
-                                        targetValue = 1f,
-                                        animationSpec = tween(50)
-                                    )
-                                }
-                                if (itemAnimateScale.value == 1f) {
-                                    onAnimStop()
-                                }
-                                Modifier.scale(itemAnimateScale.value)
-                            } else {
-                                Modifier
+                    val modifierAdd: Modifier =
+                        if (merchantDataId == data.id && isAddMerchantDataSuccess) {
+                            scope.launch {
+                                itemAnimateScale.animateTo(
+                                    targetValue = 1f,
+                                    animationSpec = tween(50)
+                                )
                             }
+                            if (itemAnimateScale.value == 1f) {
+                                onAnimStop()
+                            }
+                            Modifier.scale(itemAnimateScale.value)
+                        } else {
+                            Modifier
+                        }
 
+                    Column() {
+                        if (isDateShow) {
+                            if (index != 0)
+                                Spacer(modifier = Modifier.height(13.dp))
+                            dailyTotalList[totalListIndex]?.let { OverviewListDateItem(it) }
+                            totalListIndex++
+                        }
                         OverviewListItem(
                             item = data,
                             modifier = modifierAdd
                         )
                     }
-                }*/
 
-                if (isLoadMore && index == dataWithDayList.itemCount) {
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    ) {
-                        CircularProgressIndicator()
+
+                    if (isLoadMore && index == dataList.itemCount) {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        ) {
+                            CircularProgressIndicator()
+                        }
                     }
                 }
+            }*/
+
+            items(
+                count = dataWithDayList.itemCount,
+                contentType = dataWithDayList.itemContentType { "Any" }
+            ) { index ->
+                val data = dataWithDayList[index]
+                if (data != null) {
+
+                    val itemAnimateScale = remember {
+                        Animatable(0f)
+                    }
+
+                    val modifierAdd: Modifier =
+                        if (merchantDataId == data.id && isAddMerchantDataSuccess) {
+                            scope.launch {
+                                itemAnimateScale.animateTo(
+                                    targetValue = 1f,
+                                    animationSpec = tween(Util.ADD_ITEM_ANIM_TIME)
+                                )
+                            }
+                            if (itemAnimateScale.value == 1f) {
+                                onAnimStop()
+                            }
+                            Modifier.scale(itemAnimateScale.value)
+                        } else {
+                            Modifier
+                        }
+
+                    if (data.id == null) {
+                        if (index != 0)
+                            Spacer(modifier = Modifier.height(13.dp))
+                        OverviewListDateItem(data.toMerchantDataDailyTotal())
+                    } else {
+                        OverviewListItem(
+                            item = data.toMerchantDataWithName(),
+                            modifier = modifierAdd
+                        )
+                    }
+                    /*when (data) {
+                        is MerchantDataDailyTotal -> OverviewListDateItem(data)
+
+                        is MerchantDataWithName -> {
+
+                            val itemAnimateScale = remember {
+                                Animatable(0f)
+                            }
+
+                            val modifierAdd: Modifier =
+                                if (merchantDataId == data.id && isAddMerchantDataSuccess) {
+                                    scope.launch {
+                                        itemAnimateScale.animateTo(
+                                            targetValue = 1f,
+                                            animationSpec = tween(50)
+                                        )
+                                    }
+                                    if (itemAnimateScale.value == 1f) {
+                                        onAnimStop()
+                                    }
+                                    Modifier.scale(itemAnimateScale.value)
+                                } else {
+                                    Modifier
+                                }
+
+                            OverviewListItem(
+                                item = data,
+                                modifier = modifierAdd
+                            )
+                        }
+                    }*/
+
+                    if (isLoadMore && index == dataWithDayList.itemCount) {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    }
+                }
+
+
             }
 
 
         }
-
-
     }
 }
 

@@ -14,7 +14,6 @@ import com.indie.apps.pennypal.data.entity.Merchant
 import com.indie.apps.pennypal.data.entity.MerchantData
 import com.indie.apps.pennypal.data.entity.Payment
 import com.indie.apps.pennypal.data.entity.User
-import com.indie.apps.pennypal.repository.MerchantRepositoryImpl
 import com.indie.apps.pennypal.repository.PaymentRepositoryImpl
 import com.indie.apps.pennypal.repository.UserRepositoryImpl
 import kotlinx.coroutines.CoroutineScope
@@ -89,12 +88,12 @@ abstract class AppDatabase : RoomDatabase() {
 
             PaymentRepositoryImpl(paymentDao).insertPaymentList(preAddedPayments)
 
-            val merchantDao = db.merchantDao()
+            /*val merchantDao = db.merchantDao()
             for (i in 1..100) {
                 MerchantRepositoryImpl(merchantDao).insert(Merchant(name = "hello $i"))
 
             }
-
+*/
         }
     }
 }

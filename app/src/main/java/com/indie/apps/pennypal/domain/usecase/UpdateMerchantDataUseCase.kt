@@ -81,8 +81,7 @@ class UpdateMerchantDataUseCase @Inject constructor(
                     merchantRepository.updateAmountWithDate(
                         id = merchantDataNew.merchantId,
                         incomeAmt = newIncomeAmt,
-                        expenseAmt = newExpenseAmt,
-                        dateInMilli = System.currentTimeMillis()
+                        expenseAmt = newExpenseAmt
                     )
                 }
 
@@ -95,8 +94,7 @@ class UpdateMerchantDataUseCase @Inject constructor(
                         merchantRepository.updateAmountWithDate(
                             id = merchantId,
                             incomeAmt = if (type > 0) -amount else 0.0,
-                            expenseAmt = if (type < 0) -amount else 0.0,
-                            dateInMilli = System.currentTimeMillis()
+                            expenseAmt = if (type < 0) -amount else 0.0
                         )
                     }
                 }
@@ -106,8 +104,7 @@ class UpdateMerchantDataUseCase @Inject constructor(
                         merchantRepository.updateAmountWithDate(
                             id = merchantId,
                             incomeAmt = if (type > 0) amount else 0.0,
-                            expenseAmt = if (type < 0) amount else 0.0,
-                            dateInMilli = System.currentTimeMillis()
+                            expenseAmt = if (type < 0) amount else 0.0
                         )
                     }
                 }

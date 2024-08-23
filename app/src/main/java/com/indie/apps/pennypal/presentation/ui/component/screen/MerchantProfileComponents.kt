@@ -30,10 +30,8 @@ import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 
 @Composable
 fun MerchantProfileTopSection(
-    name: String ="",
-    description: String = "",
-    modifier: Modifier = Modifier
-){
+    name: String = "", description: String = "", modifier: Modifier = Modifier
+) {
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -46,28 +44,25 @@ fun MerchantProfileTopSection(
             )
     ) {
 
-        UserProfile(borderWidth = 1f)
+        UserProfile()
         Spacer(modifier = Modifier.height(20.dp))
         Text(
-            text = name,
-            style = MyAppTheme.typography.Semibold60,
-            color = MyAppTheme.colors.black
+            text = name, style = MyAppTheme.typography.Semibold60, color = MyAppTheme.colors.black
         )
         Text(
             text = description.ifEmpty { stringResource(id = R.string.no_details) },
             style = MyAppTheme.typography.Medium40,
             color = MyAppTheme.colors.gray1,
             textAlign = TextAlign.Center,
-            modifier = Modifier.widthIn(min = 0.dp, max =  200.dp)
+            modifier = Modifier.widthIn(min = 0.dp, max = 200.dp)
         )
     }
 }
 
 @Composable
 fun MerchantProfileBottomSection(
-    phoneNo : String = "",
-    modifier: Modifier = Modifier
-){
+    phoneNo: String = "", modifier: Modifier = Modifier
+) {
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -79,7 +74,7 @@ fun MerchantProfileBottomSection(
             .padding(dimensionResource(id = R.dimen.padding)),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(imageVector = Icons.Outlined.Phone, contentDescription ="")
+        Icon(imageVector = Icons.Outlined.Phone, contentDescription = "")
         Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.item_content_padding)))
 
         Column {

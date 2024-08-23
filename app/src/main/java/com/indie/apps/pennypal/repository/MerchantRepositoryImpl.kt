@@ -2,9 +2,9 @@ package com.indie.apps.pennypal.repository
 
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
-import com.indie.apps.pennypal.data.paging.BasePagingSource
 import com.indie.apps.pennypal.data.dao.MerchantDao
 import com.indie.apps.pennypal.data.entity.Merchant
+import com.indie.apps.pennypal.data.paging.BasePagingSource
 import com.indie.apps.pennypal.util.Util
 import javax.inject.Inject
 
@@ -27,9 +27,15 @@ class MerchantRepositoryImpl @Inject constructor(private val merchantDao: Mercha
     override suspend fun updateAmountWithDate(
         id: Long,
         incomeAmt: Double,
+        expenseAmt: Double
+    ) = merchantDao.updateAmountWithDate(id, incomeAmt, expenseAmt)
+
+    override suspend fun addAmountWithDate(
+        id: Long,
+        incomeAmt: Double,
         expenseAmt: Double,
         dateInMilli: Long
-    ) = merchantDao.updateAmountWithDate(id, incomeAmt, expenseAmt, dateInMilli)
+    ) = merchantDao.addAmountWithDate(id, incomeAmt, expenseAmt, dateInMilli)
 
     override fun searchMerchantNameAndDetailList(
         searchQuery: String

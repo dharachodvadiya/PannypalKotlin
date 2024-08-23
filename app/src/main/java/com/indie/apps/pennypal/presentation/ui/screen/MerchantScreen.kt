@@ -10,7 +10,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -42,6 +41,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.presentation.ui.component.DeleteAlertDialog
+import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.screen.MerchantListItem
 import com.indie.apps.pennypal.presentation.ui.component.screen.MerchantTopBar
@@ -203,80 +203,91 @@ fun MerchantScreen(
             })
     }) { innerPadding ->
 
-        if (pagingState.isRefresh && (lazyPagingData.itemCount == 0 || isAddSuccess)) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
-                    .padding(bottomPadding)
-                    .padding(innerPadding)
-                    .fillMaxSize()
-            ) {
-                CircularProgressIndicator()
-            }
-        } else {
+        Box(
+            modifier = Modifier
+                .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
+                .padding(bottomPadding)
+                .padding(innerPadding)
+                .fillMaxSize()
+                .padding(horizontal = dimensionResource(id = R.dimen.padding))
+        )
 
-            val scrollState: LazyListState = rememberLazyListState(
-                scrollIndex,
-                scrollOffset
-            )
-
-            // after each scroll, update values in ViewModel
-            LaunchedEffect(key1 = scrollState.isScrollInProgress) {
-                if (!scrollState.isScrollInProgress) {
-                    merchantViewModel.setScrollVal(
-                        scrollIndex = scrollState.firstVisibleItemIndex,
-                        scrollOffset = scrollState.firstVisibleItemScrollOffset
-                    )
+        {
+            if (pagingState.isRefresh && (lazyPagingData.itemCount == 0 || isAddSuccess)) {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
+                    CircularProgressIndicator()
                 }
-            }
+            } else if (lazyPagingData.itemCount == 0) {
+                NoDataMessage(
+                    title = stringResource(id = R.string.no_merchants),
+                    details = stringResource(id = R.string.no_merchants_details_with_transaction),
+                    iconSize = 70.dp,
+                    painterRes = R.drawable.person_off
+                )
+            } else {
 
-            val scope = rememberCoroutineScope()
+                val scrollState: LazyListState = rememberLazyListState(
+                    scrollIndex,
+                    scrollOffset
+                )
 
-            LazyColumn(
-                state = scrollState,
-                modifier = modifier
-                    .fillMaxSize()
-                    .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
-                    .padding(innerPadding)
-                    .padding(horizontal = dimensionResource(id = R.dimen.padding)),
-                //verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.item_inner_padding)),
-                contentPadding = bottomPadding
-            ) {
-                items(count = lazyPagingData.itemCount,
-                    key = lazyPagingData.itemKey { item -> item.id }
-                ) { index ->
-                    val itemAnimateScale = remember {
-                        Animatable(0f)
+                // after each scroll, update values in ViewModel
+                LaunchedEffect(key1 = scrollState.isScrollInProgress) {
+                    if (!scrollState.isScrollInProgress) {
+                        merchantViewModel.setScrollVal(
+                            scrollIndex = scrollState.firstVisibleItemIndex,
+                            scrollOffset = scrollState.firstVisibleItemScrollOffset
+                        )
                     }
+                }
 
-                    val itemAnimateScaleDown = remember {
-                        Animatable(1f)
-                    }
+                val scope = rememberCoroutineScope()
 
-                    val baseColor = MyAppTheme.colors.itemBg
-                    val targetAnimColor = MyAppTheme.colors.lightBlue1
+                LazyColumn(
+                    state = scrollState,
+                    modifier = modifier
+                        .fillMaxSize(),
+                    //verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.item_inner_padding)),
+                    contentPadding = bottomPadding
+                ) {
+                    items(count = lazyPagingData.itemCount,
+                        key = lazyPagingData.itemKey { item -> item.id }
+                    ) { index ->
+                        val itemAnimateScale = remember {
+                            Animatable(0f)
+                        }
 
-                    val itemAnimateColor = remember {
-                        Animatable(baseColor)
-                    }
+                        val itemAnimateScaleDown = remember {
+                            Animatable(1f)
+                        }
 
-                    val data = lazyPagingData[index]
-                    if (data != null) {
+                        val baseColor = MyAppTheme.colors.itemBg
+                        val targetAnimColor = MyAppTheme.colors.lightBlue1
 
-                        val modifierAdd: Modifier =
-                            if (addMerchantId == data.id && addAnimRun) {
-                                scope.launch {
-                                    itemAnimateScale.animateTo(
-                                        targetValue = 1f,
-                                        animationSpec = tween(Util.ADD_ITEM_ANIM_TIME)
-                                    )
-                                }
-                                if (itemAnimateScale.value == 1f) {
-                                    merchantViewModel.addMerchantSuccessAnimStop()
-                                }
-                                Modifier.scale(itemAnimateScale.value)
-                            }/* else if (deleteAnimRun &&
+                        val itemAnimateColor = remember {
+                            Animatable(baseColor)
+                        }
+
+                        val data = lazyPagingData[index]
+                        if (data != null) {
+
+                            val modifierAdd: Modifier =
+                                if (addMerchantId == data.id && addAnimRun) {
+                                    scope.launch {
+                                        itemAnimateScale.animateTo(
+                                            targetValue = 1f,
+                                            animationSpec = tween(Util.ADD_ITEM_ANIM_TIME)
+                                        )
+                                    }
+                                    if (itemAnimateScale.value == 1f) {
+                                        merchantViewModel.addMerchantSuccessAnimStop()
+                                    }
+                                    Modifier.scale(itemAnimateScale.value)
+                                }/* else if (deleteAnimRun &&
                                 selectedList.contains(data.id)
                             ) {
                                 scope.launch {
@@ -290,83 +301,84 @@ fun MerchantScreen(
                                 }
                                 Modifier.scale(itemAnimateScaleDown.value)
                             }*/ else if ((editMerchantId == data.id && editAnimRun) ||
-                                (addMerchantDataId == data.id && addDataAnimRun)
-                            ) {
-                                scope.launch {
-                                    itemAnimateColor.animateTo(
-                                        targetValue = targetAnimColor,
-                                        animationSpec = tween(Util.EDIT_ITEM_ANIM_TIME)
-                                    )
-                                    itemAnimateColor.animateTo(
-                                        targetValue = baseColor,
-                                        animationSpec = tween(Util.EDIT_ITEM_ANIM_TIME)
-                                    )
-                                }
-                                Modifier
-                            } else {
-                                Modifier
-                            }
-
-                        var visible by remember {
-                            mutableStateOf(true)
-                        }
-
-                        if (deleteAnimRun &&
-                            selectedList.contains(data.id)
-                        ){
-                            visible = false
-                        }
-
-                        AnimatedVisibility(
-                            visible = visible,
-                            exit = slideOutVertically() + shrinkVertically() + fadeOut()
-                        )
-
-                        {
-                            MerchantListItem(
-                                item = data,
-                                isSelected = selectedList.contains(data.id),
-                                onClick = {
-                                    merchantViewModel.onItemClick(data.id) {
-                                        onMerchantClick(
-                                            it
+                                    (addMerchantDataId == data.id && addDataAnimRun)
+                                ) {
+                                    scope.launch {
+                                        itemAnimateColor.animateTo(
+                                            targetValue = targetAnimColor,
+                                            animationSpec = tween(Util.EDIT_ITEM_ANIM_TIME)
+                                        )
+                                        itemAnimateColor.animateTo(
+                                            targetValue = baseColor,
+                                            animationSpec = tween(Util.EDIT_ITEM_ANIM_TIME)
                                         )
                                     }
-                                },
-                                onLongClick = { merchantViewModel.onItemLongClick(data.id) },
-                                modifier = modifierAdd,
-                                itemBgColor = itemAnimateColor.value
-                            )
-                        }
+                                    Modifier
+                                } else {
+                                    Modifier
+                                }
 
-                        if (pagingState.isLoadMore && index == lazyPagingData.itemCount - 1) {
-                            Box(
-                                contentAlignment = Alignment.Center,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .background(MyAppTheme.colors.transparent)
+                            var visible by remember {
+                                mutableStateOf(true)
+                            }
+
+                            if (deleteAnimRun &&
+                                selectedList.contains(data.id)
                             ) {
-                                CircularProgressIndicator()
+                                visible = false
+                            }
+
+                            AnimatedVisibility(
+                                visible = visible,
+                                exit = slideOutVertically() + shrinkVertically() + fadeOut()
+                            )
+
+                            {
+                                MerchantListItem(
+                                    item = data,
+                                    isSelected = selectedList.contains(data.id),
+                                    onClick = {
+                                        merchantViewModel.onItemClick(data.id) {
+                                            onMerchantClick(
+                                                it
+                                            )
+                                        }
+                                    },
+                                    onLongClick = { merchantViewModel.onItemLongClick(data.id) },
+                                    modifier = modifierAdd,
+                                    itemBgColor = itemAnimateColor.value
+                                )
+                            }
+
+                            if (pagingState.isLoadMore && index == lazyPagingData.itemCount - 1) {
+                                Box(
+                                    contentAlignment = Alignment.Center,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .background(MyAppTheme.colors.transparent)
+                                ) {
+                                    CircularProgressIndicator()
+                                }
                             }
                         }
                     }
                 }
             }
-        }
 
 
-        if (openAlertDialog) {
-            DeleteAlertDialog(
-                dialogTitle = R.string.delete_dialog_title,
-                dialogText = R.string.delete_item_dialog_text,
-                onConfirmation = {
-                    merchantViewModel.onDeleteDialogClick {
-                        openAlertDialog = false
-                        Toast.makeText(context, merchantDeleteToast, Toast.LENGTH_SHORT).show()
-                    }
-                },
-                onDismissRequest = { openAlertDialog = false }
-            )
+            if (openAlertDialog) {
+                DeleteAlertDialog(
+                    dialogTitle = R.string.delete_dialog_title,
+                    dialogText = R.string.delete_item_dialog_text,
+                    onConfirmation = {
+                        merchantViewModel.onDeleteDialogClick {
+                            openAlertDialog = false
+                            Toast.makeText(context, merchantDeleteToast, Toast.LENGTH_SHORT).show()
+                        }
+                    },
+                    onDismissRequest = { openAlertDialog = false }
+                )
+            }
         }
 
 

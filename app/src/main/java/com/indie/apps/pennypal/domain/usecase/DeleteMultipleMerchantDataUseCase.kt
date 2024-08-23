@@ -23,7 +23,7 @@ class DeleteMultipleMerchantDataUseCase @Inject constructor(
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) {
 
-    suspend fun deleteData(merchantId : Long,ids: List<Long>): Flow<Resource<Int>> {
+    suspend fun deleteData(merchantId: Long, ids: List<Long>): Flow<Resource<Int>> {
         return flow {
 
             try {
@@ -64,7 +64,7 @@ class DeleteMultipleMerchantDataUseCase @Inject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private suspend fun FlowCollector<Resource<Int>>.handleReflectedTableOperation(
-        merchantId : Long,
+        merchantId: Long,
         affectedRowCount: Int,
         newIncome: Double,
         newExpense: Double
@@ -75,8 +75,7 @@ class DeleteMultipleMerchantDataUseCase @Inject constructor(
                 merchantRepository.updateAmountWithDate(
                     id = merchantId,
                     incomeAmt = -newIncome,
-                    expenseAmt = -newExpense,
-                    dateInMilli = System.currentTimeMillis()
+                    expenseAmt = -newExpense
                 )
             }
 

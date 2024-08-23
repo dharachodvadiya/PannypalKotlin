@@ -54,11 +54,24 @@ interface MerchantDao : BaseDao<Merchant> {
     @Query(
         "UPDATE merchant " +
                 "SET income_amt = income_amt + :incomeAmt, " +
+                "expense_amt = expense_amt + :expenseAmt " +
+                "WHERE ID = :id"
+    )
+    suspend fun updateAmountWithDate(
+        id: Long,
+        incomeAmt: Double,
+        expenseAmt: Double
+    ): Int
+
+    @Transaction
+    @Query(
+        "UPDATE merchant " +
+                "SET income_amt = income_amt + :incomeAmt, " +
                 "expense_amt = expense_amt + :expenseAmt, " +
                 "date_milli = :dateInMilli " +
                 "WHERE ID = :id"
     )
-    suspend fun updateAmountWithDate(
+    suspend fun addAmountWithDate(
         id: Long,
         incomeAmt: Double,
         expenseAmt: Double,

@@ -26,13 +26,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.presentation.ui.component.UserProfile
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.AutoSizeText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
+import com.indie.apps.pennypal.util.Util
 
 @Composable
 fun ProfileTopSection(
@@ -116,13 +116,13 @@ fun ProfileSection2(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        ProfileLoginWithGoogleButton(
-            onClick = onLoginWithGoogle,
-            modifier = Modifier
-                .padding(dimensionResource(id = R.dimen.padding))
-                .fillMaxWidth()
-                .height(dimensionResource(id = R.dimen.button_height))
-        )
+        /* ProfileLoginWithGoogleButton(
+             onClick = onLoginWithGoogle,
+             modifier = Modifier
+                 .padding(dimensionResource(id = R.dimen.padding))
+                 .fillMaxWidth()
+                 .height(dimensionResource(id = R.dimen.button_height))
+         )*/
     }
 }
 

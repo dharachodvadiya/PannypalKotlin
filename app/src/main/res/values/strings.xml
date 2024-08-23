@@ -46,4 +46,10 @@
     <string name="edit_merchant_data">Edit Entry</string>
     <string name="merchant_data_edit_success_message">Merchant Data Edit Successfully</string>
     <string name="phone_number_not_added">Not Added</string>
+    <string name="no_transactions_yet">No Transactions Yet</string>
+    <string name="latest_transactions_appear_here">Your latest transactions will appear here. Track your Income and Expense. Click + to start transaction.</string>
+    <string name="no_transactions">No Transactions!</string>
+    <string name="no_merchants">No Merchants Yet!</string>
+    <string name="no_merchants_details">Click + to add new merchant.</string>
+    <string name="no_merchants_details_with_transaction">Click top + to add new merchant and click bottom + to add new transaction.</string>
 </resources>
