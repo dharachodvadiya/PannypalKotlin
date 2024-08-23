@@ -189,7 +189,7 @@ fun OverviewList(
         LazyColumn(
             modifier = modifier
                 .padding(horizontal = dimensionResource(id = R.dimen.padding)),
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.item_padding)),
+            //verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.item_padding)),
             contentPadding = bottomPadding
         ) {
 
@@ -422,7 +422,7 @@ fun OverviewListItem(
             )
         },
         isSetDivider = false,
-        modifier = modifier
+        modifier = modifier.padding(vertical = 5.dp)
     )
 }
 

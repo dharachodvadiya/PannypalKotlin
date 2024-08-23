@@ -70,7 +70,6 @@ fun OverViewStartScreen(
         is Resource.Success -> {
             amount = (uiState.data?.incomeAmount ?: 0.0) - (uiState.data?.expenseAmount ?: 0.0)
         }
-
         is Resource.Error -> {}
     }
 

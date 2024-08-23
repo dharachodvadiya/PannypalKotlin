@@ -287,6 +287,16 @@ fun MerchantDataDateItem(
     dateMillis: Long = 0,
     modifier: Modifier = Modifier,
 ) {
+    val format = SimpleDateFormat("dd MMMM yyyy")
+
+    val day = Util.getDateFromMillis(dateMillis, format)
+
+    val dayString = when (day) {
+        Util.getTodayDate(format) -> stringResource(id = R.string.today)
+        Util.getYesterdayDate(format) -> stringResource(id = R.string.yesterday)
+        else -> day
+    }
+
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -300,7 +310,7 @@ fun MerchantDataDateItem(
                 .background(color = MyAppTheme.colors.gray2)
         )
         Text(
-            text = Util.getDateFromMillis(dateMillis, SimpleDateFormat("dd MMMM yyyy")),
+            text = dayString,
             style = MyAppTheme.typography.Medium40,
             color = MyAppTheme.colors.gray2,
             maxLines = 1,
