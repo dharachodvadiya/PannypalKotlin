@@ -3,8 +3,12 @@ package com.indie.apps.pennypal.presentation.ui.screen
 import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.animation.Animatable
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -199,7 +203,7 @@ fun MerchantScreen(
             })
     }) { innerPadding ->
 
-        if (pagingState.isRefresh) {
+        if (pagingState.isRefresh && (lazyPagingData.itemCount == 0 || isAddSuccess)) {
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
@@ -236,7 +240,7 @@ fun MerchantScreen(
                     .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
                     .padding(innerPadding)
                     .padding(horizontal = dimensionResource(id = R.dimen.padding)),
-                verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.item_inner_padding)),
+                //verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.item_inner_padding)),
                 contentPadding = bottomPadding
             ) {
                 items(count = lazyPagingData.itemCount,
@@ -265,14 +269,14 @@ fun MerchantScreen(
                                 scope.launch {
                                     itemAnimateScale.animateTo(
                                         targetValue = 1f,
-                                        animationSpec = tween(50)
+                                        animationSpec = tween(Util.ADD_ITEM_ANIM_TIME)
                                     )
                                 }
                                 if (itemAnimateScale.value == 1f) {
                                     merchantViewModel.addMerchantSuccessAnimStop()
                                 }
                                 Modifier.scale(itemAnimateScale.value)
-                            } else if (deleteAnimRun &&
+                            }/* else if (deleteAnimRun &&
                                 selectedList.contains(data.id)
                             ) {
                                 scope.launch {
@@ -285,17 +289,17 @@ fun MerchantScreen(
                                     merchantViewModel.onDeleteAnimStop()
                                 }
                                 Modifier.scale(itemAnimateScaleDown.value)
-                            } else if ((editMerchantId == data.id && editAnimRun) ||
+                            }*/ else if ((editMerchantId == data.id && editAnimRun) ||
                                 (addMerchantDataId == data.id && addDataAnimRun)
                             ) {
                                 scope.launch {
                                     itemAnimateColor.animateTo(
                                         targetValue = targetAnimColor,
-                                        animationSpec = tween()
+                                        animationSpec = tween(Util.EDIT_ITEM_ANIM_TIME)
                                     )
                                     itemAnimateColor.animateTo(
                                         targetValue = baseColor,
-                                        animationSpec = tween()
+                                        animationSpec = tween(Util.EDIT_ITEM_ANIM_TIME)
                                     )
                                 }
                                 Modifier
@@ -303,14 +307,37 @@ fun MerchantScreen(
                                 Modifier
                             }
 
-                        MerchantListItem(
-                            item = data,
-                            isSelected = selectedList.contains(data.id),
-                            onClick = { merchantViewModel.onItemClick(data.id) { onMerchantClick(it) } },
-                            onLongClick = { merchantViewModel.onItemLongClick(data.id) },
-                            modifier = modifierAdd,
-                            itemBgColor = itemAnimateColor.value
+                        var visible by remember {
+                            mutableStateOf(true)
+                        }
+
+                        if (deleteAnimRun &&
+                            selectedList.contains(data.id)
+                        ){
+                            visible = false
+                        }
+
+                        AnimatedVisibility(
+                            visible = visible,
+                            exit = slideOutVertically() + shrinkVertically() + fadeOut()
                         )
+
+                        {
+                            MerchantListItem(
+                                item = data,
+                                isSelected = selectedList.contains(data.id),
+                                onClick = {
+                                    merchantViewModel.onItemClick(data.id) {
+                                        onMerchantClick(
+                                            it
+                                        )
+                                    }
+                                },
+                                onLongClick = { merchantViewModel.onItemLongClick(data.id) },
+                                modifier = modifierAdd,
+                                itemBgColor = itemAnimateColor.value
+                            )
+                        }
 
                         if (pagingState.isLoadMore && index == lazyPagingData.itemCount - 1) {
                             Box(

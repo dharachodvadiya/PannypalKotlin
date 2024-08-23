@@ -264,7 +264,7 @@ fun OverviewList(
                         scope.launch {
                             itemAnimateScale.animateTo(
                                 targetValue = 1f,
-                                animationSpec = tween(50)
+                                animationSpec = tween(Util.ADD_ITEM_ANIM_TIME)
                             )
                         }
                         if (itemAnimateScale.value == 1f) {

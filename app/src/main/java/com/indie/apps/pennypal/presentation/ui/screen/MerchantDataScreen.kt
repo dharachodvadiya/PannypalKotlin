@@ -3,7 +3,11 @@ package com.indie.apps.pennypal.presentation.ui.screen
 import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.animation.Animatable
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -116,8 +120,7 @@ fun MerchantDataScreen(
                 .padding(padding)
         ) {
 
-            if (pagingState.isRefresh
-            ) {
+            if (pagingState.isRefresh && (lazyPagingData.itemCount == 0)) {
                 Box(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
@@ -176,15 +179,15 @@ fun MerchantDataScreen(
                                     scope.launch {
                                         itemAnimateColor.animateTo(
                                             targetValue = targetAnimColor,
-                                            animationSpec = tween()
+                                            animationSpec = tween(Util.EDIT_ITEM_ANIM_TIME)
                                         )
                                         itemAnimateColor.animateTo(
                                             targetValue = baseColor,
-                                            animationSpec = tween()
+                                            animationSpec = tween(Util.EDIT_ITEM_ANIM_TIME)
                                         )
                                     }
                                     Modifier
-                                } else if (deleteAnimRun &&
+                                } /*else if (deleteAnimRun &&
                                     selectedList.contains(data.id)
                                 ) {
                                     scope.launch {
@@ -198,10 +201,19 @@ fun MerchantDataScreen(
                                         merchantDataViewModel.onDeleteAnimStop()
                                     }
                                     Modifier.scale(itemAnimateScaleDown.value)
-                                } else {
+                                }*/ else {
                                     Modifier
                                 }
 
+                            var visible by remember {
+                                mutableStateOf(true)
+                            }
+
+                            if (deleteAnimRun &&
+                                selectedList.contains(data.id)
+                            ){
+                                visible = false
+                            }
 
                             val currentDate = Util.getDateFromMillis(data.dateInMilli)
                             val previousDate =
@@ -211,24 +223,30 @@ fun MerchantDataScreen(
                                     )
                                 } else ""
 
-                            if (data.type >= 0) {
-                                MerchantDataIncomeAmount(
-                                    isSelected = selectedList.contains(data.id),
-                                    data = data,
-                                    onClick = { merchantDataViewModel.onItemClick(data.id) },
-                                    onLongClick = { merchantDataViewModel.onItemLongClick(data.id) },
-                                    itemBgColor = itemAnimateColor.value,
-                                    modifier = modifierAdd
-                                )
-                            } else {
-                                MerchantDataExpenseAmount(
-                                    isSelected = selectedList.contains(data.id),
-                                    data = data,
-                                    onClick = { merchantDataViewModel.onItemClick(data.id) },
-                                    onLongClick = { merchantDataViewModel.onItemLongClick(data.id) },
-                                    itemBgColor = itemAnimateColor.value,
-                                    modifier = modifierAdd
-                                )
+                            AnimatedVisibility(
+                                visible = visible,
+                                exit = slideOutVertically() + shrinkVertically() + fadeOut()
+                            )
+                            {
+                                if (data.type >= 0) {
+                                    MerchantDataIncomeAmount(
+                                        isSelected = selectedList.contains(data.id),
+                                        data = data,
+                                        onClick = { merchantDataViewModel.onItemClick(data.id) },
+                                        onLongClick = { merchantDataViewModel.onItemLongClick(data.id) },
+                                        itemBgColor = itemAnimateColor.value,
+                                        modifier = modifierAdd
+                                    )
+                                } else {
+                                    MerchantDataExpenseAmount(
+                                        isSelected = selectedList.contains(data.id),
+                                        data = data,
+                                        onClick = { merchantDataViewModel.onItemClick(data.id) },
+                                        onLongClick = { merchantDataViewModel.onItemLongClick(data.id) },
+                                        itemBgColor = itemAnimateColor.value,
+                                        modifier = modifierAdd
+                                    )
+                                }
                             }
 
                             if (currentDate != previousDate) {

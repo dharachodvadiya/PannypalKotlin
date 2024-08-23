@@ -13,8 +13,9 @@ import java.util.TimeZone
 object Util {
     const val SEARCH_NEWS_TIME_DELAY = 500L
 
-    const val LIST_ITEM_ANIM_DELAY = 300L
-    const val DIALOG_ANIM_DELAY = 100L
+    const val LIST_ITEM_ANIM_DELAY = 700L
+    const val EDIT_ITEM_ANIM_TIME = 400
+    const val ADD_ITEM_ANIM_TIME = 55
 
     const val PAGE_SIZE = 20
     const val PAGE_PREFETCH_DISTANCE = 20
