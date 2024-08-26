@@ -12,7 +12,7 @@ import com.indie.apps.pennypal.presentation.ui.component.custom.composable.MyApp
 import com.indie.apps.pennypal.presentation.ui.component.dialog.CppDialogField
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
-import com.indie.apps.cpp.utils.Country
+import com.indie.apps.cpp.data.model.Country
 
 @SuppressLint("RememberReturnType")
 @Composable

@@ -1,9 +1,9 @@
-package com.indie.apps.cpp.data
+package com.indie.apps.cpp.data.model
 
 import com.indie.apps.cpp.R
 import java.util.Locale
 
-data class CountryData(
+data class PhoneInfo(
     private var cCodes: String,
     val countryPhoneCode: String = "+90",
     val cNames:String = "tr",

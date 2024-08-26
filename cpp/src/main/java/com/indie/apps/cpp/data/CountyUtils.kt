@@ -1,30 +1,49 @@
-package com.indie.apps.cpp.utils
+package com.indie.apps.cpp.data
 
 
 import android.content.Context
 import com.google.gson.Gson
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
 import com.google.gson.reflect.TypeToken
+import com.indie.apps.cpp.data.model.Country
 import java.io.IOException
-import java.util.Locale
 
-fun countryList(context: Context): MutableList<Country> {
+object CountyUtils {
+    internal var countryData : List<Country>  = emptyList()
+}
+
+fun loadCountryData(context: Context){
+    val jsonFileString = getJsonDataFromAsset(context, "Countries.json")
+    val type = object : TypeToken<List<Country>>() {}.type
+    CountyUtils.countryData = Gson().fromJson(jsonFileString, type)
+}
+
+/*fun countryList(context: Context): MutableList<Country> {
     val jsonFileString = getJsonDataFromAsset(context, "Countries.json")
     val type = object : TypeToken<List<Country>>() {}.type
     return Gson().fromJson(jsonFileString, type)
-}
+}*/
 
-fun localeToEmoji(countryCode: String): String {
+fun countryList(context: Context): MutableList<Country> {
+    if(CountyUtils.countryData.isEmpty())
+    {
+        loadCountryData(context)
+    }
+    return CountyUtils.countryData.toMutableList()
+}
+fun getCountryData() = CountyUtils.countryData
+
+/*fun localeToEmoji(countryCode: String): String {
     val firstLetter = Character.codePointAt(countryCode, 0) - 0x41 + 0x1F1E6
     val secondLetter = Character.codePointAt(countryCode, 1) - 0x41 + 0x1F1E6
     return String(Character.toChars(firstLetter)) + String(Character.toChars(secondLetter))
 }
-fun String.toCountryCode(it: Country?):String{
+
+fun String.toCountryCode(it: Country?): String {
     val code = it?.dialCode.toString()
 
     return code
 }
+
 fun String.toFlagEmoji(): String {
     // INdia code IN bitmapEMOJI
     if (this.length != 2) {
@@ -37,7 +56,7 @@ fun String.toFlagEmoji(): String {
         return this
     }
     return String(Character.toChars(firstLetter)) + String(Character.toChars(secondLetter))
-}
+}*/
 
 fun getJsonDataFromAsset(context: Context, fileName: String): String? {
     val jsonString: String
@@ -50,18 +69,18 @@ fun getJsonDataFromAsset(context: Context, fileName: String): String? {
     return jsonString
 }
 
-fun List<Country>.searchCountryList(countryName: String): MutableList<Country> {
+/*fun List<Country>.searchCountryList(countryName: String): MutableList<Country> {
     val countryList = mutableListOf<Country>()
     this.forEach {
         if (it.name.lowercase().contains(countryName.lowercase()) ||
             it.dialCode.contains(countryName.lowercase()) ||
-                    it.code.contains(countryName.lowercase())
+            it.countryCode.contains(countryName.lowercase())
         ) {
             countryList.add(it)
         }
     }
     return countryList
-}
+}*/
 
 fun List<Country>.searchCountry(countryName: String): List<Country> {
     val countryList = ArrayList<Country>()
@@ -74,15 +93,3 @@ fun List<Country>.searchCountry(countryName: String): List<Country> {
     }
     return countryList
 }
-
-data class Country(
-    @SerializedName("name")
-    @Expose
-    val name: String="",
-    @SerializedName("dial_code")
-    @Expose
-    val dialCode: String="",
-    @SerializedName("code")
-    @Expose
-    val code: String=""
-)

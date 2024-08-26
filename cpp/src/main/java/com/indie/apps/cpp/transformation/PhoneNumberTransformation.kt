@@ -1,14 +1,6 @@
 package com.indie.apps.cpp.transformation
 
-import android.telephony.PhoneNumberUtils
-import android.text.Selection
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.input.OffsetMapping
-import androidx.compose.ui.text.input.TransformedText
-import androidx.compose.ui.text.input.VisualTransformation
-import com.google.i18n.phonenumbers.PhoneNumberUtil
-import java.util.*
-
+/*
 class PhoneNumberTransformation(countryCode: String = Locale.getDefault().country) :
     VisualTransformation {
 
@@ -91,4 +83,4 @@ class PhoneNumberTransformation(countryCode: String = Locale.getDefault().countr
         val originalToTransformed: List<Int>,
         val transformedToOriginal: List<Int>
     )
-}
+}*/

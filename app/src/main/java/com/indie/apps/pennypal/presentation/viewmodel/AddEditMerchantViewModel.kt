@@ -2,15 +2,15 @@ package com.indie.apps.pennypal.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.indie.apps.cpp.data.getCountryData
 import com.indie.apps.pennypal.data.entity.Merchant
 import com.indie.apps.pennypal.domain.usecase.AddMerchantUseCase
 import com.indie.apps.pennypal.domain.usecase.GetMerchantFromIdUseCase
 import com.indie.apps.pennypal.domain.usecase.UpdateMerchantUseCase
-import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.util.ErrorMessage
 import com.indie.apps.pennypal.util.Resource
-import com.indie.apps.cpp.data.utils.getLibCountries
+import com.indie.apps.pennypal.util.Util
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -63,7 +63,7 @@ class AddEditMerchantViewModel @Inject constructor(
         if (enableButton.value) {
             enableButton.value = false
             val isValidNum = Util.isValidPhoneNumber(
-                countryCode = getLibCountries.first { it.countryPhoneCode == countryCode.value }.countryCode,
+                countryCode = getCountryData().first { it.dialCode == countryCode.value }.countryCode,
                 phoneNumber = countryCode.value + phoneNumber.value.text
             )
 

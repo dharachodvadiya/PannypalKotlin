@@ -24,9 +24,9 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.indie.apps.cpp.data.utils.getFlags
-import com.indie.apps.cpp.utils.Country
-import com.indie.apps.cpp.utils.countryList
-import com.indie.apps.cpp.utils.searchCountry
+import com.indie.apps.cpp.data.model.Country
+import com.indie.apps.cpp.data.countryList
+import com.indie.apps.cpp.data.searchCountry
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.SearchView
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
@@ -105,7 +105,7 @@ private fun SearchCppListItem(
     onClick: (Country) -> Unit,
     modifier: Modifier = Modifier.fillMaxWidth()
 ) {
-    val code = country.code.lowercase(Locale.ROOT)
+    val code = country.countryCode.lowercase(Locale.ROOT)
     Row(modifier = modifier
         .clickable {
             onClick(country)
