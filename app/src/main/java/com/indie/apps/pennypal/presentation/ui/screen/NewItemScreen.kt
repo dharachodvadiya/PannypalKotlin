@@ -162,6 +162,6 @@ private fun NewItemScreenPreview() {
         NewItemScreen(onPaymentAdd = {},
             onNavigationUp = {},
             onMerchantSelect = {},
-            onSaveSuccess = { a, b, c -> })
+            onSaveSuccess = { _, _, _ -> })
     }
 }

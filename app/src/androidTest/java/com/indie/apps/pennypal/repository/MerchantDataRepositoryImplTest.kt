@@ -69,7 +69,7 @@ class MerchantDataRepositoryImplTest {
         }
 
         // When
-        var merchantsData = merchantDataDao.getMerchantDataList()
+        //var merchantsData = merchantDataDao.getMerchantDataList()
 
        /* //Then
         assertNotNull(merchantsData)

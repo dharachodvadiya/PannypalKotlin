@@ -52,8 +52,8 @@ class SearchMerchantNameAndDetailListUseCaseTest {
         merchantDao.insert(merchant2)
         merchantDao.insert(merchant3)
 
-        val result = SearchMerchantNameAndDetailListUseCase(merchantRepository, coroutineDispatcher)
-            .loadData("Merch")
+        /*val result = SearchMerchantNameAndDetailListUseCase(merchantRepository, coroutineDispatcher)
+            .loadData("Merch")*/
         //ToDo Remaing testcase
     }
 }

@@ -14,6 +14,7 @@ import com.indie.apps.pennypal.presentation.ui.state.PagingState
 import com.indie.apps.pennypal.util.Resource
 import com.indie.apps.pennypal.util.Util
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -53,6 +54,7 @@ class MerchantDataViewModel @Inject constructor(
 
     private val trigger = MutableSharedFlow<Unit>(replay = 1)
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     val pagedData = trigger
         .flatMapLatest {
             getMerchantDataListFromMerchantId.loadData(merchantId)

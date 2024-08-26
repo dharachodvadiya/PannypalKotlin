@@ -46,7 +46,7 @@ class MerchantRepositoryImplTest {
         }
 
         //when
-        var merchants = merchantDao.getMerchantList()
+        //var merchants = merchantDao.getMerchantList()
 
         /*//Then
         assert(merchants.size == 10)

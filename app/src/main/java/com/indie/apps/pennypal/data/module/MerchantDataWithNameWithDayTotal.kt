@@ -14,4 +14,4 @@ data class MerchantDataWithNameWithDayTotal(
 )
 
 fun MerchantDataWithNameWithDayTotal.toMerchantDataDailyTotal() = MerchantDataDailyTotal( day, totalIncome ?: 0.0,totalExpense ?:0.0)
-fun MerchantDataWithNameWithDayTotal.toMerchantDataWithName() = MerchantDataWithName(id ?: -1, merchantId ?: -1, merchantName ?: "", dateInMilli, details, amount ?: 0.0, type ?: 1, day  )
+fun MerchantDataWithNameWithDayTotal.toMerchantDataWithName() = MerchantDataWithName(id ?: -1, merchantId, merchantName ?: "", dateInMilli, details, amount ?: 0.0, type ?: 1, day  )

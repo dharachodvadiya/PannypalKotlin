@@ -261,9 +261,9 @@ fun MerchantScreen(
                             Animatable(0f)
                         }
 
-                        val itemAnimateScaleDown = remember {
+                        /*val itemAnimateScaleDown = remember {
                             Animatable(1f)
-                        }
+                        }*/
 
                         val baseColor = MyAppTheme.colors.itemBg
                         val targetAnimColor = MyAppTheme.colors.lightBlue1

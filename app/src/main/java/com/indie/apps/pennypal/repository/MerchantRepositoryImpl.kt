@@ -55,7 +55,7 @@ class MerchantRepositoryImpl @Inject constructor(private val merchantDao: Mercha
         searchQuery: String
     ) = merchantDao.searchMerchantList(searchQuery)
 
-    override suspend fun insert(merchant: Merchant) = merchantDao.insert(merchant)
+    override suspend fun insert(obj: Merchant) = merchantDao.insert(obj)
 
-    override suspend fun update(merchant: Merchant) = merchantDao.update(merchant)
+    override suspend fun update(obj: Merchant) = merchantDao.update(obj)
 }

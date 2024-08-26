@@ -53,7 +53,7 @@ class UpdateMerchantUseCaseTest {
 
         merchantDao.insert(merchant1)
 
-        val merchant1Updated = merchant1.copy(name = "Merchant B", details = "test detail")
+        //val merchant1Updated = merchant1.copy(name = "Merchant B", details = "test detail")
 
         //use Paging 3
         /*val result = UpdateMerchantUseCase(

@@ -65,9 +65,9 @@ fun NavGraphBuilder.merchantRoute(
                 .savedStateHandle
                 .remove<Long>(Util.SAVE_STATE_ADD_EDIT_SUCCESS_ID)
 
-            backStackEntry.savedStateHandle?.remove<Long>(Util.SAVE_STATE_MERCHANT_ADD_EDIT_ID)
-            backStackEntry.savedStateHandle?.remove<Long>(Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_ID)
-            backStackEntry.savedStateHandle?.remove<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_SUCCESS)
+            backStackEntry.savedStateHandle.remove<Long>(Util.SAVE_STATE_MERCHANT_ADD_EDIT_ID)
+            backStackEntry.savedStateHandle.remove<Long>(Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_ID)
+            backStackEntry.savedStateHandle.remove<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_SUCCESS)
 
             bottomBarState.value = true
             MerchantScreen(
@@ -106,9 +106,9 @@ fun NavGraphBuilder.merchantRoute(
                 .savedStateHandle
                 .get<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_SUCCESS)
 
-            backStackEntry.savedStateHandle?.remove<Long>(Util.SAVE_STATE_MERCHANT_ADD_EDIT_ID)
-            backStackEntry.savedStateHandle?.remove<Long>(Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_ID)
-            backStackEntry.savedStateHandle?.remove<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_SUCCESS)
+            backStackEntry.savedStateHandle.remove<Long>(Util.SAVE_STATE_MERCHANT_ADD_EDIT_ID)
+            backStackEntry.savedStateHandle.remove<Long>(Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_ID)
+            backStackEntry.savedStateHandle.remove<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_SUCCESS)
 
             bottomBarState.value = false
             MerchantDataScreen(
@@ -176,7 +176,7 @@ fun NavGraphBuilder.merchantRoute(
                 onPaymentAdd = { navController.navigate(DialogNav.ADD_PAYMENT.route) },
                 merchantData = merchant,
                 paymentData = payment,
-                onSaveSuccess = { isEdit, merchantDataId, merchantId ->
+                onSaveSuccess = { _, merchantDataId, merchantId ->
                     /*Toast.makeText(context, merchantDataSaveToast, Toast.LENGTH_SHORT).show()
                     navController.navigateUp()*/
 

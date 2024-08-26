@@ -27,8 +27,8 @@ class MerchantDataRepositoryImpl @Inject constructor(private val merchantDataDao
     override fun getMerchantDataList() = merchantDataDao.getMerchantDataList()
 
     override fun getMerchantDataListFromMerchantId(
-        id: Long,
-    ) = merchantDataDao.getMerchantDataListFromMerchantId(id)
+        merchantId: Long,
+    ) = merchantDataDao.getMerchantDataListFromMerchantId(merchantId)
 
     override fun getMerchantsDataWithMerchantNameList(
         timeZoneOffsetInMilli: Int
@@ -43,9 +43,9 @@ class MerchantDataRepositoryImpl @Inject constructor(private val merchantDataDao
         timeZoneOffsetInMilli: Int
     ) = merchantDataDao.getMerchantDataDailyTotalList(timeZoneOffsetInMilli)
 
-    override suspend fun insert(merchantData: MerchantData) = merchantDataDao.insert(merchantData)
+    override suspend fun insert(obj: MerchantData) = merchantDataDao.insert(obj)
 
-    override suspend fun update(merchantData: MerchantData) = merchantDataDao.update(merchantData)
+    override suspend fun update(obj: MerchantData) = merchantDataDao.update(obj)
 
     override fun getMerchantDataWithNameWithDayTotal(timeZoneOffsetInMilli: Int) =
         merchantDataDao.getCombinedDataWithLimit(timeZoneOffsetInMilli)

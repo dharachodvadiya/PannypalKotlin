@@ -17,7 +17,6 @@ import com.indie.apps.pennypal.repository.UserRepository
 import com.indie.apps.pennypal.util.Resource
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import junit.framework.Assert.assertTrue
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.runBlocking
@@ -164,7 +163,7 @@ class DeleteMultipleMerchantDataUseCaseTest {
 
         // Assert: Collect and verify the result
         resultFlow.drop(1).collect { result ->
-            assertTrue(result is Resource.Success)
+            assert(result is Resource.Success)
         }
     }
 

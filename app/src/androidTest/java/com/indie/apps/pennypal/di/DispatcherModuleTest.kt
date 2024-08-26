@@ -5,12 +5,14 @@ import dagger.Provides
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 
 @TestInstallIn(components = [SingletonComponent::class], replaces = [DispatcherModule::class])
 @Module
 class DispatcherModuleTest {
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     private val testDispatcher = UnconfinedTestDispatcher()
 
     @DefaultDispatcher
