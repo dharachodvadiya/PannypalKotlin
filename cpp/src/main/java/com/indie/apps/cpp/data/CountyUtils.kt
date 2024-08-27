@@ -82,11 +82,24 @@ fun getJsonDataFromAsset(context: Context, fileName: String): String? {
     return countryList
 }*/
 
-fun List<Country>.searchCountry(countryName: String): List<Country> {
+fun List<Country>.searchCountryForDialCode(countryName: String): List<Country> {
     val countryList = ArrayList<Country>()
     forEach {
         if (it.name.lowercase().contains(countryName.lowercase()) ||
             it.dialCode.contains(countryName.lowercase())
+        ) {
+            countryList.add(it)
+        }
+    }
+    return countryList
+}
+
+fun List<Country>.searchCountryForCurrency(countryName: String): List<Country> {
+    val countryList = ArrayList<Country>()
+    forEach {
+        if (it.currencyCode.lowercase().contains(countryName.lowercase()) ||
+            it.currencyName.lowercase().contains(countryName.lowercase()) ||
+            it.name.lowercase().contains(countryName.lowercase())
         ) {
             countryList.add(it)
         }

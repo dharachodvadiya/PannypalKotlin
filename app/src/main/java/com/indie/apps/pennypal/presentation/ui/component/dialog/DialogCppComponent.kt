@@ -26,7 +26,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.indie.apps.cpp.data.countryList
 import com.indie.apps.cpp.data.model.Country
-import com.indie.apps.cpp.data.searchCountry
+import com.indie.apps.cpp.data.searchCountryForCurrency
+import com.indie.apps.cpp.data.searchCountryForDialCode
 import com.indie.apps.cpp.data.utils.getFlags
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.SearchView
@@ -58,7 +59,7 @@ fun CppDialogField(
                     if (searchState.text.isEmpty()) {
                         countriesList
                     } else {
-                        countriesList.searchCountry(searchState.text)
+                        countriesList.searchCountryForCurrency(searchState.text)
                     }
                 ) { country ->
                     SearchCurrencyCppListItem(
@@ -71,7 +72,7 @@ fun CppDialogField(
                     if (searchState.text.isEmpty()) {
                         countriesList
                     } else {
-                        countriesList.searchCountry(searchState.text)
+                        countriesList.searchCountryForDialCode(searchState.text)
                     }
                 ) { country ->
                     SearchCppListItem(
