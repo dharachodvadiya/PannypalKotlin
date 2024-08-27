@@ -19,7 +19,6 @@ import androidx.navigation.compose.rememberNavController
 import com.google.gson.Gson
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.entity.toMerchantNameAndDetails
-import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.presentation.ui.dialog.DialogAddMerchant
 import com.indie.apps.pennypal.presentation.ui.dialog.DialogAddPayment
 import com.indie.apps.pennypal.presentation.ui.dialog.DialogCpp
@@ -31,6 +30,7 @@ import com.indie.apps.pennypal.presentation.ui.navigation.OverviewNav
 import com.indie.apps.pennypal.presentation.ui.route.merchantRoute
 import com.indie.apps.pennypal.presentation.ui.route.overViewRoute
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
+import com.indie.apps.pennypal.util.Util
 
 @Composable
 fun PennyPalApp() {
@@ -55,13 +55,16 @@ fun PennyPalApp() {
             bottomBar = {
                 BottomNavigationBarCustom1(
                     tabs = BottomNavItem.entries.toTypedArray(), onTabSelected = { newScreen ->
-                        navController.navigate(newScreen.route) {
-                            launchSingleTop = true
-                            restoreState = true
-                            popUpTo(newScreen.route)
+
+                        if (newScreen.route != currentScreen.route) {
+                            navController.navigate(newScreen.route) {
+                                launchSingleTop = true
+                                restoreState = true
+                                popUpTo(newScreen.route)
+                            }
                         }
                     },
-                    onAddClick = {navController.navigate(OverviewNav.NEW_ITEM.route)},
+                    onAddClick = { navController.navigate(OverviewNav.NEW_ITEM.route) },
                     currentTab = currentScreen,
                     bottomBarState = bottomBarState.value
                 )
@@ -77,8 +80,8 @@ fun PennyPalApp() {
                     ExitTransition.None
                 }
             ) {
-                overViewRoute(navController, bottomBarState,innerPadding)
-                merchantRoute(navController, bottomBarState,innerPadding)
+                overViewRoute(navController, bottomBarState, innerPadding)
+                merchantRoute(navController, bottomBarState, innerPadding)
 
                 dialog(
                     route = DialogNav.SELECT_MERCHANT.route,
@@ -134,12 +137,11 @@ fun PennyPalApp() {
                                         Gson().toJson(merchant.toMerchantNameAndDetails())
                                     )
 
-                                if(isEdit)
-                                {
+                                if (isEdit) {
                                     navController.previousBackStackEntry
                                         ?.savedStateHandle
                                         ?.set(Util.SAVE_STATE_EDIT_SUCCESS, true)
-                                }else{
+                                } else {
                                     navController.previousBackStackEntry
                                         ?.savedStateHandle
                                         ?.set(Util.SAVE_STATE_ADD_SUCCESS, true)
@@ -183,7 +185,7 @@ fun PennyPalApp() {
                 dialog(
                     route = DialogNav.CPP.route,
                     dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
-                ) {backStackEntry->
+                ) { backStackEntry ->
 
                     val isShowCurrency: Boolean? = backStackEntry
                         .savedStateHandle
