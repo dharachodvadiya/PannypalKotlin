@@ -183,7 +183,12 @@ fun PennyPalApp() {
                 dialog(
                     route = DialogNav.CPP.route,
                     dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
-                ) {
+                ) {backStackEntry->
+
+                    val isShowCurrency: Boolean? = backStackEntry
+                        .savedStateHandle
+                        .get<Boolean>(Util.SAVE_STATE_SHOW_CURRENCY)
+
                     DialogCpp(
                         onNavigationUp = { navController.navigateUp() },
                         onSelect = {
@@ -191,9 +196,14 @@ fun PennyPalApp() {
                             navController.previousBackStackEntry
                                 ?.savedStateHandle
                                 ?.set(Util.SAVE_STATE_COUNTRY_CODE, it.dialCode)
+                            navController.previousBackStackEntry
+                                ?.savedStateHandle
+                                ?.set(Util.SAVE_STATE_CURRENCY_CODE, it.currencyCode)
+
 
                             navController.popBackStack()
-                        }
+                        },
+                        isShowCurrency = isShowCurrency ?: false,
                     )
                 }
             }

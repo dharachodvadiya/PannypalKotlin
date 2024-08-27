@@ -19,6 +19,7 @@ import com.indie.apps.cpp.data.model.Country
 fun DialogCpp(
     onNavigationUp: () -> Unit,
     onSelect: (Country) -> Unit,
+    isShowCurrency: Boolean,
     modifier: Modifier = Modifier
 ) {
     val searchTextState by remember { mutableStateOf(TextFieldState()) }
@@ -29,7 +30,8 @@ fun DialogCpp(
         content = {
             CppDialogField(
                 onSelect = onSelect,
-                searchState = searchTextState
+                searchState = searchTextState,
+                isShowCurrency = isShowCurrency
             )
         },
         modifier = modifier,

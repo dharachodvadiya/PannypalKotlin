@@ -9,7 +9,6 @@ import com.indie.apps.pennypal.data.module.MerchantDataWithNameWithDayTotal
 import com.indie.apps.pennypal.domain.usecase.GetMerchantDataListWithMerchantNameAndDayTotalUseCase
 import com.indie.apps.pennypal.domain.usecase.GetUserProfileUseCase
 import com.indie.apps.pennypal.presentation.ui.state.PagingState
-import com.indie.apps.pennypal.util.Resource
 import com.indie.apps.pennypal.util.Util
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -28,8 +27,8 @@ class OverViewViewModel @Inject constructor(
 
     //val searchTextState by mutableStateOf(TextFieldState())
 
-    val uiState = userProfileUseCase.loadData()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), Resource.Loading())
+    val userData = userProfileUseCase.loadData()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), null)
 
     /*val pagedMerchantData: Flow<PagingData<MerchantDataWithName>> =
         getMerchantDataListWithMerchantNameUseCase

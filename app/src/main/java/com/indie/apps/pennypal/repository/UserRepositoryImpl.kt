@@ -6,7 +6,7 @@ import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(private val userDao: UserDao) : UserRepository {
 
-    override suspend fun getUser() = userDao.getUser()
+    override fun getUser() = userDao.getUser()
 
     override suspend fun updateAmount(incomeAmt: Double, expenseAmt: Double) =
         userDao.updateAmount(incomeAmt, expenseAmt)

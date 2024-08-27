@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -23,10 +24,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.indie.apps.cpp.data.utils.getFlags
-import com.indie.apps.cpp.data.model.Country
 import com.indie.apps.cpp.data.countryList
+import com.indie.apps.cpp.data.model.Country
 import com.indie.apps.cpp.data.searchCountry
+import com.indie.apps.cpp.data.utils.getFlags
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.SearchView
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
@@ -37,10 +38,11 @@ import java.util.Locale
 fun CppDialogField(
     onSelect: (Country) -> Unit,
     searchState: TextFieldState,
+    isShowCurrency: Boolean,
 ) {
     Column {
 
-        SearchCcpSearchview(
+        SearchCcpSearchView(
             searchState = searchState
         )
         val context = LocalContext.current
@@ -51,25 +53,41 @@ fun CppDialogField(
             modifier = Modifier
                 .padding(horizontal = dimensionResource(id = R.dimen.padding))
         ) {
-            items(
-                if (searchState.text.isEmpty()) {
-                    countriesList
-                } else {
-                    countriesList.searchCountry(searchState.text)
+            if (isShowCurrency) {
+                items(
+                    if (searchState.text.isEmpty()) {
+                        countriesList
+                    } else {
+                        countriesList.searchCountry(searchState.text)
+                    }
+                ) { country ->
+                    SearchCurrencyCppListItem(
+                        country = country,
+                        onClick = onSelect,
+                    )
                 }
-            ) { country ->
-                SearchCppListItem(
-                    country = country,
-                    onClick = onSelect
-                )
+            } else {
+                items(
+                    if (searchState.text.isEmpty()) {
+                        countriesList
+                    } else {
+                        countriesList.searchCountry(searchState.text)
+                    }
+                ) { country ->
+                    SearchCppListItem(
+                        country = country,
+                        onClick = onSelect
+                    )
+                }
             }
+
         }
 
     }
 }
 
 @Composable
-private fun SearchCcpSearchview(
+private fun SearchCcpSearchView(
     searchState: TextFieldState,
     modifier: Modifier = Modifier
 ) {
@@ -106,30 +124,81 @@ private fun SearchCppListItem(
     modifier: Modifier = Modifier.fillMaxWidth()
 ) {
     val code = country.countryCode.lowercase(Locale.ROOT)
-    Row(modifier = modifier
-        .clickable {
-            onClick(country)
-        }
-        .padding(12.dp)) {
-//                            Text(text = ("${localeToEmoji(mlist.code)}"))
-//                            Text(text = ("${getFlags(it.code.toLowerCase())}"))
+    Row(
+        modifier = modifier
+            .clickable {
+                onClick(country)
+            }
+            .padding(12.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         Image(
             painterResource(getFlags(code)),
             contentDescription = "",
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .height(20.dp)
-                .width(20.dp)
+                .width(30.dp)
         )
         Text(
             text = country.name,
             modifier = Modifier
-                .padding(start = 8.dp)
-                .weight(2f),
-            style = MyAppTheme.typography.Regular44
+                .padding(start = 8.dp),
+            style = MyAppTheme.typography.Medium45_29
         )
+        Text(
+            text = "(${country.dialCode})",
+            modifier = Modifier
+                .padding(start = 8.dp),
+            style = MyAppTheme.typography.Medium50,
+            color = MyAppTheme.colors.gray2
+        )
+
     }
-    /*Divider(
-        color = Color.LightGray, thickness = 0.5.dp
-    )*/
+}
+
+@Composable
+private fun SearchCurrencyCppListItem(
+    country: Country,
+    onClick: (Country) -> Unit,
+    modifier: Modifier = Modifier.fillMaxWidth()
+) {
+    val code = country.countryCode.lowercase(Locale.ROOT)
+    Row(
+        modifier = modifier
+            .clickable {
+                onClick(country)
+            }
+            .padding(12.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Image(
+            painterResource(getFlags(code)),
+            contentDescription = "",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .height(20.dp)
+                .width(30.dp)
+        )
+        Spacer(modifier = Modifier.width(5.dp))
+
+        Column(
+            modifier = Modifier
+                .padding(start = 8.dp)
+        ) {
+            Text(
+                text = "${country.currencyCode} (${country.currencySymbol})",
+                modifier = Modifier,
+                style = MyAppTheme.typography.Medium45_29,
+                color = MyAppTheme.colors.black
+            )
+            Text(
+                text = country.currencyName,
+                modifier = Modifier,
+                style = MyAppTheme.typography.Medium33,
+                color = MyAppTheme.colors.gray2
+            )
+        }
+
+    }
 }

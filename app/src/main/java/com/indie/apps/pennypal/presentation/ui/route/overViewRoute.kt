@@ -121,9 +121,22 @@ fun NavGraphBuilder.overViewRoute(
                 }
             )
         }
-        composable(route = OverviewNav.PROFILE.route) {
+        composable(route = OverviewNav.PROFILE.route) {backStackEntry->
+
+            val code: String? = backStackEntry
+                .savedStateHandle
+                .get<String>(Util.SAVE_STATE_CURRENCY_CODE)
+
             bottomBarState.value = false
-            ProfileScreen(onNavigationUp = { navController.navigateUp() })
+            ProfileScreen(
+                onNavigationUp = { navController.navigateUp() },
+                code = code,
+                onCurrencyChangeClick = {
+                    navController.navigate(DialogNav.CPP.route)
+                    navController.currentBackStackEntry
+                        ?.savedStateHandle
+                        ?.set(Util.SAVE_STATE_SHOW_CURRENCY, true)
+                })
         }
     }
 }

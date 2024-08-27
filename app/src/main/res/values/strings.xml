@@ -52,4 +52,6 @@
     <string name="no_merchants">No Merchants Yet!</string>
     <string name="no_merchants_details">Click + to add new merchant.</string>
     <string name="no_merchants_details_with_transaction">Click top + to add new merchant and click bottom + to add new transaction.</string>
+    <string name="currency_and_format"><![CDATA[Currency & Format]]></string>
+    <string name="user_update_success_message">Successfully Updated</string>
 </resources>

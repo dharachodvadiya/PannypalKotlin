@@ -3,6 +3,7 @@ package com.indie.apps.pennypal.presentation.ui.component.screen
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,8 +14,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.NavigateNext
 import androidx.compose.material.icons.filled.NorthEast
 import androidx.compose.material.icons.filled.SouthWest
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,20 +25,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.indie.apps.cpp.data.utils.getSymbolFromCurrencyCode
 import com.indie.apps.pennypal.R
+import com.indie.apps.pennypal.data.entity.User
 import com.indie.apps.pennypal.presentation.ui.component.UserProfile
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.AutoSizeText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
-import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.util.Util
 
 @Composable
 fun ProfileTopSection(
+    symbol: String,
     totalAmount: Double = 0.0,
     modifier: Modifier = Modifier
 ) {
@@ -70,7 +76,7 @@ fun ProfileTopSection(
         )*/
 
         AutoSizeText(
-            text = Util.getFormattedStringWithSymbol(totalAmount),
+            text = Util.getFormattedStringWithSymbol(totalAmount, symbol),
             style = MyAppTheme.typography.Regular77_5,
             color = MyAppTheme.colors.black,
             alignment = Alignment.Center,
@@ -82,11 +88,12 @@ fun ProfileTopSection(
 
 @Composable
 fun ProfileSection2(
-    incomeAmount: Double = 0.0,
-    expenseAmount: Double = 0.0,
+    user: User,
     onLoginWithGoogle: () -> Unit,
+    onCurrencyChangeClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val symbol = getSymbolFromCurrencyCode(user.currency)
     Column(modifier = modifier) {
 
         Row(
@@ -97,7 +104,8 @@ fun ProfileSection2(
                 .padding(vertical = 20.dp)
         ) {
             ProfileAmountWithIcon(
-                amount = incomeAmount,
+                currencySymbol = symbol,
+                amount = user.incomeAmount,
                 isPositive = true,
                 modifier = Modifier.width(150.dp)
             )
@@ -108,11 +116,18 @@ fun ProfileSection2(
                     .background(MyAppTheme.colors.gray1)
             )
             ProfileAmountWithIcon(
-                amount = expenseAmount,
+                currencySymbol = symbol,
+                amount = user.expenseAmount,
                 isPositive = false,
                 modifier = Modifier.width(150.dp)
             )
         }
+
+        ProfileCurrencyItem(
+            currencyCode = user.currency,
+            currencySymbol = symbol,
+            onClick = onCurrencyChangeClick
+        )
 
         Spacer(modifier = Modifier.weight(1f))
 
@@ -156,7 +171,49 @@ private fun ProfileLoginWithGoogleButton(
 }
 
 @Composable
+fun ProfileCurrencyItem(
+    currencyCode: String,
+    currencySymbol: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = dimensionResource(id = R.dimen.padding))
+            .clickable(role = Role.Button) { onClick() }
+            .background(
+                shape = RoundedCornerShape(dimensionResource(id = R.dimen.round_corner)),
+                color = MyAppTheme.colors.bottomBg
+            )
+            .padding(dimensionResource(id = R.dimen.padding)),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column {
+            Text(
+                text = stringResource(id = R.string.currency_and_format),
+                style = MyAppTheme.typography.Medium40,
+                color = MyAppTheme.colors.gray2
+            )
+            Text(
+                text = "$currencyCode ($currencySymbol)",
+                style = MyAppTheme.typography.Semibold50,
+                color = MyAppTheme.colors.black
+            )
+        }
+
+        Spacer(modifier = Modifier.weight(1f))
+        Icon(
+            imageVector = Icons.AutoMirrored.Filled.NavigateNext,
+            contentDescription = "",
+            tint = MyAppTheme.colors.gray1
+        )
+    }
+}
+
+@Composable
 private fun ProfileAmountWithIcon(
+    currencySymbol: String,
     amount: Double,
     isPositive: Boolean,
     modifier: Modifier = Modifier
@@ -186,7 +243,7 @@ private fun ProfileAmountWithIcon(
         )
         Spacer(modifier = Modifier.height(5.dp))
         AutoSizeText(
-            text = Util.getFormattedStringWithSymbol(amount),
+            text = Util.getFormattedStringWithSymbol(amount, currencySymbol),
             //minTextSize = 10.sp,
             style = MyAppTheme.typography.Regular51,
             color = MyAppTheme.colors.black,
@@ -199,15 +256,15 @@ private fun ProfileAmountWithIcon(
 @Preview
 @Composable
 private fun ProfileLoginWithGoogleButtonPreview() {
-    PennyPalTheme(darkTheme = true) {
-        /*ProfileLoginWithGoogleButton(
+    /* PennyPalTheme(darkTheme = true) {
+         *//*ProfileLoginWithGoogleButton(
             {}, modifier = Modifier
                 .padding(dimensionResource(id = R.dimen.padding))
                 .fillMaxWidth()
                 .height(dimensionResource(id = R.dimen.button_height))
-        )*/
+        )*//*
 
-        ProfileSection2(onLoginWithGoogle = { /*TODO*/ })
-    }
+        ProfileSection2(onLoginWithGoogle = { *//*TODO*//* })
+    }*/
 }
 

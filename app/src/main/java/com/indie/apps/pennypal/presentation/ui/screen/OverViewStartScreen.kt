@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.indie.apps.cpp.data.utils.getSymbolFromCurrencyCode
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.screen.OverviewBalanceView
 import com.indie.apps.pennypal.presentation.ui.component.screen.OverviewList
@@ -31,6 +32,7 @@ import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.presentation.viewmodel.OverViewViewModel
 import com.indie.apps.pennypal.util.Resource
+import com.indie.apps.pennypal.util.Util
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
@@ -58,20 +60,28 @@ fun OverViewStartScreen(
      merchantDataDailyTotalPagingState.update(dailyTotalLazyPagingItems)*/
 
 
-    val uiState by overViewViewModel.uiState.collectAsStateWithLifecycle()
+    val userData by overViewViewModel.userData.collectAsStateWithLifecycle()
     val addDataAnimRun by overViewViewModel.addDataAnimRun.collectAsStateWithLifecycle()
 
     var amount by remember {
         mutableDoubleStateOf(0.0)
     }
 
-    when (uiState) {
+    if(userData != null)
+    {
+        Util.currentCurrencySymbol = getSymbolFromCurrencyCode(userData?.currency ?: "USD")
+        amount = (userData?.incomeAmount ?: 0.0) - (userData?.expenseAmount ?: 0.0)
+
+    }
+
+    /*when (userData != null) {
         is Resource.Loading -> {}
         is Resource.Success -> {
+            Util.currentCurrencySymbol = getSymbolFromCurrencyCode(uiState.data?.currency ?: "USD")
             amount = (uiState.data?.incomeAmount ?: 0.0) - (uiState.data?.expenseAmount ?: 0.0)
         }
         is Resource.Error -> {}
-    }
+    }*/
 
     var isAddDataSuccess by remember {
         mutableStateOf(false)
@@ -124,7 +134,9 @@ fun OverViewStartScreen(
                     CircularProgressIndicator()
                 }
             } else {
-                OverviewBalanceView(amount)
+                OverviewBalanceView(
+                    balance = amount,
+                    symbol = getSymbolFromCurrencyCode(userData?.currency ?: "USD"))
                 OverviewList(
                     dataWithDayList = dataWithDayLazyPagingItems,
                     isLoadMore = merchantDataWithDayPagingState.isLoadMore,

@@ -11,6 +11,7 @@ import java.util.Calendar
 import java.util.TimeZone
 
 object Util {
+    var currentCurrencySymbol = "$"
     const val SEARCH_NEWS_TIME_DELAY = 500L
 
     const val LIST_ITEM_ANIM_DELAY = 700L
@@ -21,6 +22,7 @@ object Util {
     const val PAGE_PREFETCH_DISTANCE = 20
 
     const val SAVE_STATE_COUNTRY_CODE = "code"
+    const val SAVE_STATE_CURRENCY_CODE = "currency_code"
     const val SAVE_STATE_EDIT_ID = "edit_id"
     const val SAVE_STATE_ADD_SUCCESS = "add_success"
     const val SAVE_STATE_EDIT_SUCCESS = "edit_success"
@@ -30,15 +32,15 @@ object Util {
     const val SAVE_STATE_MERCHANT_DATA_ADD_EDIT_ID = "merchant_data_add_edit_id"
     const val SAVE_STATE_MERCHANT_ADD_EDIT_ID = "merchant_add_edit_id"
     const val SAVE_STATE_MERCHANT_DATA_ADD_EDIT_SUCCESS = "merchant_add_edit_success"
+    const val SAVE_STATE_SHOW_CURRENCY = "is_show_currency"
     const val PARAM_MERCHANT_ID = "merchant_id"
     const val PARAM_EDIT_MERCHANT_DATA_ID = "edit_merchant_data_id"
 
-
     val TIME_ZONE_OFFSET_IN_MILLI = TimeZone.getDefault().rawOffset
 
-    fun getFormattedStringWithSymbol(value: Double?): String {
+    fun getFormattedStringWithSymbol(value: Double?, symbol: String = currentCurrencySymbol): String {
         val format = DecimalFormat("##,##,##0.##")
-        return "₹ " + format.format(value)
+        return "$symbol " + format.format(value)
     }
 
     fun getFormattedString(value: Double?): String {

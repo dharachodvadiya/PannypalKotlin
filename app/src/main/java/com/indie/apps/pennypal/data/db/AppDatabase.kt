@@ -6,6 +6,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.indie.apps.cpp.data.utils.getDefaultCurrencyCode
 import com.indie.apps.pennypal.data.dao.MerchantDao
 import com.indie.apps.pennypal.data.dao.MerchantDataDao
 import com.indie.apps.pennypal.data.dao.PaymentDao
@@ -37,11 +38,14 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun merchantDao(): MerchantDao
     abstract fun merchantDataDao(): MerchantDataDao
 
+
     companion object {
         @Volatile
         private var INSTANCE: AppDatabase? = null
+        private lateinit var context: Context
 
         fun getInstance(context: Context): AppDatabase {
+            this.context = context
             synchronized(this) {
                 return INSTANCE ?: Room.databaseBuilder(
                     context.applicationContext,
@@ -73,7 +77,7 @@ abstract class AppDatabase : RoomDatabase() {
         @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
         suspend fun populateDatabase(db: AppDatabase) {
 
-            val user = User(name = "Me", currency = "AED")
+            val user = User(name = "Me", currency = getDefaultCurrencyCode(context))
             val userDao = db.userDao()
 
             UserRepositoryImpl(userDao).insert(user)

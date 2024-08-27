@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import com.indie.apps.pennypal.data.entity.User
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface UserDao : BaseDao<User> {
@@ -15,7 +16,7 @@ interface UserDao : BaseDao<User> {
 
     //this always has single user
     @Query("SELECT * FROM user WHERE id = 1")
-    suspend fun getUser(): User
+    fun getUser(): Flow<User>
 
     @Transaction
     @Query("UPDATE user SET income_amt = income_amt + :incomeAmt, expense_amt = expense_amt + :expenseAmt WHERE ID = 1")

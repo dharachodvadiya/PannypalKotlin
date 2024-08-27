@@ -6,7 +6,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -108,6 +107,7 @@ fun OverviewTopBar(
 
 @Composable
 fun OverviewBalanceView(
+    symbol: String,
     balance: Double,
     modifier: Modifier = Modifier
 ) {
@@ -150,7 +150,7 @@ fun OverviewBalanceView(
                         color = MyAppTheme.colors.gray0
                     )
                     AutoSizeText(
-                        text = Util.getFormattedStringWithSymbol(balance),
+                        text = Util.getFormattedStringWithSymbol(balance, symbol),
                         style = MyAppTheme.typography.Regular77_5,
                         color = MyAppTheme.colors.black,
                         maxLines = 2,

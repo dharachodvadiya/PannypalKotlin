@@ -13,10 +13,9 @@ import javax.inject.Inject
 
 class UpdateUserDataUseCase @Inject constructor(
     private val userRepository: UserRepository,
-    private val user: User,
     @IoDispatcher private val dispatcher: CoroutineDispatcher) {
 
-    suspend operator fun invoke() : Flow<Resource<Int>>{
+    suspend fun updateData(user: User) : Flow<Resource<Int>>{
         return flow{
 
             try {

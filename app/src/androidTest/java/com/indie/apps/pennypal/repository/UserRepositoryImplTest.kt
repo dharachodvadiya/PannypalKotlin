@@ -6,6 +6,7 @@ import com.indie.apps.pennypal.data.db.AppDatabase
 import com.indie.apps.pennypal.data.entity.User
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Before
@@ -44,7 +45,7 @@ class UserRepositoryImplTest {
         userDao.insert(User(name = "testUser", currency = "AED"))
 
         //when
-        val user = userDao.getUser()
+        val user = userDao.getUser().first()
 
         //then
         assert(user.name == "testUser")
