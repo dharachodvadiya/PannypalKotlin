@@ -1,9 +1,11 @@
 package com.indie.apps.cpp.data.model
 
+import androidx.annotation.Keep
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import java.util.Locale
 
+@Keep
 data class Country(
     @SerializedName("country_name")
     @Expose

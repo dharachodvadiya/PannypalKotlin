@@ -17,6 +17,7 @@ import com.indie.apps.pennypal.repository.UserRepository
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import org.junit.After
@@ -107,7 +108,7 @@ class DeleteMultipleMerchantUseCaseTest {
         assert(result1.toList()[1].data != 0L)
         assert(result2.toList()[1].data != 0L)
 
-        val user1 = userDao.getUser()
+        val user1 = userDao.getUser().first()
         user1.run {
             assert(incomeAmount == 100.0)
             assert(expenseAmount == 10.0)

@@ -19,6 +19,7 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.*
@@ -116,7 +117,7 @@ class AddMerchantDataUseCaseTest {
         }
 
         // Assert user's updated amounts
-        val getUser = userDao.getUser()
+        val getUser = userDao.getUser().first()
         getUser.run {
             assert(incomeAmount == 100.0)
             assert(expenseAmount == 0.0)
@@ -189,7 +190,7 @@ class AddMerchantDataUseCaseTest {
         }
 
         // Assert user's updated amounts
-        val getUser = userDao.getUser()
+        val getUser = userDao.getUser().first()
         getUser.run {
             assert(incomeAmount == 100.0)
             assert(expenseAmount == 50.0)

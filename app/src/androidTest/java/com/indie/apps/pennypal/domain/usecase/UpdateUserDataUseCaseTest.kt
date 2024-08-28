@@ -9,6 +9,7 @@ import com.indie.apps.pennypal.repository.UserRepository
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import org.junit.After
@@ -58,13 +59,12 @@ class UpdateUserDataUseCaseTest {
 
         val result = UpdateUserDataUseCase(
             userRepository = userRepository,
-            userWithEmail,
             dispatcher = coroutineDispatcher
-        ).invoke()
+        ).updateData(userWithEmail)
 
         assert(result.toList().size == 2)
 
-        val getUser = userDao.getUser()
+        val getUser = userDao.getUser().first()
         getUser.run {
             assert(getUser.email == "test@gmail.com")
         }
