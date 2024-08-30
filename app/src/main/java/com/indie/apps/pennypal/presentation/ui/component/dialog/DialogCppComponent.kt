@@ -16,39 +16,37 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.indie.apps.cpp.data.countryList
 import com.indie.apps.cpp.data.model.Country
-import com.indie.apps.cpp.data.searchCountryForCurrency
-import com.indie.apps.cpp.data.searchCountryForDialCode
-import com.indie.apps.cpp.data.utils.getFlags
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.SearchView
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
-import java.util.Locale
+import com.indie.apps.pennypal.presentation.viewmodel.CppViewModel
 
 @Composable
 fun CppDialogField(
+    viewModel: CppViewModel,
     onSelect: (Country) -> Unit,
     searchState: TextFieldState,
+    countriesList: List<Country>,
+    onTextChange: (String) -> Unit,
     isShowCurrency: Boolean,
 ) {
     Column {
 
         SearchCcpSearchView(
-            searchState = searchState
+            searchState = searchState,
+            onTextChange = onTextChange
         )
-        val context = LocalContext.current
-        val countries = remember { countryList(context) }
-        val countriesList = countries.toList()
+        //val context = LocalContext.current
+        /*val countries = remember { countryList(context) }
+        val countriesList = countries.toList()*/
 
         LazyColumn(
             modifier = Modifier
@@ -56,28 +54,22 @@ fun CppDialogField(
         ) {
             if (isShowCurrency) {
                 items(
-                    if (searchState.text.isEmpty()) {
-                        countriesList
-                    } else {
-                        countriesList.searchCountryForCurrency(searchState.text)
-                    }
+                    countriesList
                 ) { country ->
                     SearchCurrencyCppListItem(
                         country = country,
                         onClick = onSelect,
+                        flagId = viewModel.getFlagIdFromCountryCode(country.countryCode)
                     )
                 }
             } else {
                 items(
-                    if (searchState.text.isEmpty()) {
-                        countriesList
-                    } else {
-                        countriesList.searchCountryForDialCode(searchState.text)
-                    }
+                    countriesList
                 ) { country ->
                     SearchCppListItem(
                         country = country,
-                        onClick = onSelect
+                        onClick = onSelect,
+                        flagId = viewModel.getFlagIdFromCountryCode(country.countryCode)
                     )
                 }
             }
@@ -90,6 +82,7 @@ fun CppDialogField(
 @Composable
 private fun SearchCcpSearchView(
     searchState: TextFieldState,
+    onTextChange: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -113,7 +106,7 @@ private fun SearchCcpSearchView(
                 start = dimensionResource(id = R.dimen.padding),
                 end = 0.dp
             ),
-            onTextChange = {}
+            onTextChange = onTextChange
         )
     }
 }
@@ -121,10 +114,10 @@ private fun SearchCcpSearchView(
 @Composable
 private fun SearchCppListItem(
     country: Country,
+    flagId: Int,
     onClick: (Country) -> Unit,
     modifier: Modifier = Modifier.fillMaxWidth()
 ) {
-    val code = country.countryCode.lowercase(Locale.ROOT)
     Row(
         modifier = modifier
             .clickable {
@@ -134,7 +127,7 @@ private fun SearchCppListItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
-            painterResource(getFlags(code)),
+            painterResource(flagId),
             contentDescription = "",
             contentScale = ContentScale.Crop,
             modifier = Modifier
@@ -160,11 +153,11 @@ private fun SearchCppListItem(
 
 @Composable
 private fun SearchCurrencyCppListItem(
+    flagId: Int,
     country: Country,
     onClick: (Country) -> Unit,
     modifier: Modifier = Modifier.fillMaxWidth()
 ) {
-    val code = country.countryCode.lowercase(Locale.ROOT)
     Row(
         modifier = modifier
             .clickable {
@@ -174,7 +167,7 @@ private fun SearchCurrencyCppListItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
-            painterResource(getFlags(code)),
+            painterResource(flagId),
             contentDescription = "",
             contentScale = ContentScale.Crop,
             modifier = Modifier

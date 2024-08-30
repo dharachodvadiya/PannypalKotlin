@@ -2,7 +2,7 @@ package com.indie.apps.cpp.data.utils
 
 import com.indie.apps.cpp.R
 
-fun getFlags(countryName: String): Int {
+internal fun getFlags(countryName: String): Int {
     return when (countryName) {
         "ad" -> R.drawable.ad
         "ae" -> R.drawable.ae

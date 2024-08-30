@@ -113,7 +113,7 @@ fun PennyPalApp() {
                     // get data passed back from B
                     val data: String? = backStackEntry
                         .savedStateHandle
-                        .get<String>(Util.SAVE_STATE_COUNTRY_CODE)
+                        .get<String>(Util.SAVE_STATE_COUNTRY_DIAL_CODE)
 
                     val editId: Long? = backStackEntry
                         .savedStateHandle
@@ -197,7 +197,7 @@ fun PennyPalApp() {
                             // Pass data back to A
                             navController.previousBackStackEntry
                                 ?.savedStateHandle
-                                ?.set(Util.SAVE_STATE_COUNTRY_CODE, it.dialCode)
+                                ?.set(Util.SAVE_STATE_COUNTRY_DIAL_CODE, it.dialCode)
                             navController.previousBackStackEntry
                                 ?.savedStateHandle
                                 ?.set(Util.SAVE_STATE_CURRENCY_CODE, it.currencyCode)

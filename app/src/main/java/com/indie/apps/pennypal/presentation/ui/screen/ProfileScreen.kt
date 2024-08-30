@@ -22,7 +22,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.indie.apps.cpp.data.utils.getSymbolFromCurrencyCode
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.entity.User
 import com.indie.apps.pennypal.presentation.ui.component.TopBarWithTitle
@@ -52,6 +51,7 @@ fun ProfileScreen(
             ProfileScreenData(
                 onNavigationUp = onNavigationUp,
                 user = it,
+                symbol = profileViewModel.getSymbolFromCurrencyCode(it.currency),
                 isSaveEnable = profileViewModel.getIsSavable(),
                 onCurrencyChangeClick = onCurrencyChangeClick,
                 onSaveClick = {
@@ -73,6 +73,7 @@ fun ProfileScreen(
 private fun ProfileScreenData(
     onNavigationUp: () -> Unit,
     user: User,
+    symbol: String,
     onCurrencyChangeClick: () -> Unit,
     onSaveClick: (User) -> Unit,
     isSaveEnable: Boolean = false
@@ -109,14 +110,15 @@ private fun ProfileScreenData(
                 .padding(padding)
         ) {
             ProfileTopSection(
-                symbol = getSymbolFromCurrencyCode(user.currency),
+                symbol = symbol,
                 totalAmount = (user.incomeAmount - user.expenseAmount),
                 modifier = Modifier.height(screenHeight * 0.3f)
             )
             ProfileSection2(
                 user = user,
                 onLoginWithGoogle = {},
-                onCurrencyChangeClick = onCurrencyChangeClick
+                onCurrencyChangeClick = onCurrencyChangeClick,
+                symbol = symbol
             )
         }
 

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.indie.apps.cpp.data.repository.CountryRepository
 import com.indie.apps.pennypal.data.module.MerchantDataWithNameWithDayTotal
 import com.indie.apps.pennypal.domain.usecase.GetMerchantDataListWithMerchantNameAndDayTotalUseCase
 import com.indie.apps.pennypal.domain.usecase.GetUserProfileUseCase
@@ -22,7 +23,8 @@ import javax.inject.Inject
 @HiltViewModel
 class OverViewViewModel @Inject constructor(
     userProfileUseCase: GetUserProfileUseCase,
-    getMerchantDataListWithMerchantNameAndDayTotalUseCase: GetMerchantDataListWithMerchantNameAndDayTotalUseCase
+    getMerchantDataListWithMerchantNameAndDayTotalUseCase: GetMerchantDataListWithMerchantNameAndDayTotalUseCase,
+    private val countryRepository: CountryRepository
 ) : ViewModel() {
 
     //val searchTextState by mutableStateOf(TextFieldState())
@@ -70,9 +72,12 @@ class OverViewViewModel @Inject constructor(
         }
     }
 
-
     fun addMerchantDataSuccessAnimStop() {
         if (addDataAnimRun.value)
             addDataAnimRun.value = false
+    }
+
+    fun getSymbolFromCurrencyCode(currencyCode : String): String {
+        return countryRepository.getSymbolFromCurrencyCode(currencyCode)
     }
 }

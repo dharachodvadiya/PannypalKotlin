@@ -2,9 +2,9 @@ package com.indie.apps.pennypal.presentation.ui.dialog
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -16,7 +16,6 @@ import com.indie.apps.pennypal.presentation.ui.component.custom.composable.MyApp
 import com.indie.apps.pennypal.presentation.ui.component.dialog.AddMerchantDialogField
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.presentation.viewmodel.AddEditMerchantViewModel
-import com.indie.apps.cpp.data.utils.getDefaultPhoneCode
 
 @Composable
 fun DialogAddMerchant(
@@ -28,10 +27,15 @@ fun DialogAddMerchant(
     code: String?,
     editId: Long? = null,
 ) {
+    val countryCode by addMerchantViewModel.countryDialCode.collectAsStateWithLifecycle()
 
-    val countryCode by addMerchantViewModel.countryCode.collectAsStateWithLifecycle()
-    addMerchantViewModel.setCountryCode(code ?: getDefaultPhoneCode(LocalContext.current))
-    addMerchantViewModel.setEditId(editId) // always call after set country code
+    LaunchedEffect(code) {
+        addMerchantViewModel.setCountryCode(code ?: addMerchantViewModel.getDefaultCurrencyCode())
+    }
+
+    LaunchedEffect(editId) {
+        addMerchantViewModel.setEditId(editId) // always call after set country code
+    }
 
     val enableButton by addMerchantViewModel.enableButton.collectAsStateWithLifecycle()
     val merchantName by addMerchantViewModel.merchantName.collectAsStateWithLifecycle()
@@ -72,7 +76,7 @@ fun DialogAddMerchant(
 @Composable
 private fun MyAppDialogPreview() {
     PennyPalTheme(darkTheme = true) {
-        DialogAddMerchant(onNavigationUp = {}, onSaveSuccess = {_,_ -> }, onCpp = {}, code = null
+        DialogAddMerchant(onNavigationUp = {}, onSaveSuccess = { _, _ -> }, onCpp = {}, code = null
         )
     }
 }

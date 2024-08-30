@@ -2,7 +2,7 @@ package com.indie.apps.cpp.data.utils
 
 import com.indie.apps.cpp.R
 
-fun getNumberHint(countryName: String): Int {
+internal fun getNumberHint(countryName: String): Int {
     return when (countryName) {
         "ad" -> R.string.andorra_hint
         "ae" -> R.string.united_arab_emirates_hint

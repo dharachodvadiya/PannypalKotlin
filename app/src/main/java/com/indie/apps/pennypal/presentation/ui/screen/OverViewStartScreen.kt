@@ -23,7 +23,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.indie.apps.cpp.data.utils.getSymbolFromCurrencyCode
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.screen.OverviewBalanceView
 import com.indie.apps.pennypal.presentation.ui.component.screen.OverviewList
@@ -31,7 +30,6 @@ import com.indie.apps.pennypal.presentation.ui.component.screen.OverviewTopBar
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.presentation.viewmodel.OverViewViewModel
-import com.indie.apps.pennypal.util.Resource
 import com.indie.apps.pennypal.util.Util
 
 @SuppressLint("StateFlowValueCalledInComposition")
@@ -67,9 +65,9 @@ fun OverViewStartScreen(
         mutableDoubleStateOf(0.0)
     }
 
-    if(userData != null)
-    {
-        Util.currentCurrencySymbol = getSymbolFromCurrencyCode(userData?.currency ?: "USD")
+    if (userData != null) {
+        Util.currentCurrencySymbol =
+            overViewViewModel.getSymbolFromCurrencyCode(userData?.currency ?: "USD")
         amount = (userData?.incomeAmount ?: 0.0) - (userData?.expenseAmount ?: 0.0)
 
     }
@@ -136,7 +134,10 @@ fun OverViewStartScreen(
             } else {
                 OverviewBalanceView(
                     balance = amount,
-                    symbol = getSymbolFromCurrencyCode(userData?.currency ?: "USD"))
+                    symbol = overViewViewModel.getSymbolFromCurrencyCode(
+                        userData?.currency ?: "USD"
+                    )
+                )
                 OverviewList(
                     dataWithDayList = dataWithDayLazyPagingItems,
                     isLoadMore = merchantDataWithDayPagingState.isLoadMore,

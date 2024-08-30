@@ -29,7 +29,6 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.indie.apps.cpp.data.utils.getSymbolFromCurrencyCode
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.entity.User
 import com.indie.apps.pennypal.presentation.ui.component.UserProfile
@@ -89,11 +88,11 @@ fun ProfileTopSection(
 @Composable
 fun ProfileSection2(
     user: User,
+    symbol: String,
     onLoginWithGoogle: () -> Unit,
     onCurrencyChangeClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val symbol = getSymbolFromCurrencyCode(user.currency)
     Column(modifier = modifier) {
 
         Row(

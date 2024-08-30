@@ -2,6 +2,9 @@ package com.indie.apps.pennypal.di
 
 import android.content.Context
 import androidx.room.Room
+import com.indie.apps.cpp.data.CountryDb
+import com.indie.apps.cpp.data.repository.CountryRepository
+import com.indie.apps.cpp.data.repository.CountryRepositoryImpl
 import com.indie.apps.pennypal.data.db.AppDatabase
 import com.indie.apps.pennypal.repository.MerchantDataRepository
 import com.indie.apps.pennypal.repository.MerchantDataRepositoryImpl
@@ -32,6 +35,11 @@ class AppModuleTest {
             .build()
     }
 
+    @Singleton
+    @Provides
+    fun provideCountryDatabase(@ApplicationContext context : Context) : CountryDb = CountryDb.getInstance(context)
+
+
     @Provides
     fun provideUserRepository(database: AppDatabase): UserRepository {
         return UserRepositoryImpl(database.userDao())
@@ -50,6 +58,11 @@ class AppModuleTest {
     @Provides
     fun provideMerchantDataRepository(database: AppDatabase): MerchantDataRepository {
         return MerchantDataRepositoryImpl(database.merchantDataDao())
+    }
+
+    @Provides
+    fun provideCountryRepository(countryDb: CountryDb): CountryRepository {
+        return CountryRepositoryImpl(countryDb)
     }
 
 }

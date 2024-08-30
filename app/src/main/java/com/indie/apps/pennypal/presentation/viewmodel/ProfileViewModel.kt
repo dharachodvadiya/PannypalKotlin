@@ -2,6 +2,7 @@ package com.indie.apps.pennypal.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.indie.apps.cpp.data.repository.CountryRepository
 import com.indie.apps.pennypal.data.entity.User
 import com.indie.apps.pennypal.domain.usecase.GetUserProfileUseCase
 import com.indie.apps.pennypal.domain.usecase.UpdateUserDataUseCase
@@ -15,6 +16,7 @@ import javax.inject.Inject
 class ProfileViewModel @Inject constructor(
     private val userProfileUseCase: GetUserProfileUseCase,
     private val updateUserDataUseCase: UpdateUserDataUseCase,
+    private val countryRepository: CountryRepository
 ) : ViewModel() {
 
     /* val uiState = userProfileUseCase.loadData()
@@ -98,5 +100,10 @@ class ProfileViewModel @Inject constructor(
                 }
         }
     }
+
+    fun getSymbolFromCurrencyCode(currencyCode: String): String {
+        return countryRepository.getSymbolFromCurrencyCode(currencyCode)
+    }
+
 
 }

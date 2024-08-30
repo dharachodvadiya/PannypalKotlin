@@ -2,7 +2,7 @@ package com.indie.apps.pennypal.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.indie.apps.cpp.data.getCountryData
+import com.indie.apps.cpp.data.repository.CountryRepository
 import com.indie.apps.pennypal.data.entity.Merchant
 import com.indie.apps.pennypal.domain.usecase.AddMerchantUseCase
 import com.indie.apps.pennypal.domain.usecase.GetMerchantFromIdUseCase
@@ -20,13 +20,14 @@ import javax.inject.Inject
 class AddEditMerchantViewModel @Inject constructor(
     private val addMerchantUseCase: AddMerchantUseCase,
     private val updateMerchantUseCase: UpdateMerchantUseCase,
-    private val getMerchantFromIdUseCase: GetMerchantFromIdUseCase
+    private val getMerchantFromIdUseCase: GetMerchantFromIdUseCase,
+    private val countryRepository: CountryRepository
 ) : ViewModel() {
 
     val merchantName = MutableStateFlow(TextFieldState())
     val phoneNumber = MutableStateFlow(TextFieldState())
     val description = MutableStateFlow(TextFieldState())
-    val countryCode = MutableStateFlow("")
+    val countryDialCode = MutableStateFlow("")
 
     val enableButton = MutableStateFlow(true)
 
@@ -47,7 +48,7 @@ class AddEditMerchantViewModel @Inject constructor(
                         phoneNumber.value.text = it.phoneNumber ?: ""
                         description.value.text = it.details ?: ""
                         if (!it.countryCode.isNullOrEmpty())
-                            countryCode.value = it.countryCode
+                            countryDialCode.value = it.countryCode
                     }
             }
         }
@@ -56,15 +57,15 @@ class AddEditMerchantViewModel @Inject constructor(
     }
 
     fun setCountryCode(code: String) {
-        countryCode.value = code
+        countryDialCode.value = code
     }
 
     fun addOrEditMerchant(onSuccess: (Merchant?, Boolean) -> Unit) {
         if (enableButton.value) {
             enableButton.value = false
             val isValidNum = Util.isValidPhoneNumber(
-                countryCode = getCountryData().first { it.dialCode == countryCode.value }.countryCode,
-                phoneNumber = countryCode.value + phoneNumber.value.text
+                countryCode = countryRepository.getCountryCodeFromDialCode(countryDialCode.value),
+                phoneNumber = countryDialCode.value + phoneNumber.value.text
             )
 
             if (merchantName.value.text.trim().isEmpty()) {
@@ -85,7 +86,7 @@ class AddEditMerchantViewModel @Inject constructor(
                                 name = merchantName.value.text.trim(),
                                 phoneNumber = phoneNumber.value.text.trim(),
                                 details = description.value.text.trim(),
-                                countryCode = countryCode.value
+                                countryCode = countryDialCode.value
                             )
 
                             updateMerchantUseCase
@@ -111,7 +112,7 @@ class AddEditMerchantViewModel @Inject constructor(
                             name = merchantName.value.text.trim(),
                             phoneNumber = phoneNumber.value.text.trim(),
                             details = description.value.text.trim(),
-                            countryCode = countryCode.value,
+                            countryCode = countryDialCode.value,
                             dateInMilli = System.currentTimeMillis()
                         )
 
@@ -138,4 +139,7 @@ class AddEditMerchantViewModel @Inject constructor(
         }
 
     }
+
+    fun getDefaultCurrencyCode() =
+        countryRepository.getDialCodeFromCountryCode(countryRepository.getDefaultCountryCode())
 }

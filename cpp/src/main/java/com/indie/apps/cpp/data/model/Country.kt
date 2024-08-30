@@ -26,5 +26,3 @@ data class Country(
     @Expose
     val currencySymbol: String = ""
 )
-
-fun Country.toPhoneInfo() = PhoneInfo(countryCode.lowercase(Locale.ROOT), dialCode, name)
