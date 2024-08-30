@@ -44,7 +44,7 @@ class MerchantViewModel @Inject constructor(
     var addAnimRun = MutableStateFlow(false)
     var addDataAnimRun = MutableStateFlow(false)
     var editAnimRun = MutableStateFlow(false)
-    lateinit var previousData: PagingData<Merchant>
+    private lateinit var previousData: PagingData<Merchant>
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val pagedData = trigger
@@ -168,7 +168,7 @@ class MerchantViewModel @Inject constructor(
 
     }
 
-    fun onDeleteAnimStop() {
+    private fun onDeleteAnimStop() {
         if(deleteAnimRun.value)
         {
             deleteAnimRun.value = false
@@ -199,7 +199,7 @@ class MerchantViewModel @Inject constructor(
         changeUpdateState()
     }
 
-    fun clearSelection() {
+    private fun clearSelection() {
         selectedList.clear()
         changeUpdateState()
     }

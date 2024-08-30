@@ -64,7 +64,7 @@ fun MerchantScreen(
     editAddId: Long = 1L,
     merchantId: Long = 1L,
     bottomPadding: PaddingValues,
-    modifier: Modifier = Modifier
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
     val merchantDeleteToast = stringResource(id = R.string.merchant_delete_success_message)

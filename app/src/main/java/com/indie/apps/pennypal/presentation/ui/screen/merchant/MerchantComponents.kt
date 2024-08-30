@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.screen.merchant
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -51,7 +52,7 @@ fun MerchantTopBar(
     onNavigationUp: () -> Unit,
     textState: TextFieldState,
     onSearchTextChange: (String) -> Unit,
-    modifier: Modifier = Modifier
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     TopBar(
         isBackEnable = (isEditable || isDeletable),
@@ -136,7 +137,7 @@ fun MerchantListItem(
     onClick: ()-> Unit,
     isSelected : Boolean = false,
     itemBgColor : Color,
-    modifier: Modifier = Modifier.fillMaxWidth()
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier.fillMaxWidth()
 ) {
     val imageVector = if(isSelected) Icons.Default.Done else Icons.Default.Person
     val iconBgColor = if(isSelected) MyAppTheme.colors.brand  else MyAppTheme.colors.lightBlue2

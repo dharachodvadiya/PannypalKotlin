@@ -46,7 +46,7 @@ class MerchantDataViewModel @Inject constructor(
 
     var editDataAnimRun = MutableStateFlow(false)
     var deleteAnimRun = MutableStateFlow(false)
-    lateinit var previousData: PagingData<MerchantData>
+    private lateinit var previousData: PagingData<MerchantData>
 
     val merchantState = getMerchantFromIdUseCase
         .getData(merchantId)
@@ -157,7 +157,7 @@ class MerchantDataViewModel @Inject constructor(
 
     }
 
-    fun onDeleteAnimStop() {
+    private fun onDeleteAnimStop() {
         if(deleteAnimRun.value)
         {
             deleteAnimRun.value = false

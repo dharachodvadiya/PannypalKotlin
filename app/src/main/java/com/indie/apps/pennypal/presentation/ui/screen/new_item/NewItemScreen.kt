@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.screen.new_item
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -46,7 +47,7 @@ fun NewItemScreen(
     merchantData: MerchantNameAndDetails? = null,
     paymentData: Payment? = null,
 
-    modifier: Modifier = Modifier
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     if (merchantData != null) {
         newItemViewModel.setMerchantData(merchantData)
@@ -86,7 +87,7 @@ fun NewItemScreen(
                 )
             }) { padding ->
 
-                val imeState by rememberImeState({})
+                val imeState by rememberImeState {}
                 val scrollState = rememberScrollState()
 
                 LaunchedEffect(key1 = imeState) {

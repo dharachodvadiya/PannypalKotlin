@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.screen.new_item
 
+import android.annotation.SuppressLint
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -89,7 +90,7 @@ private fun NewEntryButtonItem(
     bgColor: Color,
     imageVector: ImageVector,
     selected: Boolean = false,
-    modifier: Modifier = Modifier,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
 ) {
     val btnBgColor = if (selected) bgColor else MyAppTheme.colors.itemBg
     val btnContentColor = if (selected) MyAppTheme.colors.black else MyAppTheme.colors.gray1
@@ -128,7 +129,7 @@ fun NewEntryFieldItemSection(
     paymentError: String = "",
     amount: TextFieldState = TextFieldState(),
     description: TextFieldState = TextFieldState(),
-    modifier: Modifier = Modifier,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
@@ -190,7 +191,7 @@ private fun NewEntrySelectableItem(
     @StringRes placeholder: Int,
     imageVector: ImageVector,
     onAddClick: () -> Unit,
-    modifier: Modifier = Modifier
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
@@ -359,7 +360,7 @@ private fun NewEntryTextFieldItem(
     @StringRes label: Int,
     placeholder: Int,
     keyboardType: KeyboardType = KeyboardType.Text,
-    modifier: Modifier = Modifier
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     val colorDivider = MyAppTheme.colors.gray1
 

@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.screen.merchant_profile
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -30,7 +31,7 @@ import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 
 @Composable
 fun MerchantProfileTopSection(
-    name: String = "", description: String = "", modifier: Modifier = Modifier
+    name: String = "", description: String = "", @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
 
     Column(
@@ -61,7 +62,7 @@ fun MerchantProfileTopSection(
 
 @Composable
 fun MerchantProfileBottomSection(
-    phoneNo: String = "", modifier: Modifier = Modifier
+    phoneNo: String = "", @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier

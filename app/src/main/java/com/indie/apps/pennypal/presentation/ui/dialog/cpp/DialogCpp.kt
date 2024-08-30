@@ -24,7 +24,7 @@ fun DialogCpp(
     onNavigationUp: () -> Unit,
     onSelect: (Country) -> Unit,
     isShowCurrency: Boolean,
-    modifier: Modifier = Modifier
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     val searchTextState by viewModel.searchTextState.collectAsStateWithLifecycle()
     val countryData by viewModel.uiState.collectAsStateWithLifecycle()

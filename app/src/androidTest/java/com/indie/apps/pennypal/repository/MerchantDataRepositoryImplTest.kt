@@ -11,7 +11,6 @@ import com.indie.apps.pennypal.data.entity.Payment
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.runBlocking
-import org.junit.Assert.*
 
 import org.junit.After
 import org.junit.Before

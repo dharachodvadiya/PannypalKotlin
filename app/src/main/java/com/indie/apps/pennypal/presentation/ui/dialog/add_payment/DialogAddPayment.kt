@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.dialog.add_payment
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -19,7 +20,7 @@ fun DialogAddPayment(
     addPaymentViewModel: AddPaymentViewModel = hiltViewModel(),
     onNavigationUp: () -> Unit,
     onSaveSuccess: (Payment?) -> Unit,
-    modifier: Modifier = Modifier
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     val enableButton by addPaymentViewModel.enableButton.collectAsStateWithLifecycle()
     val paymentTypeState by addPaymentViewModel.paymentTypeState.collectAsStateWithLifecycle()

@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.util
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.DisplayMetrics
 import com.google.i18n.phonenumbers.NumberParseException
@@ -63,7 +64,7 @@ object Util {
 
     fun getDateFromMillis(
         timeInMillis: Long,
-        formatter: SimpleDateFormat = SimpleDateFormat("dd-MM-yyyy")
+        @SuppressLint("SimpleDateFormat") formatter: SimpleDateFormat = SimpleDateFormat("dd-MM-yyyy")
     ): String {
 
         val calendar: Calendar = Calendar.getInstance()
@@ -71,12 +72,12 @@ object Util {
         return formatter.format(calendar.time)
     }
 
-    fun getTodayDate(formatter: SimpleDateFormat = SimpleDateFormat("dd-MM-yyyy")): String {
+    fun getTodayDate(@SuppressLint("SimpleDateFormat") formatter: SimpleDateFormat = SimpleDateFormat("dd-MM-yyyy")): String {
         val calendar: Calendar = Calendar.getInstance()
         return formatter.format(calendar.time)
     }
 
-    fun getYesterdayDate(formatter: SimpleDateFormat = SimpleDateFormat("dd-MM-yyyy")): String {
+    fun getYesterdayDate(@SuppressLint("SimpleDateFormat") formatter: SimpleDateFormat = SimpleDateFormat("dd-MM-yyyy")): String {
         val calendar: Calendar = Calendar.getInstance()
         calendar.add(Calendar.DATE, -1)
         return formatter.format(calendar.time)

@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.dialog.search_merchant
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -170,7 +171,7 @@ private fun SearchMerchantSearchView(
 private fun SearchMerchantListItem(
     item: MerchantNameAndDetails,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier.fillMaxWidth()
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier.fillMaxWidth()
 ) {
     val imageVector = Icons.Default.Person
     val bgColor = MyAppTheme.colors.lightBlue2

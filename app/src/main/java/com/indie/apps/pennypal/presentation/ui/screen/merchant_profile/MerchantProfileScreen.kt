@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.screen.merchant_profile
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -27,7 +28,7 @@ import com.indie.apps.pennypal.util.Resource
 fun MerchantProfileScreen(
     merchantProfileViewModel: MerchantProfileViewModel = hiltViewModel(),
     onNavigationUp: () -> Unit,
-    modifier: Modifier = Modifier
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
 
     val uiState by merchantProfileViewModel.uiState.collectAsStateWithLifecycle()

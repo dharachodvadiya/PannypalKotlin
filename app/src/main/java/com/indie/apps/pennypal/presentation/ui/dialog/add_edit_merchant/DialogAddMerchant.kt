@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.dialog.add_edit_merchant
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -21,7 +22,7 @@ fun DialogAddMerchant(
     onNavigationUp: () -> Unit,
     onSaveSuccess: (Merchant?, Boolean) -> Unit,
     onCpp: () -> Unit,
-    modifier: Modifier = Modifier,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
     code: String?,
     editId: Long? = null,
 ) {

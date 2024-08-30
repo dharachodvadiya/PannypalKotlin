@@ -25,7 +25,7 @@ fun DialogSearchMerchant(
     onNavigationUp: () -> Unit,
     onAddClick: () -> Unit,
     onSelectMerchant: (MerchantNameAndDetails?) -> Unit,
-    modifier: Modifier = Modifier
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
 
     val lazyPagingData = searchMerchantViewModel.pagedData.collectAsLazyPagingItems()

@@ -348,7 +348,7 @@ fun OverviewList(
 @Composable
 fun OverviewListDateItem(
     item: MerchantDataDailyTotal,
-    modifier: Modifier = Modifier.fillMaxWidth()
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier.fillMaxWidth()
 ) {
     val dayString = when (item.day) {
         Util.getTodayDate() -> stringResource(id = R.string.today)
@@ -377,7 +377,7 @@ fun OverviewListDateItem(
 @Composable
 fun OverviewListItem(
     item: MerchantDataWithName,
-    modifier: Modifier = Modifier.fillMaxWidth()
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier.fillMaxWidth()
 ) {
     val imageVector = if (item.type < 0) Icons.Default.NorthEast else Icons.Default.SouthWest
     val bgColor = if (item.type < 0) MyAppTheme.colors.redBg else MyAppTheme.colors.greenBg

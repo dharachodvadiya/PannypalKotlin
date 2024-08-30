@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.screen.profile
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -42,7 +43,7 @@ import com.indie.apps.pennypal.util.Util
 fun ProfileTopSection(
     symbol: String,
     totalAmount: Double = 0.0,
-    modifier: Modifier = Modifier
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
 
     Column(

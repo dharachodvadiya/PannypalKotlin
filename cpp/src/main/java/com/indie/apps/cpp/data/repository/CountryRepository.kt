@@ -8,7 +8,7 @@ interface CountryRepository {
     fun getNumberHintCountryCode(countryCode: String): Int
     fun getSymbolFromCurrencyCode(currencyCode: String): String
     fun getDialCodeFromCountryCode(countryCode: String): String
-    fun getCountryCodeFromDialCode(countryCode: String): String
+    fun getCountryCodeFromDialCode(dialCode: String): String
     fun getDefaultCountryCode(): String
     fun getPhoneCodeFromCountryCode(countryCode: String): String
     fun getCurrencyCodeFromCountryCode(countryCode: String): String

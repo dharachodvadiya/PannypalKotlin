@@ -53,7 +53,7 @@ fun MerchantDataScreen(
     onEditClick: (Long) -> Unit,
     isEditMerchantDataSuccess: Boolean = false,
     merchantDataId: Long = 1L,
-    modifier: Modifier = Modifier
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
 
     val merchant by merchantDataViewModel.merchantState.collectAsStateWithLifecycle()

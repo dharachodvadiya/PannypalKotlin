@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.dialog.cpp
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -115,7 +116,7 @@ private fun SearchCppListItem(
     country: Country,
     flagId: Int,
     onClick: (Country) -> Unit,
-    modifier: Modifier = Modifier.fillMaxWidth()
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier.fillMaxWidth()
 ) {
     Row(
         modifier = modifier
@@ -155,7 +156,7 @@ private fun SearchCurrencyCppListItem(
     flagId: Int,
     country: Country,
     onClick: (Country) -> Unit,
-    modifier: Modifier = Modifier.fillMaxWidth()
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier.fillMaxWidth()
 ) {
     Row(
         modifier = modifier

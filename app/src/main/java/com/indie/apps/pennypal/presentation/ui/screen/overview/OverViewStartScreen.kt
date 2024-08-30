@@ -36,7 +36,7 @@ fun OverViewStartScreen(
     bottomPadding: PaddingValues,
     addEditMerchantDataId: Long,
     isAddMerchantDataSuccess: Boolean = false,
-    modifier: Modifier = Modifier
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     /* val dataWithNameLazyPagingItems = overViewViewModel.pagedMerchantData.collectAsLazyPagingItems()
      val merchantDataWithNamePagingState by overViewViewModel.merchantDataWithNamePagingState.collectAsStateWithLifecycle()

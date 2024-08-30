@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.screen.merchant_data
 
+import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -61,7 +62,7 @@ fun MerchantDataTopBar(
     onClick: () -> Unit,
     onCloseClick: () -> Unit = {},
     onNavigationUp: () -> Unit,
-    modifier: Modifier = Modifier
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     TopBar(
         isBackEnable = selectCount == 0,
@@ -86,7 +87,7 @@ private fun MerchantDataTopBarItem(
     description: String = "",
     onClick: () -> Unit,
     onCloseClick: () -> Unit = {},
-    modifier: Modifier = Modifier.fillMaxWidth()
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier.fillMaxWidth()
 ) {
     val imageVector = Icons.Default.Person
     val bgColor = MyAppTheme.colors.lightBlue2
@@ -159,7 +160,7 @@ fun MerchantDataBottomBar(
     isDeletable: Boolean = false,
     onEditClick: () -> Unit,
     onDeleteClick: () -> Unit,
-    modifier: Modifier = Modifier.fillMaxWidth()
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier.fillMaxWidth()
 ) {
     if (isEditable || isDeletable) {
         Row(
@@ -212,7 +213,7 @@ fun MerchantDataIncomeAmount(
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     itemBgColor: Color,
-    modifier: Modifier = Modifier
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     val bgColor =
         if (isSelected) MyAppTheme.colors.itemSelectedBg else MyAppTheme.colors.transparent
@@ -251,7 +252,7 @@ fun MerchantDataExpenseAmount(
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     itemBgColor: Color,
-    modifier: Modifier = Modifier
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     val bgColor =
         if (isSelected) MyAppTheme.colors.itemSelectedBg else MyAppTheme.colors.transparent
@@ -282,16 +283,15 @@ fun MerchantDataExpenseAmount(
     }
 }
 
+@SuppressLint("SimpleDateFormat")
 @Composable
 fun MerchantDataDateItem(
     dateMillis: Long = 0,
-    modifier: Modifier = Modifier,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
 ) {
     val format = SimpleDateFormat("dd MMMM yyyy")
 
-    val day = Util.getDateFromMillis(dateMillis, format)
-
-    val dayString = when (day) {
+    val dayString = when (val day = Util.getDateFromMillis(dateMillis, format)) {
         Util.getTodayDate(format) -> stringResource(id = R.string.today)
         Util.getYesterdayDate(format) -> stringResource(id = R.string.yesterday)
         else -> day
@@ -330,7 +330,7 @@ fun MerchantDataDateItem(
 private fun MerchantDataAmountItem(
     amount: Double,
     description: String? = null,
-    modifier: Modifier = Modifier,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
     contentAlignment: Alignment.Horizontal,
     colorStroke: Color = MyAppTheme.colors.black,
     itemBgColor: Color
@@ -384,7 +384,7 @@ private fun MerchantDataBottomButton(
     bgBrush: Brush? = null,
     bgColor: Color = MyAppTheme.colors.brand,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     PrimaryButton(
         bgColor = bgColor,
@@ -413,7 +413,7 @@ private fun MerchantDataBottomButton(
 private fun MerchantDataBottomTotal(
     totalIncome: Double = 0.0,
     totalExpense: Double = 0.0,
-    modifier: Modifier = Modifier
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
 
     Row(
@@ -452,7 +452,7 @@ private fun MerchantDataBottomTotal(
 private fun MerchantDataTotalIncomeExpense(
     amount: Double = 0.0,
     strokeColor: Color,
-    modifier: Modifier = Modifier
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier
@@ -481,7 +481,7 @@ private fun MerchantDataTotalIncomeExpense(
 @Composable
 private fun MerchantDataTotal(
     amount: Double = 0.0,
-    modifier: Modifier = Modifier
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier,
