@@ -19,12 +19,12 @@ import androidx.navigation.compose.rememberNavController
 import com.google.gson.Gson
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.entity.toMerchantNameAndDetails
-import com.indie.apps.pennypal.presentation.ui.dialog.DialogAddMerchant
-import com.indie.apps.pennypal.presentation.ui.dialog.DialogAddPayment
-import com.indie.apps.pennypal.presentation.ui.dialog.DialogCpp
-import com.indie.apps.pennypal.presentation.ui.dialog.DialogSearchMerchant
+import com.indie.apps.pennypal.presentation.ui.dialog.add_edit_merchant.DialogAddMerchant
+import com.indie.apps.pennypal.presentation.ui.dialog.add_payment.DialogAddPayment
+import com.indie.apps.pennypal.presentation.ui.dialog.cpp.DialogCpp
+import com.indie.apps.pennypal.presentation.ui.dialog.search_merchant.DialogSearchMerchant
 import com.indie.apps.pennypal.presentation.ui.navigation.BottomNavItem
-import com.indie.apps.pennypal.presentation.ui.navigation.BottomNavigationBarCustom1
+import com.indie.apps.pennypal.presentation.ui.component.navigation.BottomNavigationBarCustom1
 import com.indie.apps.pennypal.presentation.ui.navigation.DialogNav
 import com.indie.apps.pennypal.presentation.ui.navigation.OverviewNav
 import com.indie.apps.pennypal.presentation.ui.route.merchantRoute

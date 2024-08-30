@@ -16,9 +16,9 @@ import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
 import com.indie.apps.pennypal.presentation.ui.navigation.BottomNavItem
 import com.indie.apps.pennypal.presentation.ui.navigation.DialogNav
 import com.indie.apps.pennypal.presentation.ui.navigation.OverviewNav
-import com.indie.apps.pennypal.presentation.ui.screen.NewItemScreen
-import com.indie.apps.pennypal.presentation.ui.screen.OverViewStartScreen
-import com.indie.apps.pennypal.presentation.ui.screen.ProfileScreen
+import com.indie.apps.pennypal.presentation.ui.screen.new_item.NewItemScreen
+import com.indie.apps.pennypal.presentation.ui.screen.overview.OverViewStartScreen
+import com.indie.apps.pennypal.presentation.ui.screen.profile.ProfileScreen
 import com.indie.apps.pennypal.util.Util
 
 

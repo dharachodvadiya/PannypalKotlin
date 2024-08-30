@@ -16,10 +16,10 @@ import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
 import com.indie.apps.pennypal.presentation.ui.navigation.BottomNavItem
 import com.indie.apps.pennypal.presentation.ui.navigation.DialogNav
 import com.indie.apps.pennypal.presentation.ui.navigation.MerchantNav
-import com.indie.apps.pennypal.presentation.ui.screen.MerchantDataScreen
-import com.indie.apps.pennypal.presentation.ui.screen.MerchantProfileScreen
-import com.indie.apps.pennypal.presentation.ui.screen.MerchantScreen
-import com.indie.apps.pennypal.presentation.ui.screen.NewItemScreen
+import com.indie.apps.pennypal.presentation.ui.screen.merchant_data.MerchantDataScreen
+import com.indie.apps.pennypal.presentation.ui.screen.merchant_profile.MerchantProfileScreen
+import com.indie.apps.pennypal.presentation.ui.screen.merchant.MerchantScreen
+import com.indie.apps.pennypal.presentation.ui.screen.new_item.NewItemScreen
 import com.indie.apps.pennypal.util.Util
 
 fun NavGraphBuilder.merchantRoute(
