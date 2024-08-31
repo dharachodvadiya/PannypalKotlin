@@ -356,7 +356,7 @@ private fun NoTransactionMessagePreview() {
     }
 }
 
-fun Context.ShowToast(message: String) = run {
+fun Context.showToast(message: String) = run {
     Toast.makeText(
         this,
         message,

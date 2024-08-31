@@ -1,6 +1,5 @@
 package com.indie.apps.pennypal.presentation.ui.route
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.platform.LocalContext
@@ -13,7 +12,7 @@ import com.google.gson.Gson
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.entity.Payment
 import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
-import com.indie.apps.pennypal.presentation.ui.component.ShowToast
+import com.indie.apps.pennypal.presentation.ui.component.showToast
 import com.indie.apps.pennypal.presentation.ui.navigation.BottomNavItem
 import com.indie.apps.pennypal.presentation.ui.navigation.DialogNav
 import com.indie.apps.pennypal.presentation.ui.navigation.MerchantNav
@@ -199,7 +198,7 @@ fun NavGraphBuilder.merchantRoute(
                 isMerchantLock = false,
                 onSaveSuccess = { isEdit, merchantDataId, merchantId ->
                     /*navController.navigateUp()*/
-                    context.ShowToast(merchantDataSaveToast)
+                    context.showToast(merchantDataSaveToast)
 
                     navController.previousBackStackEntry
                         ?.savedStateHandle

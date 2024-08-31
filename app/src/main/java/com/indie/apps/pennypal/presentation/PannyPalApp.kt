@@ -1,6 +1,5 @@
 package com.indie.apps.pennypal.presentation
 
-import android.widget.Toast
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.material3.Scaffold
@@ -19,7 +18,7 @@ import androidx.navigation.compose.rememberNavController
 import com.google.gson.Gson
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.entity.toMerchantNameAndDetails
-import com.indie.apps.pennypal.presentation.ui.component.ShowToast
+import com.indie.apps.pennypal.presentation.ui.component.showToast
 import com.indie.apps.pennypal.presentation.ui.dialog.add_edit_merchant.DialogAddMerchant
 import com.indie.apps.pennypal.presentation.ui.dialog.add_payment.DialogAddPayment
 import com.indie.apps.pennypal.presentation.ui.dialog.cpp.DialogCpp
@@ -124,7 +123,7 @@ fun PennyPalApp() {
                         onNavigationUp = { navController.navigateUp() },
                         onSaveSuccess = { merchant, isEdit ->
                             //navController.navigateUp()
-                            context.ShowToast(if (isEdit) merchantEditToast else merchantSaveToast)
+                            context.showToast(if (isEdit) merchantEditToast else merchantSaveToast)
 
                             if (merchant != null) {
                                 navController.previousBackStackEntry
@@ -168,7 +167,7 @@ fun PennyPalApp() {
                         onNavigationUp = { navController.navigateUp() },
                         onSaveSuccess = {
                             //navController.navigateUp()
-                            context.ShowToast(paymentSaveToast)
+                            context.showToast(paymentSaveToast)
 
                             if (it != null)
                                 navController.previousBackStackEntry

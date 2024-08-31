@@ -1,7 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.screen.merchant
 
 import android.annotation.SuppressLint
-import android.widget.Toast
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
@@ -42,7 +41,7 @@ import androidx.paging.compose.itemKey
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.presentation.ui.component.DeleteAlertDialog
 import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
-import com.indie.apps.pennypal.presentation.ui.component.ShowToast
+import com.indie.apps.pennypal.presentation.ui.component.showToast
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
@@ -371,7 +370,7 @@ fun MerchantScreen(
                     onConfirmation = {
                         merchantViewModel.onDeleteDialogClick {
                             openAlertDialog = false
-                            context.ShowToast(merchantDeleteToast)
+                            context.showToast(merchantDeleteToast)
                        }
                     },
                     onDismissRequest = { openAlertDialog = false }
