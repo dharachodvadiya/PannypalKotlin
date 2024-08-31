@@ -1,5 +1,7 @@
 package com.indie.apps.pennypal.presentation.ui.component
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -352,5 +354,13 @@ private fun NoTransactionMessagePreview() {
             details = "Your latest transaction will appear here. Track your spending and income.start now."
         )
     }
+}
+
+fun Context.ShowToast(message: String) = run {
+    Toast.makeText(
+        this,
+        message,
+        Toast.LENGTH_SHORT
+    ).show()
 }
 

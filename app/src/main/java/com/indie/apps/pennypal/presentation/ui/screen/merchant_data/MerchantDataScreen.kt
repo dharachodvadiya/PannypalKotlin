@@ -21,12 +21,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,8 +38,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.indie.apps.pennypal.R
+import com.indie.apps.pennypal.data.entity.toMerchantNameAndDetails
+import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
 import com.indie.apps.pennypal.presentation.ui.component.DeleteAlertDialog
 import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
+import com.indie.apps.pennypal.presentation.ui.component.ShowToast
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
@@ -51,7 +56,9 @@ fun MerchantDataScreen(
     onProfileClick: (Long) -> Unit,
     onNavigationUp: () -> Unit,
     onEditClick: (Long) -> Unit,
-    isEditMerchantDataSuccess: Boolean = false,
+    onAddClick: (MerchantNameAndDetails) -> Unit,
+    isEditSuccess: Boolean = false,
+    isAddSuccess: Boolean = false,
     merchantDataId: Long = 1L,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
@@ -62,6 +69,7 @@ fun MerchantDataScreen(
     val scrollOffset by merchantDataViewModel.scrollOffset.collectAsStateWithLifecycle()
     val isEditable by merchantDataViewModel.isEditable.collectAsStateWithLifecycle()
     val isDeletable by merchantDataViewModel.isDeletable.collectAsStateWithLifecycle()
+    val addDataAnimRun by merchantDataViewModel.addDataAnimRun.collectAsStateWithLifecycle()
     val editDataAnimRun by merchantDataViewModel.editDataAnimRun.collectAsStateWithLifecycle()
     val deleteAnimRun by merchantDataViewModel.deleteAnimRun.collectAsStateWithLifecycle()
 
@@ -75,16 +83,16 @@ fun MerchantDataScreen(
         mutableStateOf(false)
     }
 
-    var editMerchantId by remember {
-        mutableStateOf(-1L)
+    var addEditMerchantDataId by remember {
+        mutableLongStateOf(-1L)
     }
 
-    if (isEditMerchantDataSuccessState != isEditMerchantDataSuccess) {
-        if (isEditMerchantDataSuccess) {
-            editMerchantId = merchantDataId
+    if (isEditMerchantDataSuccessState != isEditSuccess) {
+        if (isEditSuccess) {
+            addEditMerchantDataId = merchantDataId
             merchantDataViewModel.editMerchantDataSuccess()
         }
-        isEditMerchantDataSuccessState = isEditMerchantDataSuccess
+        isEditMerchantDataSuccessState = isEditSuccess
     }
 
     /*LaunchedEffect(isEditMerchantDataSuccess) {
@@ -94,6 +102,18 @@ fun MerchantDataScreen(
 
     }*/
 
+    var isAddSuccessState by remember {
+        mutableStateOf(false)
+    }
+
+    if (isAddSuccessState != isAddSuccess) {
+        if (isAddSuccess) {
+            addEditMerchantDataId = merchantDataId
+            merchantDataViewModel.addMerchantDataSuccess()
+        }
+        isAddSuccessState = isAddSuccess
+    }
+
     Scaffold(
         topBar = {
             MerchantDataTopBar(
@@ -101,6 +121,7 @@ fun MerchantDataScreen(
                 name = merchant?.name ?: "",
                 description = merchant?.details ?: "",
                 onClick = { merchant?.let { onProfileClick(it.id) } },
+                onAddClick = { merchant?.let { onAddClick(it.toMerchantNameAndDetails()) } },
                 onNavigationUp = onNavigationUp,
                 onCloseClick = {
                     merchantDataViewModel.clearSelection()
@@ -163,6 +184,10 @@ fun MerchantDataScreen(
                         key = lazyPagingData.itemKey { item -> item.id }
                     ) { index ->
 
+                        val itemAnimateScale = remember {
+                            androidx.compose.animation.core.Animatable(0f)
+                        }
+
                         val baseColor = MyAppTheme.colors.itemBg
                         val targetAnimColor = MyAppTheme.colors.lightBlue1
 
@@ -174,7 +199,18 @@ fun MerchantDataScreen(
                         if (data != null) {
 
                             val modifierAdd: Modifier =
-                                if (editMerchantId == data.id && editDataAnimRun) {
+                                if (addEditMerchantDataId == data.id && addDataAnimRun) {
+                                    scope.launch {
+                                        itemAnimateScale.animateTo(
+                                            targetValue = 1f,
+                                            animationSpec = tween(Util.ADD_ITEM_ANIM_TIME)
+                                        )
+                                    }
+                                    if (itemAnimateScale.value == 1f) {
+                                        merchantDataViewModel.addMerchantSuccessAnimStop()
+                                    }
+                                    Modifier.scale(itemAnimateScale.value)
+                                } else if (addEditMerchantDataId == data.id && editDataAnimRun) {
                                     scope.launch {
                                         itemAnimateColor.animateTo(
                                             targetValue = targetAnimColor,
@@ -273,7 +309,7 @@ fun MerchantDataScreen(
                 totalExpense = merchant?.expenseAmount ?: 0.0,
                 isEditable = isEditable,
                 isDeletable = isDeletable,
-                onEditClick = { merchantDataViewModel.onEditClick { onEditClick(it) } },
+                onEditClick = { merchantDataViewModel.onEditClick(onSuccess = onEditClick) },
                 onDeleteClick = { openAlertDialog = true }
             )
 
@@ -289,7 +325,7 @@ fun MerchantDataScreen(
                 onConfirmation = {
                     merchantDataViewModel.onDeleteDialogClick {
                         openAlertDialog = false
-                        Toast.makeText(context, merchantDataDeleteToast, Toast.LENGTH_SHORT).show()
+                        context.ShowToast(merchantDataDeleteToast)
                     }
                 },
                 onDismissRequest = { openAlertDialog = false }
@@ -305,7 +341,8 @@ private fun MerchantDataScreenPreview() {
         MerchantDataScreen(
             onProfileClick = {},
             onNavigationUp = {},
-            onEditClick = {}
+            onEditClick = {},
+            onAddClick = {}
         )
     }
 }

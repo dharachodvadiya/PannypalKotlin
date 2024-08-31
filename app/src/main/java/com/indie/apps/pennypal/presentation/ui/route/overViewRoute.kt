@@ -13,6 +13,7 @@ import com.google.gson.Gson
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.entity.Payment
 import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
+import com.indie.apps.pennypal.presentation.ui.component.ShowToast
 import com.indie.apps.pennypal.presentation.ui.navigation.BottomNavItem
 import com.indie.apps.pennypal.presentation.ui.navigation.DialogNav
 import com.indie.apps.pennypal.presentation.ui.navigation.OverviewNav
@@ -39,13 +40,13 @@ fun NavGraphBuilder.overViewRoute(
 
             val isAddMerchantDataSuccess: Boolean? = backStackEntry
                 .savedStateHandle
-                .get<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_SUCCESS)
+                .get<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_ADD_SUCCESS)
 
             bottomBarState.value = true
 
             backStackEntry.savedStateHandle.remove<Long>(Util.SAVE_STATE_MERCHANT_ADD_EDIT_ID)
             backStackEntry.savedStateHandle.remove<Long>(Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_ID)
-            backStackEntry.savedStateHandle.remove<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_SUCCESS)
+            backStackEntry.savedStateHandle.remove<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_ADD_SUCCESS)
 
 
             OverViewStartScreen(
@@ -61,6 +62,10 @@ fun NavGraphBuilder.overViewRoute(
             val context = LocalContext.current
             val merchantDataSaveToast =
                 stringResource(id = R.string.merchant_data_save_success_message)
+
+            val isMerchantLock: Boolean? = backStackEntry
+                .savedStateHandle
+                .get<Boolean>(Util.SAVE_STATE_MERCHANT_LOCK)
 
             // get data passed back from B
             val gsonStringMerchant: String? = backStackEntry
@@ -92,8 +97,9 @@ fun NavGraphBuilder.overViewRoute(
                 onPaymentAdd = { navController.navigate(DialogNav.ADD_PAYMENT.route) },
                 merchantData = merchant,
                 paymentData = payment,
+                isMerchantLock = isMerchantLock ?: false,
                 onSaveSuccess = { _, merchantDataId, merchantId ->
-                    Toast.makeText(context, merchantDataSaveToast, Toast.LENGTH_SHORT).show()
+                    context.ShowToast(merchantDataSaveToast)
 
                     navController.previousBackStackEntry
                         ?.savedStateHandle
@@ -111,7 +117,7 @@ fun NavGraphBuilder.overViewRoute(
                     navController.previousBackStackEntry
                         ?.savedStateHandle
                         ?.set(
-                            Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_SUCCESS,
+                            Util.SAVE_STATE_MERCHANT_DATA_ADD_SUCCESS,
                             true
                         )
 

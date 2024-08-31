@@ -45,6 +45,7 @@ class MerchantDataViewModel @Inject constructor(
     var isDeletable = MutableStateFlow(false)
 
     var editDataAnimRun = MutableStateFlow(false)
+    var addDataAnimRun = MutableStateFlow(false)
     var deleteAnimRun = MutableStateFlow(false)
     private lateinit var previousData: PagingData<MerchantData>
 
@@ -88,6 +89,20 @@ class MerchantDataViewModel @Inject constructor(
             delay(Util.LIST_ITEM_ANIM_DELAY)
             editDataAnimRun.value = false
         }
+    }
+
+    fun addMerchantDataSuccess() {
+        addDataAnimRun.value = true
+
+        viewModelScope.launch {
+            delay(Util.LIST_ITEM_ANIM_DELAY)
+            addMerchantSuccessAnimStop()
+        }
+    }
+
+    fun addMerchantSuccessAnimStop() {
+        if (addDataAnimRun.value)
+            addDataAnimRun.value = false
     }
 
     fun setScrollVal(scrollIndex: Int, scrollOffset: Int) {
@@ -158,8 +173,7 @@ class MerchantDataViewModel @Inject constructor(
     }
 
     private fun onDeleteAnimStop() {
-        if(deleteAnimRun.value)
-        {
+        if (deleteAnimRun.value) {
             deleteAnimRun.value = false
             clearSelection()
             loadData()
@@ -174,5 +188,4 @@ class MerchantDataViewModel @Inject constructor(
         }
 
     }
-
 }

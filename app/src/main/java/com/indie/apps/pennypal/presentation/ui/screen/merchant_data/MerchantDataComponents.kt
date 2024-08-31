@@ -3,6 +3,7 @@ package com.indie.apps.pennypal.presentation.ui.screen.merchant_data
 import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -21,6 +22,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
@@ -61,6 +63,7 @@ fun MerchantDataTopBar(
     description: String = "",
     onClick: () -> Unit,
     onCloseClick: () -> Unit = {},
+    onAddClick: () -> Unit = {},
     onNavigationUp: () -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
@@ -76,7 +79,27 @@ fun MerchantDataTopBar(
                 onCloseClick = onCloseClick
             )
         },
-        modifier = modifier
+        modifier = modifier,
+        trailingContent = {
+            if (selectCount == 0) {
+                PrimaryButton(
+                    bgColor = MyAppTheme.colors.white,
+                    borderStroke = BorderStroke(
+                        width = 1.dp,
+                        color = MyAppTheme.colors.gray1
+                    ),
+                    onClick = onAddClick,
+                    modifier = Modifier
+                        .size(dimensionResource(R.dimen.top_bar_profile))
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "Add",
+                        tint = MyAppTheme.colors.gray1
+                    )
+                }
+            }
+        }
     )
 }
 

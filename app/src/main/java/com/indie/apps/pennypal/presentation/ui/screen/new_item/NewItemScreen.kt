@@ -43,6 +43,7 @@ fun NewItemScreen(
     onMerchantSelect: () -> Unit,
     onPaymentAdd: () -> Unit,
     onNavigationUp: () -> Unit,
+    isMerchantLock: Boolean,
     onSaveSuccess: (Boolean, Long, Long) -> Unit,
     merchantData: MerchantNameAndDetails? = null,
     paymentData: Payment? = null,
@@ -132,7 +133,8 @@ fun NewItemScreen(
                         amount = amount,
                         description = description,
                         merchantError = merchantError,
-                        paymentError = paymentError
+                        paymentError = paymentError,
+                        isMerchantLock = isMerchantLock
                     )
                     Spacer(modifier = Modifier.weight(1f))
                     BottomSaveButton(
@@ -158,9 +160,12 @@ fun NewItemScreen(
 @Composable
 private fun NewItemScreenPreview() {
     PennyPalTheme(darkTheme = true) {
-        NewItemScreen(onPaymentAdd = {},
+        NewItemScreen(
+            onPaymentAdd = {},
             onNavigationUp = {},
             onMerchantSelect = {},
-            onSaveSuccess = { _, _, _ -> })
+            onSaveSuccess = { _, _, _ -> },
+            isMerchantLock = false
+        )
     }
 }

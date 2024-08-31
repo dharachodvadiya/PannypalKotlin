@@ -35,6 +35,7 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -42,6 +43,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.entity.Payment
+import com.indie.apps.pennypal.presentation.ui.component.ShowToast
 import com.indie.apps.pennypal.presentation.ui.component.TextFieldError
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.MyAppTextField
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
@@ -127,6 +129,7 @@ fun NewEntryFieldItemSection(
     paymentName: String? = null,
     merchantError: String = "",
     paymentError: String = "",
+    isMerchantLock: Boolean,
     amount: TextFieldState = TextFieldState(),
     description: TextFieldState = TextFieldState(),
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
@@ -140,7 +143,8 @@ fun NewEntryFieldItemSection(
             label = R.string.merchant,
             imageVector = Icons.Default.PersonAddAlt1,
             onAddClick = onMerchantSelect,
-            placeholder = R.string.add_merchant_placeholder
+            placeholder = R.string.add_merchant_placeholder,
+            isSelectable = !isMerchantLock
         )
         TextFieldError(
             textError = merchantError
@@ -191,6 +195,7 @@ private fun NewEntrySelectableItem(
     @StringRes placeholder: Int,
     imageVector: ImageVector,
     onAddClick: () -> Unit,
+    isSelectable: Boolean,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     Column(
@@ -205,7 +210,7 @@ private fun NewEntrySelectableItem(
         Row(
             modifier = Modifier
                 .padding(vertical = 5.dp)
-                .clickable { onAddClick() }
+                .clickable(enabled = isSelectable) { onAddClick() }
                 .height(dimensionResource(id = R.dimen.new_entry_field_height))
                 .background(
                     shape = RoundedCornerShape(dimensionResource(id = R.dimen.round_corner)),
@@ -236,20 +241,22 @@ private fun NewEntrySelectableItem(
                     color = MyAppTheme.colors.black
                 )
             }
-            PrimaryButton(
-                bgColor = MyAppTheme.colors.white,
-                borderStroke = BorderStroke(
-                    width = 1.dp,
-                    color = MyAppTheme.colors.gray1
-                ),
-                modifier = modifier,
-                onClick = onAddClick,
-            ) {
-                Icon(
-                    imageVector = imageVector,
-                    contentDescription = "Add",
-                    tint = MyAppTheme.colors.gray1
-                )
+            if (isSelectable) {
+                PrimaryButton(
+                    bgColor = MyAppTheme.colors.white,
+                    borderStroke = BorderStroke(
+                        width = 1.dp,
+                        color = MyAppTheme.colors.gray1
+                    ),
+                    modifier = modifier,
+                    onClick = onAddClick,
+                ) {
+                    Icon(
+                        imageVector = imageVector,
+                        contentDescription = "Add",
+                        tint = MyAppTheme.colors.gray1
+                    )
+                }
             }
         }
     }
@@ -405,7 +412,8 @@ private fun TNewEntryFieldItemSectionPreview() {
             onMerchantSelect = {},
             onPaymentAdd = {},
             paymentList = emptyList(),
-            onPaymentSelect = {}
+            onPaymentSelect = {},
+            isMerchantLock = false
         )
     }
 }

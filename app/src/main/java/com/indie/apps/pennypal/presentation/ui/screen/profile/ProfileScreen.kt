@@ -24,6 +24,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.entity.User
+import com.indie.apps.pennypal.presentation.ui.component.ShowToast
 import com.indie.apps.pennypal.presentation.ui.component.TopBarWithTitle
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingScreen
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
@@ -55,7 +56,7 @@ fun ProfileScreen(
                 onSaveClick = {
                     profileViewModel.saveUser { isSuccess ->
                         if (isSuccess) {
-                            Toast.makeText(context, userUpdateToast, Toast.LENGTH_SHORT).show()
+                            context.ShowToast(userUpdateToast)
                             onNavigationUp()
                         }
                     }

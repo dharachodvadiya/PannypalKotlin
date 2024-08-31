@@ -19,6 +19,7 @@ import androidx.navigation.compose.rememberNavController
 import com.google.gson.Gson
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.entity.toMerchantNameAndDetails
+import com.indie.apps.pennypal.presentation.ui.component.ShowToast
 import com.indie.apps.pennypal.presentation.ui.dialog.add_edit_merchant.DialogAddMerchant
 import com.indie.apps.pennypal.presentation.ui.dialog.add_payment.DialogAddPayment
 import com.indie.apps.pennypal.presentation.ui.dialog.cpp.DialogCpp
@@ -123,11 +124,7 @@ fun PennyPalApp() {
                         onNavigationUp = { navController.navigateUp() },
                         onSaveSuccess = { merchant, isEdit ->
                             //navController.navigateUp()
-                            Toast.makeText(
-                                context,
-                                if (isEdit) merchantEditToast else merchantSaveToast,
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            context.ShowToast(if (isEdit) merchantEditToast else merchantSaveToast)
 
                             if (merchant != null) {
                                 navController.previousBackStackEntry
@@ -171,7 +168,7 @@ fun PennyPalApp() {
                         onNavigationUp = { navController.navigateUp() },
                         onSaveSuccess = {
                             //navController.navigateUp()
-                            Toast.makeText(context, paymentSaveToast, Toast.LENGTH_SHORT).show()
+                            context.ShowToast(paymentSaveToast)
 
                             if (it != null)
                                 navController.previousBackStackEntry

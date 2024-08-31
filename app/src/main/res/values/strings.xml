@@ -2,11 +2,11 @@
     <string name="app_name">PennyPal</string>
     <string name="overview">OverView</string>
     <string name="merchants">Merchants</string>
-    <string name="new_entry">New Entry</string>
+    <string name="new_entry">New Transaction</string>
     <string name="balance">Balance</string>
     <string name="login_with_google">Login With Google</string>
     <string name="profile">Profile</string>
-    <string name="new_item">Add New Entry</string>
+    <string name="new_item">Add New Transaction</string>
     <string name="received">Received</string>
     <string name="spent">Spent</string>
     <string name="merchant">Merchant</string>
@@ -54,4 +54,6 @@
     <string name="no_merchants_details_with_transaction">Click top + to add new merchant and click bottom + to add new transaction.</string>
     <string name="currency_and_format"><![CDATA[Currency & Format]]></string>
     <string name="user_update_success_message">Successfully Updated</string>
+    <string name="of">of</string>
+    <string name="can_not_change_merchant">Can Not Change Merchant</string>
 </resources>
