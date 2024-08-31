@@ -6,6 +6,7 @@ import com.indie.apps.pennypal.data.module.IncomeAndExpense
 import com.indie.apps.pennypal.data.module.MerchantDataDailyTotal
 import com.indie.apps.pennypal.data.module.MerchantDataWithName
 import com.indie.apps.pennypal.data.module.MerchantDataWithNameWithDayTotal
+import com.indie.apps.pennypal.data.module.MerchantDataWithPaymentName
 
 interface MerchantDataRepository : BaseRepository<MerchantData> {
 
@@ -26,6 +27,10 @@ interface MerchantDataRepository : BaseRepository<MerchantData> {
     fun getMerchantDataListFromMerchantId(merchantId: Long): PagingSource<Int, MerchantData>
 
     fun getMerchantsDataWithMerchantNameList(timeZoneOffsetInMilli: Int): PagingSource<Int, MerchantDataWithName>
+
+    fun getMerchantsDataWithPaymentNameListFromMerchantId(
+        merchantId: Long
+    ): PagingSource<Int, MerchantDataWithPaymentName>
 
     fun searchMerchantDataWithMerchantNameList(
         searchQuery: String,

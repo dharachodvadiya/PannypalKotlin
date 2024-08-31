@@ -56,4 +56,5 @@
     <string name="user_update_success_message">Successfully Updated</string>
     <string name="of">of</string>
     <string name="can_not_change_merchant">Can Not Change Merchant</string>
+    <string name="by">•</string>
 </resources>

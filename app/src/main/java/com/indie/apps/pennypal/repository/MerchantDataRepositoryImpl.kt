@@ -34,6 +34,10 @@ class MerchantDataRepositoryImpl @Inject constructor(private val merchantDataDao
         timeZoneOffsetInMilli: Int
     ) = merchantDataDao.getMerchantsDataWithMerchantNameList(timeZoneOffsetInMilli)
 
+    override fun getMerchantsDataWithPaymentNameListFromMerchantId(
+        merchantId: Long) =
+        merchantDataDao.getMerchantsDataWithPaymentNameListFromMerchantId(merchantId)
+
     override fun searchMerchantDataWithMerchantNameList(
         searchQuery: String,
         timeZoneOffsetInMilli: Int

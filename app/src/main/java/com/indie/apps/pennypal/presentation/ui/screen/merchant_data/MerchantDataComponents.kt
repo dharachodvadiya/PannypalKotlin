@@ -45,7 +45,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.data.entity.MerchantData
+import com.indie.apps.pennypal.data.module.MerchantDataWithPaymentName
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.AutoSizeText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListItem
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
@@ -232,7 +232,7 @@ fun MerchantDataBottomBar(
 @Composable
 fun MerchantDataIncomeAmount(
     isSelected: Boolean = false,
-    data: MerchantData,
+    data: MerchantDataWithPaymentName,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     itemBgColor: Color,
@@ -261,7 +261,8 @@ fun MerchantDataIncomeAmount(
             description = data.details,
             contentAlignment = Alignment.Start,
             colorStroke = MyAppTheme.colors.greenBg,
-            itemBgColor = itemBgColor
+            itemBgColor = itemBgColor,
+            paymentName = data.paymentName
         )
 
     }
@@ -271,7 +272,7 @@ fun MerchantDataIncomeAmount(
 @Composable
 fun MerchantDataExpenseAmount(
     isSelected: Boolean = false,
-    data: MerchantData,
+    data: MerchantDataWithPaymentName,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     itemBgColor: Color,
@@ -300,7 +301,8 @@ fun MerchantDataExpenseAmount(
             description = data.details,
             contentAlignment = Alignment.End,
             colorStroke = MyAppTheme.colors.redBg,
-            itemBgColor = itemBgColor
+            itemBgColor = itemBgColor,
+            paymentName = data.paymentName
         )
 
     }
@@ -353,6 +355,7 @@ fun MerchantDataDateItem(
 private fun MerchantDataAmountItem(
     amount: Double,
     description: String? = null,
+    paymentName: String,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
     contentAlignment: Alignment.Horizontal,
     colorStroke: Color = MyAppTheme.colors.black,
@@ -386,10 +389,16 @@ private fun MerchantDataAmountItem(
                 color = MyAppTheme.colors.black,
                 maxLines = 2,
             )
+            Text(
+                text = "${stringResource(R.string.by)} $paymentName",
+                style = MyAppTheme.typography.Medium34,
+                color = MyAppTheme.colors.gray0,
+                maxLines = 1,
+            )
             if (!description.isNullOrEmpty()) {
                 Text(
                     text = description,
-                    style = MyAppTheme.typography.Medium40,
+                    style = MyAppTheme.typography.Medium34,
                     color = MyAppTheme.colors.gray2,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis

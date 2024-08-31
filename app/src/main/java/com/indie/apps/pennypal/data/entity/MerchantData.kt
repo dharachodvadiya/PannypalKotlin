@@ -47,4 +47,4 @@ data class MerchantData(
     val type: Int, // -1 for expense, 1 for income
 
 
-    )
+)

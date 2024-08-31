@@ -9,6 +9,7 @@ import com.indie.apps.pennypal.data.module.IncomeAndExpense
 import com.indie.apps.pennypal.data.module.MerchantDataDailyTotal
 import com.indie.apps.pennypal.data.module.MerchantDataWithName
 import com.indie.apps.pennypal.data.module.MerchantDataWithNameWithDayTotal
+import com.indie.apps.pennypal.data.module.MerchantDataWithPaymentName
 
 @Dao
 interface MerchantDataDao : BaseDao<MerchantData> {
@@ -64,6 +65,25 @@ interface MerchantDataDao : BaseDao<MerchantData> {
     )
 
     fun getMerchantsDataWithMerchantNameList(timeZoneOffsetInMilli: Int): PagingSource<Int, MerchantDataWithName>
+
+    @Transaction
+    @Query(
+        """
+        SELECT md.id as id, 
+                md.payment_id as paymentId, 
+                md.date_milli as dateInMilli,
+                md.details, 
+                md.amount, 
+                md.type,
+                p.name as paymentName
+        FROM merchant_data md
+        INNER JOIN payment_type p ON md.payment_id = p.id
+        where md.merchant_id = :merchantId
+        ORDER BY id DESC
+    """
+    )
+
+    fun getMerchantsDataWithPaymentNameListFromMerchantId(merchantId: Long): PagingSource<Int, MerchantDataWithPaymentName>
 
     @Transaction
     @Query(

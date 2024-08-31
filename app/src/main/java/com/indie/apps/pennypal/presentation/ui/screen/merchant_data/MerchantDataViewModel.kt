@@ -6,9 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.indie.apps.pennypal.data.entity.MerchantData
+import com.indie.apps.pennypal.data.module.MerchantDataWithPaymentName
 import com.indie.apps.pennypal.domain.usecase.DeleteMultipleMerchantDataUseCase
-import com.indie.apps.pennypal.domain.usecase.GetMerchantDataListFromMerchantIdUseCase
+import com.indie.apps.pennypal.domain.usecase.GetMerchantDataWithPaymentNameListFromMerchantIdUseCase
 import com.indie.apps.pennypal.domain.usecase.GetMerchantFromIdUseCase
 import com.indie.apps.pennypal.presentation.ui.state.PagingState
 import com.indie.apps.pennypal.util.Resource
@@ -28,7 +28,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MerchantDataViewModel @Inject constructor(
     getMerchantFromIdUseCase: GetMerchantFromIdUseCase,
-    getMerchantDataListFromMerchantId: GetMerchantDataListFromMerchantIdUseCase,
+    //getMerchantDataListFromMerchantId: GetMerchantDataListFromMerchantIdUseCase,
+    getMerchantDataWithPaymentNameListFromMerchantIdUseCase: GetMerchantDataWithPaymentNameListFromMerchantIdUseCase,
     private val deleteMultipleMerchantDataUseCase: DeleteMultipleMerchantDataUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -47,7 +48,7 @@ class MerchantDataViewModel @Inject constructor(
     var editDataAnimRun = MutableStateFlow(false)
     var addDataAnimRun = MutableStateFlow(false)
     var deleteAnimRun = MutableStateFlow(false)
-    private lateinit var previousData: PagingData<MerchantData>
+    private lateinit var previousData: PagingData<MerchantDataWithPaymentName>
 
     val merchantState = getMerchantFromIdUseCase
         .getData(merchantId)
@@ -58,7 +59,7 @@ class MerchantDataViewModel @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     val pagedData = trigger
         .flatMapLatest {
-            getMerchantDataListFromMerchantId.loadData(merchantId)
+            getMerchantDataWithPaymentNameListFromMerchantIdUseCase.loadData(merchantId)
         }
         .map { item ->
 
@@ -69,7 +70,7 @@ class MerchantDataViewModel @Inject constructor(
         }
         .cachedIn(viewModelScope)
 
-    val pagingState = MutableStateFlow(PagingState<MerchantData>())
+    val pagingState = MutableStateFlow(PagingState<MerchantDataWithPaymentName>())
 
     init {
 
