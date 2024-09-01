@@ -1,10 +1,9 @@
-package com.indie.apps.pennypal.presentation.ui.dialog.cpp
+package com.indie.apps.pennypal.presentation.ui.dialog.country_picker
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,8 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -25,13 +22,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.indie.apps.cpp.data.model.Country
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.SearchView
+import com.indie.apps.pennypal.presentation.ui.component.DialogSearchView
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 
 @Composable
 fun CppDialogField(
-    viewModel: CppViewModel,
+    viewModel: CountryPickerViewModel,
     onSelect: (Country) -> Unit,
     searchState: TextFieldState,
     countriesList: List<Country>,
@@ -40,7 +37,7 @@ fun CppDialogField(
 ) {
     Column {
 
-        SearchCcpSearchView(
+        DialogSearchView(
             searchState = searchState,
             onTextChange = onTextChange
         )
@@ -76,38 +73,6 @@ fun CppDialogField(
 
         }
 
-    }
-}
-
-@Composable
-private fun SearchCcpSearchView(
-    searchState: TextFieldState,
-    onTextChange: (String) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-            .padding(
-                horizontal = dimensionResource(id = R.dimen.padding),
-                vertical = 7.dp
-            )
-    ) {
-        SearchView(
-            trailingIcon = Icons.Default.Search,
-            textState = searchState,
-            bgColor = MyAppTheme.colors.lightBlue2,
-            modifier = Modifier
-                .weight(1f)
-                .height(40.dp),
-            paddingValues = PaddingValues(
-                top = 0.dp,
-                bottom = 0.dp,
-                start = dimensionResource(id = R.dimen.padding),
-                end = 0.dp
-            ),
-            onTextChange = onTextChange
-        )
     }
 }
 

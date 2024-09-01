@@ -41,7 +41,31 @@ class ContactsProviderImpl(
         val cursor = query(
             uri = ContactsContract.Contacts.CONTENT_URI,
             projection = CONTACTS_PROJECTION,
-            sort = ContactsContract.Contacts.DISPLAY_NAME_PRIMARY
+            sort = ContactsContract.Contacts.DISPLAY_NAME_PRIMARY,
+            selection = CONTACT_LIST_SELECT,
+            selectionArgs = arrayOf(
+                "1"
+            )
+        )
+        val result: List<Contact>? = cursor.map { it.asContact() }
+        cursor?.close()
+        return result
+    }
+
+    override suspend fun searchContacts(searchString: String): Contacts = withContext(dispatcher){
+        fetchContacts(searchString) ?: Collections.emptyList()
+    }
+
+    private fun fetchContacts(searchString: String): List<Contact>? {
+        val cursor = query(
+            uri = ContactsContract.Contacts.CONTENT_URI,
+            projection = CONTACTS_PROJECTION,
+            sort = ContactsContract.Contacts.DISPLAY_NAME_PRIMARY,
+            selection = CONTACT_LIST_SEARCH_SELECT,
+            selectionArgs = arrayOf(
+                "1",
+                "%$searchString%"
+            )
         )
         val result: List<Contact>? = cursor.map { it.asContact() }
         cursor?.close()
@@ -95,6 +119,9 @@ class ContactsProviderImpl(
         private const val CONTACT_DETAILS_SELECT = "${ContactsContract.Data.CONTACT_ID}=?" +
                 " AND ${ContactsContract.Data.MIMETYPE} IN (?,?,?,?)"
 
+        private const val CONTACT_LIST_SELECT = "${ContactsContract.Contacts.HAS_PHONE_NUMBER}=?"
+        private const val CONTACT_LIST_SEARCH_SELECT = "${ContactsContract.Contacts.HAS_PHONE_NUMBER}=?" +
+                " AND ${ContactsContract.Data.DISPLAY_NAME_PRIMARY} LIKE ?"
     }
 
 }

@@ -32,6 +32,7 @@ import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
+import com.indie.apps.pennypal.presentation.ui.component.DialogSearchView
 import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListItem
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
@@ -58,11 +59,35 @@ fun SearchDialogField(
 ) {
     Column {
 
-        SearchMerchantSearchView(
+       /* SearchMerchantSearchView(
             onAddClick = onAddClick,
             textState = textState,
             onTextChange = onTextChange
+        )*/
+
+        DialogSearchView(
+            searchState = textState,
+            onTextChange = onTextChange,
+            trailingContent = {
+                PrimaryButton(
+                    bgColor = MyAppTheme.colors.transparent,
+                    borderStroke = BorderStroke(
+                        width = 1.dp,
+                        color = MyAppTheme.colors.gray2
+                    ),
+                    onClick = onAddClick,
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "Add",
+                        tint = MyAppTheme.colors.gray2
+                    )
+                }
+            }
         )
+
+
+
         if (isRefresh) {
             Box(
                 contentAlignment = Alignment.Center,
@@ -117,7 +142,7 @@ fun SearchDialogField(
     }
 }
 
-@Composable
+/*@Composable
 private fun SearchMerchantSearchView(
     onAddClick: () -> Unit,
     onTextChange: (String) -> Unit,
@@ -165,7 +190,7 @@ private fun SearchMerchantSearchView(
         }
 
     }
-}
+}*/
 
 @Composable
 private fun SearchMerchantListItem(

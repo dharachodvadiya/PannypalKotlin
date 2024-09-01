@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.dialog.add_edit_merchant
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Contacts
 import androidx.compose.material.icons.filled.Details
 import androidx.compose.material.icons.filled.PersonOutline
 import androidx.compose.material.icons.filled.Phone
@@ -15,11 +17,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
+import com.indie.apps.pennypal.presentation.PennyPalApp
 import com.indie.apps.pennypal.presentation.ui.component.DialogTextFieldItem
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
+import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
+import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 
 
 @Composable
@@ -28,13 +36,30 @@ fun AddMerchantDialogField(
     phoneNoState: TextFieldState,
     descState: TextFieldState,
     onCpp: () -> Unit,
+    onContactBook: ()-> Unit,
     countryCode: String = "+00"
 ) {
     Column {
         DialogTextFieldItem(
             textState = nameState,
             imageVector = Icons.Default.PersonOutline,
-            placeholder = R.string.merchant_name_placeholder
+            placeholder = R.string.merchant_name_placeholder,
+            textTrailingContent = {
+                PrimaryButton(
+                    bgColor = MyAppTheme.colors.white,
+                    borderStroke = BorderStroke(
+                        width = 1.dp,
+                        color = MyAppTheme.colors.gray1
+                    ),
+                    onClick = onContactBook,
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.phone_book),
+                        contentDescription = "Add",
+                        tint = MyAppTheme.colors.gray1
+                    )
+                }
+            }
         )
         DialogTextFieldItem(
             textState = phoneNoState,
@@ -61,6 +86,20 @@ fun AddMerchantDialogField(
             textState = descState,
             imageVector = Icons.Default.Details,
             placeholder = R.string.description_placeholder
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun AddMerchantDialogFieldPreview() {
+    PennyPalTheme(darkTheme = true) {
+        AddMerchantDialogField(
+            nameState = TextFieldState(),
+            phoneNoState = TextFieldState(),
+            descState = TextFieldState(),
+            onCpp = {},
+            onContactBook = {}
         )
     }
 }

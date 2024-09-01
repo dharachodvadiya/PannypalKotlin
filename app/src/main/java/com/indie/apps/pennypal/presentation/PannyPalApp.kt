@@ -21,10 +21,11 @@ import com.indie.apps.pennypal.data.entity.toMerchantNameAndDetails
 import com.indie.apps.pennypal.presentation.ui.component.showToast
 import com.indie.apps.pennypal.presentation.ui.dialog.add_edit_merchant.DialogAddMerchant
 import com.indie.apps.pennypal.presentation.ui.dialog.add_payment.DialogAddPayment
-import com.indie.apps.pennypal.presentation.ui.dialog.cpp.DialogCpp
+import com.indie.apps.pennypal.presentation.ui.dialog.country_picker.DialogCountryPicker
 import com.indie.apps.pennypal.presentation.ui.dialog.search_merchant.DialogSearchMerchant
 import com.indie.apps.pennypal.presentation.ui.navigation.BottomNavItem
 import com.indie.apps.pennypal.presentation.ui.component.navigation.BottomNavigationBarCustom1
+import com.indie.apps.pennypal.presentation.ui.dialog.contact_picker.DialogContactPicker
 import com.indie.apps.pennypal.presentation.ui.navigation.DialogNav
 import com.indie.apps.pennypal.presentation.ui.navigation.OverviewNav
 import com.indie.apps.pennypal.presentation.ui.route.merchantRoute
@@ -153,7 +154,10 @@ fun PennyPalApp() {
                             navController.popBackStack()
                         },
                         onCpp = {
-                            navController.navigate(DialogNav.CPP.route)
+                            navController.navigate(DialogNav.COUNTRY_PICKER.route)
+                        },
+                        onContactBook = {
+                            navController.navigate(DialogNav.CONTACT_PICKER.route)
                         },
                         code = data,
                         editId = editId
@@ -179,7 +183,7 @@ fun PennyPalApp() {
                     )
                 }
                 dialog(
-                    route = DialogNav.CPP.route,
+                    route = DialogNav.COUNTRY_PICKER.route,
                     dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
                 ) { backStackEntry ->
 
@@ -187,7 +191,7 @@ fun PennyPalApp() {
                         .savedStateHandle
                         .get<Boolean>(Util.SAVE_STATE_SHOW_CURRENCY)
 
-                    DialogCpp(
+                    DialogCountryPicker(
                         onNavigationUp = { navController.navigateUp() },
                         onSelect = {
                             // Pass data back to A
@@ -202,6 +206,26 @@ fun PennyPalApp() {
                             navController.popBackStack()
                         },
                         isShowCurrency = isShowCurrency ?: false,
+                    )
+                }
+                dialog(
+                    route = DialogNav.CONTACT_PICKER.route,
+                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
+                ) {
+                    DialogContactPicker(
+                        onNavigationUp = { navController.navigateUp() },
+                        onSelect = {
+                            // Pass data back to A
+                            /*navController.previousBackStackEntry
+                                ?.savedStateHandle
+                                ?.set(Util.SAVE_STATE_COUNTRY_DIAL_CODE, it.dialCode)
+                            navController.previousBackStackEntry
+                                ?.savedStateHandle
+                                ?.set(Util.SAVE_STATE_CURRENCY_CODE, it.currencyCode)
+
+
+                            navController.popBackStack()*/
+                        }
                     )
                 }
             }

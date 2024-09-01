@@ -4,6 +4,7 @@ import com.indie.apps.contacts.common.AppFlow
 import com.indie.apps.contacts.common.Result
 import com.indie.apps.contacts.data.model.ContactDetails
 import com.indie.apps.contacts.data.model.Contacts
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Repository for contacts
@@ -19,6 +20,7 @@ interface ContactsRepository {
      * Reload the contacts from the content provider
      */
     suspend fun reloadContacts()
+    suspend fun searchContacts(searchString: String) : Flow<Result<Contacts>>
 
     /**
      * Read details of our specific contacts

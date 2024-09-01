@@ -22,6 +22,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PersonOutline
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -43,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.MyAppTextField
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.SearchView
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.TopBar
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
@@ -153,13 +155,51 @@ fun BottomSaveButton(
 }
 
 @Composable
+fun DialogSearchView(
+    searchState: TextFieldState,
+    onTextChange: (String) -> Unit,
+    trailingContent: @Composable() (() -> Unit)? = null,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .padding(
+                horizontal = dimensionResource(id = R.dimen.padding),
+                vertical = 7.dp
+            )
+    ) {
+        SearchView(
+            trailingIcon = Icons.Default.Search,
+            textState = searchState,
+            bgColor = MyAppTheme.colors.lightBlue2,
+            modifier = Modifier
+                .weight(1f)
+                .height(40.dp),
+            paddingValues = PaddingValues(
+                top = 0.dp,
+                bottom = 0.dp,
+                start = dimensionResource(id = R.dimen.padding),
+                end = 0.dp
+            ),
+            onTextChange = onTextChange
+        )
+        Spacer(modifier = Modifier.width(5.dp))
+        if (trailingContent != null) {
+            trailingContent()
+        }
+    }
+}
+
+@Composable
 fun DialogTextFieldItem(
     imageVector: ImageVector,
     textState: TextFieldState = TextFieldState(),
     placeholder: Int,
     keyboardType: KeyboardType = KeyboardType.Text,
     modifier: Modifier = Modifier,
-    textLeadingContent: @Composable (() -> Unit)? = null
+    textLeadingContent: @Composable (() -> Unit)? = null,
+    textTrailingContent: @Composable (() -> Unit)? = null
 ) {
     Column(
         modifier = modifier
@@ -190,6 +230,7 @@ fun DialogTextFieldItem(
                 textStyle = MyAppTheme.typography.Medium46,
                 keyboardType = keyboardType,
                 textLeadingContent = textLeadingContent,
+                trailingIcon = textTrailingContent,
                 placeHolderTextStyle = MyAppTheme.typography.Regular46,
                 modifier = Modifier.height(dimensionResource(id = R.dimen.new_entry_field_height)),
                 bgColor = MyAppTheme.colors.itemBg,

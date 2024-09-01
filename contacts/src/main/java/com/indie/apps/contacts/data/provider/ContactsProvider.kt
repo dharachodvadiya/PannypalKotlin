@@ -12,6 +12,7 @@ interface ContactsProvider {
      * Fetch all the contacts
      */
     suspend fun getContacts(): Contacts
+    suspend fun searchContacts(searchString: String): Contacts
 
     /**
      * Read the details of a contact

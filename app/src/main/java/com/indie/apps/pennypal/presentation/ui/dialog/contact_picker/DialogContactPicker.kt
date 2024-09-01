@@ -1,4 +1,4 @@
-package com.indie.apps.pennypal.presentation.ui.dialog.cpp
+package com.indie.apps.pennypal.presentation.ui.dialog.contact_picker
 
 import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.indie.apps.contacts.data.model.Contact
 import com.indie.apps.cpp.data.model.Country
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.MyAppDialog
@@ -19,29 +20,26 @@ import kotlinx.coroutines.launch
 
 @SuppressLint("RememberReturnType")
 @Composable
-fun DialogCpp(
-    viewModel: CppViewModel = hiltViewModel(),
+fun DialogContactPicker(
+    viewModel: ContactPickerViewModel = hiltViewModel(),
     onNavigationUp: () -> Unit,
-    onSelect: (Country) -> Unit,
-    isShowCurrency: Boolean,
+    onSelect: (Contact) -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     val searchTextState by viewModel.searchTextState.collectAsStateWithLifecycle()
-    val countryData by viewModel.uiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     var job: Job? = null
 
     MyAppDialog(
         isBackEnable = true,
-        title = R.string.select_country,
+        title = R.string.select_contact,
         onNavigationUp = onNavigationUp,
         content = {
-            CppDialogField(
-                viewModel= viewModel,
+            ContactPickerDialogField(
                 onSelect = onSelect,
                 searchState = searchTextState,
-                isShowCurrency = isShowCurrency,
-                countriesList = countryData,
+                contactUiState = uiState,
                 onTextChange = {
                     job?.cancel()
                     job = MainScope().launch {

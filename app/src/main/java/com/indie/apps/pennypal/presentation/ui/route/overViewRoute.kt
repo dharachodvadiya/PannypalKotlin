@@ -137,7 +137,7 @@ fun NavGraphBuilder.overViewRoute(
                 onNavigationUp = { navController.navigateUp() },
                 code = code,
                 onCurrencyChangeClick = {
-                    navController.navigate(DialogNav.CPP.route)
+                    navController.navigate(DialogNav.COUNTRY_PICKER.route)
                     navController.currentBackStackEntry
                         ?.savedStateHandle
                         ?.set(Util.SAVE_STATE_SHOW_CURRENCY, true)

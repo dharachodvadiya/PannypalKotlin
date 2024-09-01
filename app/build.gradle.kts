@@ -119,7 +119,7 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:$navVersion")
     implementation("com.googlecode.libphonenumber:libphonenumber:8.2.0")
 
-    //pagining
+    //paging
     implementation("androidx.paging:paging-compose:3.3.1")
 
     //gson
@@ -128,6 +128,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
 
     implementation("androidx.core:core-splashscreen:1.0.1")
+
+    implementation("com.google.accompanist:accompanist-permissions:0.28.0")
 }
 
 kapt {

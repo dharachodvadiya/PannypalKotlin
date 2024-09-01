@@ -1,4 +1,4 @@
-package com.indie.apps.pennypal.presentation.ui.dialog.cpp
+package com.indie.apps.pennypal.presentation.ui.dialog.country_picker
 
 import androidx.lifecycle.ViewModel
 import com.indie.apps.cpp.data.repository.CountryRepository
@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
-class CppViewModel @Inject constructor(private val countryRepository: CountryRepository) :
+class CountryPickerViewModel @Inject constructor(private val countryRepository: CountryRepository) :
     ViewModel() {
 
 
