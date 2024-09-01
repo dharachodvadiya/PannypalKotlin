@@ -16,3 +16,4 @@ dependencyResolutionManagement {
 rootProject.name = "PennyPal"
 include(":app")
 include(":cpp")
+include(":contacts")

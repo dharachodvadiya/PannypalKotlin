@@ -1,6 +1,10 @@
 package com.indie.apps.pennypal.di
 
 import android.content.Context
+import com.indie.apps.contacts.data.provider.ContactsProvider
+import com.indie.apps.contacts.data.provider.impl.ContactsProviderImpl
+import com.indie.apps.contacts.data.repo.ContactsRepository
+import com.indie.apps.contacts.data.repo.impl.ContactsRepositoryImpl
 import com.indie.apps.cpp.data.CountryDb
 import com.indie.apps.cpp.data.repository.CountryRepository
 import com.indie.apps.cpp.data.repository.CountryRepositoryImpl
@@ -18,6 +22,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Singleton
 
 @Module
@@ -55,5 +60,21 @@ object AppModule {
     @Provides
     fun provideCountryRepository(countryDb: CountryDb): CountryRepository {
         return CountryRepositoryImpl(countryDb)
+    }
+
+    @Provides
+    @Singleton
+    fun provideContactsProvider(@ApplicationContext context: Context): ContactsProvider {
+        return ContactsProviderImpl(
+            contentResolver = context.contentResolver,
+            dispatcher = Dispatchers.IO
+        )
+    }
+
+    @Provides
+    fun provideContactsRepo(contactsProvider: ContactsProvider): ContactsRepository {
+        return ContactsRepositoryImpl(
+            contactsProvider = contactsProvider
+        )
     }
 }
