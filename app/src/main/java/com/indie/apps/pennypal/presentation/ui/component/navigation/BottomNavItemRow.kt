@@ -6,6 +6,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -157,7 +158,7 @@ fun BottomNavigationBarCustom1(
 
         Box(
             modifier = modifier
-                .height(dimensionResource(R.dimen.bottom_bar))
+                .height(dimensionResource(R.dimen.bottom_bar) + circleRadius)
                 .fillMaxWidth()
                 .background(MyAppTheme.colors.transparent)
                 .clickable(onClick = { }, enabled = false, role = Role.Button),
@@ -167,7 +168,8 @@ fun BottomNavigationBarCustom1(
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
-                    .offset { IntOffset(0, -90) }
+                    //.offset { IntOffset(0, -90) }
+                    .padding(PaddingValues(bottom = 30.dp))
                     .zIndex(1f)
                     .size(circleRadius * 2)
                     .clip(CircleShape)
