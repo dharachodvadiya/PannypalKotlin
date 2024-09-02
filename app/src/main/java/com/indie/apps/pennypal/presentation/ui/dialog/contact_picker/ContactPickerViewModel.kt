@@ -5,10 +5,13 @@ import androidx.lifecycle.viewModelScope
 import com.indie.apps.contacts.common.Result
 import com.indie.apps.contacts.data.model.ContactNumInfos
 import com.indie.apps.contacts.data.repo.ContactsRepository
+import com.indie.apps.pennypal.data.module.ContactNumberAndCode
 import com.indie.apps.pennypal.data.module.ContactNumberAndName
 import com.indie.apps.pennypal.data.module.toContactNumberAndName
+import com.indie.apps.pennypal.data.module.toContactNumberAndCode
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.util.Resource
+import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.util.handleException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -55,27 +58,10 @@ class ContactPickerViewModel @Inject constructor(private val contactsRepository:
         }
     }
 
-    /*fun toggleExpand(contact: ContactNumberAndName) {
-
-        uiState.update {
-            Resource.Success(
-                uiState.value.data?.map {
-                    if (it.id == contact.id) {
-                        it.copy(expanded = !it.expanded)
-                    } else {
-                        it
-                    }
-                } ?: Collections.emptyList()
-            )
-        }
-
-       *//* uiState.update(uiState.value.data.map {
-            if (it.id == contact.id) {
-                it.copy(isExpanded = !it.isExpanded)
-            } else {
-                it
-            }
-        })*//*
-    }*/
+    fun onSelectCountry(contact : ContactNumberAndName, onSuccess: (ContactNumberAndCode)-> Unit)
+    {
+        val data = Util.getContactNumberAndCodeFromPhoneNumber(contact.phoneNumbers[contact.currentNumberIndex.value])
+        onSuccess(contact.toContactNumberAndCode(data.phoneNumber, data.dialCode))
+    }
 
 }

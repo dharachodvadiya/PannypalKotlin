@@ -12,4 +12,12 @@ class ContactNumberAndName(
     val expanded: MutableState<Boolean> = mutableStateOf(false)
 )
 
+data class ContactNumberAndCode(
+    val id: String = "",
+    val name: String = "",
+    val phoneNumber: String,
+    val dialCode: String?
+)
+
 fun ContactNumInfo.toContactNumberAndName() = ContactNumberAndName(id, name, phoneNumbers)
+fun ContactNumberAndName.toContactNumberAndCode(contactNumber: String, countryCode: String?) = ContactNumberAndCode(id, name, contactNumber, countryCode)

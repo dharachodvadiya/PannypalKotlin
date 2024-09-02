@@ -21,6 +21,7 @@ import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.entity.Merchant
+import com.indie.apps.pennypal.data.module.ContactNumberAndCode
 import com.indie.apps.pennypal.presentation.ui.component.BottomSaveButton
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.MyAppDialog
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
@@ -34,6 +35,7 @@ fun DialogAddMerchant(
     onSaveSuccess: (Merchant?, Boolean) -> Unit,
     onCpp: () -> Unit,
     onContactBook: () -> Unit,
+    contactNumberAndCode: ContactNumberAndCode?,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
     code: String?,
     editId: Long? = null,
@@ -44,6 +46,14 @@ fun DialogAddMerchant(
     LaunchedEffect(code) {
         addMerchantViewModel.setCountryCode(code ?: addMerchantViewModel.getDefaultCurrencyCode())
     }
+
+    if (contactNumberAndCode != null) {
+        LaunchedEffect(contactNumberAndCode) {
+            addMerchantViewModel.setContactData(contactNumberAndCode)
+        }
+    }
+
+
 
     LaunchedEffect(editId) {
         addMerchantViewModel.setEditId(editId) // always call after set country code
@@ -71,18 +81,17 @@ fun DialogAddMerchant(
                 },
                 onContactBook = {
                     if (!permissionState.status.isGranted) {
-                        if(!permissionState.status.shouldShowRationale)
-                        {
+                        if (!permissionState.status.shouldShowRationale) {
                             val i = Intent()
                             i.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                             i.addCategory(Intent.CATEGORY_DEFAULT)
                             i.setData(Uri.parse("package:" + context.packageName))
                             context.startActivity(i)
-                        }else{
+                        } else {
                             permissionState.launchPermissionRequest()
                         }
 
-                    }else{
+                    } else {
                         onContactBook()
                     }
 
@@ -113,7 +122,9 @@ private fun MyAppDialogPreview() {
             onSaveSuccess = { _, _ -> },
             onCpp = {},
             code = null,
-            onContactBook = {}
+            onContactBook = {},
+            contactNumberAndCode = null
+
         )
     }
 }

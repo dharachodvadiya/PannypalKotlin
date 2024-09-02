@@ -18,6 +18,7 @@ import androidx.navigation.compose.rememberNavController
 import com.google.gson.Gson
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.entity.toMerchantNameAndDetails
+import com.indie.apps.pennypal.data.module.ContactNumberAndCode
 import com.indie.apps.pennypal.presentation.ui.component.showToast
 import com.indie.apps.pennypal.presentation.ui.dialog.add_edit_merchant.DialogAddMerchant
 import com.indie.apps.pennypal.presentation.ui.dialog.add_payment.DialogAddPayment
@@ -112,9 +113,18 @@ fun PennyPalApp() {
                     dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
                 ) { backStackEntry ->
                     // get data passed back from B
-                    val data: String? = backStackEntry
+                    val dialCode: String? = backStackEntry
                         .savedStateHandle
                         .get<String>(Util.SAVE_STATE_COUNTRY_DIAL_CODE)
+
+                    val gsonStringContactData: String? = backStackEntry
+                        .savedStateHandle
+                        .get<String>(Util.SAVE_STATE_CONTACT_NUMBER_DIAL_CODE)
+
+                    val contactData: ContactNumberAndCode? =
+                        if (gsonStringContactData != null) {
+                            Gson().fromJson(gsonStringContactData, ContactNumberAndCode::class.java)
+                        } else null
 
                     val editId: Long? = backStackEntry
                         .savedStateHandle
@@ -159,8 +169,9 @@ fun PennyPalApp() {
                         onContactBook = {
                             navController.navigate(DialogNav.CONTACT_PICKER.route)
                         },
-                        code = data,
-                        editId = editId
+                        code = dialCode,
+                        editId = editId,
+                        contactNumberAndCode = contactData
                     )
                 }
                 dialog(
@@ -216,15 +227,11 @@ fun PennyPalApp() {
                         onNavigationUp = { navController.navigateUp() },
                         onSelect = {
                             // Pass data back to A
-                            /*navController.previousBackStackEntry
-                                ?.savedStateHandle
-                                ?.set(Util.SAVE_STATE_COUNTRY_DIAL_CODE, it.dialCode)
                             navController.previousBackStackEntry
                                 ?.savedStateHandle
-                                ?.set(Util.SAVE_STATE_CURRENCY_CODE, it.currencyCode)
+                                ?.set(Util.SAVE_STATE_CONTACT_NUMBER_DIAL_CODE, Gson().toJson(it))
 
-
-                            navController.popBackStack()*/
+                            navController.popBackStack()
                         }
                     )
                 }

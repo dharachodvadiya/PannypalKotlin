@@ -6,6 +6,7 @@ import android.util.DisplayMetrics
 import com.google.i18n.phonenumbers.NumberParseException
 import com.google.i18n.phonenumbers.PhoneNumberUtil
 import com.google.i18n.phonenumbers.Phonenumber
+import com.indie.apps.pennypal.data.module.ContactNumberAndCode
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -29,6 +30,7 @@ object Util {
     const val SAVE_STATE_EDIT_SUCCESS = "edit_success"
     const val SAVE_STATE_ADD_EDIT_SUCCESS_ID = "edit_add_id"
     const val SAVE_STATE_MERCHANT_NAME_DESC = "merchant_name_desc"
+    const val SAVE_STATE_CONTACT_NUMBER_DIAL_CODE = "contact_number_code"
     const val SAVE_STATE_PAYMENT = "payment"
     const val SAVE_STATE_MERCHANT_DATA_ADD_EDIT_ID = "merchant_data_add_edit_id"
     const val SAVE_STATE_MERCHANT_ADD_EDIT_ID = "merchant_add_edit_id"
@@ -61,6 +63,26 @@ object Util {
         } catch (e: NumberParseException) {
             System.err.println("NumberParseException was thrown: $e")
             return false
+        }
+    }
+
+    fun getContactNumberAndCodeFromPhoneNumber(phoneNumber: String): ContactNumberAndCode {
+        val phoneNumberUtil = PhoneNumberUtil.getInstance()
+        return try {
+            // Parse the phone number with the default region set to empty
+            val number: Phonenumber.PhoneNumber = phoneNumberUtil.parse(phoneNumber, null)
+            //"+${number.countryCode}"
+
+            ContactNumberAndCode(
+                dialCode = "+${number.countryCode}",
+                phoneNumber = phoneNumber.replace("+${number.countryCode}", ""),)
+            //phoneNumberUtil.getRegionCodeForNumber(number)
+        } catch (e: Exception) {
+            // Handle parsing errors
+            e.printStackTrace()
+            ContactNumberAndCode(
+                dialCode = null,
+                phoneNumber = phoneNumber)
         }
     }
 

@@ -9,6 +9,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.indie.apps.contacts.data.model.ContactNumInfo
 import com.indie.apps.pennypal.R
+import com.indie.apps.pennypal.data.module.ContactNumberAndCode
 import com.indie.apps.pennypal.data.module.ContactNumberAndName
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.MyAppDialog
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
@@ -23,7 +24,7 @@ import kotlinx.coroutines.launch
 fun DialogContactPicker(
     viewModel: ContactPickerViewModel = hiltViewModel(),
     onNavigationUp: () -> Unit,
-    onSelect: (ContactNumberAndName) -> Unit,
+    onSelect: (ContactNumberAndCode) -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     val searchTextState by viewModel.searchTextState.collectAsStateWithLifecycle()
@@ -37,8 +38,11 @@ fun DialogContactPicker(
         onNavigationUp = onNavigationUp,
         content = {
             ContactPickerDialogField(
-                onSelect = onSelect,
-                onExpand = {},
+                onSelect = {
+                    viewModel.onSelectCountry(it){data->
+                        onSelect(data)
+                    }
+                },
                 searchState = searchTextState,
                 contactUiState = uiState,
                 onTextChange = {

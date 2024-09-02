@@ -8,26 +8,17 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -36,8 +27,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.indie.apps.contacts.data.model.ContactNumInfo
-import com.indie.apps.contacts.data.model.ContactNumInfos
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.module.ContactNumberAndName
 import com.indie.apps.pennypal.presentation.ui.component.DialogSearchView
@@ -51,25 +40,15 @@ import com.indie.apps.pennypal.util.Resource
 @Composable
 fun ContactPickerDialogField(
     onSelect: (ContactNumberAndName) -> Unit,
-    onExpand: (ContactNumberAndName) -> Unit,
     searchState: TextFieldState,
     contactUiState: Resource<List<ContactNumberAndName>>,
     onTextChange: (String) -> Unit
 ) {
     Column {
-
-
-
         DialogSearchView(
             searchState = searchState,
             onTextChange = onTextChange
         )
-        //val context = LocalContext.current
-        /*val countries = remember { countryList(context) }
-        val countriesList = countries.toList()*/
-
-
-
         when (contactUiState) {
             is Resource.Error,
             is Resource.Loading -> {
@@ -104,12 +83,11 @@ fun ContactPickerDialogField(
                                 onClick = { onSelect(contact) },
                                 onNumberChange = {
                                     contactUiState.data[index].currentNumberIndex.value = it
+                                    onSelect(contactUiState.data[index])
                                 },
                                 dropdownClick = {
-                                    contactUiState.data[index].expanded.value = !contactUiState.data[index].expanded.value
-                                    //onExpand(contact)
-                                    //contactUiState.data[index]
-                                    //contact = contact.copy(expanded = !contact.expanded )
+                                    contactUiState.data[index].expanded.value =
+                                        !contactUiState.data[index].expanded.value
                                 }
                             )
                         }
@@ -132,6 +110,7 @@ fun ContactPickerDialogField(
 
     }
 }
+
 @Composable
 private fun SearchContactPickerListItem(
     item: ContactNumberAndName,
@@ -140,7 +119,6 @@ private fun SearchContactPickerListItem(
     dropdownClick: () -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier.fillMaxWidth()
 ) {
-    println("aaaaaa ${item.id}")
     val imageVector = Icons.Default.Person
     val bgColor = MyAppTheme.colors.lightBlue2
 
@@ -183,7 +161,7 @@ private fun SearchContactPickerListItem(
             ),
             itemBgColor = MyAppTheme.colors.transparent,
             trailingContent = {
-                if(item.phoneNumbers.size >1) {
+                if (item.phoneNumbers.size > 1) {
                     Icon(
                         Icons.Filled.ArrowDropDown,
                         null,
@@ -196,12 +174,11 @@ private fun SearchContactPickerListItem(
             }
         )
 
-        if(item.expanded.value)
-        {
-            item.phoneNumbers.forEachIndexed {index, number ->
+        if (item.expanded.value) {
+            item.phoneNumbers.forEachIndexed { index, number ->
 
                 contactNumberItem(
-                    phoneNumber =  number,
+                    phoneNumber = number,
                     selected = index == item.currentNumberIndex.value,
                     onSelected = { onNumberChange(index) }
                 )
@@ -215,9 +192,9 @@ private fun SearchContactPickerListItem(
 private fun contactNumberItem(
     phoneNumber: String,
     selected: Boolean,
-    onSelected : ()-> Unit,
+    onSelected: () -> Unit,
     modifier: Modifier = Modifier
-){
+) {
 
     Row(
         verticalAlignment = Alignment.CenterVertically,

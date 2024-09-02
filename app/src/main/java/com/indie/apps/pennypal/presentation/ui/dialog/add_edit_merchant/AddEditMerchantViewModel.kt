@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.indie.apps.cpp.data.repository.CountryRepository
 import com.indie.apps.pennypal.data.entity.Merchant
+import com.indie.apps.pennypal.data.module.ContactNumberAndCode
 import com.indie.apps.pennypal.domain.usecase.AddMerchantUseCase
 import com.indie.apps.pennypal.domain.usecase.GetMerchantFromIdUseCase
 import com.indie.apps.pennypal.domain.usecase.UpdateMerchantUseCase
@@ -58,6 +59,16 @@ class AddEditMerchantViewModel @Inject constructor(
 
     fun setCountryCode(code: String) {
         countryDialCode.value = code
+    }
+
+    fun setContactNumber(contactNumber: String) {
+        phoneNumber.value.text = contactNumber
+    }
+
+    fun setContactData(data : ContactNumberAndCode) {
+        merchantName.value.text = data.name
+        phoneNumber.value.text = data.phoneNumber
+        countryDialCode.value = data.dialCode ?: getDefaultCurrencyCode()
     }
 
     fun addOrEditMerchant(onSuccess: (Merchant?, Boolean) -> Unit) {
