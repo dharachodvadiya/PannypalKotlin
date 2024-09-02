@@ -1,6 +1,7 @@
 package com.indie.apps.contacts.data.provider
 
 import com.indie.apps.contacts.data.model.ContactDetails
+import com.indie.apps.contacts.data.model.ContactNumInfos
 import com.indie.apps.contacts.data.model.Contacts
 
 /**
@@ -12,7 +13,7 @@ interface ContactsProvider {
      * Fetch all the contacts
      */
     suspend fun getContacts(): Contacts
-    suspend fun searchContacts(searchString: String): Contacts
+    suspend fun searchContactsNameWithPhone(searchString: String): ContactNumInfos
 
     /**
      * Read the details of a contact

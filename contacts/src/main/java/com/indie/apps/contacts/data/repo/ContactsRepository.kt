@@ -3,6 +3,7 @@ package com.indie.apps.contacts.data.repo
 import com.indie.apps.contacts.common.AppFlow
 import com.indie.apps.contacts.common.Result
 import com.indie.apps.contacts.data.model.ContactDetails
+import com.indie.apps.contacts.data.model.ContactNumInfos
 import com.indie.apps.contacts.data.model.Contacts
 import kotlinx.coroutines.flow.Flow
 
@@ -15,12 +16,13 @@ interface ContactsRepository {
      * The loaded contacts
      */
     val contacts: AppFlow<Contacts>
+    val contactNumInfos: AppFlow<ContactNumInfos>
 
     /**
      * Reload the contacts from the content provider
      */
     suspend fun reloadContacts()
-    suspend fun searchContacts(searchString: String) : Flow<Result<Contacts>>
+    suspend fun searchContactsNameWithPhone(searchString: String): Flow<Result<ContactNumInfos>>
 
     /**
      * Read details of our specific contacts

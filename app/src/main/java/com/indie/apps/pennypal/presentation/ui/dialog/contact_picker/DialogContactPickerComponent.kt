@@ -18,10 +18,8 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.paging.compose.itemContentType
-import androidx.paging.compose.itemKey
-import com.indie.apps.contacts.data.model.Contact
-import com.indie.apps.cpp.data.model.Country
+import com.indie.apps.contacts.data.model.ContactNumInfo
+import com.indie.apps.contacts.data.model.ContactNumInfos
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.presentation.ui.component.DialogSearchView
 import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
@@ -33,9 +31,9 @@ import com.indie.apps.pennypal.util.Resource
 
 @Composable
 fun ContactPickerDialogField(
-    onSelect: (Contact) -> Unit,
+    onSelect: (ContactNumInfo) -> Unit,
     searchState: TextFieldState,
-    contactUiState: Resource<List<Contact>>,
+    contactUiState: Resource<ContactNumInfos>,
     onTextChange: (String) -> Unit
 ) {
     Column {
@@ -50,8 +48,7 @@ fun ContactPickerDialogField(
 
 
 
-        when(contactUiState)
-        {
+        when (contactUiState) {
             is Resource.Error,
             is Resource.Loading -> {
                 Box(
@@ -64,9 +61,9 @@ fun ContactPickerDialogField(
                     CircularProgressIndicator()
                 }
             }
+
             is Resource.Success -> {
-                if(contactUiState.data != null)
-                {
+                if (contactUiState.data != null) {
                     LazyColumn(
                         modifier = Modifier
                             .padding(horizontal = dimensionResource(id = R.dimen.padding))
@@ -83,7 +80,7 @@ fun ContactPickerDialogField(
                         }
 
                     }
-                }else{
+                } else {
                     NoDataMessage(
                         title = stringResource(id = R.string.no_contact),
                         details = stringResource(id = R.string.no_contact_details),
@@ -98,13 +95,12 @@ fun ContactPickerDialogField(
         }
 
 
-
     }
 }
 
 @Composable
 private fun SearchContactPickerListItem(
-    item: Contact,
+    item: ContactNumInfo,
     onClick: () -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier.fillMaxWidth()
 ) {
@@ -129,6 +125,14 @@ private fun SearchContactPickerListItem(
                     text = item.name,
                     style = MyAppTheme.typography.Semibold52_5,
                     color = MyAppTheme.colors.black,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+
+                Text(
+                    text = item.phoneNumbers.first(),
+                    style = MyAppTheme.typography.Medium33,
+                    color = MyAppTheme.colors.gray1,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )

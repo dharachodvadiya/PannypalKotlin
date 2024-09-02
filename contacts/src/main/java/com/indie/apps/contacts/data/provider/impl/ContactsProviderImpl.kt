@@ -4,24 +4,29 @@ import android.content.ContentResolver
 import android.database.Cursor
 import android.net.Uri
 import android.provider.ContactsContract
-import android.provider.ContactsContract.CommonDataKinds.*
+import android.provider.ContactsContract.CommonDataKinds.Email
+import android.provider.ContactsContract.CommonDataKinds.Phone
+import android.provider.ContactsContract.CommonDataKinds.StructuredName
+import android.provider.ContactsContract.CommonDataKinds.Website
 import com.indie.apps.contacts.data.map
 import com.indie.apps.contacts.data.mapper.asContact
 import com.indie.apps.contacts.data.mapper.asContactDetails
 import com.indie.apps.contacts.data.model.Contact
 import com.indie.apps.contacts.data.model.ContactDetails
+import com.indie.apps.contacts.data.model.ContactNumInfo
+import com.indie.apps.contacts.data.model.ContactNumInfos
 import com.indie.apps.contacts.data.model.Contacts
 import com.indie.apps.contacts.data.provider.ContactsProvider
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.util.*
+import java.util.Collections
 
 
 class ContactsProviderImpl(
     private val contentResolver: ContentResolver,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
-): ContactsProvider {
+) : ContactsProvider {
 
     private fun query(
         uri: Uri,
@@ -33,7 +38,7 @@ class ContactsProviderImpl(
         return contentResolver.query(uri, projection, selection, selectionArgs, sort)
     }
 
-    override suspend fun getContacts(): Contacts = withContext(dispatcher){
+    override suspend fun getContacts(): Contacts = withContext(dispatcher) {
         fetchContacts() ?: Collections.emptyList()
     }
 
@@ -52,29 +57,57 @@ class ContactsProviderImpl(
         return result
     }
 
-    override suspend fun searchContacts(searchString: String): Contacts = withContext(dispatcher){
-        fetchContacts(searchString) ?: Collections.emptyList()
-    }
+    override suspend fun searchContactsNameWithPhone(searchString: String): ContactNumInfos =
+        withContext(dispatcher) {
+            fetchContactNumInfoList(searchString) ?: Collections.emptyList()
+        }
 
-    private fun fetchContacts(searchString: String): List<Contact>? {
+    private fun fetchContactNumInfoList(searchString: String): ContactNumInfos {
         val cursor = query(
-            uri = ContactsContract.Contacts.CONTENT_URI,
-            projection = CONTACTS_PROJECTION,
-            sort = ContactsContract.Contacts.DISPLAY_NAME_PRIMARY,
-            selection = CONTACT_LIST_SEARCH_SELECT,
-            selectionArgs = arrayOf(
-                "1",
-                "%$searchString%"
-            )
+            uri = Phone.CONTENT_URI,
+            projection = arrayOf(
+                Phone.CONTACT_ID,
+                Phone.DISPLAY_NAME,
+                Phone.NUMBER
+            ),
+            sort = Phone.DISPLAY_NAME,
+            selection = if (searchString.isNotEmpty())
+                "${Phone.DISPLAY_NAME} LIKE ?"
+            else
+                null,
+            selectionArgs = if (searchString.isNotEmpty())
+                arrayOf("%$searchString%")
+            else
+                null
         )
-        val result: List<Contact>? = cursor.map { it.asContact() }
+
+        val contacts = mutableMapOf<String, ContactNumInfo>()
+        while (cursor?.moveToNext() == true) {
+            val contactId =
+                cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.CONTACT_ID))
+            val name =
+                cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME))
+            val phoneNumber =
+                cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER))
+
+            // Use contactId as a key to ensure unique contacts
+            val contact = contacts[contactId] ?: ContactNumInfo(
+                id = contactId,
+                name = name,
+                phoneNumbers = mutableListOf()
+            )
+            if (!contact.phoneNumbers.contains(phoneNumber))
+                contact.phoneNumbers.add(phoneNumber.replace(" ", "").replace("-", ""))
+            contacts[contactId] = contact
+        }
         cursor?.close()
-        return result
+        return contacts.values.toList()
     }
 
-    override suspend fun getContactDetails(contactId: String): List<ContactDetails> = withContext(dispatcher) {
-        fetchContactData(contactId) ?: Collections.emptyList()
-    }
+    override suspend fun getContactDetails(contactId: String): List<ContactDetails> =
+        withContext(dispatcher) {
+            fetchContactData(contactId) ?: Collections.emptyList()
+        }
 
     private fun fetchContactData(contactId: String): List<ContactDetails>? {
         val cursor: Cursor? = query(
@@ -120,8 +153,9 @@ class ContactsProviderImpl(
                 " AND ${ContactsContract.Data.MIMETYPE} IN (?,?,?,?)"
 
         private const val CONTACT_LIST_SELECT = "${ContactsContract.Contacts.HAS_PHONE_NUMBER}=?"
-        private const val CONTACT_LIST_SEARCH_SELECT = "${ContactsContract.Contacts.HAS_PHONE_NUMBER}=?" +
-                " AND ${ContactsContract.Data.DISPLAY_NAME_PRIMARY} LIKE ?"
+        private const val CONTACT_LIST_SEARCH_SELECT =
+            "${ContactsContract.Contacts.HAS_PHONE_NUMBER}=?" +
+                    " AND ${ContactsContract.Data.DISPLAY_NAME_PRIMARY} LIKE ?"
     }
 
 }

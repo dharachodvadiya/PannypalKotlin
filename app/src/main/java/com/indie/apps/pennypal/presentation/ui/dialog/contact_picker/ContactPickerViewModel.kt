@@ -3,7 +3,7 @@ package com.indie.apps.pennypal.presentation.ui.dialog.contact_picker
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.indie.apps.contacts.common.Result
-import com.indie.apps.contacts.data.model.Contact
+import com.indie.apps.contacts.data.model.ContactNumInfos
 import com.indie.apps.contacts.data.repo.ContactsRepository
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.util.Resource
@@ -21,38 +21,34 @@ class ContactPickerViewModel @Inject constructor(private val contactsRepository:
 
 
     val searchTextState = MutableStateFlow(TextFieldState())
-    val uiState = MutableStateFlow<Resource<List<Contact>>>(Resource.Loading())
+    val uiState = MutableStateFlow<Resource<ContactNumInfos>>(Resource.Loading())
 
     init {
         searchData()
     }
 
 
-    fun searchData()
-    {
-        /*val data = countryRepository.searchCountryForDialCode(searchTextState.value.text)
-        if(data.isNotEmpty())
-            uiState.value = data*/
-
+    fun searchData() {
         viewModelScope.launch {
             contactsRepository
-                .searchContacts(searchTextState.value.text)
+                .searchContactsNameWithPhone(searchTextState.value.text)
                 .collect { result ->
                     processResult(result)
                 }
         }
     }
 
-    private suspend fun processResult(result: Result<List<Contact>>) {
+    private fun processResult(result: Result<ContactNumInfos>) {
         when (result) {
-            is Result.Loading -> uiState.update {Resource.Loading()}
+            is Result.Loading -> uiState.update { Resource.Loading() }
             is Result.Success -> {
                 uiState.update {
                     Resource.Success(result.data ?: Collections.emptyList())
                 }
             }
+
             is Result.Error -> {
-                uiState.update {Resource.Error(result.exception?.let { it1 -> handleException(it1).message } + ": ${result.exception?.message}")}
+                uiState.update { Resource.Error(result.exception?.let { it1 -> handleException(it1).message } + ": ${result.exception?.message}") }
             }
         }
     }
