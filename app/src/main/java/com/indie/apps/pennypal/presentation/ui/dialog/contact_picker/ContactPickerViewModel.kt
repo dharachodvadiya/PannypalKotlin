@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.indie.apps.contacts.common.Result
 import com.indie.apps.contacts.data.model.ContactNumInfos
 import com.indie.apps.contacts.data.repo.ContactsRepository
+import com.indie.apps.pennypal.data.module.ContactNumberAndName
+import com.indie.apps.pennypal.data.module.toContactNumberAndName
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.util.Resource
 import com.indie.apps.pennypal.util.handleException
@@ -21,7 +23,7 @@ class ContactPickerViewModel @Inject constructor(private val contactsRepository:
 
 
     val searchTextState = MutableStateFlow(TextFieldState())
-    val uiState = MutableStateFlow<Resource<ContactNumInfos>>(Resource.Loading())
+    val uiState = MutableStateFlow<Resource<List<ContactNumberAndName>>>(Resource.Loading())
 
     init {
         searchData()
@@ -43,7 +45,7 @@ class ContactPickerViewModel @Inject constructor(private val contactsRepository:
             is Result.Loading -> uiState.update { Resource.Loading() }
             is Result.Success -> {
                 uiState.update {
-                    Resource.Success(result.data ?: Collections.emptyList())
+                    Resource.Success(result.data?.map { it.toContactNumberAndName() } ?: Collections.emptyList())
                 }
             }
 
@@ -52,5 +54,28 @@ class ContactPickerViewModel @Inject constructor(private val contactsRepository:
             }
         }
     }
+
+    /*fun toggleExpand(contact: ContactNumberAndName) {
+
+        uiState.update {
+            Resource.Success(
+                uiState.value.data?.map {
+                    if (it.id == contact.id) {
+                        it.copy(expanded = !it.expanded)
+                    } else {
+                        it
+                    }
+                } ?: Collections.emptyList()
+            )
+        }
+
+       *//* uiState.update(uiState.value.data.map {
+            if (it.id == contact.id) {
+                it.copy(isExpanded = !it.isExpanded)
+            } else {
+                it
+            }
+        })*//*
+    }*/
 
 }

@@ -1,26 +1,45 @@
 package com.indie.apps.pennypal.presentation.ui.dialog.contact_picker
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.indie.apps.contacts.data.model.ContactNumInfo
 import com.indie.apps.contacts.data.model.ContactNumInfos
 import com.indie.apps.pennypal.R
+import com.indie.apps.pennypal.data.module.ContactNumberAndName
 import com.indie.apps.pennypal.presentation.ui.component.DialogSearchView
 import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListItem
@@ -31,12 +50,15 @@ import com.indie.apps.pennypal.util.Resource
 
 @Composable
 fun ContactPickerDialogField(
-    onSelect: (ContactNumInfo) -> Unit,
+    onSelect: (ContactNumberAndName) -> Unit,
+    onExpand: (ContactNumberAndName) -> Unit,
     searchState: TextFieldState,
-    contactUiState: Resource<ContactNumInfos>,
+    contactUiState: Resource<List<ContactNumberAndName>>,
     onTextChange: (String) -> Unit
 ) {
     Column {
+
+
 
         DialogSearchView(
             searchState = searchState,
@@ -72,10 +94,23 @@ fun ContactPickerDialogField(
                             count = contactUiState.data.size,
                             key = { index -> contactUiState.data[index].id }
                         ) { index ->
+                            /*var contact by remember {
+                                mutableStateOf(contactUiState.data[index])
+                            }*/
+
                             val contact = contactUiState.data[index]
                             SearchContactPickerListItem(
                                 item = contact,
-                                onClick = { onSelect(contact) }
+                                onClick = { onSelect(contact) },
+                                onNumberChange = {
+                                    contactUiState.data[index].currentNumberIndex.value = it
+                                },
+                                dropdownClick = {
+                                    contactUiState.data[index].expanded.value = !contactUiState.data[index].expanded.value
+                                    //onExpand(contact)
+                                    //contactUiState.data[index]
+                                    //contact = contact.copy(expanded = !contact.expanded )
+                                }
                             )
                         }
 
@@ -97,51 +132,113 @@ fun ContactPickerDialogField(
 
     }
 }
-
 @Composable
 private fun SearchContactPickerListItem(
-    item: ContactNumInfo,
+    item: ContactNumberAndName,
     onClick: () -> Unit,
+    onNumberChange: (Int) -> Unit,
+    dropdownClick: () -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier.fillMaxWidth()
 ) {
+    println("aaaaaa ${item.id}")
     val imageVector = Icons.Default.Person
     val bgColor = MyAppTheme.colors.lightBlue2
 
-
-    ListItem(
-        onClick = onClick,
-        leadingIcon = {
-            RoundImage(
-                imageVector = imageVector,
-                //brush = linearGradientsBrush(MyAppTheme.colors.gradientBlue),
-                tint = MyAppTheme.colors.black,
-                backGround = bgColor,
-                contentDescription = "person"
-            )
-        },
-        content = {
-            Column {
-                Text(
-                    text = item.name,
-                    style = MyAppTheme.typography.Semibold52_5,
-                    color = MyAppTheme.colors.black,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+    Column(
+        modifier = modifier.animateContentSize()
+    ) {
+        ListItem(
+            onClick = onClick,
+            leadingIcon = {
+                RoundImage(
+                    imageVector = imageVector,
+                    //brush = linearGradientsBrush(MyAppTheme.colors.gradientBlue),
+                    tint = MyAppTheme.colors.black,
+                    backGround = bgColor,
+                    contentDescription = "person"
                 )
+            },
+            content = {
+                Column {
+                    Text(
+                        text = item.name,
+                        style = MyAppTheme.typography.Semibold52_5,
+                        color = MyAppTheme.colors.black,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
 
-                Text(
-                    text = item.phoneNumbers.first(),
-                    style = MyAppTheme.typography.Medium33,
-                    color = MyAppTheme.colors.gray1,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+                    Text(
+                        text = item.phoneNumbers[item.currentNumberIndex.value],
+                        style = MyAppTheme.typography.Medium33,
+                        color = MyAppTheme.colors.gray1,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+            },
+            modifier = modifier,
+            paddingValues = PaddingValues(
+                horizontal = dimensionResource(id = R.dimen.padding)
+            ),
+            itemBgColor = MyAppTheme.colors.transparent,
+            trailingContent = {
+                if(item.phoneNumbers.size >1) {
+                    Icon(
+                        Icons.Filled.ArrowDropDown,
+                        null,
+                        Modifier
+                            .rotate(if (item.expanded.value) 180f else 0f)
+                            .clickable { dropdownClick() }
+                    )
+
+                }
             }
-        },
-        modifier = modifier,
-        paddingValues = PaddingValues(
-            horizontal = dimensionResource(id = R.dimen.padding)
-        ),
-        itemBgColor = MyAppTheme.colors.transparent
-    )
+        )
+
+        if(item.expanded.value)
+        {
+            item.phoneNumbers.forEachIndexed {index, number ->
+
+                contactNumberItem(
+                    phoneNumber =  number,
+                    selected = index == item.currentNumberIndex.value,
+                    onSelected = { onNumberChange(index) }
+                )
+
+            }
+        }
+    }
+}
+
+@Composable
+private fun contactNumberItem(
+    phoneNumber: String,
+    selected: Boolean,
+    onSelected : ()-> Unit,
+    modifier: Modifier = Modifier
+){
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .fillMaxWidth()
+            .background(MyAppTheme.colors.transparent)
+            .padding(PaddingValues(start = 50.dp))
+            .clickable(role = Role.Button) { onSelected() }
+    ) {
+        RadioButton(
+            selected = selected,
+            onClick = onSelected
+        )
+
+        Text(
+            text = phoneNumber,
+            style = MyAppTheme.typography.Medium40,
+            color = MyAppTheme.colors.gray1,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+    }
+
 }
