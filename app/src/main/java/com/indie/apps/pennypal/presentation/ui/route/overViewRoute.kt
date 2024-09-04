@@ -15,7 +15,7 @@ import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
 import com.indie.apps.pennypal.presentation.ui.component.showToast
 import com.indie.apps.pennypal.presentation.ui.navigation.BottomNavItem
 import com.indie.apps.pennypal.presentation.ui.navigation.DialogNav
-import com.indie.apps.pennypal.presentation.ui.navigation.OverviewNav
+import com.indie.apps.pennypal.presentation.ui.navigation.ScreenNav
 import com.indie.apps.pennypal.presentation.ui.screen.new_item.NewItemScreen
 import com.indie.apps.pennypal.presentation.ui.screen.overview.OverViewStartScreen
 import com.indie.apps.pennypal.presentation.ui.screen.profile.ProfileScreen
@@ -29,9 +29,9 @@ fun NavGraphBuilder.overViewRoute(
 ) {
 
     navigation(
-        startDestination = OverviewNav.START.route, route = BottomNavItem.OVERVIEW.route
+        startDestination = ScreenNav.OVERVIEW_START.route, route = BottomNavItem.OVERVIEW.route
     ) {
-        composable(route = OverviewNav.START.route) { backStackEntry ->
+        composable(route = ScreenNav.OVERVIEW_START.route) { backStackEntry ->
 
             val merchantDataId: Long? = backStackEntry
                 .savedStateHandle
@@ -49,13 +49,13 @@ fun NavGraphBuilder.overViewRoute(
 
 
             OverViewStartScreen(
-                onProfileClick = { navController.navigate(OverviewNav.PROFILE.route) },
+                onProfileClick = { navController.navigate(ScreenNav.PROFILE.route) },
                 bottomPadding = innerPadding,
                 addEditMerchantDataId = merchantDataId ?: -1,
                 isAddMerchantDataSuccess = isAddMerchantDataSuccess ?: false
             )
         }
-        composable(route = OverviewNav.NEW_ITEM.route)
+        composable(route = ScreenNav.NEW_ITEM.route)
         { backStackEntry ->
 
             val context = LocalContext.current
@@ -126,7 +126,7 @@ fun NavGraphBuilder.overViewRoute(
                 }
             )
         }
-        composable(route = OverviewNav.PROFILE.route) {backStackEntry->
+        composable(route = ScreenNav.PROFILE.route) { backStackEntry->
 
             val code: String? = backStackEntry
                 .savedStateHandle

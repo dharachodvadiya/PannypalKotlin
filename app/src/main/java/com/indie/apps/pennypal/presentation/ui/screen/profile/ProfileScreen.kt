@@ -25,7 +25,7 @@ import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.entity.User
 import com.indie.apps.pennypal.presentation.ui.component.showToast
 import com.indie.apps.pennypal.presentation.ui.component.TopBarWithTitle
-import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingScreen
+import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 
@@ -42,7 +42,7 @@ fun ProfileScreen(
     val userData by profileViewModel.currUserData.collectAsStateWithLifecycle()
 
     if (userData == null) {
-        LoadingScreen()
+        LoadingWithProgress()
     } else {
         profileViewModel.setCurrency(code)
         userData?.let {

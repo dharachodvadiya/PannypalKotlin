@@ -38,6 +38,7 @@ import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListI
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.SearchView
+import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 
@@ -89,15 +90,11 @@ fun SearchDialogField(
 
 
         if (isRefresh) {
-            Box(
-                contentAlignment = Alignment.Center,
+            LoadingWithProgress(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
-
-            ) {
-                CircularProgressIndicator()
-            }
+            )
         } else if (dataList.itemCount == 0) {
             NoDataMessage(
                 title = stringResource(id = R.string.no_merchants),
@@ -133,6 +130,7 @@ fun SearchDialogField(
                             ) {
                                 CircularProgressIndicator()
                             }
+
                         }
                     }
                 }

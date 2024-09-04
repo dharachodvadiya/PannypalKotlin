@@ -10,18 +10,22 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.util.Util
 
-enum class OverviewNav(val route: String) {
-    START("overview/start"),
-    NEW_ITEM("overview/new_item"),
-    PROFILE("overview/profile")
+enum class DialogNav(val route: String) {
+    SELECT_MERCHANT("Dialog/SelectMerchant"),
+    ADD_EDIT_MERCHANT("Dialog/AddMerchant"),
+    ADD_PAYMENT("Dialog/AddPayment"),
+    COUNTRY_PICKER("Dialog/CountryCodePicker"),
+    CONTACT_PICKER("Dialog/ContactPicker")
 }
 
-sealed class MerchantNav(val route: String) {
-    data object START : MerchantNav("merchant/start")
-    data object DATA : MerchantNav("merchant/merchant_data/{${Util.PARAM_MERCHANT_ID}}")
-    data object PROFILE : MerchantNav("merchant/merchant_profile/{${Util.PARAM_MERCHANT_ID}}")
-    data object EDIT_DATA :
-        MerchantNav("merchant/edit_merchant_data/{${Util.PARAM_EDIT_MERCHANT_DATA_ID}}")
+enum class ScreenNav(val route: String) {
+    OVERVIEW_START("overview/start"),
+    NEW_ITEM("overview/new_item"),
+    PROFILE("overview/profile"),
+    MERCHANT_START("merchant/start"),
+    MERCHANT_DATA("merchant/merchant_data/{${Util.PARAM_MERCHANT_ID}}"),
+    MERCHANT_PROFILE("merchant/merchant_profile/{${Util.PARAM_MERCHANT_ID}}"),
+    EDIT_MERCHANT_DATA("merchant/edit_merchant_data/{${Util.PARAM_EDIT_MERCHANT_DATA_ID}}")
 }
 
 enum class BottomNavItem(
@@ -34,10 +38,3 @@ enum class BottomNavItem(
     MERCHANTS(R.string.merchants, Icons.Filled.Person, Icons.Outlined.PersonOutline, "merchant"),
 }
 
-sealed class DialogNav(val route: String) {
-    data object SELECT_MERCHANT : DialogNav("Dialog/SelectMerchant")
-    data object ADD_EDIT_MERCHANT : DialogNav("Dialog/AddMerchant")
-    data object ADD_PAYMENT : DialogNav("Dialog/AddPayment")
-    data object COUNTRY_PICKER : DialogNav("Dialog/CountryCodePicker")
-    data object CONTACT_PICKER : DialogNav("Dialog/ContactPicker")
-}

@@ -24,6 +24,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
+import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.util.Util
@@ -119,14 +120,11 @@ fun OverViewStartScreen(
         ) {
             if (merchantDataWithDayPagingState.isRefresh
             ) {
-                Box(
-                    contentAlignment = Alignment.Center,
+                LoadingWithProgress(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
-                ) {
-                    CircularProgressIndicator()
-                }
+                )
             } else {
                 OverviewBalanceView(
                     balance = amount,

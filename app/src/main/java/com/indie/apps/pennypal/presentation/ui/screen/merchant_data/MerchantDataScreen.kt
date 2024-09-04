@@ -43,6 +43,7 @@ import com.indie.apps.pennypal.presentation.ui.component.DeleteAlertDialog
 import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
 import com.indie.apps.pennypal.presentation.ui.component.showToast
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
+import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.util.Util
@@ -135,15 +136,12 @@ fun MerchantDataScreen(
         ) {
 
             if (pagingState.isRefresh && (lazyPagingData.itemCount == 0)) {
-                Box(
-                    contentAlignment = Alignment.Center,
+                LoadingWithProgress(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
                         .background(MyAppTheme.colors.transparent)
-                ) {
-                    CircularProgressIndicator()
-                }
+                )
             } else if (lazyPagingData.itemCount == 0) {
                 NoDataMessage(
                     title = stringResource(id = R.string.no_transactions),

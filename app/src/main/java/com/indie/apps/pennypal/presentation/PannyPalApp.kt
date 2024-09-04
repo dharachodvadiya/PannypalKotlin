@@ -28,7 +28,7 @@ import com.indie.apps.pennypal.presentation.ui.navigation.BottomNavItem
 import com.indie.apps.pennypal.presentation.ui.component.navigation.BottomNavigationBarCustom1
 import com.indie.apps.pennypal.presentation.ui.dialog.contact_picker.DialogContactPicker
 import com.indie.apps.pennypal.presentation.ui.navigation.DialogNav
-import com.indie.apps.pennypal.presentation.ui.navigation.OverviewNav
+import com.indie.apps.pennypal.presentation.ui.navigation.ScreenNav
 import com.indie.apps.pennypal.presentation.ui.route.merchantRoute
 import com.indie.apps.pennypal.presentation.ui.route.overViewRoute
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
@@ -66,7 +66,7 @@ fun PennyPalApp() {
                             }
                         }
                     },
-                    onAddClick = { navController.navigate(OverviewNav.NEW_ITEM.route) },
+                    onAddClick = { navController.navigate(ScreenNav.NEW_ITEM.route) },
                     currentTab = currentScreen,
                     bottomBarState = bottomBarState.value
                 )

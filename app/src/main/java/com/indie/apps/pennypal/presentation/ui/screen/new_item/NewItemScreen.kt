@@ -31,7 +31,7 @@ import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
 import com.indie.apps.pennypal.presentation.ui.component.BottomSaveButton
 import com.indie.apps.pennypal.presentation.ui.component.TopBarWithTitle
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
-import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingScreen
+import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.state.rememberImeState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
@@ -75,7 +75,7 @@ fun NewItemScreen(
 
     when (uiState) {
         is Resource.Loading -> {
-            LoadingScreen()
+            LoadingWithProgress()
         }
 
         is Resource.Success -> {
@@ -149,7 +149,7 @@ fun NewItemScreen(
         }
 
         is Resource.Error -> {
-            LoadingScreen()
+            LoadingWithProgress()
         }
     }
 

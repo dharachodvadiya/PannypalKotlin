@@ -33,6 +33,7 @@ import com.indie.apps.pennypal.presentation.ui.component.DialogSearchView
 import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListItem
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
+import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.util.Resource
@@ -52,15 +53,11 @@ fun ContactPickerDialogField(
         when (contactUiState) {
             is Resource.Error,
             is Resource.Loading -> {
-                Box(
-                    contentAlignment = Alignment.Center,
+                LoadingWithProgress(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
-
-                ) {
-                    CircularProgressIndicator()
-                }
+                )
             }
 
             is Resource.Success -> {

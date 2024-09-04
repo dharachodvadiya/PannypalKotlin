@@ -19,7 +19,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.indie.apps.pennypal.data.entity.Merchant
 import com.indie.apps.pennypal.presentation.ui.component.TopBarWithTitle
-import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingScreen
+import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.util.Resource
@@ -35,7 +35,7 @@ fun MerchantProfileScreen(
 
     when (uiState) {
         is Resource.Loading -> {
-            LoadingScreen()
+            LoadingWithProgress()
         }
 
         is Resource.Success -> {
@@ -49,7 +49,7 @@ fun MerchantProfileScreen(
         }
 
         is Resource.Error -> {
-            LoadingScreen()
+            LoadingWithProgress()
         }
     }
 

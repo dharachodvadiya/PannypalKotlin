@@ -15,8 +15,7 @@ import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
 import com.indie.apps.pennypal.presentation.ui.component.showToast
 import com.indie.apps.pennypal.presentation.ui.navigation.BottomNavItem
 import com.indie.apps.pennypal.presentation.ui.navigation.DialogNav
-import com.indie.apps.pennypal.presentation.ui.navigation.MerchantNav
-import com.indie.apps.pennypal.presentation.ui.navigation.OverviewNav
+import com.indie.apps.pennypal.presentation.ui.navigation.ScreenNav
 import com.indie.apps.pennypal.presentation.ui.screen.merchant_data.MerchantDataScreen
 import com.indie.apps.pennypal.presentation.ui.screen.merchant_profile.MerchantProfileScreen
 import com.indie.apps.pennypal.presentation.ui.screen.merchant.MerchantScreen
@@ -29,10 +28,10 @@ fun NavGraphBuilder.merchantRoute(
     innerPadding: PaddingValues
 ) {
     navigation(
-        startDestination = MerchantNav.START.route,
+        startDestination = ScreenNav.MERCHANT_START.route,
         route = BottomNavItem.MERCHANTS.route
     ) {
-        composable(route = MerchantNav.START.route) { backStackEntry ->
+        composable(route = ScreenNav.MERCHANT_START.route) { backStackEntry ->
             // get data passed back from B
             val isAddSuccess: Boolean? = backStackEntry
                 .savedStateHandle
@@ -77,7 +76,7 @@ fun NavGraphBuilder.merchantRoute(
                 editAddId = editAddId ?: -1,
                 onMerchantClick = {
                     navController.navigate(
-                        MerchantNav.DATA.route.replace(
+                        ScreenNav.MERCHANT_DATA.route.replace(
                             "{${Util.PARAM_MERCHANT_ID}}",
                             it.toString()
                         )
@@ -97,7 +96,7 @@ fun NavGraphBuilder.merchantRoute(
                 merchantId = merchantId ?: -1
             )
         }
-        composable(route = MerchantNav.DATA.route) { backStackEntry ->
+        composable(route = ScreenNav.MERCHANT_DATA.route) { backStackEntry ->
 
             val merchantDataId: Long? = backStackEntry
                 .savedStateHandle
@@ -120,7 +119,7 @@ fun NavGraphBuilder.merchantRoute(
             MerchantDataScreen(
                 onProfileClick = {
                     navController.navigate(
-                        MerchantNav.PROFILE.route.replace(
+                        ScreenNav.MERCHANT_PROFILE.route.replace(
                             "{${Util.PARAM_MERCHANT_ID}}",
                             it.toString()
                         )
@@ -129,14 +128,14 @@ fun NavGraphBuilder.merchantRoute(
                 onNavigationUp = { navController.navigateUp() },
                 onEditClick = {
                     navController.navigate(
-                        MerchantNav.EDIT_DATA.route.replace(
+                        ScreenNav.EDIT_MERCHANT_DATA.route.replace(
                             "{${Util.PARAM_EDIT_MERCHANT_DATA_ID}}",
                             it.toString()
                         )
                     )
                 },
                 onAddClick = {
-                    navController.navigate(OverviewNav.NEW_ITEM.route)
+                    navController.navigate(ScreenNav.NEW_ITEM.route)
 
                     navController.currentBackStackEntry
                         ?.savedStateHandle
@@ -153,13 +152,13 @@ fun NavGraphBuilder.merchantRoute(
             )
         }
 
-        composable(route = MerchantNav.PROFILE.route) {
+        composable(route = ScreenNav.MERCHANT_PROFILE.route) {
             bottomBarState.value = false
             MerchantProfileScreen(
                 onNavigationUp = { navController.navigateUp() })
         }
 
-        composable(route = MerchantNav.EDIT_DATA.route) { backStackEntry ->
+        composable(route = ScreenNav.EDIT_MERCHANT_DATA.route) { backStackEntry ->
             bottomBarState.value = false
             val context = LocalContext.current
             val merchantDataSaveToast =
