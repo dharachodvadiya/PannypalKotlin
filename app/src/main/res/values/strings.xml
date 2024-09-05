@@ -61,4 +61,6 @@
     <string name="no_contact_details">Contact list not found in your Device.</string>
     <string name="phone_number_not_fount">Phone Number Not Found</string>
     <string name="select_contact">Select Contact</string>
+    <string name="accounts">Accounts</string>
+    <string name="setting">Setting</string>
 </resources>

@@ -30,6 +30,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
@@ -117,7 +118,11 @@ fun BottomNavigationBarCustomItem(
 
         ) {
             Icon(
-                imageVector = if (isSelected) item.selectedIcon else item.unSelectedIcon,
+                painter = if (isSelected)
+                    painterResource(id = item.selectedIcon)
+                else painterResource(
+                    id = item.unSelectedIcon
+                ),
                 contentDescription = stringResource(item.title),
                 tint = if (isSelected) MyAppTheme.colors.white else MyAppTheme.colors.inactiveLight
             )
@@ -191,12 +196,17 @@ fun BottomNavigationBarCustom1(
                     .height(dimensionResource(id = R.dimen.bottom_bar))
                     .background(MyAppTheme.colors.bottomBg)
             ) {
-                tabs.forEach { item ->
+                tabs.forEachIndexed() {index,  item ->
                     BottomNavigationBarCustom1Item(
                         item = item,
                         onTabSelected = { onTabSelected(item) },
                         currentTab = currentTab,
                     )
+
+                    if(tabs.size %2 ==0 && (tabs.size/2) == index+1)
+                    {
+                        Box(modifier = Modifier.size(24.dp))
+                    }
                 }
             }
         }
@@ -216,7 +226,7 @@ fun BottomNavigationBarCustom1Item(
         },
         modifier = modifier
             .semantics { role = Role.Button },
-        shape = RoundedCornerShape(100.dp),
+        //shape = RoundedCornerShape(100.dp),
         //contentColor = MyAppTheme.colors.transparent
     ) {
         val isSelected = currentTab == item
@@ -226,7 +236,11 @@ fun BottomNavigationBarCustom1Item(
             modifier = Modifier.background(MyAppTheme.colors.bottomBg)
         ) {
             Icon(
-                imageVector = if (isSelected) item.selectedIcon else item.unSelectedIcon,
+                painter = if (isSelected)
+                    painterResource(id = item.selectedIcon)
+                else painterResource(
+                    id = item.unSelectedIcon
+                ),
                 contentDescription = stringResource(item.title),
                 tint = if (isSelected) MyAppTheme.colors.lightBlue1 else MyAppTheme.colors.inactiveDark
             )

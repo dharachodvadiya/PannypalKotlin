@@ -31,6 +31,8 @@ import com.indie.apps.pennypal.presentation.ui.navigation.DialogNav
 import com.indie.apps.pennypal.presentation.ui.navigation.ScreenNav
 import com.indie.apps.pennypal.presentation.ui.route.merchantRoute
 import com.indie.apps.pennypal.presentation.ui.route.overViewRoute
+import com.indie.apps.pennypal.presentation.ui.route.paymentRoute
+import com.indie.apps.pennypal.presentation.ui.route.settingRoute
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.util.Util
 
@@ -84,6 +86,8 @@ fun PennyPalApp() {
             ) {
                 overViewRoute(navController, bottomBarState, innerPadding)
                 merchantRoute(navController, bottomBarState, innerPadding)
+                paymentRoute(navController, bottomBarState, innerPadding)
+                settingRoute(navController, bottomBarState, innerPadding)
 
                 dialog(
                     route = DialogNav.SELECT_MERCHANT.route,
