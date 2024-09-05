@@ -10,11 +10,14 @@ import com.indie.apps.cpp.data.repository.CountryRepository
 import com.indie.apps.pennypal.data.dao.MerchantDao
 import com.indie.apps.pennypal.data.dao.MerchantDataDao
 import com.indie.apps.pennypal.data.dao.PaymentDao
+import com.indie.apps.pennypal.data.dao.PaymentModeDao
 import com.indie.apps.pennypal.data.dao.UserDao
 import com.indie.apps.pennypal.data.entity.Merchant
 import com.indie.apps.pennypal.data.entity.MerchantData
 import com.indie.apps.pennypal.data.entity.Payment
+import com.indie.apps.pennypal.data.entity.PaymentMode
 import com.indie.apps.pennypal.data.entity.User
+import com.indie.apps.pennypal.repository.PaymentModeRepositoryImpl
 import com.indie.apps.pennypal.repository.PaymentRepositoryImpl
 import com.indie.apps.pennypal.repository.UserRepositoryImpl
 import kotlinx.coroutines.CoroutineScope
@@ -26,15 +29,17 @@ import kotlinx.coroutines.launch
         User::class,
         Payment::class,
         Merchant::class,
-        MerchantData::class
+        MerchantData::class,
+        PaymentMode::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun userDao(): UserDao
     abstract fun paymentDao(): PaymentDao
+    abstract fun paymentModeDao(): PaymentModeDao
     abstract fun merchantDao(): MerchantDao
     abstract fun merchantDataDao(): MerchantDataDao
 
@@ -49,6 +54,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "pennypal_money_db"
                 )
+                    .addMigrations(MIGRATION_1_2)
                     .addCallback(Callback(countryRepository))
                     .build().also {
                         INSTANCE = it
@@ -60,7 +66,6 @@ abstract class AppDatabase : RoomDatabase() {
             RoomDatabase.Callback() {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
-
                 val scope = CoroutineScope(Dispatchers.IO)
                 scope.launch {
                     INSTANCE?.let { database ->
@@ -69,25 +74,24 @@ abstract class AppDatabase : RoomDatabase() {
                     }
                 }
             }
-
-            /*private val CALLBACK = object : Callback() {
-            override fun onCreate(db: SupportSQLiteDatabase) {
-                super.onCreate(db)
-
-                val scope = CoroutineScope(Dispatchers.IO)
-                scope.launch {
-                    INSTANCE?.let { database ->
-                        // Pre-populate the database on first creation
-                        populateDatabase(database)
-                    }
-                }
-
-            }
-        }*/
 
             @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
             suspend fun populateDatabase(db: AppDatabase) {
 
+                populateUserDb(db)
+                populatePaymentModeDb(db)
+                populatePaymentDb(db)
+
+
+                /*val merchantDao = db.merchantDao()
+            for (i in 1..100) {
+                MerchantRepositoryImpl(merchantDao).insert(Merchant(name = "hello $i"))
+
+            }
+*/
+            }
+
+            private suspend fun populateUserDb(db: AppDatabase) {
                 val user =
                     User(
                         name = "Me",
@@ -98,23 +102,34 @@ abstract class AppDatabase : RoomDatabase() {
                 val userDao = db.userDao()
 
                 UserRepositoryImpl(userDao).insert(user)
+            }
 
+            private suspend fun populatePaymentDb(db: AppDatabase) {
                 val paymentDao = db.paymentDao()
                 // Define your pre-added payment methods
                 val preAddedPayments = listOf(
-                    Payment(name = "Cash", preAdded = 1),
-                    Payment(name = "Bank Transfer", preAdded = 1),
-                    Payment(name = "Credit Card", preAdded = 1)
+                    Payment(name = "Cash", preAdded = 1, modeId = 1),
+                    Payment(name = "Bank Transfer", preAdded = 1, modeId = 2),
+                    Payment(name = "Credit Card", preAdded = 1, modeId = 3)
                 )
 
                 PaymentRepositoryImpl(paymentDao).insertPaymentList(preAddedPayments)
-
-                /*val merchantDao = db.merchantDao()
-            for (i in 1..100) {
-                MerchantRepositoryImpl(merchantDao).insert(Merchant(name = "hello $i"))
-
             }
-*/
+
+            private suspend fun populatePaymentModeDb(db: AppDatabase) {
+                val paymentModeDao = db.paymentModeDao()
+                // Define your pre-added payment mode
+                val preAddedPaymentMode = listOf(
+                    PaymentMode(name = "Other"),
+                    PaymentMode(name = "Cash"),
+                    PaymentMode(name = "Bank"),
+                    PaymentMode(name = "Card"),
+                    PaymentMode(name = "Cheque"),
+                    PaymentMode(name = "Net-banking"),
+                    PaymentMode(name = "Upi")
+                )
+
+                PaymentModeRepositoryImpl(paymentModeDao).insertPaymentModeList(preAddedPaymentMode)
             }
         }
     }
