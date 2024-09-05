@@ -58,8 +58,8 @@ fun PennyPalApp() {
         Scaffold(
             bottomBar = {
                 BottomNavigationBarCustom1(
-                    tabs = BottomNavItem.entries.toTypedArray(), onTabSelected = { newScreen ->
-
+                    tabs = BottomNavItem.entries.toTypedArray(),
+                    onTabSelected = { newScreen ->
                         if (newScreen.route != currentScreen.route) {
                             navController.navigate(newScreen.route) {
                                 launchSingleTop = true

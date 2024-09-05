@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -33,7 +34,7 @@ fun TopBar(
     contentAlignment: Alignment = Alignment.CenterStart,
     bgColor: Color = MyAppTheme.colors.transparent
 ) {
-    Row(
+    /*Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .fillMaxWidth()
@@ -71,6 +72,45 @@ fun TopBar(
             trailingContent()
         }
 
+    }*/
+
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(bgColor)
+            .height(dimensionResource(R.dimen.top_bar))
+            .padding(horizontal = dimensionResource(R.dimen.padding)),
+        contentAlignment = contentAlignment
+    )
+    {
+        if (content != null)
+            content()
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = modifier
+                .matchParentSize(),
+            horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding))
+        ){
+            if (isBackEnable) {
+                Icon(
+                    Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Back",
+                    modifier = Modifier.clickable {
+                        onBackClick()
+                    })
+            }
+
+            if (leadingContent != null) {
+                leadingContent()
+            }
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            if (trailingContent != null) {
+                trailingContent()
+            }
+        }
     }
 }
 

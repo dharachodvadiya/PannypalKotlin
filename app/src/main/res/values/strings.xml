@@ -63,4 +63,7 @@
     <string name="select_contact">Select Contact</string>
     <string name="accounts">Accounts</string>
     <string name="setting">Setting</string>
+    <string name="default_payment_mode">Default Payment Mode</string>
+    <string name="bank">Bank</string>
+    <string name="edit_account_details">Edit Details</string>
 </resources>
