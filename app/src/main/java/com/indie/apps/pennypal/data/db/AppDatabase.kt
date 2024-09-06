@@ -78,9 +78,9 @@ abstract class AppDatabase : RoomDatabase() {
             @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
             suspend fun populateDatabase(db: AppDatabase) {
 
-                populateUserDb(db)
                 populatePaymentModeDb(db)
                 populatePaymentDb(db)
+                populateUserDb(db)
 
 
                 /*val merchantDao = db.merchantDao()
@@ -108,9 +108,9 @@ abstract class AppDatabase : RoomDatabase() {
                 val paymentDao = db.paymentDao()
                 // Define your pre-added payment methods
                 val preAddedPayments = listOf(
-                    Payment(name = "Cash", preAdded = 1, modeId = 1),
-                    Payment(name = "Bank Transfer", preAdded = 1, modeId = 2),
-                    Payment(name = "Credit Card", preAdded = 1, modeId = 3)
+                    Payment(name = "Cash", preAdded = 1, modeId = 2), ////id = 1
+                    Payment(name = "Bank Transfer", preAdded = 1, modeId = 3), //id = 2
+                    Payment(name = "Credit Card", preAdded = 1, modeId = 4) //id = 3
                 )
 
                 PaymentRepositoryImpl(paymentDao).insertPaymentList(preAddedPayments)
@@ -120,13 +120,13 @@ abstract class AppDatabase : RoomDatabase() {
                 val paymentModeDao = db.paymentModeDao()
                 // Define your pre-added payment mode
                 val preAddedPaymentMode = listOf(
-                    PaymentMode(name = "Other"),
-                    PaymentMode(name = "Cash"),
-                    PaymentMode(name = "Bank"),
-                    PaymentMode(name = "Card"),
-                    PaymentMode(name = "Cheque"),
-                    PaymentMode(name = "Net-banking"),
-                    PaymentMode(name = "Upi")
+                    PaymentMode(name = "Other"), //id = 1
+                    PaymentMode(name = "Cash"),//id = 2
+                    PaymentMode(name = "Bank"), //id = 3
+                    PaymentMode(name = "Card"), //id = 4
+                    PaymentMode(name = "Cheque"), //id = 5
+                    PaymentMode(name = "Net-banking"), //id = 6
+                    PaymentMode(name = "Upi") //id = 7
                 )
 
                 PaymentModeRepositoryImpl(paymentModeDao).insertPaymentModeList(preAddedPaymentMode)

@@ -2,6 +2,8 @@ package com.indie.apps.pennypal.repository
 
 import androidx.paging.PagingSource
 import com.indie.apps.pennypal.data.entity.Payment
+import com.indie.apps.pennypal.data.entity.PaymentMode
+import com.indie.apps.pennypal.data.module.PaymentWithMode
 import kotlinx.coroutines.flow.Flow
 
 interface PaymentRepository : BaseRepository<Payment> {
@@ -11,6 +13,8 @@ interface PaymentRepository : BaseRepository<Payment> {
     suspend fun getPaymentFromId(paymentId: Long): Payment
 
     fun getPaymentList(): Flow<List<Payment>>
+
+    fun getPaymentListWithMode(): Flow<List<PaymentWithMode>>
 
     suspend fun insertPaymentList(payments: List<Payment>): List<Long>
 

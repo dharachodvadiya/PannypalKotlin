@@ -29,5 +29,5 @@ data class Payment(
     val preAdded: Int = 0,
 
     @ColumnInfo(name = "mode_id")
-    val modeId: Long = 0 //0= other, 1 = cash, 2 = bank, 3 = card , 4 = cheque, 5 = net-banking, 6 = upi
+    val modeId: Long = 1L //0= other, 1 = cash, 2 = bank, 3 = card , 4 = cheque, 5 = net-banking, 6 = upi
 )

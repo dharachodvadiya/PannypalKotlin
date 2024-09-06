@@ -15,8 +15,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -40,6 +38,9 @@ fun PaymentScreen(
 ) {
     val isEditMode by paymentViewModel.isInEditMode.collectAsStateWithLifecycle()
 
+    val paymentWithModeList by paymentViewModel.paymentWithModeState.collectAsStateWithLifecycle()
+    val userData by paymentViewModel.userState.collectAsStateWithLifecycle()
+
     LaunchedEffect(Unit) {
         onModeChange(false)
     }
@@ -52,11 +53,13 @@ fun PaymentScreen(
                     paymentViewModel.setEditMode(false)
                     onModeChange(false)
                 },
-                title = if(isEditMode) stringResource(id = R.string.edit_account_details) else stringResource(id = R.string.accounts),
+                title = if (isEditMode) stringResource(id = R.string.edit_account_details) else stringResource(
+                    id = R.string.accounts
+                ),
                 contentAlignment = Alignment.Center,
                 bgColor = MyAppTheme.colors.transparent,
                 trailingContent = {
-                    if(isEditMode){
+                    if (isEditMode) {
 
                         Icon(
                             imageVector = Icons.Default.Done,
@@ -70,7 +73,7 @@ fun PaymentScreen(
                                 }
                         )
 
-                    }else{
+                    } else {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_edit),
                             contentDescription = "edit",
@@ -96,12 +99,26 @@ fun PaymentScreen(
                 .padding(innerPadding),
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding))
         ) {
-            if(!isEditMode){
-                PaymentModeDefaultItem()
+            val paymentName = userData?.let {
+                paymentWithModeList.first { item ->
+                    item.id == it.paymentId
+                }
+            }?.name ?: "Cash"
+
+            if (!isEditMode) {
+                PaymentModeDefaultItem(paymentName)
             }
 
-            AccountBankItem(isEditMode = isEditMode)
-            AccountCashItem(isEditMode = isEditMode)
+            val bankList = paymentWithModeList.filter { item ->
+                item.modeName != "Cash"
+            }
+
+            val cashList = paymentWithModeList.filter { item ->
+                item.modeName == "Cash"
+            }
+
+            userData?.let { AccountBankItem(isEditMode = isEditMode, dataList = bankList, defaultPaymentId = it.paymentId) }
+            userData?.let { AccountCashItem(isEditMode = isEditMode, dataList = cashList, defaultPaymentId = it.paymentId) }
         }
 
     }

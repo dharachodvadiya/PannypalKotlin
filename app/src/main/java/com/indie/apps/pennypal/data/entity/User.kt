@@ -36,5 +36,5 @@ data class User(
     val currency: String,
 
     @ColumnInfo(name = "payment_id")
-    val paymentId: Long = 0,
+    val paymentId: Long = 1L,
 )

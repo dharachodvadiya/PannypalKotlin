@@ -26,10 +26,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
+import com.indie.apps.pennypal.data.module.PaymentWithMode
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 
 @Composable
 fun PaymentModeDefaultItem(
+    paymentModeName: String,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -48,7 +50,7 @@ fun PaymentModeDefaultItem(
             color = MyAppTheme.colors.gray2
         )
         Text(
-            text = "Cash",
+            text = paymentModeName,
             style = MyAppTheme.typography.Semibold50,
             color = MyAppTheme.colors.black
         )
@@ -57,7 +59,9 @@ fun PaymentModeDefaultItem(
 
 @Composable
 fun AccountBankItem(
+    defaultPaymentId: Long,
     isEditMode: Boolean,
+    dataList: List<PaymentWithMode>,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -75,9 +79,24 @@ fun AccountBankItem(
                 )
                 .padding(dimensionResource(id = R.dimen.padding))
         ) {
-            AccountItem(isEditMode = isEditMode)
-            AccountItem(isEditMode = isEditMode)
-            AccountItem(isEditMode = isEditMode)
+
+            dataList.forEach(){item->
+                val id = when(item.modeName)
+                {
+                    "Bank" -> { R.drawable.ic_bank}
+                    "Card" -> { R.drawable.ic_card}
+                    "Cheque" -> {R.drawable.ic_cheque}
+                    "Net-banking" -> { R.drawable.ic_net_banking}
+                    "Upi" -> {R.drawable.ic_upi}
+                    else -> {R.drawable.ic_payment}
+                }
+                AccountItem(
+                    isSelected = item.id == defaultPaymentId,
+                    isEditMode = isEditMode,
+                    name = item.name,
+                    symbolId = id,
+                    isEditable = item.preAdded == 0)
+            }
         }
     }
 }
@@ -96,7 +115,11 @@ fun AccountHeadingItem(
 
 @Composable
 fun AccountItem(
+    isSelected: Boolean,
     isEditMode: Boolean,
+    isEditable: Boolean,
+    name: String,
+    @DrawableRes symbolId: Int,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -106,20 +129,21 @@ fun AccountItem(
         horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.item_padding))
     ) {
         if (isEditMode)
-            RadioButton(selected = false, onClick = { /*TODO*/ })
+            RadioButton(selected = isSelected, onClick = { /*TODO*/ })
         Icon(
-            painter = painterResource(R.drawable.ic_bank_fill),
+            painter = painterResource(symbolId),
             contentDescription = "bank",
+            tint = MyAppTheme.colors.lightBlue1,
             modifier = Modifier.size(dimensionResource(id = R.dimen.small_icon_size))
         )
         Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.item_padding)))
         Text(
-            text = stringResource(id = R.string.bank),
+            text = name,
             style = MyAppTheme.typography.Semibold52_5,
             color = MyAppTheme.colors.black
         )
 
-        if (isEditMode) {
+        if (isEditMode && isEditable) {
             Spacer(modifier = Modifier.weight(1f))
 
             Icon(
@@ -139,7 +163,9 @@ fun AccountItem(
 
 @Composable
 fun AccountCashItem(
+    defaultPaymentId: Long,
     isEditMode: Boolean,
+    dataList: List<PaymentWithMode>,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -157,7 +183,15 @@ fun AccountCashItem(
                 )
                 .padding(dimensionResource(id = R.dimen.padding))
         ) {
-            AccountItem(isEditMode = isEditMode)
+            dataList.forEach(){item->
+
+                AccountItem(
+                    isSelected = item.id == defaultPaymentId,
+                    isEditMode = isEditMode,
+                    name = item.name,
+                    symbolId = R.drawable.ic_cash,
+                    isEditable = item.preAdded == 0 )
+            }
         }
     }
 }

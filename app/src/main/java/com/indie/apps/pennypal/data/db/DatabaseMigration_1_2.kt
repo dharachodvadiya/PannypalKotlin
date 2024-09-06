@@ -23,7 +23,7 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
 fun updateUserTable(database: SupportSQLiteDatabase)
 {
     // Add the default payment_id column to user table
-    database.execSQL("ALTER TABLE user ADD COLUMN payment_id INTEGER NOT NULL DEFAULT 0")
+    database.execSQL("ALTER TABLE user ADD COLUMN payment_id INTEGER NOT NULL DEFAULT 1")
     // Add foreign key constraint
     database.execSQL("CREATE TABLE IF NOT EXISTS `user_new` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `email` TEXT, `last_sync_date_milli` INTEGER NOT NULL, `income_amt` REAL NOT NULL, `expense_amt` REAL NOT NULL, `currency` TEXT NOT NULL, `payment_id` INTEGER NOT NULL, FOREIGN KEY(`payment_id`) REFERENCES `payment_type`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )");
     // Copy data from old table to new table
@@ -37,7 +37,7 @@ fun updateUserTable(database: SupportSQLiteDatabase)
 fun updatePaymentTypeTable(database: SupportSQLiteDatabase)
 {
     // Add the foreign key column to payment_type table
-    database.execSQL("ALTER TABLE payment_type ADD COLUMN mode_id INTEGER NOT NULL DEFAULT 0")
+    database.execSQL("ALTER TABLE payment_type ADD COLUMN mode_id INTEGER NOT NULL DEFAULT 1")
     // Add foreign key constraint
     database.execSQL("CREATE TABLE IF NOT EXISTS `payment_type_new` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL COLLATE NOCASE, `pre_added` INTEGER NOT NULL, `mode_id` INTEGER NOT NULL, FOREIGN KEY(`mode_id`) REFERENCES `payment_mode`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )");
     database.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_payment_type_name` ON `payment_type_new` (`name`)");
@@ -51,9 +51,9 @@ fun updatePaymentTypeTable(database: SupportSQLiteDatabase)
 }
 
 fun updatePopulatedPayment(database: SupportSQLiteDatabase) {
-    database.execSQL("UPDATE payment_type SET mode_id = 1 WHERE id = '0';")
     database.execSQL("UPDATE payment_type SET mode_id = 2 WHERE id = '1';")
     database.execSQL("UPDATE payment_type SET mode_id = 3 WHERE id = '2';")
+    database.execSQL("UPDATE payment_type SET mode_id = 4 WHERE id = '3';")
 }
 
 fun populatePaymentMode(database: SupportSQLiteDatabase) {
