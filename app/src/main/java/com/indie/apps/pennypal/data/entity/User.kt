@@ -2,10 +2,19 @@ package com.indie.apps.pennypal.data.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
 @Entity(
-    tableName = "user"
+    tableName = "user",
+    foreignKeys = [
+        ForeignKey(
+            entity = Payment::class,
+            parentColumns = ["id"],
+            childColumns = ["payment_id"],
+            onDelete = ForeignKey.NO_ACTION
+        )
+    ],
 )
 data class User(
     @PrimaryKey(autoGenerate = true)
@@ -24,5 +33,8 @@ data class User(
     @ColumnInfo(name = "expense_amt")
     val expenseAmount: Double = 0.0,
 
-    val currency: String
+    val currency: String,
+
+    @ColumnInfo(name = "payment_id")
+    val paymentId: Long = 0,
 )

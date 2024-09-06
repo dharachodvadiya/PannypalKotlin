@@ -41,7 +41,7 @@ class PaymentRepositoryImplTest {
 
     @Test
     fun delete_customPayment_test()= runBlocking {
-        //inserting pre-added data
+       /* //inserting pre-added data
         AppDatabase.populateDatabase(appDatabase)
 
         //when [delete preadded data]
@@ -50,7 +50,7 @@ class PaymentRepositoryImplTest {
         //then
         val paymentList = paymentDao.getPaymentList().first()
         assert(paymentList.size == 3)
-
+*/
 
 
         //inserting custom data

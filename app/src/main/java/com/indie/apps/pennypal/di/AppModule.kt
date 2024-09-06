@@ -13,6 +13,8 @@ import com.indie.apps.pennypal.repository.MerchantDataRepository
 import com.indie.apps.pennypal.repository.MerchantDataRepositoryImpl
 import com.indie.apps.pennypal.repository.MerchantRepository
 import com.indie.apps.pennypal.repository.MerchantRepositoryImpl
+import com.indie.apps.pennypal.repository.PaymentModeRepository
+import com.indie.apps.pennypal.repository.PaymentModeRepositoryImpl
 import com.indie.apps.pennypal.repository.PaymentRepository
 import com.indie.apps.pennypal.repository.PaymentRepositoryImpl
 import com.indie.apps.pennypal.repository.UserRepository
@@ -45,6 +47,11 @@ object AppModule {
     @Provides
     fun providePaymentRepository(database: AppDatabase): PaymentRepository {
         return PaymentRepositoryImpl(database.paymentDao())
+    }
+
+    @Provides
+    fun providePaymentModeRepository(database: AppDatabase): PaymentModeRepository {
+        return PaymentModeRepositoryImpl(database.paymentModeDao())
     }
 
     @Provides
