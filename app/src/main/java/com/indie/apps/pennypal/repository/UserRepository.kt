@@ -8,4 +8,6 @@ interface UserRepository : BaseRepository<User> {
     fun getUser(): Flow<User>
 
     suspend fun updateAmount(incomeAmt: Double, expenseAmt: Double): Int
+
+    suspend fun updateWithDefaultPayment(): Int
 }

@@ -13,10 +13,9 @@ import javax.inject.Inject
 
 class UpdatePaymentUseCase @Inject constructor(
     private val paymentRepository: PaymentRepository,
-    private val payment: Payment,
     @IoDispatcher private val dispatcher: CoroutineDispatcher) {
 
-    suspend operator fun invoke() : Flow<Resource<Int>>{
+    suspend fun updateData(payment: Payment,) : Flow<Resource<Int>>{
         return flow{
 
             try {

@@ -13,7 +13,7 @@ import androidx.room.PrimaryKey
             entity = PaymentMode::class,
             parentColumns = ["id"],
             childColumns = ["mode_id"],
-            onDelete = ForeignKey.CASCADE
+            onDelete = ForeignKey.NO_ACTION
         )
     ],
     indices = [Index(value = ["name"], unique = true)]

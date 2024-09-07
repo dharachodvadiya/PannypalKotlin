@@ -93,7 +93,7 @@ fun NavGraphBuilder.overViewRoute(
             NewItemScreen(
                 onNavigationUp = { navController.navigateUp() },
                 onMerchantSelect = { navController.navigate(DialogNav.SELECT_MERCHANT.route) },
-                onPaymentAdd = { navController.navigate(DialogNav.ADD_PAYMENT.route) },
+                onPaymentAdd = { navController.navigate(DialogNav.ADD_EDIT_PAYMENT.route) },
                 merchantData = merchant,
                 paymentData = payment,
                 isMerchantLock = isMerchantLock ?: false,

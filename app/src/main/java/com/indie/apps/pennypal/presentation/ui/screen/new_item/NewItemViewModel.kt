@@ -13,10 +13,10 @@ import com.indie.apps.pennypal.domain.usecase.GetMerchantFromIdUseCase
 import com.indie.apps.pennypal.domain.usecase.GetPaymentFromIdUseCase
 import com.indie.apps.pennypal.domain.usecase.GetPaymentListUseCase
 import com.indie.apps.pennypal.domain.usecase.UpdateMerchantDataUseCase
-import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.util.ErrorMessage
 import com.indie.apps.pennypal.util.Resource
+import com.indie.apps.pennypal.util.Util
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -70,50 +70,48 @@ class NewItemViewModel @Inject constructor(
                 try {
                     getMerchantDataFromIdUseCase.getData(merchantEditId).collect { it ->
                         when (it) {
-                                is Resource.Loading -> {
-                                    uiState.value = Resource.Loading()
-                                }
+                            is Resource.Loading -> {
+                                uiState.value = Resource.Loading()
+                            }
 
-                                is Resource.Error -> {
-                                    uiState.value = Resource.Error("")
-                                }
+                            is Resource.Error -> {
+                                uiState.value = Resource.Error("")
+                            }
 
-                                is Resource.Success -> {
-                                    if (it.data != null) {
-                                        editMerchantData = it.data
-                                        received.value =
-                                            editMerchantData!!.type == 1
-                                        amount.value.text =
-                                            Util.getFormattedString(editMerchantData!!.amount)
-                                        description.value.text =
-                                            editMerchantData!!.details.toString()
+                            is Resource.Success -> {
+                                if (it.data != null) {
+                                    editMerchantData = it.data
+                                    received.value =
+                                        editMerchantData!!.type == 1
+                                    amount.value.text =
+                                        Util.getFormattedString(editMerchantData!!.amount)
+                                    description.value.text =
+                                        editMerchantData!!.details.toString()
 
-                                        launch {
-                                            getPaymentFromIdUseCase.getData(editMerchantData!!.paymentId)
-                                                .collect {
-                                                    if (it is Resource.Success && it.data != null) {
-                                                        setPaymentData(it.data)
-                                                    }
-                                                }
-                                        }
-                                        var merchantJob : Job? = null
-                                        merchantJob = launch {
-                                            getMerchantFromIdUseCase.getData(editMerchantData!!.merchantId)
-                                                .collect {
-                                                    setMerchantData(it.toMerchantNameAndDetails())
-                                                    merchantJob?.cancel()
-                                                }
-                                        }
-
-                                        uiState.value = Resource.Success(Unit)
-                                    } else {
-                                        uiState.value = Resource.Error("Not found")
+                                    launch {
+                                        getPaymentFromIdUseCase.getData(editMerchantData!!.paymentId)
+                                            .collect {
+                                                setPaymentData(it)
+                                            }
                                     }
+                                    var merchantJob: Job? = null
+                                    merchantJob = launch {
+                                        getMerchantFromIdUseCase.getData(editMerchantData!!.merchantId)
+                                            .collect {
+                                                setMerchantData(it.toMerchantNameAndDetails())
+                                                merchantJob?.cancel()
+                                            }
+                                    }
+
+                                    uiState.value = Resource.Success(Unit)
+                                } else {
+                                    uiState.value = Resource.Error("Not found")
                                 }
                             }
                         }
+                    }
                 } catch (e: Exception) {
-                    uiState.value = Resource.Error(e.message ?: "unexpected" )
+                    uiState.value = Resource.Error(e.message ?: "unexpected")
                 }
             }
         } else {
@@ -167,18 +165,18 @@ class NewItemViewModel @Inject constructor(
 
                     viewModelScope.launch {
                         addMerchantDataUseCase.addData(merchantData).collect {
-                                when (it) {
-                                    is Resource.Loading -> {}
-                                    is Resource.Success -> {
-                                        enableButton.value = true
-                                        onSuccess(false, it.data?:-1, merchantData.merchantId)
-                                    }
+                            when (it) {
+                                is Resource.Loading -> {}
+                                is Resource.Success -> {
+                                    enableButton.value = true
+                                    onSuccess(false, it.data ?: -1, merchantData.merchantId)
+                                }
 
-                                    is Resource.Error -> {
-                                        enableButton.value = true
-                                    }
+                                is Resource.Error -> {
+                                    enableButton.value = true
                                 }
                             }
+                        }
                     }
                 } else {
                     val merchantData = editMerchantData!!.copy(
@@ -191,20 +189,20 @@ class NewItemViewModel @Inject constructor(
 
                     viewModelScope.launch {
                         updateMerchantDataUseCase.updateData(
-                                merchantDataNew = merchantData, merchantDataOld = editMerchantData!!
-                            ).collect {
-                                when (it) {
-                                    is Resource.Loading -> {}
-                                    is Resource.Success -> {
-                                        enableButton.value = true
-                                        onSuccess(true, merchantData.id, merchantData.merchantId)
-                                    }
+                            merchantDataNew = merchantData, merchantDataOld = editMerchantData!!
+                        ).collect {
+                            when (it) {
+                                is Resource.Loading -> {}
+                                is Resource.Success -> {
+                                    enableButton.value = true
+                                    onSuccess(true, merchantData.id, merchantData.merchantId)
+                                }
 
-                                    is Resource.Error -> {
-                                        enableButton.value = true
-                                    }
+                                is Resource.Error -> {
+                                    enableButton.value = true
                                 }
                             }
+                        }
                     }
                 }
             }

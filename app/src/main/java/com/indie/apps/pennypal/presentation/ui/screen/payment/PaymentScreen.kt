@@ -1,22 +1,30 @@
 package com.indie.apps.pennypal.presentation.ui.screen.payment
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -25,24 +33,62 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.indie.apps.pennypal.R
+import com.indie.apps.pennypal.presentation.ui.component.BottomSaveButton
+import com.indie.apps.pennypal.presentation.ui.component.DeleteAlertDialog
 import com.indie.apps.pennypal.presentation.ui.component.TopBarWithTitle
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
+import com.indie.apps.pennypal.presentation.ui.component.showToast
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 
 @Composable
 fun PaymentScreen(
     paymentViewModel: PaymentViewModel = hiltViewModel(),
-    bottomPadding: PaddingValues,
+    isEditSuccess: Boolean = false,
+    onEditPaymentClick: (Long) -> Unit,
+    onAddPaymentClick: () -> Unit,
+    paymentId: Long = 0L,
     onModeChange: (Boolean) -> Unit
 ) {
+
     val isEditMode by paymentViewModel.isInEditMode.collectAsStateWithLifecycle()
 
     val paymentWithModeList by paymentViewModel.paymentWithModeState.collectAsStateWithLifecycle()
     val userData by paymentViewModel.userState.collectAsStateWithLifecycle()
 
+    var defaultPaymentId by remember {
+        mutableLongStateOf(1L)
+    }
+
+    LaunchedEffect(isEditMode) {
+        if (isEditMode)
+            defaultPaymentId = userData?.paymentId ?: 1L
+    }
+
     LaunchedEffect(Unit) {
         onModeChange(false)
+    }
+    val context = LocalContext.current
+    val paymentDeleteToast = stringResource(id = R.string.payment_delete_success_message)
+    var openDeleteDialog by remember { mutableStateOf(false) }
+    var deletePaymentId by remember { mutableLongStateOf(0) }
+
+    val editAnimRun by paymentViewModel.editAnimRun.collectAsStateWithLifecycle()
+
+    var editedPaymentId by remember {
+        mutableLongStateOf(-1L)
+    }
+    var isEditPaymentSuccessState by remember {
+        mutableStateOf(false)
+    }
+
+    if (isEditPaymentSuccessState != isEditSuccess) {
+        if (isEditSuccess) {
+            editedPaymentId = paymentId
+            paymentViewModel.editPaymentSuccess()
+        }
+        isEditPaymentSuccessState = isEditSuccess
     }
 
     Scaffold(
@@ -60,19 +106,22 @@ fun PaymentScreen(
                 bgColor = MyAppTheme.colors.transparent,
                 trailingContent = {
                     if (isEditMode) {
-
-                        Icon(
-                            imageVector = Icons.Default.Done,
-                            contentDescription = "done",
-                            tint = MyAppTheme.colors.black,
+                        PrimaryButton(
+                            bgColor = MyAppTheme.colors.white,
+                            borderStroke = BorderStroke(
+                                width = 1.dp,
+                                color = MyAppTheme.colors.gray1
+                            ),
+                            onClick = onAddPaymentClick,
                             modifier = Modifier
-                                .size(25.dp)
-                                .clickable {
-                                    paymentViewModel.saveEditedData()
-                                    onModeChange(false)
-                                }
-                        )
-
+                                .size(dimensionResource(R.dimen.top_bar_profile))
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Add,
+                                contentDescription = "Add",
+                                tint = MyAppTheme.colors.gray1
+                            )
+                        }
                     } else {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_edit),
@@ -91,19 +140,22 @@ fun PaymentScreen(
             )
         }
     ) { innerPadding ->
-
+        val scrollState = rememberScrollState()
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
-                .padding(innerPadding),
+                .padding(innerPadding)
+                .verticalScroll(scrollState),
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding))
         ) {
-            val paymentName = userData?.let {
+            val paymentName = if (paymentWithModeList.isNotEmpty()) {
                 paymentWithModeList.first { item ->
-                    item.id == it.paymentId
-                }
-            }?.name ?: "Cash"
+                    item.id == (userData?.paymentId ?: 1L)
+                }.name
+            } else {
+                "Cash"
+            }
 
             if (!isEditMode) {
                 PaymentModeDefaultItem(paymentName)
@@ -117,8 +169,73 @@ fun PaymentScreen(
                 item.modeName == "Cash"
             }
 
-            userData?.let { AccountBankItem(isEditMode = isEditMode, dataList = bankList, defaultPaymentId = it.paymentId) }
-            userData?.let { AccountCashItem(isEditMode = isEditMode, dataList = cashList, defaultPaymentId = it.paymentId) }
+            userData?.let {
+                AccountBankItem(
+                    isEditMode = isEditMode,
+                    dataList = bankList,
+                    defaultPaymentId = defaultPaymentId,
+                    onSelect = {
+                        defaultPaymentId = it
+                    },
+                    onEditClick = onEditPaymentClick,
+                    editAnimPaymentId = editedPaymentId,
+                    editAnimRun = editAnimRun,
+                    onDeleteClick = {
+                        deletePaymentId = it
+                        openDeleteDialog = true
+                    }
+                )
+            }
+            userData?.let {
+                AccountCashItem(
+                    isEditMode = isEditMode,
+                    dataList = cashList,
+                    defaultPaymentId = defaultPaymentId,
+                    onSelect = {
+                        defaultPaymentId = it
+                    },
+                    onEditClick = {},
+                    editAnimPaymentId = editedPaymentId,
+                    editAnimRun = editAnimRun,
+                    onDeleteClick = {
+                        deletePaymentId = it
+                        openDeleteDialog = true
+                    }
+                )
+            }
+
+            if (isEditMode) {
+                Spacer(modifier = Modifier.weight(1f))
+                BottomSaveButton(
+                    onClick = {
+                        paymentViewModel.saveEditedData(defaultPaymentId) {
+                            onModeChange(false)
+                        }
+                    },
+                    modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.padding))
+                )
+            }
+        }
+
+        if (openDeleteDialog) {
+            DeleteAlertDialog(
+                dialogTitle = R.string.delete_dialog_title,
+                dialogText = R.string.delete_payment_dialog_text,
+                onConfirmation = {
+                    paymentViewModel.onDeleteDialogClick(deletePaymentId) {
+                        if (deletePaymentId == defaultPaymentId) {
+                            defaultPaymentId = 1L
+                        }
+                        openDeleteDialog = false
+                        deletePaymentId = 0
+                        context.showToast(paymentDeleteToast)
+                    }
+                },
+                onDismissRequest = {
+                    openDeleteDialog = false
+                    deletePaymentId = 0
+                }
+            )
         }
 
     }
@@ -129,8 +246,9 @@ fun PaymentScreen(
 private fun PaymentScreenPreview() {
     PennyPalTheme(darkTheme = true) {
         PaymentScreen(
-            bottomPadding = PaddingValues(0.dp),
-            onModeChange = {}
+            onModeChange = {},
+            onEditPaymentClick = {},
+            onAddPaymentClick = {}
         )
     }
 }

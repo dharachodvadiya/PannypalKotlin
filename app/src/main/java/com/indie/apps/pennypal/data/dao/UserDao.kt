@@ -21,4 +21,8 @@ interface UserDao : BaseDao<User> {
     @Transaction
     @Query("UPDATE user SET income_amt = income_amt + :incomeAmt, expense_amt = expense_amt + :expenseAmt WHERE ID = 1")
     suspend fun updateAmount(incomeAmt: Double, expenseAmt: Double): Int
+
+    @Transaction
+    @Query("UPDATE user SET payment_id = 1 WHERE ID = 1")
+    suspend fun updateWithDefaultPayment(): Int
 }

@@ -3,8 +3,8 @@
     <dimen name="top_bar">64dp</dimen>
     <dimen name="bottom_bar">56dp</dimen>
 
-    <dimen name="bottom_bar_item_horizontal_padding">20dp</dimen>
-    <dimen name="bottom_bar_item_vertical_padding">6dp</dimen>
+    <dimen name="bottom_bar_item_horizontal_padding">15dp</dimen>
+    <dimen name="bottom_bar_item_vertical_padding">5dp</dimen>
 
     <dimen name="top_bar_profile">45dp</dimen>
     <dimen name="padding">15dp</dimen>

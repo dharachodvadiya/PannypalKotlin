@@ -1,8 +1,9 @@
-package com.indie.apps.pennypal.presentation.ui.dialog.add_payment
+package com.indie.apps.pennypal.presentation.ui.dialog.add_edit_payment
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -17,13 +18,21 @@ import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 
 @Composable
 fun DialogAddPayment(
-    addPaymentViewModel: AddPaymentViewModel = hiltViewModel(),
+    addPaymentViewModel: AddEditPaymentViewModel = hiltViewModel(),
     onNavigationUp: () -> Unit,
-    onSaveSuccess: (Payment?) -> Unit,
+    onSaveSuccess: (Payment?, Boolean) -> Unit,
+    editId: Long? = null,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     val enableButton by addPaymentViewModel.enableButton.collectAsStateWithLifecycle()
     val paymentTypeState by addPaymentViewModel.paymentTypeState.collectAsStateWithLifecycle()
+
+    val paymentModeList by addPaymentViewModel.paymentModeState.collectAsStateWithLifecycle()
+    val selectedModeId by addPaymentViewModel.selectedModeId.collectAsStateWithLifecycle()
+
+    LaunchedEffect(editId) {
+        addPaymentViewModel.setEditId(editId) // always call after set country code
+    }
 
     /*var showAnimatedDialog by remember { mutableStateOf(false) }
 
@@ -52,13 +61,16 @@ fun DialogAddPayment(
         },
         content = {
             AddPaymentDialogField(
-                textPaymentState = paymentTypeState
+                textPaymentState = paymentTypeState,
+                paymentModeList = paymentModeList,
+                currentModId = selectedModeId,
+                onModeChange = addPaymentViewModel::onModeChange
             )
         },
         bottomContent = {
             BottomSaveButton(
                 onClick = {
-                    addPaymentViewModel.addPayment(onSuccess = onSaveSuccess)
+                    addPaymentViewModel.addEditPayment(onSuccess = onSaveSuccess)
                 },
                 modifier = Modifier.padding(dimensionResource(id = R.dimen.padding))
             )
@@ -74,7 +86,7 @@ private fun MyAppDialogPreview() {
     PennyPalTheme(darkTheme = true) {
         DialogAddPayment(
             onNavigationUp = {},
-            onSaveSuccess = {}
+            onSaveSuccess = { _, _ -> }
         )
     }
 }

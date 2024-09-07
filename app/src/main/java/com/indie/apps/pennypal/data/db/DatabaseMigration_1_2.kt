@@ -52,7 +52,7 @@ fun updatePaymentTypeTable(database: SupportSQLiteDatabase)
 
 fun updatePopulatedPayment(database: SupportSQLiteDatabase) {
     database.execSQL("UPDATE payment_type SET mode_id = 2 WHERE id = '1';")
-    database.execSQL("UPDATE payment_type SET mode_id = 3 WHERE id = '2';")
+    database.execSQL("UPDATE payment_type SET mode_id = 3, name='Bank' WHERE id = '2';")
     database.execSQL("UPDATE payment_type SET mode_id = 4 WHERE id = '3';")
 }
 

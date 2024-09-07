@@ -1,31 +1,36 @@
 package com.indie.apps.pennypal.domain.usecase
 
-import com.indie.apps.pennypal.data.entity.Payment
 import com.indie.apps.pennypal.di.IoDispatcher
 import com.indie.apps.pennypal.repository.PaymentRepository
+import com.indie.apps.pennypal.repository.UserRepository
 import com.indie.apps.pennypal.util.Resource
 import com.indie.apps.pennypal.util.handleException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 class DeletePaymentUseCase @Inject constructor(
     private val paymentRepository: PaymentRepository,
-    private val payment: Payment,
-    @IoDispatcher private val dispatcher: CoroutineDispatcher) {
+    private val userRepository: UserRepository,
+    @IoDispatcher private val dispatcher: CoroutineDispatcher
+) {
 
-    suspend operator fun invoke() : Flow<Resource<Int>>{
-        return flow{
-
+    suspend fun deleteData(paymentId: Long): Flow<Resource<Int>> {
+        return flow {
             try {
                 emit(Resource.Loading())
-                val id = paymentRepository.deleteCustomPayment(payment.id)
-
-                if(id >0){
+                val user = userRepository
+                    .getUser().first()
+                if (user.paymentId == paymentId) {
+                    userRepository.updateWithDefaultPayment()
+                }
+                val id = paymentRepository.deleteCustomPayment(paymentId)
+                if (id > 0) {
                     emit(Resource.Success(id))
-                }else{
+                } else {
                     emit(Resource.Error("Fail to delete payment"))
                 }
 

@@ -21,7 +21,7 @@ import com.indie.apps.pennypal.data.entity.toMerchantNameAndDetails
 import com.indie.apps.pennypal.data.module.ContactNumberAndCode
 import com.indie.apps.pennypal.presentation.ui.component.showToast
 import com.indie.apps.pennypal.presentation.ui.dialog.add_edit_merchant.DialogAddMerchant
-import com.indie.apps.pennypal.presentation.ui.dialog.add_payment.DialogAddPayment
+import com.indie.apps.pennypal.presentation.ui.dialog.add_edit_payment.DialogAddPayment
 import com.indie.apps.pennypal.presentation.ui.dialog.country_picker.DialogCountryPicker
 import com.indie.apps.pennypal.presentation.ui.dialog.search_merchant.DialogSearchMerchant
 import com.indie.apps.pennypal.presentation.ui.navigation.BottomNavItem
@@ -40,6 +40,7 @@ import com.indie.apps.pennypal.util.Util
 fun PennyPalApp() {
     val context = LocalContext.current
     val paymentSaveToast = stringResource(id = R.string.payment_save_success_toast)
+    val paymentEditToast = stringResource(id = R.string.payment_edit_success_toast)
     val merchantSaveToast = stringResource(id = R.string.merchant_save_success_toast)
     val merchantEditToast = stringResource(id = R.string.merchant_edit_success_message)
     PennyPalTheme(darkTheme = true) {
@@ -116,23 +117,19 @@ fun PennyPalApp() {
                     route = DialogNav.ADD_EDIT_MERCHANT.route,
                     dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
                 ) { backStackEntry ->
+                    val savedStateHandle = backStackEntry.savedStateHandle
                     // get data passed back from B
-                    val dialCode: String? = backStackEntry
-                        .savedStateHandle
-                        .get<String>(Util.SAVE_STATE_COUNTRY_DIAL_CODE)
+                    val dialCode = savedStateHandle.get<String>(Util.SAVE_STATE_COUNTRY_DIAL_CODE)
 
-                    val gsonStringContactData: String? = backStackEntry
-                        .savedStateHandle
-                        .get<String>(Util.SAVE_STATE_CONTACT_NUMBER_DIAL_CODE)
+                    val gsonStringContactData =
+                        savedStateHandle.get<String>(Util.SAVE_STATE_CONTACT_NUMBER_DIAL_CODE)
 
                     val contactData: ContactNumberAndCode? =
                         if (gsonStringContactData != null) {
                             Gson().fromJson(gsonStringContactData, ContactNumberAndCode::class.java)
                         } else null
 
-                    val editId: Long? = backStackEntry
-                        .savedStateHandle
-                        .get<Long>(Util.SAVE_STATE_EDIT_ID)
+                    val editId = savedStateHandle.get<Long>(Util.SAVE_STATE_MERCHANT_EDIT_ID)
 
                     DialogAddMerchant(
                         onNavigationUp = { navController.navigateUp() },
@@ -151,18 +148,18 @@ fun PennyPalApp() {
                                 if (isEdit) {
                                     navController.previousBackStackEntry
                                         ?.savedStateHandle
-                                        ?.set(Util.SAVE_STATE_EDIT_SUCCESS, true)
+                                        ?.set(Util.SAVE_STATE_EDIT_MERCHANT_SUCCESS, true)
                                 } else {
                                     navController.previousBackStackEntry
                                         ?.savedStateHandle
-                                        ?.set(Util.SAVE_STATE_ADD_SUCCESS, true)
+                                        ?.set(Util.SAVE_STATE_ADD_MERCHANT_SUCCESS, true)
                                 }
 
 
 
                                 navController.previousBackStackEntry
                                     ?.savedStateHandle
-                                    ?.set(Util.SAVE_STATE_ADD_EDIT_SUCCESS_ID, merchant.id)
+                                    ?.set(Util.SAVE_STATE_ADD_EDIT_MERCHANT_SUCCESS_ID, merchant.id)
                             }
 
                             navController.popBackStack()
@@ -179,22 +176,39 @@ fun PennyPalApp() {
                     )
                 }
                 dialog(
-                    route = DialogNav.ADD_PAYMENT.route,
+                    route = DialogNav.ADD_EDIT_PAYMENT.route,
                     dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
-                ) {
+                ) { backStackEntry ->
+
+                    val editId: Long? = backStackEntry
+                        .savedStateHandle
+                        .get<Long>(Util.SAVE_STATE_PAYMENT_EDIT_ID)
                     DialogAddPayment(
                         onNavigationUp = { navController.navigateUp() },
-                        onSaveSuccess = {
+                        onSaveSuccess = { payment, isEdit ->
                             //navController.navigateUp()
-                            context.showToast(paymentSaveToast)
+                            context.showToast(if (isEdit) paymentEditToast else paymentSaveToast)
 
-                            if (it != null)
+                            if (payment != null)
                                 navController.previousBackStackEntry
                                     ?.savedStateHandle
-                                    ?.set(Util.SAVE_STATE_PAYMENT, Gson().toJson(it))
+                                    ?.set(Util.SAVE_STATE_PAYMENT, Gson().toJson(payment))
+
+                            if (isEdit) {
+                                navController.previousBackStackEntry
+                                    ?.savedStateHandle
+                                    ?.set(Util.SAVE_STATE_PAYMENT_EDIT_SUCCESS, true)
+                            }
+
+                            if (payment != null) {
+                                navController.previousBackStackEntry
+                                    ?.savedStateHandle
+                                    ?.set(Util.SAVE_STATE_PAYMENT_ADD_EDIT_ID, payment.id)
+                            }
 
                             navController.popBackStack()
-                        }
+                        },
+                        editId = editId
                     )
                 }
                 dialog(

@@ -1,7 +1,11 @@
 package com.indie.apps.pennypal.presentation.ui.screen.payment
 
 import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,6 +23,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -28,6 +34,8 @@ import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.module.PaymentWithMode
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
+import com.indie.apps.pennypal.util.Util
+import kotlinx.coroutines.launch
 
 @Composable
 fun PaymentModeDefaultItem(
@@ -60,16 +68,26 @@ fun PaymentModeDefaultItem(
 @Composable
 fun AccountBankItem(
     defaultPaymentId: Long,
+    editAnimPaymentId: Long,
+    editAnimRun: Boolean,
     isEditMode: Boolean,
     dataList: List<PaymentWithMode>,
+    onSelect: (Long)->Unit,
+    onEditClick: (Long)-> Unit,
+    onDeleteClick: (Long)-> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
+            .animateContentSize()
             .padding(horizontal = dimensionResource(id = R.dimen.padding))
     ) {
-        AccountHeadingItem()
+        val scope = rememberCoroutineScope()
+        val baseColor = MyAppTheme.colors.itemBg
+        val targetAnimColor = MyAppTheme.colors.lightBlue1
+
+        AccountHeadingItem(R.string.bank)
         Column(
             modifier = modifier
                 .fillMaxWidth()
@@ -81,6 +99,28 @@ fun AccountBankItem(
         ) {
 
             dataList.forEach(){item->
+
+                val itemAnimateColor = remember {
+                    androidx.compose.animation.Animatable(baseColor)
+                }
+                val modifierColor = if (editAnimPaymentId == item.id && editAnimRun)
+                {
+
+                    scope.launch {
+                        itemAnimateColor.animateTo(
+                            targetValue = targetAnimColor,
+                            animationSpec = tween(Util.EDIT_ITEM_ANIM_TIME)
+                        )
+                        itemAnimateColor.animateTo(
+                            targetValue = baseColor,
+                            animationSpec = tween(Util.EDIT_ITEM_ANIM_TIME)
+                        )
+                    }
+                    modifier.background(itemAnimateColor.value)
+                } else {
+                    Modifier
+                }
+
                 val id = when(item.modeName)
                 {
                     "Bank" -> { R.drawable.ic_bank}
@@ -95,7 +135,12 @@ fun AccountBankItem(
                     isEditMode = isEditMode,
                     name = item.name,
                     symbolId = id,
-                    isEditable = item.preAdded == 0)
+                    isEditable = item.preAdded == 0,
+                    onSelect = {onSelect(item.id)},
+                    onDeleteClick = {onDeleteClick(item.id)},
+                    onEditClick = {onEditClick(item.id)},
+                    modifier = modifierColor
+                )
             }
         }
     }
@@ -103,10 +148,11 @@ fun AccountBankItem(
 
 @Composable
 fun AccountHeadingItem(
+    @StringRes title: Int,
     modifier: Modifier = Modifier
 ) {
     Text(
-        text = stringResource(id = R.string.bank),
+        text = stringResource(id = title),
         style = MyAppTheme.typography.Regular51,
         color = MyAppTheme.colors.gray1,
         modifier = modifier
@@ -119,6 +165,9 @@ fun AccountItem(
     isEditMode: Boolean,
     isEditable: Boolean,
     name: String,
+    onSelect: ()->Unit,
+    onEditClick: ()-> Unit,
+    onDeleteClick: ()-> Unit,
     @DrawableRes symbolId: Int,
     modifier: Modifier = Modifier
 ) {
@@ -129,7 +178,7 @@ fun AccountItem(
         horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.item_padding))
     ) {
         if (isEditMode)
-            RadioButton(selected = isSelected, onClick = { /*TODO*/ })
+            RadioButton(selected = isSelected, onClick = onSelect)
         Icon(
             painter = painterResource(symbolId),
             contentDescription = "bank",
@@ -148,14 +197,16 @@ fun AccountItem(
 
             Icon(
                 imageVector = Icons.Default.Edit,
-                contentDescription = "edit"
+                contentDescription = "edit",
+                modifier = Modifier.clickable { onEditClick() }
             )
 
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.item_padding)))
 
             Icon(
                 imageVector = Icons.Default.Delete,
-                contentDescription = "delete"
+                contentDescription = "delete",
+                modifier = Modifier.clickable { onDeleteClick() }
             )
         }
     }
@@ -164,8 +215,13 @@ fun AccountItem(
 @Composable
 fun AccountCashItem(
     defaultPaymentId: Long,
+    editAnimPaymentId: Long,
+    editAnimRun: Boolean,
     isEditMode: Boolean,
     dataList: List<PaymentWithMode>,
+    onSelect: (Long)->Unit,
+    onEditClick: (Long)-> Unit,
+    onDeleteClick: (Long)-> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -173,7 +229,10 @@ fun AccountCashItem(
             .fillMaxWidth()
             .padding(horizontal = dimensionResource(id = R.dimen.padding))
     ) {
-        AccountHeadingItem()
+        val scope = rememberCoroutineScope()
+        val baseColor = MyAppTheme.colors.itemBg
+        val targetAnimColor = MyAppTheme.colors.lightBlue1
+        AccountHeadingItem(R.string.cash)
         Column(
             modifier = modifier
                 .fillMaxWidth()
@@ -184,13 +243,37 @@ fun AccountCashItem(
                 .padding(dimensionResource(id = R.dimen.padding))
         ) {
             dataList.forEach(){item->
+                val itemAnimateColor = remember {
+                    androidx.compose.animation.Animatable(baseColor)
+                }
+                val modifierColor = if (editAnimPaymentId == item.id && editAnimRun)
+                {
+                    scope.launch {
+                        itemAnimateColor.animateTo(
+                            targetValue = targetAnimColor,
+                            animationSpec = tween(Util.EDIT_ITEM_ANIM_TIME)
+                        )
+                        itemAnimateColor.animateTo(
+                            targetValue = baseColor,
+                            animationSpec = tween(Util.EDIT_ITEM_ANIM_TIME)
+                        )
+                    }
+                    Modifier
+                } else {
+                    Modifier
+                }
 
                 AccountItem(
                     isSelected = item.id == defaultPaymentId,
                     isEditMode = isEditMode,
                     name = item.name,
                     symbolId = R.drawable.ic_cash,
-                    isEditable = item.preAdded == 0 )
+                    isEditable = item.preAdded == 0,
+                    onSelect = {onSelect(item.id)},
+                    onDeleteClick = {onDeleteClick(item.id)},
+                    onEditClick = {onEditClick(item.id)},
+                    modifier = modifierColor
+                )
             }
         }
     }

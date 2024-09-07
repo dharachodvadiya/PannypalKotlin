@@ -25,15 +25,17 @@ android {
     }
 
     buildTypes {
-        /*debug {
+        debug {
+            manifestPlaceholders["crashlyticsCollectionEnabled"] = false
             isMinifyEnabled = true
             //isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-        }*/
+        }
         release {
+            manifestPlaceholders["crashlyticsCollectionEnabled"] = true
             isMinifyEnabled = true
             //isShrinkResources = true
             proguardFiles(

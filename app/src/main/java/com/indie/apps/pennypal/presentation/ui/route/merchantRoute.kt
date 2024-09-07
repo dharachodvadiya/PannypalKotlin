@@ -16,9 +16,9 @@ import com.indie.apps.pennypal.presentation.ui.component.showToast
 import com.indie.apps.pennypal.presentation.ui.navigation.BottomNavItem
 import com.indie.apps.pennypal.presentation.ui.navigation.DialogNav
 import com.indie.apps.pennypal.presentation.ui.navigation.ScreenNav
+import com.indie.apps.pennypal.presentation.ui.screen.merchant.MerchantScreen
 import com.indie.apps.pennypal.presentation.ui.screen.merchant_data.MerchantDataScreen
 import com.indie.apps.pennypal.presentation.ui.screen.merchant_profile.MerchantProfileScreen
-import com.indie.apps.pennypal.presentation.ui.screen.merchant.MerchantScreen
 import com.indie.apps.pennypal.presentation.ui.screen.new_item.NewItemScreen
 import com.indie.apps.pennypal.util.Util
 
@@ -28,46 +28,30 @@ fun NavGraphBuilder.merchantRoute(
     innerPadding: PaddingValues
 ) {
     navigation(
-        startDestination = ScreenNav.MERCHANT_START.route,
-        route = BottomNavItem.MERCHANTS.route
+        startDestination = ScreenNav.MERCHANT_START.route, route = BottomNavItem.MERCHANTS.route
     ) {
         composable(route = ScreenNav.MERCHANT_START.route) { backStackEntry ->
+
+            val savedStateHandle = backStackEntry.savedStateHandle
             // get data passed back from B
-            val isAddSuccess: Boolean? = backStackEntry
-                .savedStateHandle
-                .get<Boolean>(Util.SAVE_STATE_ADD_SUCCESS)
+            val isAddSuccess = savedStateHandle.get<Boolean>(Util.SAVE_STATE_ADD_MERCHANT_SUCCESS)
 
-            val isEditSuccess: Boolean? = backStackEntry
-                .savedStateHandle
-                .get<Boolean>(Util.SAVE_STATE_EDIT_SUCCESS)
+            val isEditSuccess = savedStateHandle.get<Boolean>(Util.SAVE_STATE_EDIT_MERCHANT_SUCCESS)
 
-            val editAddId: Long? = backStackEntry
-                .savedStateHandle
-                .get<Long>(Util.SAVE_STATE_ADD_EDIT_SUCCESS_ID)
+            val editAddId = savedStateHandle.get<Long>(Util.SAVE_STATE_ADD_EDIT_MERCHANT_SUCCESS_ID)
 
-            val isAddMerchantDataSuccess: Boolean? = backStackEntry
-                .savedStateHandle
-                .get<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_ADD_SUCCESS)
+            val isAddMerchantDataSuccess =
+                savedStateHandle.get<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_ADD_SUCCESS)
 
-            val merchantId: Long? = backStackEntry
-                .savedStateHandle
-                .get<Long>(Util.SAVE_STATE_MERCHANT_ADD_EDIT_ID)
+            val merchantId = savedStateHandle.get<Long>(Util.SAVE_STATE_MERCHANT_ADD_EDIT_ID)
 
-            backStackEntry
-                .savedStateHandle
-                .remove<Boolean>(Util.SAVE_STATE_EDIT_SUCCESS)
+            savedStateHandle.remove<Boolean>(Util.SAVE_STATE_EDIT_MERCHANT_SUCCESS)
+            savedStateHandle.remove<Boolean>(Util.SAVE_STATE_ADD_MERCHANT_SUCCESS)
+            savedStateHandle.remove<Long>(Util.SAVE_STATE_ADD_EDIT_MERCHANT_SUCCESS_ID)
 
-            backStackEntry
-                .savedStateHandle
-                .remove<Boolean>(Util.SAVE_STATE_ADD_SUCCESS)
-
-            backStackEntry
-                .savedStateHandle
-                .remove<Long>(Util.SAVE_STATE_ADD_EDIT_SUCCESS_ID)
-
-            backStackEntry.savedStateHandle.remove<Long>(Util.SAVE_STATE_MERCHANT_ADD_EDIT_ID)
-            backStackEntry.savedStateHandle.remove<Long>(Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_ID)
-            backStackEntry.savedStateHandle.remove<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_ADD_SUCCESS)
+            savedStateHandle.remove<Long>(Util.SAVE_STATE_MERCHANT_ADD_EDIT_ID)
+            savedStateHandle.remove<Long>(Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_ID)
+            savedStateHandle.remove<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_ADD_SUCCESS)
 
             bottomBarState.value = true
             MerchantScreen(
@@ -77,8 +61,7 @@ fun NavGraphBuilder.merchantRoute(
                 onMerchantClick = {
                     navController.navigate(
                         ScreenNav.MERCHANT_DATA.route.replace(
-                            "{${Util.PARAM_MERCHANT_ID}}",
-                            it.toString()
+                            "{${Util.PARAM_MERCHANT_ID}}", it.toString()
                         )
                     )
                 },
@@ -87,9 +70,10 @@ fun NavGraphBuilder.merchantRoute(
 
                     navController.navigate(DialogNav.ADD_EDIT_MERCHANT.route)
 
-                    navController.currentBackStackEntry
-                        ?.savedStateHandle
-                        ?.set(Util.SAVE_STATE_EDIT_ID, it)
+                    navController.currentBackStackEntry?.savedStateHandle?.set(
+                        Util.SAVE_STATE_MERCHANT_EDIT_ID,
+                        it
+                    )
                 },
                 bottomPadding = innerPadding,
                 isAddMerchantDataSuccess = isAddMerchantDataSuccess ?: false,
@@ -98,17 +82,14 @@ fun NavGraphBuilder.merchantRoute(
         }
         composable(route = ScreenNav.MERCHANT_DATA.route) { backStackEntry ->
 
-            val merchantDataId: Long? = backStackEntry
-                .savedStateHandle
-                .get<Long>(Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_ID)
+            val merchantDataId: Long? =
+                backStackEntry.savedStateHandle.get<Long>(Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_ID)
 
-            val isEditMerchantDataSuccess: Boolean? = backStackEntry
-                .savedStateHandle
-                .get<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_EDIT_SUCCESS)
+            val isEditMerchantDataSuccess: Boolean? =
+                backStackEntry.savedStateHandle.get<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_EDIT_SUCCESS)
 
-            val isAddMerchantDataSuccess: Boolean? = backStackEntry
-                .savedStateHandle
-                .get<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_ADD_SUCCESS)
+            val isAddMerchantDataSuccess: Boolean? =
+                backStackEntry.savedStateHandle.get<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_ADD_SUCCESS)
 
             backStackEntry.savedStateHandle.remove<Long>(Util.SAVE_STATE_MERCHANT_ADD_EDIT_ID)
             backStackEntry.savedStateHandle.remove<Long>(Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_ID)
@@ -120,8 +101,7 @@ fun NavGraphBuilder.merchantRoute(
                 onProfileClick = {
                     navController.navigate(
                         ScreenNav.MERCHANT_PROFILE.route.replace(
-                            "{${Util.PARAM_MERCHANT_ID}}",
-                            it.toString()
+                            "{${Util.PARAM_MERCHANT_ID}}", it.toString()
                         )
                     )
                 },
@@ -129,21 +109,22 @@ fun NavGraphBuilder.merchantRoute(
                 onEditClick = {
                     navController.navigate(
                         ScreenNav.EDIT_MERCHANT_DATA.route.replace(
-                            "{${Util.PARAM_EDIT_MERCHANT_DATA_ID}}",
-                            it.toString()
+                            "{${Util.PARAM_EDIT_MERCHANT_DATA_ID}}", it.toString()
                         )
                     )
                 },
                 onAddClick = {
                     navController.navigate(ScreenNav.NEW_ITEM.route)
 
-                    navController.currentBackStackEntry
-                        ?.savedStateHandle
-                        ?.set(Util.SAVE_STATE_MERCHANT_NAME_DESC, Gson().toJson(it))
+                    navController.currentBackStackEntry?.savedStateHandle?.set(
+                        Util.SAVE_STATE_MERCHANT_NAME_DESC,
+                        Gson().toJson(it)
+                    )
 
-                    navController.currentBackStackEntry
-                        ?.savedStateHandle
-                        ?.set(Util.SAVE_STATE_MERCHANT_LOCK, true)
+                    navController.currentBackStackEntry?.savedStateHandle?.set(
+                        Util.SAVE_STATE_MERCHANT_LOCK,
+                        true
+                    )
 
                 },
                 isEditSuccess = isEditMerchantDataSuccess ?: false,
@@ -154,8 +135,7 @@ fun NavGraphBuilder.merchantRoute(
 
         composable(route = ScreenNav.MERCHANT_PROFILE.route) {
             bottomBarState.value = false
-            MerchantProfileScreen(
-                onNavigationUp = { navController.navigateUp() })
+            MerchantProfileScreen(onNavigationUp = { navController.navigateUp() })
         }
 
         composable(route = ScreenNav.EDIT_MERCHANT_DATA.route) { backStackEntry ->
@@ -164,34 +144,29 @@ fun NavGraphBuilder.merchantRoute(
             val merchantDataSaveToast =
                 stringResource(id = R.string.merchant_data_edit_success_message)
 
+            val savedStateHandle = backStackEntry.savedStateHandle
             // get data passed back from B
-            val gsonStringMerchant: String? = backStackEntry
-                .savedStateHandle
-                .get<String>(Util.SAVE_STATE_MERCHANT_NAME_DESC)
+            val gsonStringMerchant =
+                savedStateHandle.get<String>(Util.SAVE_STATE_MERCHANT_NAME_DESC)
 
-            val merchant: MerchantNameAndDetails? =
-                if (gsonStringMerchant != null) {
-                    Gson().fromJson(gsonStringMerchant, MerchantNameAndDetails::class.java)
-                } else null
+            val merchant: MerchantNameAndDetails? = if (gsonStringMerchant != null) {
+                Gson().fromJson(gsonStringMerchant, MerchantNameAndDetails::class.java)
+            } else null
 
-            val gsonStringPayment: String? = backStackEntry
-                .savedStateHandle
-                .get<String>(Util.SAVE_STATE_PAYMENT)
+            val gsonStringPayment = savedStateHandle.get<String>(Util.SAVE_STATE_PAYMENT)
 
-            val payment: Payment? =
-                if (gsonStringPayment != null) {
-                    Gson().fromJson(gsonStringPayment, Payment::class.java)
-                } else null
+            val payment: Payment? = if (gsonStringPayment != null) {
+                Gson().fromJson(gsonStringPayment, Payment::class.java)
+            } else null
 
 
-            backStackEntry.savedStateHandle.remove<String>(Util.SAVE_STATE_MERCHANT_NAME_DESC)
-            backStackEntry.savedStateHandle.remove<String>(Util.SAVE_STATE_PAYMENT)
+            savedStateHandle.remove<String>(Util.SAVE_STATE_MERCHANT_NAME_DESC)
+            savedStateHandle.remove<String>(Util.SAVE_STATE_PAYMENT)
 
             bottomBarState.value = false
-            NewItemScreen(
-                onNavigationUp = { navController.navigateUp() },
+            NewItemScreen(onNavigationUp = { navController.navigateUp() },
                 onMerchantSelect = { navController.navigate(DialogNav.SELECT_MERCHANT.route) },
-                onPaymentAdd = { navController.navigate(DialogNav.ADD_PAYMENT.route) },
+                onPaymentAdd = { navController.navigate(DialogNav.ADD_EDIT_PAYMENT.route) },
                 merchantData = merchant,
                 paymentData = payment,
                 isMerchantLock = false,
@@ -199,35 +174,22 @@ fun NavGraphBuilder.merchantRoute(
                     /*navController.navigateUp()*/
                     context.showToast(merchantDataSaveToast)
 
-                    navController.previousBackStackEntry
-                        ?.savedStateHandle
-                        ?.set(
-                            Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_ID,
-                            merchantDataId
-                        )
+                    navController.previousBackStackEntry?.savedStateHandle?.set(
+                        Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_ID, merchantDataId
+                    )
 
-                    navController.previousBackStackEntry
-                        ?.savedStateHandle
-                        ?.set(
-                            Util.SAVE_STATE_MERCHANT_ADD_EDIT_ID,
-                            merchantId
-                        )
-                    navController.previousBackStackEntry
-                        ?.savedStateHandle
-                        ?.set(
-                            Util.SAVE_STATE_MERCHANT_DATA_EDIT_SUCCESS,
-                            isEdit
-                        )
+                    navController.previousBackStackEntry?.savedStateHandle?.set(
+                        Util.SAVE_STATE_MERCHANT_ADD_EDIT_ID, merchantId
+                    )
+                    navController.previousBackStackEntry?.savedStateHandle?.set(
+                        Util.SAVE_STATE_MERCHANT_DATA_EDIT_SUCCESS, isEdit
+                    )
 
-                    navController.previousBackStackEntry
-                        ?.savedStateHandle
-                        ?.set(
-                            Util.SAVE_STATE_MERCHANT_DATA_ADD_SUCCESS,
-                            !isEdit
-                        )
+                    navController.previousBackStackEntry?.savedStateHandle?.set(
+                        Util.SAVE_STATE_MERCHANT_DATA_ADD_SUCCESS, !isEdit
+                    )
                     navController.popBackStack()
-                }
-            )
+                })
         }
     }
 }

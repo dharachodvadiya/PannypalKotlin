@@ -109,7 +109,7 @@ abstract class AppDatabase : RoomDatabase() {
                 // Define your pre-added payment methods
                 val preAddedPayments = listOf(
                     Payment(name = "Cash", preAdded = 1, modeId = 2), ////id = 1
-                    Payment(name = "Bank Transfer", preAdded = 1, modeId = 3), //id = 2
+                    Payment(name = "Bank", preAdded = 1, modeId = 3), //id = 2
                     Payment(name = "Credit Card", preAdded = 1, modeId = 4) //id = 3
                 )
 

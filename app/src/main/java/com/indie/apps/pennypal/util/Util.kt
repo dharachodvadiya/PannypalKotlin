@@ -25,19 +25,30 @@ object Util {
 
     const val SAVE_STATE_COUNTRY_DIAL_CODE = "dial_code"
     const val SAVE_STATE_CURRENCY_CODE = "currency_code"
-    const val SAVE_STATE_EDIT_ID = "edit_id"
-    const val SAVE_STATE_ADD_SUCCESS = "add_success"
-    const val SAVE_STATE_EDIT_SUCCESS = "edit_success"
-    const val SAVE_STATE_ADD_EDIT_SUCCESS_ID = "edit_add_id"
+
+    const val SAVE_STATE_PAYMENT_EDIT_ID = "payment_edit_id"
+    const val SAVE_STATE_PAYMENT_EDIT_SUCCESS = "payment_edit_success"
+    const val SAVE_STATE_PAYMENT_ADD_EDIT_ID = "payment_add_edit_id"
+
+    const val SAVE_STATE_MERCHANT_EDIT_ID = "merchant_edit_id"
+    const val SAVE_STATE_ADD_MERCHANT_SUCCESS = "merchant_add_success"
+    const val SAVE_STATE_EDIT_MERCHANT_SUCCESS = "merchant_edit_success"
+    const val SAVE_STATE_ADD_EDIT_MERCHANT_SUCCESS_ID = "merchant_edit_add_id"
+
     const val SAVE_STATE_MERCHANT_NAME_DESC = "merchant_name_desc"
+
     const val SAVE_STATE_CONTACT_NUMBER_DIAL_CODE = "contact_number_code"
+
     const val SAVE_STATE_PAYMENT = "payment"
     const val SAVE_STATE_MERCHANT_DATA_ADD_EDIT_ID = "merchant_data_add_edit_id"
     const val SAVE_STATE_MERCHANT_ADD_EDIT_ID = "merchant_add_edit_id"
-    const val SAVE_STATE_MERCHANT_DATA_ADD_SUCCESS = "merchant_add_success"
-    const val SAVE_STATE_MERCHANT_DATA_EDIT_SUCCESS = "merchant_edit_success"
+    const val SAVE_STATE_MERCHANT_DATA_ADD_SUCCESS = "merchant_data_add_success"
+    const val SAVE_STATE_MERCHANT_DATA_EDIT_SUCCESS = "merchant_data_edit_success"
+
     const val SAVE_STATE_MERCHANT_LOCK = "merchant_lock"
+
     const val SAVE_STATE_SHOW_CURRENCY = "is_show_currency"
+
     const val PARAM_MERCHANT_ID = "merchant_id"
     const val PARAM_EDIT_MERCHANT_DATA_ID = "edit_merchant_data_id"
 

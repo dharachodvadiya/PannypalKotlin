@@ -273,14 +273,14 @@ fun DeleteAlertDialog(
         title = {
             Text(
                 text = stringResource(id = dialogTitle),
-                style = MyAppTheme.typography.Semibold80,
+                style = MyAppTheme.typography.Semibold57,
                 color = MyAppTheme.colors.black
             )
         },
         text = {
             Text(
                 text = stringResource(id = dialogText),
-                style = MyAppTheme.typography.Semibold57,
+                style = MyAppTheme.typography.Regular46,
                 color = MyAppTheme.colors.gray2
             )
         },
@@ -293,7 +293,7 @@ fun DeleteAlertDialog(
                     onConfirmation()
                 }
             ) {
-                Text("Confirm")
+                Text(stringResource(id = R.string.confirm))
             }
         },
         dismissButton = {
@@ -302,7 +302,7 @@ fun DeleteAlertDialog(
                     onDismissRequest()
                 }
             ) {
-                Text("Dismiss")
+                Text(stringResource(id = R.string.dismiss))
             }
         }
     )
