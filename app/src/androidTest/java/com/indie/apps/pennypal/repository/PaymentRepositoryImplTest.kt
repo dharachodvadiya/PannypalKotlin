@@ -58,7 +58,7 @@ class PaymentRepositoryImplTest {
         paymentDao.insert(Payment(name = "debitCard1"))
 
         //when [delete custom data]
-        paymentDao.deleteCustomPayment(4)
+        paymentDao.softDeleteCustomPayment(4)
 
         //then
 

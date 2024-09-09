@@ -6,8 +6,6 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import com.indie.apps.pennypal.data.entity.Payment
-import com.indie.apps.pennypal.data.module.MerchantDataWithPaymentName
-import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
 import com.indie.apps.pennypal.data.module.PaymentWithMode
 import kotlinx.coroutines.flow.Flow
 
@@ -20,11 +18,11 @@ interface PaymentDao : BaseDao<Payment> {
     //get data
 
     //delete only custom payment method
-    @Query("DELETE FROM payment_type WHERE id = :paymentId AND pre_added = 0")
-    suspend fun deleteCustomPayment(paymentId: Long): Int
+    @Query("UPDATE payment_type SET soft_delete = 1 WHERE id = :paymentId")
+    suspend fun softDeleteCustomPayment(paymentId: Long): Int
 
     @Transaction
-    @Query("SELECT * FROM payment_type")
+    @Query("SELECT * FROM payment_type WHERE soft_delete = 0")
     fun getPaymentList(): Flow<List<Payment>>
 
     @Transaction
@@ -37,6 +35,7 @@ interface PaymentDao : BaseDao<Payment> {
                 pm.name as modeName
         FROM payment_type pt
         INNER JOIN payment_mode pm ON pt.mode_id = pm.id
+        WHERE pt.soft_delete = 0
     """
     )
 
@@ -47,7 +46,7 @@ interface PaymentDao : BaseDao<Payment> {
     suspend fun getPaymentFromId(id: Long): Payment
 
     @Transaction
-    @Query("SELECT * FROM payment_type WHERE name LIKE :searchQuery || '%'")
+    @Query("SELECT * FROM payment_type WHERE name LIKE :searchQuery || '%' AND soft_delete = 0")
     fun searchPaymentList(searchQuery: String): PagingSource<Int, Payment>
 
     @Insert

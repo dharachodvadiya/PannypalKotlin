@@ -37,12 +37,12 @@ fun updateUserTable(database: SupportSQLiteDatabase)
 fun updatePaymentTypeTable(database: SupportSQLiteDatabase)
 {
     // Add the foreign key column to payment_type table
-    database.execSQL("ALTER TABLE payment_type ADD COLUMN mode_id INTEGER NOT NULL DEFAULT 1")
+    database.execSQL("ALTER TABLE payment_type ADD COLUMN mode_id INTEGER NOT NULL DEFAULT 1, soft_delete INTEGER NOT NULL DEFAULT 0")
     // Add foreign key constraint
-    database.execSQL("CREATE TABLE IF NOT EXISTS `payment_type_new` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL COLLATE NOCASE, `pre_added` INTEGER NOT NULL, `mode_id` INTEGER NOT NULL, FOREIGN KEY(`mode_id`) REFERENCES `payment_mode`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )");
+    database.execSQL("CREATE TABLE IF NOT EXISTS `payment_type_new` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL COLLATE NOCASE, `pre_added` INTEGER NOT NULL, `soft_delete` INTEGER NOT NULL,  `mode_id` INTEGER NOT NULL, FOREIGN KEY(`mode_id`) REFERENCES `payment_mode`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )");
     database.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_payment_type_name` ON `payment_type_new` (`name`)");
     // Copy data from old table to new table
-    database.execSQL("INSERT INTO payment_type_new (id, name, pre_added, mode_id) SELECT id, name, pre_added, mode_id FROM payment_type")
+    database.execSQL("INSERT INTO payment_type_new (id, name, pre_added, mode_id, soft_delete) SELECT id, name, pre_added, mode_id, soft_delete FROM payment_type")
     // Drop the old table
     database.execSQL("DROP TABLE payment_type")
     // Rename the new table to the old table name

@@ -16,11 +16,11 @@ import javax.inject.Inject
 class DeletePaymentUseCase @Inject constructor(
     private val paymentRepository: PaymentRepository,
     private val userRepository: UserRepository,
-    private val merchantDataRepository: MerchantDataRepository,
+    //private val merchantDataRepository: MerchantDataRepository,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) {
 
-    suspend fun deleteData(deleteId: Long, replaceId: Long): Flow<Resource<Int>> {
+    suspend fun deleteData(deleteId: Long): Flow<Resource<Int>> {
         return flow {
             try {
                 emit(Resource.Loading())
@@ -29,7 +29,7 @@ class DeletePaymentUseCase @Inject constructor(
                 if (user.paymentId == deleteId) {
                     userRepository.updateWithDefaultPayment()
                 }
-                merchantDataRepository.updateMerchantDataPaymentId(deleteId, replaceId)
+                //merchantDataRepository.updateMerchantDataPaymentId(deleteId, replaceId)
                 val id = paymentRepository.deleteCustomPayment(deleteId)
                 if (id > 0) {
                     emit(Resource.Success(id))

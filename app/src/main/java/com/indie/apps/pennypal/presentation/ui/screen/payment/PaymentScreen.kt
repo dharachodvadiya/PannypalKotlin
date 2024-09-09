@@ -73,10 +73,10 @@ fun PaymentScreen(
     LaunchedEffect(Unit) {
         onModeChange(false)
     }
-    //val context = LocalContext.current
-    //val paymentDeleteToast = stringResource(id = R.string.payment_delete_success_message)
-    //var openDeleteDialog by remember { mutableStateOf(false) }
-    //var deletePaymentId by remember { mutableLongStateOf(0) }
+    val context = LocalContext.current
+    val paymentDeleteToast = stringResource(id = R.string.payment_delete_success_message)
+    var openDeleteDialog by remember { mutableStateOf(false) }
+    var deletePaymentId by remember { mutableLongStateOf(0) }
 
     val editAnimRun by paymentViewModel.editAnimRun.collectAsStateWithLifecycle()
 
@@ -187,9 +187,9 @@ fun PaymentScreen(
                         editAnimPaymentId = editedPaymentId,
                         editAnimRun = editAnimRun,
                         onDeleteClick = {
-                            //deletePaymentId = it
-                            //openDeleteDialog = true
-                            onDeletePaymentClick(it.toPaymentWithIdName())
+                            deletePaymentId = it.id
+                            openDeleteDialog = true
+                            //(it.toPaymentWithIdName())
                         }
                     )
                 }
@@ -227,7 +227,7 @@ fun PaymentScreen(
             }
         }
 
-       /* if (openDeleteDialog) {
+        if (openDeleteDialog) {
             DeleteAlertDialog(
                 dialogTitle = R.string.delete_dialog_title,
                 dialogText = R.string.delete_payment_dialog_text,
@@ -246,7 +246,7 @@ fun PaymentScreen(
                     deletePaymentId = 0
                 }
             )
-        }*/
+        }
 
     }
 }

@@ -45,7 +45,7 @@ class DeletePaymentViewModel@Inject constructor(
     }
 
     fun onDeleteDialogClick(deleteId: Long, onSuccess: (Long) -> Unit) {
-        viewModelScope.launch {
+        /*viewModelScope.launch {
             deletePaymentUseCase
                 .deleteData(deleteId,newPaymentId.value )
                 .collect {
@@ -58,7 +58,7 @@ class DeletePaymentViewModel@Inject constructor(
                         }
                     }
                 }
-        }
+        }*/
     }
 
 
