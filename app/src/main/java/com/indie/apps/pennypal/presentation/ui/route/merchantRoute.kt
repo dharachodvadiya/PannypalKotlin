@@ -164,9 +164,17 @@ fun NavGraphBuilder.merchantRoute(
             savedStateHandle.remove<String>(Util.SAVE_STATE_PAYMENT)
 
             bottomBarState.value = false
-            NewItemScreen(onNavigationUp = { navController.navigateUp() },
+            NewItemScreen(
+                onNavigationUp = { navController.navigateUp() },
                 onMerchantSelect = { navController.navigate(DialogNav.SELECT_MERCHANT.route) },
-                onPaymentAdd = { navController.navigate(DialogNav.ADD_EDIT_PAYMENT.route) },
+                onPaymentSelect = { currentId ->
+                    navController.navigate(DialogNav.SELECT_PAYMENT.route)
+                    if (currentId != null) {
+                        navController.currentBackStackEntry?.savedStateHandle?.set(
+                            Util.SAVE_STATE_SELECT_PAYMENT_ID, currentId
+                        )
+                    }
+                },
                 merchantData = merchant,
                 paymentData = payment,
                 isMerchantLock = false,

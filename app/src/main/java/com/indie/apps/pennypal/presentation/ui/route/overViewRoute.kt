@@ -33,13 +33,11 @@ fun NavGraphBuilder.overViewRoute(
     ) {
         composable(route = ScreenNav.OVERVIEW_START.route) { backStackEntry ->
 
-            val merchantDataId: Long? = backStackEntry
-                .savedStateHandle
-                .get<Long>(Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_ID)
+            val merchantDataId: Long? =
+                backStackEntry.savedStateHandle.get<Long>(Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_ID)
 
-            val isAddMerchantDataSuccess: Boolean? = backStackEntry
-                .savedStateHandle
-                .get<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_ADD_SUCCESS)
+            val isAddMerchantDataSuccess: Boolean? =
+                backStackEntry.savedStateHandle.get<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_ADD_SUCCESS)
 
             bottomBarState.value = true
 
@@ -55,35 +53,29 @@ fun NavGraphBuilder.overViewRoute(
                 isAddMerchantDataSuccess = isAddMerchantDataSuccess ?: false
             )
         }
-        composable(route = ScreenNav.NEW_ITEM.route)
-        { backStackEntry ->
+        composable(route = ScreenNav.NEW_ITEM.route) { backStackEntry ->
 
             val context = LocalContext.current
             val merchantDataSaveToast =
                 stringResource(id = R.string.merchant_data_save_success_message)
 
-            val isMerchantLock: Boolean? = backStackEntry
-                .savedStateHandle
-                .get<Boolean>(Util.SAVE_STATE_MERCHANT_LOCK)
+            val isMerchantLock: Boolean? =
+                backStackEntry.savedStateHandle.get<Boolean>(Util.SAVE_STATE_MERCHANT_LOCK)
 
             // get data passed back from B
-            val gsonStringMerchant: String? = backStackEntry
-                .savedStateHandle
-                .get<String>(Util.SAVE_STATE_MERCHANT_NAME_DESC)
+            val gsonStringMerchant: String? =
+                backStackEntry.savedStateHandle.get<String>(Util.SAVE_STATE_MERCHANT_NAME_DESC)
 
-            val merchant: MerchantNameAndDetails? =
-                if (gsonStringMerchant != null) {
-                    Gson().fromJson(gsonStringMerchant, MerchantNameAndDetails::class.java)
-                } else null
+            val merchant: MerchantNameAndDetails? = if (gsonStringMerchant != null) {
+                Gson().fromJson(gsonStringMerchant, MerchantNameAndDetails::class.java)
+            } else null
 
-            val gsonStringPayment: String? = backStackEntry
-                .savedStateHandle
-                .get<String>(Util.SAVE_STATE_PAYMENT)
+            val gsonStringPayment: String? =
+                backStackEntry.savedStateHandle.get<String>(Util.SAVE_STATE_PAYMENT)
 
-            val payment: Payment? =
-                if (gsonStringPayment != null) {
-                    Gson().fromJson(gsonStringPayment, Payment::class.java)
-                } else null
+            val payment: Payment? = if (gsonStringPayment != null) {
+                Gson().fromJson(gsonStringPayment, Payment::class.java)
+            } else null
 
 
             backStackEntry.savedStateHandle.remove<String>(Util.SAVE_STATE_MERCHANT_NAME_DESC)
@@ -93,54 +85,50 @@ fun NavGraphBuilder.overViewRoute(
             NewItemScreen(
                 onNavigationUp = { navController.navigateUp() },
                 onMerchantSelect = { navController.navigate(DialogNav.SELECT_MERCHANT.route) },
-                onPaymentAdd = { navController.navigate(DialogNav.ADD_EDIT_PAYMENT.route) },
+                onPaymentSelect = { currentId ->
+                    navController.navigate(DialogNav.SELECT_PAYMENT.route)
+                    if(currentId != null) {
+                        navController.currentBackStackEntry?.savedStateHandle?.set(
+                            Util.SAVE_STATE_SELECT_PAYMENT_ID, currentId
+                        )
+                    }
+                },
                 merchantData = merchant,
                 paymentData = payment,
                 isMerchantLock = isMerchantLock ?: false,
                 onSaveSuccess = { _, merchantDataId, merchantId ->
                     context.showToast(merchantDataSaveToast)
 
-                    navController.previousBackStackEntry
-                        ?.savedStateHandle
-                        ?.set(
-                            Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_ID,
-                            merchantDataId
+                    navController.previousBackStackEntry?.savedStateHandle?.set(
+                            Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_ID, merchantDataId
                         )
 
-                    navController.previousBackStackEntry
-                        ?.savedStateHandle
-                        ?.set(
-                            Util.SAVE_STATE_MERCHANT_ADD_EDIT_ID,
-                            merchantId
+                    navController.previousBackStackEntry?.savedStateHandle?.set(
+                            Util.SAVE_STATE_MERCHANT_ADD_EDIT_ID, merchantId
                         )
-                    navController.previousBackStackEntry
-                        ?.savedStateHandle
-                        ?.set(
-                            Util.SAVE_STATE_MERCHANT_DATA_ADD_SUCCESS,
-                            true
+                    navController.previousBackStackEntry?.savedStateHandle?.set(
+                            Util.SAVE_STATE_MERCHANT_DATA_ADD_SUCCESS, true
                         )
 
 
                     navController.popBackStack()
                     //navController.navigateUp()
-                }
-            )
+                })
         }
-        composable(route = ScreenNav.PROFILE.route) { backStackEntry->
+        composable(route = ScreenNav.PROFILE.route) { backStackEntry ->
 
-            val code: String? = backStackEntry
-                .savedStateHandle
-                .get<String>(Util.SAVE_STATE_CURRENCY_CODE)
+            val code: String? =
+                backStackEntry.savedStateHandle.get<String>(Util.SAVE_STATE_CURRENCY_CODE)
 
             bottomBarState.value = false
-            ProfileScreen(
-                onNavigationUp = { navController.navigateUp() },
+            ProfileScreen(onNavigationUp = { navController.navigateUp() },
                 code = code,
                 onCurrencyChangeClick = {
                     navController.navigate(DialogNav.COUNTRY_PICKER.route)
-                    navController.currentBackStackEntry
-                        ?.savedStateHandle
-                        ?.set(Util.SAVE_STATE_SHOW_CURRENCY, true)
+                    navController.currentBackStackEntry?.savedStateHandle?.set(
+                            Util.SAVE_STATE_SHOW_CURRENCY,
+                            true
+                        )
                 })
         }
     }

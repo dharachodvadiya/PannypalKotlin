@@ -41,13 +41,12 @@ import com.indie.apps.pennypal.util.Resource
 fun NewItemScreen(
     newItemViewModel: NewItemViewModel = hiltViewModel(),
     onMerchantSelect: () -> Unit,
-    onPaymentAdd: () -> Unit,
+    onPaymentSelect: (Long?) -> Unit,
     onNavigationUp: () -> Unit,
     isMerchantLock: Boolean,
     onSaveSuccess: (Boolean, Long, Long) -> Unit,
     merchantData: MerchantNameAndDetails? = null,
     paymentData: Payment? = null,
-
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     if (merchantData != null) {
@@ -56,8 +55,6 @@ fun NewItemScreen(
     if (paymentData != null) {
         newItemViewModel.setPaymentData(paymentData)
     }
-
-    val paymentList by newItemViewModel.paymentList.collectAsStateWithLifecycle()
 
     val uiState by newItemViewModel.uiState.collectAsStateWithLifecycle()
     val enableButton by newItemViewModel.enableButton.collectAsStateWithLifecycle()
@@ -114,12 +111,6 @@ fun NewItemScreen(
                     )
                     NewEntryFieldItemSection(
                         modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.padding)),
-                        onPaymentAdd = {
-                            if (enableButton) {
-                                focusManager.clearFocus()
-                                onPaymentAdd()
-                            }
-                        },
                         onMerchantSelect = {
                             if (enableButton) {
                                 focusManager.clearFocus()
@@ -127,8 +118,12 @@ fun NewItemScreen(
                             }
                         },
                         merchantName = merchant?.name,
-                        onPaymentSelect = newItemViewModel::onPaymentSelect,
-                        paymentList = paymentList,
+                        onPaymentSelect = {
+                            if (enableButton) {
+                                focusManager.clearFocus()
+                                onPaymentSelect(payment?.id)
+                            }
+                        },
                         paymentName = payment?.name,
                         amount = amount,
                         description = description,
@@ -161,7 +156,7 @@ fun NewItemScreen(
 private fun NewItemScreenPreview() {
     PennyPalTheme(darkTheme = true) {
         NewItemScreen(
-            onPaymentAdd = {},
+            onPaymentSelect = {},
             onNavigationUp = {},
             onMerchantSelect = {},
             onSaveSuccess = { _, _, _ -> },

@@ -27,6 +27,7 @@ object Util {
     const val SAVE_STATE_CURRENCY_CODE = "currency_code"
 
     const val SAVE_STATE_PAYMENT_EDIT_ID = "payment_edit_id"
+    const val SAVE_STATE_SELECT_PAYMENT_ID = "select_payment_id"
     const val SAVE_STATE_PAYMENT_EDIT_SUCCESS = "payment_edit_success"
     const val SAVE_STATE_PAYMENT_ADD_EDIT_ID = "payment_add_edit_id"
 

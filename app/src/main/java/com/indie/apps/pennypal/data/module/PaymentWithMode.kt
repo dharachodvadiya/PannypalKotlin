@@ -1,5 +1,7 @@
 package com.indie.apps.pennypal.data.module
 
+import com.indie.apps.pennypal.data.entity.Payment
+
 data class PaymentWithMode(
     val id: Long = 0,
 
@@ -13,3 +15,9 @@ data class PaymentWithMode(
 )
 
 fun PaymentWithMode.toPaymentWithIdName() = PaymentWithIdName(id, name)
+fun PaymentWithMode.toPayment() = Payment(
+    id = id,
+    name = name,
+    modeId = modeId,
+    preAdded = preAdded
+)

@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.component
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.widget.Toast
 import androidx.annotation.DrawableRes
@@ -70,7 +71,7 @@ fun TopBarWithTitle(
     title: String,
     titleStyle: TextStyle = MyAppTheme.typography.Semibold57,
     onNavigationUp: () -> Unit,
-    modifier: Modifier = Modifier,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
     contentAlignment: Alignment = Alignment.CenterStart,
     bgColor: Color = MyAppTheme.colors.transparent,
     trailingContent: @Composable (() -> Unit)? = null
@@ -95,7 +96,7 @@ fun TopBarWithTitle(
 @Composable
 fun UserProfile(
     borderWidth: Float = 0f,
-    modifier: Modifier = Modifier
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     MyAppTheme.colors.gradientBlue
     val borderModifier = if (borderWidth > 0) {
@@ -145,10 +146,10 @@ fun UserProfile(
 
 @Composable
 fun BottomSaveButton(
-    @StringRes textId : Int = R.string.save,
+    @StringRes textId: Int = R.string.save,
     onClick: () -> Unit,
     enabled: Boolean = true,
-    modifier: Modifier = Modifier
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     PrimaryButton(
         //bgBrush = linearGradientsBrush(MyAppTheme.colors.gradientBlue),
@@ -174,7 +175,7 @@ fun DialogSearchView(
     searchState: TextFieldState,
     onTextChange: (String) -> Unit,
     trailingContent: @Composable() (() -> Unit)? = null,
-    modifier: Modifier = Modifier
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -212,7 +213,7 @@ fun DialogTextFieldItem(
     textState: TextFieldState = TextFieldState(),
     placeholder: Int,
     keyboardType: KeyboardType = KeyboardType.Text,
-    modifier: Modifier = Modifier,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
     textLeadingContent: @Composable (() -> Unit)? = null,
     textTrailingContent: @Composable (() -> Unit)? = null
 ) {
@@ -374,15 +375,17 @@ fun AccountItem(
     isEditMode: Boolean,
     isEditable: Boolean,
     name: String,
-    onSelect: ()->Unit,
-    onEditClick: ()-> Unit,
-    onDeleteClick: ()-> Unit,
+    onSelect: () -> Unit,
+    onEditClick: () -> Unit,
+    onDeleteClick: () -> Unit,
     @DrawableRes symbolId: Int,
     modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier
-            .height(40.dp),
+            .height(40.dp)
+            .fillMaxWidth()
+            .clickable { onSelect() },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.item_padding))
     ) {
@@ -424,16 +427,16 @@ fun AccountItem(
 @Composable
 fun AccountTypeItem(
     @StringRes titleId: Int,
-    defaultPaymentId: Long,
+    selectPaymentId: Long,
     editAnimPaymentId: Long = 0L,
     editAnimRun: Boolean = false,
     isEditMode: Boolean = false,
     isEditable: Boolean = false,
     dataList: List<PaymentWithMode>,
-    onSelect: (Long) -> Unit = {},
+    onSelect: (PaymentWithMode) -> Unit = {},
     onEditClick: (Long) -> Unit = {},
     onDeleteClick: (PaymentWithMode) -> Unit = {},
-    modifier: Modifier = Modifier
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
@@ -508,12 +511,12 @@ fun AccountTypeItem(
                     }
                 }
                 AccountItem(
-                    isSelected = item.id == defaultPaymentId,
+                    isSelected = item.id == selectPaymentId,
                     isEditMode = isEditMode,
                     name = item.name,
                     symbolId = id,
                     isEditable = (item.preAdded == 0 && isEditable),
-                    onSelect = { onSelect(item.id) },
+                    onSelect = { onSelect(item) },
                     onDeleteClick = { onDeleteClick(item) },
                     onEditClick = { onEditClick(item.id) },
                     modifier = modifierColor

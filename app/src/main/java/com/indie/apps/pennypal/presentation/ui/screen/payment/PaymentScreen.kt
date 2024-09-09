@@ -33,9 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.data.entity.Payment
-import com.indie.apps.pennypal.data.module.PaymentWithIdName
-import com.indie.apps.pennypal.data.module.toPaymentWithIdName
+import com.indie.apps.pennypal.presentation.ui.component.AccountTypeItem
 import com.indie.apps.pennypal.presentation.ui.component.BottomSaveButton
 import com.indie.apps.pennypal.presentation.ui.component.DeleteAlertDialog
 import com.indie.apps.pennypal.presentation.ui.component.TopBarWithTitle
@@ -172,15 +170,17 @@ fun PaymentScreen(
                 item.modeName == "Cash"
             }
 
-            if(userData != null)
-            {
-                if(bankList.isNotEmpty()){
-                    AccountBankItem(
+            if (userData != null) {
+                if (bankList.isNotEmpty()) {
+
+                    AccountTypeItem(
+                        titleId = R.string.bank,
                         isEditMode = isEditMode,
+                        isEditable = isEditMode,
                         dataList = bankList,
-                        defaultPaymentId = defaultPaymentId,
+                        selectPaymentId = defaultPaymentId,
                         onSelect = {
-                            defaultPaymentId = it
+                            defaultPaymentId = it.id
                         },
                         onEditClick = onEditPaymentClick,
                         editAnimPaymentId = editedPaymentId,
@@ -188,18 +188,19 @@ fun PaymentScreen(
                         onDeleteClick = {
                             deletePaymentId = it.id
                             openDeleteDialog = true
-                            //(it.toPaymentWithIdName())
                         }
                     )
                 }
 
-                if(cashList.isNotEmpty()){
-                    AccountCashItem(
+                if (cashList.isNotEmpty()) {
+                    AccountTypeItem(
+                        titleId = R.string.cash,
                         isEditMode = isEditMode,
+                        isEditable = isEditMode,
                         dataList = cashList,
-                        defaultPaymentId = defaultPaymentId,
+                        selectPaymentId = defaultPaymentId,
                         onSelect = {
-                            defaultPaymentId = it
+                            defaultPaymentId = it.id
                         },
                         onEditClick = {},
                         editAnimPaymentId = editedPaymentId,
