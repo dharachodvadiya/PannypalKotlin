@@ -34,7 +34,7 @@ fun TopBar(
     contentAlignment: Alignment = Alignment.CenterStart,
     bgColor: Color = MyAppTheme.colors.transparent
 ) {
-    /*Row(
+    Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .fillMaxWidth()
@@ -72,9 +72,9 @@ fun TopBar(
             trailingContent()
         }
 
-    }*/
+    }
 
-    Box(
+   /* Box(
         modifier = modifier
             .fillMaxWidth()
             .background(bgColor)
@@ -111,7 +111,7 @@ fun TopBar(
                 trailingContent()
             }
         }
-    }
+    }*/
 }
 
 @Preview

@@ -385,7 +385,7 @@ fun AccountItem(
         modifier = modifier
             .height(40.dp)
             .fillMaxWidth()
-            .clickable { onSelect() },
+            .clickable(enabled = isEditMode) { onSelect() },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.item_padding))
     ) {
