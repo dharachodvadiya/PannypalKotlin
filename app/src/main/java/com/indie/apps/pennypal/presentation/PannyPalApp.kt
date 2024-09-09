@@ -26,7 +26,7 @@ import com.indie.apps.pennypal.presentation.ui.dialog.add_edit_merchant.DialogAd
 import com.indie.apps.pennypal.presentation.ui.dialog.add_edit_payment.DialogAddPayment
 import com.indie.apps.pennypal.presentation.ui.dialog.contact_picker.DialogContactPicker
 import com.indie.apps.pennypal.presentation.ui.dialog.country_picker.DialogCountryPicker
-import com.indie.apps.pennypal.presentation.ui.dialog.delete_payment.DialogDeletePayment
+import com.indie.apps.pennypal.presentation.ui.dialog.select_payment.DialogSelectPayment
 import com.indie.apps.pennypal.presentation.ui.dialog.search_merchant.DialogSearchMerchant
 import com.indie.apps.pennypal.presentation.ui.navigation.BottomNavItem
 import com.indie.apps.pennypal.presentation.ui.navigation.DialogNav
@@ -256,29 +256,17 @@ fun PennyPalApp() {
                     )
                 }
                 dialog(
-                    route = DialogNav.DELETE_PAYMENT.route,
+                    route = DialogNav.SELECT_PAYMENT.route,
                     dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
                 ) { backStackEntry ->
 
-                    val gsonStringPayment: String? = backStackEntry
-                        .savedStateHandle
-                        .get<String>(Util.SAVE_STATE_PAYMENT_ID_NAME_DATA)
-
-                    val payment: PaymentWithIdName? =
-                        if (gsonStringPayment != null) {
-                            Gson().fromJson(gsonStringPayment, PaymentWithIdName::class.java)
-                        } else null
-
-                    if (payment != null) {
-                        DialogDeletePayment(
-                            onNavigationUp = { navController.navigateUp() },
-                            onDeleteSuccess = { deleteId ->
-                                // Pass data back to A
-                                navController.popBackStack()
-                            },
-                            paymentData = payment
-                        )
-                    }
+                    DialogSelectPayment(
+                        onNavigationUp = { navController.navigateUp() },
+                        onSelect = { selectId ->
+                            // Pass data back to A
+                            navController.popBackStack()
+                        }
+                    )
 
                 }
             }

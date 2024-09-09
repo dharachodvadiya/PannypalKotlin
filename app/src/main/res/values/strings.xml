@@ -75,4 +75,5 @@
     <string name="delete_payment">Delete Payment</string>
     <string name="delete_payment_text1">About to delete payment : </string>
     <string name="delete_payment_text2">If this method has been used for transactions, it will be change by selected alternative method.</string>
+    <string name="select_payment">Select Payment</string>
 </resources>

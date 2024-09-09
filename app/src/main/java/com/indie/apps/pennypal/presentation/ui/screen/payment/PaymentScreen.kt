@@ -51,7 +51,6 @@ fun PaymentScreen(
     isEditSuccess: Boolean = false,
     onEditPaymentClick: (Long) -> Unit,
     onAddPaymentClick: () -> Unit,
-    onDeletePaymentClick: (PaymentWithIdName) -> Unit,
     paymentId: Long = 0L,
     onModeChange: (Boolean) -> Unit
 ) {
@@ -206,9 +205,9 @@ fun PaymentScreen(
                         editAnimPaymentId = editedPaymentId,
                         editAnimRun = editAnimRun,
                         onDeleteClick = {
-                            //deletePaymentId = it
-                            //openDeleteDialog = true
-                            onDeletePaymentClick(it.toPaymentWithIdName())
+                            deletePaymentId = it.id
+                            openDeleteDialog = true
+                            //onDeletePaymentClick(it.toPaymentWithIdName())
                         }
                     )
                 }
@@ -258,8 +257,7 @@ private fun PaymentScreenPreview() {
         PaymentScreen(
             onModeChange = {},
             onEditPaymentClick = {},
-            onAddPaymentClick = {},
-            onDeletePaymentClick = {}
+            onAddPaymentClick = {}
         )
     }
 }

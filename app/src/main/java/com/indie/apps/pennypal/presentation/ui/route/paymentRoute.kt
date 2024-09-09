@@ -48,14 +48,6 @@ fun NavGraphBuilder.paymentRoute(
                 },
                 onAddPaymentClick = {
                     navController.navigate(DialogNav.ADD_EDIT_PAYMENT.route)
-                },
-                onDeletePaymentClick = {
-                    navController.navigate(DialogNav.DELETE_PAYMENT.route)
-
-                    navController.currentBackStackEntry
-                        ?.savedStateHandle
-                        ?.set(Util.SAVE_STATE_PAYMENT_ID_NAME_DATA, Gson().toJson(it))
-
                 }
             )
         }

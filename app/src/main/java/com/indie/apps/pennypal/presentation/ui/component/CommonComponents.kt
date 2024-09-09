@@ -4,6 +4,8 @@ import android.content.Context
 import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -34,6 +36,8 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -48,13 +52,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
+import com.indie.apps.pennypal.data.module.PaymentWithMode
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.MyAppTextField
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.SearchView
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.TopBar
+import com.indie.apps.pennypal.presentation.ui.screen.payment.AccountHeadingItem
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
+import com.indie.apps.pennypal.util.Util
+import kotlinx.coroutines.launch
 
 @Composable
 fun TopBarWithTitle(
@@ -409,6 +417,108 @@ fun AccountItem(
                 contentDescription = "delete",
                 modifier = Modifier.clickable { onDeleteClick() }
             )
+        }
+    }
+}
+
+@Composable
+fun AccountTypeItem(
+    @StringRes titleId: Int,
+    defaultPaymentId: Long,
+    editAnimPaymentId: Long = 0L,
+    editAnimRun: Boolean = false,
+    isEditMode: Boolean = false,
+    isEditable: Boolean = false,
+    dataList: List<PaymentWithMode>,
+    onSelect: (Long) -> Unit = {},
+    onEditClick: (Long) -> Unit = {},
+    onDeleteClick: (PaymentWithMode) -> Unit = {},
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .animateContentSize()
+            .padding(horizontal = dimensionResource(id = R.dimen.padding))
+    ) {
+        val scope = rememberCoroutineScope()
+        val baseColor = MyAppTheme.colors.itemBg
+        val targetAnimColor = MyAppTheme.colors.lightBlue1
+
+        AccountHeadingItem(titleId)
+        Column(
+            modifier = modifier
+                .fillMaxWidth()
+                .background(
+                    shape = RoundedCornerShape(dimensionResource(id = R.dimen.round_corner)),
+                    color = MyAppTheme.colors.itemBg
+                )
+                .padding(dimensionResource(id = R.dimen.padding))
+        ) {
+
+            dataList.forEach() { item ->
+
+                val itemAnimateColor = remember {
+                    androidx.compose.animation.Animatable(baseColor)
+                }
+                val modifierColor = if (editAnimPaymentId == item.id && editAnimRun) {
+
+                    scope.launch {
+                        itemAnimateColor.animateTo(
+                            targetValue = targetAnimColor,
+                            animationSpec = tween(Util.EDIT_ITEM_ANIM_TIME)
+                        )
+                        itemAnimateColor.animateTo(
+                            targetValue = baseColor,
+                            animationSpec = tween(Util.EDIT_ITEM_ANIM_TIME)
+                        )
+                    }
+                    modifier.background(itemAnimateColor.value)
+                } else {
+                    Modifier
+                }
+
+                val id = when (item.modeName) {
+                    "Bank" -> {
+                        R.drawable.ic_bank
+                    }
+
+                    "Cash" -> {
+                        R.drawable.ic_cash
+                    }
+
+                    "Card" -> {
+                        R.drawable.ic_card
+                    }
+
+                    "Cheque" -> {
+                        R.drawable.ic_cheque
+                    }
+
+                    "Net-banking" -> {
+                        R.drawable.ic_net_banking
+                    }
+
+                    "Upi" -> {
+                        R.drawable.ic_upi
+                    }
+
+                    else -> {
+                        R.drawable.ic_payment
+                    }
+                }
+                AccountItem(
+                    isSelected = item.id == defaultPaymentId,
+                    isEditMode = isEditMode,
+                    name = item.name,
+                    symbolId = id,
+                    isEditable = (item.preAdded == 0 && isEditable),
+                    onSelect = { onSelect(item.id) },
+                    onDeleteClick = { onDeleteClick(item) },
+                    onEditClick = { onEditClick(item.id) },
+                    modifier = modifierColor
+                )
+            }
         }
     }
 }

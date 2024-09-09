@@ -11,7 +11,7 @@ enum class DialogNav(val route: String) {
     ADD_EDIT_PAYMENT("Dialog/AddEditPayment"),
     COUNTRY_PICKER("Dialog/CountryCodePicker"),
     CONTACT_PICKER("Dialog/ContactPicker"),
-    DELETE_PAYMENT("Dialog/DeletePayment"),
+    SELECT_PAYMENT("Dialog/SelectPayment"),
 }
 
 enum class ScreenNav(val route: String) {
