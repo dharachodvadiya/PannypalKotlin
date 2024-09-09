@@ -72,4 +72,7 @@
     <string name="confirm">Confirm</string>
     <string name="dismiss">Dismiss</string>
     <string name="payment_edit_success_toast">Payment Edit Successfully</string>
+    <string name="delete_payment">Delete Payment</string>
+    <string name="delete_payment_text1">About to delete payment : </string>
+    <string name="delete_payment_text2">If this method has been used for transactions, it will be change by selected alternative method.</string>
 </resources>

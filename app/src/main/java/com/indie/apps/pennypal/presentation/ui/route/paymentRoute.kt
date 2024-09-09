@@ -6,6 +6,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.google.gson.Gson
 import com.indie.apps.pennypal.presentation.ui.navigation.BottomNavItem
 import com.indie.apps.pennypal.presentation.ui.navigation.DialogNav
 import com.indie.apps.pennypal.presentation.ui.navigation.ScreenNav
@@ -47,6 +48,14 @@ fun NavGraphBuilder.paymentRoute(
                 },
                 onAddPaymentClick = {
                     navController.navigate(DialogNav.ADD_EDIT_PAYMENT.route)
+                },
+                onDeletePaymentClick = {
+                    navController.navigate(DialogNav.DELETE_PAYMENT.route)
+
+                    navController.currentBackStackEntry
+                        ?.savedStateHandle
+                        ?.set(Util.SAVE_STATE_PAYMENT_ID_NAME_DATA, Gson().toJson(it))
+
                 }
             )
         }

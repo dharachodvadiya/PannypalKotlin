@@ -9,6 +9,7 @@ import com.indie.apps.pennypal.data.module.MerchantDataWithNameWithDayTotal
 import com.indie.apps.pennypal.data.module.MerchantDataWithPaymentName
 
 interface MerchantDataRepository : BaseRepository<MerchantData> {
+    suspend fun updateMerchantDataPaymentId(oldPaymentId: Long, newPaymentId: Long): Int
 
     suspend fun deleteMerchantDataWithId(id: Long): Int
 

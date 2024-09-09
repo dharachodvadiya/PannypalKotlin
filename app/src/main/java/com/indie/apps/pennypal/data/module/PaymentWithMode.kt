@@ -1,11 +1,5 @@
 package com.indie.apps.pennypal.data.module
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.Index
-import androidx.room.PrimaryKey
-
 data class PaymentWithMode(
     val id: Long = 0,
 
@@ -17,3 +11,5 @@ data class PaymentWithMode(
 
     val modeName: String
 )
+
+fun PaymentWithMode.toPaymentWithIdName() = PaymentWithIdName(id, name)

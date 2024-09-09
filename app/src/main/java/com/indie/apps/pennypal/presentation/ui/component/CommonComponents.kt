@@ -2,9 +2,12 @@ package com.indie.apps.pennypal.presentation.ui.component
 
 import android.content.Context
 import android.widget.Toast
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,11 +23,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PersonOutline
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -131,6 +137,7 @@ fun UserProfile(
 
 @Composable
 fun BottomSaveButton(
+    @StringRes textId : Int = R.string.save,
     onClick: () -> Unit,
     enabled: Boolean = true,
     modifier: Modifier = Modifier
@@ -145,7 +152,7 @@ fun BottomSaveButton(
         enabled = enabled
     ) {
         Text(
-            text = stringResource(id = R.string.save),
+            text = stringResource(id = textId),
             style = MyAppTheme.typography.Bold49_5,
             color = MyAppTheme.colors.black,
             textAlign = TextAlign.Center,
@@ -349,6 +356,59 @@ fun NoDataMessage(
                 textAlign = TextAlign.Center
             )
 
+        }
+    }
+}
+
+@Composable
+fun AccountItem(
+    isSelected: Boolean,
+    isEditMode: Boolean,
+    isEditable: Boolean,
+    name: String,
+    onSelect: ()->Unit,
+    onEditClick: ()-> Unit,
+    onDeleteClick: ()-> Unit,
+    @DrawableRes symbolId: Int,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .height(40.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.item_padding))
+    ) {
+        if (isEditMode)
+            RadioButton(selected = isSelected, onClick = onSelect)
+        Icon(
+            painter = painterResource(symbolId),
+            contentDescription = "bank",
+            tint = MyAppTheme.colors.lightBlue1,
+            modifier = Modifier.size(dimensionResource(id = R.dimen.small_icon_size))
+        )
+        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.item_padding)))
+        Text(
+            text = name,
+            style = MyAppTheme.typography.Semibold52_5,
+            color = MyAppTheme.colors.black
+        )
+
+        if (isEditMode && isEditable) {
+            Spacer(modifier = Modifier.weight(1f))
+
+            Icon(
+                imageVector = Icons.Default.Edit,
+                contentDescription = "edit",
+                modifier = Modifier.clickable { onEditClick() }
+            )
+
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.item_padding)))
+
+            Icon(
+                imageVector = Icons.Default.Delete,
+                contentDescription = "delete",
+                modifier = Modifier.clickable { onDeleteClick() }
+            )
         }
     }
 }

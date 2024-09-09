@@ -20,6 +20,10 @@ interface MerchantDataDao : BaseDao<MerchantData> {
     //get data
 
     @Transaction
+    @Query("UPDATE merchant_data SET payment_id = :newPaymentId WHERE payment_id = :oldPaymentId")
+    suspend fun updateMerchantDataPaymentId(oldPaymentId: Long, newPaymentId: Long): Int
+
+    @Transaction
     @Query("delete from merchant_data where id = :id")
     suspend fun deleteMerchantDataWithId(id: Long): Int
 

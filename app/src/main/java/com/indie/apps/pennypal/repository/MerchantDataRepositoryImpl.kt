@@ -6,6 +6,8 @@ import javax.inject.Inject
 
 class MerchantDataRepositoryImpl @Inject constructor(private val merchantDataDao: MerchantDataDao) :
     MerchantDataRepository {
+    override suspend fun updateMerchantDataPaymentId(oldPaymentId: Long, newPaymentId: Long) =
+        merchantDataDao.updateMerchantDataPaymentId(oldPaymentId, newPaymentId)
 
     override suspend fun deleteMerchantDataWithId(id: Long): Int =
         merchantDataDao.deleteMerchantDataWithId(id)

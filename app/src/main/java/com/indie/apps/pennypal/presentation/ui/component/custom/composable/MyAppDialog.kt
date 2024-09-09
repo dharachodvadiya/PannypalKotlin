@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -70,12 +71,15 @@ fun MyAppDialog(
                     onNavigationUp()
                 }
             )
+            val spaceModifier = if (isFixHeight) Modifier.weight(1f) else Modifier
 
-            content()
-
+            Column(modifier = spaceModifier){
+                content()
+            }
+/*
             if (isFixHeight) {
                 Spacer(modifier = Modifier.weight(1f))
-            }
+            }*/
             if (bottomContent != null) {
                 bottomContent()
             }

@@ -19,14 +19,16 @@ import com.google.gson.Gson
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.entity.toMerchantNameAndDetails
 import com.indie.apps.pennypal.data.module.ContactNumberAndCode
+import com.indie.apps.pennypal.data.module.PaymentWithIdName
+import com.indie.apps.pennypal.presentation.ui.component.navigation.BottomNavigationBarCustom1
 import com.indie.apps.pennypal.presentation.ui.component.showToast
 import com.indie.apps.pennypal.presentation.ui.dialog.add_edit_merchant.DialogAddMerchant
 import com.indie.apps.pennypal.presentation.ui.dialog.add_edit_payment.DialogAddPayment
+import com.indie.apps.pennypal.presentation.ui.dialog.contact_picker.DialogContactPicker
 import com.indie.apps.pennypal.presentation.ui.dialog.country_picker.DialogCountryPicker
+import com.indie.apps.pennypal.presentation.ui.dialog.delete_payment.DialogDeletePayment
 import com.indie.apps.pennypal.presentation.ui.dialog.search_merchant.DialogSearchMerchant
 import com.indie.apps.pennypal.presentation.ui.navigation.BottomNavItem
-import com.indie.apps.pennypal.presentation.ui.component.navigation.BottomNavigationBarCustom1
-import com.indie.apps.pennypal.presentation.ui.dialog.contact_picker.DialogContactPicker
 import com.indie.apps.pennypal.presentation.ui.navigation.DialogNav
 import com.indie.apps.pennypal.presentation.ui.navigation.ScreenNav
 import com.indie.apps.pennypal.presentation.ui.route.merchantRoute
@@ -252,6 +254,32 @@ fun PennyPalApp() {
                             navController.popBackStack()
                         }
                     )
+                }
+                dialog(
+                    route = DialogNav.DELETE_PAYMENT.route,
+                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
+                ) { backStackEntry ->
+
+                    val gsonStringPayment: String? = backStackEntry
+                        .savedStateHandle
+                        .get<String>(Util.SAVE_STATE_PAYMENT_ID_NAME_DATA)
+
+                    val payment: PaymentWithIdName? =
+                        if (gsonStringPayment != null) {
+                            Gson().fromJson(gsonStringPayment, PaymentWithIdName::class.java)
+                        } else null
+
+                    if (payment != null) {
+                        DialogDeletePayment(
+                            onNavigationUp = { navController.navigateUp() },
+                            onDeleteSuccess = { deleteId ->
+                                // Pass data back to A
+                                navController.popBackStack()
+                            },
+                            paymentData = payment
+                        )
+                    }
+
                 }
             }
 

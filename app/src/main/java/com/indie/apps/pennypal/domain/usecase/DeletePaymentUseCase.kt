@@ -1,6 +1,7 @@
 package com.indie.apps.pennypal.domain.usecase
 
 import com.indie.apps.pennypal.di.IoDispatcher
+import com.indie.apps.pennypal.repository.MerchantDataRepository
 import com.indie.apps.pennypal.repository.PaymentRepository
 import com.indie.apps.pennypal.repository.UserRepository
 import com.indie.apps.pennypal.util.Resource
@@ -15,19 +16,21 @@ import javax.inject.Inject
 class DeletePaymentUseCase @Inject constructor(
     private val paymentRepository: PaymentRepository,
     private val userRepository: UserRepository,
+    private val merchantDataRepository: MerchantDataRepository,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) {
 
-    suspend fun deleteData(paymentId: Long): Flow<Resource<Int>> {
+    suspend fun deleteData(deleteId: Long, replaceId: Long): Flow<Resource<Int>> {
         return flow {
             try {
                 emit(Resource.Loading())
                 val user = userRepository
                     .getUser().first()
-                if (user.paymentId == paymentId) {
+                if (user.paymentId == deleteId) {
                     userRepository.updateWithDefaultPayment()
                 }
-                val id = paymentRepository.deleteCustomPayment(paymentId)
+                merchantDataRepository.updateMerchantDataPaymentId(deleteId, replaceId)
+                val id = paymentRepository.deleteCustomPayment(deleteId)
                 if (id > 0) {
                     emit(Resource.Success(id))
                 } else {

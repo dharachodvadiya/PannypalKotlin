@@ -33,6 +33,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.indie.apps.pennypal.R
+import com.indie.apps.pennypal.data.entity.Payment
+import com.indie.apps.pennypal.data.module.PaymentWithIdName
+import com.indie.apps.pennypal.data.module.toPaymentWithIdName
 import com.indie.apps.pennypal.presentation.ui.component.BottomSaveButton
 import com.indie.apps.pennypal.presentation.ui.component.DeleteAlertDialog
 import com.indie.apps.pennypal.presentation.ui.component.TopBarWithTitle
@@ -48,6 +51,7 @@ fun PaymentScreen(
     isEditSuccess: Boolean = false,
     onEditPaymentClick: (Long) -> Unit,
     onAddPaymentClick: () -> Unit,
+    onDeletePaymentClick: (PaymentWithIdName) -> Unit,
     paymentId: Long = 0L,
     onModeChange: (Boolean) -> Unit
 ) {
@@ -69,10 +73,10 @@ fun PaymentScreen(
     LaunchedEffect(Unit) {
         onModeChange(false)
     }
-    val context = LocalContext.current
-    val paymentDeleteToast = stringResource(id = R.string.payment_delete_success_message)
-    var openDeleteDialog by remember { mutableStateOf(false) }
-    var deletePaymentId by remember { mutableLongStateOf(0) }
+    //val context = LocalContext.current
+    //val paymentDeleteToast = stringResource(id = R.string.payment_delete_success_message)
+    //var openDeleteDialog by remember { mutableStateOf(false) }
+    //var deletePaymentId by remember { mutableLongStateOf(0) }
 
     val editAnimRun by paymentViewModel.editAnimRun.collectAsStateWithLifecycle()
 
@@ -169,39 +173,45 @@ fun PaymentScreen(
                 item.modeName == "Cash"
             }
 
-            userData?.let {
-                AccountBankItem(
-                    isEditMode = isEditMode,
-                    dataList = bankList,
-                    defaultPaymentId = defaultPaymentId,
-                    onSelect = {
-                        defaultPaymentId = it
-                    },
-                    onEditClick = onEditPaymentClick,
-                    editAnimPaymentId = editedPaymentId,
-                    editAnimRun = editAnimRun,
-                    onDeleteClick = {
-                        deletePaymentId = it
-                        openDeleteDialog = true
-                    }
-                )
-            }
-            userData?.let {
-                AccountCashItem(
-                    isEditMode = isEditMode,
-                    dataList = cashList,
-                    defaultPaymentId = defaultPaymentId,
-                    onSelect = {
-                        defaultPaymentId = it
-                    },
-                    onEditClick = {},
-                    editAnimPaymentId = editedPaymentId,
-                    editAnimRun = editAnimRun,
-                    onDeleteClick = {
-                        deletePaymentId = it
-                        openDeleteDialog = true
-                    }
-                )
+            if(userData != null)
+            {
+                if(bankList.isNotEmpty()){
+                    AccountBankItem(
+                        isEditMode = isEditMode,
+                        dataList = bankList,
+                        defaultPaymentId = defaultPaymentId,
+                        onSelect = {
+                            defaultPaymentId = it
+                        },
+                        onEditClick = onEditPaymentClick,
+                        editAnimPaymentId = editedPaymentId,
+                        editAnimRun = editAnimRun,
+                        onDeleteClick = {
+                            //deletePaymentId = it
+                            //openDeleteDialog = true
+                            onDeletePaymentClick(it.toPaymentWithIdName())
+                        }
+                    )
+                }
+
+                if(cashList.isNotEmpty()){
+                    AccountCashItem(
+                        isEditMode = isEditMode,
+                        dataList = cashList,
+                        defaultPaymentId = defaultPaymentId,
+                        onSelect = {
+                            defaultPaymentId = it
+                        },
+                        onEditClick = {},
+                        editAnimPaymentId = editedPaymentId,
+                        editAnimRun = editAnimRun,
+                        onDeleteClick = {
+                            //deletePaymentId = it
+                            //openDeleteDialog = true
+                            onDeletePaymentClick(it.toPaymentWithIdName())
+                        }
+                    )
+                }
             }
 
             if (isEditMode) {
@@ -217,7 +227,7 @@ fun PaymentScreen(
             }
         }
 
-        if (openDeleteDialog) {
+       /* if (openDeleteDialog) {
             DeleteAlertDialog(
                 dialogTitle = R.string.delete_dialog_title,
                 dialogText = R.string.delete_payment_dialog_text,
@@ -236,7 +246,7 @@ fun PaymentScreen(
                     deletePaymentId = 0
                 }
             )
-        }
+        }*/
 
     }
 }
@@ -248,7 +258,8 @@ private fun PaymentScreenPreview() {
         PaymentScreen(
             onModeChange = {},
             onEditPaymentClick = {},
-            onAddPaymentClick = {}
+            onAddPaymentClick = {},
+            onDeletePaymentClick = {}
         )
     }
 }
