@@ -23,8 +23,8 @@ object ErrorMessage {
     const val AMOUNT_EMPTY = "Enter Amount"
     const val AMOUNT_PAYMENT_TYPE = "Enter Payment Type"
 
-    const val MERCHANT_EXIST = "Merchant Already Exist"
-    const val PAYMENT_TYPE_EXIST = "Payment Type Exist"
+    const val MERCHANT_EXIST = "Merchant Name Already Used"
+    const val PAYMENT_TYPE_EXIST = "Payment Name Already Used"
     const val PHONE_NO_INVALID = "Enter Valid Phone Number"
     const val SELECT_MERCHANT = "Select Merchant"
     const val SELECT_PAYMENT = "Select Payment"

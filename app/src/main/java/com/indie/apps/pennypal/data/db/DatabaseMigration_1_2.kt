@@ -37,7 +37,8 @@ fun updateUserTable(database: SupportSQLiteDatabase)
 fun updatePaymentTypeTable(database: SupportSQLiteDatabase)
 {
     // Add the foreign key column to payment_type table
-    database.execSQL("ALTER TABLE payment_type ADD COLUMN mode_id INTEGER NOT NULL DEFAULT 1, soft_delete INTEGER NOT NULL DEFAULT 0")
+    database.execSQL("ALTER TABLE payment_type ADD COLUMN mode_id INTEGER NOT NULL DEFAULT 1")
+    database.execSQL("ALTER TABLE payment_type ADD COLUMN soft_delete INTEGER NOT NULL DEFAULT 0")
     // Add foreign key constraint
     database.execSQL("CREATE TABLE IF NOT EXISTS `payment_type_new` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL COLLATE NOCASE, `pre_added` INTEGER NOT NULL, `soft_delete` INTEGER NOT NULL,  `mode_id` INTEGER NOT NULL, FOREIGN KEY(`mode_id`) REFERENCES `payment_mode`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )");
     database.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_payment_type_name` ON `payment_type_new` (`name`)");
