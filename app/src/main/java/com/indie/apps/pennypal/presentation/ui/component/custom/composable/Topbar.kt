@@ -1,11 +1,11 @@
 package com.indie.apps.pennypal.presentation.ui.component.custom.composable
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -29,7 +29,7 @@ fun TopBar(
     leadingContent: @Composable (() -> Unit)? = null,
     content: @Composable (() -> Unit)? = null,
     trailingContent: @Composable (() -> Unit)? = null,
-    modifier: Modifier = Modifier,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
     isBackEnable: Boolean = true,
     contentAlignment: Alignment = Alignment.CenterStart,
     bgColor: Color = MyAppTheme.colors.transparent
@@ -45,7 +45,8 @@ fun TopBar(
     ) {
         var rightPadding = 0.dp
         if (isBackEnable) {
-            rightPadding = if (contentAlignment == Alignment.Center) (24.dp + dimensionResource(id = R.dimen.padding)) else 0.dp
+            rightPadding =
+                if (contentAlignment == Alignment.Center) (24.dp + dimensionResource(id = R.dimen.padding)) else 0.dp
             Icon(
                 Icons.AutoMirrored.Filled.ArrowBack,
                 contentDescription = "Back",
@@ -74,44 +75,44 @@ fun TopBar(
 
     }
 
-   /* Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(bgColor)
-            .height(dimensionResource(R.dimen.top_bar))
-            .padding(horizontal = dimensionResource(R.dimen.padding)),
-        contentAlignment = contentAlignment
-    )
-    {
-        if (content != null)
-            content()
+    /* Box(
+         modifier = modifier
+             .fillMaxWidth()
+             .background(bgColor)
+             .height(dimensionResource(R.dimen.top_bar))
+             .padding(horizontal = dimensionResource(R.dimen.padding)),
+         contentAlignment = contentAlignment
+     )
+     {
+         if (content != null)
+             content()
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = modifier
-                .matchParentSize(),
-            horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding))
-        ){
-            if (isBackEnable) {
-                Icon(
-                    Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Back",
-                    modifier = Modifier.clickable {
-                        onBackClick()
-                    })
-            }
+         Row(
+             verticalAlignment = Alignment.CenterVertically,
+             modifier = modifier
+                 .matchParentSize(),
+             horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding))
+         ){
+             if (isBackEnable) {
+                 Icon(
+                     Icons.AutoMirrored.Filled.ArrowBack,
+                     contentDescription = "Back",
+                     modifier = Modifier.clickable {
+                         onBackClick()
+                     })
+             }
 
-            if (leadingContent != null) {
-                leadingContent()
-            }
+             if (leadingContent != null) {
+                 leadingContent()
+             }
 
-            Spacer(modifier = Modifier.weight(1f))
+             Spacer(modifier = Modifier.weight(1f))
 
-            if (trailingContent != null) {
-                trailingContent()
-            }
-        }
-    }*/
+             if (trailingContent != null) {
+                 trailingContent()
+             }
+         }
+     }*/
 }
 
 @Preview
