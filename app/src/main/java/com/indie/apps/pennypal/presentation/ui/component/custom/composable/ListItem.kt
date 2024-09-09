@@ -24,6 +24,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
+import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -43,8 +44,8 @@ fun ListItem(
     itemBgColor : Color = MyAppTheme.colors.itemBg
 ) {
     val bgColor = if (isSelected) MyAppTheme.colors.itemSelectedBg else itemBgColor
-    val shape = RoundedCornerShape(dimensionResource(R.dimen.round_corner))
-    Surface(
+    //val shape = RoundedCornerShape(dimensionResource(R.dimen.round_corner))
+    /*Surface(
         modifier = modifier
             .shadow(0.dp, shape, clip = false)
             .clip(shape)
@@ -101,5 +102,57 @@ fun ListItem(
             }
 
         }
+    }*/
+
+    Row(
+        modifier = modifier
+            .roundedCornerBackground(bgColor)
+            //.background(bgColor)
+            .combinedClickable(
+                onClick = onClick,
+                onLongClick = onLongClick,
+                enabled = isClickable,
+                role = Role.Button
+            )
+            .padding(paddingValues)
+            .padding(dimensionResource(id = R.dimen.item_inner_padding)),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        if (leadingIcon != null) {
+            leadingIcon()
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.item_content_padding)))
+        }
+        if (isSetDivider) {
+            val colorDivider = MyAppTheme.colors.gray1
+            Row(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 0.dp, bottom = 7.dp, top = 7.dp, end = 0.dp)
+                    .drawBehind {
+                        drawLine(
+                            colorDivider,
+                            Offset(0f, size.height + 20),
+                            Offset(size.width, size.height + 20),
+                            dividerWidth
+                        )
+                    },
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(modifier = Modifier.weight(1f)) {
+                    content()
+                }
+                if (trailingContent != null) {
+                    trailingContent()
+                }
+            }
+        } else {
+            Box(modifier = Modifier.weight(1f)) {
+                content()
+            }
+            if (trailingContent != null) {
+                trailingContent()
+            }
+        }
+
     }
 }

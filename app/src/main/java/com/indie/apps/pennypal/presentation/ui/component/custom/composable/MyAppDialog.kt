@@ -26,6 +26,7 @@ import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.presentation.ui.component.BottomSaveButton
 import com.indie.apps.pennypal.presentation.ui.component.DialogTextFieldItem
 import com.indie.apps.pennypal.presentation.ui.component.TopBarWithTitle
+import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 
@@ -105,6 +106,7 @@ private fun DialogTopBar(
                     imageVector = Icons.Default.Close,
                     contentDescription = "close",
                     modifier = Modifier
+                        .roundedCornerBackground(MyAppTheme.colors.transparent)
                         .clickable {
                             onNavigationUp()
                         })

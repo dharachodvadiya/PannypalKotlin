@@ -25,6 +25,7 @@ import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.presentation.PennyPalApp
 import com.indie.apps.pennypal.presentation.ui.component.DialogTextFieldItem
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
+import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
@@ -69,7 +70,9 @@ fun AddMerchantDialogField(
 
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.clickable { onCpp() }
+                    modifier = Modifier
+                        .roundedCornerBackground(MyAppTheme.colors.transparent)
+                        .clickable { onCpp() }
                 ) {
                     Text(text = countryCode)
                     Spacer(modifier = Modifier.width(5.dp))

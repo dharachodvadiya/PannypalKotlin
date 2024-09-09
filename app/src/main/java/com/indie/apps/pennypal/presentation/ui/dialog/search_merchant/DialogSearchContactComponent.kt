@@ -71,7 +71,7 @@ fun SearchDialogField(
             onTextChange = onTextChange,
             trailingContent = {
                 PrimaryButton(
-                    bgColor = MyAppTheme.colors.transparent,
+                    bgColor = MyAppTheme.colors.white,
                     borderStroke = BorderStroke(
                         width = 1.dp,
                         color = MyAppTheme.colors.gray2

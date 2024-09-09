@@ -37,6 +37,7 @@ import com.indie.apps.pennypal.presentation.ui.component.custom.composable.Prima
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.SearchView
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.TopBar
+import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
@@ -89,6 +90,7 @@ fun MerchantTopBar(
                             contentDescription = "Delete",
                             tint = MyAppTheme.colors.black,
                             modifier = Modifier
+                                .roundedCornerBackground(MyAppTheme.colors.transparent)
                                 .size(25.dp)
                                 .clickable { onDeleteClick() }
                         )
@@ -100,6 +102,7 @@ fun MerchantTopBar(
                             contentDescription = "edit",
                             tint = MyAppTheme.colors.black,
                             modifier = Modifier
+                                .roundedCornerBackground(MyAppTheme.colors.transparent)
                                 .size(25.dp)
                                 .clickable { onEditClick() }
                         )

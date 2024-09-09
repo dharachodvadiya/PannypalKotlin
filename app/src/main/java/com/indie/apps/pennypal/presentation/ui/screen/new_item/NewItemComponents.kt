@@ -37,6 +37,7 @@ import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.presentation.ui.component.TextFieldError
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.MyAppTextField
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
+import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
@@ -142,19 +143,21 @@ fun NewEntryFieldItemSection(
             placeholder = R.string.add_merchant_placeholder,
             isSelectable = !isMerchantLock,
             trailingContent = {
-                PrimaryButton(
-                    bgColor = MyAppTheme.colors.white,
-                    borderStroke = BorderStroke(
-                        width = 1.dp,
-                        color = MyAppTheme.colors.gray1
-                    ),
-                    onClick = onMerchantSelect,
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.PersonAddAlt1,
-                        contentDescription = "Add",
-                        tint = MyAppTheme.colors.gray1
-                    )
+                if (!isMerchantLock) {
+                    PrimaryButton(
+                        bgColor = MyAppTheme.colors.white,
+                        borderStroke = BorderStroke(
+                            width = 1.dp,
+                            color = MyAppTheme.colors.gray1
+                        ),
+                        onClick = onMerchantSelect,
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.PersonAddAlt1,
+                            contentDescription = "Add",
+                            tint = MyAppTheme.colors.gray1
+                        )
+                    }
                 }
             }
         )
@@ -184,6 +187,7 @@ fun NewEntryFieldItemSection(
                     tint = MyAppTheme.colors.gray1,
                     modifier = Modifier
                         .padding(horizontal = dimensionResource(id = R.dimen.item_inner_padding))
+                        .roundedCornerBackground(MyAppTheme.colors.transparent)
                         .clickable {
                             onPaymentSelect()
                         }
@@ -241,12 +245,13 @@ fun NewEntrySelectableItem(
         Row(
             modifier = Modifier
                 .padding(vertical = 5.dp)
+                .roundedCornerBackground(MyAppTheme.colors.itemBg)
                 .clickable(enabled = isSelectable) { onClick() }
                 .height(dimensionResource(id = R.dimen.new_entry_field_height))
-                .background(
+                /*.background(
                     shape = RoundedCornerShape(dimensionResource(id = R.dimen.round_corner)),
                     color = MyAppTheme.colors.itemBg
-                )
+                )*/
                 .padding(
                     top = 0.dp,
                     bottom = 0.dp,

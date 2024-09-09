@@ -51,6 +51,7 @@ import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListI
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.TopBar
+import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.util.Util
@@ -123,7 +124,9 @@ private fun MerchantDataTopBarItem(
                 Icon(
                     imageVector = Icons.Default.Close,
                     contentDescription = "Close",
-                    modifier = Modifier.clickable {
+                    modifier = Modifier
+                        .roundedCornerBackground(MyAppTheme.colors.transparent)
+                        .clickable {
                         onCloseClick()
                     }
                 )
@@ -243,9 +246,10 @@ fun MerchantDataIncomeAmount(
 
     Row(
         modifier = modifier
-            .background(bgColor)
-            .padding(vertical = 2.dp)
-            .clip(RoundedCornerShape(dimensionResource(R.dimen.round_corner)))
+            .roundedCornerBackground(bgColor)
+            //.background(bgColor)
+           // .padding(vertical = 2.dp)
+            //.clip(RoundedCornerShape(dimensionResource(R.dimen.round_corner)))
             .fillMaxWidth()
             .combinedClickable(
                 onClick = onClick,
@@ -283,10 +287,11 @@ fun MerchantDataExpenseAmount(
 
     Row(
         modifier = modifier
-            .background(bgColor)
+            .roundedCornerBackground(bgColor)
+            //.background(bgColor)
             .fillMaxWidth()
-            .padding(vertical = 2.dp)
-            .clip(RoundedCornerShape(dimensionResource(R.dimen.round_corner)))
+            //.padding(vertical = 2.dp)
+            //.clip(RoundedCornerShape(dimensionResource(R.dimen.round_corner)))
             .combinedClickable(
                 onClick = onClick,
                 onLongClick = onLongClick,
@@ -361,7 +366,7 @@ private fun MerchantDataAmountItem(
     colorStroke: Color = MyAppTheme.colors.black,
     itemBgColor: Color
 ) {
-    Surface(
+    /*Surface(
         modifier = modifier
             .padding(horizontal = dimensionResource(id = R.dimen.padding))
             .widthIn(min = 150.dp, max = 250.dp),
@@ -406,6 +411,47 @@ private fun MerchantDataAmountItem(
             }
 
         }
+    }*/
+
+    Column(
+        modifier = modifier
+            .padding(horizontal = dimensionResource(id = R.dimen.padding))
+            .widthIn(min = 150.dp, max = 250.dp)
+            .roundedCornerBackground(itemBgColor)
+            .drawBehind {
+                drawLine(
+                    colorStroke,
+                    Offset(0f, size.height),
+                    Offset(size.width, size.height),
+                    25f
+                )
+            }
+            .padding(10.dp),
+        //.padding(horizontal = 10.dp),
+        horizontalAlignment = contentAlignment
+    ) {
+        AutoSizeText(
+            text = Util.getFormattedStringWithSymbol(amount),
+            style = MyAppTheme.typography.Regular51,
+            color = MyAppTheme.colors.black,
+            maxLines = 2,
+        )
+        Text(
+            text = "${stringResource(R.string.by)} $paymentName",
+            style = MyAppTheme.typography.Medium34,
+            color = MyAppTheme.colors.gray0,
+            maxLines = 1,
+        )
+        if (!description.isNullOrEmpty()) {
+            Text(
+                text = description,
+                style = MyAppTheme.typography.Medium34,
+                color = MyAppTheme.colors.gray2,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+
     }
 }
 
@@ -489,7 +535,8 @@ private fun MerchantDataTotalIncomeExpense(
     Box(
         modifier = modifier
             .height(dimensionResource(id = R.dimen.top_bar_profile))
-            .background(
+            .roundedCornerBackground(MyAppTheme.colors.transparent, BorderStroke(2.dp, strokeColor))
+           /* .background(
                 shape = RoundedCornerShape(dimensionResource(id = R.dimen.round_corner)),
                 color = MyAppTheme.colors.transparent
             )
@@ -497,7 +544,7 @@ private fun MerchantDataTotalIncomeExpense(
                 width = 2.dp,
                 color = strokeColor,
                 shape = RoundedCornerShape(dimensionResource(id = R.dimen.round_corner)),
-            ),
+            )*/,
         contentAlignment = Alignment.Center
     ) {
         AutoSizeText(

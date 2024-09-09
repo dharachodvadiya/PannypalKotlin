@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.indie.apps.cpp.data.model.Country
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.presentation.ui.component.DialogSearchView
+import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 
@@ -85,6 +86,7 @@ private fun SearchCppListItem(
 ) {
     Row(
         modifier = modifier
+            .roundedCornerBackground(MyAppTheme.colors.transparent)
             .clickable {
                 onClick(country)
             }
@@ -125,6 +127,7 @@ private fun SearchCurrencyCppListItem(
 ) {
     Row(
         modifier = modifier
+            .roundedCornerBackground(MyAppTheme.colors.transparent)
             .clickable {
                 onClick(country)
             }

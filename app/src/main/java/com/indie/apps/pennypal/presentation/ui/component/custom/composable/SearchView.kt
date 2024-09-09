@@ -19,6 +19,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
+import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
@@ -34,8 +35,9 @@ fun SearchView(
 ) {
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(dimensionResource(R.dimen.round_corner)))
-            .background(bgColor)
+            .roundedCornerBackground(bgColor)
+            /*.clip(RoundedCornerShape(dimensionResource(R.dimen.round_corner)))
+            .background(bgColor)*/
     ) {
 
         MyAppTextField(
@@ -50,7 +52,9 @@ fun SearchView(
             trailingIcon = {
                 if (textState.text.isNotEmpty()) {
                     Icon(
-                        modifier = Modifier.clickable {
+                        modifier = Modifier
+                            .roundedCornerBackground(MyAppTheme.colors.transparent)
+                            .clickable {
                             if (textState.text.isNotEmpty()) {
                                 textState.text = ""
                                 onTextChange("")
@@ -62,7 +66,9 @@ fun SearchView(
 
                 } else if (trailingIcon != null) {
                     Icon(
-                        modifier = Modifier.clickable {
+                        modifier = Modifier
+                            .roundedCornerBackground(MyAppTheme.colors.transparent)
+                            .clickable {
                             if (textState.text.isNotEmpty()) {
                                 textState.text = ""
                                 onTextChange("")

@@ -39,6 +39,7 @@ import com.indie.apps.pennypal.presentation.ui.component.DeleteAlertDialog
 import com.indie.apps.pennypal.presentation.ui.component.TopBarWithTitle
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
+import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.component.showToast
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
@@ -129,6 +130,7 @@ fun PaymentScreen(
                             contentDescription = "edit",
                             tint = MyAppTheme.colors.black,
                             modifier = Modifier
+                                .roundedCornerBackground(MyAppTheme.colors.transparent)
                                 .size(25.dp)
                                 .clickable {
                                     paymentViewModel.setEditMode(true)

@@ -36,6 +36,7 @@ import com.indie.apps.pennypal.presentation.ui.component.UserProfile
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.AutoSizeText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
+import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.util.Util
 
@@ -60,7 +61,7 @@ fun ProfileTopSection(
         UserProfile()
         Spacer(modifier = Modifier.height(20.dp))
         Text(
-            text = "Balance",
+            text = stringResource(id = R.string.balance),
             style = MyAppTheme.typography.Semibold60,
             color = MyAppTheme.colors.gray1
         )
@@ -181,11 +182,12 @@ fun ProfileCurrencyItem(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = dimensionResource(id = R.dimen.padding))
+            .roundedCornerBackground(MyAppTheme.colors.bottomBg)
             .clickable(role = Role.Button) { onClick() }
-            .background(
+            /*.background(
                 shape = RoundedCornerShape(dimensionResource(id = R.dimen.round_corner)),
                 color = MyAppTheme.colors.bottomBg
-            )
+            )*/
             .padding(dimensionResource(id = R.dimen.padding)),
         verticalAlignment = Alignment.CenterVertically
     ) {

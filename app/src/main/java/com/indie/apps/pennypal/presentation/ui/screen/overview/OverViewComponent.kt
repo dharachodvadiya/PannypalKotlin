@@ -6,6 +6,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -35,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -59,6 +61,7 @@ import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListI
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.TopBar
+import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.util.Util
@@ -431,7 +434,7 @@ private fun OverviewTopBarProfile(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Surface(
+    /*Surface(
         onClick = onClick,
         modifier = modifier
             .semantics { role = Role.Button },
@@ -442,14 +445,15 @@ private fun OverviewTopBarProfile(
             contentAlignment = Alignment.Center,
             modifier = modifier
                 .size(dimensionResource(R.dimen.top_bar_profile))
-                .border(
+                .roundedCornerBackground(MyAppTheme.colors.white, BorderStroke(width = 1.dp, MyAppTheme.colors.gray1))
+                *//*.border(
                     border = BorderStroke(
                         width = 1.dp,
                         MyAppTheme.colors.gray1
                     ),
                     shape = RoundedCornerShape(dimensionResource(R.dimen.round_corner))
                 )
-                .background(MyAppTheme.colors.white)
+                .background(MyAppTheme.colors.white)*//*
         ) {
             Icon(
                 Icons.Filled.Person,
@@ -458,6 +462,28 @@ private fun OverviewTopBarProfile(
         }
 
 
+    }*/
+
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier
+            .size(dimensionResource(R.dimen.top_bar_profile))
+            .roundedCornerBackground(MyAppTheme.colors.white, BorderStroke(width = 1.dp, MyAppTheme.colors.gray1))
+            .clickable { onClick() }
+    /*.border(
+            border = BorderStroke(
+                width = 1.dp,
+                MyAppTheme.colors.gray1
+            ),
+            shape = RoundedCornerShape(dimensionResource(R.dimen.round_corner))
+        )
+        .background(MyAppTheme.colors.white)*/
+    ) {
+        Icon(
+            Icons.Filled.Person,
+            contentDescription = "Profile",
+            tint = MyAppTheme.colors.gray1
+        )
     }
 }
 

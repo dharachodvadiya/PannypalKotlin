@@ -42,6 +42,7 @@ import androidx.compose.ui.zIndex
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.presentation.ui.navigation.BottomNavItem
 import com.indie.apps.pennypal.presentation.ui.component.linearGradientsBrush
+import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 
@@ -220,7 +221,7 @@ fun BottomNavigationBarCustom1Item(
     currentTab: BottomNavItem,
     modifier: Modifier = Modifier
 ) {
-    Surface(
+    /*Surface(
         onClick = {
             onTabSelected(item)
         },
@@ -244,16 +245,45 @@ fun BottomNavigationBarCustom1Item(
                 contentDescription = stringResource(item.title),
                 tint = if (isSelected) MyAppTheme.colors.lightBlue1 else MyAppTheme.colors.inactiveDark
             )
-            /* if (isSelected) {
+            *//* if (isSelected) {
                  Spacer(modifier = Modifier.width(5.dp))
                  Text(
                      text = stringResource(item.title),
                      color = MyAppTheme.colors.lightBlue1,
                      style = MyAppTheme.typography.Medium45_29
                  )
-             }*/
+             }*//*
 
         }
+    }*/
+
+    val isSelected = currentTab == item
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .roundedCornerBackground(MyAppTheme.colors.transparent)
+            //.background(MyAppTheme.colors.bottomBg)
+            .clickable {  onTabSelected(item) }
+    ) {
+        Icon(
+            painter = if (isSelected)
+                painterResource(id = item.selectedIcon)
+            else painterResource(
+                id = item.unSelectedIcon
+            ),
+            contentDescription = stringResource(item.title),
+            tint = if (isSelected) MyAppTheme.colors.lightBlue1 else MyAppTheme.colors.inactiveDark
+        )
+        /* if (isSelected) {
+             Spacer(modifier = Modifier.width(5.dp))
+             Text(
+                 text = stringResource(item.title),
+                 color = MyAppTheme.colors.lightBlue1,
+                 style = MyAppTheme.typography.Medium45_29
+             )
+         }*/
+
     }
 
 }

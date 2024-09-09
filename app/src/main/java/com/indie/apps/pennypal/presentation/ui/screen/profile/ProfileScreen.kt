@@ -25,6 +25,7 @@ import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.entity.User
 import com.indie.apps.pennypal.presentation.ui.component.showToast
 import com.indie.apps.pennypal.presentation.ui.component.TopBarWithTitle
+import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
@@ -89,7 +90,9 @@ private fun ProfileScreenData(
                         Icon(
                             Icons.Default.Done,
                             contentDescription = "save",
-                            modifier = Modifier.clickable {
+                            modifier = Modifier
+                                .roundedCornerBackground(MyAppTheme.colors.bottomBg)
+                                .clickable {
                                 onSaveClick(user)
                             })
                     }

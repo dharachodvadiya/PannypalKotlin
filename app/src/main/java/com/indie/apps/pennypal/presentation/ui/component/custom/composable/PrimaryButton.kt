@@ -2,6 +2,7 @@ package com.indie.apps.pennypal.presentation.ui.component.custom.composable
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -26,6 +27,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
+import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 
@@ -42,7 +44,7 @@ fun PrimaryButton(
     val containerColor = if (enabled) bgColor else MyAppTheme.colors.gray2
     val contentColor =
         if (enabled) MyAppTheme.colors.white else MyAppTheme.colors.white.copy(alpha = 0.1f)
-    Surface(
+    /*Surface(
         onClick = onClick,
         enabled = enabled,
         modifier = modifier
@@ -68,7 +70,26 @@ fun PrimaryButton(
                 ),
             content = content
         )
+    }*/
+
+    val buttonModifier = if (bgBrush != null && enabled) {
+        Modifier.background(brush = bgBrush)
+    } else {
+        Modifier.background(color = containerColor)
     }
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Absolute.Center,
+        modifier = modifier
+            .roundedCornerBackground(MyAppTheme.colors.transparent, borderStroke)
+            .then(buttonModifier)
+            .clickable(enabled = enabled) { onClick() }
+            .padding(
+                horizontal = dimensionResource(R.dimen.button_horizontal_padding),
+                vertical = dimensionResource(R.dimen.button_item_vertical_padding)
+            ),
+        content = content
+    )
 
 }
 

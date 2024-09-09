@@ -33,6 +33,7 @@ import com.indie.apps.pennypal.presentation.ui.component.DialogSearchView
 import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListItem
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
+import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
@@ -163,6 +164,7 @@ private fun SearchContactPickerListItem(
                         Icons.Filled.ArrowDropDown,
                         null,
                         Modifier
+                            .roundedCornerBackground(MyAppTheme.colors.transparent)
                             .rotate(if (item.expanded.value) 180f else 0f)
                             .clickable { dropdownClick() }
                     )
@@ -197,7 +199,8 @@ private fun contactNumberItem(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .fillMaxWidth()
-            .background(MyAppTheme.colors.transparent)
+            .roundedCornerBackground(MyAppTheme.colors.transparent)
+            //.background(MyAppTheme.colors.transparent)
             .padding(PaddingValues(start = 50.dp))
             .clickable(role = Role.Button) { onSelected() }
     ) {

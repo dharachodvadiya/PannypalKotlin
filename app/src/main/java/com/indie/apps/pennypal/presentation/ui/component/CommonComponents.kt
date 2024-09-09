@@ -227,10 +227,11 @@ fun DialogTextFieldItem(
         Row(
             modifier = Modifier
                 .height(dimensionResource(id = R.dimen.new_entry_field_height))
-                .background(
+                .roundedCornerBackground(MyAppTheme.colors.transparent)
+               /* .background(
                     shape = RoundedCornerShape(dimensionResource(id = R.dimen.round_corner)),
                     color = MyAppTheme.colors.transparent
-                ),
+                )*/,
             verticalAlignment = Alignment.CenterVertically,
         ) {
 
@@ -385,6 +386,7 @@ fun AccountItem(
         modifier = modifier
             .height(40.dp)
             .fillMaxWidth()
+            .roundedCornerBackground(MyAppTheme.colors.transparent)
             .clickable(enabled = isEditMode) { onSelect() },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.item_padding))
@@ -410,7 +412,9 @@ fun AccountItem(
             Icon(
                 imageVector = Icons.Default.Edit,
                 contentDescription = "edit",
-                modifier = Modifier.clickable { onEditClick() }
+                modifier = Modifier
+                    .roundedCornerBackground(MyAppTheme.colors.transparent)
+                    .clickable { onEditClick() }
             )
 
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.item_padding)))
@@ -418,7 +422,9 @@ fun AccountItem(
             Icon(
                 imageVector = Icons.Default.Delete,
                 contentDescription = "delete",
-                modifier = Modifier.clickable { onDeleteClick() }
+                modifier = Modifier
+                    .roundedCornerBackground(MyAppTheme.colors.transparent)
+                    .clickable { onDeleteClick() }
             )
         }
     }
@@ -452,10 +458,11 @@ fun AccountTypeItem(
         Column(
             modifier = modifier
                 .fillMaxWidth()
-                .background(
+                .roundedCornerBackground(MyAppTheme.colors.itemBg)
+                /*.background(
                     shape = RoundedCornerShape(dimensionResource(id = R.dimen.round_corner)),
                     color = MyAppTheme.colors.itemBg
-                )
+                )*/
                 .padding(dimensionResource(id = R.dimen.padding))
         ) {
 
