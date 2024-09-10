@@ -24,10 +24,10 @@ object Util {
     const val PAGE_PREFETCH_DISTANCE = 20
 
     const val SAVE_STATE_SAVABLE_DIALOG = "savable"
-    const val SAVE_STATE_SELECT_CURRENCY_CODE = "selected_currency_code"
+    const val SAVE_STATE_SELECT_COUNTRY_CODE = "selected_country_code"
 
     const val SAVE_STATE_COUNTRY_DIAL_CODE = "dial_code"
-    const val SAVE_STATE_CURRENCY_CODE = "currency_code"
+    const val SAVE_STATE_COUNTRY_CODE = "country_code"
 
     const val SAVE_STATE_PAYMENT_EDIT_ID = "payment_edit_id"
     const val SAVE_STATE_SELECT_PAYMENT_ID = "select_payment_id"

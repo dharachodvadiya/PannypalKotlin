@@ -22,6 +22,7 @@ fun NavGraphBuilder.settingRoute(
         route = BottomNavItem.SETTING.route
     ) {
         composable(route = ScreenNav.SETTING_START.route) { backStackEntry ->
+            bottomBarState.value = true
             SettingScreen(
                 onDefaultPaymentChange = { currentId->
                     navController.navigate(DialogNav.SELECT_PAYMENT.route)
@@ -39,7 +40,7 @@ fun NavGraphBuilder.settingRoute(
                     navController.navigate(DialogNav.COUNTRY_PICKER.route)
 
                     navController.currentBackStackEntry?.savedStateHandle?.set(
-                        Util.SAVE_STATE_SELECT_CURRENCY_CODE,
+                        Util.SAVE_STATE_SELECT_COUNTRY_CODE,
                         currencyCode
                     )
 

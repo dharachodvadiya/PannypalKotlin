@@ -224,8 +224,8 @@ fun PennyPalApp() {
                     val isSavable =
                         backStackEntry.savedStateHandle.get<Boolean>(Util.SAVE_STATE_SAVABLE_DIALOG)
 
-                    val currencyCode =
-                        backStackEntry.savedStateHandle.get<String>(Util.SAVE_STATE_SELECT_CURRENCY_CODE)
+                    val countryCode =
+                        backStackEntry.savedStateHandle.get<String>(Util.SAVE_STATE_SELECT_COUNTRY_CODE)
 
                     DialogCountryPicker(
                         onNavigationUp = { navController.navigateUp() },
@@ -236,7 +236,7 @@ fun PennyPalApp() {
                                 ?.set(Util.SAVE_STATE_COUNTRY_DIAL_CODE, it.dialCode)
                             navController.previousBackStackEntry
                                 ?.savedStateHandle
-                                ?.set(Util.SAVE_STATE_CURRENCY_CODE, it.currencyCode)
+                                ?.set(Util.SAVE_STATE_COUNTRY_CODE, it.countryCode)
 
 
                             navController.popBackStack()
@@ -246,7 +246,7 @@ fun PennyPalApp() {
                         },
                         isShowCurrency = isShowCurrency ?: false,
                         isSavable = isSavable ?: false,
-                        selectedCurrencyCode = currencyCode ?: ""
+                        selectedCountryCode = countryCode ?: ""
                     )
                 }
                 dialog(

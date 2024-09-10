@@ -1,9 +1,11 @@
 package com.indie.apps.pennypal.data.db
 
+import android.annotation.SuppressLint
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.indie.apps.cpp.data.repository.CountryRepository
 
-val MIGRATION_1_2 = object : Migration(1, 2) {
+class Migration_1_2(private val countryRepository: CountryRepository) : Migration(1, 2) {
     override fun migrate(database: SupportSQLiteDatabase) {
 
         // Create the payment_mode table
@@ -12,7 +14,7 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
 
         populatePaymentMode(database)
 
-        updateUserTable(database)
+        updateUserTable(database, countryRepository)
 
         updatePaymentTypeTable(database)
 
@@ -20,18 +22,38 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
     }
 }
 
-fun updateUserTable(database: SupportSQLiteDatabase)
+@SuppressLint("Range")
+fun updateUserTable(database: SupportSQLiteDatabase, countryRepository: CountryRepository)
 {
     // Add the default payment_id column to user table
     database.execSQL("ALTER TABLE user ADD COLUMN payment_id INTEGER NOT NULL DEFAULT 1")
-    // Add foreign key constraint
-    database.execSQL("CREATE TABLE IF NOT EXISTS `user_new` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `email` TEXT, `last_sync_date_milli` INTEGER NOT NULL, `income_amt` REAL NOT NULL, `expense_amt` REAL NOT NULL, `currency` TEXT NOT NULL, `payment_id` INTEGER NOT NULL, FOREIGN KEY(`payment_id`) REFERENCES `payment_type`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )");
-    // Copy data from old table to new table
-    database.execSQL("INSERT INTO user_new (id, name, email, last_sync_date_milli, income_amt, expense_amt, currency, payment_id) SELECT id, name, email, last_sync_date_milli, income_amt, expense_amt, currency, payment_id FROM user")
-    // Drop the old table
-    database.execSQL("DROP TABLE user")
-    // Rename the new table to the old table name
-    database.execSQL("ALTER TABLE user_new RENAME TO user")
+    database.execSQL("ALTER TABLE user ADD COLUMN country_code TEXT NOT NULL")
+
+
+    val cursor = database.query("SELECT currency FROM user WHERE id = 1")
+
+    try {
+        var currency = ""
+        while (cursor.moveToNext()) {
+            currency = cursor.getString(cursor.getColumnIndex("currency"))
+        }
+
+        val countryCode = countryRepository.getCountryCodeFromCurrencyCode(currency)
+
+        database.execSQL("UPDATE user SET country_code = $countryCode WHERE ID = 1")
+        // Add foreign key constraint
+        database.execSQL("CREATE TABLE IF NOT EXISTS `user_new` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `email` TEXT, `last_sync_date_milli` INTEGER NOT NULL, `income_amt` REAL NOT NULL, `expense_amt` REAL NOT NULL, `currency` TEXT NOT NULL, `country_code` TEXT NOT NULL, `payment_id` INTEGER NOT NULL, FOREIGN KEY(`payment_id`) REFERENCES `payment_type`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )");
+        // Copy data from old table to new table
+        database.execSQL("INSERT INTO user_new (id, name, email, last_sync_date_milli, income_amt, expense_amt, currency, country_code, payment_id) SELECT id, name, email, last_sync_date_milli, income_amt, expense_amt, currency, country_code, payment_id FROM user")
+        // Drop the old table
+        database.execSQL("DROP TABLE user")
+        // Rename the new table to the old table name
+        database.execSQL("ALTER TABLE user_new RENAME TO user")
+    } finally {
+        cursor.close()
+    }
+
+
 }
 
 fun updatePaymentTypeTable(database: SupportSQLiteDatabase)

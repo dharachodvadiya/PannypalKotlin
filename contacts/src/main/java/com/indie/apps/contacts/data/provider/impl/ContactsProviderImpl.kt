@@ -59,7 +59,7 @@ class ContactsProviderImpl(
 
     override suspend fun searchContactsNameWithPhone(searchString: String): ContactNumInfos =
         withContext(dispatcher) {
-            fetchContactNumInfoList(searchString) ?: Collections.emptyList()
+            fetchContactNumInfoList(searchString)
         }
 
     private fun fetchContactNumInfoList(searchString: String): ContactNumInfos {

@@ -45,11 +45,13 @@ class CountryPickerViewModel @Inject constructor(
         return countryRepository.getFlagsFromCountryCode(countryCode)
     }
 
-    fun saveDefaultCurrency(currencyCode: String, onSuccess : ()-> Unit )
+    fun saveDefaultCurrency(countryCode: String, onSuccess : ()-> Unit )
     {
         viewModelScope.launch {
             updateUserCurrencyDataUseCase
-                .updateData(currencyCode)
+                .updateData(
+                    currency = countryRepository.getCurrencyCodeFromCountryCode(countryCode),
+                    currencyCountryCode =  countryCode)
                 .collect {
                     when (it) {
                         is Resource.Loading -> {}

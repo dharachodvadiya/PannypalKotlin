@@ -54,7 +54,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "pennypal_money_db"
                 )
-                    .addMigrations(MIGRATION_1_2)
+                    .addMigrations(Migration_1_2(countryRepository))
                     .addCallback(Callback(countryRepository))
                     .build().also {
                         INSTANCE = it
@@ -95,9 +95,10 @@ abstract class AppDatabase : RoomDatabase() {
                 val user =
                     User(
                         name = "Me",
-                        currency = countryRepository.getCurrencyCodeFromCountryCode(
-                            countryRepository.getDefaultCountryCode()
-                        )
+                            currency = countryRepository.getCurrencyCodeFromCountryCode(
+                            countryRepository.getDefaultCountryCode(),
+                        ),
+                        currencyCountryCode = countryRepository.getDefaultCountryCode()
                     )
                 val userDao = db.userDao()
 

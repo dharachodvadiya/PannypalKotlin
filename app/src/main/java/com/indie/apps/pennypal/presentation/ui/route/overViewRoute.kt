@@ -118,7 +118,7 @@ fun NavGraphBuilder.overViewRoute(
         composable(route = ScreenNav.PROFILE.route) { backStackEntry ->
 
             val code: String? =
-                backStackEntry.savedStateHandle.get<String>(Util.SAVE_STATE_CURRENCY_CODE)
+                backStackEntry.savedStateHandle.get<String>(Util.SAVE_STATE_COUNTRY_CODE)
 
             bottomBarState.value = false
             ProfileScreen(onNavigationUp = { navController.navigateUp() },

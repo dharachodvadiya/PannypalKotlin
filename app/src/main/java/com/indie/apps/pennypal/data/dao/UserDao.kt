@@ -24,6 +24,7 @@ interface UserDao : BaseDao<User> {
         SELECT u.name as name, 
                 u.email as email,
                 u.currency as currency,
+                u.country_code as currencyCountryCode,
                 u.payment_id as paymentId,
                 p.name as paymentName
         FROM user u
@@ -38,8 +39,8 @@ interface UserDao : BaseDao<User> {
     suspend fun updatePayment(paymentId: Long): Int
 
     @Transaction
-    @Query("UPDATE user SET currency = :currency WHERE ID = 1")
-    suspend fun updateCurrency(currency : String): Int
+    @Query("UPDATE user SET currency = :currency, country_code = :countryCode WHERE ID = 1")
+    suspend fun updateCurrency(currency : String, countryCode: String): Int
 
     @Transaction
     @Query("UPDATE user SET income_amt = income_amt + :incomeAmt, expense_amt = expense_amt + :expenseAmt WHERE ID = 1")

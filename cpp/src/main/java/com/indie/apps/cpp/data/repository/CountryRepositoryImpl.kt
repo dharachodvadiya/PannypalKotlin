@@ -48,6 +48,16 @@ class CountryRepositoryImpl(private val countryDb: CountryDb) : CountryRepositor
         }
     }
 
+    override fun getCountryCodeFromCurrencyCode(currencyCode: String): String {
+        try {
+            val defaultCode: String =
+                countryDb.countryData.first { it.currencyCode.lowercase() == currencyCode.lowercase() }.currencyCode
+            return defaultCode.ifBlank { "US" }
+        } catch (e: Exception) {
+            return "US"
+        }
+    }
+
     override fun searchCountryForDialCode(searchString: String): List<Country> {
         val countryList = ArrayList<Country>()
         countryDb.countryData.forEach {

@@ -30,7 +30,7 @@ fun DialogCountryPicker(
     onNavigationUp: () -> Unit,
     onSelect: (Country) -> Unit,
     onSaveSuccess: () -> Unit,
-    selectedCurrencyCode: String,
+    selectedCountryCode: String,
     isSavable: Boolean = false,
     isShowCurrency: Boolean,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
@@ -38,8 +38,8 @@ fun DialogCountryPicker(
     val searchTextState by viewModel.searchTextState.collectAsStateWithLifecycle()
     val countryData by viewModel.uiState.collectAsStateWithLifecycle()
 
-    var currentCurrencyCode by remember {
-        mutableStateOf(selectedCurrencyCode)
+    var currentCountryCode by remember {
+        mutableStateOf(selectedCountryCode)
     }
 
     var job: Job? = null
@@ -55,14 +55,14 @@ fun DialogCountryPicker(
                     if(!isSavable) {
                         onSelect(it)
                     }else{
-                        currentCurrencyCode = it.currencyCode
+                        currentCountryCode = it.countryCode
                     }
                 },
                 searchState = searchTextState,
                 isShowCurrency = isShowCurrency,
                 countriesList = countryData,
                 isSelectable = isSavable,
-                currentCurrency = currentCurrencyCode,
+                currentCountry = currentCountryCode,
                 onTextChange = {
                     job?.cancel()
                     job = MainScope().launch {
@@ -76,7 +76,7 @@ fun DialogCountryPicker(
             if(isSavable){
                 BottomSaveButton(
                     onClick = {
-                        viewModel.saveDefaultCurrency(currentCurrencyCode){
+                        viewModel.saveDefaultCurrency(currentCountryCode){
                             onSaveSuccess()
                         }
                     },

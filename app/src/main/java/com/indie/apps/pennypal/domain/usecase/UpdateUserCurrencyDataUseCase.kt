@@ -15,12 +15,12 @@ class UpdateUserCurrencyDataUseCase @Inject constructor(
     private val userRepository: UserRepository,
     @IoDispatcher private val dispatcher: CoroutineDispatcher) {
 
-    suspend fun updateData(currency: String) : Flow<Resource<Int>>{
+    suspend fun updateData(currency: String, currencyCountryCode : String) : Flow<Resource<Int>>{
         return flow{
 
             try {
                 emit(Resource.Loading())
-                val count = userRepository.updateCurrency(currency)
+                val count = userRepository.updateCurrency(currency, currencyCountryCode)
 
                 if(count >0){
                     emit(Resource.Success(count))

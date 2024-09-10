@@ -32,7 +32,7 @@ import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 fun CppDialogField(
     viewModel: CountryPickerViewModel,
     isSelectable: Boolean,
-    currentCurrency: String,
+    currentCountry: String,
     onSelect: (Country) -> Unit,
     searchState: TextFieldState,
     countriesList: List<Country>,
@@ -59,7 +59,7 @@ fun CppDialogField(
                 ) { country ->
                     SearchCurrencyCppListItem(
                         isSelectable = isSelectable,
-                        currentCurrencyCode = currentCurrency,
+                        currentCountryCode = currentCountry,
                         country = country,
                         onClick = onSelect,
                         flagId = viewModel.getFlagIdFromCountryCode(country.countryCode)
@@ -126,7 +126,7 @@ private fun SearchCppListItem(
 @Composable
 private fun SearchCurrencyCppListItem(
     isSelectable : Boolean,
-    currentCurrencyCode : String,
+    currentCountryCode : String,
     flagId: Int,
     country: Country,
     onClick: (Country) -> Unit,
@@ -144,7 +144,7 @@ private fun SearchCurrencyCppListItem(
     ) {
         if (isSelectable) {
             RadioButton(
-                selected = currentCurrencyCode == country.currencyCode,
+                selected = currentCountryCode.lowercase() == country.countryCode.lowercase(),
                 onClick = {
                     onClick(country)
                 })

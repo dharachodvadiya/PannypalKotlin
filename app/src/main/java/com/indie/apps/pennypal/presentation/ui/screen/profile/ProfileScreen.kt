@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,7 +46,10 @@ fun ProfileScreen(
     if (userData == null) {
         LoadingWithProgress()
     } else {
-        profileViewModel.setCurrency(code)
+        LaunchedEffect(key1 = Unit) {
+            profileViewModel.setCountryCode(code)
+        }
+
         userData?.let {
             ProfileScreenData(
                 onNavigationUp = onNavigationUp,
@@ -93,8 +97,8 @@ private fun ProfileScreenData(
                             modifier = Modifier
                                 .roundedCornerBackground(MyAppTheme.colors.bottomBg)
                                 .clickable {
-                                onSaveClick(user)
-                            })
+                                    onSaveClick(user)
+                                })
                     }
 
                 }
@@ -131,6 +135,6 @@ private fun ProfileScreenData(
 @Composable
 private fun ProfileScreenPreview() {
     PennyPalTheme(darkTheme = true) {
-        ProfileScreen(onNavigationUp = {}, onCurrencyChangeClick = {}, code = "USD")
+        ProfileScreen(onNavigationUp = {}, onCurrencyChangeClick = {}, code = "US")
     }
 }

@@ -69,9 +69,9 @@ class ProfileViewModel @Inject constructor(
             }
     }
 
-    fun setCurrency(currencyCode: String?) {
-        currencyCode?.let {
-            currUserData.value = currUserData.value?.copy(currency = it)
+    fun setCountryCode(countryCode: String?) {
+        countryCode?.let {
+            currUserData.value = currUserData.value?.copy(currency = countryRepository.getCurrencyCodeFromCountryCode(it), currencyCountryCode = it)
         }
     }
 

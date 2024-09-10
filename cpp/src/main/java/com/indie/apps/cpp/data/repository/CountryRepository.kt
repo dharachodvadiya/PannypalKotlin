@@ -12,6 +12,7 @@ interface CountryRepository {
     fun getDefaultCountryCode(): String
     fun getPhoneCodeFromCountryCode(countryCode: String): String
     fun getCurrencyCodeFromCountryCode(countryCode: String): String
+    fun getCountryCodeFromCurrencyCode(currencyCode: String): String
     fun searchCountryForDialCode(searchString: String): List<Country>
     fun searchCountryForCurrency(searchString: String): List<Country>
 }

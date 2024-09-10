@@ -8,5 +8,6 @@ data class UserWithPaymentName(
     val currency: String,
     val paymentId: Long = 1L,
     val paymentName: String,
+    val currencyCountryCode: String,
 
 )
