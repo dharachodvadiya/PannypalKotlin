@@ -1,14 +1,20 @@
 package com.indie.apps.pennypal.presentation.ui.dialog.country_picker
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.indie.apps.cpp.data.model.Country
 import com.indie.apps.pennypal.R
+import com.indie.apps.pennypal.presentation.ui.component.BottomSaveButton
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.MyAppDialog
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.util.Util
@@ -23,11 +29,18 @@ fun DialogCountryPicker(
     viewModel: CountryPickerViewModel = hiltViewModel(),
     onNavigationUp: () -> Unit,
     onSelect: (Country) -> Unit,
+    onSaveSuccess: () -> Unit,
+    selectedCurrencyCode: String,
+    isSavable: Boolean = false,
     isShowCurrency: Boolean,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     val searchTextState by viewModel.searchTextState.collectAsStateWithLifecycle()
     val countryData by viewModel.uiState.collectAsStateWithLifecycle()
+
+    var currentCurrencyCode by remember {
+        mutableStateOf(selectedCurrencyCode)
+    }
 
     var job: Job? = null
 
@@ -38,18 +51,38 @@ fun DialogCountryPicker(
         content = {
             CppDialogField(
                 viewModel= viewModel,
-                onSelect = onSelect,
+                onSelect = {
+                    if(!isSavable) {
+                        onSelect(it)
+                    }else{
+                        currentCurrencyCode = it.currencyCode
+                    }
+                },
                 searchState = searchTextState,
                 isShowCurrency = isShowCurrency,
                 countriesList = countryData,
+                isSelectable = isSavable,
+                currentCurrency = currentCurrencyCode,
                 onTextChange = {
                     job?.cancel()
                     job = MainScope().launch {
                         delay(Util.SEARCH_NEWS_TIME_DELAY)
-                        viewModel.searchData()
+                        viewModel.searchData(isShowCurrency)
                     }
                 }
             )
+        },
+        bottomContent = {
+            if(isSavable){
+                BottomSaveButton(
+                    onClick = {
+                        viewModel.saveDefaultCurrency(currentCurrencyCode){
+                            onSaveSuccess()
+                        }
+                    },
+                    modifier = Modifier.padding(dimensionResource(id = R.dimen.padding))
+                )
+            }
         },
         modifier = modifier,
         isFixHeight = true

@@ -23,6 +23,9 @@ object Util {
     const val PAGE_SIZE = 20
     const val PAGE_PREFETCH_DISTANCE = 20
 
+    const val SAVE_STATE_SAVABLE_DIALOG = "savable"
+    const val SAVE_STATE_SELECT_CURRENCY_CODE = "selected_currency_code"
+
     const val SAVE_STATE_COUNTRY_DIAL_CODE = "dial_code"
     const val SAVE_STATE_CURRENCY_CODE = "currency_code"
 

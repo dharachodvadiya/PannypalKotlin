@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -30,6 +31,8 @@ import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 @Composable
 fun CppDialogField(
     viewModel: CountryPickerViewModel,
+    isSelectable: Boolean,
+    currentCurrency: String,
     onSelect: (Country) -> Unit,
     searchState: TextFieldState,
     countriesList: List<Country>,
@@ -55,6 +58,8 @@ fun CppDialogField(
                     countriesList
                 ) { country ->
                     SearchCurrencyCppListItem(
+                        isSelectable = isSelectable,
+                        currentCurrencyCode = currentCurrency,
                         country = country,
                         onClick = onSelect,
                         flagId = viewModel.getFlagIdFromCountryCode(country.countryCode)
@@ -120,6 +125,8 @@ private fun SearchCppListItem(
 
 @Composable
 private fun SearchCurrencyCppListItem(
+    isSelectable : Boolean,
+    currentCurrencyCode : String,
     flagId: Int,
     country: Country,
     onClick: (Country) -> Unit,
@@ -127,13 +134,22 @@ private fun SearchCurrencyCppListItem(
 ) {
     Row(
         modifier = modifier
+            .height(55.dp)
             .roundedCornerBackground(MyAppTheme.colors.transparent)
             .clickable {
                 onClick(country)
             }
-            .padding(12.dp),
+            .padding(horizontal = dimensionResource(id = R.dimen.item_inner_padding)),
         verticalAlignment = Alignment.CenterVertically
     ) {
+        if (isSelectable) {
+            RadioButton(
+                selected = currentCurrencyCode == country.currencyCode,
+                onClick = {
+                    onClick(country)
+                })
+
+        }
         Image(
             painterResource(flagId),
             contentDescription = "",

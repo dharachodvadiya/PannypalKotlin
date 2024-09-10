@@ -221,6 +221,12 @@ fun PennyPalApp() {
                         .savedStateHandle
                         .get<Boolean>(Util.SAVE_STATE_SHOW_CURRENCY)
 
+                    val isSavable =
+                        backStackEntry.savedStateHandle.get<Boolean>(Util.SAVE_STATE_SAVABLE_DIALOG)
+
+                    val currencyCode =
+                        backStackEntry.savedStateHandle.get<String>(Util.SAVE_STATE_SELECT_CURRENCY_CODE)
+
                     DialogCountryPicker(
                         onNavigationUp = { navController.navigateUp() },
                         onSelect = {
@@ -235,7 +241,12 @@ fun PennyPalApp() {
 
                             navController.popBackStack()
                         },
+                        onSaveSuccess = {
+                            navController.popBackStack()
+                        },
                         isShowCurrency = isShowCurrency ?: false,
+                        isSavable = isSavable ?: false,
+                        selectedCurrencyCode = currencyCode ?: ""
                     )
                 }
                 dialog(
@@ -262,6 +273,9 @@ fun PennyPalApp() {
                     val currentId =
                         backStackEntry.savedStateHandle.get<Long>(Util.SAVE_STATE_SELECT_PAYMENT_ID)
 
+                    val isSavable =
+                        backStackEntry.savedStateHandle.get<Boolean>(Util.SAVE_STATE_SAVABLE_DIALOG)
+
                     DialogSelectPayment(
                         onNavigationUp = { navController.navigateUp() },
                         onSelect = { payment ->
@@ -273,7 +287,11 @@ fun PennyPalApp() {
 
                             navController.popBackStack()
                         },
-                        currentId = currentId ?: 1L
+                        isSavable = isSavable?: false,
+                        selectedId = currentId ?: 1L,
+                        onSaveSuccess = {
+                            navController.popBackStack()
+                        }
                     )
 
                 }
