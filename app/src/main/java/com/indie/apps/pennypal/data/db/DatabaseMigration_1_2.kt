@@ -26,7 +26,7 @@ class Migration1to2(private val countryRepository: CountryRepository) : Migratio
 fun updateUserTable(database: SupportSQLiteDatabase, countryRepository: CountryRepository) {
     // Add the default payment_id column to user table
     database.execSQL("ALTER TABLE user ADD COLUMN payment_id INTEGER NOT NULL DEFAULT 1")
-    database.execSQL("ALTER TABLE user ADD COLUMN country_code TEXT NOT NULL")
+    database.execSQL("ALTER TABLE user ADD COLUMN country_code TEXT")
 
 
     val cursor = database.query("SELECT currency FROM user WHERE id = 1")
@@ -39,7 +39,7 @@ fun updateUserTable(database: SupportSQLiteDatabase, countryRepository: CountryR
 
         val countryCode = countryRepository.getCountryCodeFromCurrencyCode(currency)
 
-        database.execSQL("UPDATE user SET country_code = $countryCode WHERE ID = 1")
+        database.execSQL("UPDATE user SET country_code = '$countryCode' WHERE ID = 1")
         // Add foreign key constraint
         database.execSQL("CREATE TABLE IF NOT EXISTS `user_new` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `email` TEXT, `last_sync_date_milli` INTEGER NOT NULL, `income_amt` REAL NOT NULL, `expense_amt` REAL NOT NULL, `currency` TEXT NOT NULL, `country_code` TEXT NOT NULL, `payment_id` INTEGER NOT NULL, FOREIGN KEY(`payment_id`) REFERENCES `payment_type`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )")
         // Copy data from old table to new table
