@@ -1,6 +1,10 @@
 package com.indie.apps.pennypal.presentation.ui.screen.setting
 
 import android.annotation.SuppressLint
+import android.content.ActivityNotFoundException
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -22,11 +26,13 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.startActivity
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.module.MoreItem
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.screen.payment.AccountHeadingItem
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
+
 
 @Composable
 fun SettingTypeItem(
@@ -127,4 +133,44 @@ fun SettingItem(
 
     if(showDivider)
         Divider(color = MyAppTheme.colors.gray3.copy(alpha = 0.5f))
+}
+
+fun onShareClick(context: Context)
+{
+    val intent = Intent().apply {
+        action = Intent.ACTION_SEND
+        putExtra(Intent.EXTRA_TEXT, "Check out this awesome app!")
+        type = "text/plain"
+    }
+    context.startActivity(Intent.createChooser(intent, "Share via"))
+}
+
+fun onRateClick(context: Context)
+{
+    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=${context.packageName}"))
+    context.startActivity(intent)
+}
+
+fun onPrivacyPolicyClick(context: Context)
+{
+    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://sites.google.com/view/privacypolicyforpennypal/home"))
+    context.startActivity(intent)
+}
+
+@SuppressLint("IntentReset")
+fun onContactUsClick(context: Context)
+{
+    val intent = Intent(Intent.ACTION_SENDTO).apply {
+        data = Uri.parse("mailto:videostatus.group@gmail.com")
+        putExtra(Intent.EXTRA_SUBJECT, "Penny Pal Contact Us")
+        putExtra(Intent.EXTRA_TEXT, "Hello, I have a question about...")
+    }
+    try {
+        context.startActivity(Intent.createChooser(intent, "Send mail"))
+    } catch (e: ActivityNotFoundException) {
+
+        println("aaaaa ${e.message}")
+
+    }
+
 }

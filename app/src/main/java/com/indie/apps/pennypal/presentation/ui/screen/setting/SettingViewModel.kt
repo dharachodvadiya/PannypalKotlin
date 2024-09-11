@@ -48,12 +48,21 @@ class SettingViewModel @Inject constructor(
     fun onSelectOption(
         item: MoreItem,
         onDefaultPaymentChange: (Long)->Unit,
-        onCurrencyChange: (String)-> Unit){
+        onCurrencyChange: (String)-> Unit,
+        onShare: ()-> Unit,
+        onRate: ()-> Unit,
+        onPrivacyPolicy: ()-> Unit,
+        onContactUs: ()-> Unit,
+    ){
 
         when(item.title)
         {
             R.string.currency_and_format -> onCurrencyChange(currCountryCode)
             R.string.default_payment_mode-> onDefaultPaymentChange(currPaymentId)
+            R.string.share-> onShare()
+            R.string.rate-> onRate()
+            R.string.privacy_policy-> onPrivacyPolicy()
+            R.string.contact_us-> onContactUs()
         }
 
     }
