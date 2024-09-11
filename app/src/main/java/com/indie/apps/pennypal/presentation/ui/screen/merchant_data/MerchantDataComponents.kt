@@ -6,7 +6,6 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -26,12 +25,10 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
@@ -127,8 +124,8 @@ private fun MerchantDataTopBarItem(
                     modifier = Modifier
                         .roundedCornerBackground(MyAppTheme.colors.transparent)
                         .clickable {
-                        onCloseClick()
-                    }
+                            onCloseClick()
+                        }
                 )
             } else {
                 RoundImage(
@@ -248,7 +245,7 @@ fun MerchantDataIncomeAmount(
         modifier = modifier
             .roundedCornerBackground(bgColor)
             //.background(bgColor)
-           // .padding(vertical = 2.dp)
+            // .padding(vertical = 2.dp)
             //.clip(RoundedCornerShape(dimensionResource(R.dimen.round_corner)))
             .fillMaxWidth()
             .combinedClickable(
@@ -536,15 +533,15 @@ private fun MerchantDataTotalIncomeExpense(
         modifier = modifier
             .height(dimensionResource(id = R.dimen.top_bar_profile))
             .roundedCornerBackground(MyAppTheme.colors.transparent, BorderStroke(2.dp, strokeColor))
-           /* .background(
-                shape = RoundedCornerShape(dimensionResource(id = R.dimen.round_corner)),
-                color = MyAppTheme.colors.transparent
-            )
-            .border(
-                width = 2.dp,
-                color = strokeColor,
-                shape = RoundedCornerShape(dimensionResource(id = R.dimen.round_corner)),
-            )*/,
+        /* .background(
+             shape = RoundedCornerShape(dimensionResource(id = R.dimen.round_corner)),
+             color = MyAppTheme.colors.transparent
+         )
+         .border(
+             width = 2.dp,
+             color = strokeColor,
+             shape = RoundedCornerShape(dimensionResource(id = R.dimen.round_corner)),
+         )*/,
         contentAlignment = Alignment.Center
     ) {
         AutoSizeText(

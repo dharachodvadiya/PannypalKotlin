@@ -54,7 +54,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "pennypal_money_db"
                 )
-                    .addMigrations(Migration_1_2(countryRepository))
+                    .addMigrations(Migration1to2(countryRepository))
                     .addCallback(Callback(countryRepository))
                     .build().also {
                         INSTANCE = it

@@ -24,13 +24,11 @@ fun NavGraphBuilder.settingRoute(
         composable(route = ScreenNav.SETTING_START.route) { backStackEntry ->
             bottomBarState.value = true
             SettingScreen(
-                onDefaultPaymentChange = { currentId->
+                onDefaultPaymentChange = { currentId ->
                     navController.navigate(DialogNav.SELECT_PAYMENT.route)
-                    if(currentId != null) {
-                        navController.currentBackStackEntry?.savedStateHandle?.set(
-                            Util.SAVE_STATE_SELECT_PAYMENT_ID, currentId
-                        )
-                    }
+                    navController.currentBackStackEntry?.savedStateHandle?.set(
+                        Util.SAVE_STATE_SELECT_PAYMENT_ID, currentId
+                    )
 
                     navController.currentBackStackEntry?.savedStateHandle?.set(
                         Util.SAVE_STATE_SAVABLE_DIALOG, true

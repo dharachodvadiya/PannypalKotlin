@@ -4,24 +4,19 @@ import android.annotation.SuppressLint
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.NorthEast
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.SouthWest
@@ -36,13 +31,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.semantics.role
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -58,7 +49,6 @@ import com.indie.apps.pennypal.data.module.toMerchantDataWithName
 import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.AutoSizeText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListItem
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.TopBar
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
@@ -70,10 +60,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun OverviewTopBar(
     //onSearchTextChange: (String) -> Unit,
-    onProfileClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    /*var isSearch by remember { mutableStateOf(false) }
+    onProfileClick: () -> Unit, modifier: Modifier = Modifier
+) {/*var isSearch by remember { mutableStateOf(false) }
 
     TopBar(
         isBackEnable = isSearch,
@@ -110,9 +98,7 @@ fun OverviewTopBar(
 
 @Composable
 fun OverviewBalanceView(
-    symbol: String,
-    balance: Double,
-    modifier: Modifier = Modifier
+    symbol: String, balance: Double, modifier: Modifier = Modifier
 ) {
 
     val colorStroke = if (balance >= 0) MyAppTheme.colors.greenBg else MyAppTheme.colors.redBg
@@ -125,8 +111,7 @@ fun OverviewBalanceView(
             .padding(dimensionResource(id = R.dimen.padding))
     ) {
         Surface(
-            modifier = Modifier
-                .fillMaxSize(),
+            modifier = Modifier.fillMaxSize(),
             shape = RoundedCornerShape(dimensionResource(id = R.dimen.round_corner)),
             color = MyAppTheme.colors.lightBlue2,
             shadowElevation = dimensionResource(id = R.dimen.shadow_elevation)
@@ -136,13 +121,9 @@ fun OverviewBalanceView(
                     .fillMaxSize()
                     .drawBehind {
                         drawLine(
-                            colorStroke,
-                            Offset(0f, 0f),
-                            Offset(size.width, 0f),
-                            25f
+                            colorStroke, Offset(0f, 0f), Offset(size.width, 0f), 25f
                         )
-                    },
-                contentAlignment = Alignment.Center
+                    }, contentAlignment = Alignment.Center
             ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -190,8 +171,7 @@ fun OverviewList(
         )
     } else {
         LazyColumn(
-            modifier = modifier
-                .padding(horizontal = dimensionResource(id = R.dimen.padding)),
+            modifier = modifier.padding(horizontal = dimensionResource(id = R.dimen.padding)),
             //verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.item_padding)),
             contentPadding = bottomPadding
         ) {
@@ -260,10 +240,8 @@ fun OverviewList(
                 }
             }*/
 
-            items(
-                count = dataWithDayList.itemCount,
-                contentType = dataWithDayList.itemContentType { "Any" }
-            ) { index ->
+            items(count = dataWithDayList.itemCount,
+                contentType = dataWithDayList.itemContentType { "Any" }) { index ->
                 val data = dataWithDayList[index]
                 if (data != null) {
 
@@ -275,8 +253,7 @@ fun OverviewList(
                         if (merchantDataId == data.id && isAddMerchantDataSuccess) {
                             scope.launch {
                                 itemAnimateScale.animateTo(
-                                    targetValue = 1f,
-                                    animationSpec = tween(Util.ADD_ITEM_ANIM_TIME)
+                                    targetValue = 1f, animationSpec = tween(Util.ADD_ITEM_ANIM_TIME)
                                 )
                             }
                             if (itemAnimateScale.value == 1f) {
@@ -288,16 +265,13 @@ fun OverviewList(
                         }
 
                     if (data.id == null) {
-                        if (index != 0)
-                            Spacer(modifier = Modifier.height(13.dp))
+                        if (index != 0) Spacer(modifier = Modifier.height(13.dp))
                         OverviewListDateItem(data.toMerchantDataDailyTotal())
                     } else {
                         OverviewListItem(
-                            item = data.toMerchantDataWithName(),
-                            modifier = modifierAdd
+                            item = data.toMerchantDataWithName(), modifier = modifierAdd
                         )
-                    }
-                    /*when (data) {
+                    }/*when (data) {
                         is MerchantDataDailyTotal -> OverviewListDateItem(data)
 
                         is MerchantDataWithName -> {
@@ -331,9 +305,7 @@ fun OverviewList(
 
                     if (isLoadMore && index == dataWithDayList.itemCount) {
                         Box(
-                            contentAlignment = Alignment.Center,
-                            modifier = Modifier
-                                .fillMaxWidth()
+                            contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth()
                         ) {
                             CircularProgressIndicator()
                         }
@@ -385,56 +357,48 @@ fun OverviewListItem(
     val imageVector = if (item.type < 0) Icons.Default.NorthEast else Icons.Default.SouthWest
     val bgColor = if (item.type < 0) MyAppTheme.colors.redBg else MyAppTheme.colors.greenBg
 
-    ListItem(
-        isClickable = false,
-        leadingIcon = {
-            RoundImage(
-                imageVector = imageVector,
-                tint = MyAppTheme.colors.black,
-                backGround = bgColor,
-                contentDescription = "amount"
-            )
-        },
-        content = {
-            Column {
-                Text(
-                    text = item.merchantName,
-                    style = MyAppTheme.typography.Semibold52_5,
-                    color = MyAppTheme.colors.black,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Text(
-                    text = if (item.details.isNullOrEmpty()) stringResource(id = R.string.no_details) else item.details,
-                    style = MyAppTheme.typography.Medium33,
-                    color = MyAppTheme.colors.gray1,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
-        },
-        trailingContent = {
+    ListItem(isClickable = false, leadingIcon = {
+        RoundImage(
+            imageVector = imageVector,
+            tint = MyAppTheme.colors.black,
+            backGround = bgColor,
+            contentDescription = "amount"
+        )
+    }, content = {
+        Column {
             Text(
-                text = Util.getFormattedStringWithSymbol(if (item.type > 0) item.amount else item.amount * -1),
-                style = MyAppTheme.typography.Regular51,
+                text = item.merchantName,
+                style = MyAppTheme.typography.Semibold52_5,
                 color = MyAppTheme.colors.black,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.fillMaxWidth(0.5f),
-                textAlign = TextAlign.Right,
-                maxLines = 1
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
-        },
-        isSetDivider = false,
-        modifier = modifier.padding(vertical = 5.dp)
+            Text(
+                text = if (item.details.isNullOrEmpty()) stringResource(id = R.string.no_details) else item.details,
+                style = MyAppTheme.typography.Medium33,
+                color = MyAppTheme.colors.gray1,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+    }, trailingContent = {
+        Text(
+            text = Util.getFormattedStringWithSymbol(if (item.type > 0) item.amount else item.amount * -1),
+            style = MyAppTheme.typography.Regular51,
+            color = MyAppTheme.colors.black,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.fillMaxWidth(0.5f),
+            textAlign = TextAlign.Right,
+            maxLines = 1
+        )
+    }, isSetDivider = false, modifier = modifier.padding(vertical = 5.dp)
     )
 }
 
 @Composable
 private fun OverviewTopBarProfile(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    /*Surface(
+    onClick: () -> Unit, modifier: Modifier = Modifier
+) {/*Surface(
         onClick = onClick,
         modifier = modifier
             .semantics { role = Role.Button },
@@ -468,35 +432,31 @@ private fun OverviewTopBarProfile(
         contentAlignment = Alignment.Center,
         modifier = modifier
             .size(dimensionResource(R.dimen.top_bar_profile))
-            .roundedCornerBackground(MyAppTheme.colors.white, BorderStroke(width = 1.dp, MyAppTheme.colors.gray1))
-            .clickable { onClick() }
-    /*.border(
-            border = BorderStroke(
-                width = 1.dp,
-                MyAppTheme.colors.gray1
-            ),
-            shape = RoundedCornerShape(dimensionResource(R.dimen.round_corner))
-        )
-        .background(MyAppTheme.colors.white)*/
+            .roundedCornerBackground(
+                MyAppTheme.colors.white, BorderStroke(width = 1.dp, MyAppTheme.colors.gray1)
+            )
+            .clickable { onClick() }/*.border(
+                border = BorderStroke(
+                    width = 1.dp,
+                    MyAppTheme.colors.gray1
+                ),
+                shape = RoundedCornerShape(dimensionResource(R.dimen.round_corner))
+            )
+            .background(MyAppTheme.colors.white)*/
     ) {
         Icon(
-            Icons.Filled.Person,
-            contentDescription = "Profile",
-            tint = MyAppTheme.colors.gray1
+            Icons.Filled.Person, contentDescription = "Profile", tint = MyAppTheme.colors.gray1
         )
     }
 }
-
+/*
 @Composable
 fun OverviewAppFloatingButton(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    onClick: () -> Unit, modifier: Modifier = Modifier
 ) {
     PrimaryButton(
         //bgBrush = linearGradientsBrush(MyAppTheme.colors.gradientBlue),
-        bgColor = MyAppTheme.colors.buttonBg,
-        onClick = onClick,
-        modifier = modifier
+        bgColor = MyAppTheme.colors.buttonBg, onClick = onClick, modifier = modifier
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -514,7 +474,7 @@ fun OverviewAppFloatingButton(
             )
         }
     }
-}
+}*/
 
 @Preview(showBackground = true)
 @Composable

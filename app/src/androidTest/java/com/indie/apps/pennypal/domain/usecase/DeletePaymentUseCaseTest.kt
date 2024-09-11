@@ -6,15 +6,11 @@ import com.indie.apps.pennypal.data.db.AppDatabase
 import com.indie.apps.pennypal.data.entity.Payment
 import com.indie.apps.pennypal.di.IoDispatcher
 import com.indie.apps.pennypal.repository.PaymentRepository
-import com.indie.apps.pennypal.util.Resource
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.drop
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.After
-import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test

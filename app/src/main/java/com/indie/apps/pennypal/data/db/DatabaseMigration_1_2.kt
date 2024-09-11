@@ -5,26 +5,25 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.indie.apps.cpp.data.repository.CountryRepository
 
-class Migration_1_2(private val countryRepository: CountryRepository) : Migration(1, 2) {
-    override fun migrate(database: SupportSQLiteDatabase) {
+class Migration1to2(private val countryRepository: CountryRepository) : Migration(1, 2) {
+    override fun migrate(db: SupportSQLiteDatabase) {
 
         // Create the payment_mode table
-        database.execSQL("CREATE TABLE IF NOT EXISTS `payment_mode` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL COLLATE NOCASE)");
-        database.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_payment_mode_name` ON `payment_mode` (`name`)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS `payment_mode` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL COLLATE NOCASE)")
+        db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_payment_mode_name` ON `payment_mode` (`name`)")
 
-        populatePaymentMode(database)
+        populatePaymentMode(db)
 
-        updateUserTable(database, countryRepository)
+        updateUserTable(db, countryRepository)
 
-        updatePaymentTypeTable(database)
+        updatePaymentTypeTable(db)
 
-        updatePopulatedPayment(database)
+        updatePopulatedPayment(db)
     }
 }
 
 @SuppressLint("Range")
-fun updateUserTable(database: SupportSQLiteDatabase, countryRepository: CountryRepository)
-{
+fun updateUserTable(database: SupportSQLiteDatabase, countryRepository: CountryRepository) {
     // Add the default payment_id column to user table
     database.execSQL("ALTER TABLE user ADD COLUMN payment_id INTEGER NOT NULL DEFAULT 1")
     database.execSQL("ALTER TABLE user ADD COLUMN country_code TEXT NOT NULL")
@@ -32,7 +31,7 @@ fun updateUserTable(database: SupportSQLiteDatabase, countryRepository: CountryR
 
     val cursor = database.query("SELECT currency FROM user WHERE id = 1")
 
-    try {
+    cursor.use { cursor ->
         var currency = ""
         while (cursor.moveToNext()) {
             currency = cursor.getString(cursor.getColumnIndex("currency"))
@@ -42,35 +41,32 @@ fun updateUserTable(database: SupportSQLiteDatabase, countryRepository: CountryR
 
         database.execSQL("UPDATE user SET country_code = $countryCode WHERE ID = 1")
         // Add foreign key constraint
-        database.execSQL("CREATE TABLE IF NOT EXISTS `user_new` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `email` TEXT, `last_sync_date_milli` INTEGER NOT NULL, `income_amt` REAL NOT NULL, `expense_amt` REAL NOT NULL, `currency` TEXT NOT NULL, `country_code` TEXT NOT NULL, `payment_id` INTEGER NOT NULL, FOREIGN KEY(`payment_id`) REFERENCES `payment_type`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )");
+        database.execSQL("CREATE TABLE IF NOT EXISTS `user_new` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `email` TEXT, `last_sync_date_milli` INTEGER NOT NULL, `income_amt` REAL NOT NULL, `expense_amt` REAL NOT NULL, `currency` TEXT NOT NULL, `country_code` TEXT NOT NULL, `payment_id` INTEGER NOT NULL, FOREIGN KEY(`payment_id`) REFERENCES `payment_type`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )")
         // Copy data from old table to new table
         database.execSQL("INSERT INTO user_new (id, name, email, last_sync_date_milli, income_amt, expense_amt, currency, country_code, payment_id) SELECT id, name, email, last_sync_date_milli, income_amt, expense_amt, currency, country_code, payment_id FROM user")
         // Drop the old table
         database.execSQL("DROP TABLE user")
         // Rename the new table to the old table name
         database.execSQL("ALTER TABLE user_new RENAME TO user")
-    } finally {
-        cursor.close()
     }
 
 
 }
 
-fun updatePaymentTypeTable(database: SupportSQLiteDatabase)
-{
+fun updatePaymentTypeTable(database: SupportSQLiteDatabase) {
     // Add the foreign key column to payment_type table
     database.execSQL("ALTER TABLE payment_type ADD COLUMN mode_id INTEGER NOT NULL DEFAULT 1")
     database.execSQL("ALTER TABLE payment_type ADD COLUMN soft_delete INTEGER NOT NULL DEFAULT 0")
     // Add foreign key constraint
-    database.execSQL("CREATE TABLE IF NOT EXISTS `payment_type_new` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL COLLATE NOCASE, `pre_added` INTEGER NOT NULL, `soft_delete` INTEGER NOT NULL,  `mode_id` INTEGER NOT NULL, FOREIGN KEY(`mode_id`) REFERENCES `payment_mode`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )");
-    database.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_payment_type_name` ON `payment_type_new` (`name`)");
+    database.execSQL("CREATE TABLE IF NOT EXISTS `payment_type_new` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL COLLATE NOCASE, `pre_added` INTEGER NOT NULL, `soft_delete` INTEGER NOT NULL,  `mode_id` INTEGER NOT NULL, FOREIGN KEY(`mode_id`) REFERENCES `payment_mode`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )")
+    database.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_payment_type_name` ON `payment_type_new` (`name`)")
     // Copy data from old table to new table
     database.execSQL("INSERT INTO payment_type_new (id, name, pre_added, mode_id, soft_delete) SELECT id, name, pre_added, mode_id, soft_delete FROM payment_type")
     // Drop the old table
     database.execSQL("DROP TABLE payment_type")
     // Rename the new table to the old table name
     database.execSQL("ALTER TABLE payment_type_new RENAME TO payment_type")
-    database.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_payment_type_name` ON `payment_type` (`name`)");
+    database.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_payment_type_name` ON `payment_type` (`name`)")
 }
 
 fun updatePopulatedPayment(database: SupportSQLiteDatabase) {

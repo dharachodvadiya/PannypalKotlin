@@ -1,7 +1,5 @@
 package com.indie.apps.pennypal.data.module
 
-import androidx.room.ColumnInfo
-
 data class UserWithPaymentName(
     val name: String,
     val email: String? = null,
@@ -10,4 +8,4 @@ data class UserWithPaymentName(
     val paymentName: String,
     val currencyCountryCode: String,
 
-)
+    )

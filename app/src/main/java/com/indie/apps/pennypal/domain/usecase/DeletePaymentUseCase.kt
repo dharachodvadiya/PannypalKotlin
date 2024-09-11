@@ -1,7 +1,6 @@
 package com.indie.apps.pennypal.domain.usecase
 
 import com.indie.apps.pennypal.di.IoDispatcher
-import com.indie.apps.pennypal.repository.MerchantDataRepository
 import com.indie.apps.pennypal.repository.PaymentRepository
 import com.indie.apps.pennypal.repository.UserRepository
 import com.indie.apps.pennypal.util.Resource

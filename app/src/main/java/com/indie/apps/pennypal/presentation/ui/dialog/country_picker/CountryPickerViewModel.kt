@@ -32,11 +32,11 @@ class CountryPickerViewModel @Inject constructor(
     {
         if(isCurrency){
             val data = countryRepository.searchCountryForCurrency(searchTextState.value.text)
-            if (data.isNotEmpty())
+            //if (data.isNotEmpty())
                 uiState.value = data
         }else {
             val data = countryRepository.searchCountryForDialCode(searchTextState.value.text)
-            if (data.isNotEmpty())
+            //if (data.isNotEmpty())
                 uiState.value = data
         }
     }

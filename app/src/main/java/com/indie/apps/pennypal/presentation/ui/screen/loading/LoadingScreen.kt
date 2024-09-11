@@ -1,9 +1,8 @@
 package com.indie.apps.pennypal.presentation.ui.screen.loading
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -15,7 +14,7 @@ import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 
 @Composable
 fun LoadingWithProgress(
-    modifier: Modifier = Modifier.fillMaxSize().background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier.fillMaxSize().background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
 ) {
     Box(
         contentAlignment = Alignment.Center,

@@ -1,12 +1,11 @@
 package com.indie.apps.pennypal.presentation.ui.component.custom.composable
 
+import android.annotation.SuppressLint
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -38,7 +37,7 @@ fun MyAppDialog(
     content: @Composable () -> Unit,
     bottomContent: @Composable (() -> Unit)? = null,
     isFixHeight: Boolean = false,
-    modifier: Modifier = Modifier
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
@@ -74,13 +73,13 @@ fun MyAppDialog(
             )
             val spaceModifier = if (isFixHeight) Modifier.weight(1f) else Modifier
 
-            Column(modifier = spaceModifier){
+            Column(modifier = spaceModifier) {
                 content()
             }
-/*
-            if (isFixHeight) {
-                Spacer(modifier = Modifier.weight(1f))
-            }*/
+            /*
+                        if (isFixHeight) {
+                            Spacer(modifier = Modifier.weight(1f))
+                        }*/
             if (bottomContent != null) {
                 bottomContent()
             }

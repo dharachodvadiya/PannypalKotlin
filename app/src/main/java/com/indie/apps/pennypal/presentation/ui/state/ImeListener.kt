@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -21,7 +22,7 @@ fun rememberImeState(onImeSizeChange: (Float) -> Unit): State<Boolean> {
     }
 
     val context = LocalContext.current
-    var initialViewHeight by remember { mutableStateOf(0) }
+    var initialViewHeight by remember { mutableIntStateOf(0) }
 
     val view = LocalView.current
     DisposableEffect(view) {

@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.component.custom.composable
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
@@ -31,7 +32,7 @@ fun RoundImage(
     brush: Brush? = null,
     backGround: Color,
     contentDescription: String,
-    modifier: Modifier = Modifier.size(dimensionResource(id = R.dimen.item_image))
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier.size(dimensionResource(id = R.dimen.item_image))
 ) {
     Box(
         contentAlignment = Alignment.Center,

@@ -26,7 +26,6 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat.startActivity
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.module.MoreItem
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
@@ -139,7 +138,7 @@ fun onShareClick(context: Context)
 {
     val intent = Intent().apply {
         action = Intent.ACTION_SEND
-        putExtra(Intent.EXTRA_TEXT, "Check out this awesome app!")
+        putExtra(Intent.EXTRA_TEXT, "Check out this awesome app! \n https://play.google.com/store/apps/details?id=${context.packageName}&hl=en")
         type = "text/plain"
     }
     context.startActivity(Intent.createChooser(intent, "Share via"))

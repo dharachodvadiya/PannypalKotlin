@@ -14,7 +14,6 @@ data class PaymentWithMode(
     val modeName: String
 )
 
-fun PaymentWithMode.toPaymentWithIdName() = PaymentWithIdName(id, name)
 fun PaymentWithMode.toPayment() = Payment(
     id = id,
     name = name,

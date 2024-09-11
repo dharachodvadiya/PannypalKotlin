@@ -43,7 +43,7 @@ fun AddPaymentDialogField(
     FlowRow {
 
         paymentModeList.forEach { item ->
-            paymentModeItem(
+            PaymentModeItem(
                 isSelected = currentModId == item.id,
                 text = item.name,
                 onClick = { onModeChange(item.id) })
@@ -53,7 +53,7 @@ fun AddPaymentDialogField(
 }
 
 @Composable
-fun paymentModeItem(
+fun PaymentModeItem(
     isSelected: Boolean,
     text: String,
     onClick: () -> Unit,

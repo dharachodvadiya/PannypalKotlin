@@ -10,7 +10,6 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 
 internal fun Modifier.roundedCornerBackground(
     backgroundColor: Color,

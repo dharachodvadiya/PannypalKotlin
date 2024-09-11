@@ -22,6 +22,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -111,7 +112,7 @@ fun MerchantScreen(
     }
 
     var addMerchantId by remember {
-        mutableStateOf(-1L)
+        mutableLongStateOf(-1L)
     }
 
     if (isAddMerchantSuccessState != isAddSuccess) {
@@ -135,7 +136,7 @@ fun MerchantScreen(
     }
 
     var editMerchantId by remember {
-        mutableStateOf(-1L)
+        mutableLongStateOf(-1L)
     }
 
     if (isEditMerchantSuccessState != isEditSuccess) {
@@ -159,7 +160,7 @@ fun MerchantScreen(
     }
 
     var addMerchantDataId by remember {
-        mutableStateOf(-1L)
+        mutableLongStateOf(-1L)
     }
 
     if (isAddMerchantDataSuccessState != isAddMerchantDataSuccess) {

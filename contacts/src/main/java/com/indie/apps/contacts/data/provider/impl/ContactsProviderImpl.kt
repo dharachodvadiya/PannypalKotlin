@@ -5,7 +5,11 @@ import android.database.Cursor
 import android.net.Uri
 import android.provider.ContactsContract
 import android.provider.ContactsContract.CommonDataKinds.Email
-import android.provider.ContactsContract.CommonDataKinds.Phone
+import android.provider.ContactsContract.CommonDataKinds.Phone.CONTACT_ID
+import android.provider.ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE
+import android.provider.ContactsContract.CommonDataKinds.Phone.CONTENT_URI
+import android.provider.ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME
+import android.provider.ContactsContract.CommonDataKinds.Phone.NUMBER
 import android.provider.ContactsContract.CommonDataKinds.StructuredName
 import android.provider.ContactsContract.CommonDataKinds.Website
 import com.indie.apps.contacts.data.map
@@ -64,15 +68,15 @@ class ContactsProviderImpl(
 
     private fun fetchContactNumInfoList(searchString: String): ContactNumInfos {
         val cursor = query(
-            uri = Phone.CONTENT_URI,
+            uri = CONTENT_URI,
             projection = arrayOf(
-                Phone.CONTACT_ID,
-                Phone.DISPLAY_NAME,
-                Phone.NUMBER
+                CONTACT_ID,
+                DISPLAY_NAME,
+                NUMBER
             ),
-            sort = Phone.DISPLAY_NAME,
+            sort = DISPLAY_NAME,
             selection = if (searchString.isNotEmpty())
-                "${Phone.DISPLAY_NAME} LIKE ?"
+                "$DISPLAY_NAME LIKE ?"
             else
                 null,
             selectionArgs = if (searchString.isNotEmpty())
@@ -84,11 +88,11 @@ class ContactsProviderImpl(
         val contacts = mutableMapOf<String, ContactNumInfo>()
         while (cursor?.moveToNext() == true) {
             val contactId =
-                cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.CONTACT_ID))
+                cursor.getString(cursor.getColumnIndexOrThrow(CONTACT_ID))
             val name =
-                cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME))
+                cursor.getString(cursor.getColumnIndexOrThrow(DISPLAY_NAME))
             val phoneNumber =
-                cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER))
+                cursor.getString(cursor.getColumnIndexOrThrow(NUMBER))
 
             // Use contactId as a key to ensure unique contacts
             val contact = contacts[contactId] ?: ContactNumInfo(
@@ -118,7 +122,7 @@ class ContactsProviderImpl(
             selectionArgs = arrayOf(
                 contactId,
                 StructuredName.CONTENT_ITEM_TYPE,
-                Phone.CONTENT_ITEM_TYPE,
+                CONTENT_ITEM_TYPE,
                 Email.CONTENT_ITEM_TYPE,
                 Website.CONTENT_ITEM_TYPE
             )
@@ -153,9 +157,6 @@ class ContactsProviderImpl(
                 " AND ${ContactsContract.Data.MIMETYPE} IN (?,?,?,?)"
 
         private const val CONTACT_LIST_SELECT = "${ContactsContract.Contacts.HAS_PHONE_NUMBER}=?"
-        private const val CONTACT_LIST_SEARCH_SELECT =
-            "${ContactsContract.Contacts.HAS_PHONE_NUMBER}=?" +
-                    " AND ${ContactsContract.Data.DISPLAY_NAME_PRIMARY} LIKE ?"
     }
 
 }

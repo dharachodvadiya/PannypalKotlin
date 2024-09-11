@@ -24,7 +24,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
@@ -174,7 +173,7 @@ fun BottomSaveButton(
 fun DialogSearchView(
     searchState: TextFieldState,
     onTextChange: (String) -> Unit,
-    trailingContent: @Composable() (() -> Unit)? = null,
+    trailingContent: @Composable (() -> Unit)? = null,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     Row(
@@ -227,11 +226,11 @@ fun DialogTextFieldItem(
         Row(
             modifier = Modifier
                 .height(dimensionResource(id = R.dimen.new_entry_field_height))
-                .roundedCornerBackground(MyAppTheme.colors.transparent)
-               /* .background(
-                    shape = RoundedCornerShape(dimensionResource(id = R.dimen.round_corner)),
-                    color = MyAppTheme.colors.transparent
-                )*/,
+                .roundedCornerBackground(MyAppTheme.colors.transparent),
+            /* .background(
+                 shape = RoundedCornerShape(dimensionResource(id = R.dimen.round_corner)),
+                 color = MyAppTheme.colors.transparent
+             )*/
             verticalAlignment = Alignment.CenterVertically,
         ) {
 
@@ -333,7 +332,7 @@ fun NoDataMessage(
     iconSize: Dp = 50.dp,
     titleTextStyle: TextStyle = MyAppTheme.typography.Regular51,
     detailsTextStyle: TextStyle = MyAppTheme.typography.Regular44,
-    modifier: Modifier = Modifier.fillMaxSize()
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier.fillMaxSize()
 ) {
     Box(
         modifier = modifier

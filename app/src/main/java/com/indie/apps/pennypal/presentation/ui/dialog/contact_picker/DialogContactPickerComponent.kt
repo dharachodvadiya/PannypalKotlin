@@ -2,9 +2,7 @@ package com.indie.apps.pennypal.presentation.ui.dialog.contact_picker
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -14,7 +12,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
@@ -176,7 +173,7 @@ private fun SearchContactPickerListItem(
         if (item.expanded.value) {
             item.phoneNumbers.forEachIndexed { index, number ->
 
-                contactNumberItem(
+                ContactNumberItem(
                     phoneNumber = number,
                     selected = index == item.currentNumberIndex.value,
                     onSelected = { onNumberChange(index) }
@@ -188,7 +185,7 @@ private fun SearchContactPickerListItem(
 }
 
 @Composable
-private fun contactNumberItem(
+private fun ContactNumberItem(
     phoneNumber: String,
     selected: Boolean,
     onSelected: () -> Unit,
