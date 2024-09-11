@@ -23,7 +23,7 @@ fun SelectPaymentDialogField(
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
-            .padding(horizontal = dimensionResource(id = R.dimen.item_inner_padding))
+            .padding(horizontal = dimensionResource(id = R.dimen.padding))
             .fillMaxWidth()
     ) {
         val bankList = paymentList.filter { item ->

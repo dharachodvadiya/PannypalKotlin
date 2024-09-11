@@ -21,7 +21,6 @@ fun PaymentModeDefaultItem(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = dimensionResource(id = R.dimen.padding))
             .roundedCornerBackground(MyAppTheme.colors.itemBg)
             /* .background(
                  shape = RoundedCornerShape(dimensionResource(id = R.dimen.round_corner)),

@@ -39,7 +39,7 @@ import androidx.paging.compose.itemKey
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.entity.toMerchantNameAndDetails
 import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
-import com.indie.apps.pennypal.presentation.ui.component.DeleteAlertDialog
+import com.indie.apps.pennypal.presentation.ui.component.ConfirmationDialog
 import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
 import com.indie.apps.pennypal.presentation.ui.component.showToast
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
@@ -316,7 +316,7 @@ fun MerchantDataScreen(
             stringResource(id = R.string.merchant_data_delete_success_message)
 
         if (openAlertDialog) {
-            DeleteAlertDialog(
+            ConfirmationDialog(
                 dialogTitle = R.string.delete_dialog_title,
                 dialogText = R.string.delete_item_dialog_text,
                 onConfirmation = {

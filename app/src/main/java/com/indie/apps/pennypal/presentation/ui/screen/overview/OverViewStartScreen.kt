@@ -34,6 +34,7 @@ fun OverViewStartScreen(
     onProfileClick: () -> Unit,
     bottomPadding: PaddingValues,
     addEditMerchantDataId: Long,
+    onNavigationUp: () -> Unit,
     isAddMerchantDataSuccess: Boolean = false,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
@@ -144,6 +145,7 @@ fun OverViewStartScreen(
 
         }
     }
+
 }
 
 @Preview
@@ -153,7 +155,8 @@ private fun OverViewScreenPreview() {
         OverViewStartScreen(
             onProfileClick = {},
             bottomPadding = PaddingValues(0.dp),
-            addEditMerchantDataId = -1
+            addEditMerchantDataId = -1,
+            onNavigationUp = {}
         )
     }
 }

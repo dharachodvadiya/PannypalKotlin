@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.screen.payment
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -35,7 +36,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.presentation.ui.component.AccountTypeItem
 import com.indie.apps.pennypal.presentation.ui.component.BottomSaveButton
-import com.indie.apps.pennypal.presentation.ui.component.DeleteAlertDialog
+import com.indie.apps.pennypal.presentation.ui.component.ConfirmationDialog
 import com.indie.apps.pennypal.presentation.ui.component.TopBarWithTitle
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
@@ -50,6 +51,7 @@ fun PaymentScreen(
     isEditSuccess: Boolean = false,
     onEditPaymentClick: (Long) -> Unit,
     onAddPaymentClick: () -> Unit,
+    onNavigationUp: () -> Unit,
     paymentId: Long = 0L,
     onModeChange: (Boolean) -> Unit
 ) {
@@ -74,6 +76,7 @@ fun PaymentScreen(
     val context = LocalContext.current
     val paymentDeleteToast = stringResource(id = R.string.payment_delete_success_message)
     var openDeleteDialog by remember { mutableStateOf(false) }
+    var openDiscardDialog by remember { mutableStateOf(false) }
     var deletePaymentId by remember { mutableLongStateOf(0) }
 
     val editAnimRun by paymentViewModel.editAnimRun.collectAsStateWithLifecycle()
@@ -93,13 +96,21 @@ fun PaymentScreen(
         isEditPaymentSuccessState = isEditSuccess
     }
 
+    BackHandler(){
+        if(isEditMode){
+            openDiscardDialog = true
+        }else{
+            onNavigationUp()
+        }
+    }
+
     Scaffold(
         topBar = {
             TopBarWithTitle(
                 isBackEnable = isEditMode,
                 onNavigationUp = {
-                    paymentViewModel.setEditMode(false)
-                    onModeChange(false)
+                    openDiscardDialog = true
+
                 },
                 title = if (isEditMode) stringResource(id = R.string.edit_account_details) else stringResource(
                     id = R.string.accounts
@@ -149,6 +160,7 @@ fun PaymentScreen(
                 .fillMaxSize()
                 .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
                 .padding(innerPadding)
+                .padding(horizontal = dimensionResource(id =  R.dimen.padding))
                 .verticalScroll(scrollState),
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding))
         ) {
@@ -230,7 +242,7 @@ fun PaymentScreen(
         }
 
         if (openDeleteDialog) {
-            DeleteAlertDialog(
+            ConfirmationDialog(
                 dialogTitle = R.string.delete_dialog_title,
                 dialogText = R.string.delete_payment_dialog_text,
                 onConfirmation = {
@@ -250,6 +262,23 @@ fun PaymentScreen(
             )
         }
 
+        if (openDiscardDialog) {
+            ConfirmationDialog(
+                dialogTitle = R.string.discard_dialog_title,
+                dialogText = R.string.discard_dialog_text,
+                onConfirmation = {
+                    openDiscardDialog = false
+                    paymentViewModel.setEditMode(false)
+                    onModeChange(false)
+                },
+                onDismissRequest = {
+                    openDiscardDialog = false
+                },
+                positiveText = R.string.discard,
+                negativeText = R.string.cancel
+            )
+        }
+
     }
 }
 
@@ -260,7 +289,8 @@ private fun PaymentScreenPreview() {
         PaymentScreen(
             onModeChange = {},
             onEditPaymentClick = {},
-            onAddPaymentClick = {}
+            onAddPaymentClick = {},
+            onNavigationUp = {}
         )
     }
 }

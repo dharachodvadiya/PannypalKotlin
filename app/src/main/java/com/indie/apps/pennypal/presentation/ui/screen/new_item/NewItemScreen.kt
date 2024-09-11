@@ -1,6 +1,7 @@
 package com.indie.apps.pennypal.presentation.ui.screen.new_item
 
 import android.annotation.SuppressLint
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -29,6 +30,7 @@ import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.entity.Payment
 import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
 import com.indie.apps.pennypal.presentation.ui.component.BottomSaveButton
+import com.indie.apps.pennypal.presentation.ui.component.ConfirmationDialog
 import com.indie.apps.pennypal.presentation.ui.component.TopBarWithTitle
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
@@ -70,6 +72,16 @@ fun NewItemScreen(
 
     var haveFocus by remember { mutableStateOf(false) }
 
+    var openDiscardDialog by remember { mutableStateOf(false) }
+
+    BackHandler(){
+        if(newItemViewModel.isEditData()){
+            openDiscardDialog = true
+        }else{
+            onNavigationUp()
+        }
+    }
+
     when (uiState) {
         is Resource.Loading -> {
             LoadingWithProgress()
@@ -79,8 +91,15 @@ fun NewItemScreen(
 
             Scaffold(topBar = {
                 TopBarWithTitle(
-                    title = stringResource(id = R.string.new_item), onNavigationUp = {
-                        if (enableButton) onNavigationUp()
+                    title = stringResource(id = R.string.new_item),
+                    onNavigationUp = {
+                        if (enableButton) {
+                            if(newItemViewModel.isEditData()) {
+                                openDiscardDialog = true
+                            }else {
+                                onNavigationUp()
+                            }
+                        }
                     }, contentAlignment = Alignment.Center
                 )
             }) { padding ->
@@ -146,6 +165,22 @@ fun NewItemScreen(
         is Resource.Error -> {
             LoadingWithProgress()
         }
+    }
+
+    if (openDiscardDialog) {
+        ConfirmationDialog(
+            dialogTitle = R.string.discard_dialog_title,
+            dialogText = R.string.discard_dialog_text,
+            onConfirmation = {
+                openDiscardDialog = false
+                onNavigationUp()
+            },
+            onDismissRequest = {
+                openDiscardDialog = false
+            },
+            positiveText = R.string.discard,
+            negativeText = R.string.cancel
+        )
     }
 
 

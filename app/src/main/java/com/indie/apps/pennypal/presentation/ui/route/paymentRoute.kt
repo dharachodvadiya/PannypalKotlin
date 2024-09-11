@@ -47,6 +47,9 @@ fun NavGraphBuilder.paymentRoute(
                 },
                 onAddPaymentClick = {
                     navController.navigate(DialogNav.ADD_EDIT_PAYMENT.route)
+                },
+                onNavigationUp = {
+                    navController.popBackStack()
                 }
             )
         }

@@ -279,11 +279,13 @@ internal fun TextFieldError(textError: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun DeleteAlertDialog(
+fun ConfirmationDialog(
     onDismissRequest: () -> Unit,
     onConfirmation: () -> Unit,
     dialogTitle: Int,
-    dialogText: Int
+    dialogText: Int,
+    @StringRes positiveText: Int = R.string.confirm,
+    @StringRes negativeText: Int = R.string.dismiss
 ) {
     AlertDialog(
         title = {
@@ -309,7 +311,7 @@ fun DeleteAlertDialog(
                     onConfirmation()
                 }
             ) {
-                Text(stringResource(id = R.string.confirm))
+                Text(stringResource(id = positiveText))
             }
         },
         dismissButton = {
@@ -318,7 +320,7 @@ fun DeleteAlertDialog(
                     onDismissRequest()
                 }
             ) {
-                Text(stringResource(id = R.string.dismiss))
+                Text(stringResource(id = negativeText))
             }
         }
     )
@@ -447,7 +449,6 @@ fun AccountTypeItem(
         modifier = modifier
             .fillMaxWidth()
             .animateContentSize()
-            .padding(horizontal = dimensionResource(id = R.dimen.padding))
     ) {
         val scope = rememberCoroutineScope()
         val baseColor = MyAppTheme.colors.itemBg

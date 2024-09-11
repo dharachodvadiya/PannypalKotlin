@@ -72,6 +72,8 @@ class NewItemViewModel @Inject constructor(
         }
     }
 
+    fun isEditData() = (merchantEditId != 0L)
+
     private fun setEditData() {
         viewModelScope.launch {
             try {

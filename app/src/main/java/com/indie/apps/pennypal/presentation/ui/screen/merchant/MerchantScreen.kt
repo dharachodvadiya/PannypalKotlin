@@ -40,7 +40,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.presentation.ui.component.DeleteAlertDialog
+import com.indie.apps.pennypal.presentation.ui.component.ConfirmationDialog
 import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
 import com.indie.apps.pennypal.presentation.ui.component.showToast
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
@@ -363,7 +363,7 @@ fun MerchantScreen(
 
 
             if (openAlertDialog) {
-                DeleteAlertDialog(
+                ConfirmationDialog(
                     dialogTitle = R.string.delete_dialog_title,
                     dialogText = R.string.delete_item_dialog_text,
                     onConfirmation = {

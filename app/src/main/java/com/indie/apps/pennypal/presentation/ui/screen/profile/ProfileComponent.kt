@@ -124,13 +124,13 @@ fun ProfileSection2(
             )
         }
 
-        ProfileCurrencyItem(
+        /*ProfileCurrencyItem(
             currencyCode = user.currency,
             currencySymbol = symbol,
             onClick = onCurrencyChangeClick
         )
 
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.weight(1f))*/
 
         /* ProfileLoginWithGoogleButton(
              onClick = onLoginWithGoogle,

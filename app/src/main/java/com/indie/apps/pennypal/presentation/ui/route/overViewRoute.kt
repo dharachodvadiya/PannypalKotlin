@@ -50,7 +50,10 @@ fun NavGraphBuilder.overViewRoute(
                 onProfileClick = { navController.navigate(ScreenNav.PROFILE.route) },
                 bottomPadding = innerPadding,
                 addEditMerchantDataId = merchantDataId ?: -1,
-                isAddMerchantDataSuccess = isAddMerchantDataSuccess ?: false
+                isAddMerchantDataSuccess = isAddMerchantDataSuccess ?: false,
+                onNavigationUp = {
+                    navController.popBackStack()
+                }
             )
         }
         composable(route = ScreenNav.NEW_ITEM.route) { backStackEntry ->
