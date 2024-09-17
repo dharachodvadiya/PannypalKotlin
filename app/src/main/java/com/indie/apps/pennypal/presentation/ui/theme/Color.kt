@@ -15,19 +15,19 @@ enum class Neutral(val color: Color) {
 }
 
 enum class Blue(val color: Color) {
-    blue50(Color(0xFFE7F4FD)),
-    blue100(Color(0xFFBDD8FF)),
-    blue200(Color(0xFF91BEFF)),
-    blue300(Color(0xFF64A3FF)),
-    blue400(Color(0xFF4390FF)),
-    blue500(Color(_bluePrimaryValue)),
-    blue600(Color(0xFF1E74FF)),
-    blue700(Color(0xFF1969FF)),
-    blue800(Color(0xFF145FFF)),
-    blue900(Color(0xFF0C4CFF)),
+    Blue50(Color(0xFFE7F4FD)),
+    Blue100(Color(0xFFBDD8FF)),
+    Blue200(Color(0xFF91BEFF)),
+    Blue300(Color(0xFF64A3FF)),
+    Blue400(Color(0xFF4390FF)),
+    Blue500(Color(bluePrimaryValue)),
+    Blue600(Color(0xFF1E74FF)),
+    Blue700(Color(0xFF1969FF)),
+    Blue800(Color(0xFF145FFF)),
+    Blue900(Color(0xFF0C4CFF)),
 }
 
-private const val _bluePrimaryValue = 0xFF227CFF
+private const val bluePrimaryValue = 0xFF227CFF
 
 enum class DarkBlue(val color: Color) {
     DarkBlue1(Color(0xFFEDEFFB)),
@@ -53,57 +53,93 @@ enum class Brand(val color: Color) {
 
 
 enum class BlueAccent(val color: Color) {
-    blueAccent100(Color(0xFFFFFFFF)),
-    blueAccent200(Color(_blueAccentValue)),
-    blueAccent400(Color(0xFFC3D0FF)),
-    blueAccent700(Color(0xFFA9BCFF))
+    BlueAccent100(Color(0xFFFFFFFF)),
+    BlueAccent200(Color(blueAccentValue)),
+    BlueAccent400(Color(0xFFC3D0FF)),
+    BlueAccent700(Color(0xFFA9BCFF))
 }
 
-private const val _blueAccentValue = 0xFFF6F8FF
+private const val blueAccentValue = 0xFFF6F8FF
 
-enum class Ocen(val color: Color) {
-    ocen50(Color(0xFFE4F5FE)),
-    ocen100(Color(0xFFBAE5FD)),
-    ocen200(Color(0xFF8DD4FC)),
-    ocen300(Color(0xFF5FC3FA)),
-    ocen400(Color(0xFF3CB6F9)),
-    ocen500(Color(_ocenPrimaryValue)),
-    ocen600(Color(0xFF17A2F7)),
-    ocen700(Color(0xFF1398F6)),
-    ocen800(Color(0xFF0F8FF5)),
-    ocen900(Color(0xFF087EF3))
+enum class Ocean(val color: Color) {
+    Ocean50(Color(0xFFE4F5FE)),
+    Ocean100(Color(0xFFBAE5FD)),
+    Ocean200(Color(0xFF8DD4FC)),
+    Ocean300(Color(0xFF5FC3FA)),
+    Ocean400(Color(0xFF3CB6F9)),
+    Ocean500(Color(oceanPrimaryValue)),
+    Ocean600(Color(0xFF17A2F7)),
+    Ocean700(Color(0xFF1398F6)),
+    Ocean800(Color(0xFF0F8FF5)),
+    Ocean900(Color(0xFF087EF3))
 }
 
-private const val _ocenPrimaryValue = 0xFF1AA9F8
+private const val oceanPrimaryValue = 0xFF1AA9F8
 
 enum class Green(val color: Color) {
-    green50(Color(0xFFE0F9F5)),
-    green100(Color(0xFFB3F0E6)),
-    green200(Color(0xFF80E7D5)),
-    green300(Color(0xFF4DDDC4)),
-    green400(Color(0xFF26D5B7)),
-    green500(Color(_greenPrimaryValue)),
-    green600(Color(0xFF00C9A3)),
-    green700(Color(0xFF00C299)),
-    green800(Color(0xFF00BC90)),
-    green900(Color(0xFF00B07F))
+    Green50(Color(0xFFE0F9F5)),
+    Green100(Color(0xFFB3F0E6)),
+    Green200(Color(0xFF80E7D5)),
+    Green300(Color(0xFF4DDDC4)),
+    Green400(Color(0xFF26D5B7)),
+    Green500(Color(greenPrimaryValue)),
+    Green600(Color(0xFF00C9A3)),
+    Green700(Color(0xFF00C299)),
+    Green800(Color(0xFF00BC90)),
+    Green900(Color(0xFF00B07F))
 }
 
-private const val _greenPrimaryValue = 0xFF00CEAA
-
-private const val _greenAccentValue = 0xFFA7FFE3
+private const val greenPrimaryValue = 0xFF00CEAA
 
 enum class Red(val color: Color) {
-    red50(Color(0xFFFEEDED)),
-    red100(Color(0xFFFDD1D1)),
-    red200(Color(0xFFFCB2B2)),
-    red300(Color(0xFFFA9393)),
-    red400(Color(0xFFF97C7C)),
-    red500(Color(_redPrimaryValue)),
-    red600(Color(0xFFF75D5D)),
-    red700(Color(0xFFF65353)),
-    red800(Color(0xFFF54949)),
-    red900(Color(0xFFF33737))
+    Red50(Color(0xFFFEEDED)),
+    Red100(Color(0xFFFDD1D1)),
+    Red200(Color(0xFFFCB2B2)),
+    Red300(Color(0xFFFA9393)),
+    Red400(Color(0xFFF97C7C)),
+    Red500(Color(redPrimaryValue)),
+    Red600(Color(0xFFF75D5D)),
+    Red700(Color(0xFFF65353)),
+    Red800(Color(0xFFF54949)),
+    Red900(Color(0xFFF33737))
 }
 
-private const val _redPrimaryValue = 0xFFF86565
+private const val redPrimaryValue = 0xFFF86565
+
+enum class CategoryDark(val color: Color) {
+    Other(Color(0xFFB0B0B0)),
+    Bills(Color(0xFFADD8E6)),
+    Education(Color(0xFFFFFACD)),
+    Entertainment(Color(0xFFFFE4B5)),
+    Food(Color(0xFF90EE90)),
+    Gift(Color(0xFFD8BFD8)),
+    Insurance(Color(0xFFFFC0CB)),
+    Investment(Color(0xFFAFEEEE)),
+    Medical(Color(0xFFFFB6C1)),
+    PersonalCare(Color(0xFFD2B48C)),
+    Salary(Color(0xFFE0FFFF)),
+    Rewards(Color(0xFFCCCCFF)),
+    Rent(Color(0xFFF5DEB3)),
+    Shopping(Color(0xFFFFE4E1)),
+    Tax(Color(0xFFFFDAB9)),
+    Traveling(Color(0xFF87CEFA))
+}
+
+enum class CategoryLight(val color: Color) {
+    Other(Color(0xFF404040)),
+    Bills(Color(0xFF00BFFF)),
+    Education(Color(0xFFFFD700)),
+    Entertainment(Color(0xFFFF8C00)),
+    Food(Color(0xFF228B22)),
+    Gift(Color(0xFF800080)),
+    Insurance(Color(0xFF8B0000)),
+    Investment(Color(0xFF008080)),
+    Medical(Color(0xFFC71585)),
+    PersonalCare(Color(0xFF3E2723)),
+    Salary(Color(0xFF008B8B)),
+    Rewards(Color(0xFF191970)),
+    Rent(Color(0xFF3B2F2A)),
+    Shopping(Color(0xFFB22222)),
+    Tax(Color(0xFF8B4513)),
+    Traveling(Color(0xFF4682B4))
+}

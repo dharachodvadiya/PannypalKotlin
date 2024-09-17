@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.google.gson.Gson
 import com.indie.apps.pennypal.R
+import com.indie.apps.pennypal.data.entity.Category
 import com.indie.apps.pennypal.data.entity.Payment
 import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
 import com.indie.apps.pennypal.presentation.ui.component.showToast
@@ -58,31 +59,37 @@ fun NavGraphBuilder.overViewRoute(
         }
         composable(route = ScreenNav.NEW_ITEM.route) { backStackEntry ->
 
+            val savedStateHandle = backStackEntry.savedStateHandle
+
             val context = LocalContext.current
             val merchantDataSaveToast =
                 stringResource(id = R.string.merchant_data_save_success_message)
 
-            val isMerchantLock: Boolean? =
-                backStackEntry.savedStateHandle.get<Boolean>(Util.SAVE_STATE_MERCHANT_LOCK)
+            val isMerchantLock: Boolean? = savedStateHandle.get<Boolean>(Util.SAVE_STATE_MERCHANT_LOCK)
 
             // get data passed back from B
-            val gsonStringMerchant: String? =
-                backStackEntry.savedStateHandle.get<String>(Util.SAVE_STATE_MERCHANT_NAME_DESC)
+            val gsonStringMerchant: String? = savedStateHandle.get<String>(Util.SAVE_STATE_MERCHANT_NAME_DESC)
 
             val merchant: MerchantNameAndDetails? = if (gsonStringMerchant != null) {
                 Gson().fromJson(gsonStringMerchant, MerchantNameAndDetails::class.java)
             } else null
 
-            val gsonStringPayment: String? =
-                backStackEntry.savedStateHandle.get<String>(Util.SAVE_STATE_PAYMENT)
+            val gsonStringPayment: String? = savedStateHandle.get<String>(Util.SAVE_STATE_PAYMENT)
 
             val payment: Payment? = if (gsonStringPayment != null) {
                 Gson().fromJson(gsonStringPayment, Payment::class.java)
             } else null
 
+            val gsonStringCategory = savedStateHandle.get<String>(Util.SAVE_STATE_CATEGORY)
+
+            val category: Category? = if (gsonStringCategory != null) {
+                Gson().fromJson(gsonStringCategory, Category::class.java)
+            } else null
+
 
             backStackEntry.savedStateHandle.remove<String>(Util.SAVE_STATE_MERCHANT_NAME_DESC)
             backStackEntry.savedStateHandle.remove<String>(Util.SAVE_STATE_PAYMENT)
+            backStackEntry.savedStateHandle.remove<String>(Util.SAVE_STATE_CATEGORY)
 
             bottomBarState.value = false
             NewItemScreen(
@@ -96,8 +103,21 @@ fun NavGraphBuilder.overViewRoute(
                         )
                     }
                 },
+                onCategorySelect = { currentId, categoryType ->
+                    navController.navigate(DialogNav.SELECT_CATEGORY.route)
+                    if(currentId != null) {
+                        navController.currentBackStackEntry?.savedStateHandle?.set(
+                            Util.SAVE_STATE_SELECT_CATEGORY_ID, currentId
+                        )
+                    }
+
+                    navController.currentBackStackEntry?.savedStateHandle?.set(
+                        Util.SAVE_STATE_CATEGORY_TYPE, categoryType
+                    )
+                },
                 merchantData = merchant,
                 paymentData = payment,
+                categoryData = category,
                 isMerchantLock = isMerchantLock ?: false,
                 onSaveSuccess = { _, merchantDataId, merchantId ->
                     context.showToast(merchantDataSaveToast)

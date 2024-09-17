@@ -26,6 +26,7 @@ import com.indie.apps.pennypal.presentation.ui.dialog.add_edit_payment.DialogAdd
 import com.indie.apps.pennypal.presentation.ui.dialog.contact_picker.DialogContactPicker
 import com.indie.apps.pennypal.presentation.ui.dialog.country_picker.DialogCountryPicker
 import com.indie.apps.pennypal.presentation.ui.dialog.search_merchant.DialogSearchMerchant
+import com.indie.apps.pennypal.presentation.ui.dialog.select_category.DialogSelectCategory
 import com.indie.apps.pennypal.presentation.ui.dialog.select_payment.DialogSelectPayment
 import com.indie.apps.pennypal.presentation.ui.navigation.BottomNavItem
 import com.indie.apps.pennypal.presentation.ui.navigation.DialogNav
@@ -292,6 +293,33 @@ fun PennyPalApp() {
                         onSaveSuccess = {
                             navController.popBackStack()
                         }
+                    )
+
+                }
+                dialog(
+                    route = DialogNav.SELECT_CATEGORY.route,
+                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
+                ) { backStackEntry ->
+
+                    val currentId =
+                        backStackEntry.savedStateHandle.get<Long>(Util.SAVE_STATE_SELECT_CATEGORY_ID)
+
+                    val type =
+                        backStackEntry.savedStateHandle.get<Int>(Util.SAVE_STATE_CATEGORY_TYPE)
+
+                    DialogSelectCategory(
+                        onNavigationUp = { navController.navigateUp() },
+                        onSelect = { category ->
+                            // Pass data back to A
+
+                            navController.previousBackStackEntry
+                                ?.savedStateHandle
+                                ?.set(Util.SAVE_STATE_CATEGORY, Gson().toJson(category))
+
+                            navController.popBackStack()
+                        },
+                        selectedId = currentId ?: 0L,
+                        type = type ?: -1
                     )
 
                 }

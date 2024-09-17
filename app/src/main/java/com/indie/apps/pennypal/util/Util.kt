@@ -34,6 +34,10 @@ object Util {
     const val SAVE_STATE_PAYMENT_EDIT_SUCCESS = "payment_edit_success"
     const val SAVE_STATE_PAYMENT_ADD_EDIT_ID = "payment_add_edit_id"
 
+    const val SAVE_STATE_CATEGORY = "category"
+    const val SAVE_STATE_SELECT_CATEGORY_ID = "select_category_id"
+    const val SAVE_STATE_CATEGORY_TYPE = "category_type"
+
     const val SAVE_STATE_MERCHANT_EDIT_ID = "merchant_edit_id"
     const val SAVE_STATE_ADD_MERCHANT_SUCCESS = "merchant_add_success"
     const val SAVE_STATE_EDIT_MERCHANT_SUCCESS = "merchant_edit_success"

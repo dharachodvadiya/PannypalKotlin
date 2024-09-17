@@ -14,10 +14,10 @@
     <string name="payment_type">Payment Type</string>
     <string name="description">Description</string>
     <string name="save">Save</string>
-    <string name="add_merchant_placeholder">Add Merchant</string>
-    <string name="add_payment_type_placeholder">Payment Type</string>
-    <string name="amount_placeholder">Amount</string>
-    <string name="description_placeholder">Short Description</string>
+    <string name="add_merchant_placeholder">Select Merchant</string>
+    <string name="add_payment_type_placeholder">Select Payment Type</string>
+    <string name="amount_placeholder">Enter Amount</string>
+    <string name="description_placeholder">Enter Short Description</string>
     <string name="add_merchant">Add Merchant</string>
     <string name="merchant_name_placeholder">Merchant Name</string>
     <string name="select_merchant">Select Merchant</string>
@@ -88,4 +88,7 @@
     <string name="cancel">Cancel</string>
     <string name="discard">Discard</string>
     <string name="edit_dialog_title">Exit</string>
+    <string name="category">Category</string>
+    <string name="add_category_placeholder">Select Category</string>
+    <string name="select_category">Select Category</string>
 </resources>

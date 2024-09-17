@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.google.gson.Gson
 import com.indie.apps.pennypal.R
+import com.indie.apps.pennypal.data.entity.Category
 import com.indie.apps.pennypal.data.entity.Payment
 import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
 import com.indie.apps.pennypal.presentation.ui.component.showToast
@@ -159,9 +160,16 @@ fun NavGraphBuilder.merchantRoute(
                 Gson().fromJson(gsonStringPayment, Payment::class.java)
             } else null
 
+            val gsonStringCategory = savedStateHandle.get<String>(Util.SAVE_STATE_CATEGORY)
+
+            val category: Category? = if (gsonStringCategory != null) {
+                Gson().fromJson(gsonStringCategory, Category::class.java)
+            } else null
+
 
             savedStateHandle.remove<String>(Util.SAVE_STATE_MERCHANT_NAME_DESC)
             savedStateHandle.remove<String>(Util.SAVE_STATE_PAYMENT)
+            savedStateHandle.remove<String>(Util.SAVE_STATE_CATEGORY)
 
             bottomBarState.value = false
             NewItemScreen(
@@ -175,8 +183,21 @@ fun NavGraphBuilder.merchantRoute(
                         )
                     }
                 },
+                onCategorySelect = { currentId, categoryType ->
+                    navController.navigate(DialogNav.SELECT_CATEGORY.route)
+                    if(currentId != null) {
+                        navController.currentBackStackEntry?.savedStateHandle?.set(
+                            Util.SAVE_STATE_SELECT_CATEGORY_ID, currentId
+                        )
+                    }
+
+                    navController.currentBackStackEntry?.savedStateHandle?.set(
+                        Util.SAVE_STATE_CATEGORY_TYPE, categoryType
+                    )
+                },
                 merchantData = merchant,
                 paymentData = payment,
+                categoryData = category,
                 isMerchantLock = false,
                 onSaveSuccess = { isEdit, merchantDataId, merchantId ->
                     /*navController.navigateUp()*/

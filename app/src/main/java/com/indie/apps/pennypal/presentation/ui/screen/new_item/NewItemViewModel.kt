@@ -3,11 +3,13 @@ package com.indie.apps.pennypal.presentation.ui.screen.new_item
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.indie.apps.pennypal.data.entity.Category
 import com.indie.apps.pennypal.data.entity.MerchantData
 import com.indie.apps.pennypal.data.entity.Payment
 import com.indie.apps.pennypal.data.entity.toMerchantNameAndDetails
 import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
 import com.indie.apps.pennypal.domain.usecase.AddMerchantDataUseCase
+import com.indie.apps.pennypal.domain.usecase.GetCategoryFromIdUseCase
 import com.indie.apps.pennypal.domain.usecase.GetMerchantDataFromIdUseCase
 import com.indie.apps.pennypal.domain.usecase.GetMerchantFromIdUseCase
 import com.indie.apps.pennypal.domain.usecase.GetPaymentFromIdUseCase
@@ -31,6 +33,7 @@ class NewItemViewModel @Inject constructor(
     private val getMerchantDataFromIdUseCase: GetMerchantDataFromIdUseCase,
     private val getMerchantFromIdUseCase: GetMerchantFromIdUseCase,
     private val getPaymentFromIdUseCase: GetPaymentFromIdUseCase,
+    private val getCategoryFromIdUseCase: GetCategoryFromIdUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -42,6 +45,10 @@ class NewItemViewModel @Inject constructor(
 
     val payment = MutableStateFlow<Payment?>(null)
 
+    val category = MutableStateFlow<Category?>(null)
+    private var categoryIncome: Category? = null
+    private var categoryExpense: Category? = null
+
     val received = MutableStateFlow(false)
 
     val enableButton = MutableStateFlow(true)
@@ -51,6 +58,7 @@ class NewItemViewModel @Inject constructor(
 
     var merchantError = MutableStateFlow("")
     var paymentError = MutableStateFlow("")
+    var categoryError = MutableStateFlow("")
 
     val uiState = MutableStateFlow<Resource<Unit>>(Resource.Loading())
 
@@ -98,6 +106,7 @@ class NewItemViewModel @Inject constructor(
                                     editMerchantData!!.details.toString()
 
                                 loadPaymentData(editMerchantData!!.paymentId)
+                                loadCategoryData(editMerchantData!!.categoryId)
                                 var merchantJob: Job? = null
                                 merchantJob = launch {
                                     getMerchantFromIdUseCase.getData(editMerchantData!!.merchantId)
@@ -129,8 +138,22 @@ class NewItemViewModel @Inject constructor(
         }
     }
 
+    private fun loadCategoryData(id: Long) {
+        viewModelScope.launch {
+            getCategoryFromIdUseCase.getData(id)
+                .collect {
+                    setCategory(it)
+                }
+        }
+    }
+
     fun onReceivedChange(isReceived: Boolean) {
         received.value = isReceived
+
+        if(received.value)
+            setCategory(categoryIncome)
+        else
+            setCategory(categoryExpense)
     }
 
     fun setMerchantData(data: MerchantNameAndDetails) {
@@ -143,14 +166,24 @@ class NewItemViewModel @Inject constructor(
         payment.value = data
     }
 
+    fun setCategory(data: Category?) {
+        categoryError.value = ""
+        category.value = data
+
+        if (received.value) categoryIncome = data else categoryExpense = data
+    }
+
     fun addOrEditMerchantData(onSuccess: (Boolean, Long, Long) -> Unit) {
         if (enableButton.value) {
             enableButton.value = false
-            if (amount.value.text.trim().isEmpty()) {
-                amount.value.setError(ErrorMessage.AMOUNT_EMPTY)
-                enableButton.value = true
-            } else if (merchant.value == null) {
+            if (merchant.value == null) {
                 merchantError.value = ErrorMessage.SELECT_MERCHANT
+                enableButton.value = true
+            } else if (category.value == null) {
+                categoryError.value = ErrorMessage.SELECT_CATEGORY
+                enableButton.value = true
+            } else if (amount.value.text.trim().isEmpty()) {
+                amount.value.setError(ErrorMessage.AMOUNT_EMPTY)
                 enableButton.value = true
             } else if (payment.value == null) {
                 paymentError.value = ErrorMessage.SELECT_PAYMENT
@@ -162,11 +195,11 @@ class NewItemViewModel @Inject constructor(
                     val merchantData = MerchantData(
                         merchantId = merchant.value!!.id,
                         paymentId = payment.value!!.id,
+                        categoryId = category.value!!.id,
                         amount = amount,
                         details = description.value.text.trim(),
                         dateInMilli = System.currentTimeMillis(),
-                        type = if (received.value) 1 else -1,
-                        categoryId = 1
+                        type = if (received.value) 1 else -1
                     )
 
                     viewModelScope.launch {
@@ -188,6 +221,7 @@ class NewItemViewModel @Inject constructor(
                     val merchantData = editMerchantData!!.copy(
                         merchantId = merchant.value!!.id,
                         paymentId = payment.value!!.id,
+                        categoryId = category.value!!.id,
                         amount = amount,
                         details = description.value.text.trim(),
                         type = if (received.value) 1 else -1

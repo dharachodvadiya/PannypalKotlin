@@ -50,6 +50,7 @@ fun MyAppTextField(
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
     textModifier: Modifier = Modifier,
     bgColor: Color = MyAppTheme.colors.transparent,
+    placeHolderColor: Color = MyAppTheme.colors.gray1,
     onDoneAction: (() -> Unit)? = {},
     onNextAction: (() -> Unit)? = null,
     paddingValues: PaddingValues = PaddingValues(0.dp)
@@ -109,7 +110,7 @@ fun MyAppTextField(
                         Text(
                             text = placeHolder,
                             style = placeHolderTextStyle,
-                            color = MyAppTheme.colors.gray1
+                            color = placeHolderColor
                         )
                     },
                     trailingIcon = trailingIcon,

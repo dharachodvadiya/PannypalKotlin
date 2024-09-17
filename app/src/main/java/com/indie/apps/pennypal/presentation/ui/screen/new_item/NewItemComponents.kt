@@ -113,10 +113,13 @@ private fun NewEntryButtonItem(
 fun NewEntryFieldItemSection(
     onMerchantSelect: () -> Unit,
     onPaymentSelect: () -> Unit,
+    onCategorySelect: () -> Unit,
     merchantName: String? = null,
     paymentName: String? = null,
+    categoryName: String? = null,
     merchantError: String = "",
     paymentError: String = "",
+    categoryError: String = "",
     isMerchantLock: Boolean,
     amount: TextFieldState = TextFieldState(),
     description: TextFieldState = TextFieldState(),
@@ -164,14 +167,6 @@ fun NewEntryFieldItemSection(
             textError = merchantError
         )
         Spacer(modifier = Modifier.height(10.dp))
-        /* NewEntryDropDownList(
-             label = R.string.payment_type,
-             placeholder = R.string.add_payment_type_placeholder,
-             selectedValue = paymentName ?: "",
-             onValueChangedEvent = onPaymentSelect,
-             onAddClick = onPaymentAdd,
-             options = paymentList
-         )*/
 
         NewEntrySelectableItem(
             text = paymentName ?: "",
@@ -197,7 +192,31 @@ fun NewEntryFieldItemSection(
             textError = paymentError
         )
 
-        Spacer(modifier = Modifier.height(20.dp))
+        NewEntrySelectableItem(
+            text = categoryName ?: "",
+            label = R.string.category,
+            onClick = onCategorySelect,
+            placeholder = R.string.add_category_placeholder,
+            isSelectable = true,
+            trailingContent = {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                    contentDescription = "Add",
+                    tint = MyAppTheme.colors.gray1,
+                    modifier = Modifier
+                        .padding(horizontal = dimensionResource(id = R.dimen.item_inner_padding))
+                        .roundedCornerBackground(MyAppTheme.colors.transparent)
+                        .clickable {
+                            onCategorySelect()
+                        }
+                )
+            }
+        )
+        TextFieldError(
+            textError = categoryError
+        )
+
+        //Spacer(modifier = Modifier.height(20.dp))
         NewEntryTextFieldItem(
             label = R.string.amount,
             placeholder = R.string.amount_placeholder,
@@ -326,7 +345,8 @@ private fun NewEntryTextFieldItem(
             textStyle = MyAppTheme.typography.Medium46,
             keyboardType = keyboardType,
             placeHolderTextStyle = MyAppTheme.typography.Regular46,
-            modifier = Modifier.height(dimensionResource(id = R.dimen.new_entry_field_height))
+            placeHolderColor = MyAppTheme.colors.gray2,
+            modifier = Modifier.height(dimensionResource(id = R.dimen.new_entry_field_height)),
         )
     }
 }
@@ -338,6 +358,7 @@ private fun TNewEntryFieldItemSectionPreview() {
         NewEntryFieldItemSection(
             onMerchantSelect = {},
             onPaymentSelect = {},
+            onCategorySelect = {},
             isMerchantLock = false
         )
     }

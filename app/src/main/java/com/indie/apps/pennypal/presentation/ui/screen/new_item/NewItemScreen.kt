@@ -27,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.indie.apps.pennypal.R
+import com.indie.apps.pennypal.data.entity.Category
 import com.indie.apps.pennypal.data.entity.Payment
 import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
 import com.indie.apps.pennypal.presentation.ui.component.BottomSaveButton
@@ -44,18 +45,31 @@ fun NewItemScreen(
     newItemViewModel: NewItemViewModel = hiltViewModel(),
     onMerchantSelect: () -> Unit,
     onPaymentSelect: (Long?) -> Unit,
+    onCategorySelect: (Long?, Int) -> Unit,
     onNavigationUp: () -> Unit,
     isMerchantLock: Boolean,
     onSaveSuccess: (Boolean, Long, Long) -> Unit,
     merchantData: MerchantNameAndDetails? = null,
     paymentData: Payment? = null,
+    categoryData: Category? = null,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
-    if (merchantData != null) {
-        newItemViewModel.setMerchantData(merchantData)
+    LaunchedEffect(merchantData) {
+        if (merchantData != null) {
+            newItemViewModel.setMerchantData(merchantData)
+        }
     }
-    if (paymentData != null) {
-        newItemViewModel.setPaymentData(paymentData)
+
+    LaunchedEffect(paymentData) {
+        if (paymentData != null) {
+            newItemViewModel.setPaymentData(paymentData)
+        }
+    }
+
+    LaunchedEffect(categoryData) {
+        if (categoryData != null) {
+            newItemViewModel.setCategory(categoryData)
+        }
     }
 
     val uiState by newItemViewModel.uiState.collectAsStateWithLifecycle()
@@ -63,10 +77,12 @@ fun NewItemScreen(
     val received by newItemViewModel.received.collectAsStateWithLifecycle()
     val merchant by newItemViewModel.merchant.collectAsStateWithLifecycle()
     val payment by newItemViewModel.payment.collectAsStateWithLifecycle()
+    val category by newItemViewModel.category.collectAsStateWithLifecycle()
     val amount by newItemViewModel.amount.collectAsStateWithLifecycle()
     val description by newItemViewModel.description.collectAsStateWithLifecycle()
     val merchantError by newItemViewModel.merchantError.collectAsStateWithLifecycle()
     val paymentError by newItemViewModel.paymentError.collectAsStateWithLifecycle()
+    val categoryError by newItemViewModel.categoryError.collectAsStateWithLifecycle()
 
     val focusManager = LocalFocusManager.current
 
@@ -74,7 +90,7 @@ fun NewItemScreen(
 
     var openDiscardDialog by remember { mutableStateOf(false) }
 
-    BackHandler(){
+    BackHandler{
         if(newItemViewModel.isEditData()){
             openDiscardDialog = true
         }else{
@@ -143,11 +159,19 @@ fun NewItemScreen(
                                 onPaymentSelect(payment?.id)
                             }
                         },
+                        onCategorySelect = {
+                            if (enableButton) {
+                                focusManager.clearFocus()
+                                onCategorySelect(category?.id, if (received) 1 else -1 )
+                            }
+                        },
                         paymentName = payment?.name,
+                        categoryName = category?.name,
                         amount = amount,
                         description = description,
                         merchantError = merchantError,
                         paymentError = paymentError,
+                        categoryError = categoryError,
                         isMerchantLock = isMerchantLock
                     )
                     Spacer(modifier = Modifier.weight(1f))
@@ -194,6 +218,7 @@ private fun NewItemScreenPreview() {
             onPaymentSelect = {},
             onNavigationUp = {},
             onMerchantSelect = {},
+            onCategorySelect = {_,_->},
             onSaveSuccess = { _, _, _ -> },
             isMerchantLock = false
         )

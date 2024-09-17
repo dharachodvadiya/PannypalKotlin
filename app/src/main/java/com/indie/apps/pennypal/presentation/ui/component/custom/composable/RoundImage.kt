@@ -3,6 +3,7 @@ package com.indie.apps.pennypal.presentation.ui.component.custom.composable
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -20,6 +21,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
@@ -31,6 +33,7 @@ fun RoundImage(
     tint: Color = MyAppTheme.colors.black,
     brush: Brush? = null,
     backGround: Color,
+    innerPadding: Dp = 0.dp,
     contentDescription: String,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier.size(dimensionResource(id = R.dimen.item_image))
 ) {
@@ -40,7 +43,7 @@ fun RoundImage(
             .background(
                 color = backGround,
                 shape = CircleShape
-            )
+            ).padding(innerPadding)
     ) {
         if (brush != null) {
             Icon(

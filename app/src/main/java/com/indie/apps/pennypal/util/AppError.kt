@@ -28,4 +28,5 @@ object ErrorMessage {
     const val PHONE_NO_INVALID = "Enter Valid Phone Number"
     const val SELECT_MERCHANT = "Select Merchant"
     const val SELECT_PAYMENT = "Select Payment"
+    const val SELECT_CATEGORY = "Select Category"
 }

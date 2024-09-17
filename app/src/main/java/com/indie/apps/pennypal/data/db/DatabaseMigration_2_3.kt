@@ -2,9 +2,8 @@ package com.indie.apps.pennypal.data.db
 
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import kotlinx.coroutines.runBlocking
 
-class Migration2to3() : Migration(2, 3) {
+class Migration2to3 : Migration(2, 3) {
     override fun migrate(db: SupportSQLiteDatabase) {
         //create category table
         db.execSQL("CREATE TABLE IF NOT EXISTS `category` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL COLLATE NOCASE, `pre_added` INTEGER NOT NULL, `soft_delete` INTEGER NOT NULL, `type` INTEGER NOT NULL)")
@@ -36,11 +35,11 @@ class Migration2to3() : Migration(2, 3) {
     private fun populateCategoryDb(database: SupportSQLiteDatabase) {
         // Insert default values into payment_mode table
         database.execSQL("INSERT INTO category (name, pre_added, soft_delete, type) VALUES ('Other',1,0,0)")
-        database.execSQL("INSERT INTO category (name, pre_added, soft_delete, type) VALUES ('Bills & Utilities',1,0,-1)")
+        database.execSQL("INSERT INTO category (name, pre_added, soft_delete, type) VALUES ('Bills and Utilities',1,0,-1)")
         database.execSQL("INSERT INTO category (name, pre_added, soft_delete, type) VALUES ('Education',1,0,-1)")
         database.execSQL("INSERT INTO category (name, pre_added, soft_delete, type) VALUES ('Entertainment',1,0,-1)")
-        database.execSQL("INSERT INTO category (name, pre_added, soft_delete, type) VALUES ('Food & Dining',1,0,-1)")
-        database.execSQL("INSERT INTO category (name, pre_added, soft_delete, type) VALUES ('Gift & Donation',1,0,-1)")
+        database.execSQL("INSERT INTO category (name, pre_added, soft_delete, type) VALUES ('Food and Dining',1,0,-1)")
+        database.execSQL("INSERT INTO category (name, pre_added, soft_delete, type) VALUES ('Gift and Donation',1,0,-1)")
         database.execSQL("INSERT INTO category (name, pre_added, soft_delete, type) VALUES ('Insurance',1,0,-1)")
         database.execSQL("INSERT INTO category (name, pre_added, soft_delete, type) VALUES ('Investments',1,0,-1)")
         database.execSQL("INSERT INTO category (name, pre_added, soft_delete, type) VALUES ('Medical',1,0,-1)")

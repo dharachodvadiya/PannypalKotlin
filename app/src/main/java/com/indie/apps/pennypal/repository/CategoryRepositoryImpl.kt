@@ -9,6 +9,10 @@ class CategoryRepositoryImpl @Inject constructor(private val categoryDao: Catego
     override suspend fun insertCategoryList(categories: List<Category>) =
         categoryDao.insertCategoryList(categories)
 
+    override fun getCategoryFromId(id: Long) = categoryDao.getCategoryFromId(id)
+
+    override fun getCategoryFromTypeList(type: Int) = categoryDao.getCategoryFromTypeList(type)
+
     override suspend fun insert(obj: Category) = categoryDao.insert(obj)
 
     override suspend fun update(obj: Category) = categoryDao.update(obj)

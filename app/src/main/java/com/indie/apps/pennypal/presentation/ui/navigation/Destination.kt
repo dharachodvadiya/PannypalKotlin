@@ -12,6 +12,7 @@ enum class DialogNav(val route: String) {
     COUNTRY_PICKER("Dialog/CountryCodePicker"),
     CONTACT_PICKER("Dialog/ContactPicker"),
     SELECT_PAYMENT("Dialog/SelectPayment"),
+    SELECT_CATEGORY("Dialog/SelectCategory"),
 }
 
 enum class ScreenNav(val route: String) {

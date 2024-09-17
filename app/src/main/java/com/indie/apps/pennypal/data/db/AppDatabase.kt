@@ -144,11 +144,11 @@ abstract class AppDatabase : RoomDatabase() {
                 val categoryDao = db.categoryDao()
                 val preAddedCategory = listOf(
                     Category(name = "Other", preAdded = 1, type = 0), //id = 1
-                    Category(name = "Bills & Utilities", preAdded = 1, type = -1), //id = 2
+                    Category(name = "Bills and Utilities", preAdded = 1, type = -1), //id = 2
                     Category(name = "Education", preAdded = 1, type = -1), //id = 3
                     Category(name = "Entertainment", preAdded = 1, type = -1), //id = 4
-                    Category(name = "Food & Dining", preAdded = 1, type = -1), //id = 5
-                    Category(name = "Gift & Donation", preAdded = 1, type = -1), //id = 6
+                    Category(name = "Food and Dining", preAdded = 1, type = -1), //id = 5
+                    Category(name = "Gift and Donation", preAdded = 1, type = -1), //id = 6
                     Category(name = "Insurance", preAdded = 1, type = -1), //id = 7
                     Category(name = "Investments", preAdded = 1, type = -1), //id = 8
                     Category(name = "Medical", preAdded = 1, type = -1), //id = 9

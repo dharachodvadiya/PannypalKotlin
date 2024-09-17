@@ -61,6 +61,7 @@ import com.indie.apps.pennypal.presentation.ui.screen.payment.AccountHeadingItem
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
+import com.indie.apps.pennypal.util.getPaymentModeIcon
 import com.indie.apps.pennypal.util.Util
 import kotlinx.coroutines.launch
 
@@ -466,7 +467,7 @@ fun AccountTypeItem(
                 .padding(dimensionResource(id = R.dimen.padding))
         ) {
 
-            dataList.forEach() { item ->
+            dataList.forEach { item ->
 
                 val itemAnimateColor = remember {
                     androidx.compose.animation.Animatable(baseColor)
@@ -488,40 +489,11 @@ fun AccountTypeItem(
                     Modifier
                 }
 
-                val id = when (item.modeName) {
-                    "Bank" -> {
-                        R.drawable.ic_bank
-                    }
-
-                    "Cash" -> {
-                        R.drawable.ic_cash
-                    }
-
-                    "Card" -> {
-                        R.drawable.ic_card
-                    }
-
-                    "Cheque" -> {
-                        R.drawable.ic_cheque
-                    }
-
-                    "Net-banking" -> {
-                        R.drawable.ic_net_banking
-                    }
-
-                    "Upi" -> {
-                        R.drawable.ic_upi
-                    }
-
-                    else -> {
-                        R.drawable.ic_payment
-                    }
-                }
                 AccountItem(
                     isSelected = item.id == selectPaymentId,
                     isEditMode = isEditMode,
                     name = item.name,
-                    symbolId = id,
+                    symbolId = getPaymentModeIcon(item.name),
                     isEditable = (item.preAdded == 0 && isEditable),
                     onSelect = { onSelect(item) },
                     onDeleteClick = { onDeleteClick(item) },

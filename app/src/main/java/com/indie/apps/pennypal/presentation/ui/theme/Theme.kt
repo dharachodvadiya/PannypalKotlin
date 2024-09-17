@@ -13,29 +13,29 @@ import androidx.compose.ui.graphics.Color
 
 private val lightScheme = MyAppColors(
     gradientBlue = listOf(
-        Blue.blue500.color,
-        Ocen.ocen500.color
+        Blue.Blue500.color,
+        Ocean.Ocean500.color
     ),
     gradientBg = listOf(
-        Blue.blue500.color,
-        Ocen.ocen500.color
+        Blue.Blue500.color,
+        Ocean.Ocean500.color
     ),
     gradientGreen = listOf(
-        Green.green50.color,
+        Green.Green50.color,
         Neutral.Neutral0.color
     ),
     gradientRed = listOf(
-        Red.red50.color,
+        Red.Red50.color,
         Neutral.Neutral0.color
     ),
-    brand = Blue.blue500.color,
-    redBgLight = Red.red100.color,
-    redBg = Red.red500.color,
-    redText = Red.red500.color,
-    greenBgLight = Green.green100.color,
-    greenBg = Green.green500.color,
-    greenText = Green.green500.color,
-    brandBg = Blue.blue50.color,
+    brand = Blue.Blue500.color,
+    redBgLight = Red.Red100.color,
+    redBg = Red.Red500.color,
+    redText = Red.Red500.color,
+    greenBgLight = Green.Green100.color,
+    greenBg = Green.Green500.color,
+    greenText = Green.Green500.color,
+    brandBg = Blue.Blue50.color,
     black = Neutral.Neutral8.color,
     white = Neutral.Neutral0.color,
     gray0 = Neutral.Neutral3.color,
@@ -50,8 +50,24 @@ private val lightScheme = MyAppColors(
     bottomBg = Neutral.Neutral2.color,
     lightBlue1 = Neutral.Neutral8.color,
     lightBlue2 = Neutral.Neutral8.color,
-    buttonBg = Blue.blue500.color,
+    buttonBg = Blue.Blue500.color,
     transparent = Color.Transparent,
+    categoryOther = CategoryLight.Other.color,
+    categoryBills = CategoryLight.Bills.color,
+    categoryEducation = CategoryLight.Education.color,
+    categoryEntertainment = CategoryLight.Entertainment.color,
+    categoryFood = CategoryLight.Food.color,
+    categoryGift = CategoryLight.Gift.color,
+    categoryInsurance = CategoryLight.Insurance.color,
+    categoryInvestment = CategoryLight.Investment.color,
+    categoryMedical = CategoryLight.Medical.color,
+    categoryPersonalCare = CategoryLight.PersonalCare.color,
+    categoryRent = CategoryLight.Rent.color,
+    categoryShopping = CategoryLight.Shopping.color,
+    categoryTax = CategoryLight.Tax.color,
+    categoryTravelling = CategoryLight.Traveling.color,
+    categorySalary = CategoryLight.Salary.color,
+    categoryRewards = CategoryLight.Rewards.color,
     isDark = false
 )
 
@@ -65,20 +81,20 @@ private val darkScheme = MyAppColors(
         Brand.Black.color
     ),
     gradientGreen = listOf(
-        Green.green50.color,
+        Green.Green50.color,
         Neutral.Neutral0.color
     ),
     gradientRed = listOf(
-        Red.red50.color,
+        Red.Red50.color,
         Neutral.Neutral0.color
     ),
     brand = DarkBlue.DarkBlue6.color,
-    redBgLight = Red.red100.color,
-    redBg = Red.red500.color,
-    redText = Red.red500.color,
-    greenBgLight = Green.green100.color,
-    greenBg = Green.green500.color,
-    greenText = Green.green500.color,
+    redBgLight = Red.Red100.color,
+    redBg = Red.Red500.color,
+    redText = Red.Red500.color,
+    greenBgLight = Green.Green100.color,
+    greenBg = Green.Green500.color,
+    greenText = Green.Green500.color,
     brandBg = Brand.Black.color,
     black = Brand.White.color,
     white = Brand.Black.color,
@@ -96,6 +112,22 @@ private val darkScheme = MyAppColors(
     lightBlue2 = DarkBlue.DarkBlue4.color,
     buttonBg = DarkBlue.DarkBlue5.color,
     transparent = Color.Transparent,
+    categoryOther = CategoryDark.Other.color,
+    categoryBills = CategoryDark.Bills.color,
+    categoryEducation = CategoryDark.Education.color,
+    categoryEntertainment = CategoryDark.Entertainment.color,
+    categoryFood = CategoryDark.Food.color,
+    categoryGift = CategoryDark.Gift.color,
+    categoryInsurance = CategoryDark.Insurance.color,
+    categoryInvestment = CategoryDark.Investment.color,
+    categoryMedical = CategoryDark.Medical.color,
+    categoryPersonalCare = CategoryDark.PersonalCare.color,
+    categoryRent = CategoryDark.Rent.color,
+    categoryShopping = CategoryDark.Shopping.color,
+    categoryTax = CategoryDark.Tax.color,
+    categoryTravelling = CategoryDark.Traveling.color,
+    categorySalary = CategoryDark.Salary.color,
+    categoryRewards = CategoryDark.Rewards.color,
     isDark = true
 )
 
@@ -210,18 +242,35 @@ data class MyAppColors(
 
     val transparent: Color,
 
+    val categoryOther: Color,
+    val categoryBills: Color,
+    val categoryEducation: Color,
+    val categoryEntertainment: Color,
+    val categoryFood: Color,
+    val categoryGift: Color,
+    val categoryInsurance: Color,
+    val categoryInvestment: Color,
+    val categoryMedical: Color,
+    val categoryPersonalCare: Color,
+    val categoryRent: Color,
+    val categoryShopping: Color,
+    val categoryTax: Color,
+    val categoryTravelling: Color,
+    val categorySalary: Color,
+    val categoryRewards: Color,
+
     val isDark: Boolean
 )
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Blue.blue500.color,
+    primary = Blue.Blue500.color,
     background = Neutral.Neutral0.color
 
 
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Blue.blue500.color,
+    primary = Blue.Blue500.color,
     background = Neutral.Neutral0.color
 )
 
