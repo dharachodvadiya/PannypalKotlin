@@ -24,14 +24,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.entity.Merchant
-import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListItem
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
@@ -41,10 +39,11 @@ import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
+import com.indie.apps.pennypal.util.Util
 
 @Composable
 fun MerchantTopBar(
-    title : String = "",
+    title: String = "",
     isEditable: Boolean = false,
     isDeletable: Boolean = false,
     onAddClick: () -> Unit,
@@ -59,8 +58,7 @@ fun MerchantTopBar(
         isBackEnable = (isEditable || isDeletable),
         onBackClick = onNavigationUp,
         content = {
-            if(!isEditable && !isDeletable)
-            {
+            if (!isEditable && !isDeletable) {
                 SearchView(
                     textState = textState,
                     onTextChange = onSearchTextChange,
@@ -68,9 +66,14 @@ fun MerchantTopBar(
                     bgColor = MyAppTheme.colors.lightBlue2,
                     modifier = Modifier
                         .height(dimensionResource(R.dimen.top_bar_profile)),
-                    paddingValues = PaddingValues(top = 0.dp, bottom = 0.dp, start = dimensionResource(id = R.dimen.padding), end = 0.dp)
+                    paddingValues = PaddingValues(
+                        top = 0.dp,
+                        bottom = 0.dp,
+                        start = dimensionResource(id = R.dimen.padding),
+                        end = 0.dp
+                    )
                 )
-            }else{
+            } else {
                 Text(
                     text = title,
                     style = MyAppTheme.typography.Semibold52_5,
@@ -81,10 +84,9 @@ fun MerchantTopBar(
         },
         trailingContent = {
 
-            if(isEditable || isDeletable)
-            {
+            if (isEditable || isDeletable) {
                 Row {
-                    if(isDeletable){
+                    if (isDeletable) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_delete_top),
                             contentDescription = "Delete",
@@ -95,7 +97,7 @@ fun MerchantTopBar(
                                 .clickable { onDeleteClick() }
                         )
                     }
-                    if(isEditable){
+                    if (isEditable) {
                         Spacer(modifier = Modifier.width(15.dp))
                         Icon(
                             painter = painterResource(id = R.drawable.ic_edit),
@@ -108,7 +110,7 @@ fun MerchantTopBar(
                         )
                     }
                 }
-            }else{
+            } else {
                 PrimaryButton(
                     bgColor = MyAppTheme.colors.white,
                     borderStroke = BorderStroke(
@@ -136,16 +138,16 @@ fun MerchantTopBar(
 @Composable
 fun MerchantListItem(
     item: Merchant,
-    onLongClick: ()-> Unit = {},
-    onClick: ()-> Unit,
-    isSelected : Boolean = false,
-    itemBgColor : Color,
+    onLongClick: () -> Unit = {},
+    onClick: () -> Unit,
+    isSelected: Boolean = false,
+    itemBgColor: Color,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier.fillMaxWidth()
 ) {
-    val imageVector = if(isSelected) Icons.Default.Done else Icons.Default.Person
-    val iconBgColor = if(isSelected) MyAppTheme.colors.brand  else MyAppTheme.colors.lightBlue2
+    val imageVector = if (isSelected) Icons.Default.Done else Icons.Default.Person
+    val iconBgColor = if (isSelected) MyAppTheme.colors.brand else MyAppTheme.colors.lightBlue2
     val amount = item.incomeAmount - item.expenseAmount
-    val amountColor = if(amount >= 0) MyAppTheme.colors.greenText else MyAppTheme.colors.redText
+    val amountColor = if (amount >= 0) MyAppTheme.colors.greenText else MyAppTheme.colors.redText
 
     ListItem(
         isClickable = true,
@@ -171,13 +173,15 @@ fun MerchantListItem(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
-                Text(
-                    text = if (item.details.isNullOrEmpty()) stringResource(id = R.string.no_details) else item.details,
-                    style = MyAppTheme.typography.Medium40,
-                    color = MyAppTheme.colors.gray2,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+                if (!item.details.isNullOrEmpty()) {
+                    Text(
+                        text = item.details,
+                        style = MyAppTheme.typography.Medium40,
+                        color = MyAppTheme.colors.gray2,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
             }
         },
         trailingContent = {

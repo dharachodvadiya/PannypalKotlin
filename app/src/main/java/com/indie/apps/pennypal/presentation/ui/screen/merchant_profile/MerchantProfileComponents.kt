@@ -51,13 +51,17 @@ fun MerchantProfileTopSection(
         Text(
             text = name, style = MyAppTheme.typography.Semibold60, color = MyAppTheme.colors.black
         )
-        Text(
-            text = description.ifEmpty { stringResource(id = R.string.no_details) },
-            style = MyAppTheme.typography.Medium40,
-            color = MyAppTheme.colors.gray1,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.widthIn(min = 0.dp, max = 200.dp)
-        )
+        if(description.isNotEmpty())
+        {
+            Text(
+                text = description,
+                style = MyAppTheme.typography.Medium40,
+                color = MyAppTheme.colors.gray1,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.widthIn(min = 0.dp, max = 200.dp)
+            )
+        }
+
     }
 }
 

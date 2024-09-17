@@ -214,13 +214,16 @@ private fun SearchMerchantListItem(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
-                Text(
-                    text = if (item.details.isNullOrEmpty()) stringResource(id = R.string.no_details) else item.details,
-                    style = MyAppTheme.typography.Medium33,
-                    color = MyAppTheme.colors.gray1,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+                if (!item.details.isNullOrEmpty()){
+                    Text(
+                        text = item.details,
+                        style = MyAppTheme.typography.Medium33,
+                        color = MyAppTheme.colors.gray1,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+
             }
         },
         modifier = modifier,
