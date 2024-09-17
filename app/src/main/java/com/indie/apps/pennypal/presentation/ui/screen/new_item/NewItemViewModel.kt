@@ -165,7 +165,8 @@ class NewItemViewModel @Inject constructor(
                         amount = amount,
                         details = description.value.text.trim(),
                         dateInMilli = System.currentTimeMillis(),
-                        type = if (received.value) 1 else -1
+                        type = if (received.value) 1 else -1,
+                        categoryId = 1
                     )
 
                     viewModelScope.launch {

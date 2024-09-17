@@ -7,16 +7,19 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.indie.apps.cpp.data.repository.CountryRepository
+import com.indie.apps.pennypal.data.dao.CategoryDao
 import com.indie.apps.pennypal.data.dao.MerchantDao
 import com.indie.apps.pennypal.data.dao.MerchantDataDao
 import com.indie.apps.pennypal.data.dao.PaymentDao
 import com.indie.apps.pennypal.data.dao.PaymentModeDao
 import com.indie.apps.pennypal.data.dao.UserDao
+import com.indie.apps.pennypal.data.entity.Category
 import com.indie.apps.pennypal.data.entity.Merchant
 import com.indie.apps.pennypal.data.entity.MerchantData
 import com.indie.apps.pennypal.data.entity.Payment
 import com.indie.apps.pennypal.data.entity.PaymentMode
 import com.indie.apps.pennypal.data.entity.User
+import com.indie.apps.pennypal.repository.CategoryRepositoryImpl
 import com.indie.apps.pennypal.repository.PaymentModeRepositoryImpl
 import com.indie.apps.pennypal.repository.PaymentRepositoryImpl
 import com.indie.apps.pennypal.repository.UserRepositoryImpl
@@ -30,9 +33,10 @@ import kotlinx.coroutines.launch
         Payment::class,
         Merchant::class,
         MerchantData::class,
-        PaymentMode::class
+        PaymentMode::class,
+        Category::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -42,10 +46,11 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun paymentModeDao(): PaymentModeDao
     abstract fun merchantDao(): MerchantDao
     abstract fun merchantDataDao(): MerchantDataDao
+    abstract fun categoryDao(): CategoryDao
 
     companion object {
         @Volatile
-        private var INSTANCE: AppDatabase? = null
+        public var INSTANCE: AppDatabase? = null
 
         fun getInstance(context: Context, countryRepository: CountryRepository): AppDatabase {
             synchronized(this) {
@@ -55,6 +60,7 @@ abstract class AppDatabase : RoomDatabase() {
                     "pennypal_money_db"
                 )
                     .addMigrations(Migration1to2(countryRepository))
+                    .addMigrations(Migration2to3())
                     .addCallback(Callback(countryRepository))
                     .build().also {
                         INSTANCE = it
@@ -81,6 +87,7 @@ abstract class AppDatabase : RoomDatabase() {
                 populatePaymentModeDb(db)
                 populatePaymentDb(db)
                 populateUserDb(db)
+                INSTANCE?.populateCategoryDb()
 
 
                 /*val merchantDao = db.merchantDao()
@@ -95,7 +102,7 @@ abstract class AppDatabase : RoomDatabase() {
                 val user =
                     User(
                         name = "Me",
-                            currency = countryRepository.getCurrencyCodeFromCountryCode(
+                        currency = countryRepository.getCurrencyCodeFromCountryCode(
                             countryRepository.getDefaultCountryCode(),
                         ),
                         currencyCountryCode = countryRepository.getDefaultCountryCode()
@@ -132,6 +139,33 @@ abstract class AppDatabase : RoomDatabase() {
 
                 PaymentModeRepositoryImpl(paymentModeDao).insertPaymentModeList(preAddedPaymentMode)
             }
+
+
         }
+    }
+
+    suspend fun populateCategoryDb() {
+        val categoryDao = categoryDao()
+        val preAddedCategory = listOf(
+            Category(name = "Other", preAdded = 1, type = 0), //id = 1
+            Category(name = "Bills & Utilities", preAdded = 1, type = -1), //id = 2
+            Category(name = "Education", preAdded = 1, type = -1), //id = 3
+            Category(name = "Entertainment", preAdded = 1, type = -1), //id = 4
+            Category(name = "Food & Dining", preAdded = 1, type = -1), //id = 5
+            Category(name = "Gift & Donation", preAdded = 1, type = -1), //id = 6
+            Category(name = "Insurance", preAdded = 1, type = -1), //id = 7
+            Category(name = "Investments", preAdded = 1, type = -1), //id = 8
+            Category(name = "Medical", preAdded = 1, type = -1), //id = 9
+            Category(name = "Personal Care", preAdded = 1, type = -1), //id = 10
+            Category(name = "Rent", preAdded = 1, type = 0), //id = 11
+            Category(name = "Shopping", preAdded = 1, type = -1), //id = 12
+            Category(name = "Taxes", preAdded = 1, type = -1), //id = 13
+            Category(name = "Travelling", preAdded = 1, type = -1), //id = 14
+            Category(name = "Salary", preAdded = 1, type = 1), //id = 15
+            Category(name = "Rewards", preAdded = 1, type = 1), //id = 16
+        )
+
+        CategoryRepositoryImpl(categoryDao).insertCategoryList(preAddedCategory)
+
     }
 }

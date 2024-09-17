@@ -1,0 +1,16 @@
+package com.indie.apps.pennypal.repository
+
+import com.indie.apps.pennypal.data.dao.CategoryDao
+import com.indie.apps.pennypal.data.entity.Category
+import javax.inject.Inject
+
+class CategoryRepositoryImpl @Inject constructor(private val categoryDao: CategoryDao) :
+    CategoryRepository {
+    override suspend fun insertCategoryList(categories: List<Category>) =
+        categoryDao.insertCategoryList(categories)
+
+    override suspend fun insert(obj: Category) = categoryDao.insert(obj)
+
+    override suspend fun update(obj: Category) = categoryDao.update(obj)
+
+}

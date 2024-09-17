@@ -9,6 +9,8 @@ import com.indie.apps.cpp.data.CountryDb
 import com.indie.apps.cpp.data.repository.CountryRepository
 import com.indie.apps.cpp.data.repository.CountryRepositoryImpl
 import com.indie.apps.pennypal.data.db.AppDatabase
+import com.indie.apps.pennypal.repository.CategoryRepository
+import com.indie.apps.pennypal.repository.CategoryRepositoryImpl
 import com.indie.apps.pennypal.repository.MerchantDataRepository
 import com.indie.apps.pennypal.repository.MerchantDataRepositoryImpl
 import com.indie.apps.pennypal.repository.MerchantRepository
@@ -62,6 +64,11 @@ object AppModule {
     @Provides
     fun provideMerchantDataRepository(database: AppDatabase): MerchantDataRepository {
         return MerchantDataRepositoryImpl(database.merchantDataDao())
+    }
+
+    @Provides
+    fun provideCategoryRepository(database: AppDatabase): CategoryRepository {
+        return CategoryRepositoryImpl(database.categoryDao())
     }
 
     @Provides
