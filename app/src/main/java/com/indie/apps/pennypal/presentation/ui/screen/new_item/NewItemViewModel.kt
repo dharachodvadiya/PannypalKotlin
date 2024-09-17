@@ -170,7 +170,17 @@ class NewItemViewModel @Inject constructor(
         categoryError.value = ""
         category.value = data
 
-        if (received.value) categoryIncome = data else categoryExpense = data
+        if (received.value) {
+            categoryIncome = data
+            if (data != null) {
+                if(data.type == 0 && categoryExpense == null) categoryExpense = data
+            }
+        } else {
+            categoryExpense = data
+            if (data != null) {
+                if(data.type == 0 && categoryIncome == null) categoryIncome = data
+            }
+        }
     }
 
     fun addOrEditMerchantData(onSuccess: (Boolean, Long, Long) -> Unit) {
