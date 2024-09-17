@@ -8,11 +8,8 @@ class Migration2to3() : Migration(2, 3) {
     override fun migrate(db: SupportSQLiteDatabase) {
         //create category table
         db.execSQL("CREATE TABLE IF NOT EXISTS `category` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL COLLATE NOCASE, `pre_added` INTEGER NOT NULL, `soft_delete` INTEGER NOT NULL, `type` INTEGER NOT NULL)")
-        runBlocking {
-            AppDatabase.INSTANCE?.populateCategoryDb()
-            //update merchant table
-            updateMerchantDataTable(db)
-        }
+        populateCategoryDb(db)
+        updateMerchantDataTable(db)
     }
 
     private fun updateMerchantDataTable(database: SupportSQLiteDatabase) {
@@ -34,5 +31,25 @@ class Migration2to3() : Migration(2, 3) {
         database.execSQL("CREATE INDEX IF NOT EXISTS `index_merchant_data_payment_id` ON `merchant_data` (`payment_id`)")
         database.execSQL("CREATE INDEX IF NOT EXISTS `index_merchant_data_category_id` ON `merchant_data` (`category_id`)")
 
+    }
+
+    private fun populateCategoryDb(database: SupportSQLiteDatabase) {
+        // Insert default values into payment_mode table
+        database.execSQL("INSERT INTO category (name, pre_added, soft_delete, type) VALUES ('Other',1,0,0)")
+        database.execSQL("INSERT INTO category (name, pre_added, soft_delete, type) VALUES ('Bills & Utilities',1,0,-1)")
+        database.execSQL("INSERT INTO category (name, pre_added, soft_delete, type) VALUES ('Education',1,0,-1)")
+        database.execSQL("INSERT INTO category (name, pre_added, soft_delete, type) VALUES ('Entertainment',1,0,-1)")
+        database.execSQL("INSERT INTO category (name, pre_added, soft_delete, type) VALUES ('Food & Dining',1,0,-1)")
+        database.execSQL("INSERT INTO category (name, pre_added, soft_delete, type) VALUES ('Gift & Donation',1,0,-1)")
+        database.execSQL("INSERT INTO category (name, pre_added, soft_delete, type) VALUES ('Insurance',1,0,-1)")
+        database.execSQL("INSERT INTO category (name, pre_added, soft_delete, type) VALUES ('Investments',1,0,-1)")
+        database.execSQL("INSERT INTO category (name, pre_added, soft_delete, type) VALUES ('Medical',1,0,-1)")
+        database.execSQL("INSERT INTO category (name, pre_added, soft_delete, type) VALUES ('Personal Care',1,0,-1)")
+        database.execSQL("INSERT INTO category (name, pre_added, soft_delete, type) VALUES ('Rent',1,0,0)")
+        database.execSQL("INSERT INTO category (name, pre_added, soft_delete, type) VALUES ('Shopping',1,0,-1)")
+        database.execSQL("INSERT INTO category (name, pre_added, soft_delete, type) VALUES ('Taxes',1,0,-1)")
+        database.execSQL("INSERT INTO category (name, pre_added, soft_delete, type) VALUES ('Travelling',1,0,-1)")
+        database.execSQL("INSERT INTO category (name, pre_added, soft_delete, type) VALUES ('Salary',1,0,1)")
+        database.execSQL("INSERT INTO category (name, pre_added, soft_delete, type) VALUES ('Rewards',1,0,1)")
     }
 }
