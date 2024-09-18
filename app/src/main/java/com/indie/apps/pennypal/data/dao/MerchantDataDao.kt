@@ -7,6 +7,7 @@ import androidx.room.Transaction
 import com.indie.apps.pennypal.data.entity.MerchantData
 import com.indie.apps.pennypal.data.module.IncomeAndExpense
 import com.indie.apps.pennypal.data.module.MerchantDataDailyTotal
+import com.indie.apps.pennypal.data.module.MerchantDataWithAllData
 import com.indie.apps.pennypal.data.module.MerchantDataWithName
 import com.indie.apps.pennypal.data.module.MerchantDataWithNameWithDayTotal
 import com.indie.apps.pennypal.data.module.MerchantDataWithPaymentName
@@ -56,19 +57,28 @@ interface MerchantDataDao : BaseDao<MerchantData> {
         """
         SELECT md.id as id, 
                 md.merchant_id as merchantId, 
-                md.date_milli as dateInMilli, 
-                strftime('%d-%m-%Y', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') as day,
+                m.name as merchantName, 
+                md.category_id as categoryId, 
+                c.name as categoryName, 
+                md.payment_id as paymentId, 
+                p.name as paymentName, 
+                md.date_milli as dateInMilli,
                 md.details, 
                 md.amount, 
-                md.type,
-                m.name as merchantName
+                md.type
         FROM merchant_data md
         INNER JOIN merchant m ON md.merchant_id = m.id
+        INNER JOIN category c ON md.category_id = c.id
+        INNER JOIN payment_type p ON md.payment_id = p.id
+        WHERE m.name LIKE  '%' || :searchQuery || '%' OR 
+                md.details LIKE  '%' || :searchQuery || '%' OR
+                c.name LIKE  '%' || :searchQuery || '%' OR
+                p.name LIKE  '%' || :searchQuery || '%'
         ORDER BY id DESC
     """
     )
 
-    fun getMerchantsDataWithMerchantNameList(timeZoneOffsetInMilli: Int): PagingSource<Int, MerchantDataWithName>
+    fun searchMerchantsDataWithAllDataList(searchQuery : String): PagingSource<Int, MerchantDataWithAllData>
 
     @Transaction
     @Query(

@@ -185,7 +185,7 @@ fun NavGraphBuilder.merchantRoute(
                 },
                 onCategorySelect = { currentId, categoryType ->
                     navController.navigate(DialogNav.SELECT_CATEGORY.route)
-                    if(currentId != null) {
+                    if (currentId != null) {
                         navController.currentBackStackEntry?.savedStateHandle?.set(
                             Util.SAVE_STATE_SELECT_CATEGORY_ID, currentId
                         )
