@@ -32,12 +32,13 @@ class AddMerchantDataUseCase @Inject constructor(
                 val id = merchantDataRepository.insert(merchantData)
 
                 if (id > 0) {
-                    handleSuccessfulInsert(
+                    /*handleSuccessfulInsert(
                         id = id,
                         merchantId = merchantData.merchantId,
                         amount = merchantData.amount,
                         type = merchantData.type
-                    )
+                    )*/
+                    emit(Resource.Success(id))
                 } else {
                     emit(Resource.Error("Failed to insert MerchantData"))
                 }
@@ -47,7 +48,7 @@ class AddMerchantDataUseCase @Inject constructor(
         }.flowOn(dispatcher)
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
+   /* @OptIn(ExperimentalCoroutinesApi::class)
     private suspend fun FlowCollector<Resource<Long>>.handleSuccessfulInsert(
         id: Long, merchantId: Long, amount: Double, type: Int
     ) {
@@ -84,6 +85,6 @@ class AddMerchantDataUseCase @Inject constructor(
         }
 
 
-    }
+    }*/
 
 }

@@ -1,9 +1,7 @@
 package com.indie.apps.pennypal.repository
 
-import androidx.paging.PagingSource
 import com.indie.apps.pennypal.data.dao.MerchantDataDao
 import com.indie.apps.pennypal.data.entity.MerchantData
-import com.indie.apps.pennypal.data.module.MerchantDataWithAllData
 import javax.inject.Inject
 
 class MerchantDataRepositoryImpl @Inject constructor(private val merchantDataDao: MerchantDataDao) :
@@ -50,9 +48,9 @@ class MerchantDataRepositoryImpl @Inject constructor(private val merchantDataDao
         timeZoneOffsetInMilli: Int
     ) = merchantDataDao.searchMerchantDataWithMerchantNameList(searchQuery, timeZoneOffsetInMilli)
 
-    override fun getMerchantDataDailyTotalList(
+    override fun getDailyTotalList(
         timeZoneOffsetInMilli: Int
-    ) = merchantDataDao.getMerchantDataDailyTotalList(timeZoneOffsetInMilli)
+    ) = merchantDataDao.getDailyTotalList(timeZoneOffsetInMilli)
 
     override suspend fun insert(obj: MerchantData) = merchantDataDao.insert(obj)
 
@@ -60,4 +58,14 @@ class MerchantDataRepositoryImpl @Inject constructor(private val merchantDataDao
 
     override fun getMerchantDataWithNameWithDayTotal(timeZoneOffsetInMilli: Int) =
         merchantDataDao.getCombinedDataWithLimit(timeZoneOffsetInMilli)
+
+    override fun getMonthlyTotalList(
+        timeZoneOffsetInMilli: Int,
+        offset: Int
+    ) = merchantDataDao.getMonthlyTotalList(timeZoneOffsetInMilli, offset)
+
+    override fun getYearlyTotalList(
+        timeZoneOffsetInMilli: Int,
+        offset: Int
+    ) = merchantDataDao.getYearlyTotalList(timeZoneOffsetInMilli, offset)
 }

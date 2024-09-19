@@ -25,6 +25,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.indie.apps.pennypal.R
+import com.indie.apps.pennypal.data.module.toTotalWithCurrency
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
@@ -36,53 +37,34 @@ import com.indie.apps.pennypal.util.Util
 fun OverViewStartScreen(
     overViewViewModel: OverViewViewModel = hiltViewModel(),
     onProfileClick: () -> Unit,
-    onSeeAllClick : ()-> Unit,
+    onSeeAllClick: () -> Unit,
     bottomPadding: PaddingValues,
     addEditMerchantDataId: Long,
     onNavigationUp: () -> Unit,
     isAddMerchantDataSuccess: Boolean = false,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
-    /* val dataWithNameLazyPagingItems = overViewViewModel.pagedMerchantData.collectAsLazyPagingItems()
-     val merchantDataWithNamePagingState by overViewViewModel.merchantDataWithNamePagingState.collectAsStateWithLifecycle()
-     merchantDataWithNamePagingState.update(dataWithNameLazyPagingItems)*/
-
-    val dataWithDayLazyPagingItems =
+   /* val dataWithDayLazyPagingItems =
         overViewViewModel.pagedMerchantDataWithDay.collectAsLazyPagingItems()
     val merchantDataWithDayPagingState by overViewViewModel.merchantDataWithDayPagingState.collectAsStateWithLifecycle()
     merchantDataWithDayPagingState.update(dataWithDayLazyPagingItems)
-
-    /* val dailyTotalLazyPagingItems =
-         overViewViewModel.pagedMerchantDataDailyTotal.collectAsLazyPagingItems()
-     val merchantDataDailyTotalPagingState by
-     overViewViewModel.merchantDataDailyTotalPagingState.collectAsStateWithLifecycle()
-     merchantDataDailyTotalPagingState.update(dailyTotalLazyPagingItems)*/
-
-    val userData by overViewViewModel.userData.collectAsStateWithLifecycle()
+    */
+    //val userData by overViewViewModel.userData.collectAsStateWithLifecycle()
+    val monthlyTotal by overViewViewModel.monthlyTotal.collectAsStateWithLifecycle()
     val addDataAnimRun by overViewViewModel.addDataAnimRun.collectAsStateWithLifecycle()
 
     val recentTransaction by overViewViewModel.recentTransaction.collectAsStateWithLifecycle()
 
-
-    var amount by remember {
+    /*var amount by remember {
         mutableDoubleStateOf(0.0)
-    }
-
-    if (userData != null) {
-        Util.currentCurrencySymbol =
-            overViewViewModel.getSymbolFromCurrencyCode(userData?.currency ?: "USD")
-        amount = (userData?.incomeAmount ?: 0.0) - (userData?.expenseAmount ?: 0.0)
-
-    }
-
-    /*when (userData != null) {
-        is Resource.Loading -> {}
-        is Resource.Success -> {
-            Util.currentCurrencySymbol = getSymbolFromCurrencyCode(uiState.data?.currency ?: "USD")
-            amount = (uiState.data?.incomeAmount ?: 0.0) - (uiState.data?.expenseAmount ?: 0.0)
-        }
-        is Resource.Error -> {}
     }*/
+
+    if (monthlyTotal.isNotEmpty()) {
+        Util.currentCurrencySymbol =
+            overViewViewModel.getSymbolFromCurrencyCode(monthlyTotal[0].currency)
+        //amount = (monthlyTotal[0].totalIncome) - (monthlyTotal[0].totalExpense)
+
+    }
 
     var isAddDataSuccess by remember {
         mutableStateOf(false)
@@ -125,8 +107,7 @@ fun OverViewStartScreen(
                 .padding(innerPadding)
                 .padding(dimensionResource(id = R.dimen.padding))
         ) {
-            if (merchantDataWithDayPagingState.isRefresh
-            ) {
+            if (monthlyTotal.isEmpty()) {
                 LoadingWithProgress(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -134,28 +115,25 @@ fun OverViewStartScreen(
                 )
             } else {
                 OverviewBalanceView(
-                    balance = amount,
-                    symbol = overViewViewModel.getSymbolFromCurrencyCode(
-                        userData?.currency ?: "USD"
-                    )
+                    data = monthlyTotal[0].toTotalWithCurrency(),
+                    symbol = overViewViewModel.getSymbolFromCurrencyCode(monthlyTotal[0].currency),
                 )
-               /* OverviewList(
-                    dataWithDayList = dataWithDayLazyPagingItems,
-                    isLoadMore = merchantDataWithDayPagingState.isLoadMore,
-                    bottomPadding = bottomPadding,
-                    merchantDataId = addDataId,
-                    isAddMerchantDataSuccess = addDataAnimRun,
-                    onAnimStop = {
-                        overViewViewModel.addMerchantDataSuccessAnimStop()
-                    }
-                )*/
+                /* OverviewList(
+                     dataWithDayList = dataWithDayLazyPagingItems,
+                     isLoadMore = merchantDataWithDayPagingState.isLoadMore,
+                     bottomPadding = bottomPadding,
+                     merchantDataId = addDataId,
+                     isAddMerchantDataSuccess = addDataAnimRun,
+                     onAnimStop = {
+                         overViewViewModel.addMerchantDataSuccessAnimStop()
+                     }
+                 )*/
                 Spacer(modifier = modifier.height(dimensionResource(id = R.dimen.overview_item_padding)))
                 OverviewData(
                     recentTransaction = recentTransaction,
                     onSeeAllTransactionClick = onSeeAllClick
                 )
             }
-
         }
     }
 

@@ -28,28 +28,19 @@ class DeleteMultipleMerchantDataUseCase @Inject constructor(
 
             try {
                 emit(Resource.Loading())
-                val incomeAndExpense = merchantDataRepository.getTotalIncomeAndeExpenseFromIds(ids)
+                //val incomeAndExpense = merchantDataRepository.getTotalIncomeAndeExpenseFromIds(ids)
                 val merchantDataDeleteCount =
                     merchantDataRepository.deleteMerchantDataWithIdList(ids)
 
                 if (merchantDataDeleteCount == ids.size) {
-                    /* val (newIncomeAmt, newExpenseAmt) = merchantsData.fold(0.0 to 0.0) { acc, merchant ->
-                         val (currentIncome, currentExpense) = acc
-                         when {
-                             merchant.type < 0 -> (currentIncome to (currentExpense + merchant.amount))
-                             merchant.type > 0 -> ((currentIncome + merchant.amount) to currentExpense)
-                             else -> acc
-                         }
-                     }
 
-                     handleReflectedTableOperation(count, newIncomeAmt, newExpenseAmt)*/
-
-                    handleReflectedTableOperation(
+                    /*handleReflectedTableOperation(
                         merchantId,
                         merchantDataDeleteCount,
                         incomeAndExpense.totalIncome,
                         incomeAndExpense.totalExpense
-                    )
+                    )*/
+                    emit(Resource.Success(merchantDataDeleteCount))
 
                 } else {
                     emit(Resource.Error("Fail to delete Multiple Merchant Data"))
@@ -62,7 +53,7 @@ class DeleteMultipleMerchantDataUseCase @Inject constructor(
         }.flowOn(dispatcher)
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
+    /*@OptIn(ExperimentalCoroutinesApi::class)
     private suspend fun FlowCollector<Resource<Int>>.handleReflectedTableOperation(
         merchantId: Long,
         affectedRowCount: Int,
@@ -102,6 +93,6 @@ class DeleteMultipleMerchantDataUseCase @Inject constructor(
                 }
             )
         }
-    }
+    }*/
 
 }

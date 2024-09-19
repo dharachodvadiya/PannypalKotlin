@@ -302,8 +302,8 @@ fun MerchantDataScreen(
                 }
             }
             MerchantDataBottomBar(
-                totalIncome = merchant?.incomeAmount ?: 0.0,
-                totalExpense = merchant?.expenseAmount ?: 0.0,
+                //totalIncome = merchant?.incomeAmount ?: 0.0,
+                //totalExpense = merchant?.expenseAmount ?: 0.0,
                 isEditable = isEditable,
                 isDeletable = isDeletable,
                 onEditClick = { merchantDataViewModel.onEditClick(onSuccess = onEditClick) },

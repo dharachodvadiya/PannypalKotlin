@@ -23,16 +23,16 @@ data class Merchant(
     @ColumnInfo(name = "country_code")
     val countryCode: String? = null,
 
-    @ColumnInfo(name = "date_milli")
-    val dateInMilli: Long = 0,
+    //@ColumnInfo(name = "date_milli")
+    //val dateInMilli: Long = 0,
 
     val details: String? = null,
 
-    @ColumnInfo(name = "income_amt")
-    val incomeAmount: Double = 0.0,
+    //@ColumnInfo(name = "income_amt")
+    //val incomeAmount: Double = 0.0,
 
-    @ColumnInfo(name = "expense_amt")
-    val expenseAmount: Double = 0.0,
+    //@ColumnInfo(name = "expense_amt")
+    //val expenseAmount: Double = 0.0,
 )
 
 fun Merchant.toMerchantNameAndDetails() = MerchantNameAndDetails(id, name, details)

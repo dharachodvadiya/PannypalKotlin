@@ -6,11 +6,13 @@ import androidx.room.Query
 import androidx.room.Transaction
 import com.indie.apps.pennypal.data.entity.MerchantData
 import com.indie.apps.pennypal.data.module.IncomeAndExpense
-import com.indie.apps.pennypal.data.module.MerchantDataDailyTotal
+import com.indie.apps.pennypal.data.module.DailyTotal
+import com.indie.apps.pennypal.data.module.MonthlyTotal
 import com.indie.apps.pennypal.data.module.MerchantDataWithAllData
 import com.indie.apps.pennypal.data.module.MerchantDataWithName
 import com.indie.apps.pennypal.data.module.MerchantDataWithNameWithDayTotal
 import com.indie.apps.pennypal.data.module.MerchantDataWithPaymentName
+import com.indie.apps.pennypal.data.module.YearlyTotal
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -151,14 +153,45 @@ interface MerchantDataDao : BaseDao<MerchantData> {
         SELECT 
             strftime('%d-%m-%Y',  (date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') as day,
             SUM(CASE WHEN type >= 0 THEN amount ELSE 0 END) as totalIncome,
-            SUM(CASE WHEN type < 0 THEN amount ELSE 0 END) as totalExpense,
-            MAX(id) as lastId
+            SUM(CASE WHEN type < 0 THEN amount ELSE 0 END) as totalExpense
         FROM merchant_data
         GROUP BY day
         ORDER BY day DESC
     """
     )
-    fun getMerchantDataDailyTotalList(timeZoneOffsetInMilli: Int): PagingSource<Int, MerchantDataDailyTotal>
+    fun getDailyTotalList(timeZoneOffsetInMilli: Int): PagingSource<Int, DailyTotal>
+
+    @Query(
+        """
+    SELECT 
+        strftime('%Y-%m', (m.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') as month,
+        IFNULL(SUM(CASE WHEN m.type >= 0 THEN m.amount ELSE 0 END), 0) as totalIncome,
+        IFNULL(SUM(CASE WHEN m.type < 0 THEN m.amount ELSE 0 END), 0) as totalExpense,
+        u.currency
+    FROM merchant_data m
+    JOIN user u ON u.id = 1
+    GROUP BY month
+    ORDER BY month DESC
+    LIMIT :offset
+    """
+    )
+    fun getMonthlyTotalList(timeZoneOffsetInMilli: Int, offset: Int): Flow<List<MonthlyTotal>>
+
+    @Query(
+        """
+    SELECT 
+        strftime('%Y', (m.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') as year,
+        IFNULL(SUM(CASE WHEN m.type >= 0 THEN m.amount ELSE 0 END), 0) as totalIncome,
+        IFNULL(SUM(CASE WHEN m.type < 0 THEN m.amount ELSE 0 END), 0) as totalExpense,
+        u.currency
+    FROM merchant_data m
+    JOIN user u ON u.id = 1
+    GROUP BY year
+    ORDER BY year DESC
+    LIMIT :offset
+    """
+    )
+    fun getYearlyTotalList(timeZoneOffsetInMilli: Int, offset: Int): Flow<List<YearlyTotal>>
 
     @Transaction
     @Query(

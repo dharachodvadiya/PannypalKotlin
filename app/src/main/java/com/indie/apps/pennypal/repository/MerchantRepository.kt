@@ -17,7 +17,7 @@ interface MerchantRepository : BaseRepository<Merchant> {
 
     fun getMerchantFromId(id: Long): Flow<Merchant>
 
-    suspend fun getTotalIncomeAndeExpenseFromIds(ids: List<Long>): IncomeAndExpense
+   /* suspend fun getTotalIncomeAndeExpenseFromIds(ids: List<Long>): IncomeAndExpense
 
     suspend fun updateAmountWithDate(
         id: Long,
@@ -30,7 +30,7 @@ interface MerchantRepository : BaseRepository<Merchant> {
         incomeAmt: Double,
         expenseAmt: Double,
         dateInMilli: Long
-    ): Int
+    ): Int*/
 
     fun searchMerchantNameAndDetailList(searchQuery: String): PagingSource<Int, MerchantNameAndDetails>
     fun searchMerchantNameAndDetailListPaging(searchQuery: String): Flow<PagingData<MerchantNameAndDetails>>

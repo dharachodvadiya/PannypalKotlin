@@ -177,8 +177,8 @@ private fun MerchantDataTopBarItem(
 
 @Composable
 fun MerchantDataBottomBar(
-    totalIncome: Double = 0.0,
-    totalExpense: Double = 0.0,
+    //totalIncome: Double = 0.0,
+    //totalExpense: Double = 0.0,
     isEditable: Boolean = false,
     isDeletable: Boolean = false,
     onEditClick: () -> Unit,
@@ -213,7 +213,7 @@ fun MerchantDataBottomBar(
         }
 
     } else {
-        MerchantDataBottomTotal(
+       /* MerchantDataBottomTotal(
             totalIncome = totalIncome,
             totalExpense = totalExpense,
             modifier = modifier
@@ -223,7 +223,7 @@ fun MerchantDataBottomBar(
                     start = 0.dp,
                     end = 0.dp
                 )
-        )
+        )*/
     }
 
 }

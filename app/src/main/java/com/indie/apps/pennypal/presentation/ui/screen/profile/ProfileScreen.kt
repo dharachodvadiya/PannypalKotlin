@@ -41,6 +41,7 @@ fun ProfileScreen(
     val userUpdateToast = stringResource(id = R.string.user_update_success_message)
 
     val userData by profileViewModel.currUserData.collectAsStateWithLifecycle()
+    val monthlyTotal by profileViewModel.monthlyTotal.collectAsStateWithLifecycle()
 
     if (userData == null) {
         LoadingWithProgress()
@@ -110,7 +111,7 @@ private fun ProfileScreenData(
                 .background(MyAppTheme.colors.brandBg)
                 .padding(padding)
         ) {
-            ProfileTopSection(
+            /*ProfileTopSection(
                 symbol = symbol,
                 totalAmount = (user.incomeAmount - user.expenseAmount),
                 modifier = Modifier.height(screenHeight * 0.3f)
@@ -120,7 +121,7 @@ private fun ProfileScreenData(
                 onLoginWithGoogle = {},
                 onCurrencyChangeClick = onCurrencyChangeClick,
                 symbol = symbol
-            )
+            )*/
         }
 
     }

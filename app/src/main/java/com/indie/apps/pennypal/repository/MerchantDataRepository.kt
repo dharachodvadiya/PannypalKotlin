@@ -3,11 +3,13 @@ package com.indie.apps.pennypal.repository
 import androidx.paging.PagingSource
 import com.indie.apps.pennypal.data.entity.MerchantData
 import com.indie.apps.pennypal.data.module.IncomeAndExpense
-import com.indie.apps.pennypal.data.module.MerchantDataDailyTotal
+import com.indie.apps.pennypal.data.module.DailyTotal
+import com.indie.apps.pennypal.data.module.MonthlyTotal
 import com.indie.apps.pennypal.data.module.MerchantDataWithAllData
 import com.indie.apps.pennypal.data.module.MerchantDataWithName
 import com.indie.apps.pennypal.data.module.MerchantDataWithNameWithDayTotal
 import com.indie.apps.pennypal.data.module.MerchantDataWithPaymentName
+import com.indie.apps.pennypal.data.module.YearlyTotal
 import kotlinx.coroutines.flow.Flow
 
 interface MerchantDataRepository : BaseRepository<MerchantData> {
@@ -42,7 +44,11 @@ interface MerchantDataRepository : BaseRepository<MerchantData> {
         timeZoneOffsetInMilli: Int
     ): PagingSource<Int, MerchantDataWithName>
 
-    fun getMerchantDataDailyTotalList(timeZoneOffsetInMilli: Int): PagingSource<Int, MerchantDataDailyTotal>
+    fun getDailyTotalList(timeZoneOffsetInMilli: Int): PagingSource<Int, DailyTotal>
 
     fun getMerchantDataWithNameWithDayTotal(timeZoneOffsetInMilli: Int): PagingSource<Int, MerchantDataWithNameWithDayTotal>
+
+    fun getMonthlyTotalList(timeZoneOffsetInMilli: Int, offset: Int): Flow<List<MonthlyTotal>>
+
+    fun getYearlyTotalList(timeZoneOffsetInMilli: Int, offset: Int): Flow<List<YearlyTotal>>
 }

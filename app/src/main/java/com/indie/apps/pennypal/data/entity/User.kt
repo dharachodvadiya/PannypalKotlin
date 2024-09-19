@@ -27,11 +27,11 @@ data class User(
     @ColumnInfo(name = "last_sync_date_milli")
     val lastSyncDateInMilli: Long = 0,
 
-    @ColumnInfo(name = "income_amt")
-    val incomeAmount: Double = 0.0,
+    //@ColumnInfo(name = "income_amt")
+    //val incomeAmount: Double = 0.0,
 
-    @ColumnInfo(name = "expense_amt")
-    val expenseAmount: Double = 0.0,
+    //@ColumnInfo(name = "expense_amt")
+    //val expenseAmount: Double = 0.0,
 
     val currency: String,
 

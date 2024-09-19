@@ -30,7 +30,7 @@ class DeleteSingleMerchantDataUseCase @Inject constructor(
                 val count = merchantDataRepository.deleteMerchantDataWithId(merchantData.id)
 
                 if (count > 0) {
-                    merchantData.run {
+                    /*merchantData.run {
                         var newIncomeAmt = 0.0
                         var newExpenseAmt = 0.0
 
@@ -41,7 +41,8 @@ class DeleteSingleMerchantDataUseCase @Inject constructor(
 
                         handleReflectedTableOperation(count, newIncomeAmt, newExpenseAmt)
 
-                    }
+                    }*/
+                    emit(Resource.Success(count))
                 } else {
                     emit(Resource.Error("Fail to delete Single Merchant Data"))
                 }
@@ -52,7 +53,7 @@ class DeleteSingleMerchantDataUseCase @Inject constructor(
         }.flowOn(dispatcher)
     }
 
-    private suspend fun FlowCollector<Resource<Int>>.handleReflectedTableOperation(
+    /*private suspend fun FlowCollector<Resource<Int>>.handleReflectedTableOperation(
         affectedRowCount: Int,
         newIncome: Double,
         newExpense: Double
@@ -83,6 +84,6 @@ class DeleteSingleMerchantDataUseCase @Inject constructor(
 
         }
 
-    }
+    }*/
 
 }

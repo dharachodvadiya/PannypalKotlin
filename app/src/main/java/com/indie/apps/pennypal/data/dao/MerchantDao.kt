@@ -30,11 +30,13 @@ interface MerchantDao : BaseDao<Merchant> {
     fun getMerchantFromId(id: Long): Flow<Merchant>
 
     @Transaction
-    @Query("SELECT * FROM merchant ORDER BY date_milli DESC")
+    //@Query("SELECT * FROM merchant ORDER BY date_milli DESC")
+    @Query("SELECT * FROM merchant")
     fun getMerchantList(): PagingSource<Int, Merchant>
 
     @Transaction
-    @Query("SELECT id, name, details FROM merchant WHERE name LIKE  '%' || :searchQuery || '%' OR details LIKE  '%' || :searchQuery || '%'ORDER BY date_milli DESC LIMIT :limit OFFSET :offset")
+    //@Query("SELECT id, name, details FROM merchant WHERE name LIKE  '%' || :searchQuery || '%' OR details LIKE  '%' || :searchQuery || '%'ORDER BY date_milli DESC LIMIT :limit OFFSET :offset")
+    @Query("SELECT id, name, details FROM merchant WHERE name LIKE  '%' || :searchQuery || '%' OR details LIKE  '%' || :searchQuery || '%' LIMIT :limit OFFSET :offset")
     suspend fun searchMerchantNameAndDetailList(
         searchQuery: String,
         limit: Int,
@@ -42,15 +44,17 @@ interface MerchantDao : BaseDao<Merchant> {
     ): List<MerchantNameAndDetails>
 
     @Transaction
-    @Query("SELECT id, name, details FROM merchant WHERE name LIKE  '%' || :searchQuery || '%' OR details LIKE  '%' || :searchQuery || '%'ORDER BY date_milli DESC")
+    //@Query("SELECT id, name, details FROM merchant WHERE name LIKE  '%' || :searchQuery || '%' OR details LIKE  '%' || :searchQuery || '%'ORDER BY date_milli DESC")
+    @Query("SELECT id, name, details FROM merchant WHERE name LIKE  '%' || :searchQuery || '%' OR details LIKE  '%' || :searchQuery || '%'")
     fun searchMerchantNameAndDetailList(searchQuery: String): PagingSource<Int, MerchantNameAndDetails>
 
     @Transaction
-    @Query("SELECT * FROM merchant WHERE name LIKE  '%' || :searchQuery || '%' OR details LIKE  '%' || :searchQuery || '%' ORDER BY date_milli DESC")
+    //@Query("SELECT * FROM merchant WHERE name LIKE  '%' || :searchQuery || '%' OR details LIKE  '%' || :searchQuery || '%' ORDER BY date_milli DESC")
+    @Query("SELECT * FROM merchant WHERE name LIKE  '%' || :searchQuery || '%' OR details LIKE  '%' || :searchQuery || '%'")
     fun searchMerchantList(searchQuery: String): PagingSource<Int, Merchant>
 
 
-    @Transaction
+    /*@Transaction
     @Query(
         "UPDATE merchant " +
                 "SET income_amt = income_amt + :incomeAmt, " +
@@ -61,9 +65,9 @@ interface MerchantDao : BaseDao<Merchant> {
         id: Long,
         incomeAmt: Double,
         expenseAmt: Double
-    ): Int
+    ): Int*/
 
-    @Transaction
+    /*@Transaction
     @Query(
         "UPDATE merchant " +
                 "SET income_amt = income_amt + :incomeAmt, " +
@@ -76,9 +80,9 @@ interface MerchantDao : BaseDao<Merchant> {
         incomeAmt: Double,
         expenseAmt: Double,
         dateInMilli: Long
-    ): Int
+    ): Int*/
 
-    @Transaction
+    /*@Transaction
     @Query(
         """
         SELECT
@@ -88,6 +92,6 @@ interface MerchantDao : BaseDao<Merchant> {
         WHERE ID IN (:ids)
     """
     )
-    suspend fun getTotalIncomeAndeExpenseFromIds(ids: List<Long>): IncomeAndExpense
+    suspend fun getTotalIncomeAndeExpenseFromIds(ids: List<Long>): IncomeAndExpense*/
 
 }

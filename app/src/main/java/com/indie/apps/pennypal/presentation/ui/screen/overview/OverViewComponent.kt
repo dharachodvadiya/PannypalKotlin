@@ -44,10 +44,11 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemContentType
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.data.module.MerchantDataDailyTotal
+import com.indie.apps.pennypal.data.module.DailyTotal
 import com.indie.apps.pennypal.data.module.MerchantDataWithAllData
 import com.indie.apps.pennypal.data.module.MerchantDataWithName
 import com.indie.apps.pennypal.data.module.MerchantDataWithNameWithDayTotal
+import com.indie.apps.pennypal.data.module.TotalWithCurrency
 import com.indie.apps.pennypal.data.module.toMerchantDataDailyTotal
 import com.indie.apps.pennypal.data.module.toMerchantDataWithName
 import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
@@ -103,9 +104,16 @@ fun OverviewTopBar(
 
 @Composable
 fun OverviewBalanceView(
-    symbol: String, balance: Double, modifier: Modifier = Modifier
+    data : TotalWithCurrency?,
+    symbol: String,
+    modifier: Modifier = Modifier,
 ) {
 
+    val balance = if (data == null) {
+        0.0
+    }else{
+        data.totalIncome - data.totalExpense
+    }
     val colorStroke = if (balance >= 0) MyAppTheme.colors.greenBg else MyAppTheme.colors.redBg
 
     Box(
@@ -142,7 +150,8 @@ fun OverviewBalanceView(
                         style = MyAppTheme.typography.Regular77_5,
                         color = MyAppTheme.colors.black,
                         maxLines = 2,
-                        modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding))
+                        modifier = Modifier
+                            .padding(horizontal = dimensionResource(id = R.dimen.padding))
                     )
                 }
             }
@@ -326,7 +335,7 @@ fun OverviewList(
 
 @Composable
 fun OverviewListDateItem(
-    item: MerchantDataDailyTotal,
+    item: DailyTotal,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier.fillMaxWidth()
 ) {
     val dayString = when (item.day) {

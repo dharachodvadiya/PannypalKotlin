@@ -104,7 +104,7 @@ fun ProfileSection2(
                 .fillMaxWidth()
                 .padding(vertical = 20.dp)
         ) {
-            ProfileAmountWithIcon(
+            /*ProfileAmountWithIcon(
                 currencySymbol = symbol,
                 amount = user.incomeAmount,
                 isPositive = true,
@@ -121,7 +121,7 @@ fun ProfileSection2(
                 amount = user.expenseAmount,
                 isPositive = false,
                 modifier = Modifier.width(150.dp)
-            )
+            )*/
         }
 
         /*ProfileCurrencyItem(

@@ -13,5 +13,5 @@ data class MerchantDataWithNameWithDayTotal(
     val type: Int?,
 )
 
-fun MerchantDataWithNameWithDayTotal.toMerchantDataDailyTotal() = MerchantDataDailyTotal( day, totalIncome ?: 0.0,totalExpense ?:0.0)
+fun MerchantDataWithNameWithDayTotal.toMerchantDataDailyTotal() = DailyTotal( day, totalIncome ?: 0.0,totalExpense ?:0.0)
 fun MerchantDataWithNameWithDayTotal.toMerchantDataWithName() = MerchantDataWithName(id ?: -1, merchantId, merchantName ?: "", dateInMilli, details, amount ?: 0.0, type ?: 1, day  )

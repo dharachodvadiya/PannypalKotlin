@@ -28,32 +28,32 @@ class DeleteMultipleMerchantUseCase @Inject constructor(
 
             try {
                 emit(Resource.Loading())
-                val incomeAndExpense = merchantRepository.getTotalIncomeAndeExpenseFromIds(ids)
+                //val incomeAndExpense = merchantRepository.getTotalIncomeAndeExpenseFromIds(ids)
                 val merchantDeleteCount = merchantRepository.deleteMerchantWithIdList(ids)
 
                 if (merchantDeleteCount == ids.size) {
 
-                    coroutineScope {
-                        val deletedRowMerchantDataDeferred = async {
-                            merchantDataRepository.deleteMerchantDataWithMerchantIdList(ids)
-                        }
+                    /* coroutineScope {
+                         val deletedRowMerchantDataDeferred = async {
+                             merchantDataRepository.deleteMerchantDataWithMerchantIdList(ids)
+                         }
 
-                        val updatedUserDeferred = async {
-                            userRepository.updateAmount(-incomeAndExpense.totalIncome, -incomeAndExpense.totalExpense)
-                        }
+                         val updatedUserDeferred = async {
+                             userRepository.updateAmount(-incomeAndExpense.totalIncome, -incomeAndExpense.totalExpense)
+                         }
 
-                        deletedRowMerchantDataDeferred.await()
-                        updatedUserDeferred.await()
+                         deletedRowMerchantDataDeferred.await()
+                         updatedUserDeferred.await()
 
-                        emit(
-                            when {
-                                updatedUserDeferred.getCompleted() == 1 -> Resource.Success(merchantDeleteCount)
-                                else -> Resource.Error("Fail to update User Amount")
-                            }
-                        )
-                    }
+                         emit(
+                             when {
+                                 updatedUserDeferred.getCompleted() == 1 -> Resource.Success(merchantDeleteCount)
+                                 else -> Resource.Error("Fail to update User Amount")
+                             }
+                         )
+                     }*/
 
-
+                    emit(Resource.Success(merchantDeleteCount))
 
                 } else {
                     emit(Resource.Error("Fail to delete multiple merchant"))

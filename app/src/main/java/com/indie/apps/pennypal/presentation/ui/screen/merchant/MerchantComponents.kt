@@ -146,8 +146,8 @@ fun MerchantListItem(
 ) {
     val imageVector = if (isSelected) Icons.Default.Done else Icons.Default.Person
     val iconBgColor = if (isSelected) MyAppTheme.colors.brand else MyAppTheme.colors.lightBlue2
-    val amount = item.incomeAmount - item.expenseAmount
-    val amountColor = if (amount >= 0) MyAppTheme.colors.greenText else MyAppTheme.colors.redText
+    //val amount = item.incomeAmount - item.expenseAmount
+    //val amountColor = if (amount >= 0) MyAppTheme.colors.greenText else MyAppTheme.colors.redText
 
     ListItem(
         isClickable = true,
@@ -185,7 +185,7 @@ fun MerchantListItem(
             }
         },
         trailingContent = {
-            Text(
+           /* Text(
                 text = Util.getFormattedStringWithSymbol(amount),
                 style = MyAppTheme.typography.Regular51,
                 color = amountColor,
@@ -193,7 +193,7 @@ fun MerchantListItem(
                 modifier = Modifier.fillMaxWidth(0.5f),
                 textAlign = TextAlign.Right,
                 maxLines = 1
-            )
+            )*/
 
         },
         isSetDivider = false,

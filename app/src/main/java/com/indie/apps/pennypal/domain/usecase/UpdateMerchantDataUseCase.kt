@@ -36,11 +36,12 @@ class UpdateMerchantDataUseCase @Inject constructor(
 
                 if (count > 0) {
 
-                    handleReflectedTableOperation(
+                   /* handleReflectedTableOperation(
                         affectedRowCount = count,
                         merchantDataOld = merchantDataOld,
                         merchantDataNew = merchantDataNew
-                    )
+                    )*/
+                    emit(Resource.Success(count))
                 } else {
                     emit(Resource.Error("Fail to update merchantData"))
                 }
@@ -52,7 +53,7 @@ class UpdateMerchantDataUseCase @Inject constructor(
         }.flowOn(dispatcher)
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
+    /*@OptIn(ExperimentalCoroutinesApi::class)
     private suspend fun FlowCollector<Resource<Int>>.handleReflectedTableOperation(
         affectedRowCount: Int,
         merchantDataNew: MerchantData,
@@ -143,6 +144,6 @@ class UpdateMerchantDataUseCase @Inject constructor(
             )
         }
 
-    }
+    }*/
 
 }
