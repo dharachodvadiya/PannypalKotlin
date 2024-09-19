@@ -42,6 +42,7 @@ class OverViewViewModel @Inject constructor(
 
     val monthlyTotal = getMonthlyTotalUseCase.loadData(1)
         .flatMapConcat { monthlyTotals ->
+            delay(500)
             if (monthlyTotals.isEmpty()) {
                 userProfileUseCase.loadData().map { user ->
                     listOf(MonthlyTotal("", 0.0, 0.0, user.currency))

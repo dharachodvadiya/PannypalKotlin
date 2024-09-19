@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,7 +44,8 @@ fun RoundImage(
             .background(
                 color = backGround,
                 shape = CircleShape
-            ).padding(innerPadding)
+            )
+            .padding(innerPadding)
     ) {
         if (brush != null) {
             Icon(
@@ -63,9 +65,37 @@ fun RoundImage(
             Icon(
                 imageVector = imageVector,
                 contentDescription = contentDescription,
-                tint = tint
+                tint = tint,
+                modifier =  Modifier
+                    .size(imageVectorSize)
             )
         }
+
+    }
+}
+
+@Composable
+fun RoundImageWithText(
+    character : Char,
+    tint: Color = MyAppTheme.colors.black,
+    backGround: Color,
+    innerPadding: Dp = 0.dp,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier.size(dimensionResource(id = R.dimen.item_image))
+) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier
+            .background(
+                color = backGround,
+                shape = CircleShape
+            )
+            .padding(innerPadding)
+    ) {
+        Text(
+            text = character.toString(),
+            style = MyAppTheme.typography.Semibold60,
+            color = tint
+            )
 
     }
 }

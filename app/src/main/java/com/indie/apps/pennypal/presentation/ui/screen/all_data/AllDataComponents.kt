@@ -3,12 +3,16 @@ package com.indie.apps.pennypal.presentation.ui.screen.all_data
 import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Done
@@ -16,11 +20,13 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -40,6 +46,8 @@ import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.util.GetCategoryColor
 import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.util.getCategoryIcon
+import com.indie.apps.pennypal.util.getPaymentModeIcon
+import java.text.SimpleDateFormat
 
 @Composable
 fun AllDataTopBar(
@@ -117,6 +125,7 @@ fun AllDataTopBar(
     )
 }
 
+@SuppressLint("SimpleDateFormat")
 @Composable
 fun TransactionItem(
     item: MerchantDataWithAllData,
@@ -139,7 +148,7 @@ fun TransactionItem(
         leadingIcon = {
             RoundImage(
                 imageVector = imageVector,
-                imageVectorSize = 27.dp,
+                imageVectorSize = 24.dp,
                 //brush = linearGradientsBrush(MyAppTheme.colors.gradientBlue),
                 tint = GetCategoryColor(item.categoryName),
                 backGround = iconBgColor,
@@ -149,8 +158,24 @@ fun TransactionItem(
         },
         content = {
             Column {
-                Text(
+                /*Text(
                     text = item.categoryName,
+                    style = MyAppTheme.typography.Semibold52_5,
+                    color = MyAppTheme.colors.black,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                if (!item.details.isNullOrEmpty()) {
+                    Text(
+                        text = item.details,
+                        style = MyAppTheme.typography.Medium40,
+                        color = MyAppTheme.colors.gray2,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }*/
+                Text(
+                    text = Util.getFormattedStringWithSymbol(amount),
                     style = MyAppTheme.typography.Semibold52_5,
                     color = MyAppTheme.colors.black,
                     maxLines = 1,
@@ -168,7 +193,7 @@ fun TransactionItem(
             }
         },
         trailingContent = {
-            Text(
+            /*Text(
                 text = Util.getFormattedStringWithSymbol(amount),
                 style = MyAppTheme.typography.Regular51,
                 color = amountColor,
@@ -176,7 +201,51 @@ fun TransactionItem(
                 modifier = Modifier.fillMaxWidth(0.5f),
                 textAlign = TextAlign.Right,
                 maxLines = 1
-            )
+            )*/
+            Column(
+                horizontalAlignment = Alignment.End,
+                verticalArrangement = Arrangement.spacedBy(5.dp)
+            ) {
+
+                val format = SimpleDateFormat("dd MMM yyyy")
+
+                val dayString = when (val day = Util.getDateFromMillis(item.dateInMilli, format)) {
+                    Util.getTodayDate(format) -> stringResource(id = R.string.today)
+                    Util.getYesterdayDate(format) -> stringResource(id = R.string.yesterday)
+                    else -> day
+                }
+                Text(
+                    text = dayString,
+                    style = MyAppTheme.typography.Medium40,
+                    color = MyAppTheme.colors.gray1,
+                    overflow = TextOverflow.Ellipsis,
+                    textAlign = TextAlign.Right,
+                    maxLines = 1
+                )
+
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = item.merchantName,
+                        style = MyAppTheme.typography.Medium34,
+                        color = MyAppTheme.colors.gray2,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.fillMaxWidth(0.5f),
+                        textAlign = TextAlign.Right,
+                        maxLines = 1
+                    )
+                    Spacer(modifier = Modifier.width(5.dp))
+                    Icon(
+                        painter = painterResource(getPaymentModeIcon(item.paymentName)),
+                        contentDescription = "payment",
+                        tint = MyAppTheme.colors.lightBlue2,
+                        modifier = Modifier.size(dimensionResource(id = R.dimen.small_icon_size))
+                    )
+                }
+
+            }
 
         },
         isSetDivider = false,

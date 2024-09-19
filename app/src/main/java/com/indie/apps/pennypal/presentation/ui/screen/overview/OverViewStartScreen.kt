@@ -37,7 +37,8 @@ import com.indie.apps.pennypal.util.Util
 fun OverViewStartScreen(
     overViewViewModel: OverViewViewModel = hiltViewModel(),
     onProfileClick: () -> Unit,
-    onSeeAllClick: () -> Unit,
+    onSeeAllTransactionClick: () -> Unit,
+    onSeeAllMerchantClick: () -> Unit,
     bottomPadding: PaddingValues,
     addEditMerchantDataId: Long,
     onNavigationUp: () -> Unit,
@@ -134,7 +135,8 @@ fun OverViewStartScreen(
                 OverviewData(
                     recentTransaction = recentTransaction,
                     recentMerchant = recentMerchant,
-                    onSeeAllTransactionClick = onSeeAllClick,
+                    onSeeAllTransactionClick = onSeeAllTransactionClick,
+                    onSeeAllMerchantClick = onSeeAllMerchantClick,
                     merchantDataId = addDataId,
                     isAddMerchantDataSuccess = addDataAnimRun,
                     onAnimStop = {
@@ -156,7 +158,8 @@ private fun OverViewScreenPreview() {
             bottomPadding = PaddingValues(0.dp),
             addEditMerchantDataId = -1,
             onNavigationUp = {},
-            onSeeAllClick = {}
+            onSeeAllTransactionClick = {},
+            onSeeAllMerchantClick = {}
         )
     }
 }

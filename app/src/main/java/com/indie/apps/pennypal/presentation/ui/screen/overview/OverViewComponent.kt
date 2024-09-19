@@ -57,12 +57,15 @@ import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.AutoSizeText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListItem
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImageWithText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.TopBar
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.screen.all_data.TransactionItem
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
+import com.indie.apps.pennypal.util.GetColorFromId
 import com.indie.apps.pennypal.util.Util
+import com.indie.apps.pennypal.util.getFirstCharacterUppercase
 import kotlinx.coroutines.launch
 
 @Composable
@@ -417,6 +420,7 @@ fun OverviewData(
     recentTransaction: List<MerchantDataWithAllData>,
     recentMerchant: List<MerchantNameAndDetails>,
     onSeeAllTransactionClick: () -> Unit,
+    onSeeAllMerchantClick: () -> Unit,
     isAddMerchantDataSuccess: Boolean = false,
     merchantDataId: Long = 1L,
     onAnimStop: () -> Unit,
@@ -467,7 +471,7 @@ fun OverviewData(
 
     OverviewItem(
         title = R.string.recent_merchant,
-        onSeeAllClick = {},
+        onSeeAllClick = onSeeAllMerchantClick,
         content = {
             Row(
                 horizontalArrangement = Arrangement.Absolute.SpaceEvenly,
@@ -499,7 +503,7 @@ fun MerchantItem(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier.padding(5.dp)
     ) {
-        RoundImage(
+        /*RoundImage(
             imageVector = Icons.Default.Person,
             imageVectorSize = 30.dp,
             //brush = linearGradientsBrush(MyAppTheme.colors.gradientBlue),
@@ -507,12 +511,19 @@ fun MerchantItem(
             backGround = MyAppTheme.colors.lightBlue2,
             contentDescription = "person",
             modifier = Modifier.size(55.dp)
+        )*/
+
+        RoundImageWithText(
+            character = getFirstCharacterUppercase(item.name),
+            tint = MyAppTheme.colors.white,
+            backGround = GetColorFromId(item.id.toInt()),
+            modifier = Modifier.size(55.dp)
         )
         Spacer(modifier = Modifier.height(5.dp))
 
         Text(
             text = item.name,
-            style = MyAppTheme.typography.Semibold52_5,
+            style = MyAppTheme.typography.Regular44,
             color = MyAppTheme.colors.black,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
@@ -521,7 +532,7 @@ fun MerchantItem(
         if (!item.details.isNullOrEmpty()) {
             Text(
                 text = item.details,
-                style = MyAppTheme.typography.Medium40,
+                style = MyAppTheme.typography.Medium34,
                 color = MyAppTheme.colors.gray2,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
@@ -546,7 +557,7 @@ fun OverviewItem(
         ) {
             Text(
                 text = stringResource(id = title),
-                style = MyAppTheme.typography.Semibold50,
+                style = MyAppTheme.typography.Regular51,
                 color = MyAppTheme.colors.gray1
             )
 
@@ -569,6 +580,8 @@ fun OverviewItem(
                 )
             }
         }
+        
+        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.item_padding)))
 
         content()
     }

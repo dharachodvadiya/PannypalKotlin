@@ -33,13 +33,16 @@ import com.indie.apps.pennypal.data.entity.Merchant
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListItem
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImageWithText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.SearchView
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.TopBar
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
+import com.indie.apps.pennypal.util.GetColorFromId
 import com.indie.apps.pennypal.util.Util
+import com.indie.apps.pennypal.util.getFirstCharacterUppercase
 
 @Composable
 fun MerchantTopBar(
@@ -145,7 +148,8 @@ fun MerchantListItem(
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier.fillMaxWidth()
 ) {
     val imageVector = if (isSelected) Icons.Default.Done else Icons.Default.Person
-    val iconBgColor = if (isSelected) MyAppTheme.colors.brand else MyAppTheme.colors.lightBlue2
+    val iconBgColor = if (isSelected) MyAppTheme.colors.brand else GetColorFromId(item.id.toInt())
+    val tintColor = if (isSelected) MyAppTheme.colors.black else MyAppTheme.colors.white
     //val amount = item.incomeAmount - item.expenseAmount
     //val amountColor = if (amount >= 0) MyAppTheme.colors.greenText else MyAppTheme.colors.redText
 
@@ -154,13 +158,20 @@ fun MerchantListItem(
         onClick = onClick,
         onLongClick = onLongClick,
         leadingIcon = {
-            RoundImage(
+           /* RoundImage(
                 imageVector = imageVector,
                 imageVectorSize = 27.dp,
                 //brush = linearGradientsBrush(MyAppTheme.colors.gradientBlue),
                 tint = MyAppTheme.colors.black,
                 backGround = iconBgColor,
                 contentDescription = "person",
+                modifier = Modifier.size(50.dp)
+            )*/
+
+            RoundImageWithText(
+                character = getFirstCharacterUppercase(item.name),
+                tint = tintColor,
+                backGround = iconBgColor,
                 modifier = Modifier.size(50.dp)
             )
         },
