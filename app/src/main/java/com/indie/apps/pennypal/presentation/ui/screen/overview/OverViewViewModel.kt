@@ -3,27 +3,22 @@ package com.indie.apps.pennypal.presentation.ui.screen.overview
 import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
 import com.indie.apps.cpp.data.repository.CountryRepository
-import com.indie.apps.pennypal.data.module.MerchantDataWithNameWithDayTotal
 import com.indie.apps.pennypal.data.module.MonthlyTotal
 import com.indie.apps.pennypal.domain.usecase.GetMerchantDataListWithMerchantNameAndDayTotalUseCase
 import com.indie.apps.pennypal.domain.usecase.GetMonthlyTotalUseCase
 import com.indie.apps.pennypal.domain.usecase.GetUserProfileUseCase
 import com.indie.apps.pennypal.domain.usecase.GetYearlyTotalUseCase
 import com.indie.apps.pennypal.domain.usecase.SearchMerchantDataWithAllDataListUseCase
-import com.indie.apps.pennypal.presentation.ui.state.PagingState
+import com.indie.apps.pennypal.domain.usecase.SearchMerchantNameAndDetailListUseCase
 import com.indie.apps.pennypal.util.Util
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -34,6 +29,7 @@ class OverViewViewModel @Inject constructor(
     getMonthlyTotalUseCase: GetMonthlyTotalUseCase,
     getYearlyTotalUseCase: GetYearlyTotalUseCase,
     searchMerchantDataWithAllDataListUseCase: SearchMerchantDataWithAllDataListUseCase,
+    searchMerchantNameAndDetailListUseCase: SearchMerchantNameAndDetailListUseCase,
     getMerchantDataListWithMerchantNameAndDayTotalUseCase: GetMerchantDataListWithMerchantNameAndDayTotalUseCase,
     private val countryRepository: CountryRepository
 ) : ViewModel() {
@@ -70,6 +66,10 @@ class OverViewViewModel @Inject constructor(
         .getLast3Data()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
 
+    val recentMerchant = searchMerchantNameAndDetailListUseCase
+        .getLast3Data()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
+
 
     @SuppressLint("SuspiciousIndentation")
     fun addMerchantDataSuccess() {
@@ -86,7 +86,7 @@ class OverViewViewModel @Inject constructor(
             addDataAnimRun.value = false
     }
 
-    fun getSymbolFromCurrencyCode(currencyCode : String): String {
+    fun getSymbolFromCurrencyCode(currencyCode: String): String {
         return countryRepository.getSymbolFromCurrencyCode(currencyCode)
     }
 }

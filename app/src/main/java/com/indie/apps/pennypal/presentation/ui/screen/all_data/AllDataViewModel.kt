@@ -6,9 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.indie.apps.pennypal.data.module.MerchantDataWithAllData
-import com.indie.apps.pennypal.data.module.MerchantDataWithNameWithDayTotal
 import com.indie.apps.pennypal.domain.usecase.DeleteMultipleMerchantDataUseCase
-import com.indie.apps.pennypal.domain.usecase.GetMerchantDataListWithMerchantNameAndDayTotalUseCase
 import com.indie.apps.pennypal.domain.usecase.SearchMerchantDataWithAllDataListUseCase
 import com.indie.apps.pennypal.presentation.ui.state.PagingState
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
@@ -95,7 +93,7 @@ class AllDataViewModel @Inject constructor(
     }
 
     fun addDataSuccessAnimStop() {
-        if(addAnimRun.value)
+        if (addAnimRun.value)
             addAnimRun.value = false
     }
 
@@ -127,7 +125,7 @@ class AllDataViewModel @Inject constructor(
     fun onDeleteDialogClick(onSuccess: () -> Unit) {
         deleteAnimRun.value = true
         viewModelScope.launch {
-            /*deleteMultipleMerchantDataUseCase
+            deleteMultipleMerchantDataUseCase
                 .deleteData(selectedList)
                 .collect {
                     when (it) {
@@ -143,14 +141,13 @@ class AllDataViewModel @Inject constructor(
                         is Resource.Error -> {
                         }
                     }
-                }*/
+                }
         }
 
     }
 
     private fun onDeleteAnimStop() {
-        if(deleteAnimRun.value)
-        {
+        if (deleteAnimRun.value) {
             deleteAnimRun.value = false
             clearSelection()
             searchData()

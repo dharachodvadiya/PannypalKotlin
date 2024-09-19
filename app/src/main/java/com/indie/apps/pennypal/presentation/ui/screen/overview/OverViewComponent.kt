@@ -6,6 +6,7 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -48,6 +49,7 @@ import com.indie.apps.pennypal.data.module.DailyTotal
 import com.indie.apps.pennypal.data.module.MerchantDataWithAllData
 import com.indie.apps.pennypal.data.module.MerchantDataWithName
 import com.indie.apps.pennypal.data.module.MerchantDataWithNameWithDayTotal
+import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
 import com.indie.apps.pennypal.data.module.TotalWithCurrency
 import com.indie.apps.pennypal.data.module.toMerchantDataDailyTotal
 import com.indie.apps.pennypal.data.module.toMerchantDataWithName
@@ -57,7 +59,7 @@ import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListI
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.TopBar
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
-import com.indie.apps.pennypal.presentation.ui.screen.all_data.DataItem
+import com.indie.apps.pennypal.presentation.ui.screen.all_data.TransactionItem
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.util.Util
@@ -104,14 +106,14 @@ fun OverviewTopBar(
 
 @Composable
 fun OverviewBalanceView(
-    data : TotalWithCurrency?,
+    data: TotalWithCurrency?,
     symbol: String,
     modifier: Modifier = Modifier,
 ) {
 
     val balance = if (data == null) {
         0.0
-    }else{
+    } else {
         data.totalIncome - data.totalExpense
     }
     val colorStroke = if (balance >= 0) MyAppTheme.colors.greenBg else MyAppTheme.colors.redBg
@@ -120,7 +122,7 @@ fun OverviewBalanceView(
         modifier = modifier
             .fillMaxWidth()
             .height(150.dp)
-            //.background(brush = verticalGradientsBrush(colorGradient))
+        //.background(brush = verticalGradientsBrush(colorGradient))
     ) {
         Surface(
             modifier = Modifier.fillMaxSize(),
@@ -413,42 +415,75 @@ fun OverviewListItem(
 @Composable
 fun OverviewData(
     recentTransaction: List<MerchantDataWithAllData>,
+    recentMerchant: List<MerchantNameAndDetails>,
     onSeeAllTransactionClick: () -> Unit,
+    isAddMerchantDataSuccess: Boolean = false,
+    merchantDataId: Long = 1L,
+    onAnimStop: () -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
-){
+) {
     OverviewItem(
         title = R.string.recent_transaction,
         onSeeAllClick = onSeeAllTransactionClick,
         content = {
-            recentTransaction.forEach{ item ->
-                DataItem(
+            val scope = rememberCoroutineScope()
+
+            recentTransaction.forEach { item ->
+
+                val itemAnimateScale = remember {
+                    Animatable(0f)
+                }
+
+                val modifierAdd: Modifier =
+                    if (merchantDataId == item.id && isAddMerchantDataSuccess) {
+                        scope.launch {
+                            itemAnimateScale.animateTo(
+                                targetValue = 1f,
+                                animationSpec = tween(Util.ADD_ITEM_ANIM_TIME)
+                            )
+                        }
+                        if (itemAnimateScale.value == 1f) {
+                            onAnimStop()
+                        }
+                        Modifier.scale(itemAnimateScale.value)
+                    } else {
+                        Modifier
+                    }
+
+                TransactionItem(
                     item = item,
                     isSelected = false,
                     onClick = {
                     },
                     onLongClick = { },
-                    itemBgColor = MyAppTheme.colors.itemBg
+                    itemBgColor = MyAppTheme.colors.itemBg,
+                    modifier = modifierAdd
                 )
             }
-
         }
     )
 
     Spacer(modifier = modifier.height(dimensionResource(id = R.dimen.overview_item_padding)))
 
     OverviewItem(
-        title = R.string.merchant,
-        onSeeAllClick = onSeeAllTransactionClick,
+        title = R.string.recent_merchant,
+        onSeeAllClick = {},
         content = {
-            recentTransaction.forEach{ item ->
-                DataItem(
-                    item = item,
-                    isSelected = false,
-                    onClick = {
-                    },
-                    onLongClick = { },
-                    itemBgColor = MyAppTheme.colors.itemBg
-                )
+            Row(
+                horizontalArrangement = Arrangement.Absolute.SpaceEvenly,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                recentMerchant.forEach { item ->
+                    MerchantItem(
+                        item = item,
+                        modifier = Modifier
+                            .weight(1f)
+                    )
+                }
+
+                repeat(4 - recentMerchant.size) {
+                    Spacer(modifier = Modifier.weight(1f))
+                }
             }
 
         }
@@ -456,8 +491,48 @@ fun OverviewData(
 }
 
 @Composable
+fun MerchantItem(
+    item: MerchantNameAndDetails,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier.padding(5.dp)
+    ) {
+        RoundImage(
+            imageVector = Icons.Default.Person,
+            imageVectorSize = 30.dp,
+            //brush = linearGradientsBrush(MyAppTheme.colors.gradientBlue),
+            tint = MyAppTheme.colors.black,
+            backGround = MyAppTheme.colors.lightBlue2,
+            contentDescription = "person",
+            modifier = Modifier.size(55.dp)
+        )
+        Spacer(modifier = Modifier.height(5.dp))
+
+        Text(
+            text = item.name,
+            style = MyAppTheme.typography.Semibold52_5,
+            color = MyAppTheme.colors.black,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+
+        if (!item.details.isNullOrEmpty()) {
+            Text(
+                text = item.details,
+                style = MyAppTheme.typography.Medium40,
+                color = MyAppTheme.colors.gray2,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+    }
+}
+
+@Composable
 fun OverviewItem(
-    onSeeAllClick : ()-> Unit,
+    onSeeAllClick: () -> Unit,
     @StringRes title: Int,
     content: @Composable (() -> Unit),
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
@@ -482,7 +557,7 @@ fun OverviewItem(
                 modifier = Modifier.clickable { onSeeAllClick() }
             ) {
                 Text(
-                    text = stringResource(id = R.string.see_all) ,
+                    text = stringResource(id = R.string.see_all),
                     style = MyAppTheme.typography.Semibold40,
                     color = MyAppTheme.colors.lightBlue1
                 )
@@ -490,7 +565,8 @@ fun OverviewItem(
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                     contentDescription = "all",
-                    tint =  MyAppTheme.colors.lightBlue1)
+                    tint = MyAppTheme.colors.lightBlue1
+                )
             }
         }
 

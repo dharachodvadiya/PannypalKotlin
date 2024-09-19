@@ -155,7 +155,7 @@ class MerchantDataViewModel @Inject constructor(
         deleteAnimRun.value = true
         viewModelScope.launch {
             deleteMultipleMerchantDataUseCase
-                .deleteData(merchantId, selectedList)
+                .deleteData(selectedList)
                 .collect {
                     when (it) {
                         is Resource.Loading -> {}

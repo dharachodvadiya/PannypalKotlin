@@ -90,10 +90,10 @@ fun NewItemScreen(
 
     var openDiscardDialog by remember { mutableStateOf(false) }
 
-    BackHandler{
-        if(newItemViewModel.isEditData()){
+    BackHandler {
+        if (newItemViewModel.isEditData()) {
             openDiscardDialog = true
-        }else{
+        } else {
             onNavigationUp()
         }
     }
@@ -105,14 +105,19 @@ fun NewItemScreen(
 
         is Resource.Success -> {
 
+            val title = if (newItemViewModel.merchantEditId == 0L)
+                stringResource(id = R.string.new_item)
+            else
+                stringResource(id = R.string.edit_merchant_data)
+
             Scaffold(topBar = {
                 TopBarWithTitle(
-                    title = stringResource(id = R.string.new_item),
+                    title = title,
                     onNavigationUp = {
                         if (enableButton) {
-                            if(newItemViewModel.isEditData()) {
+                            if (newItemViewModel.isEditData()) {
                                 openDiscardDialog = true
-                            }else {
+                            } else {
                                 onNavigationUp()
                             }
                         }
@@ -162,7 +167,7 @@ fun NewItemScreen(
                         onCategorySelect = {
                             if (enableButton) {
                                 focusManager.clearFocus()
-                                onCategorySelect(category?.id, if (received) 1 else -1 )
+                                onCategorySelect(category?.id, if (received) 1 else -1)
                             }
                         },
                         paymentName = payment?.name,
@@ -218,7 +223,7 @@ private fun NewItemScreenPreview() {
             onPaymentSelect = {},
             onNavigationUp = {},
             onMerchantSelect = {},
-            onCategorySelect = {_,_->},
+            onCategorySelect = { _, _ -> },
             onSaveSuccess = { _, _, _ -> },
             isMerchantLock = false
         )

@@ -9,10 +9,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,7 +24,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.paging.compose.collectAsLazyPagingItems
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.module.toTotalWithCurrency
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
@@ -44,16 +44,17 @@ fun OverViewStartScreen(
     isAddMerchantDataSuccess: Boolean = false,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
-   /* val dataWithDayLazyPagingItems =
-        overViewViewModel.pagedMerchantDataWithDay.collectAsLazyPagingItems()
-    val merchantDataWithDayPagingState by overViewViewModel.merchantDataWithDayPagingState.collectAsStateWithLifecycle()
-    merchantDataWithDayPagingState.update(dataWithDayLazyPagingItems)
-    */
+    /* val dataWithDayLazyPagingItems =
+         overViewViewModel.pagedMerchantDataWithDay.collectAsLazyPagingItems()
+     val merchantDataWithDayPagingState by overViewViewModel.merchantDataWithDayPagingState.collectAsStateWithLifecycle()
+     merchantDataWithDayPagingState.update(dataWithDayLazyPagingItems)
+     */
     //val userData by overViewViewModel.userData.collectAsStateWithLifecycle()
     val monthlyTotal by overViewViewModel.monthlyTotal.collectAsStateWithLifecycle()
     val addDataAnimRun by overViewViewModel.addDataAnimRun.collectAsStateWithLifecycle()
 
     val recentTransaction by overViewViewModel.recentTransaction.collectAsStateWithLifecycle()
+    val recentMerchant by overViewViewModel.recentMerchant.collectAsStateWithLifecycle()
 
     /*var amount by remember {
         mutableDoubleStateOf(0.0)
@@ -103,6 +104,7 @@ fun OverViewStartScreen(
         Column(
             modifier = modifier
                 .fillMaxSize()
+                .verticalScroll(rememberScrollState())
                 .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
                 .padding(innerPadding)
                 .padding(dimensionResource(id = R.dimen.padding))
@@ -131,7 +133,13 @@ fun OverViewStartScreen(
                 Spacer(modifier = modifier.height(dimensionResource(id = R.dimen.overview_item_padding)))
                 OverviewData(
                     recentTransaction = recentTransaction,
-                    onSeeAllTransactionClick = onSeeAllClick
+                    recentMerchant = recentMerchant,
+                    onSeeAllTransactionClick = onSeeAllClick,
+                    merchantDataId = addDataId,
+                    isAddMerchantDataSuccess = addDataAnimRun,
+                    onAnimStop = {
+                        overViewViewModel.addMerchantDataSuccessAnimStop()
+                    }
                 )
             }
         }

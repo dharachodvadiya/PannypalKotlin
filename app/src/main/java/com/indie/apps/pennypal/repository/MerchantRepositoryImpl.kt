@@ -21,14 +21,14 @@ class MerchantRepositoryImpl @Inject constructor(private val merchantDao: Mercha
 
     override fun getMerchantFromId(id: Long) = merchantDao.getMerchantFromId(id)
 
-   /* override suspend fun getTotalIncomeAndeExpenseFromIds(ids: List<Long>) =
-        merchantDao.getTotalIncomeAndeExpenseFromIds(ids)*/
+    /* override suspend fun getTotalIncomeAndeExpenseFromIds(ids: List<Long>) =
+         merchantDao.getTotalIncomeAndeExpenseFromIds(ids)*/
 
-   /* override suspend fun updateAmountWithDate(
-        id: Long,
-        incomeAmt: Double,
-        expenseAmt: Double
-    ) = merchantDao.updateAmountWithDate(id, incomeAmt, expenseAmt)*/
+    /* override suspend fun updateAmountWithDate(
+         id: Long,
+         incomeAmt: Double,
+         expenseAmt: Double
+     ) = merchantDao.updateAmountWithDate(id, incomeAmt, expenseAmt)*/
 
     /*override suspend fun addAmountWithDate(
         id: Long,
@@ -40,6 +40,9 @@ class MerchantRepositoryImpl @Inject constructor(private val merchantDao: Mercha
     override fun searchMerchantNameAndDetailList(
         searchQuery: String
     ) = merchantDao.searchMerchantNameAndDetailList(searchQuery)
+
+    override fun getRecentMerchantNameAndDetailList() =
+        merchantDao.getRecentMerchantNameAndDetailList()
 
     override fun searchMerchantNameAndDetailListPaging(
         searchQuery: String

@@ -5,7 +5,6 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import com.indie.apps.pennypal.data.entity.Merchant
-import com.indie.apps.pennypal.data.module.IncomeAndExpense
 import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
 import kotlinx.coroutines.flow.Flow
 
@@ -31,12 +30,12 @@ interface MerchantDao : BaseDao<Merchant> {
 
     @Transaction
     //@Query("SELECT * FROM merchant ORDER BY date_milli DESC")
-    @Query("SELECT * FROM merchant")
+    @Query("SELECT * FROM merchant ORDER BY id DESC")
     fun getMerchantList(): PagingSource<Int, Merchant>
 
     @Transaction
     //@Query("SELECT id, name, details FROM merchant WHERE name LIKE  '%' || :searchQuery || '%' OR details LIKE  '%' || :searchQuery || '%'ORDER BY date_milli DESC LIMIT :limit OFFSET :offset")
-    @Query("SELECT id, name, details FROM merchant WHERE name LIKE  '%' || :searchQuery || '%' OR details LIKE  '%' || :searchQuery || '%' LIMIT :limit OFFSET :offset")
+    @Query("SELECT id, name, details FROM merchant WHERE name LIKE  '%' || :searchQuery || '%' OR details LIKE  '%' || :searchQuery || '%' ORDER BY id DESC LIMIT :limit OFFSET :offset ")
     suspend fun searchMerchantNameAndDetailList(
         searchQuery: String,
         limit: Int,
@@ -45,12 +44,17 @@ interface MerchantDao : BaseDao<Merchant> {
 
     @Transaction
     //@Query("SELECT id, name, details FROM merchant WHERE name LIKE  '%' || :searchQuery || '%' OR details LIKE  '%' || :searchQuery || '%'ORDER BY date_milli DESC")
-    @Query("SELECT id, name, details FROM merchant WHERE name LIKE  '%' || :searchQuery || '%' OR details LIKE  '%' || :searchQuery || '%'")
+    @Query("SELECT id, name, details FROM merchant WHERE name LIKE  '%' || :searchQuery || '%' OR details LIKE  '%' || :searchQuery || '%' ORDER BY id DESC")
     fun searchMerchantNameAndDetailList(searchQuery: String): PagingSource<Int, MerchantNameAndDetails>
 
     @Transaction
+    //@Query("SELECT id, name, details FROM merchant WHERE name LIKE  '%' || :searchQuery || '%' OR details LIKE  '%' || :searchQuery || '%'ORDER BY date_milli DESC")
+    @Query("SELECT id, name, details FROM merchant ORDER BY id DESC LIMIT 4 ")
+    fun getRecentMerchantNameAndDetailList(): Flow<List<MerchantNameAndDetails>>
+
+    @Transaction
     //@Query("SELECT * FROM merchant WHERE name LIKE  '%' || :searchQuery || '%' OR details LIKE  '%' || :searchQuery || '%' ORDER BY date_milli DESC")
-    @Query("SELECT * FROM merchant WHERE name LIKE  '%' || :searchQuery || '%' OR details LIKE  '%' || :searchQuery || '%'")
+    @Query("SELECT * FROM merchant WHERE name LIKE  '%' || :searchQuery || '%' OR details LIKE  '%' || :searchQuery || '%' ORDER BY id DESC")
     fun searchMerchantList(searchQuery: String): PagingSource<Int, Merchant>
 
 

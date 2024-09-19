@@ -160,13 +160,39 @@ fun NavGraphBuilder.overViewRoute(
         }
 
         composable(route = ScreenNav.SEE_ALL_DATA.route) { backStackEntry ->
+
+            val merchantDataId: Long? =
+                backStackEntry.savedStateHandle.get<Long>(Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_ID)
+
+            val isEditMerchantDataSuccess: Boolean? =
+                backStackEntry.savedStateHandle.get<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_EDIT_SUCCESS)
+
+            val isAddMerchantDataSuccess: Boolean? =
+                backStackEntry.savedStateHandle.get<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_ADD_SUCCESS)
+
+            backStackEntry.savedStateHandle.remove<Long>(Util.SAVE_STATE_MERCHANT_ADD_EDIT_ID)
+            backStackEntry.savedStateHandle.remove<Long>(Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_ID)
+            backStackEntry.savedStateHandle.remove<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_EDIT_SUCCESS)
+            backStackEntry.savedStateHandle.remove<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_ADD_SUCCESS)
+
             bottomBarState.value = false
             AllDataScreen(
-                onDataClick = {},
-                onAddClick = {},
+                onDataClick = {
+                    navController.navigate(
+                        ScreenNav.EDIT_MERCHANT_DATA.route.replace(
+                            "{${Util.PARAM_EDIT_MERCHANT_DATA_ID}}", it.toString()
+                        )
+                    )
+                },
+                onAddClick = {
+                    navController.navigate(ScreenNav.NEW_ITEM.route)
+                },
                 onNavigationUp = {
                     navController.navigateUp()
                 },
+                editAddId = merchantDataId ?: 0,
+                isEditSuccess = isEditMerchantDataSuccess ?: false,
+                isAddSuccess = isAddMerchantDataSuccess ?: false,
                 bottomPadding = innerPadding
 ,            )
         }

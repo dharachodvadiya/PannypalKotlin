@@ -37,7 +37,7 @@ class NewItemViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val merchantEditId =
+    val merchantEditId =
         savedStateHandle.get<String>(Util.PARAM_EDIT_MERCHANT_DATA_ID)?.toLong() ?: 0
     private var editMerchantData: MerchantData? = null
 
@@ -150,7 +150,7 @@ class NewItemViewModel @Inject constructor(
     fun onReceivedChange(isReceived: Boolean) {
         received.value = isReceived
 
-        if(received.value)
+        if (received.value)
             setCategory(categoryIncome)
         else
             setCategory(categoryExpense)
@@ -173,12 +173,12 @@ class NewItemViewModel @Inject constructor(
         if (received.value) {
             categoryIncome = data
             if (data != null) {
-                if(data.type == 0 && categoryExpense == null) categoryExpense = data
+                if (data.type == 0 && categoryExpense == null) categoryExpense = data
             }
         } else {
             categoryExpense = data
             if (data != null) {
-                if(data.type == 0 && categoryIncome == null) categoryIncome = data
+                if (data.type == 0 && categoryIncome == null) categoryIncome = data
             }
         }
     }

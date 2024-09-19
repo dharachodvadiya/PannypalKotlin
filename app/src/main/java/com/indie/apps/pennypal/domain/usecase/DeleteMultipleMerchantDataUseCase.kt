@@ -7,11 +7,7 @@ import com.indie.apps.pennypal.repository.UserRepository
 import com.indie.apps.pennypal.util.Resource
 import com.indie.apps.pennypal.util.handleException
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
@@ -23,7 +19,7 @@ class DeleteMultipleMerchantDataUseCase @Inject constructor(
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) {
 
-    suspend fun deleteData(merchantId: Long, ids: List<Long>): Flow<Resource<Int>> {
+    suspend fun deleteData(ids: List<Long>): Flow<Resource<Int>> {
         return flow {
 
             try {

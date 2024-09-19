@@ -92,7 +92,7 @@ fun AllDataTopBar(
                         .size(25.dp)
                         .clickable { onDeleteClick() }
                 )
-            }else {
+            } else {
                 PrimaryButton(
                     bgColor = MyAppTheme.colors.white,
                     borderStroke = BorderStroke(
@@ -118,15 +118,16 @@ fun AllDataTopBar(
 }
 
 @Composable
-fun DataItem(
+fun TransactionItem(
     item: MerchantDataWithAllData,
     onLongClick: () -> Unit = {},
     onClick: () -> Unit,
     isSelected: Boolean = false,
     itemBgColor: Color,
-    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier.fillMaxWidth()
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
-    val imageVector = if (isSelected) Icons.Default.Done else ImageVector.vectorResource(getCategoryIcon(item.categoryName))
+    val imageVector =
+        if (isSelected) Icons.Default.Done else ImageVector.vectorResource(getCategoryIcon(item.categoryName))
     val iconBgColor = if (isSelected) MyAppTheme.colors.brand else MyAppTheme.colors.lightBlue2
     val amount = if (item.type > 0) item.amount else item.amount * -1
     val amountColor = if (item.type >= 0) MyAppTheme.colors.greenText else MyAppTheme.colors.redText
