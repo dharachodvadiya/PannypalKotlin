@@ -89,7 +89,7 @@ class Migration2to3 : Migration(2, 3) {
             `email` TEXT, 
             `last_sync_date_milli` INTEGER NOT NULL, 
             `currency` TEXT NOT NULL, 
-            `country_code` TEXT NOT NULL, 
+            `country_code` TEXT NOT NULL DEFAULT 'USD', 
             `payment_id` INTEGER NOT NULL, 
             FOREIGN KEY(`payment_id`) REFERENCES `payment_type`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )
         """)
