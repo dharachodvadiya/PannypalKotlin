@@ -127,7 +127,7 @@ class AllDataViewModel @Inject constructor(
     fun onDeleteDialogClick(onSuccess: () -> Unit) {
         deleteAnimRun.value = true
         viewModelScope.launch {
-           /* deleteMultipleMerchantDataUseCase
+            /*deleteMultipleMerchantDataUseCase
                 .deleteData(selectedList)
                 .collect {
                     when (it) {

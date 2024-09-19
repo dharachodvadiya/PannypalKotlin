@@ -94,4 +94,6 @@
     <string name="select_category">Select Category</string>
     <string name="data_delete_success_message">Transaction Deleted Successfully</string>
     <string name="no_transaction">No data yet</string>
+    <string name="see_all">See All</string>
+    <string name="recent_transaction">Recent Transactions</string>
 </resources>

@@ -31,4 +31,10 @@ class SearchMerchantDataWithAllDataListUseCase @Inject constructor(
             .flowOn(dispatcher)
     }
 
+    fun getLast3Data(): Flow<List<MerchantDataWithAllData>> {
+
+        return merchantDataRepository.getRecentMerchantsDataWithAllDataList()
+            .flowOn(dispatcher)
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.indie.apps.pennypal.presentation.ui.screen.overview
 
 import android.annotation.SuppressLint
+import androidx.annotation.StringRes
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
@@ -8,6 +9,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,6 +19,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.NorthEast
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.SouthWest
@@ -42,6 +45,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemContentType
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.module.MerchantDataDailyTotal
+import com.indie.apps.pennypal.data.module.MerchantDataWithAllData
 import com.indie.apps.pennypal.data.module.MerchantDataWithName
 import com.indie.apps.pennypal.data.module.MerchantDataWithNameWithDayTotal
 import com.indie.apps.pennypal.data.module.toMerchantDataDailyTotal
@@ -52,6 +56,7 @@ import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListI
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.TopBar
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
+import com.indie.apps.pennypal.presentation.ui.screen.all_data.DataItem
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.util.Util
@@ -108,7 +113,6 @@ fun OverviewBalanceView(
             .fillMaxWidth()
             .height(150.dp)
             //.background(brush = verticalGradientsBrush(colorGradient))
-            .padding(dimensionResource(id = R.dimen.padding))
     ) {
         Surface(
             modifier = Modifier.fillMaxSize(),
@@ -395,6 +399,95 @@ fun OverviewListItem(
         )
     }, isSetDivider = false, modifier = modifier.padding(vertical = 5.dp)
     )
+}
+
+@Composable
+fun OverviewData(
+    recentTransaction: List<MerchantDataWithAllData>,
+    onSeeAllTransactionClick: () -> Unit,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
+){
+    OverviewItem(
+        title = R.string.recent_transaction,
+        onSeeAllClick = onSeeAllTransactionClick,
+        content = {
+            recentTransaction.forEach{ item ->
+                DataItem(
+                    item = item,
+                    isSelected = false,
+                    onClick = {
+                    },
+                    onLongClick = { },
+                    itemBgColor = MyAppTheme.colors.itemBg
+                )
+            }
+
+        }
+    )
+
+    Spacer(modifier = modifier.height(dimensionResource(id = R.dimen.overview_item_padding)))
+
+    OverviewItem(
+        title = R.string.merchant,
+        onSeeAllClick = onSeeAllTransactionClick,
+        content = {
+            recentTransaction.forEach{ item ->
+                DataItem(
+                    item = item,
+                    isSelected = false,
+                    onClick = {
+                    },
+                    onLongClick = { },
+                    itemBgColor = MyAppTheme.colors.itemBg
+                )
+            }
+
+        }
+    )
+}
+
+@Composable
+fun OverviewItem(
+    onSeeAllClick : ()-> Unit,
+    @StringRes title: Int,
+    content: @Composable (() -> Unit),
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(id = title),
+                style = MyAppTheme.typography.Semibold50,
+                color = MyAppTheme.colors.gray1
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.clickable { onSeeAllClick() }
+            ) {
+                Text(
+                    text = stringResource(id = R.string.see_all) ,
+                    style = MyAppTheme.typography.Semibold40,
+                    color = MyAppTheme.colors.lightBlue1
+                )
+
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                    contentDescription = "all",
+                    tint =  MyAppTheme.colors.lightBlue1)
+            }
+        }
+
+        content()
+    }
+
 }
 
 @Composable

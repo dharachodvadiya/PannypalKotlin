@@ -1,7 +1,9 @@
 package com.indie.apps.pennypal.repository
 
+import androidx.paging.PagingSource
 import com.indie.apps.pennypal.data.dao.MerchantDataDao
 import com.indie.apps.pennypal.data.entity.MerchantData
+import com.indie.apps.pennypal.data.module.MerchantDataWithAllData
 import javax.inject.Inject
 
 class MerchantDataRepositoryImpl @Inject constructor(private val merchantDataDao: MerchantDataDao) :
@@ -35,6 +37,9 @@ class MerchantDataRepositoryImpl @Inject constructor(private val merchantDataDao
     override fun searchMerchantsDataWithAllDataList(
         searchQuery : String
     ) = merchantDataDao.searchMerchantsDataWithAllDataList(searchQuery)
+
+    override fun getRecentMerchantsDataWithAllDataList() =
+        merchantDataDao.getRecentMerchantsDataWithAllDataList()
 
     override fun getMerchantsDataWithPaymentNameListFromMerchantId(
         merchantId: Long) =

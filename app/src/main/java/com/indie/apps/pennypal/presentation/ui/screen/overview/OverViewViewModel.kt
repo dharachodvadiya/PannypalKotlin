@@ -9,6 +9,7 @@ import com.indie.apps.cpp.data.repository.CountryRepository
 import com.indie.apps.pennypal.data.module.MerchantDataWithNameWithDayTotal
 import com.indie.apps.pennypal.domain.usecase.GetMerchantDataListWithMerchantNameAndDayTotalUseCase
 import com.indie.apps.pennypal.domain.usecase.GetUserProfileUseCase
+import com.indie.apps.pennypal.domain.usecase.SearchMerchantDataWithAllDataListUseCase
 import com.indie.apps.pennypal.presentation.ui.state.PagingState
 import com.indie.apps.pennypal.util.Util
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,6 +24,7 @@ import javax.inject.Inject
 @HiltViewModel
 class OverViewViewModel @Inject constructor(
     userProfileUseCase: GetUserProfileUseCase,
+    searchMerchantDataWithAllDataListUseCase: SearchMerchantDataWithAllDataListUseCase,
     getMerchantDataListWithMerchantNameAndDayTotalUseCase: GetMerchantDataListWithMerchantNameAndDayTotalUseCase,
     private val countryRepository: CountryRepository
 ) : ViewModel() {
@@ -61,6 +63,11 @@ class OverViewViewModel @Inject constructor(
             trigger.emit(Unit)
         }
     }*/
+
+    val recentTransaction = searchMerchantDataWithAllDataListUseCase
+        .getLast3Data()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
+
 
     @SuppressLint("SuspiciousIndentation")
     fun addMerchantDataSuccess() {

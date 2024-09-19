@@ -11,6 +11,7 @@ import com.indie.apps.pennypal.data.module.MerchantDataWithAllData
 import com.indie.apps.pennypal.data.module.MerchantDataWithName
 import com.indie.apps.pennypal.data.module.MerchantDataWithNameWithDayTotal
 import com.indie.apps.pennypal.data.module.MerchantDataWithPaymentName
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MerchantDataDao : BaseDao<MerchantData> {
@@ -79,6 +80,30 @@ interface MerchantDataDao : BaseDao<MerchantData> {
     )
 
     fun searchMerchantsDataWithAllDataList(searchQuery : String): PagingSource<Int, MerchantDataWithAllData>
+
+    @Transaction
+    @Query(
+        """
+        SELECT md.id as id, 
+                md.merchant_id as merchantId, 
+                m.name as merchantName, 
+                md.category_id as categoryId, 
+                c.name as categoryName, 
+                md.payment_id as paymentId, 
+                p.name as paymentName, 
+                md.date_milli as dateInMilli,
+                md.details, 
+                md.amount, 
+                md.type
+        FROM merchant_data md
+        INNER JOIN merchant m ON md.merchant_id = m.id
+        INNER JOIN category c ON md.category_id = c.id
+        INNER JOIN payment_type p ON md.payment_id = p.id
+        ORDER BY id DESC LIMIT 3
+    """
+    )
+
+    fun getRecentMerchantsDataWithAllDataList(): Flow<List<MerchantDataWithAllData>>
 
     @Transaction
     @Query(

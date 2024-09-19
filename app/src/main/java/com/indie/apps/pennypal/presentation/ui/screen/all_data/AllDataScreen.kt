@@ -260,7 +260,7 @@ fun AllDataScreen(
                             )
 
                             {
-                                DataListItem(
+                                DataItem(
                                     item = data,
                                     isSelected = selectedList.contains(data.id),
                                     onClick = {

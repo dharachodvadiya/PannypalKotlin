@@ -17,6 +17,7 @@ enum class DialogNav(val route: String) {
 
 enum class ScreenNav(val route: String) {
     OVERVIEW_START("overview/start"),
+    SEE_ALL_DATA("overview/see_all_data"),
     NEW_ITEM("overview/new_item"),
     PROFILE("overview/profile"),
     MERCHANT_START("merchant/start"),

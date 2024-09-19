@@ -17,6 +17,7 @@ import com.indie.apps.pennypal.presentation.ui.component.showToast
 import com.indie.apps.pennypal.presentation.ui.navigation.BottomNavItem
 import com.indie.apps.pennypal.presentation.ui.navigation.DialogNav
 import com.indie.apps.pennypal.presentation.ui.navigation.ScreenNav
+import com.indie.apps.pennypal.presentation.ui.screen.all_data.AllDataScreen
 import com.indie.apps.pennypal.presentation.ui.screen.new_item.NewItemScreen
 import com.indie.apps.pennypal.presentation.ui.screen.overview.OverViewStartScreen
 import com.indie.apps.pennypal.presentation.ui.screen.profile.ProfileScreen
@@ -52,6 +53,9 @@ fun NavGraphBuilder.overViewRoute(
                 bottomPadding = innerPadding,
                 addEditMerchantDataId = merchantDataId ?: -1,
                 isAddMerchantDataSuccess = isAddMerchantDataSuccess ?: false,
+                onSeeAllClick = {
+                    navController.navigate(ScreenNav.SEE_ALL_DATA.route)
+                },
                 onNavigationUp = {
                     navController.popBackStack()
                 }
@@ -153,6 +157,18 @@ fun NavGraphBuilder.overViewRoute(
                             true
                         )
                 })
+        }
+
+        composable(route = ScreenNav.SEE_ALL_DATA.route) { backStackEntry ->
+            bottomBarState.value = false
+            AllDataScreen(
+                onDataClick = {},
+                onAddClick = {},
+                onNavigationUp = {
+                    navController.navigateUp()
+                },
+                bottomPadding = innerPadding
+,            )
         }
     }
 }
