@@ -3,16 +3,12 @@ package com.indie.apps.pennypal.presentation.ui.screen.all_data
 import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Done
@@ -46,7 +42,6 @@ import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.util.GetCategoryColor
 import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.util.getCategoryIcon
-import com.indie.apps.pennypal.util.getPaymentModeIcon
 import java.text.SimpleDateFormat
 
 @Composable
@@ -158,7 +153,7 @@ fun TransactionItem(
         },
         content = {
             Column {
-                /*Text(
+                Text(
                     text = item.categoryName,
                     style = MyAppTheme.typography.Semibold52_5,
                     color = MyAppTheme.colors.black,
@@ -173,8 +168,8 @@ fun TransactionItem(
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
-                }*/
-                Text(
+                }
+                /*Text(
                     text = Util.getFormattedStringWithSymbol(amount),
                     style = MyAppTheme.typography.Semibold52_5,
                     color = MyAppTheme.colors.black,
@@ -189,20 +184,44 @@ fun TransactionItem(
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
-                }
+                }*/
             }
         },
         trailingContent = {
-            /*Text(
-                text = Util.getFormattedStringWithSymbol(amount),
-                style = MyAppTheme.typography.Regular51,
-                color = amountColor,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.fillMaxWidth(0.5f),
-                textAlign = TextAlign.Right,
-                maxLines = 1
-            )*/
+
             Column(
+                horizontalAlignment = Alignment.End,
+            ) {
+
+                val format = SimpleDateFormat("dd MMM yyyy")
+
+                val dayString = when (val day = Util.getDateFromMillis(item.dateInMilli, format)) {
+                    Util.getTodayDate(format) -> stringResource(id = R.string.today)
+                    Util.getYesterdayDate(format) -> stringResource(id = R.string.yesterday)
+                    else -> day
+                }
+
+                Text(
+                    text = Util.getFormattedStringWithSymbol(amount),
+                    style = MyAppTheme.typography.Regular51,
+                    color = amountColor,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.fillMaxWidth(0.5f),
+                    textAlign = TextAlign.Right,
+                    maxLines = 1
+                )
+                Text(
+                    text = dayString,
+                    style = MyAppTheme.typography.Medium40,
+                    color = MyAppTheme.colors.gray2,
+                    overflow = TextOverflow.Ellipsis,
+                    textAlign = TextAlign.Right,
+                    maxLines = 1
+                )
+
+
+            }
+            /*Column(
                 horizontalAlignment = Alignment.End,
                 verticalArrangement = Arrangement.spacedBy(5.dp)
             ) {
@@ -245,7 +264,7 @@ fun TransactionItem(
                     )
                 }
 
-            }
+            }*/
 
         },
         isSetDivider = false,

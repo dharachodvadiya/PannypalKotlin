@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -36,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -114,60 +116,97 @@ fun OverviewBalanceView(
     modifier: Modifier = Modifier,
 ) {
 
-    val balance = if (data == null) {
-        0.0
-    } else {
-        data.totalIncome - data.totalExpense
-    }
-    val colorStroke = if (balance >= 0) MyAppTheme.colors.greenBg else MyAppTheme.colors.redBg
+    OverviewItem(
+        title = R.string.this_month,
+        enableSeeAll = false,
+        onSeeAllClick = {},
+        content = {
+            val balance = if (data == null) {
+                0.0
+            } else {
+                data.totalIncome - data.totalExpense
+            }
+            val colorStroke =
+                if (balance >= 0) MyAppTheme.colors.greenBg else MyAppTheme.colors.redBg
 
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(150.dp)
-        //.background(brush = verticalGradientsBrush(colorGradient))
-    ) {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            shape = RoundedCornerShape(dimensionResource(id = R.dimen.round_corner)),
-            color = MyAppTheme.colors.lightBlue2,
-            shadowElevation = dimensionResource(id = R.dimen.shadow_elevation)
-        ) {
             Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .drawBehind {
-                        drawLine(
-                            colorStroke, Offset(0f, 0f), Offset(size.width, 0f), 25f
-                        )
-                    }, contentAlignment = Alignment.Center
+                modifier = modifier
+                    .fillMaxWidth()
+                    .height(150.dp)
+                //.background(brush = verticalGradientsBrush(colorGradient))
             ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    shape = RoundedCornerShape(dimensionResource(id = R.dimen.round_corner)),
+                    color = MyAppTheme.colors.lightBlue2,
+                    shadowElevation = dimensionResource(id = R.dimen.shadow_elevation)
                 ) {
-                    Text(
-                        text = stringResource(id = R.string.balance),
-                        style = MyAppTheme.typography.Semibold67_5,
-                        color = MyAppTheme.colors.gray0
-                    )
-                    AutoSizeText(
-                        text = Util.getFormattedStringWithSymbol(balance, symbol),
-                        style = MyAppTheme.typography.Regular77_5,
-                        color = MyAppTheme.colors.black,
-                        maxLines = 2,
+                    Box(
                         modifier = Modifier
-                            .padding(horizontal = dimensionResource(id = R.dimen.padding))
-                    )
+                            .fillMaxSize()
+                            .drawBehind {
+                                drawLine(
+                                    colorStroke, Offset(0f, 0f), Offset(size.width, 0f), 25f
+                                )
+                            }, contentAlignment = Alignment.Center
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(dimensionResource(id = R.dimen.padding)),
+                        ) {
+                            Column {
+                                Text(
+                                    text = stringResource(id = R.string.balance),
+                                    style = MyAppTheme.typography.Regular57,
+                                    color = MyAppTheme.colors.gray1
+                                )
+                                AutoSizeText(
+                                    text = Util.getFormattedStringWithSymbol(balance, symbol),
+                                    style = MyAppTheme.typography.Regular66_5,
+                                    color = MyAppTheme.colors.black,
+                                    maxLines = 1
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.weight(1f))
+
+                            if (data != null) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                ) {
+                                    OverviewBalanceItem(
+                                        amount = Util.getFormattedStringWithSymbol(data.totalIncome),
+                                        title = R.string.received,
+                                        horizontalAlignment = Alignment.Start,
+                                        imageVector = Icons.Default.SouthWest,
+                                    )
+                                    Spacer(
+                                        modifier = Modifier
+                                            .weight(1f)
+                                            .padding(horizontal = dimensionResource(id = R.dimen.item_inner_padding))
+                                    )
+                                    OverviewBalanceItem(
+                                        amount = Util.getFormattedStringWithSymbol(data.totalExpense),
+                                        title = R.string.spent,
+                                        horizontalAlignment = Alignment.End,
+                                        imageVector = Icons.Default.NorthEast,
+                                    )
+                                }
+                            }
+
+                        }
+                    }
+
                 }
             }
-
         }
-    }
+    )
 
 
 }
 
-@SuppressLint("CoroutineCreationDuringComposition")
+/*@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun OverviewList(
     dataWithDayList: LazyPagingItems<MerchantDataWithNameWithDayTotal>,
@@ -194,7 +233,7 @@ fun OverviewList(
             contentPadding = bottomPadding
         ) {
 
-            /*var totalListIndex = 0
+            *//*var totalListIndex = 0
             items(
                 count = dataList.itemCount,
                 key = dataList.itemKey { item -> item.id },
@@ -256,7 +295,7 @@ fun OverviewList(
                         }
                     }
                 }
-            }*/
+            }*//*
 
             items(count = dataWithDayList.itemCount,
                 contentType = dataWithDayList.itemContentType { "Any" }) { index ->
@@ -289,7 +328,7 @@ fun OverviewList(
                         OverviewListItem(
                             item = data.toMerchantDataWithName(), modifier = modifierAdd
                         )
-                    }/*when (data) {
+                    }*//*when (data) {
                         is MerchantDataDailyTotal -> OverviewListDateItem(data)
 
                         is MerchantDataWithName -> {
@@ -319,7 +358,7 @@ fun OverviewList(
                                 modifier = modifierAdd
                             )
                         }
-                    }*/
+                    }*//*
 
                     if (isLoadMore && index == dataWithDayList.itemCount) {
                         Box(
@@ -365,9 +404,48 @@ fun OverviewListDateItem(
         )
     }
 
-}
+}*/
 
 @Composable
+fun OverviewBalanceItem(
+    amount: String,
+    @StringRes title: Int,
+    imageVector: ImageVector,
+    horizontalAlignment: Alignment.Horizontal,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        horizontalAlignment = horizontalAlignment
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = modifier
+        ) {
+            RoundImage(
+                imageVector = imageVector,
+                tint = MyAppTheme.colors.gray1,
+                backGround = MyAppTheme.colors.brandBg.copy(alpha = 0.3f),
+                contentDescription = "amount",
+                imageVectorSize = 13.dp,
+                modifier = Modifier.size(17.dp)
+            )
+            Spacer(modifier = Modifier.width(5.dp))
+            Text(
+                text = stringResource(title),
+                style = MyAppTheme.typography.Regular46,
+                color = MyAppTheme.colors.gray1
+            )
+        }
+        AutoSizeText(
+            text = amount,
+            style = MyAppTheme.typography.Regular51,
+            color = MyAppTheme.colors.black,
+            maxLines = 1,
+        )
+    }
+}
+
+/*@Composable
 fun OverviewListItem(
     item: MerchantDataWithName,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier.fillMaxWidth()
@@ -413,14 +491,45 @@ fun OverviewListItem(
         )
     }, isSetDivider = false, modifier = modifier.padding(vertical = 5.dp)
     )
-}
+}*/
 
 @Composable
 fun OverviewData(
+    data: TotalWithCurrency?,
+    symbol: String,
     recentTransaction: List<MerchantDataWithAllData>,
     recentMerchant: List<MerchantNameAndDetails>,
     onSeeAllTransactionClick: () -> Unit,
     onSeeAllMerchantClick: () -> Unit,
+    isAddMerchantDataSuccess: Boolean = false,
+    merchantDataId: Long = 1L,
+    onAnimStop: () -> Unit,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
+) {
+
+    OverviewBalanceView(
+        data = data,
+        symbol = symbol,
+    )
+
+    OverviewTransactionData(
+        recentTransaction = recentTransaction,
+        onSeeAllTransactionClick = onSeeAllTransactionClick,
+        isAddMerchantDataSuccess = isAddMerchantDataSuccess,
+        merchantDataId = merchantDataId,
+        onAnimStop = onAnimStop
+    )
+
+    OverviewMerchantData(
+        recentMerchant = recentMerchant,
+        onSeeAllMerchantClick = onSeeAllMerchantClick
+    )
+}
+
+@Composable
+fun OverviewTransactionData(
+    recentTransaction: List<MerchantDataWithAllData>,
+    onSeeAllTransactionClick: () -> Unit,
     isAddMerchantDataSuccess: Boolean = false,
     merchantDataId: Long = 1L,
     onAnimStop: () -> Unit,
@@ -466,9 +575,14 @@ fun OverviewData(
             }
         }
     )
+}
 
-    Spacer(modifier = modifier.height(dimensionResource(id = R.dimen.overview_item_padding)))
-
+@Composable
+fun OverviewMerchantData(
+    recentMerchant: List<MerchantNameAndDetails>,
+    onSeeAllMerchantClick: () -> Unit,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
+) {
     OverviewItem(
         title = R.string.recent_merchant,
         onSeeAllClick = onSeeAllMerchantClick,
@@ -546,6 +660,7 @@ fun OverviewItem(
     onSeeAllClick: () -> Unit,
     @StringRes title: Int,
     content: @Composable (() -> Unit),
+    enableSeeAll: Boolean = true,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     Column(
@@ -563,25 +678,28 @@ fun OverviewItem(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.clickable { onSeeAllClick() }
-            ) {
-                Text(
-                    text = stringResource(id = R.string.see_all),
-                    style = MyAppTheme.typography.Semibold40,
-                    color = MyAppTheme.colors.lightBlue1
-                )
+            if (enableSeeAll) {
 
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                    contentDescription = "all",
-                    tint = MyAppTheme.colors.lightBlue1
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.clickable { onSeeAllClick() }
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.see_all),
+                        style = MyAppTheme.typography.Semibold40,
+                        color = MyAppTheme.colors.lightBlue1
+                    )
+
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                        contentDescription = "all",
+                        tint = MyAppTheme.colors.lightBlue1
+                    )
+                }
             }
         }
-        
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.item_padding)))
+
+        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.item_inner_padding)))
 
         content()
     }
@@ -589,7 +707,7 @@ fun OverviewItem(
 }
 
 @Composable
-private fun OverviewTopBarProfile(
+public fun OverviewTopBarProfile(
     onClick: () -> Unit, modifier: Modifier = Modifier
 ) {/*Surface(
         onClick = onClick,

@@ -24,15 +24,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.data.entity.Merchant
+import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListItem
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImageWithText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.SearchView
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.TopBar
@@ -41,7 +40,6 @@ import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.util.GetColorFromId
-import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.util.getFirstCharacterUppercase
 
 @Composable
@@ -140,11 +138,12 @@ fun MerchantTopBar(
 
 @Composable
 fun MerchantListItem(
-    item: Merchant,
+    item: MerchantNameAndDetails,
     onLongClick: () -> Unit = {},
     onClick: () -> Unit,
     isSelected: Boolean = false,
     itemBgColor: Color,
+    leadingIconSize: Dp = 50.dp,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier.fillMaxWidth()
 ) {
     val imageVector = if (isSelected) Icons.Default.Done else Icons.Default.Person
@@ -158,21 +157,21 @@ fun MerchantListItem(
         onClick = onClick,
         onLongClick = onLongClick,
         leadingIcon = {
-           /* RoundImage(
-                imageVector = imageVector,
-                imageVectorSize = 27.dp,
-                //brush = linearGradientsBrush(MyAppTheme.colors.gradientBlue),
-                tint = MyAppTheme.colors.black,
-                backGround = iconBgColor,
-                contentDescription = "person",
-                modifier = Modifier.size(50.dp)
-            )*/
+            /* RoundImage(
+                 imageVector = imageVector,
+                 imageVectorSize = 27.dp,
+                 //brush = linearGradientsBrush(MyAppTheme.colors.gradientBlue),
+                 tint = MyAppTheme.colors.black,
+                 backGround = iconBgColor,
+                 contentDescription = "person",
+                 modifier = Modifier.size(50.dp)
+             )*/
 
             RoundImageWithText(
                 character = getFirstCharacterUppercase(item.name),
                 tint = tintColor,
                 backGround = iconBgColor,
-                modifier = Modifier.size(50.dp)
+                modifier = Modifier.size(leadingIconSize)
             )
         },
         content = {
@@ -196,15 +195,15 @@ fun MerchantListItem(
             }
         },
         trailingContent = {
-           /* Text(
-                text = Util.getFormattedStringWithSymbol(amount),
-                style = MyAppTheme.typography.Regular51,
-                color = amountColor,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.fillMaxWidth(0.5f),
-                textAlign = TextAlign.Right,
-                maxLines = 1
-            )*/
+            /* Text(
+                 text = Util.getFormattedStringWithSymbol(amount),
+                 style = MyAppTheme.typography.Regular51,
+                 color = amountColor,
+                 overflow = TextOverflow.Ellipsis,
+                 modifier = Modifier.fillMaxWidth(0.5f),
+                 textAlign = TextAlign.Right,
+                 maxLines = 1
+             )*/
 
         },
         isSetDivider = false,

@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.NavigateNext
@@ -78,7 +77,7 @@ fun ProfileTopSection(
 
         AutoSizeText(
             text = Util.getFormattedStringWithSymbol(totalAmount, symbol),
-            style = MyAppTheme.typography.Regular77_5,
+            style = MyAppTheme.typography.Regular66_5,
             color = MyAppTheme.colors.black,
             alignment = Alignment.Center,
             maxLines = 1,

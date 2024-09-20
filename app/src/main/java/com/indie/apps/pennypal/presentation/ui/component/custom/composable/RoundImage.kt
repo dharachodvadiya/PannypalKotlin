@@ -93,7 +93,7 @@ fun RoundImageWithText(
     ) {
         Text(
             text = character.toString(),
-            style = MyAppTheme.typography.Semibold60,
+            style = MyAppTheme.typography.Semibold67_5,
             color = tint
             )
 

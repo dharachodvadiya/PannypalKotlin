@@ -1,26 +1,21 @@
 package com.indie.apps.pennypal.presentation.ui.dialog.search_merchant
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemContentType
@@ -29,10 +24,9 @@ import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
 import com.indie.apps.pennypal.presentation.ui.component.DialogSearchView
 import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListItem
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
+import com.indie.apps.pennypal.presentation.ui.screen.merchant.MerchantListItem
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 
@@ -54,11 +48,11 @@ fun SearchDialogField(
 ) {
     Column {
 
-       /* SearchMerchantSearchView(
-            onAddClick = onAddClick,
-            textState = textState,
-            onTextChange = onTextChange
-        )*/
+        /* SearchMerchantSearchView(
+             onAddClick = onAddClick,
+             textState = textState,
+             onTextChange = onTextChange
+         )*/
 
         DialogSearchView(
             searchState = textState,
@@ -111,9 +105,20 @@ fun SearchDialogField(
                 ) { index ->
                     val data = dataList[index]
                     if (data != null) {
-                        SearchMerchantListItem(
+                        /*SearchMerchantListItem(
                             item = data,
                             onClick = { onItemClick(data) }
+                        )*/
+
+                        MerchantListItem(
+                            item = data,
+                            isSelected = false,
+                            onClick = {
+                                onItemClick(data)
+                            },
+                            onLongClick = { },
+                            leadingIconSize = 40.dp,
+                            itemBgColor = MyAppTheme.colors.itemBg
                         )
 
                         if (isLoadMore && index == dataList.itemCount - 1) {
@@ -183,6 +188,7 @@ private fun SearchMerchantSearchView(
 
     }
 }*/
+/*
 
 @Composable
 private fun SearchMerchantListItem(
@@ -192,17 +198,26 @@ private fun SearchMerchantListItem(
 ) {
     val imageVector = Icons.Default.Person
     val bgColor = MyAppTheme.colors.lightBlue2
-
+    val iconBgColor = GetColorFromId(item.id.toInt())
+    val tintColor = MyAppTheme.colors.white
 
     ListItem(
         onClick = onClick,
         leadingIcon = {
-            RoundImage(
+            */
+/*RoundImage(
                 imageVector = imageVector,
                 //brush = linearGradientsBrush(MyAppTheme.colors.gradientBlue),
                 tint = MyAppTheme.colors.black,
                 backGround = bgColor,
                 contentDescription = "person"
+            )*//*
+
+            RoundImageWithText(
+                character = getFirstCharacterUppercase(item.name),
+                tint = tintColor,
+                backGround = iconBgColor,
+                modifier = Modifier.size(40.dp)
             )
         },
         content = {
@@ -232,4 +247,4 @@ private fun SearchMerchantListItem(
         ),
         itemBgColor = MyAppTheme.colors.transparent
     )
-}
+}*/

@@ -2,6 +2,7 @@ package com.indie.apps.pennypal.presentation.ui.screen.overview
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -93,22 +94,23 @@ fun OverViewStartScreen(
      }*/
 
     Scaffold(
-        topBar = {
+        /*topBar = {
             OverviewTopBar(
                 onProfileClick = onProfileClick
             )
-        }/*, floatingActionButton = {
+        }*//*, floatingActionButton = {
         OverviewAppFloatingButton(onClick = onNewEntry)
     }*/
     ) { innerPadding ->
-
+        val scrollState = rememberScrollState()
         Column(
             modifier = modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(scrollState)
                 .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
                 .padding(innerPadding)
-                .padding(dimensionResource(id = R.dimen.padding))
+                .padding(dimensionResource(id = R.dimen.padding)),
+            verticalArrangement = Arrangement.spacedBy(25.dp)
         ) {
             if (monthlyTotal.isEmpty()) {
                 LoadingWithProgress(
@@ -117,10 +119,9 @@ fun OverViewStartScreen(
                         .weight(1f)
                 )
             } else {
-                OverviewBalanceView(
-                    data = monthlyTotal[0].toTotalWithCurrency(),
-                    symbol = overViewViewModel.getSymbolFromCurrencyCode(monthlyTotal[0].currency),
-                )
+
+                OverviewTopBarProfile(onClick = {})
+
                 /* OverviewList(
                      dataWithDayList = dataWithDayLazyPagingItems,
                      isLoadMore = merchantDataWithDayPagingState.isLoadMore,
@@ -131,8 +132,10 @@ fun OverViewStartScreen(
                          overViewViewModel.addMerchantDataSuccessAnimStop()
                      }
                  )*/
-                Spacer(modifier = modifier.height(dimensionResource(id = R.dimen.overview_item_padding)))
+
                 OverviewData(
+                    data = monthlyTotal[0].toTotalWithCurrency(),
+                    symbol = overViewViewModel.getSymbolFromCurrencyCode(monthlyTotal[0].currency),
                     recentTransaction = recentTransaction,
                     recentMerchant = recentMerchant,
                     onSeeAllTransactionClick = onSeeAllTransactionClick,
@@ -143,6 +146,8 @@ fun OverViewStartScreen(
                         overViewViewModel.addMerchantDataSuccessAnimStop()
                     }
                 )
+
+                Spacer(modifier = Modifier.height(30.dp))
             }
         }
     }

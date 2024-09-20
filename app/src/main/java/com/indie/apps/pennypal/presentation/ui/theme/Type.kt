@@ -116,9 +116,9 @@ val myAppTypography = MyAppTypography(
         fontSize = pxlToSp(30f).sp,
         fontWeight = FontWeight.Medium
     ),
-    Regular77_5 = TextStyle(
+    Regular66_5 = TextStyle(
         fontFamily = displayFontFamily,
-        fontSize = pxlToSp(77.5f).sp,
+        fontSize = pxlToSp(66.5f).sp,
         fontWeight = FontWeight.Normal
     ),
     Semibold90 = TextStyle(
@@ -196,7 +196,7 @@ val myAppTypography = MyAppTypography(
 fun pxlToSp(figmaSize: Float): Float {
     // Figma DPI is 72, Android base DPI is 160
     val scaleRatio =  72f/ 160f
-    return figmaSize * scaleRatio * 0.8f
+    return figmaSize * scaleRatio * 0.7f
 }
 
 /**
@@ -221,7 +221,7 @@ data class MyAppTypography(
     val Medium33: TextStyle,
     val Medium30: TextStyle,
 
-    val Regular77_5: TextStyle,
+    val Regular66_5: TextStyle,
     val Semibold90: TextStyle,
     val Semibold80: TextStyle,
     val Semibold67_5: TextStyle,

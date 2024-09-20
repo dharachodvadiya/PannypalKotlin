@@ -40,10 +40,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.indie.apps.pennypal.R
+import com.indie.apps.pennypal.data.entity.toMerchantNameAndDetails
 import com.indie.apps.pennypal.presentation.ui.component.ConfirmationDialog
 import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
-import com.indie.apps.pennypal.presentation.ui.component.showToast
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
+import com.indie.apps.pennypal.presentation.ui.component.showToast
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
@@ -331,7 +332,7 @@ fun MerchantScreen(
 
                             {
                                 MerchantListItem(
-                                    item = data,
+                                    item = data.toMerchantNameAndDetails(),
                                     isSelected = selectedList.contains(data.id),
                                     onClick = {
                                         merchantViewModel.onItemClick(data.id) {
@@ -370,7 +371,7 @@ fun MerchantScreen(
                         merchantViewModel.onDeleteDialogClick {
                             openAlertDialog = false
                             context.showToast(merchantDeleteToast)
-                       }
+                        }
                     },
                     onDismissRequest = { openAlertDialog = false }
                 )
