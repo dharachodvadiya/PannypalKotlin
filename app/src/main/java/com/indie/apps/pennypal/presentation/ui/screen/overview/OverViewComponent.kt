@@ -44,7 +44,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.entity.User
-import com.indie.apps.pennypal.data.module.CategoryIncomeExpense
+import com.indie.apps.pennypal.data.module.CategoryAmount
 import com.indie.apps.pennypal.data.module.ChartData
 import com.indie.apps.pennypal.data.module.MerchantDataWithAllData
 import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
@@ -396,7 +396,7 @@ fun OverviewData(
     data: TotalWithCurrency?,
     symbol: String,
     recentTransaction: List<MerchantDataWithAllData>,
-    categoryList: List<CategoryIncomeExpense>,
+    categoryList: List<CategoryAmount>,
     recentMerchant: List<MerchantNameAndDetails>,
     onSeeAllTransactionClick: () -> Unit,
     onSeeAllMerchantClick: () -> Unit,
@@ -495,28 +495,26 @@ fun OverviewBalanceView(
 
                             Spacer(modifier = Modifier.weight(1f))
 
-                            if (data != null) {
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                ) {
-                                    OverviewBalanceItem(
-                                        amount = Util.getFormattedStringWithSymbol(data.totalIncome),
-                                        title = R.string.received,
-                                        horizontalAlignment = Alignment.Start,
-                                        imageVector = Icons.Default.SouthWest,
-                                    )
-                                    Spacer(
-                                        modifier = Modifier
-                                            .weight(1f)
-                                            .padding(horizontal = dimensionResource(id = R.dimen.item_inner_padding))
-                                    )
-                                    OverviewBalanceItem(
-                                        amount = Util.getFormattedStringWithSymbol(data.totalExpense),
-                                        title = R.string.spent,
-                                        horizontalAlignment = Alignment.End,
-                                        imageVector = Icons.Default.NorthEast,
-                                    )
-                                }
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                            ) {
+                                OverviewBalanceItem(
+                                    amount = Util.getFormattedStringWithSymbol(data?.totalIncome ?: 0.0),
+                                    title = R.string.received,
+                                    horizontalAlignment = Alignment.Start,
+                                    imageVector = Icons.Default.SouthWest,
+                                )
+                                Spacer(
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .padding(horizontal = dimensionResource(id = R.dimen.item_inner_padding))
+                                )
+                                OverviewBalanceItem(
+                                    amount = Util.getFormattedStringWithSymbol(data?.totalExpense ?: 0.0),
+                                    title = R.string.spent,
+                                    horizontalAlignment = Alignment.End,
+                                    imageVector = Icons.Default.NorthEast,
+                                )
                             }
 
                         }
@@ -640,18 +638,18 @@ fun OverviewMerchantData(
 @Composable
 fun OverviewAnalyticData(
     onSeeAllMerchantClick: () -> Unit,
-    categoryList: List<CategoryIncomeExpense>,
+    categoryList: List<CategoryAmount>,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     OverviewItem(
-        title = R.string.analytics,
+        title = R.string.expense_analytics,
         enableSeeAll = false,
         onSeeAllClick = onSeeAllMerchantClick,
         content = {
             val chartData = categoryList.map { item ->
                 ChartData(
                     name = item.name,
-                    amount = item.totalExpense,
+                    amount = item.amount,
                     color = GetCategoryColor(item.name)
                 )
             }

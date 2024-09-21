@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.indie.apps.cpp.data.repository.CountryRepository
-import com.indie.apps.pennypal.domain.usecase.GetCategoryWiseIncomeAndExpenseFromMonthUseCase
+import com.indie.apps.pennypal.domain.usecase.GetCategoryWiseExpenseFromMonthUseCase
 import com.indie.apps.pennypal.domain.usecase.GetTotalFromMonthUseCase
 import com.indie.apps.pennypal.domain.usecase.GetUserProfileUseCase
 import com.indie.apps.pennypal.domain.usecase.SearchMerchantDataWithAllDataListUseCase
@@ -24,7 +24,7 @@ class OverViewViewModel @Inject constructor(
     getTotalFromMonthUseCase: GetTotalFromMonthUseCase,
     searchMerchantDataWithAllDataListUseCase: SearchMerchantDataWithAllDataListUseCase,
     searchMerchantNameAndDetailListUseCase: SearchMerchantNameAndDetailListUseCase,
-    getCategoryWiseIncomeAndExpenseFromMonthUseCase: GetCategoryWiseIncomeAndExpenseFromMonthUseCase,
+    getCategoryWiseExpenseFromMonthUseCase: GetCategoryWiseExpenseFromMonthUseCase,
     private val countryRepository: CountryRepository
 ) : ViewModel() {
 
@@ -56,7 +56,7 @@ class OverViewViewModel @Inject constructor(
         .getLast3Data()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
 
-    val monthlyCategory = getCategoryWiseIncomeAndExpenseFromMonthUseCase
+    val monthlyCategoryExpense = getCategoryWiseExpenseFromMonthUseCase
         .loadData(0)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
 

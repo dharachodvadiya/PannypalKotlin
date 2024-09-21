@@ -5,7 +5,7 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import com.indie.apps.pennypal.data.entity.MerchantData
-import com.indie.apps.pennypal.data.module.CategoryIncomeExpense
+import com.indie.apps.pennypal.data.module.CategoryAmount
 import com.indie.apps.pennypal.data.module.IncomeAndExpense
 import com.indie.apps.pennypal.data.module.MerchantDataWithAllData
 import com.indie.apps.pennypal.data.module.MerchantDataWithName
@@ -295,14 +295,15 @@ interface MerchantDataDao : BaseDao<MerchantData> {
             c.id AS id,
             strftime('%Y-%m', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') as month,
             c.name AS name,
-            SUM(CASE WHEN md.type = 1 THEN md.amount ELSE 0 END) AS totalIncome,
-            SUM(CASE WHEN md.type = -1 THEN md.amount ELSE 0 END) AS totalExpense
+            c.type As type,
+            SUM(CASE WHEN md.type = -1 THEN md.amount ELSE 0 END) AS amount
         FROM 
             merchant_data md
         JOIN 
             category c ON md.category_id = c.id
         WHERE 
             strftime('%Y-%m', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = strftime('%Y-%m', 'now', '-' || :monthOffset || ' months')
+            AND c.type != 1
         GROUP BY 
             month, c.name
         ORDER BY 
@@ -310,8 +311,8 @@ interface MerchantDataDao : BaseDao<MerchantData> {
     """
     )
 
-    fun getCategoryWiseIncomeAndExpenseFromMonth(
+    fun getCategoryWiseExpenseFromMonth(
         timeZoneOffsetInMilli: Int,
         monthOffset: Int
-    ): Flow<List<CategoryIncomeExpense>>
+    ): Flow<List<CategoryAmount>>
 }

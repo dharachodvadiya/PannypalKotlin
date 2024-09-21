@@ -99,4 +99,5 @@
     <string name="recent_merchant">Recent Merchant</string>
     <string name="this_month">This Month</string>
     <string name="analytics">Analytics</string>
+    <string name="expense_analytics">Expense Analytics</string>
 </resources>

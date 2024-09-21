@@ -2,7 +2,7 @@ package com.indie.apps.pennypal.repository
 
 import androidx.paging.PagingSource
 import com.indie.apps.pennypal.data.entity.MerchantData
-import com.indie.apps.pennypal.data.module.CategoryIncomeExpense
+import com.indie.apps.pennypal.data.module.CategoryAmount
 import com.indie.apps.pennypal.data.module.IncomeAndExpense
 import com.indie.apps.pennypal.data.module.MerchantDataWithAllData
 import com.indie.apps.pennypal.data.module.MerchantDataWithName
@@ -50,8 +50,8 @@ interface MerchantDataRepository : BaseRepository<MerchantData> {
 
     fun getTotalFromYear(timeZoneOffsetInMilli: Int, offset: Int): Flow<YearlyTotal?>
 
-    fun getCategoryWiseIncomeAndExpenseFromMonth(
+    fun getCategoryWiseExpenseFromMonth(
         timeZoneOffsetInMilli: Int,
         monthOffset: Int
-    ): Flow<List<CategoryIncomeExpense>>
+    ): Flow<List<CategoryAmount>>
 }

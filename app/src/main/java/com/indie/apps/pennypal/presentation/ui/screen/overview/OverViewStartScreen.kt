@@ -61,7 +61,7 @@ fun OverViewStartScreen(
 
     val recentTransaction by overViewViewModel.recentTransaction.collectAsStateWithLifecycle()
     val recentMerchant by overViewViewModel.recentMerchant.collectAsStateWithLifecycle()
-    val currentMonthCategory by overViewViewModel.monthlyCategory.collectAsStateWithLifecycle()
+    val currentMonthCategory by overViewViewModel.monthlyCategoryExpense.collectAsStateWithLifecycle()
 
     if (userData != null) {
         Util.currentCurrencySymbol =
@@ -115,13 +115,13 @@ fun OverViewStartScreen(
                 .padding(dimensionResource(id = R.dimen.padding)),
             verticalArrangement = Arrangement.spacedBy(25.dp)
         ) {
-            if (currentMonthTotal == null) {
+           /* if (currentMonthTotal == null) {
                 LoadingWithProgress(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
                 )
-            } else {
+            } else {*/
 
                 OverviewTopBarProfile(onClick = {}, user = userData)
 
@@ -137,8 +137,8 @@ fun OverViewStartScreen(
                  )*/
 
                 OverviewData(
-                    data = currentMonthTotal!!.toTotalWithCurrency(),
-                    symbol = overViewViewModel.getSymbolFromCurrencyCode(currentMonthTotal!!.currency),
+                    data = currentMonthTotal?.toTotalWithCurrency(),
+                    symbol = overViewViewModel.getSymbolFromCurrencyCode(userData?.currency ?: "USD"),
                     categoryList = currentMonthCategory,
                     recentTransaction = recentTransaction,
                     recentMerchant = recentMerchant,
@@ -154,7 +154,7 @@ fun OverViewStartScreen(
                 )
 
                 Spacer(modifier = Modifier.height(30.dp))
-            }
+            //}
         }
     }
 

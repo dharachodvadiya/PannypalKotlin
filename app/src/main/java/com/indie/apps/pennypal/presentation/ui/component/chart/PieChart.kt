@@ -24,6 +24,8 @@ fun PieChart(
     modifier: Modifier = Modifier,
 ) {
 
+    println("aaaaa $data")
+
     val totalSum = data.sumOf { it.amount }
     val amountValue = mutableListOf<Double>()
 
