@@ -2,13 +2,13 @@ package com.indie.apps.pennypal.repository
 
 import androidx.paging.PagingSource
 import com.indie.apps.pennypal.data.entity.MerchantData
+import com.indie.apps.pennypal.data.module.CategoryIncomeExpense
 import com.indie.apps.pennypal.data.module.IncomeAndExpense
-import com.indie.apps.pennypal.data.module.DailyTotal
-import com.indie.apps.pennypal.data.module.MonthlyTotal
 import com.indie.apps.pennypal.data.module.MerchantDataWithAllData
 import com.indie.apps.pennypal.data.module.MerchantDataWithName
 import com.indie.apps.pennypal.data.module.MerchantDataWithNameWithDayTotal
 import com.indie.apps.pennypal.data.module.MerchantDataWithPaymentName
+import com.indie.apps.pennypal.data.module.MonthlyTotal
 import com.indie.apps.pennypal.data.module.YearlyTotal
 import kotlinx.coroutines.flow.Flow
 
@@ -31,7 +31,7 @@ interface MerchantDataRepository : BaseRepository<MerchantData> {
 
     fun getMerchantDataListFromMerchantId(merchantId: Long): PagingSource<Int, MerchantData>
 
-    fun searchMerchantsDataWithAllDataList(searchQuery : String): PagingSource<Int, MerchantDataWithAllData>
+    fun searchMerchantsDataWithAllDataList(searchQuery: String): PagingSource<Int, MerchantDataWithAllData>
 
     fun getRecentMerchantsDataWithAllDataList(): Flow<List<MerchantDataWithAllData>>
 
@@ -44,11 +44,14 @@ interface MerchantDataRepository : BaseRepository<MerchantData> {
         timeZoneOffsetInMilli: Int
     ): PagingSource<Int, MerchantDataWithName>
 
-    fun getDailyTotalList(timeZoneOffsetInMilli: Int): PagingSource<Int, DailyTotal>
-
     fun getMerchantDataWithNameWithDayTotal(timeZoneOffsetInMilli: Int): PagingSource<Int, MerchantDataWithNameWithDayTotal>
 
-    fun getMonthlyTotalList(timeZoneOffsetInMilli: Int, offset: Int): Flow<List<MonthlyTotal>>
+    fun getTotalFromMonth(timeZoneOffsetInMilli: Int, monthOffset: Int): Flow<MonthlyTotal?>
 
-    fun getYearlyTotalList(timeZoneOffsetInMilli: Int, offset: Int): Flow<List<YearlyTotal>>
+    fun getTotalFromYear(timeZoneOffsetInMilli: Int, offset: Int): Flow<YearlyTotal?>
+
+    fun getCategoryWiseIncomeAndExpenseFromMonth(
+        timeZoneOffsetInMilli: Int,
+        monthOffset: Int
+    ): Flow<List<CategoryIncomeExpense>>
 }

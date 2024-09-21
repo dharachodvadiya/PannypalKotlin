@@ -5,13 +5,13 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import com.indie.apps.pennypal.data.entity.MerchantData
+import com.indie.apps.pennypal.data.module.CategoryIncomeExpense
 import com.indie.apps.pennypal.data.module.IncomeAndExpense
-import com.indie.apps.pennypal.data.module.DailyTotal
-import com.indie.apps.pennypal.data.module.MonthlyTotal
 import com.indie.apps.pennypal.data.module.MerchantDataWithAllData
 import com.indie.apps.pennypal.data.module.MerchantDataWithName
 import com.indie.apps.pennypal.data.module.MerchantDataWithNameWithDayTotal
 import com.indie.apps.pennypal.data.module.MerchantDataWithPaymentName
+import com.indie.apps.pennypal.data.module.MonthlyTotal
 import com.indie.apps.pennypal.data.module.YearlyTotal
 import kotlinx.coroutines.flow.Flow
 
@@ -81,7 +81,7 @@ interface MerchantDataDao : BaseDao<MerchantData> {
     """
     )
 
-    fun searchMerchantsDataWithAllDataList(searchQuery : String): PagingSource<Int, MerchantDataWithAllData>
+    fun searchMerchantsDataWithAllDataList(searchQuery: String): PagingSource<Int, MerchantDataWithAllData>
 
     @Transaction
     @Query(
@@ -147,51 +147,6 @@ interface MerchantDataDao : BaseDao<MerchantData> {
         searchQuery: String,
         timeZoneOffsetInMilli: Int
     ): PagingSource<Int, MerchantDataWithName>
-
-    @Query(
-        """
-        SELECT 
-            strftime('%d-%m-%Y',  (date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') as day,
-            SUM(CASE WHEN type >= 0 THEN amount ELSE 0 END) as totalIncome,
-            SUM(CASE WHEN type < 0 THEN amount ELSE 0 END) as totalExpense
-        FROM merchant_data
-        GROUP BY day
-        ORDER BY day DESC
-    """
-    )
-    fun getDailyTotalList(timeZoneOffsetInMilli: Int): PagingSource<Int, DailyTotal>
-
-    @Query(
-        """
-    SELECT 
-        strftime('%Y-%m', (m.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') as month,
-        IFNULL(SUM(CASE WHEN m.type >= 0 THEN m.amount ELSE 0 END), 0) as totalIncome,
-        IFNULL(SUM(CASE WHEN m.type < 0 THEN m.amount ELSE 0 END), 0) as totalExpense,
-        u.currency
-    FROM merchant_data m
-    JOIN user u ON u.id = 1
-    GROUP BY month
-    ORDER BY month DESC
-    LIMIT :offset
-    """
-    )
-    fun getMonthlyTotalList(timeZoneOffsetInMilli: Int, offset: Int): Flow<List<MonthlyTotal>>
-
-    @Query(
-        """
-    SELECT 
-        strftime('%Y', (m.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') as year,
-        IFNULL(SUM(CASE WHEN m.type >= 0 THEN m.amount ELSE 0 END), 0) as totalIncome,
-        IFNULL(SUM(CASE WHEN m.type < 0 THEN m.amount ELSE 0 END), 0) as totalExpense,
-        u.currency
-    FROM merchant_data m
-    JOIN user u ON u.id = 1
-    GROUP BY year
-    ORDER BY year DESC
-    LIMIT :offset
-    """
-    )
-    fun getYearlyTotalList(timeZoneOffsetInMilli: Int, offset: Int): Flow<List<YearlyTotal>>
 
     @Transaction
     @Query(
@@ -271,4 +226,92 @@ interface MerchantDataDao : BaseDao<MerchantData> {
     fun getCombinedDataWithLimit(
         timeZoneOffsetInMilli: Int
     ): PagingSource<Int, MerchantDataWithNameWithDayTotal>
+
+
+    @Query(
+        """
+        SELECT 
+            strftime('%Y-%m', (m.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') AS month,
+            IFNULL(SUM(CASE WHEN m.type >= 0 THEN m.amount ELSE 0 END), 0) AS totalIncome,
+            IFNULL(SUM(CASE WHEN m.type < 0 THEN m.amount ELSE 0 END), 0) AS totalExpense,
+            u.currency
+        FROM 
+            merchant_data m
+        JOIN 
+            user u ON u.id = 1
+        WHERE 
+            strftime('%Y-%m', (m.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = strftime('%Y-%m', 'now', '-' || :monthOffset || ' months')
+        GROUP BY 
+            month, u.currency
+        ORDER BY 
+            month DESC
+    """
+    )
+    fun getTotalFromMonth(timeZoneOffsetInMilli: Int, monthOffset: Int): Flow<MonthlyTotal>
+
+    @Query(
+        """
+        SELECT 
+            strftime('%Y', (m.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') AS year,
+            IFNULL(SUM(CASE WHEN m.type >= 0 THEN m.amount ELSE 0 END), 0) AS totalIncome,
+            IFNULL(SUM(CASE WHEN m.type < 0 THEN m.amount ELSE 0 END), 0) AS totalExpense,
+            u.currency
+        FROM 
+            merchant_data m
+        JOIN 
+            user u ON u.id = 1
+        WHERE 
+            strftime('%Y', (m.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = strftime('%Y', 'now', '-' || :yearOffset || ' years')
+        GROUP BY 
+            year, u.currency
+        ORDER BY 
+            year DESC
+    """
+    )
+    fun getTotalFromYear(timeZoneOffsetInMilli: Int, yearOffset: Int): Flow<YearlyTotal>
+
+    /*@Query("""
+        SELECT 
+            c.id AS id,
+            strftime('%Y-%m', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') as month,
+            c.name AS name,
+            SUM(CASE WHEN md.type = 1 THEN md.amount ELSE 0 END) AS totalIncome,
+            SUM(CASE WHEN md.type = -1 THEN md.amount ELSE 0 END) AS totalExpense
+        FROM 
+            merchant_data md
+        JOIN 
+            category c ON md.category_id = c.id
+        WHERE 
+            date_milli >= strftime('%s', 'now', '-1 months') * 1000
+        GROUP BY 
+            month, c.name
+        ORDER BY 
+            month DESC, c.name
+    """)*/
+
+    @Query(
+        """
+        SELECT 
+            c.id AS id,
+            strftime('%Y-%m', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') as month,
+            c.name AS name,
+            SUM(CASE WHEN md.type = 1 THEN md.amount ELSE 0 END) AS totalIncome,
+            SUM(CASE WHEN md.type = -1 THEN md.amount ELSE 0 END) AS totalExpense
+        FROM 
+            merchant_data md
+        JOIN 
+            category c ON md.category_id = c.id
+        WHERE 
+            strftime('%Y-%m', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = strftime('%Y-%m', 'now', '-' || :monthOffset || ' months')
+        GROUP BY 
+            month, c.name
+        ORDER BY 
+            month DESC, c.name
+    """
+    )
+
+    fun getCategoryWiseIncomeAndExpenseFromMonth(
+        timeZoneOffsetInMilli: Int,
+        monthOffset: Int
+    ): Flow<List<CategoryIncomeExpense>>
 }

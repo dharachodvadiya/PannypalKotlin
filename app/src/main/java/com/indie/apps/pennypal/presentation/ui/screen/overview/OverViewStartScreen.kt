@@ -51,20 +51,22 @@ fun OverViewStartScreen(
      val merchantDataWithDayPagingState by overViewViewModel.merchantDataWithDayPagingState.collectAsStateWithLifecycle()
      merchantDataWithDayPagingState.update(dataWithDayLazyPagingItems)
      */
+
     //val userData by overViewViewModel.userData.collectAsStateWithLifecycle()
-    val monthlyTotal by overViewViewModel.monthlyTotal.collectAsStateWithLifecycle()
+    val currentMonthTotal by overViewViewModel.currentMonthTotal.collectAsStateWithLifecycle()
     val addDataAnimRun by overViewViewModel.addDataAnimRun.collectAsStateWithLifecycle()
 
     val recentTransaction by overViewViewModel.recentTransaction.collectAsStateWithLifecycle()
     val recentMerchant by overViewViewModel.recentMerchant.collectAsStateWithLifecycle()
+    val currentMonthCategory by overViewViewModel.monthlyCategory.collectAsStateWithLifecycle()
 
     /*var amount by remember {
         mutableDoubleStateOf(0.0)
     }*/
 
-    if (monthlyTotal.isNotEmpty()) {
+    if (currentMonthTotal != null) {
         Util.currentCurrencySymbol =
-            overViewViewModel.getSymbolFromCurrencyCode(monthlyTotal[0].currency)
+            overViewViewModel.getSymbolFromCurrencyCode(currentMonthTotal!!.currency)
         //amount = (monthlyTotal[0].totalIncome) - (monthlyTotal[0].totalExpense)
 
     }
@@ -112,7 +114,7 @@ fun OverViewStartScreen(
                 .padding(dimensionResource(id = R.dimen.padding)),
             verticalArrangement = Arrangement.spacedBy(25.dp)
         ) {
-            if (monthlyTotal.isEmpty()) {
+            if (currentMonthTotal == null) {
                 LoadingWithProgress(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -134,8 +136,9 @@ fun OverViewStartScreen(
                  )*/
 
                 OverviewData(
-                    data = monthlyTotal[0].toTotalWithCurrency(),
-                    symbol = overViewViewModel.getSymbolFromCurrencyCode(monthlyTotal[0].currency),
+                    data = currentMonthTotal!!.toTotalWithCurrency(),
+                    symbol = overViewViewModel.getSymbolFromCurrencyCode(currentMonthTotal!!.currency),
+                    categoryList = currentMonthCategory,
                     recentTransaction = recentTransaction,
                     recentMerchant = recentMerchant,
                     onSeeAllTransactionClick = onSeeAllTransactionClick,

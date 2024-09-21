@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.indie.apps.cpp.data.repository.CountryRepository
 import com.indie.apps.pennypal.data.entity.User
-import com.indie.apps.pennypal.domain.usecase.GetMonthlyTotalUseCase
+import com.indie.apps.pennypal.domain.usecase.GetTotalFromMonthUseCase
 import com.indie.apps.pennypal.domain.usecase.GetUserProfileUseCase
 import com.indie.apps.pennypal.domain.usecase.UpdateUserDataUseCase
 import com.indie.apps.pennypal.util.Resource
@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    getMonthlyTotalUseCase: GetMonthlyTotalUseCase,
+    getMonthlyTotalUseCase: GetTotalFromMonthUseCase,
     private val userProfileUseCase: GetUserProfileUseCase,
     private val updateUserDataUseCase: UpdateUserDataUseCase,
     private val countryRepository: CountryRepository
@@ -32,8 +32,8 @@ class ProfileViewModel @Inject constructor(
     //private val _uiState = MutableStateFlow<Resource<User>>(Resource.Loading())
     // val uiState = _uiState.asStateFlow()
 
-    val monthlyTotal = getMonthlyTotalUseCase.loadData(1)
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
+    val currentMonthTotal = getMonthlyTotalUseCase.loadData(0)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), null)
 
     private var userData: User? = null
     val currUserData = MutableStateFlow<User?>(null)

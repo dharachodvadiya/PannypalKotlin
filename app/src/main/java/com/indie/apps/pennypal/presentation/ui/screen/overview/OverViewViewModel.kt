@@ -5,14 +5,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.indie.apps.cpp.data.repository.CountryRepository
 import com.indie.apps.pennypal.data.module.MonthlyTotal
+import com.indie.apps.pennypal.domain.usecase.GetCategoryWiseIncomeAndExpenseFromMonthUseCase
 import com.indie.apps.pennypal.domain.usecase.GetMerchantDataListWithMerchantNameAndDayTotalUseCase
-import com.indie.apps.pennypal.domain.usecase.GetMonthlyTotalUseCase
+import com.indie.apps.pennypal.domain.usecase.GetTotalFromMonthUseCase
 import com.indie.apps.pennypal.domain.usecase.GetUserProfileUseCase
-import com.indie.apps.pennypal.domain.usecase.GetYearlyTotalUseCase
 import com.indie.apps.pennypal.domain.usecase.SearchMerchantDataWithAllDataListUseCase
 import com.indie.apps.pennypal.domain.usecase.SearchMerchantNameAndDetailListUseCase
 import com.indie.apps.pennypal.util.Util
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -26,10 +27,10 @@ import javax.inject.Inject
 @HiltViewModel
 class OverViewViewModel @Inject constructor(
     userProfileUseCase: GetUserProfileUseCase,
-    getMonthlyTotalUseCase: GetMonthlyTotalUseCase,
-    getYearlyTotalUseCase: GetYearlyTotalUseCase,
+    getTotalFromMonthUseCase: GetTotalFromMonthUseCase,
     searchMerchantDataWithAllDataListUseCase: SearchMerchantDataWithAllDataListUseCase,
     searchMerchantNameAndDetailListUseCase: SearchMerchantNameAndDetailListUseCase,
+    getCategoryWiseIncomeAndExpenseFromMonthUseCase: GetCategoryWiseIncomeAndExpenseFromMonthUseCase,
     getMerchantDataListWithMerchantNameAndDayTotalUseCase: GetMerchantDataListWithMerchantNameAndDayTotalUseCase,
     private val countryRepository: CountryRepository
 ) : ViewModel() {
@@ -40,18 +41,19 @@ class OverViewViewModel @Inject constructor(
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), null)*/
 
 
-    val monthlyTotal = getMonthlyTotalUseCase.loadData(1)
-        .flatMapConcat { monthlyTotals ->
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val currentMonthTotal = getTotalFromMonthUseCase.loadData(0)
+        .flatMapConcat { data ->
             delay(500)
-            if (monthlyTotals.isEmpty()) {
+            if (data == null) {
                 userProfileUseCase.loadData().map { user ->
-                    listOf(MonthlyTotal("", 0.0, 0.0, user.currency))
+                    MonthlyTotal("", 0.0, 0.0, user.currency)
                 }
             } else {
-                flowOf(monthlyTotals)
+                flowOf(data)
             }
         }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), null)
 
     var addDataAnimRun = MutableStateFlow(false)
         private set
@@ -69,6 +71,10 @@ class OverViewViewModel @Inject constructor(
 
     val recentMerchant = searchMerchantNameAndDetailListUseCase
         .getLast3Data()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
+
+    val monthlyCategory = getCategoryWiseIncomeAndExpenseFromMonthUseCase
+        .loadData(0)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
 
 

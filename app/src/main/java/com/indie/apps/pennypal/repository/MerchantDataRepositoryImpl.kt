@@ -33,24 +33,21 @@ class MerchantDataRepositoryImpl @Inject constructor(private val merchantDataDao
     ) = merchantDataDao.getMerchantDataListFromMerchantId(merchantId)
 
     override fun searchMerchantsDataWithAllDataList(
-        searchQuery : String
+        searchQuery: String
     ) = merchantDataDao.searchMerchantsDataWithAllDataList(searchQuery)
 
     override fun getRecentMerchantsDataWithAllDataList() =
         merchantDataDao.getRecentMerchantsDataWithAllDataList()
 
     override fun getMerchantsDataWithPaymentNameListFromMerchantId(
-        merchantId: Long) =
+        merchantId: Long
+    ) =
         merchantDataDao.getMerchantsDataWithPaymentNameListFromMerchantId(merchantId)
 
     override fun searchMerchantDataWithMerchantNameList(
         searchQuery: String,
         timeZoneOffsetInMilli: Int
     ) = merchantDataDao.searchMerchantDataWithMerchantNameList(searchQuery, timeZoneOffsetInMilli)
-
-    override fun getDailyTotalList(
-        timeZoneOffsetInMilli: Int
-    ) = merchantDataDao.getDailyTotalList(timeZoneOffsetInMilli)
 
     override suspend fun insert(obj: MerchantData) = merchantDataDao.insert(obj)
 
@@ -59,13 +56,20 @@ class MerchantDataRepositoryImpl @Inject constructor(private val merchantDataDao
     override fun getMerchantDataWithNameWithDayTotal(timeZoneOffsetInMilli: Int) =
         merchantDataDao.getCombinedDataWithLimit(timeZoneOffsetInMilli)
 
-    override fun getMonthlyTotalList(
+    override fun getTotalFromMonth(
         timeZoneOffsetInMilli: Int,
-        offset: Int
-    ) = merchantDataDao.getMonthlyTotalList(timeZoneOffsetInMilli, offset)
+        monthOffset: Int
+    ) = merchantDataDao.getTotalFromMonth(timeZoneOffsetInMilli, monthOffset)
 
-    override fun getYearlyTotalList(
+
+    override fun getTotalFromYear(
         timeZoneOffsetInMilli: Int,
         offset: Int
-    ) = merchantDataDao.getYearlyTotalList(timeZoneOffsetInMilli, offset)
+    ) = merchantDataDao.getTotalFromYear(timeZoneOffsetInMilli, offset)
+
+    override fun getCategoryWiseIncomeAndExpenseFromMonth(
+        timeZoneOffsetInMilli: Int,
+        monthOffset: Int
+    ) =
+        merchantDataDao.getCategoryWiseIncomeAndExpenseFromMonth(timeZoneOffsetInMilli, monthOffset)
 }
