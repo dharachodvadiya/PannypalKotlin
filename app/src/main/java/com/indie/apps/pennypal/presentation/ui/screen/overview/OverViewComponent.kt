@@ -43,6 +43,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
+import com.indie.apps.pennypal.data.entity.User
 import com.indie.apps.pennypal.data.module.CategoryIncomeExpense
 import com.indie.apps.pennypal.data.module.ChartData
 import com.indie.apps.pennypal.data.module.MerchantDataWithAllData
@@ -51,10 +52,10 @@ import com.indie.apps.pennypal.data.module.TotalWithCurrency
 import com.indie.apps.pennypal.presentation.ui.component.chart.PieChart
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.AutoSizeText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImageWithText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.TopBar
-import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.screen.all_data.TransactionItem
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
@@ -98,7 +99,7 @@ fun OverviewTopBar(
 
     TopBar(
         isBackEnable = false,
-        leadingContent = { OverviewTopBarProfile(onClick = onProfileClick) },
+        leadingContent = { OverviewTopBarProfile(onClick = onProfileClick, user = null) },
         modifier = modifier
     )
 }
@@ -399,10 +400,11 @@ fun OverviewData(
     recentMerchant: List<MerchantNameAndDetails>,
     onSeeAllTransactionClick: () -> Unit,
     onSeeAllMerchantClick: () -> Unit,
+    onTransactionClick: (Long) -> Unit,
     isAddMerchantDataSuccess: Boolean = false,
+    isEditMerchantDataSuccess: Boolean = false,
     merchantDataId: Long = 1L,
-    onAnimStop: () -> Unit,
-    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
+    onAnimStop: () -> Unit
 ) {
 
     OverviewBalanceView(
@@ -411,9 +413,11 @@ fun OverviewData(
     )
 
     OverviewTransactionData(
+        onTransactionClick = onTransactionClick,
         recentTransaction = recentTransaction,
         onSeeAllTransactionClick = onSeeAllTransactionClick,
         isAddMerchantDataSuccess = isAddMerchantDataSuccess,
+        isEditMerchantDataSuccess = isEditMerchantDataSuccess,
         merchantDataId = merchantDataId,
         onAnimStop = onAnimStop
     )
@@ -530,7 +534,9 @@ fun OverviewBalanceView(
 fun OverviewTransactionData(
     recentTransaction: List<MerchantDataWithAllData>,
     onSeeAllTransactionClick: () -> Unit,
+    onTransactionClick: (Long) -> Unit,
     isAddMerchantDataSuccess: Boolean = false,
+    isEditMerchantDataSuccess: Boolean = false,
     merchantDataId: Long = 1L,
     onAnimStop: () -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
@@ -547,6 +553,13 @@ fun OverviewTransactionData(
                     Animatable(0f)
                 }
 
+                val baseColor = MyAppTheme.colors.itemBg
+                val targetAnimColor = MyAppTheme.colors.lightBlue1
+
+                val itemAnimateColor = remember {
+                    androidx.compose.animation.Animatable(baseColor)
+                }
+
                 val modifierAdd: Modifier =
                     if (merchantDataId == item.id && isAddMerchantDataSuccess) {
                         scope.launch {
@@ -559,6 +572,19 @@ fun OverviewTransactionData(
                             onAnimStop()
                         }
                         Modifier.scale(itemAnimateScale.value)
+                    } else if ((merchantDataId == item.id && isEditMerchantDataSuccess)
+                    ) {
+                        scope.launch {
+                            itemAnimateColor.animateTo(
+                                targetValue = targetAnimColor,
+                                animationSpec = tween(Util.EDIT_ITEM_ANIM_TIME)
+                            )
+                            itemAnimateColor.animateTo(
+                                targetValue = baseColor,
+                                animationSpec = tween(Util.EDIT_ITEM_ANIM_TIME)
+                            )
+                        }
+                        Modifier
                     } else {
                         Modifier
                     }
@@ -567,13 +593,15 @@ fun OverviewTransactionData(
                     item = item,
                     isSelected = false,
                     onClick = {
+                        onTransactionClick(item.id)
                     },
                     onLongClick = { },
-                    itemBgColor = MyAppTheme.colors.itemBg,
+                    itemBgColor = itemAnimateColor.value,
                     modifier = modifierAdd
                 )
             }
-        }
+        },
+        modifier = modifier
     )
 }
 
@@ -604,7 +632,8 @@ fun OverviewMerchantData(
                 }
             }
 
-        }
+        },
+        modifier = modifier
     )
 }
 
@@ -652,7 +681,8 @@ fun OverviewAnalyticData(
             }
 
 
-        }
+        },
+        modifier = modifier
     )
 }
 
@@ -780,7 +810,8 @@ fun OverviewItem(
 }
 
 @Composable
-public fun OverviewTopBarProfile(
+fun OverviewTopBarProfile(
+    user: User?,
     onClick: () -> Unit, modifier: Modifier = Modifier
 ) {/*Surface(
         onClick = onClick,
@@ -809,27 +840,34 @@ public fun OverviewTopBarProfile(
             )
         }
 
-
     }*/
 
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = modifier
-            .size(dimensionResource(R.dimen.top_bar_profile))
-            .roundedCornerBackground(
-                MyAppTheme.colors.white, BorderStroke(width = 1.dp, MyAppTheme.colors.gray1)
-            )
-            .clickable { onClick() }/*.border(
-                border = BorderStroke(
-                    width = 1.dp,
-                    MyAppTheme.colors.gray1
-                ),
-                shape = RoundedCornerShape(dimensionResource(R.dimen.round_corner))
-            )
-            .background(MyAppTheme.colors.white)*/
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(
-            Icons.Filled.Person, contentDescription = "Profile", tint = MyAppTheme.colors.gray1
+        PrimaryButton(
+            bgColor = MyAppTheme.colors.white,
+            borderStroke = BorderStroke(
+                width = 1.dp,
+                color = MyAppTheme.colors.gray1
+            ),
+            onClick = onClick,
+            modifier = Modifier.size(dimensionResource(R.dimen.top_bar_profile))
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Person,
+                contentDescription = "Profile",
+                tint = MyAppTheme.colors.gray1
+            )
+        }
+
+        Spacer(modifier = Modifier.width(15.dp))
+
+        CustomText(
+            text = user?.name ?: "",
+            style = MyAppTheme.typography.Regular57,
+            color = MyAppTheme.colors.black
         )
     }
 }
@@ -864,7 +902,7 @@ fun OverviewAppFloatingButton(
 @Composable
 private fun TopBarProfilePreview() {
     PennyPalTheme(darkTheme = true) {
-        OverviewTopBarProfile(onClick = { })
+        OverviewTopBarProfile(onClick = { }, user = null)
     }
 }
 

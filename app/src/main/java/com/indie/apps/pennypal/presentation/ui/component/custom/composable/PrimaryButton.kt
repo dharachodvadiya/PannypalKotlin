@@ -37,35 +37,6 @@ fun PrimaryButton(
     content: @Composable RowScope.() -> Unit,
 ) {
     val containerColor = if (enabled) bgColor else MyAppTheme.colors.gray2
-    // val contentColor =
-    //   if (enabled) MyAppTheme.colors.white else MyAppTheme.colors.white.copy(alpha = 0.1f)
-    /*Surface(
-        onClick = onClick,
-        enabled = enabled,
-        modifier = modifier
-            .background(MyAppTheme.colors.transparent)
-            .semantics { role = Role.Button },
-        shape = RoundedCornerShape(dimensionResource(R.dimen.round_corner)),
-        contentColor = contentColor,
-        border = borderStroke
-    ) {
-
-        val buttonModifier = if (bgBrush != null && enabled) {
-            Modifier.background(brush = bgBrush)
-        } else {
-            Modifier.background(color = containerColor)
-        }
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Absolute.Center,
-            modifier = buttonModifier
-                .padding(
-                    horizontal = dimensionResource(R.dimen.button_horizontal_padding),
-                    vertical = dimensionResource(R.dimen.button_item_vertical_padding)
-                ),
-            content = content
-        )
-    }*/
 
     val buttonModifier = if (bgBrush != null && enabled) {
         Modifier.background(brush = bgBrush)

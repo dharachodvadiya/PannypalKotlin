@@ -41,11 +41,15 @@ fun NavGraphBuilder.overViewRoute(
             val isAddMerchantDataSuccess: Boolean? =
                 backStackEntry.savedStateHandle.get<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_ADD_SUCCESS)
 
+            val isEditMerchantDataSuccess: Boolean? =
+                backStackEntry.savedStateHandle.get<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_EDIT_SUCCESS)
+
             bottomBarState.value = true
 
             backStackEntry.savedStateHandle.remove<Long>(Util.SAVE_STATE_MERCHANT_ADD_EDIT_ID)
             backStackEntry.savedStateHandle.remove<Long>(Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_ID)
             backStackEntry.savedStateHandle.remove<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_ADD_SUCCESS)
+            backStackEntry.savedStateHandle.remove<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_EDIT_SUCCESS)
 
 
             OverViewStartScreen(
@@ -53,6 +57,7 @@ fun NavGraphBuilder.overViewRoute(
                 bottomPadding = innerPadding,
                 addEditMerchantDataId = merchantDataId ?: -1,
                 isAddMerchantDataSuccess = isAddMerchantDataSuccess ?: false,
+                isEditSuccess = isEditMerchantDataSuccess ?: false,
                 onSeeAllTransactionClick = {
                     navController.navigate(ScreenNav.SEE_ALL_DATA.route)
                 },
@@ -61,6 +66,13 @@ fun NavGraphBuilder.overViewRoute(
                 },
                 onSeeAllMerchantClick = {
                     navController.navigate(BottomNavItem.MERCHANTS.route)
+                },
+                onTransactionClick = {
+                    navController.navigate(
+                        ScreenNav.EDIT_MERCHANT_DATA.route.replace(
+                            "{${Util.PARAM_EDIT_MERCHANT_DATA_ID}}", it.toString()
+                        )
+                    )
                 }
             )
         }

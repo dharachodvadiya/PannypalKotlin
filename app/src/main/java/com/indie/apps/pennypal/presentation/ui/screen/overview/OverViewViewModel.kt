@@ -37,26 +37,16 @@ class OverViewViewModel @Inject constructor(
 
     //val searchTextState by mutableStateOf(TextFieldState())
 
-    /*val userData = userProfileUseCase.loadData()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), null)*/
+    val userData = userProfileUseCase.loadData()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), null)
 
-
-    @OptIn(ExperimentalCoroutinesApi::class)
     val currentMonthTotal = getTotalFromMonthUseCase.loadData(0)
-        .flatMapConcat { data ->
-            delay(500)
-            if (data == null) {
-                userProfileUseCase.loadData().map { user ->
-                    MonthlyTotal("", 0.0, 0.0, user.currency)
-                }
-            } else {
-                flowOf(data)
-            }
-        }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), null)
 
     var addDataAnimRun = MutableStateFlow(false)
         private set
+
+    var editAnimRun = MutableStateFlow(false)
 
     /*val pagedMerchantDataWithDay: Flow<PagingData<MerchantDataWithNameWithDayTotal>> =
         getMerchantDataListWithMerchantNameAndDayTotalUseCase
@@ -80,7 +70,6 @@ class OverViewViewModel @Inject constructor(
 
     @SuppressLint("SuspiciousIndentation")
     fun addMerchantDataSuccess() {
-
         addDataAnimRun.value = true
         viewModelScope.launch {
             delay(Util.LIST_ITEM_ANIM_DELAY)
@@ -91,6 +80,15 @@ class OverViewViewModel @Inject constructor(
     fun addMerchantDataSuccessAnimStop() {
         if (addDataAnimRun.value)
             addDataAnimRun.value = false
+    }
+
+    fun editDataSuccess() {
+        editAnimRun.value = true
+
+        viewModelScope.launch {
+            delay(Util.LIST_ITEM_ANIM_DELAY)
+            editAnimRun.value = false
+        }
     }
 
     fun getSymbolFromCurrencyCode(currencyCode: String): String {

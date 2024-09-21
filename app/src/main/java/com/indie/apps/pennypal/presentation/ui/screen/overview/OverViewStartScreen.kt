@@ -40,10 +40,12 @@ fun OverViewStartScreen(
     onProfileClick: () -> Unit,
     onSeeAllTransactionClick: () -> Unit,
     onSeeAllMerchantClick: () -> Unit,
+    onTransactionClick: (Long) -> Unit,
     bottomPadding: PaddingValues,
     addEditMerchantDataId: Long,
     onNavigationUp: () -> Unit,
     isAddMerchantDataSuccess: Boolean = false,
+    isEditSuccess: Boolean = false,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     /* val dataWithDayLazyPagingItems =
@@ -52,48 +54,47 @@ fun OverViewStartScreen(
      merchantDataWithDayPagingState.update(dataWithDayLazyPagingItems)
      */
 
-    //val userData by overViewViewModel.userData.collectAsStateWithLifecycle()
+    val userData by overViewViewModel.userData.collectAsStateWithLifecycle()
     val currentMonthTotal by overViewViewModel.currentMonthTotal.collectAsStateWithLifecycle()
     val addDataAnimRun by overViewViewModel.addDataAnimRun.collectAsStateWithLifecycle()
+    val editAnimRun by overViewViewModel.editAnimRun.collectAsStateWithLifecycle()
 
     val recentTransaction by overViewViewModel.recentTransaction.collectAsStateWithLifecycle()
     val recentMerchant by overViewViewModel.recentMerchant.collectAsStateWithLifecycle()
     val currentMonthCategory by overViewViewModel.monthlyCategory.collectAsStateWithLifecycle()
 
-    /*var amount by remember {
-        mutableDoubleStateOf(0.0)
-    }*/
-
-    if (currentMonthTotal != null) {
+    if (userData != null) {
         Util.currentCurrencySymbol =
-            overViewViewModel.getSymbolFromCurrencyCode(currentMonthTotal!!.currency)
-        //amount = (monthlyTotal[0].totalIncome) - (monthlyTotal[0].totalExpense)
-
+            overViewViewModel.getSymbolFromCurrencyCode(userData!!.currency)
     }
 
     var isAddDataSuccess by remember {
         mutableStateOf(false)
     }
 
-    var addDataId by remember {
+    var addEditDataId by remember {
         mutableLongStateOf(-1L)
     }
 
     if (isAddDataSuccess != isAddMerchantDataSuccess) {
         if (isAddMerchantDataSuccess) {
-            addDataId = addEditMerchantDataId
+            addEditDataId = addEditMerchantDataId
             overViewViewModel.addMerchantDataSuccess()
         }
         isAddDataSuccess = isAddMerchantDataSuccess
     }
 
-    /* LaunchedEffect(isAddMerchantDataSuccess) {
+    var isEditDataSuccess by remember {
+        mutableStateOf(false)
+    }
 
-         if (isAddMerchantDataSuccess) {
-             overViewViewModel.addMerchantDataSuccess()
-         }
-
-     }*/
+    if (isEditDataSuccess != isEditSuccess) {
+        if (isEditSuccess) {
+            addEditDataId = addEditMerchantDataId
+            overViewViewModel.editDataSuccess()
+        }
+        isEditDataSuccess = isEditSuccess
+    }
 
     Scaffold(
         /*topBar = {
@@ -122,7 +123,7 @@ fun OverViewStartScreen(
                 )
             } else {
 
-                OverviewTopBarProfile(onClick = {})
+                OverviewTopBarProfile(onClick = {}, user = userData)
 
                 /* OverviewList(
                      dataWithDayList = dataWithDayLazyPagingItems,
@@ -143,8 +144,10 @@ fun OverViewStartScreen(
                     recentMerchant = recentMerchant,
                     onSeeAllTransactionClick = onSeeAllTransactionClick,
                     onSeeAllMerchantClick = onSeeAllMerchantClick,
-                    merchantDataId = addDataId,
+                    merchantDataId = addEditDataId,
                     isAddMerchantDataSuccess = addDataAnimRun,
+                    isEditMerchantDataSuccess = editAnimRun,
+                    onTransactionClick = onTransactionClick,
                     onAnimStop = {
                         overViewViewModel.addMerchantDataSuccessAnimStop()
                     }
@@ -167,7 +170,8 @@ private fun OverViewScreenPreview() {
             addEditMerchantDataId = -1,
             onNavigationUp = {},
             onSeeAllTransactionClick = {},
-            onSeeAllMerchantClick = {}
+            onSeeAllMerchantClick = {},
+            onTransactionClick = {}
         )
     }
 }
