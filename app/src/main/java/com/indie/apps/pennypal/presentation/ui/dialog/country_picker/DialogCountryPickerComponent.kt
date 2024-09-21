@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.RadioButton
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.indie.apps.cpp.data.model.Country
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.presentation.ui.component.DialogSearchView
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
@@ -106,13 +106,13 @@ private fun SearchCppListItem(
                 .height(20.dp)
                 .width(30.dp)
         )
-        Text(
+        CustomText(
             text = country.name,
             modifier = Modifier
                 .padding(start = 8.dp),
             style = MyAppTheme.typography.Medium45_29
         )
-        Text(
+        CustomText(
             text = "(${country.dialCode})",
             modifier = Modifier
                 .padding(start = 8.dp),
@@ -125,8 +125,8 @@ private fun SearchCppListItem(
 
 @Composable
 private fun SearchCurrencyCppListItem(
-    isSelectable : Boolean,
-    currentCountryCode : String,
+    isSelectable: Boolean,
+    currentCountryCode: String,
     flagId: Int,
     country: Country,
     onClick: (Country) -> Unit,
@@ -164,13 +164,13 @@ private fun SearchCurrencyCppListItem(
             modifier = Modifier
                 .padding(start = 8.dp)
         ) {
-            Text(
+            CustomText(
                 text = "${country.currencyCode} (${country.currencySymbol})",
                 modifier = Modifier,
                 style = MyAppTheme.typography.Medium45_29,
                 color = MyAppTheme.colors.black
             )
-            Text(
+            CustomText(
                 text = country.currencyName,
                 modifier = Modifier,
                 style = MyAppTheme.typography.Medium33,

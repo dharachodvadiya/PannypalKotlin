@@ -33,7 +33,6 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.RadioButton
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -53,6 +52,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.module.PaymentWithMode
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.MyAppTextField
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.SearchView
@@ -61,8 +61,8 @@ import com.indie.apps.pennypal.presentation.ui.screen.payment.AccountHeadingItem
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
-import com.indie.apps.pennypal.util.getPaymentModeIcon
 import com.indie.apps.pennypal.util.Util
+import com.indie.apps.pennypal.util.getPaymentModeIcon
 import kotlinx.coroutines.launch
 
 @Composable
@@ -80,7 +80,7 @@ fun TopBarWithTitle(
         isBackEnable = isBackEnable,
         onBackClick = onNavigationUp,
         content = {
-            Text(
+            CustomText(
                 text = title,
                 style = titleStyle,
                 color = MyAppTheme.colors.black
@@ -160,7 +160,7 @@ fun BottomSaveButton(
         onClick = onClick,
         enabled = enabled
     ) {
-        Text(
+        CustomText(
             text = stringResource(id = textId),
             style = MyAppTheme.typography.Bold49_5,
             color = MyAppTheme.colors.black,
@@ -269,7 +269,7 @@ internal fun TextFieldError(textError: String, modifier: Modifier = Modifier) {
             .height(20.dp)
     ) {
 
-        Text(
+        CustomText(
             text = textError,
             modifier = Modifier.weight(1f),
             color = MyAppTheme.colors.redText,
@@ -290,14 +290,14 @@ fun ConfirmationDialog(
 ) {
     AlertDialog(
         title = {
-            Text(
+            CustomText(
                 text = stringResource(id = dialogTitle),
                 style = MyAppTheme.typography.Semibold57,
                 color = MyAppTheme.colors.black
             )
         },
         text = {
-            Text(
+            CustomText(
                 text = stringResource(id = dialogText),
                 style = MyAppTheme.typography.Regular46,
                 color = MyAppTheme.colors.gray2
@@ -312,7 +312,7 @@ fun ConfirmationDialog(
                     onConfirmation()
                 }
             ) {
-                Text(stringResource(id = positiveText))
+                CustomText(stringResource(id = positiveText))
             }
         },
         dismissButton = {
@@ -321,7 +321,7 @@ fun ConfirmationDialog(
                     onDismissRequest()
                 }
             ) {
-                Text(stringResource(id = negativeText))
+                CustomText(stringResource(id = negativeText))
             }
         }
     )
@@ -355,13 +355,13 @@ fun NoDataMessage(
                 modifier = Modifier.size(iconSize)
             )
 
-            Text(
+            CustomText(
                 text = title,
                 style = titleTextStyle,
                 color = MyAppTheme.colors.gray2,
                 textAlign = TextAlign.Center
             )
-            Text(
+            CustomText(
                 text = details,
                 style = detailsTextStyle,
                 color = MyAppTheme.colors.gray3,
@@ -402,7 +402,7 @@ fun AccountItem(
             modifier = Modifier.size(dimensionResource(id = R.dimen.small_icon_size))
         )
         Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.item_padding)))
-        Text(
+        CustomText(
             text = name,
             style = MyAppTheme.typography.Semibold52_5,
             color = MyAppTheme.colors.black

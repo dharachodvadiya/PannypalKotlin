@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Payment
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.entity.PaymentMode
 import com.indie.apps.pennypal.presentation.ui.component.DialogTextFieldItem
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 
@@ -48,7 +48,7 @@ fun AddPaymentDialogField(
                 text = item.name,
                 onClick = { onModeChange(item.id) })
         }
-}
+    }
     Spacer(modifier = Modifier.fillMaxHeight(0.1f))
 }
 
@@ -61,7 +61,7 @@ fun PaymentModeItem(
 ) {
     val color = if (isSelected) MyAppTheme.colors.lightBlue1 else MyAppTheme.colors.gray2
 
-    val shape =RoundedCornerShape(100.dp)
+    val shape = RoundedCornerShape(100.dp)
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
@@ -71,10 +71,10 @@ fun PaymentModeItem(
                     width = 1.dp,
                     color = color
                 ),
-                shape =shape
+                shape = shape
             )
             .background(color = MyAppTheme.colors.transparent, shape = shape)
-            .clip(shape =shape)
+            .clip(shape = shape)
             .clickable { onClick() }
             .padding(
                 horizontal = dimensionResource(R.dimen.bottom_bar_item_horizontal_padding),
@@ -82,7 +82,7 @@ fun PaymentModeItem(
             )
 
     ) {
-        Text(
+        CustomText(
             text = text,
             color = color,
             style = MyAppTheme.typography.Medium40

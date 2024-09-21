@@ -14,7 +14,6 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.module.MerchantDataWithAllData
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListItem
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
@@ -75,7 +75,7 @@ fun AllDataTopBar(
                     )
                 )
             } else {
-                Text(
+                CustomText(
                     text = title,
                     style = MyAppTheme.typography.Semibold52_5,
                     color = MyAppTheme.colors.black
@@ -153,7 +153,7 @@ fun TransactionItem(
         },
         content = {
             Column {
-                Text(
+                CustomText(
                     text = item.categoryName,
                     style = MyAppTheme.typography.Semibold52_5,
                     color = MyAppTheme.colors.black,
@@ -161,7 +161,7 @@ fun TransactionItem(
                     overflow = TextOverflow.Ellipsis
                 )
                 if (!item.details.isNullOrEmpty()) {
-                    Text(
+                    CustomText(
                         text = item.details,
                         style = MyAppTheme.typography.Medium40,
                         color = MyAppTheme.colors.gray2,
@@ -169,7 +169,7 @@ fun TransactionItem(
                         overflow = TextOverflow.Ellipsis
                     )
                 }
-                /*Text(
+                /*CustomText(
                     text = Util.getFormattedStringWithSymbol(amount),
                     style = MyAppTheme.typography.Semibold52_5,
                     color = MyAppTheme.colors.black,
@@ -177,7 +177,7 @@ fun TransactionItem(
                     overflow = TextOverflow.Ellipsis
                 )
                 if (!item.details.isNullOrEmpty()) {
-                    Text(
+                    CustomText(
                         text = item.details,
                         style = MyAppTheme.typography.Medium40,
                         color = MyAppTheme.colors.gray2,
@@ -201,7 +201,7 @@ fun TransactionItem(
                     else -> day
                 }
 
-                Text(
+                CustomText(
                     text = Util.getFormattedStringWithSymbol(amount),
                     style = MyAppTheme.typography.Regular51,
                     color = amountColor,
@@ -210,7 +210,7 @@ fun TransactionItem(
                     textAlign = TextAlign.Right,
                     maxLines = 1
                 )
-                Text(
+                CustomText(
                     text = dayString,
                     style = MyAppTheme.typography.Medium40,
                     color = MyAppTheme.colors.gray2,

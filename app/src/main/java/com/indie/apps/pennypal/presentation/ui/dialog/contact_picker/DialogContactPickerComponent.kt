@@ -14,7 +14,6 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.RadioButton
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,6 +27,7 @@ import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.module.ContactNumberAndName
 import com.indie.apps.pennypal.presentation.ui.component.DialogSearchView
 import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListItem
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
@@ -133,7 +133,7 @@ private fun SearchContactPickerListItem(
             },
             content = {
                 Column {
-                    Text(
+                    CustomText(
                         text = item.name,
                         style = MyAppTheme.typography.Semibold52_5,
                         color = MyAppTheme.colors.black,
@@ -141,7 +141,7 @@ private fun SearchContactPickerListItem(
                         overflow = TextOverflow.Ellipsis
                     )
 
-                    Text(
+                    CustomText(
                         text = item.phoneNumbers[item.currentNumberIndex.value],
                         style = MyAppTheme.typography.Medium33,
                         color = MyAppTheme.colors.gray1,
@@ -206,7 +206,7 @@ private fun ContactNumberItem(
             onClick = onSelected
         )
 
-        Text(
+        CustomText(
             text = phoneNumber,
             style = MyAppTheme.typography.Medium40,
             color = MyAppTheme.colors.gray1,

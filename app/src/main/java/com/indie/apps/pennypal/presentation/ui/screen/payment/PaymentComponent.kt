@@ -4,12 +4,12 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import com.indie.apps.pennypal.R
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 
@@ -28,12 +28,12 @@ fun PaymentModeDefaultItem(
              )*/
             .padding(dimensionResource(id = R.dimen.padding))
     ) {
-        Text(
+        CustomText(
             text = stringResource(id = R.string.default_payment_mode),
             style = MyAppTheme.typography.Medium40,
             color = MyAppTheme.colors.gray2
         )
-        Text(
+        CustomText(
             text = paymentModeName,
             style = MyAppTheme.typography.Semibold50,
             color = MyAppTheme.colors.black
@@ -46,7 +46,7 @@ fun AccountHeadingItem(
     @StringRes title: Int,
     modifier: Modifier = Modifier
 ) {
-    Text(
+    CustomText(
         text = stringResource(id = title),
         style = MyAppTheme.typography.Regular51,
         color = MyAppTheme.colors.gray1,

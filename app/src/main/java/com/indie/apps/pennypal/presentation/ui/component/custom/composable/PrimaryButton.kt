@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,8 +37,8 @@ fun PrimaryButton(
     content: @Composable RowScope.() -> Unit,
 ) {
     val containerColor = if (enabled) bgColor else MyAppTheme.colors.gray2
-   // val contentColor =
-     //   if (enabled) MyAppTheme.colors.white else MyAppTheme.colors.white.copy(alpha = 0.1f)
+    // val contentColor =
+    //   if (enabled) MyAppTheme.colors.white else MyAppTheme.colors.white.copy(alpha = 0.1f)
     /*Surface(
         onClick = onClick,
         enabled = enabled,
@@ -106,7 +105,7 @@ private fun PrimaryButtonPreview() {
                     contentDescription = "test"
                 )
                 Spacer(modifier = Modifier.width(5.dp))
-                Text(
+                CustomText(
                     text = "test"
                 )
             }

@@ -19,7 +19,6 @@ import androidx.compose.material.icons.filled.NorthEast
 import androidx.compose.material.icons.filled.PersonAddAlt1
 import androidx.compose.material.icons.filled.SouthWest
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,6 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.presentation.ui.component.TextFieldError
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.MyAppTextField
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
@@ -100,7 +100,7 @@ private fun NewEntryButtonItem(
                 tint = btnContentColor
             )
             Spacer(modifier = Modifier.width(5.dp))
-            Text(
+            CustomText(
                 text = stringResource(text),
                 style = MyAppTheme.typography.Medium45_29,
                 color = btnContentColor
@@ -255,7 +255,7 @@ fun NewEntrySelectableItem(
         modifier = modifier
             .fillMaxWidth()
     ) {
-        Text(
+        CustomText(
             text = stringResource(id = label),
             style = MyAppTheme.typography.Medium46,
             color = MyAppTheme.colors.gray1
@@ -279,7 +279,7 @@ fun NewEntrySelectableItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             if (text.isNullOrEmpty()) {
-                Text(
+                CustomText(
                     text = stringResource(id = placeholder),
                     modifier = Modifier
                         .weight(1f),
@@ -287,7 +287,7 @@ fun NewEntrySelectableItem(
                     color = MyAppTheme.colors.gray2
                 )
             } else {
-                Text(
+                CustomText(
                     text = text,
                     modifier = Modifier
                         .weight(1f),
@@ -330,7 +330,7 @@ private fun NewEntryTextFieldItem(
                 )
             }
     ) {
-        Text(
+        CustomText(
             text = stringResource(id = label),
             style = MyAppTheme.typography.Medium46,
             color = MyAppTheme.colors.gray1

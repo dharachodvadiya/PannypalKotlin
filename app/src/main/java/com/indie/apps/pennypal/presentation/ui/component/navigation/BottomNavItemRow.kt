@@ -20,7 +20,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,6 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.indie.apps.pennypal.R
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.component.linearGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.navigation.BottomNavItem
@@ -127,7 +127,7 @@ fun BottomNavigationBarCustomItem(
             )
             if (isSelected) {
                 Spacer(modifier = Modifier.width(5.dp))
-                Text(
+                CustomText(
                     text = stringResource(item.title),
                     color = MyAppTheme.colors.white,
                     style = MyAppTheme.typography.Medium45_29
@@ -195,15 +195,14 @@ fun BottomNavigationBarCustom1(
                     .height(dimensionResource(id = R.dimen.bottom_bar))
                     .background(MyAppTheme.colors.bottomBg)
             ) {
-                tabs.forEachIndexed() {index,  item ->
+                tabs.forEachIndexed() { index, item ->
                     BottomNavigationBarCustom1Item(
                         item = item,
                         onTabSelected = { onTabSelected(item) },
                         currentTab = currentTab,
                     )
 
-                    if(tabs.size %2 ==0 && (tabs.size/2) == index+1)
-                    {
+                    if (tabs.size % 2 == 0 && (tabs.size / 2) == index + 1) {
                         Box(modifier = Modifier.size(24.dp))
                     }
                 }
@@ -245,7 +244,7 @@ fun BottomNavigationBarCustom1Item(
             )
             *//* if (isSelected) {
                  Spacer(modifier = Modifier.width(5.dp))
-                 Text(
+                 CustomText(
                      text = stringResource(item.title),
                      color = MyAppTheme.colors.lightBlue1,
                      style = MyAppTheme.typography.Medium45_29
@@ -262,7 +261,7 @@ fun BottomNavigationBarCustom1Item(
         modifier = modifier
             .roundedCornerBackground(MyAppTheme.colors.transparent)
             //.background(MyAppTheme.colors.bottomBg)
-            .clickable {  onTabSelected(item) }
+            .clickable { onTabSelected(item) }
     ) {
         Icon(
             painter = if (isSelected)
@@ -275,7 +274,7 @@ fun BottomNavigationBarCustom1Item(
         )
         /* if (isSelected) {
              Spacer(modifier = Modifier.width(5.dp))
-             Text(
+             CustomText(
                  text = stringResource(item.title),
                  color = MyAppTheme.colors.lightBlue1,
                  style = MyAppTheme.typography.Medium45_29

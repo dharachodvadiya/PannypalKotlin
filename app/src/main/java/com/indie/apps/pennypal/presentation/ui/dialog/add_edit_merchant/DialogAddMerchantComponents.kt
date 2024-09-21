@@ -12,7 +12,6 @@ import androidx.compose.material.icons.filled.Details
 import androidx.compose.material.icons.filled.PersonOutline
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.presentation.ui.component.DialogTextFieldItem
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
@@ -35,7 +35,7 @@ fun AddMerchantDialogField(
     phoneNoState: TextFieldState,
     descState: TextFieldState,
     onCpp: () -> Unit,
-    onContactBook: ()-> Unit,
+    onContactBook: () -> Unit,
     countryCode: String = "+00"
 ) {
     Column {
@@ -72,7 +72,7 @@ fun AddMerchantDialogField(
                         .roundedCornerBackground(MyAppTheme.colors.transparent)
                         .clickable { onCpp() }
                 ) {
-                    Text(text = countryCode)
+                    CustomText(text = countryCode)
                     Spacer(modifier = Modifier.width(5.dp))
                     Icon(
                         Icons.Filled.ArrowDropDown,

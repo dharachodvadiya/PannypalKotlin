@@ -25,7 +25,6 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.module.MerchantDataWithPaymentName
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.AutoSizeText
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListItem
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
@@ -141,7 +141,7 @@ private fun MerchantDataTopBarItem(
         content = {
             Column {
                 if (selectCount > 0) {
-                    Text(
+                    CustomText(
                         text = "$selectCount ${stringResource(id = R.string.selected_text)}",
                         style = MyAppTheme.typography.Semibold52_5,
                         color = MyAppTheme.colors.black,
@@ -149,7 +149,7 @@ private fun MerchantDataTopBarItem(
                         overflow = TextOverflow.Ellipsis
                     )
                 } else {
-                    Text(
+                    CustomText(
                         text = name.ifEmpty { stringResource(id = R.string.no_name) },
                         style = MyAppTheme.typography.Semibold52_5,
                         color = MyAppTheme.colors.black,
@@ -157,7 +157,7 @@ private fun MerchantDataTopBarItem(
                         overflow = TextOverflow.Ellipsis
                     )
                     if (description.isNotEmpty()) {
-                        Text(
+                        CustomText(
                             text = description,
                             style = MyAppTheme.typography.Medium44,
                             color = MyAppTheme.colors.gray2,
@@ -213,17 +213,17 @@ fun MerchantDataBottomBar(
         }
 
     } else {
-       /* MerchantDataBottomTotal(
-            totalIncome = totalIncome,
-            totalExpense = totalExpense,
-            modifier = modifier
-                .padding(
-                    top = 7.dp,
-                    bottom = 0.dp,
-                    start = 0.dp,
-                    end = 0.dp
-                )
-        )*/
+        /* MerchantDataBottomTotal(
+             totalIncome = totalIncome,
+             totalExpense = totalExpense,
+             modifier = modifier
+                 .padding(
+                     top = 7.dp,
+                     bottom = 0.dp,
+                     start = 0.dp,
+                     end = 0.dp
+                 )
+         )*/
     }
 
 }
@@ -336,7 +336,7 @@ fun MerchantDataDateItem(
                 .weight(1f)
                 .background(color = MyAppTheme.colors.gray2)
         )
-        Text(
+        CustomText(
             text = dayString,
             style = MyAppTheme.typography.Medium40,
             color = MyAppTheme.colors.gray2,
@@ -391,14 +391,14 @@ private fun MerchantDataAmountItem(
                 color = MyAppTheme.colors.black,
                 maxLines = 2,
             )
-            Text(
+            CustomText(
                 text = "${stringResource(R.string.by)} $paymentName",
                 style = MyAppTheme.typography.Medium34,
                 color = MyAppTheme.colors.gray0,
                 maxLines = 1,
             )
             if (!description.isNullOrEmpty()) {
-                Text(
+                CustomText(
                     text = description,
                     style = MyAppTheme.typography.Medium34,
                     color = MyAppTheme.colors.gray2,
@@ -433,14 +433,14 @@ private fun MerchantDataAmountItem(
             color = MyAppTheme.colors.black,
             maxLines = 2,
         )
-        Text(
+        CustomText(
             text = "${stringResource(R.string.by)} $paymentName",
             style = MyAppTheme.typography.Medium34,
             color = MyAppTheme.colors.gray0,
             maxLines = 1,
         )
         if (!description.isNullOrEmpty()) {
-            Text(
+            CustomText(
                 text = description,
                 style = MyAppTheme.typography.Medium34,
                 color = MyAppTheme.colors.gray2,
@@ -475,7 +475,7 @@ private fun MerchantDataBottomButton(
             modifier = Modifier.size(25.dp)
         )
         Spacer(modifier = Modifier.width(10.dp))
-        Text(
+        CustomText(
             text = stringResource(text),
             style = MyAppTheme.typography.Bold49_5,
             color = MyAppTheme.colors.black,
@@ -570,7 +570,7 @@ private fun MerchantDataTotal(
             color = MyAppTheme.colors.black,
             maxLines = 1
         )
-        Text(
+        CustomText(
             text = stringResource(id = R.string.total_amount),
             style = MyAppTheme.typography.Medium40,
             color = MyAppTheme.colors.gray2

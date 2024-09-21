@@ -27,7 +27,6 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.SouthWest
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -51,6 +50,7 @@ import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
 import com.indie.apps.pennypal.data.module.TotalWithCurrency
 import com.indie.apps.pennypal.presentation.ui.component.chart.PieChart
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.AutoSizeText
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImageWithText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.TopBar
@@ -287,7 +287,7 @@ fun OverviewListDateItem(
     val amount = item.totalIncome - item.totalExpense
     val totalTextColor = if (amount >= 0) MyAppTheme.colors.greenText else MyAppTheme.colors.redText
     Column(modifier = modifier) {
-        Text(
+        CustomText(
             text = dayString,
             style = MyAppTheme.typography.Semibold40,
             color = MyAppTheme.colors.gray1
@@ -327,7 +327,7 @@ fun OverviewBalanceItem(
                 modifier = Modifier.size(17.dp)
             )
             Spacer(modifier = Modifier.width(5.dp))
-            Text(
+            CustomText(
                 text = stringResource(title),
                 style = MyAppTheme.typography.Regular46,
                 color = MyAppTheme.colors.gray1
@@ -359,7 +359,7 @@ fun OverviewListItem(
         )
     }, content = {
         Column {
-            Text(
+            CustomText(
                 text = item.merchantName,
                 style = MyAppTheme.typography.Semibold52_5,
                 color = MyAppTheme.colors.black,
@@ -367,7 +367,7 @@ fun OverviewListItem(
                 overflow = TextOverflow.Ellipsis
             )
             if (!item.details.isNullOrEmpty()) {
-                Text(
+                CustomText(
                     text = item.details,
                     style = MyAppTheme.typography.Medium33,
                     color = MyAppTheme.colors.gray1,
@@ -377,7 +377,7 @@ fun OverviewListItem(
             }
         }
     }, trailingContent = {
-        Text(
+        CustomText(
             text = Util.getFormattedStringWithSymbol(if (item.type > 0) item.amount else item.amount * -1),
             style = MyAppTheme.typography.Regular51,
             color = MyAppTheme.colors.black,
@@ -476,7 +476,7 @@ fun OverviewBalanceView(
                                 .padding(dimensionResource(id = R.dimen.padding)),
                         ) {
                             Column {
-                                Text(
+                                CustomText(
                                     text = stringResource(id = R.string.balance),
                                     style = MyAppTheme.typography.Regular57,
                                     color = MyAppTheme.colors.gray1
@@ -673,7 +673,7 @@ fun OverviewAnalyticDataItem(
                 .background(color = color)
         )
         Spacer(modifier = Modifier.width(5.dp))
-        Text(
+        CustomText(
             text = name,
             color = MyAppTheme.colors.gray0
         )
@@ -708,7 +708,7 @@ fun MerchantItem(
         )
         Spacer(modifier = Modifier.height(5.dp))
 
-        Text(
+        CustomText(
             text = item.name,
             style = MyAppTheme.typography.Regular44,
             color = MyAppTheme.colors.black,
@@ -717,7 +717,7 @@ fun MerchantItem(
         )
 
         if (!item.details.isNullOrEmpty()) {
-            Text(
+            CustomText(
                 text = item.details,
                 style = MyAppTheme.typography.Medium34,
                 color = MyAppTheme.colors.gray2,
@@ -743,7 +743,7 @@ fun OverviewItem(
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
+            CustomText(
                 text = stringResource(id = title),
                 style = MyAppTheme.typography.Regular51,
                 color = MyAppTheme.colors.gray1
@@ -757,7 +757,7 @@ fun OverviewItem(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.clickable { onSeeAllClick() }
                 ) {
-                    Text(
+                    CustomText(
                         text = stringResource(id = R.string.see_all),
                         style = MyAppTheme.typography.Semibold40,
                         color = MyAppTheme.colors.lightBlue1

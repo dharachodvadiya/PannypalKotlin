@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 
@@ -133,7 +134,7 @@ fun AnimatedNavigationBar(
                             modifier = Modifier.alpha(iconAlpha)
                         )
                     },
-                    label = { Text(button.text) },
+                    label = { CustomText(button.text) },
                     colors = NavigationBarItemDefaults.colors()/*.copy(
                         selectedIconColor = selectedColor,
                         selectedTextColor = selectedColor,

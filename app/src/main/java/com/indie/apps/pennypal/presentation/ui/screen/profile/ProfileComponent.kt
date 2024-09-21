@@ -18,7 +18,6 @@ import androidx.compose.material.icons.automirrored.filled.NavigateNext
 import androidx.compose.material.icons.filled.NorthEast
 import androidx.compose.material.icons.filled.SouthWest
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,6 +32,7 @@ import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.entity.User
 import com.indie.apps.pennypal.presentation.ui.component.UserProfile
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.AutoSizeText
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
@@ -59,13 +59,13 @@ fun ProfileTopSection(
 
         UserProfile()
         Spacer(modifier = Modifier.height(20.dp))
-        Text(
+        CustomText(
             text = stringResource(id = R.string.balance),
             style = MyAppTheme.typography.Semibold60,
             color = MyAppTheme.colors.gray1
         )
         Spacer(modifier = Modifier.height(5.dp))
-        /*Text(
+        /*CustomText(
             text = Util.getFormattedStringWithSymbol(totalAmount),
             style = MyAppTheme.typography.Semibold90,
             color = MyAppTheme.colors.black,
@@ -160,7 +160,7 @@ private fun ProfileLoginWithGoogleButton(
             painter = painterResource(id = R.drawable.google),
             contentDescription = "Google"
         )
-        Text(
+        CustomText(
             text = stringResource(id = R.string.login_with_google),
             style = MyAppTheme.typography.Bold49_5,
             color = MyAppTheme.colors.black,
@@ -191,12 +191,12 @@ fun ProfileCurrencyItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column {
-            Text(
+            CustomText(
                 text = stringResource(id = R.string.currency_and_format),
                 style = MyAppTheme.typography.Medium40,
                 color = MyAppTheme.colors.gray2
             )
-            Text(
+            CustomText(
                 text = "$currencyCode ($currencySymbol)",
                 style = MyAppTheme.typography.Semibold50,
                 color = MyAppTheme.colors.black
@@ -237,7 +237,7 @@ private fun ProfileAmountWithIcon(
         )
 
         Spacer(modifier = Modifier.height(10.dp))
-        Text(
+        CustomText(
             text = "Balance",
             style = MyAppTheme.typography.Medium33,
             color = MyAppTheme.colors.gray2

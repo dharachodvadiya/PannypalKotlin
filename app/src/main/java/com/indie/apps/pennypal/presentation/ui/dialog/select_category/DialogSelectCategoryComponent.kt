@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,6 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.entity.Category
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
@@ -58,7 +58,7 @@ fun CategoryItem(
     onClick: () -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
-    val tintColor =GetCategoryColor(name)
+    val tintColor = GetCategoryColor(name)
     val bgColor = if (isSelected) MyAppTheme.colors.itemSelectedBg else MyAppTheme.colors.brand
     val imageColor = if (isSelected) MyAppTheme.colors.black else tintColor
     val imageVector = ImageVector.vectorResource(getCategoryIcon(name))
@@ -81,7 +81,7 @@ fun CategoryItem(
         )
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.item_padding)))
 
-        Text(
+        CustomText(
             text = name,
             style = MyAppTheme.typography.Medium40,
             color = MyAppTheme.colors.gray1,

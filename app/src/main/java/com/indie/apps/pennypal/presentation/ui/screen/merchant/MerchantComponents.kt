@@ -18,7 +18,6 @@ import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,6 +29,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListItem
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImageWithText
@@ -75,7 +75,7 @@ fun MerchantTopBar(
                     )
                 )
             } else {
-                Text(
+                CustomText(
                     text = title,
                     style = MyAppTheme.typography.Semibold52_5,
                     color = MyAppTheme.colors.black
@@ -176,7 +176,7 @@ fun MerchantListItem(
         },
         content = {
             Column {
-                Text(
+                CustomText(
                     text = item.name,
                     style = MyAppTheme.typography.Semibold52_5,
                     color = MyAppTheme.colors.black,
@@ -184,7 +184,7 @@ fun MerchantListItem(
                     overflow = TextOverflow.Ellipsis
                 )
                 if (!item.details.isNullOrEmpty()) {
-                    Text(
+                    CustomText(
                         text = item.details,
                         style = MyAppTheme.typography.Medium40,
                         color = MyAppTheme.colors.gray2,
@@ -195,7 +195,7 @@ fun MerchantListItem(
             }
         },
         trailingContent = {
-            /* Text(
+            /* CustomText(
                  text = Util.getFormattedStringWithSymbol(amount),
                  style = MyAppTheme.typography.Regular51,
                  color = amountColor,

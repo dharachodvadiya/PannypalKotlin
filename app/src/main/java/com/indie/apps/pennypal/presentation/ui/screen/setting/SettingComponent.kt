@@ -18,7 +18,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.NavigateNext
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,6 +27,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.module.MoreItem
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.screen.payment.AccountHeadingItem
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
@@ -38,7 +38,7 @@ fun SettingTypeItem(
     @StringRes titleId: Int,
     dataList: List<MoreItem>,
     onSelect: (MoreItem) -> Unit = {},
-    arrowIconEnable : Boolean,
+    arrowIconEnable: Boolean,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
 
@@ -65,7 +65,7 @@ fun SettingTypeItem(
                     onClick = {
                         onSelect(item)
                     },
-                    showDivider = index != dataList.size-1,
+                    showDivider = index != dataList.size - 1,
                     arrowIconEnable = arrowIconEnable
                 )
             }
@@ -78,7 +78,7 @@ fun SettingItem(
     data: MoreItem,
     onClick: () -> Unit,
     showDivider: Boolean = true,
-    arrowIconEnable : Boolean,
+    arrowIconEnable: Boolean,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
 
@@ -94,8 +94,7 @@ fun SettingItem(
             .padding(dimensionResource(id = R.dimen.item_inner_padding)),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        if(data.icon != null)
-        {
+        if (data.icon != null) {
             Icon(
                 painter = painterResource(id = data.icon),
                 contentDescription = "",
@@ -106,13 +105,13 @@ fun SettingItem(
         Column(
             verticalArrangement = Arrangement.Center
         ) {
-            Text(
+            CustomText(
                 text = stringResource(id = data.title),
                 style = MyAppTheme.typography.Semibold50,
                 color = MyAppTheme.colors.black
             )
             if (!data.subTitle.isNullOrEmpty()) {
-                Text(
+                CustomText(
                     text = data.subTitle,
                     style = MyAppTheme.typography.Medium40,
                     color = MyAppTheme.colors.gray2
@@ -121,7 +120,7 @@ fun SettingItem(
         }
 
         Spacer(modifier = Modifier.weight(1f))
-        if(arrowIconEnable) {
+        if (arrowIconEnable) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.NavigateNext,
                 contentDescription = "",
@@ -130,35 +129,37 @@ fun SettingItem(
         }
     }
 
-    if(showDivider)
+    if (showDivider)
         Divider(color = MyAppTheme.colors.gray3.copy(alpha = 0.5f))
 }
 
-fun onShareClick(context: Context)
-{
+fun onShareClick(context: Context) {
     val intent = Intent().apply {
         action = Intent.ACTION_SEND
-        putExtra(Intent.EXTRA_TEXT, "Check out this awesome app! \n https://play.google.com/store/apps/details?id=${context.packageName}&hl=en")
+        putExtra(
+            Intent.EXTRA_TEXT,
+            "Check out this awesome app! \n https://play.google.com/store/apps/details?id=${context.packageName}&hl=en"
+        )
         type = "text/plain"
     }
     context.startActivity(Intent.createChooser(intent, "Share via"))
 }
 
-fun onRateClick(context: Context)
-{
+fun onRateClick(context: Context) {
     val intent = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=${context.packageName}"))
     context.startActivity(intent)
 }
 
-fun onPrivacyPolicyClick(context: Context)
-{
-    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://sites.google.com/view/privacypolicyforpennypal/home"))
+fun onPrivacyPolicyClick(context: Context) {
+    val intent = Intent(
+        Intent.ACTION_VIEW,
+        Uri.parse("https://sites.google.com/view/privacypolicyforpennypal/home")
+    )
     context.startActivity(intent)
 }
 
 @SuppressLint("IntentReset")
-fun onContactUsClick(context: Context)
-{
+fun onContactUsClick(context: Context) {
     val intent = Intent(Intent.ACTION_SENDTO).apply {
         data = Uri.parse("mailto:videostatus.group@gmail.com")
         putExtra(Intent.EXTRA_SUBJECT, "Penny Pal Contact Us")

@@ -222,7 +222,7 @@ private fun SearchMerchantListItem(
         },
         content = {
             Column {
-                Text(
+                CustomText(
                     text = item.name,
                     style = MyAppTheme.typography.Semibold52_5,
                     color = MyAppTheme.colors.black,
@@ -230,7 +230,7 @@ private fun SearchMerchantListItem(
                     overflow = TextOverflow.Ellipsis
                 )
                 if (!item.details.isNullOrEmpty()){
-                    Text(
+                    CustomText(
                         text = item.details,
                         style = MyAppTheme.typography.Medium33,
                         color = MyAppTheme.colors.gray1,
