@@ -427,7 +427,7 @@ fun OverviewData(
         onSeeAllMerchantClick = onSeeAllMerchantClick
     )
 
-    OverviewAnalyticData(
+    OverviewAnalysisData(
         categoryList = categoryList,
         onSeeAllMerchantClick = {}
     )
@@ -636,13 +636,13 @@ fun OverviewMerchantData(
 }
 
 @Composable
-fun OverviewAnalyticData(
+fun OverviewAnalysisData(
     onSeeAllMerchantClick: () -> Unit,
     categoryList: List<CategoryAmount>,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     OverviewItem(
-        title = R.string.expense_analytics,
+        title = R.string.expense_analysis,
         enableSeeAll = false,
         onSeeAllClick = onSeeAllMerchantClick,
         content = {
