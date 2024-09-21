@@ -307,7 +307,7 @@ interface MerchantDataDao : BaseDao<MerchantData> {
         GROUP BY 
             month, c.name
         ORDER BY 
-            month DESC, c.name
+            amount DESC
     """
     )
 
