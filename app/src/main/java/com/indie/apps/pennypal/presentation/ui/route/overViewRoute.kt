@@ -20,6 +20,7 @@ import com.indie.apps.pennypal.presentation.ui.navigation.ScreenNav
 import com.indie.apps.pennypal.presentation.ui.screen.all_data.AllDataScreen
 import com.indie.apps.pennypal.presentation.ui.screen.new_item.NewItemScreen
 import com.indie.apps.pennypal.presentation.ui.screen.overview.OverViewStartScreen
+import com.indie.apps.pennypal.presentation.ui.screen.overview_analysis.OverViewAnalysisScreen
 import com.indie.apps.pennypal.presentation.ui.screen.profile.ProfileScreen
 import com.indie.apps.pennypal.util.Util
 
@@ -54,7 +55,6 @@ fun NavGraphBuilder.overViewRoute(
 
             OverViewStartScreen(
                 onProfileClick = { navController.navigate(ScreenNav.PROFILE.route) },
-                bottomPadding = innerPadding,
                 addEditMerchantDataId = merchantDataId ?: -1,
                 isAddMerchantDataSuccess = isAddMerchantDataSuccess ?: false,
                 isEditSuccess = isEditMerchantDataSuccess ?: false,
@@ -66,6 +66,9 @@ fun NavGraphBuilder.overViewRoute(
                 },
                 onSeeAllMerchantClick = {
                     navController.navigate(BottomNavItem.MERCHANTS.route)
+                },
+                onExploreAnalysisClick = {
+                    navController.navigate(ScreenNav.OVERVIEW_ANALYSIS.route)
                 },
                 onTransactionClick = {
                     navController.navigate(
@@ -106,9 +109,9 @@ fun NavGraphBuilder.overViewRoute(
             } else null
 
 
-            backStackEntry.savedStateHandle.remove<String>(Util.SAVE_STATE_MERCHANT_NAME_DESC)
-            backStackEntry.savedStateHandle.remove<String>(Util.SAVE_STATE_PAYMENT)
-            backStackEntry.savedStateHandle.remove<String>(Util.SAVE_STATE_CATEGORY)
+            //backStackEntry.savedStateHandle.remove<String>(Util.SAVE_STATE_MERCHANT_NAME_DESC)
+            //backStackEntry.savedStateHandle.remove<String>(Util.SAVE_STATE_PAYMENT)
+            //backStackEntry.savedStateHandle.remove<String>(Util.SAVE_STATE_CATEGORY)
 
             bottomBarState.value = false
             NewItemScreen(
@@ -173,7 +176,6 @@ fun NavGraphBuilder.overViewRoute(
                         )
                 })
         }
-
         composable(route = ScreenNav.SEE_ALL_DATA.route) { backStackEntry ->
 
             val merchantDataId: Long? =
@@ -210,6 +212,12 @@ fun NavGraphBuilder.overViewRoute(
                 isAddSuccess = isAddMerchantDataSuccess ?: false,
                 bottomPadding = innerPadding
 ,            )
+        }
+        composable(route = ScreenNav.OVERVIEW_ANALYSIS.route) {
+            bottomBarState.value = false
+            OverViewAnalysisScreen(
+                onNavigationUp = { navController.navigateUp() }
+            )
         }
     }
 }

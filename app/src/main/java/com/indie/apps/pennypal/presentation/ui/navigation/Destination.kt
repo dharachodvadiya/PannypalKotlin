@@ -25,7 +25,8 @@ enum class ScreenNav(val route: String) {
     MERCHANT_PROFILE("merchant/merchant_profile/{${Util.PARAM_MERCHANT_ID}}"),
     EDIT_MERCHANT_DATA("merchant/edit_merchant_data/{${Util.PARAM_EDIT_MERCHANT_DATA_ID}}"),
     PAYMENT_START("accounts/start"),
-    SETTING_START("setting/start")
+    SETTING_START("setting/start"),
+    OVERVIEW_ANALYSIS("overview/analysis")
 }
 
 enum class BottomNavItem(

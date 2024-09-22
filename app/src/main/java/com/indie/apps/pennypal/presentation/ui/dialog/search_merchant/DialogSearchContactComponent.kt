@@ -1,14 +1,18 @@
 package com.indie.apps.pennypal.presentation.ui.dialog.search_merchant
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -16,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemContentType
@@ -24,11 +29,17 @@ import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
 import com.indie.apps.pennypal.presentation.ui.component.DialogSearchView
 import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListItem
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImageWithText
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.screen.merchant.MerchantListItem
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
+import com.indie.apps.pennypal.util.GetColorFromId
+import com.indie.apps.pennypal.util.getFirstCharacterUppercase
 
 /*
 
@@ -105,21 +116,21 @@ fun SearchDialogField(
                 ) { index ->
                     val data = dataList[index]
                     if (data != null) {
-                        /*SearchMerchantListItem(
+                        SearchMerchantListItem(
                             item = data,
                             onClick = { onItemClick(data) }
-                        )*/
-
-                        MerchantListItem(
-                            item = data,
-                            isSelected = false,
-                            onClick = {
-                                onItemClick(data)
-                            },
-                            onLongClick = { },
-                            leadingIconSize = 40.dp,
-                            itemBgColor = MyAppTheme.colors.itemBg
                         )
+
+                        /* MerchantListItem(
+                             item = data,
+                             isSelected = false,
+                             onClick = {
+                                 onItemClick(data)
+                             },
+                             onLongClick = { },
+                             leadingIconSize = 40.dp,
+                             itemBgColor = MyAppTheme.colors.transparent
+                         )*/
 
                         if (isLoadMore && index == dataList.itemCount - 1) {
                             Box(
@@ -188,31 +199,19 @@ private fun SearchMerchantSearchView(
 
     }
 }*/
-/*
 
 @Composable
 private fun SearchMerchantListItem(
     item: MerchantNameAndDetails,
     onClick: () -> Unit,
-    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier.fillMaxWidth()
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
-    val imageVector = Icons.Default.Person
-    val bgColor = MyAppTheme.colors.lightBlue2
     val iconBgColor = GetColorFromId(item.id.toInt())
     val tintColor = MyAppTheme.colors.white
 
     ListItem(
         onClick = onClick,
         leadingIcon = {
-            */
-/*RoundImage(
-                imageVector = imageVector,
-                //brush = linearGradientsBrush(MyAppTheme.colors.gradientBlue),
-                tint = MyAppTheme.colors.black,
-                backGround = bgColor,
-                contentDescription = "person"
-            )*//*
-
             RoundImageWithText(
                 character = getFirstCharacterUppercase(item.name),
                 tint = tintColor,
@@ -229,7 +228,7 @@ private fun SearchMerchantListItem(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
-                if (!item.details.isNullOrEmpty()){
+                if (!item.details.isNullOrEmpty()) {
                     CustomText(
                         text = item.details,
                         style = MyAppTheme.typography.Medium33,
@@ -247,4 +246,4 @@ private fun SearchMerchantListItem(
         ),
         itemBgColor = MyAppTheme.colors.transparent
     )
-}*/
+}

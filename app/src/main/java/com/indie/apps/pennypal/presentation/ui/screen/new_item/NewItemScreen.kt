@@ -54,6 +54,7 @@ fun NewItemScreen(
     categoryData: Category? = null,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
+    println("aaaaaaa $merchantData")
     LaunchedEffect(merchantData) {
         if (merchantData != null) {
             newItemViewModel.setMerchantData(merchantData)

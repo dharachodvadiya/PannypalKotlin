@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.component.chart
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,10 +22,8 @@ fun PieChart(
     data: List<ChartData>,
     radiusOuter: Dp = 80.dp,
     chartBarWidth: Dp = 30.dp,
-    modifier: Modifier = Modifier,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
 ) {
-
-    println("aaaaa $data")
 
     val totalSum = data.sumOf { it.amount }
     val amountValue = mutableListOf<Double>()
@@ -37,26 +36,33 @@ fun PieChart(
 
     var lastValue = 0.0
 
-    Canvas(
+    Box(
         modifier = modifier
-            .size(radiusOuter * 2f)
+            .size(((radiusOuter * 2f) + (chartBarWidth * 2f))),
+        contentAlignment = Alignment.Center
     ) {
-        if (data.isEmpty()) {
-            drawCircle(
-                color = defaultColor,
-                style = Stroke(chartBarWidth.toPx(), cap = StrokeCap.Butt)
-            )
-        } else {
-            amountValue.forEachIndexed { index, value ->
-                drawArc(
-                    color = data[index].color,
-                    lastValue.toFloat(),
-                    value.toFloat(),
-                    useCenter = false,
+        Canvas(
+            modifier = Modifier
+                .size(radiusOuter * 2f)
+        ) {
+            if (data.isEmpty()) {
+                drawCircle(
+                    color = defaultColor,
                     style = Stroke(chartBarWidth.toPx(), cap = StrokeCap.Butt)
                 )
-                lastValue += value
+            } else {
+                amountValue.forEachIndexed { index, value ->
+                    drawArc(
+                        color = data[index].color,
+                        lastValue.toFloat(),
+                        value.toFloat(),
+                        useCenter = false,
+                        style = Stroke(chartBarWidth.toPx(), cap = StrokeCap.Butt)
+                    )
+                    lastValue += value
+                }
             }
         }
     }
 }
+

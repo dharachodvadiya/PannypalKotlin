@@ -167,9 +167,9 @@ fun NavGraphBuilder.merchantRoute(
             } else null
 
 
-            savedStateHandle.remove<String>(Util.SAVE_STATE_MERCHANT_NAME_DESC)
-            savedStateHandle.remove<String>(Util.SAVE_STATE_PAYMENT)
-            savedStateHandle.remove<String>(Util.SAVE_STATE_CATEGORY)
+            //savedStateHandle.remove<String>(Util.SAVE_STATE_MERCHANT_NAME_DESC)
+            //savedStateHandle.remove<String>(Util.SAVE_STATE_PAYMENT)
+            //savedStateHandle.remove<String>(Util.SAVE_STATE_CATEGORY)
 
             bottomBarState.value = false
             NewItemScreen(

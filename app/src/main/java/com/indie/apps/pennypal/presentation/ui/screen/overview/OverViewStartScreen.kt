@@ -4,10 +4,8 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -28,7 +26,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.module.toTotalWithCurrency
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
-import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.util.Util
@@ -40,8 +37,8 @@ fun OverViewStartScreen(
     onProfileClick: () -> Unit,
     onSeeAllTransactionClick: () -> Unit,
     onSeeAllMerchantClick: () -> Unit,
+    onExploreAnalysisClick: () -> Unit,
     onTransactionClick: (Long) -> Unit,
-    bottomPadding: PaddingValues,
     addEditMerchantDataId: Long,
     onNavigationUp: () -> Unit,
     isAddMerchantDataSuccess: Boolean = false,
@@ -144,6 +141,7 @@ fun OverViewStartScreen(
                     recentMerchant = recentMerchant,
                     onSeeAllTransactionClick = onSeeAllTransactionClick,
                     onSeeAllMerchantClick = onSeeAllMerchantClick,
+                    onExploreAnalysisClick = onExploreAnalysisClick,
                     merchantDataId = addEditDataId,
                     isAddMerchantDataSuccess = addDataAnimRun,
                     isEditMerchantDataSuccess = editAnimRun,
@@ -166,12 +164,12 @@ private fun OverViewScreenPreview() {
     PennyPalTheme(darkTheme = true) {
         OverViewStartScreen(
             onProfileClick = {},
-            bottomPadding = PaddingValues(0.dp),
             addEditMerchantDataId = -1,
             onNavigationUp = {},
             onSeeAllTransactionClick = {},
             onSeeAllMerchantClick = {},
-            onTransactionClick = {}
+            onTransactionClick = {},
+            onExploreAnalysisClick = {}
         )
     }
 }

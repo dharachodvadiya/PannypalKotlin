@@ -56,6 +56,7 @@ import com.indie.apps.pennypal.presentation.ui.component.custom.composable.Prima
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImageWithText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.TopBar
+import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.screen.all_data.TransactionItem
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
@@ -400,6 +401,7 @@ fun OverviewData(
     recentMerchant: List<MerchantNameAndDetails>,
     onSeeAllTransactionClick: () -> Unit,
     onSeeAllMerchantClick: () -> Unit,
+    onExploreAnalysisClick: () -> Unit,
     onTransactionClick: (Long) -> Unit,
     isAddMerchantDataSuccess: Boolean = false,
     isEditMerchantDataSuccess: Boolean = false,
@@ -429,7 +431,7 @@ fun OverviewData(
 
     OverviewAnalysisData(
         categoryList = categoryList,
-        onSeeAllMerchantClick = {}
+        onExploreAnalysisClick = onExploreAnalysisClick
     )
 }
 
@@ -637,14 +639,14 @@ fun OverviewMerchantData(
 
 @Composable
 fun OverviewAnalysisData(
-    onSeeAllMerchantClick: () -> Unit,
+    onExploreAnalysisClick: () -> Unit,
     categoryList: List<CategoryAmount>,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     OverviewItem(
-        title = R.string.expense_analysis,
-        enableSeeAll = false,
-        onSeeAllClick = onSeeAllMerchantClick,
+        title = R.string.analysis,
+        trailingText = R.string.explore,
+        onSeeAllClick = onExploreAnalysisClick,
         content = {
             val chartData = categoryList.map { item ->
                 ChartData(
@@ -655,17 +657,19 @@ fun OverviewAnalysisData(
             }
 
             Row(
-                modifier = Modifier.padding(PaddingValues(top = 20.dp, start = 20.dp))
+                modifier = Modifier
+                    .clickable { onExploreAnalysisClick() }
             ) {
                 PieChart(
                     data = chartData,
                     modifier = Modifier.align(Alignment.CenterVertically)
                 )
-
-                Spacer(modifier = Modifier.width(30.dp))
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.item_inner_padding)))
 
                 Column(
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(vertical = 20.dp)
                 ) {
                     if (chartData.isEmpty()) {
                         OverviewAnalyticDataItem("No Data", MyAppTheme.colors.gray2)
@@ -760,6 +764,7 @@ fun MerchantItem(
 fun OverviewItem(
     onSeeAllClick: () -> Unit,
     @StringRes title: Int,
+    @StringRes trailingText: Int = R.string.see_all,
     content: @Composable (() -> Unit),
     enableSeeAll: Boolean = true,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
@@ -786,7 +791,7 @@ fun OverviewItem(
                     modifier = Modifier.clickable { onSeeAllClick() }
                 ) {
                     CustomText(
-                        text = stringResource(id = R.string.see_all),
+                        text = stringResource(id = trailingText),
                         style = MyAppTheme.typography.Semibold40,
                         color = MyAppTheme.colors.lightBlue1
                     )
