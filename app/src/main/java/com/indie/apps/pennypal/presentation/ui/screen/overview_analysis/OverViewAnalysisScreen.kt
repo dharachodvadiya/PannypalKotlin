@@ -46,7 +46,7 @@ fun OverViewAnalysisScreen(
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     val currentMonthCategory by overViewAnalysisViewModel.monthlyCategoryExpense.collectAsStateWithLifecycle()
-    val title = stringResource(id = R.string.expense_analysis)
+    val title = stringResource(id = R.string.analysis)
 
     Scaffold(
         topBar = {
