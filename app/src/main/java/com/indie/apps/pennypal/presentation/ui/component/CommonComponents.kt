@@ -557,3 +557,33 @@ fun Context.showToast(message: String) = run {
     ).show()
 }
 
+@Composable
+fun PeriodText(
+    @StringRes text : Int,
+    textStyle : TextStyle = MyAppTheme.typography.Regular44,
+    modifier: Modifier = Modifier
+) {
+
+    Box(
+        modifier = modifier
+            .fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ) {
+        Box(
+            modifier = Modifier
+                .roundedCornerBackground(MyAppTheme.colors.brand)
+                .padding(
+                    horizontal = dimensionResource(R.dimen.bottom_bar_item_horizontal_padding),
+                    vertical = dimensionResource(R.dimen.bottom_bar_item_vertical_padding)
+                )
+        ) {
+            CustomText(
+                text = stringResource(text),
+                style = textStyle,
+                color = MyAppTheme.colors.black
+            )
+        }
+    }
+
+}
+

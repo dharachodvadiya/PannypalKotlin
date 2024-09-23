@@ -1,54 +1,29 @@
 package com.indie.apps.pennypal.presentation.ui.screen.overview_analysis
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.module.CategoryAmount
 import com.indie.apps.pennypal.data.module.ChartData
 import com.indie.apps.pennypal.presentation.ui.component.chart.PieChart
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListItem
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
-import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.util.GetCategoryColor
 import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.util.getCategoryIcon
 
-@Composable
-fun OverViewAnalysisPeriod(
-    modifier: Modifier = Modifier
-) {
-    Box(
-        modifier = modifier
-            .roundedCornerBackground(MyAppTheme.colors.brand)
-            .padding(
-                horizontal = dimensionResource(R.dimen.bottom_bar_item_horizontal_padding),
-                vertical = dimensionResource(R.dimen.bottom_bar_item_vertical_padding)
-            )
-    ) {
-        CustomText(
-            text = stringResource(id = R.string.this_month),
-            style = MyAppTheme.typography.Regular44,
-            color = MyAppTheme.colors.black
-        )
-    }
-}
 
 @Composable
 fun OverViewAnalysisCategoryChart(
@@ -80,7 +55,6 @@ fun OverViewAnalysisCategoryChart(
             }
         }
     }
-
 
 
 }

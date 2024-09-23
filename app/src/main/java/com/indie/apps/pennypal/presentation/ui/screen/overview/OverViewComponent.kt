@@ -48,6 +48,7 @@ import com.indie.apps.pennypal.data.module.ChartData
 import com.indie.apps.pennypal.data.module.MerchantDataWithAllData
 import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
 import com.indie.apps.pennypal.data.module.TotalWithCurrency
+import com.indie.apps.pennypal.presentation.ui.component.PeriodText
 import com.indie.apps.pennypal.presentation.ui.component.chart.PieChart
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.AutoSizeText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
@@ -55,7 +56,6 @@ import com.indie.apps.pennypal.presentation.ui.component.custom.composable.Prima
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImageWithText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.TopBar
-import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.screen.all_data.TransactionItem
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
@@ -408,28 +408,10 @@ fun OverviewData(
     onAnimStop: () -> Unit
 ) {
 
-    Box(
-        modifier = Modifier
-            .fillMaxWidth(),
-        contentAlignment = Alignment.Center
-    ) {
-        Box(
-            modifier = Modifier
-                .roundedCornerBackground(MyAppTheme.colors.brand)
-                .padding(
-                    horizontal = dimensionResource(R.dimen.bottom_bar_item_horizontal_padding),
-                    vertical = dimensionResource(R.dimen.bottom_bar_item_vertical_padding)
-                )
-        ) {
-            CustomText(
-                text = stringResource(id = R.string.this_month),
-                style = MyAppTheme.typography.Regular51,
-                color = MyAppTheme.colors.black
-            )
-        }
-    }
-
-
+    PeriodText(
+        text = R.string.this_month,
+        textStyle = MyAppTheme.typography.Regular51,
+    )
 
     OverviewBalanceView(
         data = data,
@@ -659,7 +641,7 @@ fun OverviewAnalysisData(
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     OverviewItem(
-        title = R.string.analysis,
+        title = R.string.analysis_of_this_month,
         trailingText = R.string.explore,
         onSeeAllClick = onExploreAnalysisClick,
         content = {

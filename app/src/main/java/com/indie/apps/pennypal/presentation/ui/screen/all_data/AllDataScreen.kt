@@ -10,6 +10,7 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -42,8 +43,8 @@ import androidx.paging.compose.itemKey
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.presentation.ui.component.ConfirmationDialog
 import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
-import com.indie.apps.pennypal.presentation.ui.component.showToast
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
+import com.indie.apps.pennypal.presentation.ui.component.showToast
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
@@ -138,7 +139,7 @@ fun AllDataScreen(
             })
     }) { innerPadding ->
 
-        Box(
+        Column(
             modifier = Modifier
                 .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
                 //.padding(bottomPadding)

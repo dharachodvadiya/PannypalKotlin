@@ -101,4 +101,5 @@
     <string name="expense_analysis">Expense Analysis</string>
     <string name="explore">Explore</string>
     <string name="analysis">Analysis</string>
+    <string name="analysis_of_this_month">Analysis Of This Month</string>
 </resources>

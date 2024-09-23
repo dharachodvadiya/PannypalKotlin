@@ -41,8 +41,8 @@ import com.indie.apps.pennypal.data.entity.toMerchantNameAndDetails
 import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
 import com.indie.apps.pennypal.presentation.ui.component.ConfirmationDialog
 import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
-import com.indie.apps.pennypal.presentation.ui.component.showToast
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
+import com.indie.apps.pennypal.presentation.ui.component.showToast
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
@@ -307,7 +307,8 @@ fun MerchantDataScreen(
                 isEditable = isEditable,
                 isDeletable = isDeletable,
                 onEditClick = { merchantDataViewModel.onEditClick(onSuccess = onEditClick) },
-                onDeleteClick = { openAlertDialog = true }
+                onDeleteClick = { openAlertDialog = true },
+                onAddClick = { merchant?.let { onAddClick(it.toMerchantNameAndDetails()) } }
             )
 
         }

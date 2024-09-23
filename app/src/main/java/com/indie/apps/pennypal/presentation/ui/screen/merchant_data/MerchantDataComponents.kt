@@ -1,7 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.screen.merchant_data
 
 import android.annotation.SuppressLint
-import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -32,9 +31,10 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -79,7 +79,7 @@ fun MerchantDataTopBar(
         },
         modifier = modifier,
         trailingContent = {
-            if (selectCount == 0) {
+            /*if (selectCount == 0) {
                 PrimaryButton(
                     bgColor = MyAppTheme.colors.white,
                     borderStroke = BorderStroke(
@@ -96,7 +96,7 @@ fun MerchantDataTopBar(
                         tint = MyAppTheme.colors.gray1
                     )
                 }
-            }
+            }*/
         }
     )
 }
@@ -182,48 +182,64 @@ fun MerchantDataBottomBar(
     isEditable: Boolean = false,
     isDeletable: Boolean = false,
     onEditClick: () -> Unit,
+    onAddClick: () -> Unit,
     onDeleteClick: () -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier.fillMaxWidth()
 ) {
     if (isEditable || isDeletable) {
-        Row(
-            modifier = modifier.padding(dimensionResource(id = R.dimen.padding))
-        ) {
-            if (isEditable) {
-                MerchantDataBottomButton(
-                    text = R.string.edit_transaction,
-                    painterRes = R.drawable.ic_edit,
-                    //bgBrush = linearGradientsBrush(MyAppTheme.colors.gradientBlue),
-                    bgColor = MyAppTheme.colors.buttonBg,
-                    onClick = onEditClick,
-                    modifier = Modifier.weight(1f)
-                )
-            }
 
-            if (isDeletable) {
-                Spacer(modifier = Modifier.width(7.dp))
-                MerchantDataBottomButton(
-                    text = R.string.delete_transaction,
-                    painterRes = R.drawable.ic_delete_top,
-                    bgColor = MyAppTheme.colors.redBg,
-                    onClick = onDeleteClick,
-                    modifier = Modifier.weight(1f)
-                )
-            }
-        }
 
     } else {
-        /* MerchantDataBottomTotal(
-             totalIncome = totalIncome,
-             totalExpense = totalExpense,
-             modifier = modifier
-                 .padding(
-                     top = 7.dp,
-                     bottom = 0.dp,
-                     start = 0.dp,
-                     end = 0.dp
-                 )
-         )*/
+
+
+    }
+
+    Row(
+        modifier = modifier.padding(dimensionResource(id = R.dimen.padding))
+    ) {
+        if (isEditable) {
+            MerchantDataBottomButton(
+                text = R.string.edit_transaction,
+                imageVector = ImageVector.vectorResource(R.drawable.ic_edit),
+                //bgBrush = linearGradientsBrush(MyAppTheme.colors.gradientBlue),
+                bgColor = MyAppTheme.colors.buttonBg,
+                onClick = onEditClick,
+                modifier = Modifier.weight(1f)
+            )
+        }
+
+        if (isDeletable) {
+            Spacer(modifier = Modifier.width(7.dp))
+            MerchantDataBottomButton(
+                text = R.string.delete_transaction,
+                imageVector = ImageVector.vectorResource(R.drawable.ic_delete_top),
+                bgColor = MyAppTheme.colors.redBg,
+                onClick = onDeleteClick,
+                modifier = Modifier.weight(1f)
+            )
+        }
+
+        if (!isDeletable && !isEditable) {
+            MerchantDataBottomButton(
+                text = R.string.new_item,
+                imageVector = Icons.Default.Add,
+                //bgBrush = linearGradientsBrush(MyAppTheme.colors.gradientBlue),
+                bgColor = MyAppTheme.colors.brand,
+                onClick = onAddClick,
+                modifier = Modifier.fillMaxWidth()
+            )
+            /* MerchantDataBottomTotal(
+                 totalIncome = totalIncome,
+                 totalExpense = totalExpense,
+                 modifier = modifier
+                     .padding(
+                         top = 7.dp,
+                         bottom = 0.dp,
+                         start = 0.dp,
+                         end = 0.dp
+                     )
+             )*/
+        }
     }
 
 }
@@ -455,7 +471,7 @@ private fun MerchantDataAmountItem(
 @Composable
 private fun MerchantDataBottomButton(
     @StringRes text: Int,
-    @DrawableRes painterRes: Int,
+    imageVector: ImageVector,
     bgBrush: Brush? = null,
     bgColor: Color = MyAppTheme.colors.brand,
     onClick: () -> Unit,
@@ -469,7 +485,7 @@ private fun MerchantDataBottomButton(
         onClick = onClick,
     ) {
         Icon(
-            painter = painterResource(painterRes),
+            imageVector = imageVector,
             contentDescription = "",
             tint = MyAppTheme.colors.black,
             modifier = Modifier.size(25.dp)
@@ -592,7 +608,8 @@ private fun MerchantDataBottomBarPreview() {
     PennyPalTheme(darkTheme = true) {
         MerchantDataBottomBar(
             onEditClick = {},
-            onDeleteClick = {}
+            onDeleteClick = {},
+            onAddClick = {}
         )
     }
 }
