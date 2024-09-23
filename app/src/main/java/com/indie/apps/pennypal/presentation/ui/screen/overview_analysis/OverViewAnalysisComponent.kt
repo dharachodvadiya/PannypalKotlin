@@ -1,25 +1,15 @@
 package com.indie.apps.pennypal.presentation.ui.screen.overview_analysis
 
 import android.annotation.SuppressLint
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -39,17 +29,6 @@ import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.util.GetCategoryColor
 import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.util.getCategoryIcon
-import ir.ehsannarmani.compose_charts.ColumnChart
-import ir.ehsannarmani.compose_charts.extensions.format
-import ir.ehsannarmani.compose_charts.models.AnimationMode
-import ir.ehsannarmani.compose_charts.models.BarProperties
-import ir.ehsannarmani.compose_charts.models.Bars
-import ir.ehsannarmani.compose_charts.models.GridProperties
-import ir.ehsannarmani.compose_charts.models.HorizontalIndicatorProperties
-import ir.ehsannarmani.compose_charts.models.IndicatorPosition
-import ir.ehsannarmani.compose_charts.models.LabelHelperProperties
-import ir.ehsannarmani.compose_charts.models.LabelProperties
-import ir.ehsannarmani.compose_charts.models.PopupProperties
 
 @Composable
 fun OverViewAnalysisPeriod(
@@ -71,24 +50,6 @@ fun OverViewAnalysisPeriod(
     }
 }
 
-val columnGridProperties = GridProperties(
-    enabled = true,
-    xAxisProperties = GridProperties.AxisProperties(
-        thickness = .2.dp,
-        color = SolidColor(Color.Gray.copy(alpha = .6f))
-    ),
-    yAxisProperties = GridProperties.AxisProperties(
-        thickness = .2.dp,
-        color = SolidColor(Color.Gray.copy(alpha = .6f))
-    ),
-)
-
-@Composable
-fun OverViewAnalysisIncExpChart(
-    modifier: Modifier = Modifier
-) {
-}
-
 @Composable
 fun OverViewAnalysisCategoryChart(
     categoryList: List<CategoryAmount>,
@@ -102,18 +63,25 @@ fun OverViewAnalysisCategoryChart(
         )
     }
 
-    PieChart(
-        data = chartData
-    )
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        PieChart(
+            data = chartData
+        )
 
-    Column {
-        categoryList.forEach { item ->
-            CategoryListItem(
-                item = item,
-                itemBgColor = MyAppTheme.colors.transparent
-            )
+        Column {
+            categoryList.forEach { item ->
+                CategoryListItem(
+                    item = item,
+                    itemBgColor = MyAppTheme.colors.transparent
+                )
+            }
         }
     }
+
+
 
 }
 

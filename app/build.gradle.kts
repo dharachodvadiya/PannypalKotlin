@@ -139,7 +139,7 @@ dependencies {
     implementation("com.google.firebase:firebase-crashlytics")
     implementation("com.google.firebase:firebase-analytics")
 
-    implementation ("io.github.ehsannarmani:compose-charts:0.0.14")
+    //implementation ("io.github.ehsannarmani:compose-charts:0.0.14")
 }
 
 kapt {

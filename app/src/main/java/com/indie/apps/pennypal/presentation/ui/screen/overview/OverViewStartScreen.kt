@@ -110,7 +110,7 @@ fun OverViewStartScreen(
                 .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
                 .padding(innerPadding)
                 .padding(dimensionResource(id = R.dimen.padding)),
-            verticalArrangement = Arrangement.spacedBy(25.dp)
+            verticalArrangement = Arrangement.spacedBy(25.dp),
         ) {
            /* if (currentMonthTotal == null) {
                 LoadingWithProgress(

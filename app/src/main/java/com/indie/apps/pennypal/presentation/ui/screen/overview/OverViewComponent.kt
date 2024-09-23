@@ -10,7 +10,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -409,6 +408,29 @@ fun OverviewData(
     onAnimStop: () -> Unit
 ) {
 
+    Box(
+        modifier = Modifier
+            .fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ) {
+        Box(
+            modifier = Modifier
+                .roundedCornerBackground(MyAppTheme.colors.brand)
+                .padding(
+                    horizontal = dimensionResource(R.dimen.bottom_bar_item_horizontal_padding),
+                    vertical = dimensionResource(R.dimen.bottom_bar_item_vertical_padding)
+                )
+        ) {
+            CustomText(
+                text = stringResource(id = R.string.this_month),
+                style = MyAppTheme.typography.Regular51,
+                color = MyAppTheme.colors.black
+            )
+        }
+    }
+
+
+
     OverviewBalanceView(
         data = data,
         symbol = symbol,
@@ -442,90 +464,83 @@ fun OverviewBalanceView(
     modifier: Modifier = Modifier,
 ) {
 
-    OverviewItem(
-        title = R.string.this_month,
-        enableSeeAll = false,
-        onSeeAllClick = {},
-        content = {
-            val balance = if (data == null) {
-                0.0
-            } else {
-                data.totalIncome - data.totalExpense
-            }
-            val colorStroke =
-                if (balance >= 0) MyAppTheme.colors.greenBg else MyAppTheme.colors.redBg
+    val balance = if (data == null) {
+        0.0
+    } else {
+        data.totalIncome - data.totalExpense
+    }
+    val colorStroke =
+        if (balance >= 0) MyAppTheme.colors.greenBg else MyAppTheme.colors.redBg
 
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(150.dp)
+        //.background(brush = verticalGradientsBrush(colorGradient))
+    ) {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            shape = RoundedCornerShape(dimensionResource(id = R.dimen.round_corner)),
+            color = MyAppTheme.colors.lightBlue2,
+            shadowElevation = dimensionResource(id = R.dimen.shadow_elevation)
+        ) {
             Box(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .height(150.dp)
-                //.background(brush = verticalGradientsBrush(colorGradient))
+                modifier = Modifier
+                    .fillMaxSize()
+                    .drawBehind {
+                        drawLine(
+                            colorStroke, Offset(0f, 0f), Offset(size.width, 0f), 25f
+                        )
+                    }, contentAlignment = Alignment.Center
             ) {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    shape = RoundedCornerShape(dimensionResource(id = R.dimen.round_corner)),
-                    color = MyAppTheme.colors.lightBlue2,
-                    shadowElevation = dimensionResource(id = R.dimen.shadow_elevation)
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(dimensionResource(id = R.dimen.padding)),
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .drawBehind {
-                                drawLine(
-                                    colorStroke, Offset(0f, 0f), Offset(size.width, 0f), 25f
-                                )
-                            }, contentAlignment = Alignment.Center
+                    Column {
+                        CustomText(
+                            text = stringResource(id = R.string.balance),
+                            style = MyAppTheme.typography.Regular57,
+                            color = MyAppTheme.colors.gray1
+                        )
+                        AutoSizeText(
+                            text = Util.getFormattedStringWithSymbol(balance, symbol),
+                            style = MyAppTheme.typography.Regular66_5,
+                            color = MyAppTheme.colors.black,
+                            maxLines = 1
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.weight(1f))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
                     ) {
-                        Column(
+                        OverviewBalanceItem(
+                            amount = Util.getFormattedStringWithSymbol(data?.totalIncome ?: 0.0),
+                            title = R.string.received,
+                            horizontalAlignment = Alignment.Start,
+                            imageVector = Icons.Default.SouthWest,
+                        )
+                        Spacer(
                             modifier = Modifier
-                                .fillMaxSize()
-                                .padding(dimensionResource(id = R.dimen.padding)),
-                        ) {
-                            Column {
-                                CustomText(
-                                    text = stringResource(id = R.string.balance),
-                                    style = MyAppTheme.typography.Regular57,
-                                    color = MyAppTheme.colors.gray1
-                                )
-                                AutoSizeText(
-                                    text = Util.getFormattedStringWithSymbol(balance, symbol),
-                                    style = MyAppTheme.typography.Regular66_5,
-                                    color = MyAppTheme.colors.black,
-                                    maxLines = 1
-                                )
-                            }
-
-                            Spacer(modifier = Modifier.weight(1f))
-
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                            ) {
-                                OverviewBalanceItem(
-                                    amount = Util.getFormattedStringWithSymbol(data?.totalIncome ?: 0.0),
-                                    title = R.string.received,
-                                    horizontalAlignment = Alignment.Start,
-                                    imageVector = Icons.Default.SouthWest,
-                                )
-                                Spacer(
-                                    modifier = Modifier
-                                        .weight(1f)
-                                        .padding(horizontal = dimensionResource(id = R.dimen.item_inner_padding))
-                                )
-                                OverviewBalanceItem(
-                                    amount = Util.getFormattedStringWithSymbol(data?.totalExpense ?: 0.0),
-                                    title = R.string.spent,
-                                    horizontalAlignment = Alignment.End,
-                                    imageVector = Icons.Default.NorthEast,
-                                )
-                            }
-
-                        }
+                                .weight(1f)
+                                .padding(horizontal = dimensionResource(id = R.dimen.item_inner_padding))
+                        )
+                        OverviewBalanceItem(
+                            amount = Util.getFormattedStringWithSymbol(data?.totalExpense ?: 0.0),
+                            title = R.string.spent,
+                            horizontalAlignment = Alignment.End,
+                            imageVector = Icons.Default.NorthEast,
+                        )
                     }
 
                 }
             }
+
         }
-    )
+    }
 
 
 }
