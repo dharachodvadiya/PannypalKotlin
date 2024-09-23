@@ -109,21 +109,22 @@ private const val redPrimaryValue = 0xFFF86565
 enum class CategoryDark(val color: Color) {
     Other(Color(0xFFB0B0B0)),
     Bills(Color(0xFF7CA0E6)),
-    Education(Color(0xFFD3C864)),
-    Entertainment(Color(0xFFD5AE6A)),
-    Food(Color(0xFF6ACC6A)),
+    Education(Color(0xFFFFEF60)),
+    Entertainment(Color(0xFFFFC55F)),
+    Food(Color(0xFF6EFF6E)),
     Gift(Color(0xFFCC6FCC)),
     Insurance(Color(0xFFFF9BCE)),
     Investment(Color(0xFF5BDBF1)),
-    Medical(Color(0xFFAF4959)),
-    PersonalCare(Color(0xFFA28155)),
+    Medical(Color(0xFFFF667E)),
+    PersonalCare(Color(0xFFFFCF91)),
     Salary(Color(0xFF86D1D1)),
     Rewards(Color(0xFFCCCCFF)),
-    Rent(Color(0xFFAEB63F)),
+    Rent(Color(0xFFC7D13F)),
     Shopping(Color(0xFFFF8F82)),
     Tax(Color(0xFFFFDAB9)),
     Traveling(Color(0xFF87CEFA))
 }
+
 
 enum class CategoryLight(val color: Color) {
     Other(Color(0xFF404040)),
