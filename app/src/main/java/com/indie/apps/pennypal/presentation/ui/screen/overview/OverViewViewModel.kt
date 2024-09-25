@@ -9,6 +9,7 @@ import com.indie.apps.pennypal.domain.usecase.GetTotalFromPreferencePeriodUseCas
 import com.indie.apps.pennypal.domain.usecase.GetUserProfileUseCase
 import com.indie.apps.pennypal.domain.usecase.SearchMerchantDataWithAllDataListUseCase
 import com.indie.apps.pennypal.domain.usecase.SearchMerchantNameAndDetailListUseCase
+import com.indie.apps.pennypal.repository.BillingRepository
 import com.indie.apps.pennypal.repository.PreferenceRepository
 import com.indie.apps.pennypal.util.ShowDataPeriod
 import com.indie.apps.pennypal.util.Util
@@ -28,6 +29,7 @@ class OverViewViewModel @Inject constructor(
     searchMerchantNameAndDetailListUseCase: SearchMerchantNameAndDetailListUseCase,
     getCategoryWiseExpenseFromPreferencePeriodUseCase: GetCategoryWiseExpenseFromPreferencePeriodUseCase,
     preferenceRepository: PreferenceRepository,
+    private val billingRepository : BillingRepository,
     private val countryRepository: CountryRepository
 ) : ViewModel() {
 
@@ -66,6 +68,8 @@ class OverViewViewModel @Inject constructor(
     private val periodIndex = preferenceRepository.getInt(Util.PREF_BALANCE_VIEW, 1)
     val currentPeriod = MutableStateFlow(ShowDataPeriod.fromIndex(periodIndex))
 
+    val isSubscribed = MutableStateFlow(billingRepository.getSubscription())
+
 
     @SuppressLint("SuspiciousIndentation")
     fun addMerchantDataSuccess() {
@@ -88,6 +92,11 @@ class OverViewViewModel @Inject constructor(
             delay(Util.LIST_ITEM_ANIM_DELAY)
             editAnimRun.value = false
         }
+    }
+
+    fun onSubscriptionChanged(isSubscribed: Boolean) {
+        billingRepository.setSubscription(isSubscribed)
+        this.isSubscribed.value = isSubscribed
     }
 
     fun getSymbolFromCurrencyCode(currencyCode: String): String {

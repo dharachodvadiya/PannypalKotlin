@@ -51,6 +51,7 @@ fun OverViewStartScreen(
      */
 
     val currentPeriod by overViewViewModel.currentPeriod.collectAsStateWithLifecycle()
+    val isSubscribed by overViewViewModel.isSubscribed.collectAsStateWithLifecycle()
     val userData by overViewViewModel.userData.collectAsStateWithLifecycle()
     val currentTotal by overViewViewModel.currentTotal.collectAsStateWithLifecycle()
     val addDataAnimRun by overViewViewModel.addDataAnimRun.collectAsStateWithLifecycle()
@@ -120,7 +121,11 @@ fun OverViewStartScreen(
                 )
             } else {*/
 
-                OverviewTopBarProfile(onClick = {}, user = userData)
+                OverviewTopBarProfile(
+                    onClick = {},
+                    user = userData,
+                    isSubscribed = isSubscribed,
+                    onSubscriptionChanged = overViewViewModel::onSubscriptionChanged )
 
                 /* OverviewList(
                      dataWithDayList = dataWithDayLazyPagingItems,

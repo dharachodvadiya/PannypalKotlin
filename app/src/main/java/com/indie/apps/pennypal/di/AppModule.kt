@@ -10,6 +10,8 @@ import com.indie.apps.cpp.data.repository.CountryRepository
 import com.indie.apps.cpp.data.repository.CountryRepositoryImpl
 import com.indie.apps.pennypal.data.database.db.AppDatabase
 import com.indie.apps.pennypal.data.preference.PreferenceManager
+import com.indie.apps.pennypal.repository.BillingRepository
+import com.indie.apps.pennypal.repository.BillingRepositoryImpl
 import com.indie.apps.pennypal.repository.CategoryRepository
 import com.indie.apps.pennypal.repository.CategoryRepositoryImpl
 import com.indie.apps.pennypal.repository.MerchantDataRepository
@@ -104,5 +106,10 @@ object AppModule {
         return PreferenceRepositoryImpl(
             preferenceManager = preferenceManager
         )
+    }
+
+    @Provides
+    fun provideBillingRepository(): BillingRepository {
+        return BillingRepositoryImpl()
     }
 }

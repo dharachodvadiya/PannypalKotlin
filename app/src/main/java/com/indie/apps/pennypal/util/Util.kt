@@ -13,6 +13,8 @@ import java.util.Calendar
 import java.util.TimeZone
 
 object Util {
+    var isSubscribed = false
+
     var currentCurrencySymbol = "$"
     const val SEARCH_NEWS_TIME_DELAY = 500L
 

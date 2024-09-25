@@ -24,6 +24,7 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.NorthEast
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.SouthWest
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -99,7 +100,7 @@ fun OverviewTopBar(
 
     TopBar(
         isBackEnable = false,
-        leadingContent = { OverviewTopBarProfile(onClick = onProfileClick, user = null) },
+        leadingContent = { OverviewTopBarProfile(onClick = onProfileClick, user = null, isSubscribed = false, onSubscriptionChanged = {}) },
         modifier = modifier
     )
 }
@@ -812,7 +813,10 @@ fun OverviewItem(
 @Composable
 fun OverviewTopBarProfile(
     user: User?,
-    onClick: () -> Unit, modifier: Modifier = Modifier
+    isSubscribed : Boolean,
+    onClick: () -> Unit,
+    onSubscriptionChanged: (Boolean) -> Unit,
+    modifier: Modifier = Modifier
 ) {/*Surface(
         onClick = onClick,
         modifier = modifier
@@ -869,6 +873,21 @@ fun OverviewTopBarProfile(
             style = MyAppTheme.typography.Regular57,
             color = MyAppTheme.colors.black
         )
+
+        Spacer(modifier = Modifier.weight(1f))
+
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Checkbox(checked = isSubscribed, onCheckedChange = onSubscriptionChanged)
+            CustomText(
+                text = "Subscribed",
+                style = MyAppTheme.typography.Regular57,
+                color = MyAppTheme.colors.black
+            )
+        }
+
     }
 }
 /*
@@ -902,7 +921,7 @@ fun OverviewAppFloatingButton(
 @Composable
 private fun TopBarProfilePreview() {
     PennyPalTheme(darkTheme = true) {
-        OverviewTopBarProfile(onClick = { }, user = null)
+        OverviewTopBarProfile(onClick = { }, user = null, isSubscribed = false, onSubscriptionChanged = {})
     }
 }
 
