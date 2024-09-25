@@ -2,7 +2,7 @@ package com.indie.apps.pennypal.data.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.indie.apps.pennypal.data.dao.MerchantDao
+import com.indie.apps.pennypal.data.database.dao.MerchantDao
 import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
 import javax.inject.Inject
 

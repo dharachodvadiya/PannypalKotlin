@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.data.module.toTotalWithCurrency
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
@@ -51,8 +50,9 @@ fun OverViewStartScreen(
      merchantDataWithDayPagingState.update(dataWithDayLazyPagingItems)
      */
 
+    val currentPeriod by overViewViewModel.currentPeriod.collectAsStateWithLifecycle()
     val userData by overViewViewModel.userData.collectAsStateWithLifecycle()
-    val currentMonthTotal by overViewViewModel.currentMonthTotal.collectAsStateWithLifecycle()
+    val currentTotal by overViewViewModel.currentTotal.collectAsStateWithLifecycle()
     val addDataAnimRun by overViewViewModel.addDataAnimRun.collectAsStateWithLifecycle()
     val editAnimRun by overViewViewModel.editAnimRun.collectAsStateWithLifecycle()
 
@@ -134,7 +134,8 @@ fun OverViewStartScreen(
                  )*/
 
                 OverviewData(
-                    data = currentMonthTotal?.toTotalWithCurrency(),
+                    currentPeriod = currentPeriod?.title ?: "",
+                    data = currentTotal,
                     symbol = overViewViewModel.getSymbolFromCurrencyCode(userData?.currency ?: "USD"),
                     categoryList = currentMonthCategory,
                     recentTransaction = recentTransaction,

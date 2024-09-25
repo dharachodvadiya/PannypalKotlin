@@ -2,7 +2,7 @@ package com.indie.apps.pennypal.repository
 
 import androidx.paging.PagingData
 import androidx.paging.PagingSource
-import com.indie.apps.pennypal.data.entity.Merchant
+import com.indie.apps.pennypal.data.database.entity.Merchant
 import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
 import kotlinx.coroutines.flow.Flow
 

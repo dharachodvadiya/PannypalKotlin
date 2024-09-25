@@ -27,8 +27,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.data.entity.Category
-import com.indie.apps.pennypal.data.entity.Payment
+import com.indie.apps.pennypal.data.database.entity.Category
+import com.indie.apps.pennypal.data.database.entity.Payment
 import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
 import com.indie.apps.pennypal.presentation.ui.component.BottomSaveButton
 import com.indie.apps.pennypal.presentation.ui.component.ConfirmationDialog
@@ -54,7 +54,6 @@ fun NewItemScreen(
     categoryData: Category? = null,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
-    println("aaaaaaa $merchantData")
     LaunchedEffect(merchantData) {
         if (merchantData != null) {
             newItemViewModel.setMerchantData(merchantData)

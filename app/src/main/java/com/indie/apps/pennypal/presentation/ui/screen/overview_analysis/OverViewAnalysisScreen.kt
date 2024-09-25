@@ -33,6 +33,7 @@ fun OverViewAnalysisScreen(
     onNavigationUp: () -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
+    val currentPeriod by overViewAnalysisViewModel.currentPeriod.collectAsStateWithLifecycle()
     val currentMonthCategory by overViewAnalysisViewModel.monthlyCategoryExpense.collectAsStateWithLifecycle()
     val title = stringResource(id = R.string.analysis)
 
@@ -59,7 +60,7 @@ fun OverViewAnalysisScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            PeriodText(R.string.this_month)
+            PeriodText(currentPeriod?.title ?: "")
             OverViewAnalysisCategoryChart(
                 categoryList = currentMonthCategory
             )

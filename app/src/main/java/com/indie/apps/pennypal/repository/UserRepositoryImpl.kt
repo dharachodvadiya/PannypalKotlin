@@ -1,7 +1,7 @@
 package com.indie.apps.pennypal.repository
 
-import com.indie.apps.pennypal.data.dao.UserDao
-import com.indie.apps.pennypal.data.entity.User
+import com.indie.apps.pennypal.data.database.dao.UserDao
+import com.indie.apps.pennypal.data.database.entity.User
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(private val userDao: UserDao) : UserRepository {

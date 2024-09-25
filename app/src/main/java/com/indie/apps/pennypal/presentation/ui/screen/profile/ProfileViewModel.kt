@@ -3,8 +3,8 @@ package com.indie.apps.pennypal.presentation.ui.screen.profile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.indie.apps.cpp.data.repository.CountryRepository
-import com.indie.apps.pennypal.data.entity.User
-import com.indie.apps.pennypal.domain.usecase.GetTotalFromMonthUseCase
+import com.indie.apps.pennypal.data.database.entity.User
+import com.indie.apps.pennypal.domain.usecase.GetTotalFromPreferencePeriodUseCase
 import com.indie.apps.pennypal.domain.usecase.GetUserProfileUseCase
 import com.indie.apps.pennypal.domain.usecase.UpdateUserDataUseCase
 import com.indie.apps.pennypal.util.Resource
@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    getMonthlyTotalUseCase: GetTotalFromMonthUseCase,
+    getMonthlyTotalUseCase: GetTotalFromPreferencePeriodUseCase,
     private val userProfileUseCase: GetUserProfileUseCase,
     private val updateUserDataUseCase: UpdateUserDataUseCase,
     private val countryRepository: CountryRepository
@@ -32,7 +32,7 @@ class ProfileViewModel @Inject constructor(
     //private val _uiState = MutableStateFlow<Resource<User>>(Resource.Loading())
     // val uiState = _uiState.asStateFlow()
 
-    val currentMonthTotal = getMonthlyTotalUseCase.loadData(0)
+    val currentMonthTotal = getMonthlyTotalUseCase.loadData()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), null)
 
     private var userData: User? = null
@@ -78,7 +78,10 @@ class ProfileViewModel @Inject constructor(
 
     fun setCountryCode(countryCode: String?) {
         countryCode?.let {
-            currUserData.value = currUserData.value?.copy(currency = countryRepository.getCurrencyCodeFromCountryCode(it), currencyCountryCode = it)
+            currUserData.value = currUserData.value?.copy(
+                currency = countryRepository.getCurrencyCodeFromCountryCode(it),
+                currencyCountryCode = it
+            )
         }
     }
 

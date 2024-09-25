@@ -17,7 +17,7 @@ import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import com.google.gson.Gson
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.data.entity.toMerchantNameAndDetails
+import com.indie.apps.pennypal.data.database.entity.toMerchantNameAndDetails
 import com.indie.apps.pennypal.data.module.ContactNumberAndCode
 import com.indie.apps.pennypal.presentation.ui.component.navigation.BottomNavigationBarCustom1
 import com.indie.apps.pennypal.presentation.ui.component.showToast
@@ -26,6 +26,7 @@ import com.indie.apps.pennypal.presentation.ui.dialog.add_edit_payment.DialogAdd
 import com.indie.apps.pennypal.presentation.ui.dialog.contact_picker.DialogContactPicker
 import com.indie.apps.pennypal.presentation.ui.dialog.country_picker.DialogCountryPicker
 import com.indie.apps.pennypal.presentation.ui.dialog.search_merchant.DialogSearchMerchant
+import com.indie.apps.pennypal.presentation.ui.dialog.select_balance_view.DialogSelectBalanceView
 import com.indie.apps.pennypal.presentation.ui.dialog.select_category.DialogSelectCategory
 import com.indie.apps.pennypal.presentation.ui.dialog.select_payment.DialogSelectPayment
 import com.indie.apps.pennypal.presentation.ui.navigation.BottomNavItem
@@ -322,6 +323,15 @@ fun PennyPalApp() {
                         type = type ?: -1
                     )
 
+                }
+                dialog(
+                    route = DialogNav.SELECT_BALANCE_VIEW.route,
+                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
+                ) {
+                    DialogSelectBalanceView(
+                        onSelect = {navController.popBackStack()},
+                        onNavigationUp = {navController.popBackStack()}
+                    )
                 }
             }
 

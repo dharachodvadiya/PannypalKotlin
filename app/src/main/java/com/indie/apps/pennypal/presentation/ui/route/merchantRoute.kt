@@ -10,8 +10,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.google.gson.Gson
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.data.entity.Category
-import com.indie.apps.pennypal.data.entity.Payment
+import com.indie.apps.pennypal.data.database.entity.Category
+import com.indie.apps.pennypal.data.database.entity.Payment
 import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
 import com.indie.apps.pennypal.presentation.ui.component.showToast
 import com.indie.apps.pennypal.presentation.ui.navigation.BottomNavItem

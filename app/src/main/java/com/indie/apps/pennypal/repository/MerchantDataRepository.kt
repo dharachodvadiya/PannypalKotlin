@@ -1,15 +1,16 @@
 package com.indie.apps.pennypal.repository
 
 import androidx.paging.PagingSource
-import com.indie.apps.pennypal.data.entity.MerchantData
-import com.indie.apps.pennypal.data.module.CategoryAmount
+import com.indie.apps.pennypal.data.database.entity.MerchantData
 import com.indie.apps.pennypal.data.module.IncomeAndExpense
 import com.indie.apps.pennypal.data.module.MerchantDataWithAllData
 import com.indie.apps.pennypal.data.module.MerchantDataWithName
 import com.indie.apps.pennypal.data.module.MerchantDataWithNameWithDayTotal
 import com.indie.apps.pennypal.data.module.MerchantDataWithPaymentName
-import com.indie.apps.pennypal.data.module.MonthlyTotal
-import com.indie.apps.pennypal.data.module.YearlyTotal
+import com.indie.apps.pennypal.data.module.balance.TotalMonthly
+import com.indie.apps.pennypal.data.module.balance.TotalYearly
+import com.indie.apps.pennypal.data.module.category.CategoryMonthly
+import com.indie.apps.pennypal.data.module.category.CategoryYearly
 import kotlinx.coroutines.flow.Flow
 
 interface MerchantDataRepository : BaseRepository<MerchantData> {
@@ -46,12 +47,17 @@ interface MerchantDataRepository : BaseRepository<MerchantData> {
 
     fun getMerchantDataWithNameWithDayTotal(timeZoneOffsetInMilli: Int): PagingSource<Int, MerchantDataWithNameWithDayTotal>
 
-    fun getTotalFromMonth(timeZoneOffsetInMilli: Int, monthOffset: Int): Flow<MonthlyTotal?>
+    fun getTotalFromMonth(timeZoneOffsetInMilli: Int, monthOffset: Int): Flow<TotalMonthly?>
 
-    fun getTotalFromYear(timeZoneOffsetInMilli: Int, offset: Int): Flow<YearlyTotal?>
+    fun getTotalFromYear(timeZoneOffsetInMilli: Int, offset: Int): Flow<TotalYearly?>
 
     fun getCategoryWiseExpenseFromMonth(
         timeZoneOffsetInMilli: Int,
         monthOffset: Int
-    ): Flow<List<CategoryAmount>>
+    ): Flow<List<CategoryMonthly>>
+
+    fun getCategoryWiseExpenseFromYear(
+        timeZoneOffsetInMilli: Int,
+        yearOffset: Int
+    ): Flow<List<CategoryYearly>>
 }

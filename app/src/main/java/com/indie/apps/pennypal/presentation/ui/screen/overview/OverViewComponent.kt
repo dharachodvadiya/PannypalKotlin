@@ -42,12 +42,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.data.entity.User
-import com.indie.apps.pennypal.data.module.CategoryAmount
+import com.indie.apps.pennypal.data.database.entity.User
+import com.indie.apps.pennypal.data.module.category.CategoryAmount
 import com.indie.apps.pennypal.data.module.ChartData
 import com.indie.apps.pennypal.data.module.MerchantDataWithAllData
 import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
-import com.indie.apps.pennypal.data.module.TotalWithCurrency
+import com.indie.apps.pennypal.data.module.balance.TotalWithCurrency
 import com.indie.apps.pennypal.presentation.ui.component.PeriodText
 import com.indie.apps.pennypal.presentation.ui.component.chart.PieChart
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.AutoSizeText
@@ -393,6 +393,7 @@ fun OverviewListItem(
 
 @Composable
 fun OverviewData(
+    currentPeriod: String,
     data: TotalWithCurrency?,
     symbol: String,
     recentTransaction: List<MerchantDataWithAllData>,
@@ -409,7 +410,7 @@ fun OverviewData(
 ) {
 
     PeriodText(
-        text = R.string.this_month,
+        text = currentPeriod,
         textStyle = MyAppTheme.typography.Regular51,
     )
 
@@ -434,6 +435,7 @@ fun OverviewData(
     )
 
     OverviewAnalysisData(
+        currentPeriod = currentPeriod,
         categoryList = categoryList,
         onExploreAnalysisClick = onExploreAnalysisClick
     )
@@ -539,7 +541,7 @@ fun OverviewTransactionData(
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     OverviewItem(
-        title = R.string.recent_transaction,
+        title = stringResource(id = R.string.recent_transaction),
         onSeeAllClick = onSeeAllTransactionClick,
         content = {
             val scope = rememberCoroutineScope()
@@ -609,7 +611,7 @@ fun OverviewMerchantData(
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     OverviewItem(
-        title = R.string.recent_merchant,
+        title = stringResource(id = R.string.recent_merchant),
         onSeeAllClick = onSeeAllMerchantClick,
         content = {
             Row(
@@ -636,12 +638,13 @@ fun OverviewMerchantData(
 
 @Composable
 fun OverviewAnalysisData(
+    currentPeriod: String,
     onExploreAnalysisClick: () -> Unit,
     categoryList: List<CategoryAmount>,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     OverviewItem(
-        title = R.string.analysis_of_this_month,
+        title = stringResource(id = R.string.analysis_of) + currentPeriod,
         trailingText = R.string.explore,
         onSeeAllClick = onExploreAnalysisClick,
         content = {
@@ -669,17 +672,14 @@ fun OverviewAnalysisData(
                         .padding(vertical = 20.dp)
                 ) {
                     if (chartData.isEmpty()) {
-                        OverviewAnalyticDataItem("No Data", MyAppTheme.colors.gray2)
+                        OverviewAnalyticDataItem(stringResource(id = R.string.no_data), MyAppTheme.colors.gray3.copy(alpha = 0.3f))
                     } else {
                         chartData.forEach { item ->
                             OverviewAnalyticDataItem(item.name, item.color)
                         }
                     }
-
                 }
             }
-
-
         },
         modifier = modifier
     )
@@ -760,7 +760,7 @@ fun MerchantItem(
 @Composable
 fun OverviewItem(
     onSeeAllClick: () -> Unit,
-    @StringRes title: Int,
+    title: String,
     @StringRes trailingText: Int = R.string.see_all,
     content: @Composable (() -> Unit),
     enableSeeAll: Boolean = true,
@@ -774,7 +774,7 @@ fun OverviewItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             CustomText(
-                text = stringResource(id = title),
+                text = title,
                 style = MyAppTheme.typography.Regular51,
                 color = MyAppTheme.colors.gray1
             )

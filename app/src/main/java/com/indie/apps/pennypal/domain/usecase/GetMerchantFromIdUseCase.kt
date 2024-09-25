@@ -1,6 +1,6 @@
 package com.indie.apps.pennypal.domain.usecase
 
-import com.indie.apps.pennypal.data.entity.Merchant
+import com.indie.apps.pennypal.data.database.entity.Merchant
 import com.indie.apps.pennypal.di.IoDispatcher
 import com.indie.apps.pennypal.repository.MerchantRepository
 import kotlinx.coroutines.CoroutineDispatcher

@@ -1,7 +1,7 @@
 package com.indie.apps.pennypal.repository
 
-import com.indie.apps.pennypal.data.dao.PaymentDao
-import com.indie.apps.pennypal.data.entity.Payment
+import com.indie.apps.pennypal.data.database.dao.PaymentDao
+import com.indie.apps.pennypal.data.database.entity.Payment
 import javax.inject.Inject
 
 class PaymentRepositoryImpl @Inject constructor(private val paymentDao: PaymentDao) :

@@ -1,6 +1,6 @@
 package com.indie.apps.pennypal.domain.usecase
 
-import com.indie.apps.pennypal.data.entity.PaymentMode
+import com.indie.apps.pennypal.data.database.entity.PaymentMode
 import com.indie.apps.pennypal.di.IoDispatcher
 import com.indie.apps.pennypal.repository.PaymentModeRepository
 import kotlinx.coroutines.CoroutineDispatcher

@@ -22,65 +22,52 @@ import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.module.MoreItem
 import com.indie.apps.pennypal.presentation.ui.component.TopBarWithTitle
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
-import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
-import com.indie.apps.pennypal.util.Resource
 
 @Composable
 fun SettingScreen(
     settingViewModel: SettingViewModel = hiltViewModel(),
     onCurrencyChange: (String) -> Unit,
     onDefaultPaymentChange: (Long) -> Unit,
-){
+    onBalanceViewChange: () -> Unit,
+) {
 
-    val uiState by settingViewModel.uiState.collectAsStateWithLifecycle()
     val generalList by settingViewModel.generalList.collectAsStateWithLifecycle()
     val moreList by settingViewModel.moreList.collectAsStateWithLifecycle()
 
+    val context = LocalContext.current
 
-    when(uiState){
-        is Resource.Error ->{
-            LoadingWithProgress()
-        }
-        is Resource.Loading -> {
-            LoadingWithProgress()
-        }
-        is Resource.Success -> {
-
-            val context = LocalContext.current
-
-            SettingScreenData(
-                generalList = generalList,
-                moreList = moreList,
-                onSelect  = {
-                    settingViewModel.onSelectOption(
-                        item = it,
-                        onCurrencyChange = onCurrencyChange,
-                        onDefaultPaymentChange = onDefaultPaymentChange,
-                        onShare = {onShareClick(context)},
-                        onRate = { onRateClick(context)},
-                        onPrivacyPolicy = { onPrivacyPolicyClick(context)},
-                        onContactUs = { onContactUsClick(context)}
-                    )
-                }
+    SettingScreenData(
+        generalList = generalList,
+        moreList = moreList,
+        onSelect = {
+            settingViewModel.onSelectOption(
+                item = it,
+                onCurrencyChange = onCurrencyChange,
+                onDefaultPaymentChange = onDefaultPaymentChange,
+                onBalanceViewChange = onBalanceViewChange,
+                onShare = { onShareClick(context) },
+                onRate = { onRateClick(context) },
+                onPrivacyPolicy = { onPrivacyPolicyClick(context) },
+                onContactUs = { onContactUsClick(context) }
             )
         }
-    }
+    )
 }
 
 @Composable
 fun SettingScreenData(
-    generalList : List<MoreItem>,
-    moreList : List<MoreItem>,
+    generalList: List<MoreItem>,
+    moreList: List<MoreItem>,
     onSelect: (MoreItem) -> Unit
-){
+) {
     Scaffold(
         topBar = {
             TopBarWithTitle(
                 isBackEnable = false,
                 onNavigationUp = {},
-                title =stringResource(id = R.string.setting),
+                title = stringResource(id = R.string.setting),
                 contentAlignment = Alignment.Center,
                 bgColor = MyAppTheme.colors.transparent,
             )
@@ -131,7 +118,8 @@ private fun SettingScreenPreview() {
     PennyPalTheme(darkTheme = true) {
         SettingScreen(
             onDefaultPaymentChange = {},
-            onCurrencyChange = {}
+            onCurrencyChange = {},
+            onBalanceViewChange = {}
         )
     }
 }

@@ -1,7 +1,7 @@
 package com.indie.apps.pennypal.repository
 
-import com.indie.apps.pennypal.data.dao.CategoryDao
-import com.indie.apps.pennypal.data.entity.Category
+import com.indie.apps.pennypal.data.database.dao.CategoryDao
+import com.indie.apps.pennypal.data.database.entity.Category
 import javax.inject.Inject
 
 class CategoryRepositoryImpl @Inject constructor(private val categoryDao: CategoryDao) :

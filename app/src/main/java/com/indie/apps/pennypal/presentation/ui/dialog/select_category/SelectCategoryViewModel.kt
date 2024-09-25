@@ -2,7 +2,7 @@ package com.indie.apps.pennypal.presentation.ui.dialog.select_category
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.indie.apps.pennypal.data.entity.Category
+import com.indie.apps.pennypal.data.database.entity.Category
 import com.indie.apps.pennypal.domain.usecase.GetCategoryListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

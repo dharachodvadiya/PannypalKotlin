@@ -4,11 +4,13 @@ import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.indie.apps.cpp.data.repository.CountryRepository
-import com.indie.apps.pennypal.domain.usecase.GetCategoryWiseExpenseFromMonthUseCase
-import com.indie.apps.pennypal.domain.usecase.GetTotalFromMonthUseCase
+import com.indie.apps.pennypal.domain.usecase.GetCategoryWiseExpenseFromPreferencePeriodUseCase
+import com.indie.apps.pennypal.domain.usecase.GetTotalFromPreferencePeriodUseCase
 import com.indie.apps.pennypal.domain.usecase.GetUserProfileUseCase
 import com.indie.apps.pennypal.domain.usecase.SearchMerchantDataWithAllDataListUseCase
 import com.indie.apps.pennypal.domain.usecase.SearchMerchantNameAndDetailListUseCase
+import com.indie.apps.pennypal.repository.PreferenceRepository
+import com.indie.apps.pennypal.util.ShowDataPeriod
 import com.indie.apps.pennypal.util.Util
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -21,10 +23,11 @@ import javax.inject.Inject
 @HiltViewModel
 class OverViewViewModel @Inject constructor(
     userProfileUseCase: GetUserProfileUseCase,
-    getTotalFromMonthUseCase: GetTotalFromMonthUseCase,
+    getTotalFromPreferencePeriodUseCase: GetTotalFromPreferencePeriodUseCase,
     searchMerchantDataWithAllDataListUseCase: SearchMerchantDataWithAllDataListUseCase,
     searchMerchantNameAndDetailListUseCase: SearchMerchantNameAndDetailListUseCase,
-    getCategoryWiseExpenseFromMonthUseCase: GetCategoryWiseExpenseFromMonthUseCase,
+    getCategoryWiseExpenseFromPreferencePeriodUseCase: GetCategoryWiseExpenseFromPreferencePeriodUseCase,
+    preferenceRepository: PreferenceRepository,
     private val countryRepository: CountryRepository
 ) : ViewModel() {
 
@@ -33,7 +36,7 @@ class OverViewViewModel @Inject constructor(
     val userData = userProfileUseCase.loadData()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), null)
 
-    val currentMonthTotal = getTotalFromMonthUseCase.loadData(0)
+    val currentTotal = getTotalFromPreferencePeriodUseCase.loadData()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), null)
 
     var addDataAnimRun = MutableStateFlow(false)
@@ -56,9 +59,12 @@ class OverViewViewModel @Inject constructor(
         .getLast3Data()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
 
-    val monthlyCategoryExpense = getCategoryWiseExpenseFromMonthUseCase
-        .loadData(0)
+    val monthlyCategoryExpense = getCategoryWiseExpenseFromPreferencePeriodUseCase
+        .loadData()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
+
+    private val periodIndex = preferenceRepository.getInt(Util.PREF_BALANCE_VIEW, 1)
+    val currentPeriod = MutableStateFlow(ShowDataPeriod.fromIndex(periodIndex))
 
 
     @SuppressLint("SuspiciousIndentation")

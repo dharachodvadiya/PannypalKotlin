@@ -29,7 +29,7 @@ fun PieChart(
         amountValue.add(index, 360.0 * data.amount / totalSum)
     }
 
-    val defaultColor = MyAppTheme.colors.gray3
+    val defaultColor = MyAppTheme.colors.gray3.copy(alpha = 0.3f)
 
     var lastValue = 0.0
 

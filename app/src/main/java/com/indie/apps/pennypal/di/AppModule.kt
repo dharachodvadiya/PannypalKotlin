@@ -8,7 +8,8 @@ import com.indie.apps.contacts.data.repo.impl.ContactsRepositoryImpl
 import com.indie.apps.cpp.data.CountryDb
 import com.indie.apps.cpp.data.repository.CountryRepository
 import com.indie.apps.cpp.data.repository.CountryRepositoryImpl
-import com.indie.apps.pennypal.data.db.AppDatabase
+import com.indie.apps.pennypal.data.database.db.AppDatabase
+import com.indie.apps.pennypal.data.preference.PreferenceManager
 import com.indie.apps.pennypal.repository.CategoryRepository
 import com.indie.apps.pennypal.repository.CategoryRepositoryImpl
 import com.indie.apps.pennypal.repository.MerchantDataRepository
@@ -19,6 +20,8 @@ import com.indie.apps.pennypal.repository.PaymentModeRepository
 import com.indie.apps.pennypal.repository.PaymentModeRepositoryImpl
 import com.indie.apps.pennypal.repository.PaymentRepository
 import com.indie.apps.pennypal.repository.PaymentRepositoryImpl
+import com.indie.apps.pennypal.repository.PreferenceRepository
+import com.indie.apps.pennypal.repository.PreferenceRepositoryImpl
 import com.indie.apps.pennypal.repository.UserRepository
 import com.indie.apps.pennypal.repository.UserRepositoryImpl
 import dagger.Module
@@ -40,6 +43,10 @@ object AppModule {
     @Singleton
     @Provides
     fun provideCountryDatabase(@ApplicationContext context : Context) : CountryDb = CountryDb.getInstance(context)
+
+    @Singleton
+    @Provides
+    fun providePreference(@ApplicationContext context : Context) : PreferenceManager = PreferenceManager.getInstance(context)
 
     @Provides
     fun provideUserRepository(database: AppDatabase): UserRepository {
@@ -89,6 +96,13 @@ object AppModule {
     fun provideContactsRepo(contactsProvider: ContactsProvider): ContactsRepository {
         return ContactsRepositoryImpl(
             contactsProvider = contactsProvider
+        )
+    }
+
+    @Provides
+    fun providePreferenceRepo(preferenceManager: PreferenceManager): PreferenceRepository {
+        return PreferenceRepositoryImpl(
+            preferenceManager = preferenceManager
         )
     }
 }

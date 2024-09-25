@@ -3,10 +3,10 @@ package com.indie.apps.pennypal.presentation.ui.screen.new_item
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.indie.apps.pennypal.data.entity.Category
-import com.indie.apps.pennypal.data.entity.MerchantData
-import com.indie.apps.pennypal.data.entity.Payment
-import com.indie.apps.pennypal.data.entity.toMerchantNameAndDetails
+import com.indie.apps.pennypal.data.database.entity.Category
+import com.indie.apps.pennypal.data.database.entity.MerchantData
+import com.indie.apps.pennypal.data.database.entity.Payment
+import com.indie.apps.pennypal.data.database.entity.toMerchantNameAndDetails
 import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
 import com.indie.apps.pennypal.domain.usecase.AddMerchantDataUseCase
 import com.indie.apps.pennypal.domain.usecase.GetCategoryFromIdUseCase

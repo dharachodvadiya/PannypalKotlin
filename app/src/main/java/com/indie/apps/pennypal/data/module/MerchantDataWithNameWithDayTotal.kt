@@ -1,5 +1,7 @@
 package com.indie.apps.pennypal.data.module
 
+import com.indie.apps.pennypal.data.module.balance.TotalDaily
+
 data class MerchantDataWithNameWithDayTotal(
     val day: String,
     val totalIncome: Double?,
@@ -13,5 +15,5 @@ data class MerchantDataWithNameWithDayTotal(
     val type: Int?,
 )
 
-fun MerchantDataWithNameWithDayTotal.toMerchantDataDailyTotal() = DailyTotal( day, totalIncome ?: 0.0,totalExpense ?:0.0)
+fun MerchantDataWithNameWithDayTotal.toMerchantDataDailyTotal() = TotalDaily( day, totalIncome ?: 0.0,totalExpense ?:0.0)
 fun MerchantDataWithNameWithDayTotal.toMerchantDataWithName() = MerchantDataWithName(id ?: -1, merchantId, merchantName ?: "", dateInMilli, details, amount ?: 0.0, type ?: 1, day  )

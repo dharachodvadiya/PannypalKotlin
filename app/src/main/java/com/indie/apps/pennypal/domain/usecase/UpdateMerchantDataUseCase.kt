@@ -1,6 +1,6 @@
 package com.indie.apps.pennypal.domain.usecase
 
-import com.indie.apps.pennypal.data.entity.MerchantData
+import com.indie.apps.pennypal.data.database.entity.MerchantData
 import com.indie.apps.pennypal.di.IoDispatcher
 import com.indie.apps.pennypal.repository.MerchantDataRepository
 import com.indie.apps.pennypal.repository.MerchantRepository
@@ -8,11 +8,7 @@ import com.indie.apps.pennypal.repository.UserRepository
 import com.indie.apps.pennypal.util.Resource
 import com.indie.apps.pennypal.util.handleException
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
@@ -36,11 +32,11 @@ class UpdateMerchantDataUseCase @Inject constructor(
 
                 if (count > 0) {
 
-                   /* handleReflectedTableOperation(
-                        affectedRowCount = count,
-                        merchantDataOld = merchantDataOld,
-                        merchantDataNew = merchantDataNew
-                    )*/
+                    /* handleReflectedTableOperation(
+                         affectedRowCount = count,
+                         merchantDataOld = merchantDataOld,
+                         merchantDataNew = merchantDataNew
+                     )*/
                     emit(Resource.Success(count))
                 } else {
                     emit(Resource.Error("Fail to update merchantData"))

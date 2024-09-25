@@ -3,7 +3,7 @@ package com.indie.apps.pennypal.presentation.ui.dialog.add_edit_merchant
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.indie.apps.cpp.data.repository.CountryRepository
-import com.indie.apps.pennypal.data.entity.Merchant
+import com.indie.apps.pennypal.data.database.entity.Merchant
 import com.indie.apps.pennypal.data.module.ContactNumberAndCode
 import com.indie.apps.pennypal.domain.usecase.AddMerchantUseCase
 import com.indie.apps.pennypal.domain.usecase.GetMerchantFromIdUseCase

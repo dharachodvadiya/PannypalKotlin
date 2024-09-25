@@ -34,6 +34,9 @@ fun NavGraphBuilder.settingRoute(
                         Util.SAVE_STATE_SAVABLE_DIALOG, true
                     )
                 },
+                onBalanceViewChange = {
+                    navController.navigate(DialogNav.SELECT_BALANCE_VIEW.route)
+                },
                 onCurrencyChange = { currencyCode ->
                     navController.navigate(DialogNav.COUNTRY_PICKER.route)
 

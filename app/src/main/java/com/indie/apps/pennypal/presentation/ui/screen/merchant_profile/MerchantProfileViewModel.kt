@@ -3,7 +3,7 @@ package com.indie.apps.pennypal.presentation.ui.screen.merchant_profile
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.indie.apps.pennypal.data.entity.Merchant
+import com.indie.apps.pennypal.data.database.entity.Merchant
 import com.indie.apps.pennypal.domain.usecase.GetMerchantFromIdUseCase
 import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.util.Resource

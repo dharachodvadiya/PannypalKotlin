@@ -1,6 +1,6 @@
 package com.indie.apps.pennypal.data.module
 
-import com.indie.apps.pennypal.data.entity.Payment
+import com.indie.apps.pennypal.data.database.entity.Payment
 
 data class PaymentWithMode(
     val id: Long = 0,

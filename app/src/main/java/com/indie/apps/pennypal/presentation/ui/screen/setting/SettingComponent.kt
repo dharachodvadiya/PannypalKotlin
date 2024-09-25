@@ -45,7 +45,8 @@ fun SettingTypeItem(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = dimensionResource(id = R.dimen.padding))
+            .padding(horizontal = dimensionResource(id = R.dimen.padding)),
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding))
     ) {
         AccountHeadingItem(titleId)
         Column(
@@ -168,8 +169,6 @@ fun onContactUsClick(context: Context) {
     try {
         context.startActivity(Intent.createChooser(intent, "Send mail"))
     } catch (e: ActivityNotFoundException) {
-
-        println("aaaaa ${e.message}")
 
     }
 

@@ -373,6 +373,42 @@ fun NoDataMessage(
 }
 
 @Composable
+fun TextWithRadioButton(
+    isSelected : Boolean = false,
+    name: String,
+    onSelect: () -> Unit,
+    @DrawableRes symbolId: Int? = null,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .height(40.dp)
+            .fillMaxWidth()
+            .roundedCornerBackground(MyAppTheme.colors.transparent)
+            .clickable() { onSelect() },
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.item_padding))
+    ) {
+        RadioButton(selected = isSelected, onClick = onSelect)
+        if(symbolId != null) {
+            Icon(
+                painter = painterResource(symbolId),
+                contentDescription = "bank",
+                tint = MyAppTheme.colors.lightBlue1,
+                modifier = Modifier.size(dimensionResource(id = R.dimen.small_icon_size))
+            )
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.item_padding)))
+        }
+
+        CustomText(
+            text = name,
+            style = MyAppTheme.typography.Semibold52_5,
+            color = MyAppTheme.colors.black
+        )
+    }
+}
+
+@Composable
 fun AccountItem(
     isSelected: Boolean,
     isEditMode: Boolean,
@@ -559,7 +595,7 @@ fun Context.showToast(message: String) = run {
 
 @Composable
 fun PeriodText(
-    @StringRes text : Int,
+    text : String,
     textStyle : TextStyle = MyAppTheme.typography.Regular44,
     modifier: Modifier = Modifier
 ) {
@@ -578,7 +614,7 @@ fun PeriodText(
                 )
         ) {
             CustomText(
-                text = stringResource(text),
+                text = text,
                 style = textStyle,
                 color = MyAppTheme.colors.black
             )

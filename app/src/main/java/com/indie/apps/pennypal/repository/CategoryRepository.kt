@@ -1,6 +1,6 @@
 package com.indie.apps.pennypal.repository
 
-import com.indie.apps.pennypal.data.entity.Category
+import com.indie.apps.pennypal.data.database.entity.Category
 import kotlinx.coroutines.flow.Flow
 
 interface CategoryRepository : BaseRepository<Category> {

@@ -1,7 +1,9 @@
 package com.indie.apps.pennypal.repository
 
-import com.indie.apps.pennypal.data.dao.MerchantDataDao
-import com.indie.apps.pennypal.data.entity.MerchantData
+import com.indie.apps.pennypal.data.database.dao.MerchantDataDao
+import com.indie.apps.pennypal.data.database.entity.MerchantData
+import com.indie.apps.pennypal.data.module.category.CategoryMonthly
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class MerchantDataRepositoryImpl @Inject constructor(private val merchantDataDao: MerchantDataDao) :
@@ -72,4 +74,9 @@ class MerchantDataRepositoryImpl @Inject constructor(private val merchantDataDao
         monthOffset: Int
     ) =
         merchantDataDao.getCategoryWiseExpenseFromMonth(timeZoneOffsetInMilli, monthOffset)
+
+    override fun getCategoryWiseExpenseFromYear(
+        timeZoneOffsetInMilli: Int,
+        yearOffset: Int
+    ) = merchantDataDao.getCategoryWiseExpenseFromYear(timeZoneOffsetInMilli, yearOffset)
 }

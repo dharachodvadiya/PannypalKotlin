@@ -1,6 +1,6 @@
 package com.indie.apps.pennypal.domain.usecase
 
-import com.indie.apps.pennypal.data.entity.User
+import com.indie.apps.pennypal.data.database.entity.User
 import com.indie.apps.pennypal.di.IoDispatcher
 import com.indie.apps.pennypal.repository.UserRepository
 import com.indie.apps.pennypal.util.Resource
