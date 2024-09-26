@@ -15,8 +15,8 @@ android {
         applicationId = "com.indie.apps.pennypal"
         minSdk = 26
         targetSdk = 34
-        versionCode = 3
-        versionName = "1.2"
+        versionCode = 4
+        versionName = "1.3"
 
         testInstrumentationRunner = "com.indie.apps.pennypal.CustomTestRunner"
         vectorDrawables {
@@ -135,11 +135,16 @@ dependencies {
 
     implementation("com.google.accompanist:accompanist-permissions:0.28.0")
 
+    //Analytic
     implementation(platform("com.google.firebase:firebase-bom:33.2.0"))
     implementation("com.google.firebase:firebase-crashlytics")
     implementation("com.google.firebase:firebase-analytics")
 
     //implementation ("io.github.ehsannarmani:compose-charts:0.0.14")
+
+    //App Update
+    implementation("com.google.android.play:app-update:2.1.0")
+    implementation("com.google.android.play:app-update-ktx:2.1.0")
 }
 
 kapt {
