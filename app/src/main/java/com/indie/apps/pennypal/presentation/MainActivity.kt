@@ -41,7 +41,6 @@ class MainActivity : ComponentActivity() {
         appUpdateManager = AppUpdateManagerFactory.create(this)
         setupUpdateResultLauncher()
         setupUpdateListener()
-
         checkForUpdate()
 
         setContent {
