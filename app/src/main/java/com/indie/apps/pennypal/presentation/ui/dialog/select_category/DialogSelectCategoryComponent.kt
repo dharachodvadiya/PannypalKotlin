@@ -24,7 +24,7 @@ import com.indie.apps.pennypal.presentation.ui.component.custom.composable.Custo
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
-import com.indie.apps.pennypal.util.GetCategoryColor
+import com.indie.apps.pennypal.util.getCategoryColor
 import com.indie.apps.pennypal.util.getCategoryIcon
 
 @Composable
@@ -58,7 +58,7 @@ fun CategoryItem(
     onClick: () -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
-    val tintColor = GetCategoryColor(name)
+    val tintColor = getCategoryColor(name)
     val bgColor = if (isSelected) MyAppTheme.colors.itemSelectedBg else MyAppTheme.colors.brand
     val imageColor = if (isSelected) MyAppTheme.colors.black else tintColor
     val imageVector = ImageVector.vectorResource(getCategoryIcon(name))

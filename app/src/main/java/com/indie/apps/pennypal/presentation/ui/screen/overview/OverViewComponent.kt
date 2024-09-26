@@ -44,11 +44,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.database.entity.User
-import com.indie.apps.pennypal.data.module.category.CategoryAmount
 import com.indie.apps.pennypal.data.module.ChartData
 import com.indie.apps.pennypal.data.module.MerchantDataWithAllData
 import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
 import com.indie.apps.pennypal.data.module.balance.TotalWithCurrency
+import com.indie.apps.pennypal.data.module.category.CategoryAmount
 import com.indie.apps.pennypal.presentation.ui.component.PeriodText
 import com.indie.apps.pennypal.presentation.ui.component.chart.PieChart
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.AutoSizeText
@@ -60,9 +60,9 @@ import com.indie.apps.pennypal.presentation.ui.component.custom.composable.TopBa
 import com.indie.apps.pennypal.presentation.ui.screen.all_data.TransactionItem
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
-import com.indie.apps.pennypal.util.GetCategoryColor
-import com.indie.apps.pennypal.util.GetColorFromId
 import com.indie.apps.pennypal.util.Util
+import com.indie.apps.pennypal.util.getCategoryColor
+import com.indie.apps.pennypal.util.getColorFromId
 import com.indie.apps.pennypal.util.getFirstCharacterUppercase
 import kotlinx.coroutines.launch
 
@@ -100,7 +100,13 @@ fun OverviewTopBar(
 
     TopBar(
         isBackEnable = false,
-        leadingContent = { OverviewTopBarProfile(onClick = onProfileClick, user = null, isSubscribed = false, onSubscriptionChanged = {}) },
+        leadingContent = {
+            OverviewTopBarProfile(
+                onClick = onProfileClick,
+                user = null,
+                isSubscribed = false,
+                onSubscriptionChanged = {})
+        },
         modifier = modifier
     )
 }
@@ -653,7 +659,7 @@ fun OverviewAnalysisData(
                 ChartData(
                     name = item.name,
                     amount = item.amount,
-                    color = GetCategoryColor(item.name)
+                    color = getCategoryColor(item.name)
                 )
             }
 
@@ -673,7 +679,10 @@ fun OverviewAnalysisData(
                         .padding(vertical = 20.dp)
                 ) {
                     if (chartData.isEmpty()) {
-                        OverviewAnalyticDataItem(stringResource(id = R.string.no_data), MyAppTheme.colors.gray3.copy(alpha = 0.3f))
+                        OverviewAnalyticDataItem(
+                            stringResource(id = R.string.no_data),
+                            MyAppTheme.colors.gray3.copy(alpha = 0.3f)
+                        )
                     } else {
                         chartData.forEach { item ->
                             OverviewAnalyticDataItem(item.name, item.color)
@@ -733,7 +742,7 @@ fun MerchantItem(
         RoundImageWithText(
             character = getFirstCharacterUppercase(item.name),
             tint = MyAppTheme.colors.white,
-            backGround = GetColorFromId(item.id.toInt()),
+            backGround = getColorFromId(item.id.toInt()),
             modifier = Modifier.size(55.dp)
         )
         Spacer(modifier = Modifier.height(5.dp))
@@ -813,7 +822,7 @@ fun OverviewItem(
 @Composable
 fun OverviewTopBarProfile(
     user: User?,
-    isSubscribed : Boolean,
+    isSubscribed: Boolean,
     onClick: () -> Unit,
     onSubscriptionChanged: (Boolean) -> Unit,
     modifier: Modifier = Modifier
@@ -921,7 +930,11 @@ fun OverviewAppFloatingButton(
 @Composable
 private fun TopBarProfilePreview() {
     PennyPalTheme(darkTheme = true) {
-        OverviewTopBarProfile(onClick = { }, user = null, isSubscribed = false, onSubscriptionChanged = {})
+        OverviewTopBarProfile(
+            onClick = { },
+            user = null,
+            isSubscribed = false,
+            onSubscriptionChanged = {})
     }
 }
 

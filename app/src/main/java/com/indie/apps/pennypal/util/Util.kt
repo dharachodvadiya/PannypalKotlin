@@ -1,6 +1,5 @@
 package com.indie.apps.pennypal.util
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.util.DisplayMetrics
 import com.google.i18n.phonenumbers.NumberParseException
@@ -8,8 +7,6 @@ import com.google.i18n.phonenumbers.PhoneNumberUtil
 import com.google.i18n.phonenumbers.Phonenumber
 import com.indie.apps.pennypal.data.module.ContactNumberAndCode
 import java.text.DecimalFormat
-import java.text.SimpleDateFormat
-import java.util.Calendar
 import java.util.TimeZone
 
 object Util {
@@ -67,7 +64,10 @@ object Util {
 
     val TIME_ZONE_OFFSET_IN_MILLI = TimeZone.getDefault().rawOffset
 
-    fun getFormattedStringWithSymbol(value: Double?, symbol: String = currentCurrencySymbol): String {
+    fun getFormattedStringWithSymbol(
+        value: Double?,
+        symbol: String = currentCurrencySymbol
+    ): String {
         val format = DecimalFormat("##,##,##0.##")
         return "$symbol " + format.format(value)
     }
@@ -99,18 +99,20 @@ object Util {
 
             ContactNumberAndCode(
                 dialCode = "+${number.countryCode}",
-                phoneNumber = phoneNumber.replace("+${number.countryCode}", ""),)
+                phoneNumber = phoneNumber.replace("+${number.countryCode}", ""),
+            )
             //phoneNumberUtil.getRegionCodeForNumber(number)
         } catch (e: Exception) {
             // Handle parsing errors
             e.printStackTrace()
             ContactNumberAndCode(
                 dialCode = null,
-                phoneNumber = phoneNumber)
+                phoneNumber = phoneNumber
+            )
         }
     }
 
-    fun getDateFromMillis(
+    /*fun getDateFromMillis(
         timeInMillis: Long,
         @SuppressLint("SimpleDateFormat") formatter: SimpleDateFormat = SimpleDateFormat("dd-MM-yyyy")
     ): String {
@@ -129,7 +131,7 @@ object Util {
         val calendar: Calendar = Calendar.getInstance()
         calendar.add(Calendar.DATE, -1)
         return formatter.format(calendar.time)
-    }
+    }*/
 
     fun Float.pxToDp(context: Context): Float =
         (this / (context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT))

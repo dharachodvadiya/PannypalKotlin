@@ -47,6 +47,7 @@ import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgres
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.util.Util
+import com.indie.apps.pennypal.util.getDateFromMillis
 import kotlinx.coroutines.launch
 
 @SuppressLint("CoroutineCreationDuringComposition")
@@ -247,10 +248,10 @@ fun MerchantDataScreen(
                                 visible = false
                             }
 
-                            val currentDate = Util.getDateFromMillis(data.dateInMilli)
+                            val currentDate = getDateFromMillis(data.dateInMilli)
                             val previousDate =
                                 if (index != lazyPagingData.itemCount - 1) lazyPagingData[index + 1]?.let {
-                                    Util.getDateFromMillis(
+                                    getDateFromMillis(
                                         it.dateInMilli
                                     )
                                 } else ""

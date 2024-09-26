@@ -23,6 +23,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
@@ -56,6 +57,8 @@ class NewItemViewModel @Inject constructor(
     val amount = MutableStateFlow(TextFieldState())
     val description = MutableStateFlow(TextFieldState())
 
+    val currentTimeInMilli = MutableStateFlow(0L)
+
     var merchantError = MutableStateFlow("")
     var paymentError = MutableStateFlow("")
     var categoryError = MutableStateFlow("")
@@ -64,7 +67,10 @@ class NewItemViewModel @Inject constructor(
 
     init {
         if (merchantEditId == 0L)
+        {
             loadUserData()
+            setDateAndTime(Calendar.getInstance().timeInMillis)
+        }
         else
             setEditData()
     }
@@ -105,8 +111,11 @@ class NewItemViewModel @Inject constructor(
                                 description.value.text =
                                     editMerchantData!!.details.toString()
 
+                                setDateAndTime(editMerchantData!!.dateInMilli)
+
                                 loadPaymentData(editMerchantData!!.paymentId)
                                 loadCategoryData(editMerchantData!!.categoryId)
+
                                 var merchantJob: Job? = null
                                 merchantJob = launch {
                                     getMerchantFromIdUseCase.getData(editMerchantData!!.merchantId)
@@ -154,6 +163,11 @@ class NewItemViewModel @Inject constructor(
             setCategory(categoryIncome)
         else
             setCategory(categoryExpense)
+    }
+
+    fun setDateAndTime(currentDateAndTime: Long)
+    {
+        currentTimeInMilli.value = currentDateAndTime
     }
 
     fun setMerchantData(data: MerchantNameAndDetails) {
@@ -208,7 +222,7 @@ class NewItemViewModel @Inject constructor(
                         categoryId = category.value!!.id,
                         amount = amount,
                         details = description.value.text.trim(),
-                        dateInMilli = System.currentTimeMillis(),
+                        dateInMilli = currentTimeInMilli.value,
                         type = if (received.value) 1 else -1
                     )
 
@@ -234,6 +248,7 @@ class NewItemViewModel @Inject constructor(
                         categoryId = category.value!!.id,
                         amount = amount,
                         details = description.value.text.trim(),
+                        dateInMilli = currentTimeInMilli.value,
                         type = if (received.value) 1 else -1
                     )
 

@@ -5,7 +5,7 @@ import androidx.compose.ui.graphics.Color
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 
 @Composable
-internal fun GetColorFromId(id: Int): Color {
+internal fun getColorFromId(id: Int): Color {
     val index = id % 16
     return when (index) {
         0 -> MyAppTheme.colors.categoryOther

@@ -49,11 +49,11 @@ interface MerchantDataDao : BaseDao<MerchantData> {
     suspend fun getMerchantDataFromId(id: Long): MerchantData
 
     @Transaction
-    @Query("SELECT * FROM merchant_data ORDER BY id DESC")
+    @Query("SELECT * FROM merchant_data ORDER BY date_milli DESC")
     fun getMerchantDataList(): PagingSource<Int, MerchantData>
 
     @Transaction
-    @Query("SELECT * FROM merchant_data where merchant_id = :merchantId ORDER BY id DESC")
+    @Query("SELECT * FROM merchant_data where merchant_id = :merchantId ORDER BY date_milli DESC")
     fun getMerchantDataListFromMerchantId(merchantId: Long): PagingSource<Int, MerchantData>
 
     @Transaction
@@ -78,7 +78,7 @@ interface MerchantDataDao : BaseDao<MerchantData> {
                 md.details LIKE  '%' || :searchQuery || '%' OR
                 c.name LIKE  '%' || :searchQuery || '%' OR
                 p.name LIKE  '%' || :searchQuery || '%'
-        ORDER BY id DESC
+        ORDER BY md.date_milli DESC
     """
     )
 
@@ -102,7 +102,7 @@ interface MerchantDataDao : BaseDao<MerchantData> {
         INNER JOIN merchant m ON md.merchant_id = m.id
         INNER JOIN category c ON md.category_id = c.id
         INNER JOIN payment_type p ON md.payment_id = p.id
-        ORDER BY id DESC LIMIT 3
+        ORDER BY md.date_milli DESC LIMIT 3
     """
     )
 
@@ -121,7 +121,7 @@ interface MerchantDataDao : BaseDao<MerchantData> {
         FROM merchant_data md
         INNER JOIN payment_type p ON md.payment_id = p.id
         where md.merchant_id = :merchantId
-        ORDER BY id DESC
+        ORDER BY md.date_milli DESC
     """
     )
 
@@ -141,7 +141,7 @@ interface MerchantDataDao : BaseDao<MerchantData> {
         FROM merchant_data md
         INNER JOIN merchant m ON md.merchant_id = m.id
         WHERE m.name LIKE  '%' || :searchQuery || '%' OR md.details LIKE  '%' || :searchQuery || '%'
-        ORDER BY id DESC
+        ORDER BY md.date_milli DESC
     """
     )
     fun searchMerchantDataWithMerchantNameList(

@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.NorthEast
 import androidx.compose.material.icons.filled.PersonAddAlt1
 import androidx.compose.material.icons.filled.SouthWest
@@ -40,6 +42,9 @@ import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
+import com.indie.apps.pennypal.util.getDateFromMillis
+import com.indie.apps.pennypal.util.getTimeFromMillis
+import java.text.SimpleDateFormat
 
 @Composable
 fun NewEntryTopSelectionButton(
@@ -121,6 +126,9 @@ fun NewEntryFieldItemSection(
     paymentError: String = "",
     categoryError: String = "",
     isMerchantLock: Boolean,
+    currentTimeInMilli: Long,
+    onDateSelect: () -> Unit,
+    onTimeSelect: () -> Unit,
     amount: TextFieldState = TextFieldState(),
     description: TextFieldState = TextFieldState(),
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
@@ -137,6 +145,16 @@ fun NewEntryFieldItemSection(
             placeholder = R.string.add_merchant_placeholder,
             isSelectable = !isMerchantLock
         )*/
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        NewEntryDateTimeItem(
+            currentTimeInMilli = currentTimeInMilli,
+            onDateSelect = onDateSelect,
+            onTimeSelect = onTimeSelect
+        )
+
+        Spacer(modifier = Modifier.height(30.dp))
 
         NewEntrySelectableItem(
             text = merchantName,
@@ -166,7 +184,6 @@ fun NewEntryFieldItemSection(
         TextFieldError(
             textError = merchantError
         )
-        Spacer(modifier = Modifier.height(10.dp))
 
         NewEntrySelectableItem(
             text = paymentName ?: "",
@@ -238,6 +255,68 @@ fun NewEntryFieldItemSection(
             textError = description.errorText
         )
 
+    }
+}
+
+@SuppressLint("SimpleDateFormat")
+@Composable
+fun NewEntryDateTimeItem(
+    currentTimeInMilli: Long,
+    onDateSelect: () -> Unit,
+    onTimeSelect: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val dateFormat = SimpleDateFormat("dd MMM yyyy")
+    val timeFormat = SimpleDateFormat("hh:mm aa")
+    Row(
+        modifier = modifier
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Absolute.SpaceEvenly
+    ) {
+        DateTimeSelectableItem(
+            imageVector = Icons.Default.CalendarMonth,
+            text = getDateFromMillis(currentTimeInMilli, dateFormat),
+            onSelect = onDateSelect
+        )
+
+        DateTimeSelectableItem(
+            imageVector = Icons.Default.AccessTime,
+            text = getTimeFromMillis(currentTimeInMilli, timeFormat),
+            onSelect = onTimeSelect
+        )
+    }
+}
+
+@Composable
+fun DateTimeSelectableItem(
+    imageVector: ImageVector,
+    text: String,
+    onSelect: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .padding(horizontal = dimensionResource(id = R.dimen.item_inner_padding))
+            .roundedCornerBackground(MyAppTheme.colors.transparent)
+            .clickable {
+                onSelect()
+            },
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            imageVector = imageVector,
+            contentDescription = "",
+            tint = MyAppTheme.colors.gray1,
+        )
+
+        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.padding)))
+
+        CustomText(
+            text = text,
+            style = MyAppTheme.typography.Medium46,
+            color = MyAppTheme.colors.black
+        )
     }
 }
 
@@ -359,7 +438,10 @@ private fun TNewEntryFieldItemSectionPreview() {
             onMerchantSelect = {},
             onPaymentSelect = {},
             onCategorySelect = {},
-            isMerchantLock = false
+            isMerchantLock = false,
+            onDateSelect = {},
+            onTimeSelect = {},
+            currentTimeInMilli = 0L
         )
     }
 }

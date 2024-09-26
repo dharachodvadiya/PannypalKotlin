@@ -39,9 +39,12 @@ import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
-import com.indie.apps.pennypal.util.GetCategoryColor
 import com.indie.apps.pennypal.util.Util
+import com.indie.apps.pennypal.util.getCategoryColor
 import com.indie.apps.pennypal.util.getCategoryIcon
+import com.indie.apps.pennypal.util.getDateFromMillis
+import com.indie.apps.pennypal.util.getTodayDate
+import com.indie.apps.pennypal.util.getYesterdayDate
 import java.text.SimpleDateFormat
 
 @Composable
@@ -145,7 +148,7 @@ fun TransactionItem(
                 imageVector = imageVector,
                 imageVectorSize = 24.dp,
                 //brush = linearGradientsBrush(MyAppTheme.colors.gradientBlue),
-                tint = GetCategoryColor(item.categoryName),
+                tint = getCategoryColor(item.categoryName),
                 backGround = iconBgColor,
                 contentDescription = "person",
                 modifier = Modifier.size(50.dp)
@@ -195,9 +198,9 @@ fun TransactionItem(
 
                 val format = SimpleDateFormat("dd MMM yyyy")
 
-                val dayString = when (val day = Util.getDateFromMillis(item.dateInMilli, format)) {
-                    Util.getTodayDate(format) -> stringResource(id = R.string.today)
-                    Util.getYesterdayDate(format) -> stringResource(id = R.string.yesterday)
+                val dayString = when (val day = getDateFromMillis(item.dateInMilli, format)) {
+                    getTodayDate(format) -> stringResource(id = R.string.today)
+                    getYesterdayDate(format) -> stringResource(id = R.string.yesterday)
                     else -> day
                 }
 

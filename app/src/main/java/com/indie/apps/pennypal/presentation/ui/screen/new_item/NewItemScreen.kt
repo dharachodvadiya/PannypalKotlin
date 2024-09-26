@@ -34,6 +34,8 @@ import com.indie.apps.pennypal.presentation.ui.component.BottomSaveButton
 import com.indie.apps.pennypal.presentation.ui.component.ConfirmationDialog
 import com.indie.apps.pennypal.presentation.ui.component.TopBarWithTitle
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomDatePickerDialog
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomTimePickerDialog
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.state.rememberImeState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
@@ -72,6 +74,7 @@ fun NewItemScreen(
         }
     }
 
+    val currentTimeInMilli by newItemViewModel.currentTimeInMilli.collectAsStateWithLifecycle()
     val uiState by newItemViewModel.uiState.collectAsStateWithLifecycle()
     val enableButton by newItemViewModel.enableButton.collectAsStateWithLifecycle()
     val received by newItemViewModel.received.collectAsStateWithLifecycle()
@@ -87,6 +90,9 @@ fun NewItemScreen(
     val focusManager = LocalFocusManager.current
 
     var haveFocus by remember { mutableStateOf(false) }
+
+    var openDateDialog by remember { mutableStateOf(false) }
+    var openTimeDialog by remember { mutableStateOf(false) }
 
     var openDiscardDialog by remember { mutableStateOf(false) }
 
@@ -151,6 +157,7 @@ fun NewItemScreen(
                     )
                     NewEntryFieldItemSection(
                         modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.padding)),
+                        currentTimeInMilli = currentTimeInMilli,
                         onMerchantSelect = {
                             if (enableButton) {
                                 focusManager.clearFocus()
@@ -170,6 +177,8 @@ fun NewItemScreen(
                                 onCategorySelect(category?.id, if (received) 1 else -1)
                             }
                         },
+                        onDateSelect = { openDateDialog = true },
+                        onTimeSelect = { openTimeDialog = true },
                         paymentName = payment?.name,
                         categoryName = category?.name,
                         amount = amount,
@@ -209,6 +218,32 @@ fun NewItemScreen(
             },
             positiveText = R.string.discard,
             negativeText = R.string.cancel
+        )
+    }
+
+    if (openDateDialog) {
+        CustomDatePickerDialog(
+            currentTimeInMilli = currentTimeInMilli,
+            onDateSelected = {
+                newItemViewModel.setDateAndTime(it.timeInMillis)
+                openDateDialog = false
+            },
+            onDismiss = {
+                openDateDialog = false
+            }
+        )
+    }
+
+    if (openTimeDialog) {
+        CustomTimePickerDialog(
+            currentTimeInMilli = currentTimeInMilli,
+            onTimeSelected = {
+                newItemViewModel.setDateAndTime(it.timeInMillis)
+                openTimeDialog = false
+            },
+            onDismiss = {
+                openTimeDialog = false
+            }
         )
     }
 

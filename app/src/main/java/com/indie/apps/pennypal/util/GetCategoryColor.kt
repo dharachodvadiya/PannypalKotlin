@@ -5,7 +5,7 @@ import androidx.compose.ui.graphics.Color
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 
 @Composable
-internal fun GetCategoryColor(categoryName: String): Color {
+internal fun getCategoryColor(categoryName: String): Color {
     return when (categoryName) {
         "Other" -> MyAppTheme.colors.categoryOther
         "Bills and Utilities" -> MyAppTheme.colors.categoryBills

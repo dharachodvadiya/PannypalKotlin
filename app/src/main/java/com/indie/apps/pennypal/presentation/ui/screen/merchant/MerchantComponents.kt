@@ -39,7 +39,7 @@ import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
-import com.indie.apps.pennypal.util.GetColorFromId
+import com.indie.apps.pennypal.util.getColorFromId
 import com.indie.apps.pennypal.util.getFirstCharacterUppercase
 
 @Composable
@@ -147,7 +147,7 @@ fun MerchantListItem(
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier.fillMaxWidth()
 ) {
     val imageVector = if (isSelected) Icons.Default.Done else Icons.Default.Person
-    val iconBgColor = if (isSelected) MyAppTheme.colors.brand else GetColorFromId(item.id.toInt())
+    val iconBgColor = if (isSelected) MyAppTheme.colors.brand else getColorFromId(item.id.toInt())
     val tintColor = if (isSelected) MyAppTheme.colors.black else MyAppTheme.colors.white
     //val amount = item.incomeAmount - item.expenseAmount
     //val amountColor = if (amount >= 0) MyAppTheme.colors.greenText else MyAppTheme.colors.redText

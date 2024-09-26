@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -32,13 +31,11 @@ import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListItem
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImageWithText
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
-import com.indie.apps.pennypal.presentation.ui.screen.merchant.MerchantListItem
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
-import com.indie.apps.pennypal.util.GetColorFromId
+import com.indie.apps.pennypal.util.getColorFromId
 import com.indie.apps.pennypal.util.getFirstCharacterUppercase
 
 /*
@@ -206,7 +203,7 @@ private fun SearchMerchantListItem(
     onClick: () -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
-    val iconBgColor = GetColorFromId(item.id.toInt())
+    val iconBgColor = getColorFromId(item.id.toInt())
     val tintColor = MyAppTheme.colors.white
 
     ListItem(
