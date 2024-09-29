@@ -105,4 +105,6 @@
     <string name="home_page_balance_view">Home Page Balance View</string>
     <string name="select_balance_view">Select Balance View</string>
     <string name="no_data">No Data</string>
+    <string name="your_budget">Your Budget</string>
+    <string name="budget">Budget Analysis</string>
 </resources>

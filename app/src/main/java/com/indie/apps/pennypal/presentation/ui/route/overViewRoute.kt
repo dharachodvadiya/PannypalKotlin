@@ -18,6 +18,7 @@ import com.indie.apps.pennypal.presentation.ui.navigation.BottomNavItem
 import com.indie.apps.pennypal.presentation.ui.navigation.DialogNav
 import com.indie.apps.pennypal.presentation.ui.navigation.ScreenNav
 import com.indie.apps.pennypal.presentation.ui.screen.all_data.AllDataScreen
+import com.indie.apps.pennypal.presentation.ui.screen.budget.BudgetScreen
 import com.indie.apps.pennypal.presentation.ui.screen.new_item.NewItemScreen
 import com.indie.apps.pennypal.presentation.ui.screen.overview.OverViewStartScreen
 import com.indie.apps.pennypal.presentation.ui.screen.overview_analysis.OverViewAnalysisScreen
@@ -76,6 +77,9 @@ fun NavGraphBuilder.overViewRoute(
                             "{${Util.PARAM_EDIT_MERCHANT_DATA_ID}}", it.toString()
                         )
                     )
+                },
+                onExploreBudgetClick = {
+                    navController.navigate(ScreenNav.BUDGET.route)
                 }
             )
         }
@@ -216,6 +220,13 @@ fun NavGraphBuilder.overViewRoute(
         composable(route = ScreenNav.OVERVIEW_ANALYSIS.route) {
             bottomBarState.value = false
             OverViewAnalysisScreen(
+                onNavigationUp = { navController.navigateUp() }
+            )
+        }
+
+        composable(route = ScreenNav.BUDGET.route) {
+            bottomBarState.value = false
+            BudgetScreen(
                 onNavigationUp = { navController.navigateUp() }
             )
         }

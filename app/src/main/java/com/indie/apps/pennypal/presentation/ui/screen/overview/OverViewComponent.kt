@@ -57,6 +57,7 @@ import com.indie.apps.pennypal.presentation.ui.component.custom.composable.Prima
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImageWithText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.TopBar
+import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.screen.all_data.TransactionItem
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
@@ -409,6 +410,7 @@ fun OverviewData(
     onSeeAllTransactionClick: () -> Unit,
     onSeeAllMerchantClick: () -> Unit,
     onExploreAnalysisClick: () -> Unit,
+    onExploreBudgetClick: () -> Unit,
     onTransactionClick: (Long) -> Unit,
     isAddMerchantDataSuccess: Boolean = false,
     isEditMerchantDataSuccess: Boolean = false,
@@ -445,6 +447,10 @@ fun OverviewData(
         currentPeriod = currentPeriod,
         categoryList = categoryList,
         onExploreAnalysisClick = onExploreAnalysisClick
+    )
+
+    OverviewBudgetData(
+        onExploreBudgetClick = onExploreBudgetClick
     )
 }
 
@@ -651,7 +657,7 @@ fun OverviewAnalysisData(
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     OverviewItem(
-        title = stringResource(id = R.string.analysis_of) + currentPeriod,
+        title = stringResource(id = R.string.analysis_of) + " $currentPeriod",
         trailingText = R.string.explore,
         onSeeAllClick = onExploreAnalysisClick,
         content = {
@@ -681,7 +687,7 @@ fun OverviewAnalysisData(
                     if (chartData.isEmpty()) {
                         OverviewAnalyticDataItem(
                             stringResource(id = R.string.no_data),
-                            MyAppTheme.colors.gray3.copy(alpha = 0.3f)
+                            MyAppTheme.colors.gray3.copy(alpha = 0.5f)
                         )
                     } else {
                         chartData.forEach { item ->
@@ -691,6 +697,23 @@ fun OverviewAnalysisData(
                 }
             }
         },
+        isBgEnable = false,
+        modifier = modifier
+    )
+}
+
+@Composable
+fun OverviewBudgetData(
+    onExploreBudgetClick: () -> Unit,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
+) {
+    OverviewItem(
+        title = stringResource(id = R.string.your_budget),
+        trailingText = R.string.explore,
+        onSeeAllClick = onExploreBudgetClick,
+        content = {
+        },
+        isBgEnable = false,
         modifier = modifier
     )
 }
@@ -714,7 +737,9 @@ fun OverviewAnalyticDataItem(
         Spacer(modifier = Modifier.width(5.dp))
         CustomText(
             text = name,
-            color = MyAppTheme.colors.gray0
+            color = MyAppTheme.colors.gray0,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
         )
 
     }
@@ -774,6 +799,7 @@ fun OverviewItem(
     @StringRes trailingText: Int = R.string.see_all,
     content: @Composable (() -> Unit),
     enableSeeAll: Boolean = true,
+    isBgEnable : Boolean = false,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     Column(
@@ -814,7 +840,17 @@ fun OverviewItem(
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.item_inner_padding)))
 
-        content()
+        if(isBgEnable)
+        {
+            Box(modifier = Modifier
+                .roundedCornerBackground(MyAppTheme.colors.itemBg))
+            {
+                content()
+            }
+        }else{
+            content()
+        }
+
     }
 
 }

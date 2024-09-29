@@ -37,6 +37,7 @@ fun OverViewStartScreen(
     onSeeAllTransactionClick: () -> Unit,
     onSeeAllMerchantClick: () -> Unit,
     onExploreAnalysisClick: () -> Unit,
+    onExploreBudgetClick: () -> Unit,
     onTransactionClick: (Long) -> Unit,
     addEditMerchantDataId: Long,
     onNavigationUp: () -> Unit,
@@ -148,6 +149,7 @@ fun OverViewStartScreen(
                     onSeeAllTransactionClick = onSeeAllTransactionClick,
                     onSeeAllMerchantClick = onSeeAllMerchantClick,
                     onExploreAnalysisClick = onExploreAnalysisClick,
+                    onExploreBudgetClick = onExploreBudgetClick,
                     merchantDataId = addEditDataId,
                     isAddMerchantDataSuccess = addDataAnimRun,
                     isEditMerchantDataSuccess = editAnimRun,
@@ -175,7 +177,8 @@ private fun OverViewScreenPreview() {
             onSeeAllTransactionClick = {},
             onSeeAllMerchantClick = {},
             onTransactionClick = {},
-            onExploreAnalysisClick = {}
+            onExploreAnalysisClick = {},
+            onExploreBudgetClick = {}
         )
     }
 }
