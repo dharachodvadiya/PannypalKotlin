@@ -155,6 +155,8 @@ fun NewEntryFieldItemSection(
     onTimeSelect: () -> Unit,
     amount: TextFieldState = TextFieldState(),
     description: TextFieldState = TextFieldState(),
+    onAmountTextChange: (String) -> Unit,
+    onDescTextChange: (String) -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
 ) {
     Column(
@@ -235,7 +237,8 @@ fun NewEntryFieldItemSection(
             label = R.string.amount,
             placeholder = R.string.amount_placeholder,
             textState = amount,
-            keyboardType = KeyboardType.Number
+            keyboardType = KeyboardType.Number,
+            onTextChange = onAmountTextChange
         )
         TextFieldError(
             textError = amount.errorText
@@ -246,7 +249,8 @@ fun NewEntryFieldItemSection(
         NewEntryTextFieldItem(
             label = R.string.description,
             placeholder = R.string.description_placeholder,
-            textState = description
+            textState = description,
+            onTextChange = onDescTextChange
         )
         TextFieldError(
             textError = description.errorText
@@ -386,6 +390,7 @@ fun NewEntrySelectableItem(
 @Composable
 private fun NewEntryTextFieldItem(
     textState: TextFieldState = TextFieldState(),
+    onTextChange: (String) -> Unit,
     @StringRes label: Int,
     placeholder: Int,
     keyboardType: KeyboardType = KeyboardType.Text,
@@ -413,10 +418,11 @@ private fun NewEntryTextFieldItem(
         )
         MyAppTextField(
             value = textState.text,
-            onValueChange = {
+            /*onValueChange = {
                 textState.disableError()
                 textState.text = it
-            },
+            },*/
+            onValueChange = onTextChange,
             placeHolder = stringResource(placeholder),
             textStyle = MyAppTheme.typography.Medium46,
             keyboardType = keyboardType,
@@ -437,7 +443,9 @@ private fun TNewEntryFieldItemSectionPreview() {
             isMerchantLock = false,
             onDateSelect = {},
             onTimeSelect = {},
-            currentTimeInMilli = 0L
+            currentTimeInMilli = 0L,
+            onAmountTextChange = {},
+            onDescTextChange = {}
         )
     }
 }

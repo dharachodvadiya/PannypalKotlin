@@ -44,6 +44,7 @@ fun DialogContactPicker(
                 searchState = searchTextState,
                 contactUiState = uiState,
                 onTextChange = {
+                    viewModel.updateSearchText(it)
                     job?.cancel()
                     job = MainScope().launch {
                         delay(Util.SEARCH_NEWS_TIME_DELAY)

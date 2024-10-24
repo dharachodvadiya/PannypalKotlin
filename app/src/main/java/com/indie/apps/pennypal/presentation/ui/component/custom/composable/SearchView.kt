@@ -38,10 +38,11 @@ fun SearchView(
 
         MyAppTextField(
             value = textState.text,
-            onValueChange = {
+            onValueChange = onTextChange,
+            /*onValueChange = {
                 textState.text = it
                 onTextChange(it)
-            },
+            },*/
             placeHolder = "Search",
             imeAction = ImeAction.Search,
             //keyboardActions = KeyboardActions(onSearch = { onSearchClick(text) }),
@@ -52,7 +53,7 @@ fun SearchView(
                             .roundedCornerBackground(MyAppTheme.colors.transparent)
                             .clickable {
                                 if (textState.text.isNotEmpty()) {
-                                    textState.text = ""
+                                    //textState.text = ""
                                     onTextChange("")
                                 }
                             },
@@ -66,7 +67,7 @@ fun SearchView(
                             .roundedCornerBackground(MyAppTheme.colors.transparent)
                             .clickable {
                                 if (textState.text.isNotEmpty()) {
-                                    textState.text = ""
+                                    //textState.text = ""
                                     onTextChange("")
                                 }
                             },

@@ -96,7 +96,10 @@ fun DialogAddMerchant(
                     }
 
                 },
-                countryCode = countryCode
+                countryCode = countryCode,
+                onDescTextChange = addMerchantViewModel::updateDescText,
+                onNameTextChange = addMerchantViewModel::updateNameText,
+                onPhoneNoTextChange = addMerchantViewModel::updatePhoneNoText
             )
         }, bottomContent = {
             BottomSaveButton(

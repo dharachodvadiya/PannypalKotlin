@@ -131,6 +131,7 @@ fun AllDataScreen(
                     onNavigationUp()
             } },
             onSearchTextChange = {
+                allDataViewModel.updateSearchText(it)
                 job?.cancel()
                 job = MainScope().launch {
                     delay(Util.SEARCH_NEWS_TIME_DELAY)

@@ -64,6 +64,7 @@ fun DialogCountryPicker(
                 isSelectable = isSavable,
                 currentCountry = currentCountryCode,
                 onTextChange = {
+                    viewModel.updateSearchText(it)
                     job?.cancel()
                     job = MainScope().launch {
                         delay(Util.SEARCH_NEWS_TIME_DELAY)

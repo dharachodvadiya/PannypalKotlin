@@ -49,6 +49,7 @@ fun DialogMultiSelectCategory(
                 },
                 searchTextState = searchTextState,
                 onTextChange = {
+                    multiSelectCategoryViewModel.updateSearchText(it)
                     job?.cancel()
                     job = MainScope().launch {
                         delay(Util.SEARCH_NEWS_TIME_DELAY)

@@ -186,7 +186,9 @@ fun NewItemScreen(
                         merchantError = merchantError,
                         paymentError = paymentError,
                         categoryError = categoryError,
-                        isMerchantLock = isMerchantLock
+                        isMerchantLock = isMerchantLock,
+                        onAmountTextChange = newItemViewModel::updateAmountText,
+                        onDescTextChange = newItemViewModel::updateDescText
                     )
                     Spacer(modifier = Modifier.weight(1f))
                     BottomSaveButton(

@@ -60,7 +60,8 @@ class AddEditPaymentViewModel @Inject constructor(
                         editPayment = it
 
                         selectedModeId.value = editPayment!!.modeId
-                        paymentTypeState.value.text = editPayment!!.name
+                        //paymentTypeState.value.text = editPayment!!.name
+                        updatePaymentTypeText(editPayment!!.name)
                     }
             }
         }
@@ -143,5 +144,7 @@ class AddEditPaymentViewModel @Inject constructor(
         }
 
     }
+
+    fun updatePaymentTypeText(text : String) = paymentTypeState.value.updateText(text)
 
 }

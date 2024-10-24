@@ -195,6 +195,7 @@ fun MerchantScreen(
             onDeleteClick = { merchantViewModel.onDeleteClick { openAlertDialog = true } },
             onNavigationUp = { merchantViewModel.onNavigationUp { } },
             onSearchTextChange = {
+                merchantViewModel.updateSearchText(it)
                 job?.cancel()
                 job = MainScope().launch {
                     delay(Util.SEARCH_NEWS_TIME_DELAY)

@@ -64,7 +64,8 @@ fun DialogAddPayment(
                 textPaymentState = paymentTypeState,
                 paymentModeList = paymentModeList,
                 currentModId = selectedModeId,
-                onModeChange = addPaymentViewModel::onModeChange
+                onModeChange = addPaymentViewModel::onModeChange,
+                onPaymentTypeTextChange = addPaymentViewModel::updatePaymentTypeText
             )
         },
         bottomContent = {

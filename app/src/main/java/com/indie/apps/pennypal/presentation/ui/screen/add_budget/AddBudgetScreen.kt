@@ -145,7 +145,8 @@ fun AddBudgetScreen(
                 periodFromErrorText = periodFromErrorText,
                 periodToErrorText = periodToErrorText,
                 categoryErrorText = categoryErrorText,
-                categoryBudgetErrorText = categoryBudgetErrorText
+                categoryBudgetErrorText = categoryBudgetErrorText,
+                onAmountTextChange = addBudgetViewModel::updateAmountText
             )
 
             Spacer(modifier = Modifier.weight(1f))

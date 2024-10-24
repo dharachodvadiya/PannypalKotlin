@@ -111,7 +111,8 @@ fun AddBudgetFieldItem(
     onSelectFromDate: () -> Unit,
     onSelectToDate: () -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
-    amount: TextFieldState
+    amount: TextFieldState,
+    onAmountTextChange: (String) -> Unit,
 ) {
     Column(
         modifier = modifier.background(MyAppTheme.colors.transparent),
@@ -142,7 +143,8 @@ fun AddBudgetFieldItem(
                     style = MyAppTheme.typography.Regular66_5
                 )
             },
-            keyboardType = KeyboardType.Number
+            keyboardType = KeyboardType.Number,
+            onTextChange = onAmountTextChange
         )
 
         DialogSelectableItem(label = R.string.select_category,
@@ -401,10 +403,11 @@ private fun CategoryListItem(
     }, trailingContent = {
         MyAppTextField(
             value = textState.text,
-            onValueChange = {
+            onValueChange = onTextChange,
+           /* onValueChange = {
                 textState.text = it
                 onTextChange(it)
-            },
+            },*/
             bgColor = MyAppTheme.colors.brand,
             placeHolder = stringResource(id = R.string.no_limit),
             textStyle = MyAppTheme.typography.Regular44.copy(textAlign = TextAlign.Center),

@@ -66,12 +66,10 @@ class NewItemViewModel @Inject constructor(
     val uiState = MutableStateFlow<Resource<Unit>>(Resource.Loading())
 
     init {
-        if (merchantEditId == 0L)
-        {
+        if (merchantEditId == 0L) {
             loadUserData()
             setDateAndTime(Calendar.getInstance().timeInMillis)
-        }
-        else
+        } else
             setEditData()
     }
 
@@ -106,10 +104,8 @@ class NewItemViewModel @Inject constructor(
                                 editMerchantData = it.data
                                 received.value =
                                     editMerchantData!!.type == 1
-                                amount.value.text =
-                                    Util.getFormattedString(editMerchantData!!.amount)
-                                description.value.text =
-                                    editMerchantData!!.details.toString()
+                                updateAmountText(Util.getFormattedString(editMerchantData!!.amount))
+                                updateDescText(editMerchantData!!.details.toString())
 
                                 setDateAndTime(editMerchantData!!.dateInMilli)
 
@@ -165,8 +161,7 @@ class NewItemViewModel @Inject constructor(
             setCategory(categoryExpense)
     }
 
-    fun setDateAndTime(currentDateAndTime: Long)
-    {
+    fun setDateAndTime(currentDateAndTime: Long) {
         currentTimeInMilli.value = currentDateAndTime
     }
 
@@ -275,5 +270,8 @@ class NewItemViewModel @Inject constructor(
 
 
     }
+
+    fun updateAmountText(text: String) = amount.value.updateText(text)
+    fun updateDescText(text: String) = description.value.updateText(text)
 
 }

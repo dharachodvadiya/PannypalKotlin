@@ -65,4 +65,6 @@ class CountryPickerViewModel @Inject constructor(
                 }
         }
     }
+
+    fun updateSearchText(text : String) = searchTextState.value.updateText(text)
 }

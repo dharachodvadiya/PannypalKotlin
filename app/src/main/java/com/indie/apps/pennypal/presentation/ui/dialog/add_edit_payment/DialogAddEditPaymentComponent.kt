@@ -34,6 +34,7 @@ fun AddPaymentDialogField(
     currentModId: Long,
     paymentModeList: List<PaymentMode>,
     textPaymentState: TextFieldState,
+    onPaymentTypeTextChange: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -44,7 +45,8 @@ fun AddPaymentDialogField(
         DialogTextFieldItem(
             textState = textPaymentState,
             imageVector = Icons.Default.Payment,
-            placeholder = R.string.add_payment_type_placeholder
+            placeholder = R.string.add_payment_type_placeholder,
+            onTextChange = onPaymentTypeTextChange
         )
 
         FlowRow {

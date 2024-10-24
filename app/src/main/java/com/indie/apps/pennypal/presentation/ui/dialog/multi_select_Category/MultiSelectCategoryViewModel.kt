@@ -85,4 +85,6 @@ class MultiSelectCategoryViewModel @Inject constructor(
         selectAllState.value = isSelectAll
     }
 
+    fun updateSearchText(text : String) = searchTextState.value.updateText(text)
+
 }

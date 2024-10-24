@@ -43,4 +43,6 @@ class SearchMerchantViewModel @Inject constructor(
         }
     }
 
+    fun updateSearchText(text : String) = searchTextState.value.updateText(text)
+
 }

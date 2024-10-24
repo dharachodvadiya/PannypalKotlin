@@ -45,9 +45,14 @@ class AddEditMerchantViewModel @Inject constructor(
                     .collect {
                         editMerchant = it
 
-                        merchantName.value.text = it.name
+                        /*merchantName.value.text = it.name
                         phoneNumber.value.text = it.phoneNumber ?: ""
-                        description.value.text = it.details ?: ""
+                        description.value.text = it.details ?: ""*/
+
+                        updateNameText(it.name)
+                        updatePhoneNoText(it.phoneNumber ?: "")
+                        updateDescText(it.details ?: "")
+
                         if (!it.countryCode.isNullOrEmpty())
                             countryDialCode.value = it.countryCode
                     }
@@ -61,13 +66,13 @@ class AddEditMerchantViewModel @Inject constructor(
         countryDialCode.value = code
     }
 
-    fun setContactNumber(contactNumber: String) {
-        phoneNumber.value.text = contactNumber
-    }
-
     fun setContactData(data : ContactNumberAndCode) {
-        merchantName.value.text = data.name
-        phoneNumber.value.text = data.phoneNumber
+        //merchantName.value.text = data.name
+        //phoneNumber.value.text = data.phoneNumber
+
+        updateNameText(data.name)
+        updatePhoneNoText(data.phoneNumber)
+
         countryDialCode.value = data.dialCode ?: getDefaultCurrencyCode()
     }
 
@@ -153,4 +158,8 @@ class AddEditMerchantViewModel @Inject constructor(
 
     fun getDefaultCurrencyCode() =
         countryRepository.getDialCodeFromCountryCode(countryRepository.getDefaultCountryCode())
+
+    fun updateNameText(text : String) = merchantName.value.updateText(text)
+    fun updatePhoneNoText(text : String) = phoneNumber.value.updateText(text)
+    fun updateDescText(text : String) = description.value.updateText(text)
 }

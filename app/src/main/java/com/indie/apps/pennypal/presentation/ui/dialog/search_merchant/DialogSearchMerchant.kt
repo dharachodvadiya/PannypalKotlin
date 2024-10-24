@@ -85,6 +85,7 @@ fun DialogSearchMerchant(
                 },
                 textState = uiState,
                 onTextChange = {
+                    searchMerchantViewModel.updateSearchText(it)
                     job?.cancel()
                     job = MainScope().launch {
                         delay(Util.SEARCH_NEWS_TIME_DELAY)

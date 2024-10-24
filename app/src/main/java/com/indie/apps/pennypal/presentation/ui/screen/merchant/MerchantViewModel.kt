@@ -75,7 +75,8 @@ class MerchantViewModel @Inject constructor(
 
     private fun clearSearch() {
         if (searchTextState.value.text.trim().isNotEmpty()) {
-            searchTextState.value.text = ""
+            //searchTextState.value.text = ""
+            updateSearchText("")
             searchData()
         }
     }
@@ -222,5 +223,7 @@ class MerchantViewModel @Inject constructor(
         this.scrollIndex.value = scrollIndex
         this.scrollOffset.value = scrollOffset
     }
+
+    fun updateSearchText(text : String) = searchTextState.value.updateText(text)
 
 }

@@ -64,4 +64,7 @@ class ContactPickerViewModel @Inject constructor(private val contactsRepository:
         onSuccess(contact.toContactNumberAndCode(data.phoneNumber, data.dialCode))
     }
 
+    fun updateSearchText(text : String) = searchTextState.value.updateText(text)
+
+
 }

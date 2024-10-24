@@ -37,6 +37,9 @@ fun AddMerchantDialogField(
     nameState: TextFieldState,
     phoneNoState: TextFieldState,
     descState: TextFieldState,
+    onNameTextChange: (String) -> Unit,
+    onPhoneNoTextChange: (String) -> Unit,
+    onDescTextChange: (String) -> Unit,
     onCpp: () -> Unit,
     onContactBook: () -> Unit,
     countryCode: String = "+00",
@@ -66,7 +69,8 @@ fun AddMerchantDialogField(
                         tint = MyAppTheme.colors.gray1
                     )
                 }
-            }
+            },
+            onTextChange = onNameTextChange
         )
         DialogTextFieldItem(
             textState = phoneNoState,
@@ -89,12 +93,14 @@ fun AddMerchantDialogField(
                 }
 
             },
-            keyboardType = KeyboardType.Number
+            keyboardType = KeyboardType.Number,
+            onTextChange = onPhoneNoTextChange
         )
         DialogTextFieldItem(
             textState = descState,
             imageVector = Icons.Default.Details,
-            placeholder = R.string.description_placeholder
+            placeholder = R.string.description_placeholder,
+            onTextChange = onDescTextChange
         )
     }
 }
@@ -108,7 +114,10 @@ private fun AddMerchantDialogFieldPreview() {
             phoneNoState = TextFieldState(),
             descState = TextFieldState(),
             onCpp = {},
-            onContactBook = {}
+            onContactBook = {},
+            onDescTextChange = {},
+            onPhoneNoTextChange = {},
+            onNameTextChange = {}
         )
     }
 }

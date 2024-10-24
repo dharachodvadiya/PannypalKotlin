@@ -194,4 +194,9 @@ class AddBudgetViewModel @Inject constructor(
         categoryBudgetErrorText.value = ""
     }
 
+    fun updateAmountText(text : String) {
+        amount.value.updateText(text)
+
+    }
+
 }

@@ -212,12 +212,13 @@ fun DialogSearchView(
 fun DialogTextFieldItem(
     imageVector: ImageVector? = null,
     textState: TextFieldState = TextFieldState(),
+    onTextChange: (String) -> Unit,
     placeholder: Int,
     @StringRes label: Int? = null,
     keyboardType: KeyboardType = KeyboardType.Text,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
     textLeadingContent: @Composable (() -> Unit)? = null,
-    textTrailingContent: @Composable (() -> Unit)? = null
+    textTrailingContent: @Composable (() -> Unit)? = null,
 ) {
     Column(
         modifier = modifier
@@ -247,10 +248,11 @@ fun DialogTextFieldItem(
             }
             MyAppTextField(
                 value = textState.text,
-                onValueChange = {
+                /*onValueChange = {
                     textState.disableError()
                     textState.text = it
-                },
+                },*/
+                onValueChange = onTextChange,
                 placeHolder = stringResource(placeholder),
                 textStyle = MyAppTheme.typography.Medium46,
                 keyboardType = keyboardType,
@@ -665,7 +667,8 @@ private fun DialogTextFieldItemPreview() {
     PennyPalTheme(darkTheme = true) {
         DialogTextFieldItem(
             imageVector = Icons.Default.PersonOutline,
-            placeholder = R.string.amount_placeholder
+            placeholder = R.string.amount_placeholder,
+            onTextChange = {}
         )
     }
 }

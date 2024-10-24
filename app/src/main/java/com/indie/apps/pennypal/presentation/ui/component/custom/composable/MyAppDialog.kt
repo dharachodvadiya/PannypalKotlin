@@ -121,7 +121,8 @@ private fun MyAppDialogPreview() {
         MyAppDialog(title = R.string.add_merchant, onNavigationUp = {}, content = {
             DialogTextFieldItem(
                 imageVector = Icons.Default.PersonOutline,
-                placeholder = R.string.merchant_name_placeholder
+                placeholder = R.string.merchant_name_placeholder,
+                onTextChange = {}
             )
         }, bottomContent = {
             BottomSaveButton(onClick = {})
