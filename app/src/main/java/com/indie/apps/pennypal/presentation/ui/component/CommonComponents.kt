@@ -47,6 +47,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -209,9 +210,10 @@ fun DialogSearchView(
 
 @Composable
 fun DialogTextFieldItem(
-    imageVector: ImageVector,
+    imageVector: ImageVector? = null,
     textState: TextFieldState = TextFieldState(),
     placeholder: Int,
+    @StringRes label: Int? = null,
     keyboardType: KeyboardType = KeyboardType.Text,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
     textLeadingContent: @Composable (() -> Unit)? = null,
@@ -220,23 +222,29 @@ fun DialogTextFieldItem(
     Column(
         modifier = modifier
             .padding(
-                horizontal = dimensionResource(id = R.dimen.padding),
                 vertical = 5.dp
             )
     ) {
+        label?.let {
+            CustomText(
+                text = stringResource(id = label),
+                style = MyAppTheme.typography.Medium46,
+                color = MyAppTheme.colors.gray1
+            )
+            Spacer(modifier = Modifier.height(5.dp))
+        }
+
         Row(
             modifier = Modifier
                 .height(dimensionResource(id = R.dimen.new_entry_field_height))
                 .roundedCornerBackground(MyAppTheme.colors.transparent),
-            /* .background(
-                 shape = RoundedCornerShape(dimensionResource(id = R.dimen.round_corner)),
-                 color = MyAppTheme.colors.transparent
-             )*/
             verticalAlignment = Alignment.CenterVertically,
         ) {
 
-            Icon(imageVector = imageVector, contentDescription = "")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.item_content_padding)))
+            imageVector?.let {
+                Icon(imageVector = it, contentDescription = "")
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.item_content_padding)))
+            }
             MyAppTextField(
                 value = textState.text,
                 onValueChange = {
@@ -277,6 +285,94 @@ internal fun TextFieldError(textError: String, modifier: Modifier = Modifier) {
             textAlign = TextAlign.End
         )
     }
+}
+
+@Composable
+fun DialogSelectableItem(
+    imageVector: ImageVector? = null,
+    text: String? = null,
+    errorText: String = "",
+    onClick: () -> Unit,
+    isSelectable: Boolean = true,
+    @StringRes label: Int? = null,
+    @StringRes placeholder: Int,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
+    leadingContent: @Composable (() -> Unit)? = null,
+    trailingContent: @Composable (() -> Unit)? = null
+) {
+    Column(
+        modifier = modifier
+            .padding(
+                vertical = 5.dp
+            )
+    ) {
+        label?.let {
+            CustomText(
+                text = stringResource(id = label),
+                style = MyAppTheme.typography.Medium46,
+                color = MyAppTheme.colors.gray1
+            )
+            Spacer(modifier = Modifier.height(5.dp))
+        }
+
+        Row(
+            modifier = Modifier
+                .height(dimensionResource(id = R.dimen.new_entry_field_height))
+                .roundedCornerBackground(MyAppTheme.colors.transparent),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+
+            imageVector?.let {
+                Icon(imageVector = it, contentDescription = "")
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.item_content_padding)))
+            }
+
+            Row(
+                modifier = Modifier
+                    .roundedCornerBackground(MyAppTheme.colors.itemBg)
+                    .clickable(enabled = isSelectable) { onClick() }
+                    .padding(dimensionResource(id = R.dimen.padding)),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                if (leadingContent != null) {
+                    leadingContent()
+                    Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.item_content_padding)))
+                }
+
+                if (text.isNullOrEmpty()) {
+                    CustomText(
+                        text = stringResource(id = placeholder),
+                        modifier = Modifier
+                            .weight(1f),
+                        style = MyAppTheme.typography.Regular46,
+                        color = MyAppTheme.colors.gray2.copy(alpha = 0.7f)
+                    )
+                } else {
+                    CustomText(
+                        text = text,
+                        modifier = Modifier
+                            .weight(1f),
+                        style = MyAppTheme.typography.Medium46,
+                        color = MyAppTheme.colors.black,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+
+                if (trailingContent != null) {
+                    Spacer(modifier = Modifier.weight(1f))
+                    trailingContent()
+                }
+            }
+        }
+        TextFieldError(
+            textError = errorText
+        )
+
+    }
+
 }
 
 @Composable
@@ -374,11 +470,11 @@ fun NoDataMessage(
 
 @Composable
 fun TextWithRadioButton(
-    isSelected : Boolean = false,
+    isSelected: Boolean = false,
     name: String,
     onSelect: () -> Unit,
     @DrawableRes symbolId: Int? = null,
-    modifier: Modifier = Modifier
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier
@@ -390,7 +486,7 @@ fun TextWithRadioButton(
         horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.item_padding))
     ) {
         RadioButton(selected = isSelected, onClick = onSelect)
-        if(symbolId != null) {
+        if (symbolId != null) {
             Icon(
                 painter = painterResource(symbolId),
                 contentDescription = "bank",
@@ -595,9 +691,9 @@ fun Context.showToast(message: String) = run {
 
 @Composable
 fun PeriodText(
-    text : String,
-    textStyle : TextStyle = MyAppTheme.typography.Regular44,
-    modifier: Modifier = Modifier
+    text: String,
+    textStyle: TextStyle = MyAppTheme.typography.Regular44,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
 
     Box(

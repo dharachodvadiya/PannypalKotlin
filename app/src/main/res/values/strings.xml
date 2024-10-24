@@ -107,4 +107,22 @@
     <string name="no_data">No Data</string>
     <string name="your_budget">Your Budget</string>
     <string name="budget">Budget Analysis</string>
+    <string name="add_budget">Add Budget</string>
+    <string name="period">Period</string>
+    <string name="select_period_type_placeholder">Select Period</string>
+    <string name="budget_for">Budget For</string>
+    <string name="month">Month</string>
+    <string name="year">Year</string>
+    <string name="one_time">One-Time</string>
+    <string name="select_all">Select All</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="empty">""</string>
+    <string name="no_limit">No Limit</string>
+    <string name="category_wise_limit">Set category wise limit (optional)</string>
+    <string name="category_included">categories included in your budget</string>
+    <string name="total_budget">Total Budget</string>
+    <string name="remaining">Remaining</string>
+    <string name="select_month">Select Month</string>
+    <string name="select_year">Select Year</string>
 </resources>

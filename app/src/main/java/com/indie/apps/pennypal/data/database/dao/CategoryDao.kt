@@ -19,4 +19,8 @@ interface CategoryDao : BaseDao<Category> {
     @Transaction
     @Query("SELECT * FROM category where type = :type OR type = 0")
     fun getCategoryFromTypeList(type: Int): Flow<List<Category>>
+
+    @Transaction
+    @Query("SELECT * FROM category where (type = :type OR type = 0) AND name LIKE  '%' || :searchQuery || '%'")
+    fun searchCategoryFromTypeList(type: Int, searchQuery: String): Flow<List<Category>>
 }

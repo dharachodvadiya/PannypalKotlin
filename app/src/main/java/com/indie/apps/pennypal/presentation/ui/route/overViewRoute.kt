@@ -9,6 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.database.entity.Category
 import com.indie.apps.pennypal.data.database.entity.Payment
@@ -17,6 +18,7 @@ import com.indie.apps.pennypal.presentation.ui.component.showToast
 import com.indie.apps.pennypal.presentation.ui.navigation.BottomNavItem
 import com.indie.apps.pennypal.presentation.ui.navigation.DialogNav
 import com.indie.apps.pennypal.presentation.ui.navigation.ScreenNav
+import com.indie.apps.pennypal.presentation.ui.screen.add_budget.AddBudgetScreen
 import com.indie.apps.pennypal.presentation.ui.screen.all_data.AllDataScreen
 import com.indie.apps.pennypal.presentation.ui.screen.budget.BudgetScreen
 import com.indie.apps.pennypal.presentation.ui.screen.new_item.NewItemScreen
@@ -91,10 +93,12 @@ fun NavGraphBuilder.overViewRoute(
             val merchantDataSaveToast =
                 stringResource(id = R.string.merchant_data_save_success_message)
 
-            val isMerchantLock: Boolean? = savedStateHandle.get<Boolean>(Util.SAVE_STATE_MERCHANT_LOCK)
+            val isMerchantLock: Boolean? =
+                savedStateHandle.get<Boolean>(Util.SAVE_STATE_MERCHANT_LOCK)
 
             // get data passed back from B
-            val gsonStringMerchant: String? = savedStateHandle.get<String>(Util.SAVE_STATE_MERCHANT_NAME_DESC)
+            val gsonStringMerchant: String? =
+                savedStateHandle.get<String>(Util.SAVE_STATE_MERCHANT_NAME_DESC)
 
             val merchant: MerchantNameAndDetails? = if (gsonStringMerchant != null) {
                 Gson().fromJson(gsonStringMerchant, MerchantNameAndDetails::class.java)
@@ -123,7 +127,7 @@ fun NavGraphBuilder.overViewRoute(
                 onMerchantSelect = { navController.navigate(DialogNav.SELECT_MERCHANT.route) },
                 onPaymentSelect = { currentId ->
                     navController.navigate(DialogNav.SELECT_PAYMENT.route)
-                    if(currentId != null) {
+                    if (currentId != null) {
                         navController.currentBackStackEntry?.savedStateHandle?.set(
                             Util.SAVE_STATE_SELECT_PAYMENT_ID, currentId
                         )
@@ -131,7 +135,7 @@ fun NavGraphBuilder.overViewRoute(
                 },
                 onCategorySelect = { currentId, categoryType ->
                     navController.navigate(DialogNav.SELECT_CATEGORY.route)
-                    if(currentId != null) {
+                    if (currentId != null) {
                         navController.currentBackStackEntry?.savedStateHandle?.set(
                             Util.SAVE_STATE_SELECT_CATEGORY_ID, currentId
                         )
@@ -149,15 +153,15 @@ fun NavGraphBuilder.overViewRoute(
                     context.showToast(merchantDataSaveToast)
 
                     navController.previousBackStackEntry?.savedStateHandle?.set(
-                            Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_ID, merchantDataId
-                        )
+                        Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_ID, merchantDataId
+                    )
 
                     navController.previousBackStackEntry?.savedStateHandle?.set(
-                            Util.SAVE_STATE_MERCHANT_ADD_EDIT_ID, merchantId
-                        )
+                        Util.SAVE_STATE_MERCHANT_ADD_EDIT_ID, merchantId
+                    )
                     navController.previousBackStackEntry?.savedStateHandle?.set(
-                            Util.SAVE_STATE_MERCHANT_DATA_ADD_SUCCESS, true
-                        )
+                        Util.SAVE_STATE_MERCHANT_DATA_ADD_SUCCESS, true
+                    )
 
 
                     navController.popBackStack()
@@ -175,9 +179,9 @@ fun NavGraphBuilder.overViewRoute(
                 onCurrencyChangeClick = {
                     navController.navigate(DialogNav.COUNTRY_PICKER.route)
                     navController.currentBackStackEntry?.savedStateHandle?.set(
-                            Util.SAVE_STATE_SHOW_CURRENCY,
-                            true
-                        )
+                        Util.SAVE_STATE_SHOW_CURRENCY,
+                        true
+                    )
                 })
         }
         composable(route = ScreenNav.SEE_ALL_DATA.route) { backStackEntry ->
@@ -214,8 +218,8 @@ fun NavGraphBuilder.overViewRoute(
                 editAddId = merchantDataId ?: 0,
                 isEditSuccess = isEditMerchantDataSuccess ?: false,
                 isAddSuccess = isAddMerchantDataSuccess ?: false,
-                bottomPadding = innerPadding
-,            )
+                bottomPadding = innerPadding,
+            )
         }
         composable(route = ScreenNav.OVERVIEW_ANALYSIS.route) {
             bottomBarState.value = false
@@ -227,7 +231,30 @@ fun NavGraphBuilder.overViewRoute(
         composable(route = ScreenNav.BUDGET.route) {
             bottomBarState.value = false
             BudgetScreen(
-                onNavigationUp = { navController.navigateUp() }
+                onNavigationUp = { navController.navigateUp() },
+                onAddClick = {
+                    navController.navigate(ScreenNav.ADD_BUDGET.route)
+                }
+            )
+        }
+
+        composable(route = ScreenNav.ADD_BUDGET.route) { backStackEntry ->
+
+            val gsonStringCategoryIds =
+                backStackEntry.savedStateHandle.get<String>(Util.SAVE_STATE_SELECT_CATEGORY_ID_LIST)
+
+            val categoryIds: List<Long> = gsonStringCategoryIds?.let {
+                Gson().fromJson(it, object : TypeToken<List<Long>>() {}.type)
+            } ?: emptyList()
+
+            bottomBarState.value = false
+            AddBudgetScreen(
+                onNavigationUp = { navController.navigateUp() },
+                onSave = {},
+                onSelectCategory = {
+                    navController.navigate(DialogNav.MULTI_SELECT_CATEGORY.route)
+                },
+                selectedCategoryIds = categoryIds
             )
         }
     }

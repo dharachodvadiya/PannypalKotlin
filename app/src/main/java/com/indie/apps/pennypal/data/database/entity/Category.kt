@@ -3,6 +3,7 @@ package com.indie.apps.pennypal.data.database.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.indie.apps.pennypal.data.module.category.CategoryAmount
 
 @Entity(
     tableName = "category"
@@ -22,3 +23,5 @@ data class Category(
 
     val type: Int = 0 //-1 = expense, 1 = income , 0 = both
 )
+
+fun Category.toCategoryAmount() = CategoryAmount(id, name, 0.0, type)

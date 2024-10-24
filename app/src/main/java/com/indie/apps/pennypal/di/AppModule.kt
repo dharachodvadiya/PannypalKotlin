@@ -8,10 +8,14 @@ import com.indie.apps.contacts.data.repo.impl.ContactsRepositoryImpl
 import com.indie.apps.cpp.data.CountryDb
 import com.indie.apps.cpp.data.repository.CountryRepository
 import com.indie.apps.cpp.data.repository.CountryRepositoryImpl
+import com.indie.apps.pennypal.data.database.dao.BudgetCategoryDao
+import com.indie.apps.pennypal.data.database.dao.BudgetDao
 import com.indie.apps.pennypal.data.database.db.AppDatabase
 import com.indie.apps.pennypal.data.preference.PreferenceManager
 import com.indie.apps.pennypal.repository.BillingRepository
 import com.indie.apps.pennypal.repository.BillingRepositoryImpl
+import com.indie.apps.pennypal.repository.BudgetRepository
+import com.indie.apps.pennypal.repository.BudgetRepositoryImpl
 import com.indie.apps.pennypal.repository.CategoryRepository
 import com.indie.apps.pennypal.repository.CategoryRepositoryImpl
 import com.indie.apps.pennypal.repository.MerchantDataRepository
@@ -40,19 +44,24 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideAppDatabase(@ApplicationContext context : Context, countryRepository: CountryRepository) : AppDatabase = AppDatabase.getInstance(context, countryRepository)
+    fun provideAppDatabase(
+        @ApplicationContext context: Context,
+        countryRepository: CountryRepository
+    ): AppDatabase = AppDatabase.getInstance(context, countryRepository)
 
     @Singleton
     @Provides
-    fun provideCountryDatabase(@ApplicationContext context : Context) : CountryDb = CountryDb.getInstance(context)
+    fun provideCountryDatabase(@ApplicationContext context: Context): CountryDb =
+        CountryDb.getInstance(context)
 
     @Singleton
     @Provides
-    fun providePreference(@ApplicationContext context : Context) : PreferenceManager = PreferenceManager.getInstance(context)
+    fun providePreference(@ApplicationContext context: Context): PreferenceManager =
+        PreferenceManager.getInstance(context)
 
     @Provides
     fun provideUserRepository(database: AppDatabase): UserRepository {
-         return UserRepositoryImpl(database.userDao())
+        return UserRepositoryImpl(database.userDao())
     }
 
     @Provides
@@ -111,5 +120,13 @@ object AppModule {
     @Provides
     fun provideBillingRepository(): BillingRepository {
         return BillingRepositoryImpl()
+    }
+
+    @Provides
+    fun provideBudgetRepository(
+        budgetDao: BudgetDao,
+        budgetCategoryDao: BudgetCategoryDao
+    ): BudgetRepository {
+        return BudgetRepositoryImpl(budgetDao, budgetCategoryDao)
     }
 }

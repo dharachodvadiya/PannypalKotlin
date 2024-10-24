@@ -60,7 +60,7 @@ fun OverViewAnalysisCategoryChart(
 }
 
 @Composable
-fun CategoryListItem(
+private fun CategoryListItem(
     item: CategoryAmount,
     itemBgColor: Color,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier.fillMaxWidth()

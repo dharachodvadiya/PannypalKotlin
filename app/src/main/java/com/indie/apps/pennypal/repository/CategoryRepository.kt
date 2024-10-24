@@ -9,4 +9,5 @@ interface CategoryRepository : BaseRepository<Category> {
     fun getCategoryFromId(id: Long): Flow<Category>
 
     fun getCategoryFromTypeList(type: Int): Flow<List<Category>>
+    fun searchCategoryFromTypeList(type: Int, searchQuery: String): Flow<List<Category>>
 }

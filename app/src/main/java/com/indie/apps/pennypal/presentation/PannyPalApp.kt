@@ -25,6 +25,7 @@ import com.indie.apps.pennypal.presentation.ui.dialog.add_edit_merchant.DialogAd
 import com.indie.apps.pennypal.presentation.ui.dialog.add_edit_payment.DialogAddPayment
 import com.indie.apps.pennypal.presentation.ui.dialog.contact_picker.DialogContactPicker
 import com.indie.apps.pennypal.presentation.ui.dialog.country_picker.DialogCountryPicker
+import com.indie.apps.pennypal.presentation.ui.dialog.multi_select_Category.DialogMultiSelectCategory
 import com.indie.apps.pennypal.presentation.ui.dialog.search_merchant.DialogSearchMerchant
 import com.indie.apps.pennypal.presentation.ui.dialog.select_balance_view.DialogSelectBalanceView
 import com.indie.apps.pennypal.presentation.ui.dialog.select_category.DialogSelectCategory
@@ -331,6 +332,25 @@ fun PennyPalApp() {
                     DialogSelectBalanceView(
                         onSelect = {navController.popBackStack()},
                         onNavigationUp = {navController.popBackStack()}
+                    )
+                }
+
+                dialog(
+                    route = DialogNav.MULTI_SELECT_CATEGORY.route,
+                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
+                ){
+                    DialogMultiSelectCategory(
+                        onNavigationUp = { navController.navigateUp() },
+                        onSave = { selectedIds ->
+                            // Pass data back to A
+
+                            navController.previousBackStackEntry
+                                ?.savedStateHandle
+                                ?.set(Util.SAVE_STATE_SELECT_CATEGORY_ID_LIST, Gson().toJson(selectedIds))
+
+                            navController.popBackStack()
+                        },
+                        selectedIds = emptyList()
                     )
                 }
             }

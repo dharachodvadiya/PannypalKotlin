@@ -13,6 +13,9 @@ class CategoryRepositoryImpl @Inject constructor(private val categoryDao: Catego
 
     override fun getCategoryFromTypeList(type: Int) = categoryDao.getCategoryFromTypeList(type)
 
+    override fun searchCategoryFromTypeList(type: Int, searchQuery: String) =
+        categoryDao.searchCategoryFromTypeList(type, searchQuery)
+
     override suspend fun insert(obj: Category) = categoryDao.insert(obj)
 
     override suspend fun update(obj: Category) = categoryDao.update(obj)

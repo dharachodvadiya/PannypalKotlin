@@ -49,16 +49,15 @@ fun MyAppTextField(
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
     textModifier: Modifier = Modifier,
     bgColor: Color = MyAppTheme.colors.transparent,
-    placeHolderColor: Color = MyAppTheme.colors.gray1,
+    placeHolderColor: Color = MyAppTheme.colors.gray2.copy(alpha = 0.7f),
     onDoneAction: (() -> Unit)? = {},
     onNextAction: (() -> Unit)? = null,
+    maxLines: Int = Int.MAX_VALUE,
     paddingValues: PaddingValues = PaddingValues(0.dp)
 ) {
     Row(
         modifier = modifier
             .roundedCornerBackground(bgColor)
-            /*.clip(RoundedCornerShape(dimensionResource(R.dimen.round_corner)))
-            .background(bgColor)*/
             .padding(vertical = 5.dp),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
@@ -79,6 +78,7 @@ fun MyAppTextField(
         BasicTextField(
             readOnly = readOnly,
             value = value,
+            maxLines = maxLines,
             modifier = textModifier
                 .fillMaxWidth(),
             onValueChange = onValueChange,
@@ -109,7 +109,8 @@ fun MyAppTextField(
                         CustomText(
                             text = placeHolder,
                             style = placeHolderTextStyle,
-                            color = placeHolderColor
+                            color = placeHolderColor,
+                            modifier = Modifier.fillMaxWidth()
                         )
                     },
                     trailingIcon = trailingIcon,

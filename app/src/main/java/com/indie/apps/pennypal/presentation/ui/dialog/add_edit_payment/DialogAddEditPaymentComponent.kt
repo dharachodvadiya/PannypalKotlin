@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
@@ -32,24 +33,31 @@ fun AddPaymentDialogField(
     onModeChange: (Long) -> Unit,
     currentModId: Long,
     paymentModeList: List<PaymentMode>,
-    textPaymentState: TextFieldState
+    textPaymentState: TextFieldState,
+    modifier: Modifier = Modifier
 ) {
-    DialogTextFieldItem(
-        textState = textPaymentState,
-        imageVector = Icons.Default.Payment,
-        placeholder = R.string.add_payment_type_placeholder
-    )
+    Column(
+        modifier = modifier.padding(
+            horizontal = dimensionResource(id = R.dimen.padding)
+        )
+    ) {
+        DialogTextFieldItem(
+            textState = textPaymentState,
+            imageVector = Icons.Default.Payment,
+            placeholder = R.string.add_payment_type_placeholder
+        )
 
-    FlowRow {
+        FlowRow {
 
-        paymentModeList.forEach { item ->
-            PaymentModeItem(
-                isSelected = currentModId == item.id,
-                text = item.name,
-                onClick = { onModeChange(item.id) })
+            paymentModeList.forEach { item ->
+                PaymentModeItem(
+                    isSelected = currentModId == item.id,
+                    text = item.name,
+                    onClick = { onModeChange(item.id) })
+            }
         }
+        Spacer(modifier = Modifier.fillMaxHeight(0.1f))
     }
-    Spacer(modifier = Modifier.fillMaxHeight(0.1f))
 }
 
 @Composable

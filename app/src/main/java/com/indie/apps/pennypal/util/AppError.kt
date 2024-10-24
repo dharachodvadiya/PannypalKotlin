@@ -29,4 +29,10 @@ object ErrorMessage {
     const val SELECT_MERCHANT = "Select Merchant"
     const val SELECT_PAYMENT = "Select Payment"
     const val SELECT_CATEGORY = "Select Category"
+
+    const val SELECT_MONTH = "Select Month"
+    const val SELECT_YEAR = "Select Year"
+    const val SELECT_DATE = "Select Date"
+    const val INCORRECT = "From Date must be grater than To Date"
+
 }

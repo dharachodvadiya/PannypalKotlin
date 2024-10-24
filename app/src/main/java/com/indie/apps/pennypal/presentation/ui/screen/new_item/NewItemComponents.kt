@@ -2,7 +2,6 @@ package com.indie.apps.pennypal.presentation.ui.screen.new_item
 
 import android.annotation.SuppressLint
 import androidx.annotation.StringRes
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -18,7 +17,6 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.NorthEast
-import androidx.compose.material.icons.filled.PersonAddAlt1
 import androidx.compose.material.icons.filled.SouthWest
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -26,7 +24,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -34,10 +31,12 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
+import com.indie.apps.pennypal.data.module.TabItemInfo
+import com.indie.apps.pennypal.presentation.ui.component.DialogSelectableItem
 import com.indie.apps.pennypal.presentation.ui.component.TextFieldError
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomTab
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.MyAppTextField
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
@@ -52,11 +51,36 @@ fun NewEntryTopSelectionButton(
     onReceivedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val list = listOf(
+        TabItemInfo(
+            title = R.string.received,
+            icon = Icons.Default.SouthWest,
+            selectBgColor = MyAppTheme.colors.greenBg,
+            unSelectBgColor = MyAppTheme.colors.itemBg,
+            selectContentColor = MyAppTheme.colors.black,
+            unSelectContentColor = MyAppTheme.colors.gray1
+        ),
+        TabItemInfo(
+            title = R.string.spent,
+            icon = Icons.Default.NorthEast,
+            selectBgColor = MyAppTheme.colors.redBg,
+            unSelectBgColor = MyAppTheme.colors.itemBg,
+            selectContentColor = MyAppTheme.colors.black,
+            unSelectContentColor = MyAppTheme.colors.gray1
+        )
+    )
+
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.Absolute.SpaceEvenly
     ) {
-        NewEntryButtonItem(
+        CustomTab(
+            tabList = list,
+            selectedIndex = if (received) 0 else 1,
+            onTabSelected = {
+                onReceivedChange(it == 0)
+            })
+        /*NewEntryButtonItem(
             text = R.string.received,
             onClick = {
                 onReceivedChange(true)
@@ -76,10 +100,10 @@ fun NewEntryTopSelectionButton(
             imageVector = Icons.Default.NorthEast,
             modifier = Modifier.weight(0.47f),
             selected = !received
-        )
+        )*/
     }
 }
-
+/*
 @Composable
 private fun NewEntryButtonItem(
     @StringRes text: Int,
@@ -112,7 +136,7 @@ private fun NewEntryButtonItem(
             )
         }
     }
-}
+}*/
 
 @Composable
 fun NewEntryFieldItemSection(
@@ -156,81 +180,54 @@ fun NewEntryFieldItemSection(
 
         Spacer(modifier = Modifier.height(30.dp))
 
-        NewEntrySelectableItem(
+        DialogSelectableItem(
             text = merchantName,
             label = R.string.merchant,
             onClick = onMerchantSelect,
             placeholder = R.string.add_merchant_placeholder,
             isSelectable = !isMerchantLock,
+            errorText = merchantError,
             trailingContent = {
                 if (!isMerchantLock) {
-                    PrimaryButton(
-                        bgColor = MyAppTheme.colors.white,
-                        borderStroke = BorderStroke(
-                            width = 1.dp,
-                            color = MyAppTheme.colors.gray1
-                        ),
-                        onClick = onMerchantSelect,
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.PersonAddAlt1,
-                            contentDescription = "Add",
-                            tint = MyAppTheme.colors.gray1
-                        )
-                    }
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                        contentDescription = "Add",
+                        tint = MyAppTheme.colors.gray1,
+                    )
                 }
             }
         )
-        TextFieldError(
-            textError = merchantError
-        )
 
-        NewEntrySelectableItem(
+        DialogSelectableItem(
             text = paymentName ?: "",
             label = R.string.payment_type,
             onClick = onPaymentSelect,
             placeholder = R.string.add_payment_type_placeholder,
             isSelectable = true,
+            errorText = paymentError,
             trailingContent = {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                     contentDescription = "Add",
-                    tint = MyAppTheme.colors.gray1,
-                    modifier = Modifier
-                        .padding(horizontal = dimensionResource(id = R.dimen.item_inner_padding))
-                        .roundedCornerBackground(MyAppTheme.colors.transparent)
-                        .clickable {
-                            onPaymentSelect()
-                        }
+                    tint = MyAppTheme.colors.gray1
                 )
             }
         )
-        TextFieldError(
-            textError = paymentError
-        )
 
-        NewEntrySelectableItem(
+        DialogSelectableItem(
             text = categoryName ?: "",
             label = R.string.category,
             onClick = onCategorySelect,
             placeholder = R.string.add_category_placeholder,
             isSelectable = true,
+            errorText = categoryError,
             trailingContent = {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                     contentDescription = "Add",
-                    tint = MyAppTheme.colors.gray1,
-                    modifier = Modifier
-                        .padding(horizontal = dimensionResource(id = R.dimen.item_inner_padding))
-                        .roundedCornerBackground(MyAppTheme.colors.transparent)
-                        .clickable {
-                            onCategorySelect()
-                        }
+                    tint = MyAppTheme.colors.gray1
                 )
             }
-        )
-        TextFieldError(
-            textError = categoryError
         )
 
         //Spacer(modifier = Modifier.height(20.dp))
@@ -320,7 +317,7 @@ fun DateTimeSelectableItem(
     }
 }
 
-@Composable
+/*@Composable
 fun NewEntrySelectableItem(
     text: String? = null,
     @StringRes label: Int,
@@ -345,10 +342,10 @@ fun NewEntrySelectableItem(
                 .roundedCornerBackground(MyAppTheme.colors.itemBg)
                 .clickable(enabled = isSelectable) { onClick() }
                 .height(dimensionResource(id = R.dimen.new_entry_field_height))
-                /*.background(
+                *//*.background(
                     shape = RoundedCornerShape(dimensionResource(id = R.dimen.round_corner)),
                     color = MyAppTheme.colors.itemBg
-                )*/
+                )*//*
                 .padding(
                     top = 0.dp,
                     bottom = 0.dp,
@@ -384,7 +381,7 @@ fun NewEntrySelectableItem(
         }
     }
 
-}
+}*/
 
 @Composable
 private fun NewEntryTextFieldItem(
@@ -424,7 +421,6 @@ private fun NewEntryTextFieldItem(
             textStyle = MyAppTheme.typography.Medium46,
             keyboardType = keyboardType,
             placeHolderTextStyle = MyAppTheme.typography.Regular46,
-            placeHolderColor = MyAppTheme.colors.gray2,
             modifier = Modifier.height(dimensionResource(id = R.dimen.new_entry_field_height)),
         )
     }

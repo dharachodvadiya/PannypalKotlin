@@ -7,12 +7,16 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.indie.apps.cpp.data.repository.CountryRepository
+import com.indie.apps.pennypal.data.database.dao.BudgetCategoryDao
+import com.indie.apps.pennypal.data.database.dao.BudgetDao
 import com.indie.apps.pennypal.data.database.dao.CategoryDao
 import com.indie.apps.pennypal.data.database.dao.MerchantDao
 import com.indie.apps.pennypal.data.database.dao.MerchantDataDao
 import com.indie.apps.pennypal.data.database.dao.PaymentDao
 import com.indie.apps.pennypal.data.database.dao.PaymentModeDao
 import com.indie.apps.pennypal.data.database.dao.UserDao
+import com.indie.apps.pennypal.data.database.entity.Budget
+import com.indie.apps.pennypal.data.database.entity.BudgetCategory
 import com.indie.apps.pennypal.data.database.entity.Category
 import com.indie.apps.pennypal.data.database.entity.Merchant
 import com.indie.apps.pennypal.data.database.entity.MerchantData
@@ -34,7 +38,9 @@ import kotlinx.coroutines.launch
         Merchant::class,
         MerchantData::class,
         PaymentMode::class,
-        Category::class
+        Category::class,
+        Budget::class,
+        BudgetCategory::class
     ],
     version = 3,
     exportSchema = false
@@ -47,6 +53,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun merchantDao(): MerchantDao
     abstract fun merchantDataDao(): MerchantDataDao
     abstract fun categoryDao(): CategoryDao
+    abstract fun budgetDao(): BudgetDao
+    abstract fun budgetCategoryDao(): BudgetCategoryDao
 
     companion object {
         @Volatile

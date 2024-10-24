@@ -79,7 +79,8 @@ fun SearchView(
                 .fillMaxWidth(),
             bgColor = MyAppTheme.colors.transparent,
             textStyle = MyAppTheme.typography.Medium46,
-            paddingValues = paddingValues
+            paddingValues = paddingValues,
+            placeHolderColor = MyAppTheme.colors.gray1
         )
 
 

@@ -13,6 +13,7 @@ enum class DialogNav(val route: String) {
     CONTACT_PICKER("Dialog/ContactPicker"),
     SELECT_PAYMENT("Dialog/SelectPayment"),
     SELECT_CATEGORY("Dialog/SelectCategory"),
+    MULTI_SELECT_CATEGORY("Dialog/MultiSelectCategory"),
     SELECT_BALANCE_VIEW("Dialog/SelectBalanceView"),
 }
 
@@ -28,7 +29,8 @@ enum class ScreenNav(val route: String) {
     PAYMENT_START("accounts/start"),
     SETTING_START("setting/start"),
     OVERVIEW_ANALYSIS("overview/analysis"),
-    BUDGET("budget")
+    BUDGET("budget"),
+    ADD_BUDGET("add_budget")
 }
 
 enum class BottomNavItem(
