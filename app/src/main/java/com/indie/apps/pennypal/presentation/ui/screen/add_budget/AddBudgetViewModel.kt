@@ -3,24 +3,26 @@ package com.indie.apps.pennypal.presentation.ui.screen.add_budget
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.indie.apps.pennypal.data.database.entity.Category
+import com.indie.apps.pennypal.data.database.entity.MerchantData
 import com.indie.apps.pennypal.data.database.entity.toCategoryAmount
 import com.indie.apps.pennypal.data.database.enum.BudgetPeriodType
+import com.indie.apps.pennypal.data.module.BudgetWithCategory
 import com.indie.apps.pennypal.data.module.category.CategoryAmount
+import com.indie.apps.pennypal.domain.usecase.AddBudgetUseCase
 import com.indie.apps.pennypal.domain.usecase.GetCategoryListUseCase
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.util.ErrorMessage
+import com.indie.apps.pennypal.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
 class AddBudgetViewModel @Inject constructor(
-    getCategoryListUseCase: GetCategoryListUseCase
+    getCategoryListUseCase: GetCategoryListUseCase,
+    private val addBudgetUseCase: AddBudgetUseCase,
 ) : ViewModel() {
 
     val currentPeriod = MutableStateFlow(BudgetPeriodType.MONTH.id)
@@ -36,20 +38,20 @@ class AddBudgetViewModel @Inject constructor(
     val currentToTimeInMilli = MutableStateFlow(0L)
 
     val amount = MutableStateFlow(TextFieldState())
-    // val remainingAmount = MutableStateFlow(0.0)
+    val remainingAmount = MutableStateFlow(0.0)
 
 
     private var categoryList = emptyList<Category>()
 
     val selectedCategoryList = MutableStateFlow<List<CategoryAmount>>(emptyList())
 
-    val remainingAmount = combine(
+   /* val remainingAmount = combine(
         amount,
         selectedCategoryList
     ) { total, categories ->
         ((total.text.toDoubleOrNull() ?: 0.0) - categories.sumOf { it.amount })
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), 0.0)
-
+*/
     init {
         val calendar = Calendar.getInstance()
 
@@ -137,7 +139,7 @@ class AddBudgetViewModel @Inject constructor(
     }
 
     fun setCategoryAmount(id: Long, amount: String) {
-        val newAmount = amount.toDoubleOrNull() ?: return
+        val newAmount = amount.toDoubleOrNull() ?: 0.0
 
         val updatedList = selectedCategoryList.value.map { category ->
             if (category.id == id) {
@@ -147,18 +149,24 @@ class AddBudgetViewModel @Inject constructor(
             }
         }
         selectedCategoryList.value = updatedList
+        updateRemainingAmount()
     }
 
-    /* private fun updateRemainingAmount(newTotal: Double? = null) {
+     private fun updateRemainingAmount() {
          // Calculate the sum of amounts in selectedCategoryList
          val selectedSum = selectedCategoryList.value.sumOf { it.amount }
 
          // If newTotal is not null, use it; otherwise, get the current total
-         val total = newTotal ?: amount.value.text.toDoubleOrNull() ?: 0.0
+         val total = amount.value.text.toDoubleOrNull() ?: 0.0
 
          // Calculate remaining amount
          remainingAmount.value = total - selectedSum
-     }*/
+         if(remainingAmount.value <0) {
+             categoryBudgetErrorText.value = ErrorMessage.CATEGORY_LIMIT
+         }else{
+             categoryBudgetErrorText.value = ""
+         }
+     }
 
     fun saveData(onSuccess: () -> Unit) {
         clearAllError()
@@ -171,7 +179,7 @@ class AddBudgetViewModel @Inject constructor(
             currentFromTimeInMilli.value >= currentToTimeInMilli.value
         ) {
             periodFromErrorText.value = ""
-            periodToErrorText.value = ErrorMessage.INCORRECT
+            periodToErrorText.value = ErrorMessage.INCORRECT_DATE
         } else if (currentPeriod.value == BudgetPeriodType.MONTH.id && currentMonthInMilli.value == 0L) {
             periodErrorText.value = ErrorMessage.SELECT_MONTH
         } else if (currentPeriod.value == BudgetPeriodType.YEAR.id && currentYearInMilli.value == 0L) {
@@ -180,8 +188,28 @@ class AddBudgetViewModel @Inject constructor(
             amount.value.setError(ErrorMessage.AMOUNT_EMPTY)
         } else if (selectedCategoryList.value.isEmpty()) {
             categoryErrorText.value = ErrorMessage.SELECT_CATEGORY
-        } else {
-            //add category amount sum error
+        } else if(remainingAmount.value <0) {
+            categoryBudgetErrorText.value = ErrorMessage.CATEGORY_LIMIT
+        }else{
+            viewModelScope.launch {
+                val budgetWithCategory = BudgetWithCategory(
+                    amount = amount.value.text.toDouble(),
+                    periodType = currentPeriod.value,
+                    category = selectedCategoryList.value,
+                    startDate = currentFromTimeInMilli.value,
+                    endDate = if(currentPeriod.value == BudgetPeriodType.ONE_TIME.id) currentToTimeInMilli.value else null,
+                    createdDate = Calendar.getInstance().timeInMillis
+                )
+                addBudgetUseCase.addData(budgetWithCategory).collect {
+                    when (it) {
+                        is Resource.Loading -> {}
+                        is Resource.Success -> {
+                            onSuccess()
+                        }
+                        is Resource.Error -> {}
+                    }
+                }
+            }
         }
     }
 
@@ -196,7 +224,7 @@ class AddBudgetViewModel @Inject constructor(
 
     fun updateAmountText(text : String) {
         amount.value.updateText(text)
-
+        updateRemainingAmount()
     }
 
 }

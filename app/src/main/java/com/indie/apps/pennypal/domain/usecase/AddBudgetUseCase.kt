@@ -15,7 +15,7 @@ class AddBudgetUseCase @Inject constructor(
     private val budgetRepository: BudgetRepository,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) {
-    suspend fun addBudget(budgetWithCategory: BudgetWithCategory): Flow<Resource<Long>> {
+    suspend fun addData(budgetWithCategory: BudgetWithCategory): Flow<Resource<Long>> {
         return flow {
             try {
                 emit(Resource.Loading())

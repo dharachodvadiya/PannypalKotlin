@@ -250,7 +250,9 @@ fun NavGraphBuilder.overViewRoute(
             bottomBarState.value = false
             AddBudgetScreen(
                 onNavigationUp = { navController.navigateUp() },
-                onSave = {},
+                onSave = {
+                    navController.popBackStack()
+                },
                 onSelectCategory = {
                     navController.navigate(DialogNav.MULTI_SELECT_CATEGORY.route)
                 },

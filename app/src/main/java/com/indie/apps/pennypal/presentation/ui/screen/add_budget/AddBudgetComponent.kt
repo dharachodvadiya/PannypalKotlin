@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,6 +40,7 @@ import com.indie.apps.pennypal.data.module.TabItemInfo
 import com.indie.apps.pennypal.data.module.category.CategoryAmount
 import com.indie.apps.pennypal.presentation.ui.component.DialogSelectableItem
 import com.indie.apps.pennypal.presentation.ui.component.DialogTextFieldItem
+import com.indie.apps.pennypal.presentation.ui.component.TextFieldError
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomTab
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListItem
@@ -147,7 +149,9 @@ fun AddBudgetFieldItem(
             onTextChange = onAmountTextChange
         )
 
-        DialogSelectableItem(label = R.string.select_category,
+        DialogSelectableItem(
+            text = if(categoryList.isNotEmpty()) "${categoryList.size} ${stringResource(id = R.string.category_selected)}" else "",
+            label = R.string.select_category,
             onClick = { onSelectCategory() },
             placeholder = R.string.select_category,
             trailingContent = {
@@ -163,7 +167,9 @@ fun AddBudgetFieldItem(
                     contentDescription = "category",
                     tint = MyAppTheme.colors.gray1
                 )
-            })
+            },
+            errorText = categoryErrorText
+        )
 
         AddBudgetCategoryListItem(
             categoryList = categoryList,
@@ -171,7 +177,11 @@ fun AddBudgetFieldItem(
             remainingAmount = remainingCategoryAmount,
             isExpanded = isExpanded,
             onClick = onCategoryExpandChange,
-            onAmountChange = onCategoryAmountChange
+            onAmountChange = onCategoryAmountChange,
+            errorText = categoryBudgetErrorText
+        )
+        TextFieldError(
+            textError = if (!isExpanded) categoryBudgetErrorText else ""
         )
     }
 }
@@ -267,6 +277,7 @@ fun AddBudgetPeriodFieldItem(
 @Composable
 fun AddBudgetCategoryListItem(
     categoryList: List<CategoryAmount>,
+    errorText: String = "",
     isExpanded: Boolean,
     totalAmount: Double,
     remainingAmount: Double,
@@ -298,7 +309,7 @@ fun AddBudgetCategoryListItem(
                 )
                 Spacer(modifier = Modifier.height(5.dp))
                 CustomText(
-                    text = "${categoryList.size} " + stringResource(id = R.string.category_included),
+                    text = "${categoryList.size} " + stringResource(id = R.string.category_included_in_budget),
                     style = MyAppTheme.typography.Medium46,
                     color = MyAppTheme.colors.gray1
                 )
@@ -350,21 +361,23 @@ fun AddBudgetCategoryListItem(
                     CustomText(
                         text = Util.getFormattedStringWithSymbol(remainingAmount),
                         style = MyAppTheme.typography.Medium54,
-                        color = MyAppTheme.colors.black,
+                        color = if(remainingAmount <0) MyAppTheme.colors.redText else MyAppTheme.colors.black,
                     )
                 }
             }
+            TextFieldError(
+                textError = errorText
+            )
 
             categoryList.forEach { item ->
                 CategoryListItem(
-                    item = item, onTextChange = {
+                    item = item,
+                    onTextChange = {
                         onAmountChange(item.id, it)
                     }, itemBgColor = MyAppTheme.colors.transparent
                 )
             }
         }
-
-
     }
 }
 
@@ -378,7 +391,7 @@ private fun CategoryListItem(
     val imageVector = ImageVector.vectorResource(getCategoryIcon(item.name))
     val tintColor = getCategoryColor(item.name)
     val textState = remember {
-        TextFieldState()
+        mutableStateOf(TextFieldState().apply { if(item.amount != 0.0) updateText(Util.getFormattedString(item.amount)) })
     }
 
     ListItem(isClickable = false, leadingIcon = {
@@ -402,12 +415,11 @@ private fun CategoryListItem(
         )
     }, trailingContent = {
         MyAppTextField(
-            value = textState.text,
-            onValueChange = onTextChange,
-           /* onValueChange = {
-                textState.text = it
+            value = textState.value.text,
+            onValueChange = {
+                textState.value.updateText(it)
                 onTextChange(it)
-            },*/
+            },
             bgColor = MyAppTheme.colors.brand,
             placeHolder = stringResource(id = R.string.no_limit),
             textStyle = MyAppTheme.typography.Regular44.copy(textAlign = TextAlign.Center),

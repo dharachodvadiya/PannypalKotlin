@@ -124,9 +124,8 @@ object AppModule {
 
     @Provides
     fun provideBudgetRepository(
-        budgetDao: BudgetDao,
-        budgetCategoryDao: BudgetCategoryDao
+        database: AppDatabase
     ): BudgetRepository {
-        return BudgetRepositoryImpl(budgetDao, budgetCategoryDao)
+        return BudgetRepositoryImpl(database.budgetDao(), database.budgetCategoryDao())
     }
 }

@@ -120,7 +120,8 @@
     <string name="empty">""</string>
     <string name="no_limit">No Limit</string>
     <string name="category_wise_limit">Set category wise limit (optional)</string>
-    <string name="category_included">categories included in your budget</string>
+    <string name="category_included_in_budget">categories included in your budget</string>
+    <string name="category_selected">category selected</string>
     <string name="total_budget">Total Budget</string>
     <string name="remaining">Remaining</string>
     <string name="select_month">Select Month</string>

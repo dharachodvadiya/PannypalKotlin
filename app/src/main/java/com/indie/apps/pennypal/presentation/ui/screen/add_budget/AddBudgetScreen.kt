@@ -152,7 +152,9 @@ fun AddBudgetScreen(
             Spacer(modifier = Modifier.weight(1f))
             BottomSaveButton(
                 onClick = {
-                    addBudgetViewModel.saveData { }
+                    addBudgetViewModel.saveData {
+                        onSave()
+                    }
                 },
                 modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.padding))
             )
