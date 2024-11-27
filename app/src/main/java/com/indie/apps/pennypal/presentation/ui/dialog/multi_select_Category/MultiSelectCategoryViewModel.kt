@@ -58,6 +58,10 @@ class MultiSelectCategoryViewModel @Inject constructor(
         }
     }
 
+    fun setPreSelectedItem(ids: List<Long>) {
+        selectedList.addAll(ids)
+    }
+
     fun selectItem(id: Long) {
         if (selectedList.contains(id))
             selectedList.remove(id)
@@ -85,6 +89,6 @@ class MultiSelectCategoryViewModel @Inject constructor(
         selectAllState.value = isSelectAll
     }
 
-    fun updateSearchText(text : String) = searchTextState.value.updateText(text)
+    fun updateSearchText(text: String) = searchTextState.value.updateText(text)
 
 }

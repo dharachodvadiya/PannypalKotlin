@@ -27,6 +27,7 @@ fun DialogMultiSelectCategory(
     selectedIds: List<Long>,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
+    multiSelectCategoryViewModel.setPreSelectedItem(selectedIds)
     val categoryList by multiSelectCategoryViewModel.categoryList.collectAsStateWithLifecycle()
     val selectedList = multiSelectCategoryViewModel.selectedList
     val selectAllState by multiSelectCategoryViewModel.selectAllState.collectAsStateWithLifecycle()
@@ -34,55 +35,41 @@ fun DialogMultiSelectCategory(
 
     var job: Job? = null
 
-    MyAppDialog(
-        isBackEnable = true,
-        title = R.string.select_category,
-        onNavigationUp = {
-            onNavigationUp()
-        },
-        content = {
-            MultiSelectCategoryDialogField(
-                categoryList = categoryList,
-                selectedList = selectedList,
-                onSelectCategory = {
-                    multiSelectCategoryViewModel.selectItem(it.id)
-                },
-                searchTextState = searchTextState,
-                onTextChange = {
-                    multiSelectCategoryViewModel.updateSearchText(it)
-                    job?.cancel()
-                    job = MainScope().launch {
-                        delay(Util.SEARCH_NEWS_TIME_DELAY)
-                        multiSelectCategoryViewModel.searchData()
-                    }
-                },
-                isSelectAll = selectAllState,
-                onSelectAllCategory = { isSelectAll ->
-                    multiSelectCategoryViewModel.selectAllClick(isSelectAll)
+    MyAppDialog(isBackEnable = true, title = R.string.select_category, onNavigationUp = {
+        onNavigationUp()
+    }, content = {
+        MultiSelectCategoryDialogField(categoryList = categoryList,
+            selectedList = selectedList,
+            onSelectCategory = {
+                multiSelectCategoryViewModel.selectItem(it.id)
+            },
+            searchTextState = searchTextState,
+            onTextChange = {
+                multiSelectCategoryViewModel.updateSearchText(it)
+                job?.cancel()
+                job = MainScope().launch {
+                    delay(Util.SEARCH_NEWS_TIME_DELAY)
+                    multiSelectCategoryViewModel.searchData()
                 }
-            )
-        },
-        modifier = modifier,
-        isFixHeight = true,
-        bottomContent = {
-            BottomSaveButton(
-                onClick = {
-                    onSave(selectedList)
-                },
-                modifier = Modifier.padding(dimensionResource(id = R.dimen.padding))
-            )
-        }
-    )
+            },
+            isSelectAll = selectAllState,
+            onSelectAllCategory = { isSelectAll ->
+                multiSelectCategoryViewModel.selectAllClick(isSelectAll)
+            })
+    }, modifier = modifier, isFixHeight = true, bottomContent = {
+        BottomSaveButton(
+            onClick = {
+                onSave(selectedList)
+            }, modifier = Modifier.padding(dimensionResource(id = R.dimen.padding))
+        )
+    })
 }
 
 @Preview
 @Composable
 private fun MyAppDialogPreview() {
     PennyPalTheme(darkTheme = true) {
-        DialogMultiSelectCategory(
-            onNavigationUp = {},
-            onSave = { },
-            selectedIds = emptyList()
+        DialogMultiSelectCategory(onNavigationUp = {}, onSave = { }, selectedIds = emptyList()
         )
     }
 }

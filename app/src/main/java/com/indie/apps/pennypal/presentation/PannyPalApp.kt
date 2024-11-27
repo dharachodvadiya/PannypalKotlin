@@ -16,6 +16,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.database.entity.toMerchantNameAndDetails
 import com.indie.apps.pennypal.data.module.ContactNumberAndCode
@@ -290,7 +291,7 @@ fun PennyPalApp() {
 
                             navController.popBackStack()
                         },
-                        isSavable = isSavable?: false,
+                        isSavable = isSavable ?: false,
                         selectedId = currentId ?: 1L,
                         onSaveSuccess = {
                             navController.popBackStack()
@@ -330,15 +331,23 @@ fun PennyPalApp() {
                     dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
                 ) {
                     DialogSelectBalanceView(
-                        onSelect = {navController.popBackStack()},
-                        onNavigationUp = {navController.popBackStack()}
+                        onSelect = { navController.popBackStack() },
+                        onNavigationUp = { navController.popBackStack() }
                     )
                 }
 
                 dialog(
                     route = DialogNav.MULTI_SELECT_CATEGORY.route,
                     dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
-                ){
+                ) {
+
+                    val gsonStringCategoryIds =
+                        navController.previousBackStackEntry?.savedStateHandle?.get<String>(Util.SAVE_STATE_SELECT_CATEGORY_ID_LIST)
+
+                    val categoryIds: List<Long> = gsonStringCategoryIds?.let {
+                        Gson().fromJson(it, object : TypeToken<List<Long>>() {}.type)
+                    } ?: emptyList()
+
                     DialogMultiSelectCategory(
                         onNavigationUp = { navController.navigateUp() },
                         onSave = { selectedIds ->
@@ -346,11 +355,14 @@ fun PennyPalApp() {
 
                             navController.previousBackStackEntry
                                 ?.savedStateHandle
-                                ?.set(Util.SAVE_STATE_SELECT_CATEGORY_ID_LIST, Gson().toJson(selectedIds))
+                                ?.set(
+                                    Util.SAVE_STATE_SELECT_CATEGORY_ID_LIST,
+                                    Gson().toJson(selectedIds)
+                                )
 
                             navController.popBackStack()
                         },
-                        selectedIds = emptyList()
+                        selectedIds = categoryIds
                     )
                 }
             }
