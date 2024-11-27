@@ -7,6 +7,8 @@ import com.indie.apps.pennypal.data.module.category.CategoryAmount
 data class BudgetWithCategory(
     val id: Long = 0,
 
+    val title: String,
+
     val amount: Double,
 
     val periodType: Int, // Enum: MONTH, YEAR, ONE_TIME
@@ -21,7 +23,8 @@ data class BudgetWithCategory(
 
 )
 
-fun BudgetWithCategory.toBudget() = Budget(id, amount, periodType, startDate, endDate, createdDate)
+fun BudgetWithCategory.toBudget() =
+    Budget(id, title, amount, periodType, startDate, endDate, createdDate)
 
 fun BudgetWithCategory.toBudgetCategoryList(): List<BudgetCategory> {
     val list = mutableListOf<BudgetCategory>()

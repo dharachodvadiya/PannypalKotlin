@@ -126,4 +126,6 @@
     <string name="remaining">Remaining</string>
     <string name="select_month">Select Month</string>
     <string name="select_year">Select Year</string>
+    <string name="title">Title</string>
+    <string name="budget_title_placeholder">Enter Budget Title</string>
 </resources>

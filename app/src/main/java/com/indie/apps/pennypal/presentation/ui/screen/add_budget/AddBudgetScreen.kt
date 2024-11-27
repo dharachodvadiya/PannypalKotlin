@@ -63,6 +63,7 @@ fun AddBudgetScreen(
     val currentFromTimeInMilli by addBudgetViewModel.currentFromTimeInMilli.collectAsStateWithLifecycle()
     val currentToTimeInMilli by addBudgetViewModel.currentToTimeInMilli.collectAsStateWithLifecycle()
     val amount by addBudgetViewModel.amount.collectAsStateWithLifecycle()
+    val budgetTitle by addBudgetViewModel.budgetTitle.collectAsStateWithLifecycle()
     val remainingAmount by addBudgetViewModel.remainingAmount.collectAsStateWithLifecycle()
     val periodErrorText by addBudgetViewModel.periodErrorText.collectAsStateWithLifecycle()
     val periodFromErrorText by addBudgetViewModel.periodFromErrorText.collectAsStateWithLifecycle()
@@ -146,7 +147,9 @@ fun AddBudgetScreen(
                 periodToErrorText = periodToErrorText,
                 categoryErrorText = categoryErrorText,
                 categoryBudgetErrorText = categoryBudgetErrorText,
-                onAmountTextChange = addBudgetViewModel::updateAmountText
+                onAmountTextChange = addBudgetViewModel::updateAmountText,
+                budgetTitle = budgetTitle,
+                onBudgetTitleTextChange = addBudgetViewModel::updateBudgetTitleText
             )
 
             Spacer(modifier = Modifier.weight(1f))

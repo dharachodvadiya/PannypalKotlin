@@ -11,6 +11,8 @@ data class Budget(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
 
+    val title: String,
+
     val amount: Double,
 
     @ColumnInfo(name = "period_type")

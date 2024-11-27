@@ -35,5 +35,6 @@ object ErrorMessage {
     const val SELECT_DATE = "Select Date"
     const val INCORRECT_DATE = "From Date must be grater than To Date"
     const val CATEGORY_LIMIT = "Category limit must be within your total budget."
+    const val BUDGET_TITLE_EMPTY = "Enter Your Budget Title"
 
 }

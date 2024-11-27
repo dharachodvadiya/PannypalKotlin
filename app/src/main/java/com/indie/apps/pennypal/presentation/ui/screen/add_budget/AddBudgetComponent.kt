@@ -18,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.MoreHoriz
+import androidx.compose.material.icons.filled.Title
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -115,10 +116,25 @@ fun AddBudgetFieldItem(
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
     amount: TextFieldState,
     onAmountTextChange: (String) -> Unit,
+    budgetTitle: TextFieldState,
+    onBudgetTitleTextChange: (String) -> Unit,
 ) {
     Column(
         modifier = modifier.background(MyAppTheme.colors.transparent),
     ) {
+        DialogTextFieldItem(
+            textState = budgetTitle,
+            label = R.string.title,
+            placeholder = R.string.budget_title_placeholder,
+            textLeadingContent = {
+                Icon(
+                    imageVector = Icons.Filled.Title,
+                    contentDescription = "title",
+                    tint = MyAppTheme.colors.gray1
+                )
+            },
+            onTextChange = onBudgetTitleTextChange
+        )
 
         AddBudgetPeriodFieldItem(
             selectBudgetPeriod = selectBudgetPeriod,
@@ -134,6 +150,7 @@ fun AddBudgetFieldItem(
             periodFromErrorText = periodFromErrorText,
             periodToErrorText = periodToErrorText
         )
+
         DialogTextFieldItem(
             textState = amount,
             label = R.string.amount,
@@ -150,7 +167,7 @@ fun AddBudgetFieldItem(
         )
 
         DialogSelectableItem(
-            text = if(categoryList.isNotEmpty()) "${categoryList.size} ${stringResource(id = R.string.category_selected)}" else "",
+            text = if (categoryList.isNotEmpty()) "${categoryList.size} ${stringResource(id = R.string.category_selected)}" else "",
             label = R.string.select_category,
             onClick = { onSelectCategory() },
             placeholder = R.string.select_category,
@@ -361,7 +378,7 @@ fun AddBudgetCategoryListItem(
                     CustomText(
                         text = Util.getFormattedStringWithSymbol(remainingAmount),
                         style = MyAppTheme.typography.Medium54,
-                        color = if(remainingAmount <0) MyAppTheme.colors.redText else MyAppTheme.colors.black,
+                        color = if (remainingAmount < 0) MyAppTheme.colors.redText else MyAppTheme.colors.black,
                     )
                 }
             }
@@ -391,7 +408,13 @@ private fun CategoryListItem(
     val imageVector = ImageVector.vectorResource(getCategoryIcon(item.name))
     val tintColor = getCategoryColor(item.name)
     val textState = remember {
-        mutableStateOf(TextFieldState().apply { if(item.amount != 0.0) updateText(Util.getFormattedString(item.amount)) })
+        mutableStateOf(TextFieldState().apply {
+            if (item.amount != 0.0) updateText(
+                Util.getFormattedString(
+                    item.amount
+                )
+            )
+        })
     }
 
     ListItem(isClickable = false, leadingIcon = {
