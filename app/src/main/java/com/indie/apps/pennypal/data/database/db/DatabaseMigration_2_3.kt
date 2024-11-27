@@ -11,6 +11,8 @@ class Migration2to3 : Migration(2, 3) {
         updateMerchantDataTable(db)
         updateUserTable(db)
         updateMerchantTable(db)
+        addBudgetTable(db)
+        addBudgetCategoryTable(db)
     }
 
     private fun updateMerchantDataTable(database: SupportSQLiteDatabase) {
@@ -55,14 +57,16 @@ class Migration2to3 : Migration(2, 3) {
     }
 
     private fun updateMerchantTable(database: SupportSQLiteDatabase) {
-        database.execSQL("""
+        database.execSQL(
+            """
             CREATE TABLE IF NOT EXISTS `merchant_new` (
             `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
             `name` TEXT NOT NULL COLLATE NOCASE, 
             `phone_num` TEXT, 
             `country_code` TEXT, 
             `details` TEXT)
-        """)
+        """
+        )
 
         database.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_merchant_name` ON `merchant_new` (`name`)")
 
@@ -82,7 +86,8 @@ class Migration2to3 : Migration(2, 3) {
     }
 
     private fun updateUserTable(database: SupportSQLiteDatabase) {
-        database.execSQL("""
+        database.execSQL(
+            """
             CREATE TABLE IF NOT EXISTS `user_new` (
             `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
             `name` TEXT NOT NULL, 
@@ -92,7 +97,8 @@ class Migration2to3 : Migration(2, 3) {
             `country_code` TEXT NOT NULL DEFAULT 'USD', 
             `payment_id` INTEGER NOT NULL, 
             FOREIGN KEY(`payment_id`) REFERENCES `payment_type`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )
-        """)
+        """
+        )
 
         database.execSQL(
             """
@@ -106,5 +112,15 @@ class Migration2to3 : Migration(2, 3) {
         // Rename the new table to the old table's name
         database.execSQL("ALTER TABLE user_new RENAME TO user")
 
+    }
+
+    private fun addBudgetTable(database: SupportSQLiteDatabase) {
+        database.execSQL("CREATE TABLE IF NOT EXISTS `budget` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `amount` REAL NOT NULL, `period_type` INTEGER NOT NULL, `start_date` INTEGER NOT NULL, `end_date` INTEGER, `created_date` INTEGER NOT NULL)")
+    }
+
+    private fun addBudgetCategoryTable(database: SupportSQLiteDatabase) {
+        database.execSQL("CREATE TABLE IF NOT EXISTS `budget_category` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `budget_id` INTEGER NOT NULL, `category_id` INTEGER NOT NULL, `amount` REAL NOT NULL, FOREIGN KEY(`budget_id`) REFERENCES `budget`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`category_id`) REFERENCES `category`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )")
+        database.execSQL("CREATE INDEX IF NOT EXISTS `index_budget_category_budget_id` ON `budget_category` (`budget_id`)")
+        database.execSQL("CREATE INDEX IF NOT EXISTS `index_budget_category_category_id` ON `budget_category` (`category_id`)")
     }
 }
