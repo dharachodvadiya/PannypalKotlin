@@ -7,6 +7,7 @@ import com.indie.apps.pennypal.domain.usecase.GetBudgetFromPeriodUseCase
 import com.indie.apps.pennypal.domain.usecase.GetSpentAmountForPeriodAndCategoryUseCase
 import com.indie.apps.pennypal.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flatMapConcat
@@ -27,6 +28,7 @@ class BudgetViewModel @Inject constructor(
     val yearlyBudgets = MutableStateFlow<List<BudgetWithSpentAndCategoryIdList>>(emptyList())
     val oneTimeBudgets = MutableStateFlow<List<BudgetWithSpentAndCategoryIdList>>(emptyList())
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     private val budgetState = getBudgetFromPeriodUseCase.loadFromMonth(
         year = calendar.get(Calendar.YEAR),
         month = calendar.get(Calendar.MONTH)

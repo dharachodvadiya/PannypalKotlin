@@ -1,8 +1,5 @@
 package com.indie.apps.pennypal.data.module.budget
 
-import com.indie.apps.pennypal.data.database.entity.Budget
-import com.indie.apps.pennypal.data.module.category.CategoryAmount
-
 data class BudgetWithSpentAndCategoryIds(
     val id: Long = 0,
 

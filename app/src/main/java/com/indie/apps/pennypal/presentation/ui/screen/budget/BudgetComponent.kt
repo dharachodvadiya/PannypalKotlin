@@ -27,7 +27,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.module.budget.BudgetWithSpentAndCategoryIdList
-import com.indie.apps.pennypal.data.module.budget.BudgetWithSpentAndCategoryIds
 import com.indie.apps.pennypal.presentation.ui.component.TopBarWithTitle
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListItem
@@ -141,7 +140,6 @@ private fun BudgetListItem(
 
                 // Progress Bar
                 val totalBudgetAmount = budgetAmount
-                val spentAmount = spentAmount
 
                 // Calculate the percentage of the budget spent
                 val progress = if (totalBudgetAmount > 0) {

@@ -3,7 +3,6 @@ package com.indie.apps.pennypal.data.database.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.indie.apps.pennypal.data.module.budget.BudgetWithSpentAndCategoryIds
 
 @Entity(
     tableName = "budget",

@@ -1,8 +1,6 @@
 package com.indie.apps.pennypal.domain.usecase
 
-import com.indie.apps.pennypal.data.database.entity.Budget
 import com.indie.apps.pennypal.data.module.budget.BudgetWithSpentAndCategoryIdList
-import com.indie.apps.pennypal.data.module.budget.BudgetWithSpentAndCategoryIds
 import com.indie.apps.pennypal.di.IoDispatcher
 import com.indie.apps.pennypal.repository.BudgetRepository
 import com.indie.apps.pennypal.util.Util
