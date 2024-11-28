@@ -1,4 +1,4 @@
-package com.indie.apps.pennypal.data.module
+package com.indie.apps.pennypal.data.module.budget
 
 import com.indie.apps.pennypal.data.database.entity.Budget
 import com.indie.apps.pennypal.data.database.entity.BudgetCategory

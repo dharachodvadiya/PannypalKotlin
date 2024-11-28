@@ -271,25 +271,6 @@ interface MerchantDataDao : BaseDao<MerchantData> {
     )
     fun getTotalFromYear(timeZoneOffsetInMilli: Int, yearOffset: Int): Flow<TotalYearly>
 
-    /*@Query("""
-        SELECT 
-            c.id AS id,
-            strftime('%Y-%m', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') as month,
-            c.name AS name,
-            SUM(CASE WHEN md.type = 1 THEN md.amount ELSE 0 END) AS totalIncome,
-            SUM(CASE WHEN md.type = -1 THEN md.amount ELSE 0 END) AS totalExpense
-        FROM 
-            merchant_data md
-        JOIN 
-            category c ON md.category_id = c.id
-        WHERE 
-            date_milli >= strftime('%s', 'now', '-1 months') * 1000
-        GROUP BY 
-            month, c.name
-        ORDER BY 
-            month DESC, c.name
-    """)*/
-
     @Query(
         """
         SELECT 
@@ -343,4 +324,48 @@ interface MerchantDataDao : BaseDao<MerchantData> {
         timeZoneOffsetInMilli: Int,
         yearOffset: Int
     ): Flow<List<CategoryYearly>>
+
+    @Query("""
+        SELECT IFNULL(SUM(amount), 0.0) 
+        FROM merchant_data
+        WHERE
+            strftime('%Y', ((date_milli + :timeZoneOffsetInMilli) / 1000), 'unixepoch') = :year
+            AND strftime('%m', ((date_milli + :timeZoneOffsetInMilli) / 1000), 'unixepoch') = :monthPlusOne
+            AND category_id IN (:categoryIds)
+            AND type = -1
+    """)
+    suspend fun getTotalAmountForMonthAndCategory(
+        timeZoneOffsetInMilli: Int,
+        year: String,
+        monthPlusOne: String,
+        categoryIds: List<Long>
+    ): Double
+
+    @Query("""
+        SELECT IFNULL(SUM(amount), 0.0) 
+        FROM merchant_data
+        WHERE
+            strftime('%Y', ((date_milli + :timeZoneOffsetInMilli) / 1000), 'unixepoch') = :year
+            AND category_id IN (:categoryIds)
+            AND type = -1
+    """)
+    suspend fun getTotalAmountForYearAndCategory(
+        timeZoneOffsetInMilli: Int,
+        year: String,
+        categoryIds: List<Long>
+    ): Double
+
+    @Query("""
+        SELECT IFNULL(SUM(amount), 0.0) 
+        FROM merchant_data
+        WHERE
+            date_milli BETWEEN :startTime AND :endTime
+            AND category_id IN (:categoryIds)
+            AND type = -1
+    """)
+    suspend fun getTotalAmountForBetweenDatesAndCategory(
+        startTime: Long,
+        endTime: Long,
+        categoryIds: List<Long>
+    ): Double
 }

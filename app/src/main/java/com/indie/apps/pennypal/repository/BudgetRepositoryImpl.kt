@@ -2,9 +2,15 @@ package com.indie.apps.pennypal.repository
 
 import com.indie.apps.pennypal.data.database.dao.BudgetCategoryDao
 import com.indie.apps.pennypal.data.database.dao.BudgetDao
-import com.indie.apps.pennypal.data.module.BudgetWithCategory
-import com.indie.apps.pennypal.data.module.toBudget
-import com.indie.apps.pennypal.data.module.toBudgetCategoryList
+import com.indie.apps.pennypal.data.module.budget.BudgetWithCategory
+import com.indie.apps.pennypal.data.module.budget.BudgetWithSpentAndCategoryIdList
+import com.indie.apps.pennypal.data.module.budget.BudgetWithSpentAndCategoryIds
+import com.indie.apps.pennypal.data.module.budget.toBudget
+import com.indie.apps.pennypal.data.module.budget.toBudgetCategoryList
+import com.indie.apps.pennypal.data.module.budget.toBudgetWithSpentAndCategoryIdList
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 class BudgetRepositoryImpl @Inject constructor(
@@ -15,6 +21,20 @@ class BudgetRepositoryImpl @Inject constructor(
         val count = budgetDao.deleteBudgetFromId(id)
         budgetCategoryDao.deleteBudgetCategoryFromBudgetId(id)
         return count
+    }
+
+    override fun getBudgetsWithCategoryIdListFromMonth(
+        timeZoneOffsetInMilli: Int,
+        year: Int,
+        month: Int
+    ) = budgetDao.getBudgetsWithCategoryIdListFromMonth(
+        timeZoneOffsetInMilli = timeZoneOffsetInMilli,
+        year = year.toString(),
+        monthPlusOne = (month + 1).toString()
+    ).map {
+        it.map { budget ->
+            budget.toBudgetWithSpentAndCategoryIdList()
+        }
     }
 
     override suspend fun insert(obj: BudgetWithCategory): Long {

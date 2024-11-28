@@ -79,4 +79,33 @@ class MerchantDataRepositoryImpl @Inject constructor(private val merchantDataDao
         timeZoneOffsetInMilli: Int,
         yearOffset: Int
     ) = merchantDataDao.getCategoryWiseExpenseFromYear(timeZoneOffsetInMilli, yearOffset)
+
+    override suspend fun getTotalAmountForMonthAndCategory(
+        timeZoneOffsetInMilli: Int,
+        year: Int,
+        monthPlusOne: Int,
+        categoryIds: List<Long>
+    ) = merchantDataDao.getTotalAmountForMonthAndCategory(
+        timeZoneOffsetInMilli = timeZoneOffsetInMilli,
+        year = year.toString(),
+        monthPlusOne = monthPlusOne.toString(),
+        categoryIds = categoryIds
+    )
+
+    override suspend fun getTotalAmountForYearAndCategory(
+        timeZoneOffsetInMilli: Int,
+        year: Int,
+        categoryIds: List<Long>
+    ) = merchantDataDao.getTotalAmountForYearAndCategory(
+        timeZoneOffsetInMilli,
+        year.toString(),
+        categoryIds
+    )
+
+    override suspend fun getTotalAmountForBetweenDatesAndCategory(
+        timeZoneOffsetInMilli: Int,
+        startTime: Long,
+        endTime: Long,
+        categoryIds: List<Long>
+    ) = merchantDataDao.getTotalAmountForBetweenDatesAndCategory(startTime, endTime, categoryIds)
 }

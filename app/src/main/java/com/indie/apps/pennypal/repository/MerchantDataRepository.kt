@@ -60,4 +60,24 @@ interface MerchantDataRepository : BaseRepository<MerchantData> {
         timeZoneOffsetInMilli: Int,
         yearOffset: Int
     ): Flow<List<CategoryYearly>>
+
+    suspend fun getTotalAmountForMonthAndCategory(
+        timeZoneOffsetInMilli: Int,
+        year: Int,
+        monthPlusOne: Int,
+        categoryIds: List<Long>
+    ): Double
+
+    suspend fun getTotalAmountForYearAndCategory(
+        timeZoneOffsetInMilli: Int,
+        year: Int,
+        categoryIds: List<Long>
+    ): Double
+
+    suspend fun getTotalAmountForBetweenDatesAndCategory(
+        timeZoneOffsetInMilli: Int,
+        startTime: Long,
+        endTime: Long,
+        categoryIds: List<Long>
+    ): Double
 }

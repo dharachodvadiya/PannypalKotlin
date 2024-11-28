@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.indie.apps.pennypal.data.database.entity.Category
 import com.indie.apps.pennypal.data.database.entity.toCategoryAmount
 import com.indie.apps.pennypal.data.database.enum.BudgetPeriodType
-import com.indie.apps.pennypal.data.module.BudgetWithCategory
+import com.indie.apps.pennypal.data.module.budget.BudgetWithCategory
 import com.indie.apps.pennypal.data.module.category.CategoryAmount
 import com.indie.apps.pennypal.domain.usecase.AddBudgetUseCase
 import com.indie.apps.pennypal.domain.usecase.GetCategoryListUseCase
@@ -77,7 +77,6 @@ class AddBudgetViewModel @Inject constructor(
 
     fun setCurrentMonth(month: Int, year: Int) {
         currentMonthInMilli.value = Calendar.getInstance().apply {
-            timeInMillis = 0
             set(Calendar.MONTH, month)
             set(Calendar.YEAR, year)
         }.timeInMillis
@@ -85,7 +84,6 @@ class AddBudgetViewModel @Inject constructor(
 
     fun setCurrentYear(year: Int) {
         currentYearInMilli.value = Calendar.getInstance().apply {
-            timeInMillis = 0
             set(Calendar.YEAR, year)
         }.timeInMillis
     }
@@ -99,6 +97,10 @@ class AddBudgetViewModel @Inject constructor(
             set(Calendar.DAY_OF_MONTH, selectedCal.get(Calendar.DAY_OF_MONTH))
             set(Calendar.MONTH, selectedCal.get(Calendar.MONTH))
             set(Calendar.YEAR, selectedCal.get(Calendar.YEAR))
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
         }.timeInMillis
     }
 
@@ -111,6 +113,10 @@ class AddBudgetViewModel @Inject constructor(
             set(Calendar.DAY_OF_MONTH, selectedCal.get(Calendar.DAY_OF_MONTH))
             set(Calendar.MONTH, selectedCal.get(Calendar.MONTH))
             set(Calendar.YEAR, selectedCal.get(Calendar.YEAR))
+            set(Calendar.HOUR_OF_DAY, 23)
+            set(Calendar.MINUTE, 59)
+            set(Calendar.SECOND, 59)
+            set(Calendar.MILLISECOND, 999)
         }.timeInMillis
     }
 
