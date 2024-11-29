@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.screen.add_budget
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.indie.apps.pennypal.data.database.entity.Category
@@ -8,10 +9,13 @@ import com.indie.apps.pennypal.data.database.enum.BudgetPeriodType
 import com.indie.apps.pennypal.data.module.budget.BudgetWithCategory
 import com.indie.apps.pennypal.data.module.category.CategoryAmount
 import com.indie.apps.pennypal.domain.usecase.AddBudgetUseCase
+import com.indie.apps.pennypal.domain.usecase.GetBudgetWithCategoryFromBudgetIdUseCase
 import com.indie.apps.pennypal.domain.usecase.GetCategoryListUseCase
+import com.indie.apps.pennypal.domain.usecase.UpdateBudgetUseCase
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.util.ErrorMessage
 import com.indie.apps.pennypal.util.Resource
+import com.indie.apps.pennypal.util.Util
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -22,7 +26,14 @@ import javax.inject.Inject
 class AddBudgetViewModel @Inject constructor(
     getCategoryListUseCase: GetCategoryListUseCase,
     private val addBudgetUseCase: AddBudgetUseCase,
+    private val updateBudgetUseCase: UpdateBudgetUseCase,
+    private val getBudgetWithCategoryFromBudgetIdUseCase: GetBudgetWithCategoryFromBudgetIdUseCase,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
+    val budgetEditId =
+        savedStateHandle.get<String>(Util.PARAM_EDIT_BUDGET_ID)?.toLong() ?: 0
+    private var editBudgetData: BudgetWithCategory? = null
 
     val currentPeriod = MutableStateFlow(BudgetPeriodType.MONTH.id)
 
@@ -47,26 +58,66 @@ class AddBudgetViewModel @Inject constructor(
 
     val selectedCategoryList = MutableStateFlow<List<CategoryAmount>>(emptyList())
 
-    /* val remainingAmount = combine(
-         amount,
-         selectedCategoryList
-     ) { total, categories ->
-         ((total.text.toDoubleOrNull() ?: 0.0) - categories.sumOf { it.amount })
-     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), 0.0)
- */
+    val uiState = MutableStateFlow<Resource<Unit>>(Resource.Loading())
+
     init {
-        val calendar = Calendar.getInstance()
 
-        setCurrentMonth(calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR))
-        setCurrentYear(calendar.get(Calendar.YEAR))
-
+        uiState.value = Resource.Loading()
         viewModelScope.launch {
             getCategoryListUseCase
                 .loadData(
                     type = -1
                 ).collect { newCategories ->
                     categoryList = newCategories
+
+                    if (budgetEditId == 0L) {
+                        val calendar = Calendar.getInstance()
+
+                        setCurrentMonth(calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR))
+                        setCurrentYear(calendar.get(Calendar.YEAR))
+
+                        uiState.value = Resource.Success(Unit)
+
+                    } else {
+                        setEditData()
+                    }
                 }
+        }
+    }
+
+    fun isEditData() = (budgetEditId != 0L)
+
+    private fun setEditData() {
+        viewModelScope.launch {
+            try {
+                getBudgetWithCategoryFromBudgetIdUseCase.loadData(budgetEditId).collect {
+                    editBudgetData = it
+
+                    currentPeriod.value = editBudgetData!!.periodType
+
+                    if (currentPeriod.value == BudgetPeriodType.MONTH.id) {
+                        currentMonthInMilli.value = editBudgetData!!.startDate
+                    } else if (currentPeriod.value == BudgetPeriodType.YEAR.id) {
+                        currentYearInMilli.value = editBudgetData!!.startDate
+                    } else if (currentPeriod.value == BudgetPeriodType.ONE_TIME.id) {
+                        currentFromTimeInMilli.value = editBudgetData!!.startDate
+                        currentToTimeInMilli.value = editBudgetData!!.endDate!!
+                    }
+
+                    setSelectedCategory(editBudgetData!!.category.map { cat -> cat.id })
+                    editBudgetData!!.category.onEach { cat ->
+                        setCategoryAmount(id = cat.id, amount = cat.amount.toString())
+                    }
+
+                    updateBudgetTitleText(editBudgetData!!.title)
+                    updateAmountText(Util.getFormattedString(editBudgetData!!.amount))
+
+                    uiState.value = Resource.Success(Unit)
+
+                }
+            } catch (e: Exception) {
+                uiState.value = Resource.Error("")
+            }
         }
     }
 
@@ -176,7 +227,7 @@ class AddBudgetViewModel @Inject constructor(
         }
     }
 
-    fun saveData(onSuccess: () -> Unit) {
+    fun saveData(onSuccess: (Boolean, Long) -> Unit) {
         clearAllError()
         if (budgetTitle.value.text.trim().isEmpty()) {
             budgetTitle.value.setError(ErrorMessage.BUDGET_TITLE_EMPTY)
@@ -201,7 +252,7 @@ class AddBudgetViewModel @Inject constructor(
         } else if (remainingAmount.value < 0) {
             categoryBudgetErrorText.value = ErrorMessage.CATEGORY_LIMIT
         } else {
-            viewModelScope.launch {
+            if (budgetEditId == 0L) {
                 val startDate = when (currentPeriod.value) {
                     BudgetPeriodType.ONE_TIME.id -> currentFromTimeInMilli.value
                     BudgetPeriodType.MONTH.id -> currentMonthInMilli.value
@@ -223,14 +274,49 @@ class AddBudgetViewModel @Inject constructor(
                     endDate = endDate,
                     createdDate = Calendar.getInstance().timeInMillis
                 )
-                addBudgetUseCase.addData(budgetWithCategory).collect {
-                    when (it) {
-                        is Resource.Loading -> {}
-                        is Resource.Success -> {
-                            onSuccess()
-                        }
+                viewModelScope.launch {
+                    addBudgetUseCase.addData(budgetWithCategory).collect {
+                        when (it) {
+                            is Resource.Loading -> {}
+                            is Resource.Success -> {
+                                onSuccess(false, it.data ?: -1)
+                            }
 
-                        is Resource.Error -> {}
+                            is Resource.Error -> {}
+                        }
+                    }
+                }
+            }else{
+                val startDate = when (currentPeriod.value) {
+                    BudgetPeriodType.ONE_TIME.id -> currentFromTimeInMilli.value
+                    BudgetPeriodType.MONTH.id -> currentMonthInMilli.value
+                    BudgetPeriodType.YEAR.id -> currentYearInMilli.value
+                    else -> 0L
+                }
+
+                val endDate = when (currentPeriod.value) {
+                    BudgetPeriodType.ONE_TIME.id -> currentToTimeInMilli.value
+                    else -> null
+                }
+
+                val budgetWithCategory = editBudgetData!!.copy(
+                    title = budgetTitle.value.text,
+                    amount = amount.value.text.toDouble(),
+                    periodType = currentPeriod.value,
+                    category = selectedCategoryList.value,
+                    startDate = startDate,
+                    endDate = endDate
+                )
+                viewModelScope.launch {
+                    updateBudgetUseCase.updateData(budgetWithCategory).collect {
+                        when (it) {
+                            is Resource.Loading -> {}
+                            is Resource.Success -> {
+                                onSuccess(true, editBudgetData!!.id)
+                            }
+
+                            is Resource.Error -> {}
+                        }
                     }
                 }
             }

@@ -128,4 +128,5 @@
     <string name="select_year">Select Year</string>
     <string name="title">Title</string>
     <string name="budget_title_placeholder">Enter Budget Title</string>
+    <string name="edit_Budget">Edit Budget</string>
 </resources>

@@ -234,6 +234,13 @@ fun NavGraphBuilder.overViewRoute(
                 onNavigationUp = { navController.navigateUp() },
                 onAddClick = {
                     navController.navigate(ScreenNav.ADD_BUDGET.route)
+                },
+                onBudgetEditClick = {
+                    navController.navigate(
+                        ScreenNav.EDIT_BUDGET.route.replace(
+                            "{${Util.PARAM_EDIT_BUDGET_ID}}", it.toString()
+                        )
+                    )
                 }
             )
         }
@@ -250,7 +257,7 @@ fun NavGraphBuilder.overViewRoute(
             bottomBarState.value = false
             AddBudgetScreen(
                 onNavigationUp = { navController.navigateUp() },
-                onSave = {
+                onSave = {_,_ ->
                     navController.popBackStack()
                 },
                 onSelectCategory = {
@@ -259,5 +266,28 @@ fun NavGraphBuilder.overViewRoute(
                 selectedCategoryIds = categoryIds
             )
         }
+
+        composable(route = ScreenNav.EDIT_BUDGET.route) { backStackEntry ->
+
+            val gsonStringCategoryIds =
+                backStackEntry.savedStateHandle.get<String>(Util.SAVE_STATE_SELECT_CATEGORY_ID_LIST)
+
+            val categoryIds: List<Long> = gsonStringCategoryIds?.let {
+                Gson().fromJson(it, object : TypeToken<List<Long>>() {}.type)
+            } ?: emptyList()
+
+            bottomBarState.value = false
+            AddBudgetScreen(
+                onNavigationUp = { navController.navigateUp() },
+                onSave = {_,_ ->
+                    navController.popBackStack()
+                },
+                onSelectCategory = {
+                    navController.navigate(DialogNav.MULTI_SELECT_CATEGORY.route)
+                },
+                selectedCategoryIds = categoryIds
+            )
+        }
+
     }
 }

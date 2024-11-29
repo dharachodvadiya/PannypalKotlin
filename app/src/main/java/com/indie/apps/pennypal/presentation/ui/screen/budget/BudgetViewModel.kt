@@ -1,11 +1,14 @@
 package com.indie.apps.pennypal.presentation.ui.screen.budget
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.indie.apps.pennypal.data.database.entity.MerchantData
 import com.indie.apps.pennypal.data.module.budget.BudgetWithSpentAndCategoryIdList
 import com.indie.apps.pennypal.domain.usecase.GetBudgetFromPeriodUseCase
 import com.indie.apps.pennypal.domain.usecase.GetSpentAmountForPeriodAndCategoryUseCase
 import com.indie.apps.pennypal.util.Resource
+import com.indie.apps.pennypal.util.Util
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,6 +25,7 @@ class BudgetViewModel @Inject constructor(
     getBudgetFromPeriodUseCase: GetBudgetFromPeriodUseCase,
     private val getSpentAmountForPeriodAndCategoryUseCase: GetSpentAmountForPeriodAndCategoryUseCase
 ) : ViewModel() {
+
     private val calendar: Calendar = Calendar.getInstance()
 
     val monthlyBudgets = MutableStateFlow<List<BudgetWithSpentAndCategoryIdList>>(emptyList())
@@ -47,7 +51,6 @@ class BudgetViewModel @Inject constructor(
                             categoryIds = budget.category
                         ).collect { resource ->
                             when (resource) {
-                                is Resource.Loading -> 0.0
                                 is Resource.Success -> {
                                     budgetWithSpentList.add(
                                         budget.copy(
@@ -56,7 +59,8 @@ class BudgetViewModel @Inject constructor(
                                     )
                                 }
 
-                                is Resource.Error -> 0.0
+                                is Resource.Error -> {}
+                                is Resource.Loading -> {}
                             }
 
                         }
@@ -67,7 +71,6 @@ class BudgetViewModel @Inject constructor(
                             year = calendar.get(Calendar.YEAR), categoryIds = budget.category
                         ).collect { resource ->
                             when (resource) {
-                                is Resource.Loading -> 0.0
                                 is Resource.Success -> {
                                     budgetWithSpentList.add(
                                         budget.copy(
@@ -75,8 +78,8 @@ class BudgetViewModel @Inject constructor(
                                         )
                                     )
                                 }
-
-                                is Resource.Error -> 0.0
+                                is Resource.Error -> {}
+                                is Resource.Loading -> {}
                             }
                         }
                     }
@@ -87,16 +90,14 @@ class BudgetViewModel @Inject constructor(
                         categoryIds = budget.category
                     ).collect { resource ->
                         when (resource) {
-                            is Resource.Loading -> 0.0
                             is Resource.Success -> {
                                 budgetWithSpentList.add(
                                     budget.copy(
                                         spentAmount = resource.data ?: 0.0
                                     )
                                 )
-                            }
-
-                            is Resource.Error -> 0.0
+                            }is Resource.Error -> {}
+                            is Resource.Loading -> {}
                         }
                     }
                 }

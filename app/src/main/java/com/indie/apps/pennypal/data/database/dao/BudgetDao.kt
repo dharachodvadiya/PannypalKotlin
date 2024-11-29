@@ -4,6 +4,9 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import com.indie.apps.pennypal.data.database.entity.Budget
+import com.indie.apps.pennypal.data.database.entity.BudgetCategory
+import com.indie.apps.pennypal.data.module.budget.BudgetWithCategory
+import com.indie.apps.pennypal.data.module.budget.BudgetWithCategoryResult
 import com.indie.apps.pennypal.data.module.budget.BudgetWithSpentAndCategoryIds
 import kotlinx.coroutines.flow.Flow
 
@@ -12,41 +15,6 @@ interface BudgetDao : BaseDao<Budget> {
     @Transaction
     @Query("delete from budget where id = :id")
     suspend fun deleteBudgetFromId(id: Long): Int
-
-    /*@Transaction
-    @Query(
-        """
-    SELECT * FROM budget
-    WHERE 
-        (
-            period_type = 1
-            AND strftime('%Y', (start_date + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = :year
-            AND strftime('%m', (start_date + :timeZoneOffsetInMilli) / 1000, 'unixepoch')  = :monthPlusOne
-        )
-        OR
-        (
-            period_type = 2
-            AND strftime('%Y', (start_date + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = :year
-        )
-        OR
-        (
-            period_type = 3  -- ONE_TIME budget
-            AND strftime('%m', (start_date + :timeZoneOffsetInMilli) / 1000, 'unixepoch') <= :monthPlusOne
-            AND strftime('%Y', (start_date + :timeZoneOffsetInMilli) / 1000, 'unixepoch') <= :year
-            AND (
-                (strftime('%m', (end_date + :timeZoneOffsetInMilli) / 1000, 'unixepoch') >= :monthPlusOne
-                    AND strftime('%Y', (end_date + :timeZoneOffsetInMilli) / 1000, 'unixepoch') >= :year) 
-                OR 
-                (strftime('%Y', (end_date + :timeZoneOffsetInMilli) / 1000, 'unixepoch') > :year))
-        )
-        
-    """
-    )
-    fun getBudgetListFromMonth(
-        timeZoneOffsetInMilli: Int,
-        year: String,
-        monthPlusOne: String
-    ): Flow<List<Budget>>*/
 
     @Transaction
     @Query(
@@ -93,4 +61,22 @@ interface BudgetDao : BaseDao<Budget> {
         monthPlusOne: String,
         timeZoneOffsetInMilli: Int
     ): Flow<List<BudgetWithSpentAndCategoryIds>>
+
+    @Transaction
+    @Query("""
+        SELECT 
+            b.id As budgetId,
+            b.title ,
+            b.amount As budgetAmount,
+            b.period_type As periodType,
+            b.start_date As startDate,
+            b.end_date As endDate,
+            b.created_date As createdDate,
+            bc.category_id As categoryId,
+            bc.amount As categoryAmount
+        FROM budget b
+        LEFT JOIN budget_category bc ON b.id = bc.budget_id
+        WHERE b.id = :budgetId
+    """)
+    fun getBudgetWithCategoryFromId(budgetId: Long): Flow<List<BudgetWithCategoryResult>>
 }

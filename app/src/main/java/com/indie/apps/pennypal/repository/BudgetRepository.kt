@@ -1,6 +1,7 @@
 package com.indie.apps.pennypal.repository
 
 import com.indie.apps.pennypal.data.module.budget.BudgetWithCategory
+import com.indie.apps.pennypal.data.module.budget.BudgetWithCategoryResult
 import com.indie.apps.pennypal.data.module.budget.BudgetWithSpentAndCategoryIdList
 import kotlinx.coroutines.flow.Flow
 
@@ -13,4 +14,8 @@ interface BudgetRepository : BaseRepository<BudgetWithCategory> {
         year: Int,
         month: Int
     ): Flow<List<BudgetWithSpentAndCategoryIdList>>
+
+    fun getBudgetWithCategoryFromId(
+       budgetId : Long
+    ): Flow<BudgetWithCategory>
 }

@@ -3,9 +3,12 @@ package com.indie.apps.pennypal.repository
 import com.indie.apps.pennypal.data.database.dao.BudgetCategoryDao
 import com.indie.apps.pennypal.data.database.dao.BudgetDao
 import com.indie.apps.pennypal.data.module.budget.BudgetWithCategory
+import com.indie.apps.pennypal.data.module.budget.BudgetWithCategoryResult
 import com.indie.apps.pennypal.data.module.budget.toBudget
 import com.indie.apps.pennypal.data.module.budget.toBudgetCategoryList
+import com.indie.apps.pennypal.data.module.budget.toBudgetWithCategories
 import com.indie.apps.pennypal.data.module.budget.toBudgetWithSpentAndCategoryIdList
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -32,6 +35,9 @@ class BudgetRepositoryImpl @Inject constructor(
             budget.toBudgetWithSpentAndCategoryIdList()
         }
     }
+
+    override fun getBudgetWithCategoryFromId(budgetId: Long) =
+        budgetDao.getBudgetWithCategoryFromId(budgetId).map { it.toBudgetWithCategories() }
 
     override suspend fun insert(obj: BudgetWithCategory): Long {
         val id = budgetDao.insert(obj.toBudget())

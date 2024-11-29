@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
@@ -68,6 +69,7 @@ fun BudgetTopBar(
 fun BudgetGroupItem(
     title: Int,
     budgetList: List<BudgetWithSpentAndCategoryIdList>,
+    onBudgetItemClick : (Long) -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
 
@@ -86,7 +88,10 @@ fun BudgetGroupItem(
             BudgetListItem(
                 name = item.title,
                 budgetAmount = item.budgetAmount,
-                spentAmount = item.spentAmount
+                spentAmount = item.spentAmount,
+                onClick = {
+                    onBudgetItemClick(item.id)
+                }
             )
         }
 
@@ -98,10 +103,12 @@ private fun BudgetListItem(
     name: String,
     budgetAmount: Double,
     spentAmount: Double,
+    onClick : () -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
 
     ListItem(
+        onClick = onClick,
         content = {
             Column(
                 verticalArrangement = Arrangement.spacedBy(5.dp)
@@ -121,7 +128,7 @@ private fun BudgetListItem(
                 ) {
                     CustomText(
                         text = "Total : ${Util.getFormattedStringWithSymbol(budgetAmount)}",
-                        style = MyAppTheme.typography.Regular46,
+                        style = MyAppTheme.typography.Regular44,
                         color = MyAppTheme.colors.gray1,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
@@ -130,7 +137,7 @@ private fun BudgetListItem(
 
                     CustomText(
                         text = "Remain : ${Util.getFormattedStringWithSymbol(remainAmount)}",
-                        style = MyAppTheme.typography.Regular46,
+                        style = MyAppTheme.typography.Regular44,
                         color = if(remainAmount <0) MyAppTheme.colors.redText else MyAppTheme.colors.gray1,
                         overflow = TextOverflow.Ellipsis,
                         textAlign = TextAlign.Right,
@@ -164,7 +171,12 @@ private fun BudgetListItem(
 
         },
         trailingContent = {
-
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                contentDescription = "edit",
+                tint = MyAppTheme.colors.black,
+                modifier = Modifier.padding(start = 10.dp)
+            )
 
         },
         modifier = modifier,
@@ -179,7 +191,8 @@ private fun BudgetListItemPreview() {
         BudgetListItem(
             name = "aaa",
             budgetAmount = 100.0,
-            spentAmount = 30.0
+            spentAmount = 30.0,
+            onClick = {}
         )
     }
 }

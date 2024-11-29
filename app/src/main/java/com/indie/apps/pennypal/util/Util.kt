@@ -59,6 +59,7 @@ object Util {
 
     const val PARAM_MERCHANT_ID = "merchant_id"
     const val PARAM_EDIT_MERCHANT_DATA_ID = "edit_merchant_data_id"
+    const val PARAM_EDIT_BUDGET_ID = "edit_budget_id"
 
 
     const val PREF_BALANCE_VIEW = "overview_balance_view"

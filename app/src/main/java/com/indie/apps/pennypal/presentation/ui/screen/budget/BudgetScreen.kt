@@ -30,6 +30,7 @@ fun BudgetScreen(
     budgetViewModel: BudgetViewModel = hiltViewModel(),
     onNavigationUp: () -> Unit,
     onAddClick: () -> Unit,
+    onBudgetEditClick : (Long) -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     val title = stringResource(id = R.string.budget)
@@ -64,17 +65,20 @@ fun BudgetScreen(
 
             BudgetGroupItem(
                 title = R.string.month,
-                budgetList = monthBudgetState
+                budgetList = monthBudgetState,
+                onBudgetItemClick = onBudgetEditClick
             )
 
             BudgetGroupItem(
                 title = R.string.year,
-                budgetList = yearBudgetState
+                budgetList = yearBudgetState,
+                onBudgetItemClick = onBudgetEditClick
             )
 
             BudgetGroupItem(
                 title = R.string.one_time,
-                budgetList = oneTimeBudgetState
+                budgetList = oneTimeBudgetState,
+                onBudgetItemClick = onBudgetEditClick
             )
         }
     }
@@ -87,7 +91,9 @@ private fun OverViewScreenPreview() {
     PennyPalTheme(darkTheme = true) {
         BudgetScreen(
             onNavigationUp = {},
-            onAddClick = {}
+            onAddClick = {},
+            onBudgetEditClick = {
+            }
         )
     }
 }
