@@ -16,9 +16,6 @@ class SettingViewModel @Inject constructor(
     getGeneralSettingUseCase: GetGeneralSettingUseCase,
 ) : ViewModel() {
 
-    private var currPaymentId = 0L
-    private var currCountryCode = "US"
-
     val generalList = getGeneralSettingUseCase
         .loadData()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
@@ -43,8 +40,8 @@ class SettingViewModel @Inject constructor(
     ) {
 
         when (item.title) {
-            R.string.currency_and_format -> onCurrencyChange(currCountryCode)
-            R.string.default_payment_mode -> onDefaultPaymentChange(currPaymentId)
+            R.string.currency_and_format -> onCurrencyChange(item.id)
+            R.string.default_payment_mode -> onDefaultPaymentChange(item.id.toLong())
             R.string.home_page_balance_view -> onBalanceViewChange()
             R.string.share -> onShare()
             R.string.rate -> onRate()

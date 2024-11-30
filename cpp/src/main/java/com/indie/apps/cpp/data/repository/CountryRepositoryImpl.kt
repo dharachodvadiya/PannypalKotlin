@@ -51,7 +51,7 @@ class CountryRepositoryImpl(private val countryDb: CountryDb) : CountryRepositor
     override fun getCountryCodeFromCurrencyCode(currencyCode: String): String {
         try {
             val defaultCode: String =
-                countryDb.countryData.first { it.currencyCode.lowercase() == currencyCode.lowercase() }.currencyCode
+                countryDb.countryData.first { it.currencyCode.lowercase() == currencyCode.lowercase() }.countryCode
             return defaultCode.ifBlank { "US" }
         } catch (e: Exception) {
             return "US"

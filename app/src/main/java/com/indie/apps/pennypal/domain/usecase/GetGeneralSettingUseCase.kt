@@ -46,11 +46,13 @@ class GetGeneralSettingUseCase @Inject constructor(
                             countryRepository.getSymbolFromCurrencyCode(
                                 userWithPaymentName.currency
                             )
-                        })"
+                        })",
+                        id = countryRepository.getCountryCodeFromCurrencyCode(userWithPaymentName.currency)
                     ),
                     MoreItem(
                         title = R.string.default_payment_mode,
-                        subTitle = userWithPaymentName.paymentName
+                        subTitle = userWithPaymentName.paymentName,
+                        id = userWithPaymentName.paymentId.toString()
                     ),
                     MoreItem(
                         title = R.string.home_page_balance_view,
