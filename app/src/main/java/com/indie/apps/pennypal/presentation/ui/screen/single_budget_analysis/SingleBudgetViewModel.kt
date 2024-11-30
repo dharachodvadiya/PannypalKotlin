@@ -9,11 +9,9 @@ import com.indie.apps.pennypal.data.module.category.CategoryAmount
 import com.indie.apps.pennypal.domain.usecase.DeleteSingleBudgetDataUseCase
 import com.indie.apps.pennypal.domain.usecase.GetBudgetWithCategoryFromBudgetIdUseCase
 import com.indie.apps.pennypal.domain.usecase.GetCategoryWiseSpentAmountForPeriodUseCase
-import com.indie.apps.pennypal.domain.usecase.GetSpentAmountForPeriodAndCategoryUseCase
 import com.indie.apps.pennypal.util.Resource
 import com.indie.apps.pennypal.util.Util
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import java.util.Calendar
@@ -49,11 +47,11 @@ class SingleBudgetViewModel @Inject constructor(
         }
     }
 
-    private suspend fun  loadCategoryWiseSpentData(budget: BudgetWithCategory)
-    {
+    private suspend fun loadCategoryWiseSpentData(budget: BudgetWithCategory) {
         when (budget.periodType) {
             BudgetPeriodType.MONTH.id -> {
-                val startCal : Calendar = Calendar.getInstance().apply { timeInMillis = budget.startDate }
+                val startCal: Calendar =
+                    Calendar.getInstance().apply { timeInMillis = budget.startDate }
                 getCategoryWiseSpentAmountForPeriodUseCase.loadCategoryWiseTotalAmountForMonth(
                     year = startCal.get(Calendar.YEAR),
                     month = startCal.get(Calendar.MONTH),
@@ -65,7 +63,8 @@ class SingleBudgetViewModel @Inject constructor(
             }
 
             BudgetPeriodType.YEAR.id -> {
-                val startCal : Calendar = Calendar.getInstance().apply { timeInMillis = budget.startDate }
+                val startCal: Calendar =
+                    Calendar.getInstance().apply { timeInMillis = budget.startDate }
                 getCategoryWiseSpentAmountForPeriodUseCase.loadCategoryWiseTotalAmountForYear(
                     year = startCal.get(Calendar.YEAR), categoryIds = budget.category.map { it.id }
                 ).collect {
