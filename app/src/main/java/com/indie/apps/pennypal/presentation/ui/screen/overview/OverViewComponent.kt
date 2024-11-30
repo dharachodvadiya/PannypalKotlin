@@ -63,7 +63,6 @@ import com.indie.apps.pennypal.presentation.ui.component.custom.composable.Round
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImageWithText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.TopBar
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
-import com.indie.apps.pennypal.presentation.ui.screen.add_budget.AddBudgetTopSelectionButton
 import com.indie.apps.pennypal.presentation.ui.screen.all_data.TransactionItem
 import com.indie.apps.pennypal.presentation.ui.screen.single_budget_analysis.SingleBudgetOverAllAnalysis
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
@@ -718,6 +717,7 @@ fun OverviewAnalysisData(
     )
 }
 
+@SuppressLint("SimpleDateFormat")
 @Composable
 fun OverviewBudgetData(
     budgetWithSpentAndCategoryIdList: BudgetWithSpentAndCategoryIdList?,
@@ -735,8 +735,8 @@ fun OverviewBudgetData(
                 val yearFormat = SimpleDateFormat("yyyy")
                 val monthFormat = SimpleDateFormat("MMMM yyyy")
 
-                val timeString = budgetWithSpentAndCategoryIdList?.let { tmpBudgetData ->
-                    when (budgetWithSpentAndCategoryIdList!!.periodType) {
+                val timeString = budgetWithSpentAndCategoryIdList.let { tmpBudgetData ->
+                    when (budgetWithSpentAndCategoryIdList.periodType) {
                         PeriodType.MONTH.id -> getDateFromMillis(
                             tmpBudgetData.startDate,
                             monthFormat
@@ -1040,10 +1040,12 @@ fun OverviewBudgetSelectionButton(
     }
 
     Row(
-        modifier = modifier.padding(
-            top = dimensionResource(id = R.dimen.item_padding),
-            end = dimensionResource(id = R.dimen.item_padding)
-        ).fillMaxWidth(),
+        modifier = modifier
+            .padding(
+                top = dimensionResource(id = R.dimen.item_padding),
+                end = dimensionResource(id = R.dimen.item_padding)
+            )
+            .fillMaxWidth(),
         horizontalArrangement = Arrangement.End
     ) {
         CustomTab(
