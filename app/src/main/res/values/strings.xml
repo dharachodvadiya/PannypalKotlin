@@ -140,4 +140,5 @@
     <string name="budget_delete_success_toast">Budget Deleted Successfully</string>
     <string name="budget_edit_success_toast">Budget Edited Successfully</string>
     <string name="budget_add_success_toast">Budget Added</string>
+    <string name="period_not_edit_toast">You can not edit Period</string>
 </resources>

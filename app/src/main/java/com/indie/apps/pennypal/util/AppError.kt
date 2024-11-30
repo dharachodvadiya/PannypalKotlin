@@ -33,6 +33,8 @@ object ErrorMessage {
     const val SELECT_MONTH = "Select Month"
     const val SELECT_YEAR = "Select Year"
     const val SELECT_DATE = "Select Date"
+    const val BUDGET_EXIST_MONTH = "Budget Exist For This Month"
+    const val BUDGET_EXIST_YEAR = "Budget Exist For This Year"
     const val INCORRECT_DATE = "From Date must be grater than To Date"
     const val CATEGORY_LIMIT = "Category limit must be within your total budget."
     const val BUDGET_TITLE_EMPTY = "Enter Your Budget Title"

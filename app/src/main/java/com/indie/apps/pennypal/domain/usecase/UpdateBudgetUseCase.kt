@@ -4,6 +4,7 @@ import com.indie.apps.pennypal.data.module.budget.BudgetWithCategory
 import com.indie.apps.pennypal.di.IoDispatcher
 import com.indie.apps.pennypal.repository.BudgetRepository
 import com.indie.apps.pennypal.util.Resource
+import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.util.handleException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -15,11 +16,20 @@ class UpdateBudgetUseCase @Inject constructor(
     private val budgetRepository: BudgetRepository,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) {
-    suspend fun updateData(budgetWithCategory: BudgetWithCategory): Flow<Resource<Int>> {
+    suspend fun updateData(
+        budgetWithCategory: BudgetWithCategory,
+        year: Int,
+        month: Int
+    ): Flow<Resource<Int>> {
         return flow {
             try {
                 emit(Resource.Loading())
-                val count = budgetRepository.update(budgetWithCategory)
+                val count = budgetRepository.updateBudgetWithPeriodValidation(
+                    obj = budgetWithCategory,
+                    year = year,
+                    month = month,
+                    timeZoneOffsetInMilli = Util.TIME_ZONE_OFFSET_IN_MILLI
+                )
 
                 if (count > 0) {
                     emit(Resource.Success(count))

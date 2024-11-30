@@ -84,6 +84,7 @@ fun AddBudgetScreen(
     val context = LocalContext.current
     val budgetEditToast = stringResource(id = R.string.budget_edit_success_toast)
     val budgetAddToast = stringResource(id = R.string.budget_add_success_toast)
+    val periodEditToast = stringResource(id = R.string.period_not_edit_toast)
 
     var openDiscardDialog by remember { mutableStateOf(false) }
 
@@ -137,11 +138,13 @@ fun AddBudgetScreen(
                     val yearFormat = SimpleDateFormat("yyyy")
                     val monthFormat = SimpleDateFormat("MMMM yyyy")
 
-                    AddBudgetTopSelectionButton(
-                        list = BudgetPeriodType.entries,
-                        selectBudgetPeriod = BudgetPeriodType.entries.first { it.id == currentPeriod },
-                        onSelect = addBudgetViewModel::setCurrentPeriod,
-                    )
+                    if (!addBudgetViewModel.isEditData()) {
+                        AddBudgetTopSelectionButton(
+                            list = BudgetPeriodType.entries,
+                            selectBudgetPeriod = BudgetPeriodType.entries.first { it.id == currentPeriod },
+                            onSelect = addBudgetViewModel::setCurrentPeriod,
+                        )
+                    }
 
                     AddBudgetFieldItem(
                         onSelectCategory = onSelectCategory,
@@ -150,10 +153,16 @@ fun AddBudgetScreen(
                             openFromDateDialog = true
                         },
                         onSelectMonth = {
-                            openMonthDialog = true
+                            if (!addBudgetViewModel.isEditData())
+                                openMonthDialog = true
+                            else
+                                context.showToast(periodEditToast)
                         },
                         onSelectYear = {
-                            openYearDialog = true
+                            if (!addBudgetViewModel.isEditData())
+                                openYearDialog = true
+                            else
+                                context.showToast(periodEditToast)
                         },
                         onSelectToDate = {
                             openToDateDialog = true
@@ -185,10 +194,9 @@ fun AddBudgetScreen(
                         onClick = {
                             addBudgetViewModel.saveData { isEdit, id ->
                                 onSave(isEdit, id)
-                                if(isEdit)
-                                {
+                                if (isEdit) {
                                     context.showToast(budgetEditToast)
-                                }else{
+                                } else {
                                     context.showToast(budgetAddToast)
                                 }
                             }

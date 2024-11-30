@@ -37,6 +37,9 @@ class AddBudgetViewModel @Inject constructor(
 
     val currentPeriod = MutableStateFlow(BudgetPeriodType.MONTH.id)
 
+    var monthError = ""
+    var yearError = ""
+
     val periodErrorText = MutableStateFlow("")
     val periodFromErrorText = MutableStateFlow("")
     val periodToErrorText = MutableStateFlow("")
@@ -127,6 +130,19 @@ class AddBudgetViewModel @Inject constructor(
 
     fun setCurrentPeriod(budgetPeriodType: BudgetPeriodType) {
         currentPeriod.value = budgetPeriodType.id
+        when (currentPeriod.value) {
+            BudgetPeriodType.MONTH.id -> {
+                periodErrorText.value = monthError
+            }
+
+            BudgetPeriodType.YEAR.id -> {
+                periodErrorText.value = yearError
+            }
+
+            else -> {
+                periodErrorText.value = ""
+            }
+        }
     }
 
     fun setCurrentMonth(month: Int, year: Int) {
@@ -277,19 +293,28 @@ class AddBudgetViewModel @Inject constructor(
                     endDate = endDate,
                     createdDate = Calendar.getInstance().timeInMillis
                 )
+
+
                 viewModelScope.launch {
-                    addBudgetUseCase.addData(budgetWithCategory).collect {
+                    val startCalender = Calendar.getInstance().apply { timeInMillis = startDate }
+                    addBudgetUseCase.addData(
+                        budgetWithCategory = budgetWithCategory,
+                        month = startCalender.get(Calendar.MONTH),
+                        year = startCalender.get(Calendar.YEAR)
+                    ).collect {
                         when (it) {
                             is Resource.Loading -> {}
                             is Resource.Success -> {
                                 onSuccess(false, it.data ?: -1)
                             }
 
-                            is Resource.Error -> {}
+                            is Resource.Error -> {
+                                setEntryExistError()
+                            }
                         }
                     }
                 }
-            }else{
+            } else {
                 val startDate = when (currentPeriod.value) {
                     BudgetPeriodType.ONE_TIME.id -> currentFromTimeInMilli.value
                     BudgetPeriodType.MONTH.id -> currentMonthInMilli.value
@@ -311,17 +336,42 @@ class AddBudgetViewModel @Inject constructor(
                     endDate = endDate
                 )
                 viewModelScope.launch {
-                    updateBudgetUseCase.updateData(budgetWithCategory).collect {
+                    val startCalender = Calendar.getInstance().apply { timeInMillis = startDate }
+                    updateBudgetUseCase.updateData(
+                        budgetWithCategory = budgetWithCategory,
+                        month = startCalender.get(Calendar.MONTH),
+                        year = startCalender.get(Calendar.YEAR)
+                    ).collect {
                         when (it) {
                             is Resource.Loading -> {}
                             is Resource.Success -> {
                                 onSuccess(true, editBudgetData!!.id)
                             }
 
-                            is Resource.Error -> {}
+                            is Resource.Error -> {
+                                setEntryExistError()
+                            }
                         }
                     }
                 }
+            }
+        }
+    }
+    private fun setEntryExistError()
+    {
+        when (currentPeriod.value) {
+            BudgetPeriodType.MONTH.id -> {
+                monthError = ErrorMessage.BUDGET_EXIST_MONTH
+                periodErrorText.value = monthError
+            }
+
+            BudgetPeriodType.YEAR.id -> {
+                yearError = ErrorMessage.BUDGET_EXIST_YEAR
+                periodErrorText.value = yearError
+            }
+
+            else -> {
+                periodErrorText.value = ""
             }
         }
     }
@@ -333,6 +383,9 @@ class AddBudgetViewModel @Inject constructor(
         periodToErrorText.value = ""
         categoryErrorText.value = ""
         categoryBudgetErrorText.value = ""
+        monthError = ""
+        yearError = ""
+
     }
 
     fun updateAmountText(text: String) {

@@ -82,4 +82,36 @@ interface BudgetDao : BaseDao<Budget> {
         WHERE b.id = :budgetId
     """)
     fun getBudgetWithCategoryFromId(budgetId: Long): Flow<List<BudgetWithCategoryResult>>
+
+    @Transaction
+    @Query(
+        """
+    SELECT *
+    FROM budget b
+    WHERE 
+        b.period_type = 1
+            AND strftime('%Y', (b.start_date + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = :year
+            AND strftime('%m', (b.start_date + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = :monthPlusOne
+    """
+    )
+    fun getBudgetDataFromMonth(
+        year: String,
+        monthPlusOne: String,
+        timeZoneOffsetInMilli: Int
+    ): Flow<List<Budget>>
+
+    @Transaction
+    @Query(
+        """
+    SELECT *
+    FROM budget b
+    WHERE 
+        b.period_type = 2
+            AND strftime('%Y', (b.start_date + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = :year
+    """
+    )
+    fun getBudgetDataFromYear(
+        year: String,
+        timeZoneOffsetInMilli: Int
+    ): Flow<List<Budget>>
 }

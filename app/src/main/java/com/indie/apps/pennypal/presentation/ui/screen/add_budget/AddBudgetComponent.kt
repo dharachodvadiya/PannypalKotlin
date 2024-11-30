@@ -146,7 +146,7 @@ fun AddBudgetFieldItem(
             onSelectMonth = onSelectMonth,
             onSelectFromDate = onSelectFromDate,
             onSelectToDate = onSelectToDate,
-            periodErrorText = periodToErrorText,
+            periodErrorText = periodErrorText,
             periodFromErrorText = periodFromErrorText,
             periodToErrorText = periodToErrorText
         )
