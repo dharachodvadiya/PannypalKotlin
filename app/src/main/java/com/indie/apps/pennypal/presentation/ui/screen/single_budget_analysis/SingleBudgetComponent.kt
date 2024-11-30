@@ -1,6 +1,7 @@
 package com.indie.apps.pennypal.presentation.ui.screen.single_budget_analysis
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,6 +24,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
@@ -49,15 +51,39 @@ import com.indie.apps.pennypal.util.getCategoryIcon
 fun SingleBudgetTopBar(
     title: String = "",
     onNavigationUp: () -> Unit,
-    onDeleteClick: (Long) -> Unit,
-    onEditClick: (Long) -> Unit,
+    onDeleteClick: () -> Unit,
+    onEditClick: () -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
-    TopBarWithTitle(title = title, onNavigationUp = {
-        onNavigationUp()
-    }, contentAlignment = Alignment.Center, trailingContent = {
+    TopBarWithTitle(
+        title = title, onNavigationUp = {
+            onNavigationUp()
+        }, contentAlignment = Alignment.Center,
+        trailingContent = {
 
-    }, modifier = modifier
+            Row {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_delete_top),
+                    contentDescription = "Delete",
+                    tint = MyAppTheme.colors.black,
+                    modifier = Modifier
+                        .roundedCornerBackground(MyAppTheme.colors.transparent)
+                        .size(25.dp)
+                        .clickable { onDeleteClick() }
+                )
+                Spacer(modifier = Modifier.width(15.dp))
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_edit),
+                    contentDescription = "edit",
+                    tint = MyAppTheme.colors.black,
+                    modifier = Modifier
+                        .roundedCornerBackground(MyAppTheme.colors.transparent)
+                        .size(25.dp)
+                        .clickable { onEditClick() }
+                )
+            }
+
+        }, modifier = modifier
     )
 }
 

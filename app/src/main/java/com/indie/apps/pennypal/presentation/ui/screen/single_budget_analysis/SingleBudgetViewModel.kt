@@ -6,12 +6,14 @@ import androidx.lifecycle.viewModelScope
 import com.indie.apps.pennypal.data.database.enum.BudgetPeriodType
 import com.indie.apps.pennypal.data.module.budget.BudgetWithCategory
 import com.indie.apps.pennypal.data.module.category.CategoryAmount
+import com.indie.apps.pennypal.domain.usecase.DeleteSingleBudgetDataUseCase
 import com.indie.apps.pennypal.domain.usecase.GetBudgetWithCategoryFromBudgetIdUseCase
 import com.indie.apps.pennypal.domain.usecase.GetCategoryWiseSpentAmountForPeriodUseCase
 import com.indie.apps.pennypal.domain.usecase.GetSpentAmountForPeriodAndCategoryUseCase
 import com.indie.apps.pennypal.util.Resource
 import com.indie.apps.pennypal.util.Util
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import java.util.Calendar
@@ -20,8 +22,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SingleBudgetViewModel @Inject constructor(
     private val getBudgetWithCategoryFromBudgetIdUseCase: GetBudgetWithCategoryFromBudgetIdUseCase,
-    //private val getSpentAmountForPeriodAndCategoryUseCase: GetSpentAmountForPeriodAndCategoryUseCase,
     private val getCategoryWiseSpentAmountForPeriodUseCase: GetCategoryWiseSpentAmountForPeriodUseCase,
+    private val deleteSingleBudgetDataUseCase: DeleteSingleBudgetDataUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -32,12 +34,8 @@ class SingleBudgetViewModel @Inject constructor(
 
     val uiState = MutableStateFlow<Resource<Unit>>(Resource.Loading())
 
-    init {
+    fun loadBudgetData() {
         uiState.value = Resource.Loading()
-        loadBudgetData()
-    }
-
-    private fun loadBudgetData() {
         viewModelScope.launch {
             try {
                 getBudgetWithCategoryFromBudgetIdUseCase.loadData(budgetId).collect {
@@ -87,6 +85,25 @@ class SingleBudgetViewModel @Inject constructor(
 
 
         }
+    }
+
+    fun onDeleteDialogClick(onSuccess: (Long) -> Unit) {
+        viewModelScope.launch {
+            deleteSingleBudgetDataUseCase
+                .deleteBudgetFromId(budgetId)
+                .collect {
+                    when (it) {
+                        is Resource.Loading -> {}
+                        is Resource.Success -> {
+                            onSuccess(budgetId)
+                        }
+
+                        is Resource.Error -> {
+                        }
+                    }
+                }
+        }
+
     }
 
 }

@@ -19,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,6 +35,7 @@ import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrus
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomDatePickerDialog
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomMonthPickerDialog
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomYearPickerDialog
+import com.indie.apps.pennypal.presentation.ui.component.showToast
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
@@ -79,6 +81,9 @@ fun AddBudgetScreen(
     LaunchedEffect(selectedCategoryIds) {
         addBudgetViewModel.setSelectedCategory(selectedCategoryIds)
     }
+    val context = LocalContext.current
+    val budgetEditToast = stringResource(id = R.string.budget_edit_success_toast)
+    val budgetAddToast = stringResource(id = R.string.budget_add_success_toast)
 
     var openDiscardDialog by remember { mutableStateOf(false) }
 
@@ -175,10 +180,17 @@ fun AddBudgetScreen(
                     )
 
                     Spacer(modifier = Modifier.weight(1f))
+
                     BottomSaveButton(
                         onClick = {
                             addBudgetViewModel.saveData { isEdit, id ->
                                 onSave(isEdit, id)
+                                if(isEdit)
+                                {
+                                    context.showToast(budgetEditToast)
+                                }else{
+                                    context.showToast(budgetAddToast)
+                                }
                             }
                         },
                         modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.padding))

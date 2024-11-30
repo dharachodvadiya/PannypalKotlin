@@ -137,4 +137,7 @@
     <string name="exceed_budget_message">Alert! You\'ve exceeded your budget.</string>
     <string name="budgeted_category">Budgeted Categories</string>
     <string name="included_category">Included Categories</string>
+    <string name="budget_delete_success_toast">Budget Deleted Successfully</string>
+    <string name="budget_edit_success_toast">Budget Edited Successfully</string>
+    <string name="budget_add_success_toast">Budget Added</string>
 </resources>

@@ -10,8 +10,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -20,7 +25,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.database.enum.BudgetPeriodType
+import com.indie.apps.pennypal.presentation.ui.component.ConfirmationDialog
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
+import com.indie.apps.pennypal.presentation.ui.component.showToast
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
@@ -39,10 +46,15 @@ fun SingleBudgetScreen(
 ) {
     val title = stringResource(id = R.string.budget_analysis)
 
+    var openAlertDialog by remember { mutableStateOf(false) }
+
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val budgetData by viewModel.budgetData.collectAsStateWithLifecycle()
     val spentCategoryData by viewModel.spentCategoryData.collectAsStateWithLifecycle()
 
+    LaunchedEffect(Unit) {
+        viewModel.loadBudgetData()
+    }
     when (uiState) {
         is Resource.Loading -> {
             LoadingWithProgress()
@@ -54,8 +66,12 @@ fun SingleBudgetScreen(
                     SingleBudgetTopBar(
                         title = title,
                         onNavigationUp = onNavigationUp,
-                        onDeleteClick = { },
-                        onEditClick = onEditClick
+                        onDeleteClick = {
+                            openAlertDialog = true
+                        },
+                        onEditClick = {
+                            budgetData?.let { onEditClick(it.id) }
+                        }
                     )
                 }
             ) { innerPadding ->
@@ -126,6 +142,22 @@ fun SingleBudgetScreen(
         is Resource.Error -> {
             LoadingWithProgress()
         }
+    }
+    val context = LocalContext.current
+    val budgetDeleteToast = stringResource(id = R.string.budget_delete_success_toast)
+    if (openAlertDialog) {
+        ConfirmationDialog(
+            dialogTitle = R.string.delete_dialog_title,
+            dialogText = R.string.delete_item_dialog_text,
+            onConfirmation = {
+                viewModel.onDeleteDialogClick {
+                    openAlertDialog = false
+                    context.showToast(budgetDeleteToast)
+                    onDeleteSuccess(it)
+                }
+            },
+            onDismissRequest = { openAlertDialog = false }
+        )
     }
 
 }
