@@ -1,15 +1,12 @@
 package com.indie.apps.pennypal.presentation.ui.screen.budget
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.indie.apps.pennypal.data.database.entity.MerchantData
-import com.indie.apps.pennypal.data.database.enum.BudgetPeriodType
+import com.indie.apps.pennypal.data.database.enum.PeriodType
 import com.indie.apps.pennypal.data.module.budget.BudgetWithSpentAndCategoryIdList
 import com.indie.apps.pennypal.domain.usecase.GetBudgetFromPeriodUseCase
 import com.indie.apps.pennypal.domain.usecase.GetSpentAmountForPeriodAndCategoryUseCase
 import com.indie.apps.pennypal.util.Resource
-import com.indie.apps.pennypal.util.Util
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -45,7 +42,7 @@ class BudgetViewModel @Inject constructor(
             for (budget in budgets) {
 
                 when (budget.periodType) {
-                    BudgetPeriodType.MONTH.id -> {
+                    PeriodType.MONTH.id -> {
                         val startCal : Calendar = Calendar.getInstance().apply { timeInMillis = budget.startDate }
                         getSpentAmountForPeriodAndCategoryUseCase.loadTotalAmountForMonth(
                             year = startCal.get(Calendar.YEAR),
@@ -68,7 +65,7 @@ class BudgetViewModel @Inject constructor(
                         }
                     }
 
-                    BudgetPeriodType.YEAR.id -> {
+                    PeriodType.YEAR.id -> {
                         val startCal : Calendar = Calendar.getInstance().apply { timeInMillis = budget.startDate }
                         getSpentAmountForPeriodAndCategoryUseCase.loadTotalAmountForYear(
                             year = startCal.get(Calendar.YEAR), categoryIds = budget.category
@@ -87,7 +84,7 @@ class BudgetViewModel @Inject constructor(
                         }
                     }
 
-                    BudgetPeriodType.ONE_TIME.id -> getSpentAmountForPeriodAndCategoryUseCase.loadTotalAmountForBetweenDates(
+                    PeriodType.ONE_TIME.id -> getSpentAmountForPeriodAndCategoryUseCase.loadTotalAmountForBetweenDates(
                         startTime = budget.startDate,
                         endTime = budget.endDate ?: 0,
                         categoryIds = budget.category
@@ -124,9 +121,9 @@ class BudgetViewModel @Inject constructor(
                 // Separate based on period_type
                 budgets.forEach { budget ->
                     when (budget.periodType) {
-                        BudgetPeriodType.MONTH.id -> monthList.add(budget) // Period type 1 = Monthly
-                        BudgetPeriodType.YEAR.id -> yearList.add(budget)  // Period type 2 = Yearly
-                        BudgetPeriodType.ONE_TIME.id -> oneTimeList.add(budget) // Period type 3 = One-time
+                        PeriodType.MONTH.id -> monthList.add(budget) // Period type 1 = Monthly
+                        PeriodType.YEAR.id -> yearList.add(budget)  // Period type 2 = Yearly
+                        PeriodType.ONE_TIME.id -> oneTimeList.add(budget) // Period type 3 = One-time
                     }
                 }
 

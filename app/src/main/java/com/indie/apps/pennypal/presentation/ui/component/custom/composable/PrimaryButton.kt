@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
@@ -34,6 +35,8 @@ fun PrimaryButton(
     borderStroke: BorderStroke? = null,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    horizontalPadding : Dp = dimensionResource(R.dimen.button_horizontal_padding),
+    verticalPadding : Dp = dimensionResource(R.dimen.button_item_vertical_padding),
     content: @Composable RowScope.() -> Unit,
 ) {
     val containerColor = if (enabled) bgColor else MyAppTheme.colors.gray2
@@ -51,8 +54,8 @@ fun PrimaryButton(
             .then(buttonModifier)
             .clickable(enabled = enabled) { onClick() }
             .padding(
-                horizontal = dimensionResource(R.dimen.button_horizontal_padding),
-                vertical = dimensionResource(R.dimen.button_item_vertical_padding)
+                horizontal = horizontalPadding,
+                vertical = verticalPadding
             ),
         content = content
     )

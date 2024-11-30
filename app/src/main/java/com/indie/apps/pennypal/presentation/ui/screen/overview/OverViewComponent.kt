@@ -10,6 +10,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -44,28 +45,37 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.database.entity.User
+import com.indie.apps.pennypal.data.database.enum.PeriodType
 import com.indie.apps.pennypal.data.module.ChartData
 import com.indie.apps.pennypal.data.module.MerchantDataWithAllData
 import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
+import com.indie.apps.pennypal.data.module.TabItemInfo
 import com.indie.apps.pennypal.data.module.balance.TotalWithCurrency
+import com.indie.apps.pennypal.data.module.budget.BudgetWithSpentAndCategoryIdList
 import com.indie.apps.pennypal.data.module.category.CategoryAmount
 import com.indie.apps.pennypal.presentation.ui.component.PeriodText
 import com.indie.apps.pennypal.presentation.ui.component.chart.PieChart
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.AutoSizeText
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomTab
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImageWithText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.TopBar
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
+import com.indie.apps.pennypal.presentation.ui.screen.add_budget.AddBudgetTopSelectionButton
 import com.indie.apps.pennypal.presentation.ui.screen.all_data.TransactionItem
+import com.indie.apps.pennypal.presentation.ui.screen.single_budget_analysis.SingleBudgetOverAllAnalysis
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.util.getCategoryColor
 import com.indie.apps.pennypal.util.getColorFromId
+import com.indie.apps.pennypal.util.getDateFromMillis
 import com.indie.apps.pennypal.util.getFirstCharacterUppercase
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import kotlin.enums.EnumEntries
 
 @Composable
 fun OverviewTopBar(
@@ -407,6 +417,9 @@ fun OverviewData(
     recentTransaction: List<MerchantDataWithAllData>,
     categoryList: List<CategoryAmount>,
     recentMerchant: List<MerchantNameAndDetails>,
+    budgetWithSpentAndCategoryIdList: BudgetWithSpentAndCategoryIdList?,
+    selectBudgetPeriod: PeriodType,
+    onSelectBudgetPeriod: (PeriodType) -> Unit,
     onSeeAllTransactionClick: () -> Unit,
     onSeeAllMerchantClick: () -> Unit,
     onExploreAnalysisClick: () -> Unit,
@@ -450,7 +463,10 @@ fun OverviewData(
     )
 
     OverviewBudgetData(
-        onExploreBudgetClick = onExploreBudgetClick
+        budgetWithSpentAndCategoryIdList = budgetWithSpentAndCategoryIdList,
+        onExploreBudgetClick = onExploreBudgetClick,
+        selectBudgetPeriod = selectBudgetPeriod,
+        onSelectBudgetPeriod = onSelectBudgetPeriod
     )
 }
 
@@ -697,14 +713,17 @@ fun OverviewAnalysisData(
                 }
             }
         },
-        isBgEnable = false,
+        isBgEnable = true,
         modifier = modifier
     )
 }
 
 @Composable
 fun OverviewBudgetData(
+    budgetWithSpentAndCategoryIdList: BudgetWithSpentAndCategoryIdList?,
     onExploreBudgetClick: () -> Unit,
+    selectBudgetPeriod: PeriodType,
+    onSelectBudgetPeriod: (PeriodType) -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     OverviewItem(
@@ -712,9 +731,43 @@ fun OverviewBudgetData(
         trailingText = R.string.explore,
         onSeeAllClick = onExploreBudgetClick,
         content = {
+            if (budgetWithSpentAndCategoryIdList != null) {
+                val yearFormat = SimpleDateFormat("yyyy")
+                val monthFormat = SimpleDateFormat("MMMM yyyy")
+
+                val timeString = budgetWithSpentAndCategoryIdList?.let { tmpBudgetData ->
+                    when (budgetWithSpentAndCategoryIdList!!.periodType) {
+                        PeriodType.MONTH.id -> getDateFromMillis(
+                            tmpBudgetData.startDate,
+                            monthFormat
+                        )
+
+                        PeriodType.YEAR.id -> getDateFromMillis(
+                            tmpBudgetData.startDate,
+                            yearFormat
+                        )
+
+                        else -> ""
+                    }
+                } ?: ""
+
+                OverviewBudgetSelectionButton(
+                    list = PeriodType.entries,
+                    selectBudgetPeriod = PeriodType.entries.first { it == selectBudgetPeriod },
+                    onSelect = onSelectBudgetPeriod
+                )
+
+                SingleBudgetOverAllAnalysis(
+                    totalBudgetAmount = budgetWithSpentAndCategoryIdList.budgetAmount,
+                    spentAmount = budgetWithSpentAndCategoryIdList.spentAmount,
+                    timeString = timeString
+                )
+
+            }
+
         },
-        isBgEnable = false,
-        modifier = modifier
+        isBgEnable = true,
+        modifier = modifier.clickable { onExploreBudgetClick() }
     )
 }
 
@@ -799,7 +852,7 @@ fun OverviewItem(
     @StringRes trailingText: Int = R.string.see_all,
     content: @Composable (() -> Unit),
     enableSeeAll: Boolean = true,
-    isBgEnable : Boolean = false,
+    isBgEnable: Boolean = false,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     Column(
@@ -840,14 +893,15 @@ fun OverviewItem(
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.item_inner_padding)))
 
-        if(isBgEnable)
-        {
-            Box(modifier = Modifier
-                .roundedCornerBackground(MyAppTheme.colors.itemBg))
+        if (isBgEnable) {
+            Column(
+                modifier = Modifier
+                    .roundedCornerBackground(MyAppTheme.colors.itemBg)
+            )
             {
                 content()
             }
-        }else{
+        } else {
             content()
         }
 
@@ -893,7 +947,8 @@ fun OverviewTopBarProfile(
 
 
     Row(
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
     ) {
         PrimaryButton(
             bgColor = MyAppTheme.colors.white,
@@ -961,6 +1016,51 @@ fun OverviewAppFloatingButton(
         }
     }
 }*/
+
+@Composable
+fun OverviewBudgetSelectionButton(
+    list: EnumEntries<PeriodType>,
+    selectBudgetPeriod: PeriodType,
+    onSelect: (PeriodType) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+
+    val tabItems = list.filter { it == PeriodType.MONTH || it == PeriodType.YEAR }.map { period ->
+        TabItemInfo(
+            title = when (period) {
+                PeriodType.MONTH -> R.string.month
+                PeriodType.YEAR -> R.string.year
+                PeriodType.ONE_TIME -> R.string.one_time
+            },
+            selectBgColor = MyAppTheme.colors.itemSelectedBg,
+            unSelectBgColor = MyAppTheme.colors.bottomBg,
+            selectContentColor = MyAppTheme.colors.black,
+            unSelectContentColor = MyAppTheme.colors.gray1
+        )
+    }
+
+    Row(
+        modifier = modifier.padding(
+            top = dimensionResource(id = R.dimen.item_padding),
+            end = dimensionResource(id = R.dimen.item_padding)
+        ).fillMaxWidth(),
+        horizontalArrangement = Arrangement.End
+    ) {
+        CustomTab(
+            tabList = tabItems,
+            selectedIndex = list.indexOf(selectBudgetPeriod),
+            onTabSelected = {
+                onSelect(list[it])
+            },
+            bgColor = MyAppTheme.colors.bottomBg,
+            paddingValues = PaddingValues(2.dp),
+            modifier = Modifier.width(120.dp),
+            tabVerticalPadding = 3.dp
+        )
+
+    }
+
+}
 
 @Preview(showBackground = true)
 @Composable

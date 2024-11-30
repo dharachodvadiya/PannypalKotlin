@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.data.database.enum.BudgetPeriodType
+import com.indie.apps.pennypal.data.database.enum.PeriodType
 import com.indie.apps.pennypal.presentation.ui.component.BottomSaveButton
 import com.indie.apps.pennypal.presentation.ui.component.ConfirmationDialog
 import com.indie.apps.pennypal.presentation.ui.component.TopBarWithTitle
@@ -140,15 +140,15 @@ fun AddBudgetScreen(
 
                     if (!addBudgetViewModel.isEditData()) {
                         AddBudgetTopSelectionButton(
-                            list = BudgetPeriodType.entries,
-                            selectBudgetPeriod = BudgetPeriodType.entries.first { it.id == currentPeriod },
+                            list = PeriodType.entries,
+                            selectBudgetPeriod = PeriodType.entries.first { it.id == currentPeriod },
                             onSelect = addBudgetViewModel::setCurrentPeriod,
                         )
                     }
 
                     AddBudgetFieldItem(
                         onSelectCategory = onSelectCategory,
-                        selectBudgetPeriod = BudgetPeriodType.entries.first { it.id == currentPeriod },
+                        selectBudgetPeriod = PeriodType.entries.first { it.id == currentPeriod },
                         onSelectFromDate = {
                             openFromDateDialog = true
                         },

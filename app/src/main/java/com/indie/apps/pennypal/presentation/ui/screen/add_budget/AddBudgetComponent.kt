@@ -36,7 +36,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.data.database.enum.BudgetPeriodType
+import com.indie.apps.pennypal.data.database.enum.PeriodType
 import com.indie.apps.pennypal.data.module.TabItemInfo
 import com.indie.apps.pennypal.data.module.category.CategoryAmount
 import com.indie.apps.pennypal.presentation.ui.component.DialogSelectableItem
@@ -57,18 +57,18 @@ import kotlin.enums.EnumEntries
 
 @Composable
 fun AddBudgetTopSelectionButton(
-    list: EnumEntries<BudgetPeriodType>,
-    selectBudgetPeriod: BudgetPeriodType,
-    onSelect: (BudgetPeriodType) -> Unit,
+    list: EnumEntries<PeriodType>,
+    selectBudgetPeriod: PeriodType,
+    onSelect: (PeriodType) -> Unit,
     modifier: Modifier = Modifier,
 ) {
 
     val tabItems = list.map { period ->
         TabItemInfo(
             title = when (period) {
-                BudgetPeriodType.MONTH -> R.string.month
-                BudgetPeriodType.YEAR -> R.string.year
-                BudgetPeriodType.ONE_TIME -> R.string.one_time
+                PeriodType.MONTH -> R.string.month
+                PeriodType.YEAR -> R.string.year
+                PeriodType.ONE_TIME -> R.string.one_time
             },
             selectBgColor = MyAppTheme.colors.itemSelectedBg,
             unSelectBgColor = MyAppTheme.colors.itemBg,
@@ -99,7 +99,7 @@ fun AddBudgetFieldItem(
     onCategoryExpandChange: (Boolean) -> Unit,
     onCategoryAmountChange: (Long, String) -> Unit,
     onSelectCategory: () -> Unit,
-    selectBudgetPeriod: BudgetPeriodType,
+    selectBudgetPeriod: PeriodType,
     currentYear: String?,
     currentMonth: String?,
     currentFromDate: String?,
@@ -205,7 +205,7 @@ fun AddBudgetFieldItem(
 
 @Composable
 fun AddBudgetPeriodFieldItem(
-    selectBudgetPeriod: BudgetPeriodType,
+    selectBudgetPeriod: PeriodType,
     currentYear: String?,
     periodErrorText: String,
     periodFromErrorText: String,
@@ -222,7 +222,7 @@ fun AddBudgetPeriodFieldItem(
     Row(
         modifier = modifier
     ) {
-        if (selectBudgetPeriod == BudgetPeriodType.ONE_TIME) {
+        if (selectBudgetPeriod == PeriodType.ONE_TIME) {
             DialogSelectableItem(
                 label = R.string.period,
                 text = currentFromDate,
@@ -265,12 +265,12 @@ fun AddBudgetPeriodFieldItem(
         } else {
             DialogSelectableItem(
                 label = R.string.period,
-                text = if (selectBudgetPeriod == BudgetPeriodType.MONTH) currentMonth else currentYear,
+                text = if (selectBudgetPeriod == PeriodType.MONTH) currentMonth else currentYear,
                 onClick = {
-                    if (selectBudgetPeriod == BudgetPeriodType.MONTH) onSelectMonth()
+                    if (selectBudgetPeriod == PeriodType.MONTH) onSelectMonth()
                     else onSelectYear()
                 },
-                placeholder = if (selectBudgetPeriod == BudgetPeriodType.MONTH) R.string.select_month
+                placeholder = if (selectBudgetPeriod == PeriodType.MONTH) R.string.select_month
                 else R.string.select_year,
                 leadingContent = {
                     Icon(imageVector = Icons.Default.CalendarMonth,
@@ -279,7 +279,7 @@ fun AddBudgetPeriodFieldItem(
                         modifier = Modifier
                             .roundedCornerBackground(MyAppTheme.colors.transparent)
                             .clickable {
-                                if (selectBudgetPeriod == BudgetPeriodType.MONTH) onSelectMonth()
+                                if (selectBudgetPeriod == PeriodType.MONTH) onSelectMonth()
                                 else onSelectYear()
                             })
                 },

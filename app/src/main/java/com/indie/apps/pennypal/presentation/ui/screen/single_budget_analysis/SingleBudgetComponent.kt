@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -103,9 +104,12 @@ fun SingleBudgetOverAllAnalysis(
     ) {
         Row(
             modifier = Modifier
-                .padding(dimensionResource(id = R.dimen.padding))
+                .padding(dimensionResource(id = R.dimen.padding)),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Column {
+            Column(
+                modifier = Modifier.defaultMinSize(minWidth = 150.dp)
+            ) {
                 CustomText(
                     text = timeString,
                     style = MyAppTheme.typography.Regular57,

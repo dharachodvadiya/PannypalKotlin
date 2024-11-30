@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.data.database.enum.BudgetPeriodType
+import com.indie.apps.pennypal.data.database.enum.PeriodType
 import com.indie.apps.pennypal.presentation.ui.component.ConfirmationDialog
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.showToast
@@ -93,17 +93,17 @@ fun SingleBudgetScreen(
 
                     val timeString = budgetData?.let { tmpBudgetData ->
                         when (budgetData!!.periodType) {
-                            BudgetPeriodType.MONTH.id -> getDateFromMillis(
+                            PeriodType.MONTH.id -> getDateFromMillis(
                                 tmpBudgetData.startDate,
                                 monthFormat
                             )
 
-                            BudgetPeriodType.YEAR.id -> getDateFromMillis(
+                            PeriodType.YEAR.id -> getDateFromMillis(
                                 tmpBudgetData.startDate,
                                 yearFormat
                             )
 
-                            BudgetPeriodType.ONE_TIME.id -> "${
+                            PeriodType.ONE_TIME.id -> "${
                                 getDateFromMillis(
                                     tmpBudgetData.startDate,
                                     dateFormat

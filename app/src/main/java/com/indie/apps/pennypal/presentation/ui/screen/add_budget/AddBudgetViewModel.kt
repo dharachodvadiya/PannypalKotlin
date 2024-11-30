@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.indie.apps.pennypal.data.database.entity.Category
 import com.indie.apps.pennypal.data.database.entity.toCategoryAmount
-import com.indie.apps.pennypal.data.database.enum.BudgetPeriodType
+import com.indie.apps.pennypal.data.database.enum.PeriodType
 import com.indie.apps.pennypal.data.module.budget.BudgetWithCategory
 import com.indie.apps.pennypal.data.module.category.CategoryAmount
 import com.indie.apps.pennypal.domain.usecase.AddBudgetUseCase
@@ -35,7 +35,7 @@ class AddBudgetViewModel @Inject constructor(
         savedStateHandle.get<String>(Util.PARAM_BUDGET_ID)?.toLong() ?: 0
     private var editBudgetData: BudgetWithCategory? = null
 
-    val currentPeriod = MutableStateFlow(BudgetPeriodType.MONTH.id)
+    val currentPeriod = MutableStateFlow(PeriodType.MONTH.id)
 
     var monthError = ""
     var yearError = ""
@@ -98,11 +98,11 @@ class AddBudgetViewModel @Inject constructor(
 
                     currentPeriod.value = editBudgetData!!.periodType
 
-                    if (currentPeriod.value == BudgetPeriodType.MONTH.id) {
+                    if (currentPeriod.value == PeriodType.MONTH.id) {
                         currentMonthInMilli.value = editBudgetData!!.startDate
-                    } else if (currentPeriod.value == BudgetPeriodType.YEAR.id) {
+                    } else if (currentPeriod.value == PeriodType.YEAR.id) {
                         currentYearInMilli.value = editBudgetData!!.startDate
-                    } else if (currentPeriod.value == BudgetPeriodType.ONE_TIME.id) {
+                    } else if (currentPeriod.value == PeriodType.ONE_TIME.id) {
                         currentFromTimeInMilli.value = editBudgetData!!.startDate
                         currentToTimeInMilli.value = editBudgetData!!.endDate!!
                     }
@@ -128,14 +128,14 @@ class AddBudgetViewModel @Inject constructor(
     }
 
 
-    fun setCurrentPeriod(budgetPeriodType: BudgetPeriodType) {
-        currentPeriod.value = budgetPeriodType.id
+    fun setCurrentPeriod(periodType: PeriodType) {
+        currentPeriod.value = periodType.id
         when (currentPeriod.value) {
-            BudgetPeriodType.MONTH.id -> {
+            PeriodType.MONTH.id -> {
                 periodErrorText.value = monthError
             }
 
-            BudgetPeriodType.YEAR.id -> {
+            PeriodType.YEAR.id -> {
                 periodErrorText.value = yearError
             }
 
@@ -250,19 +250,19 @@ class AddBudgetViewModel @Inject constructor(
         clearAllError()
         if (budgetTitle.value.text.trim().isEmpty()) {
             budgetTitle.value.setError(ErrorMessage.BUDGET_TITLE_EMPTY)
-        } else if (currentPeriod.value == BudgetPeriodType.ONE_TIME.id && currentFromTimeInMilli.value == 0L) {
+        } else if (currentPeriod.value == PeriodType.ONE_TIME.id && currentFromTimeInMilli.value == 0L) {
             periodFromErrorText.value = ErrorMessage.SELECT_DATE
-        } else if (currentPeriod.value == BudgetPeriodType.ONE_TIME.id && currentToTimeInMilli.value == 0L) {
+        } else if (currentPeriod.value == PeriodType.ONE_TIME.id && currentToTimeInMilli.value == 0L) {
             periodToErrorText.value = ErrorMessage.SELECT_DATE
         } else if (
-            currentPeriod.value == BudgetPeriodType.ONE_TIME.id &&
+            currentPeriod.value == PeriodType.ONE_TIME.id &&
             currentFromTimeInMilli.value >= currentToTimeInMilli.value
         ) {
             periodFromErrorText.value = ""
             periodToErrorText.value = ErrorMessage.INCORRECT_DATE
-        } else if (currentPeriod.value == BudgetPeriodType.MONTH.id && currentMonthInMilli.value == 0L) {
+        } else if (currentPeriod.value == PeriodType.MONTH.id && currentMonthInMilli.value == 0L) {
             periodErrorText.value = ErrorMessage.SELECT_MONTH
-        } else if (currentPeriod.value == BudgetPeriodType.YEAR.id && currentYearInMilli.value == 0L) {
+        } else if (currentPeriod.value == PeriodType.YEAR.id && currentYearInMilli.value == 0L) {
             periodErrorText.value = ErrorMessage.SELECT_YEAR
         } else if (amount.value.text.trim().isEmpty() || amount.value.text.trim() == "0") {
             amount.value.setError(ErrorMessage.AMOUNT_EMPTY)
@@ -273,14 +273,14 @@ class AddBudgetViewModel @Inject constructor(
         } else {
             if (budgetEditId == 0L) {
                 val startDate = when (currentPeriod.value) {
-                    BudgetPeriodType.ONE_TIME.id -> currentFromTimeInMilli.value
-                    BudgetPeriodType.MONTH.id -> currentMonthInMilli.value
-                    BudgetPeriodType.YEAR.id -> currentYearInMilli.value
+                    PeriodType.ONE_TIME.id -> currentFromTimeInMilli.value
+                    PeriodType.MONTH.id -> currentMonthInMilli.value
+                    PeriodType.YEAR.id -> currentYearInMilli.value
                     else -> 0L
                 }
 
                 val endDate = when (currentPeriod.value) {
-                    BudgetPeriodType.ONE_TIME.id -> currentToTimeInMilli.value
+                    PeriodType.ONE_TIME.id -> currentToTimeInMilli.value
                     else -> null
                 }
 
@@ -316,14 +316,14 @@ class AddBudgetViewModel @Inject constructor(
                 }
             } else {
                 val startDate = when (currentPeriod.value) {
-                    BudgetPeriodType.ONE_TIME.id -> currentFromTimeInMilli.value
-                    BudgetPeriodType.MONTH.id -> currentMonthInMilli.value
-                    BudgetPeriodType.YEAR.id -> currentYearInMilli.value
+                    PeriodType.ONE_TIME.id -> currentFromTimeInMilli.value
+                    PeriodType.MONTH.id -> currentMonthInMilli.value
+                    PeriodType.YEAR.id -> currentYearInMilli.value
                     else -> 0L
                 }
 
                 val endDate = when (currentPeriod.value) {
-                    BudgetPeriodType.ONE_TIME.id -> currentToTimeInMilli.value
+                    PeriodType.ONE_TIME.id -> currentToTimeInMilli.value
                     else -> null
                 }
 
@@ -360,12 +360,12 @@ class AddBudgetViewModel @Inject constructor(
     private fun setEntryExistError()
     {
         when (currentPeriod.value) {
-            BudgetPeriodType.MONTH.id -> {
+            PeriodType.MONTH.id -> {
                 monthError = ErrorMessage.BUDGET_EXIST_MONTH
                 periodErrorText.value = monthError
             }
 
-            BudgetPeriodType.YEAR.id -> {
+            PeriodType.YEAR.id -> {
                 yearError = ErrorMessage.BUDGET_EXIST_YEAR
                 periodErrorText.value = yearError
             }

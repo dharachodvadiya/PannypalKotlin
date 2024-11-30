@@ -2,7 +2,7 @@ package com.indie.apps.pennypal.repository
 
 import com.indie.apps.pennypal.data.database.dao.BudgetCategoryDao
 import com.indie.apps.pennypal.data.database.dao.BudgetDao
-import com.indie.apps.pennypal.data.database.enum.BudgetPeriodType
+import com.indie.apps.pennypal.data.database.enum.PeriodType
 import com.indie.apps.pennypal.data.module.budget.BudgetWithCategory
 import com.indie.apps.pennypal.data.module.budget.toBudget
 import com.indie.apps.pennypal.data.module.budget.toBudgetCategoryList
@@ -52,7 +52,7 @@ class BudgetRepositoryImpl @Inject constructor(
         month: Int
     ): Long {
         val count = when (obj.periodType) {
-            BudgetPeriodType.MONTH.id -> {
+            PeriodType.MONTH.id -> {
                 val res = budgetDao.getBudgetDataFromMonth(
                     monthPlusOne = (month + 1).toString(),
                     year = year.toString(),
@@ -62,7 +62,7 @@ class BudgetRepositoryImpl @Inject constructor(
                 if (res.isNotEmpty()) res.count() else 0
             }
 
-            BudgetPeriodType.YEAR.id -> {
+            PeriodType.YEAR.id -> {
                 val res = budgetDao.getBudgetDataFromYear(
                     year = year.toString(),
                     timeZoneOffsetInMilli = timeZoneOffsetInMilli
@@ -83,7 +83,7 @@ class BudgetRepositoryImpl @Inject constructor(
         month: Int
     ): Int {
         val budgetList = when (obj.periodType) {
-            BudgetPeriodType.MONTH.id -> {
+            PeriodType.MONTH.id -> {
                 budgetDao.getBudgetDataFromMonth(
                     monthPlusOne = (month + 1).toString(),
                     year = year.toString(),
@@ -92,7 +92,7 @@ class BudgetRepositoryImpl @Inject constructor(
 
             }
 
-            BudgetPeriodType.YEAR.id -> {
+            PeriodType.YEAR.id -> {
                 budgetDao.getBudgetDataFromYear(
                     year = year.toString(),
                     timeZoneOffsetInMilli = timeZoneOffsetInMilli

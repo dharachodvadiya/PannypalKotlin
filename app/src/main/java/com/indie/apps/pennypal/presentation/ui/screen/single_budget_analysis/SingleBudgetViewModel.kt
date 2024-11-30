@@ -3,7 +3,7 @@ package com.indie.apps.pennypal.presentation.ui.screen.single_budget_analysis
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.indie.apps.pennypal.data.database.enum.BudgetPeriodType
+import com.indie.apps.pennypal.data.database.enum.PeriodType
 import com.indie.apps.pennypal.data.module.budget.BudgetWithCategory
 import com.indie.apps.pennypal.data.module.category.CategoryAmount
 import com.indie.apps.pennypal.domain.usecase.DeleteSingleBudgetDataUseCase
@@ -49,7 +49,7 @@ class SingleBudgetViewModel @Inject constructor(
 
     private suspend fun loadCategoryWiseSpentData(budget: BudgetWithCategory) {
         when (budget.periodType) {
-            BudgetPeriodType.MONTH.id -> {
+            PeriodType.MONTH.id -> {
                 val startCal: Calendar =
                     Calendar.getInstance().apply { timeInMillis = budget.startDate }
                 getCategoryWiseSpentAmountForPeriodUseCase.loadCategoryWiseTotalAmountForMonth(
@@ -62,7 +62,7 @@ class SingleBudgetViewModel @Inject constructor(
                 }
             }
 
-            BudgetPeriodType.YEAR.id -> {
+            PeriodType.YEAR.id -> {
                 val startCal: Calendar =
                     Calendar.getInstance().apply { timeInMillis = budget.startDate }
                 getCategoryWiseSpentAmountForPeriodUseCase.loadCategoryWiseTotalAmountForYear(
@@ -73,7 +73,7 @@ class SingleBudgetViewModel @Inject constructor(
                 }
             }
 
-            BudgetPeriodType.ONE_TIME.id -> getCategoryWiseSpentAmountForPeriodUseCase.loadCategoryWiseTotalAmountForBetweenDates(
+            PeriodType.ONE_TIME.id -> getCategoryWiseSpentAmountForPeriodUseCase.loadCategoryWiseTotalAmountForBetweenDates(
                 startTime = budget.startDate,
                 endTime = budget.endDate ?: 0,
                 categoryIds = budget.category.map { it.id }

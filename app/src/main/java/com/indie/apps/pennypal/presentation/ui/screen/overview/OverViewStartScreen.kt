@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.indie.apps.pennypal.R
+import com.indie.apps.pennypal.data.database.enum.PeriodType
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
@@ -61,6 +62,10 @@ fun OverViewStartScreen(
     val recentTransaction by overViewViewModel.recentTransaction.collectAsStateWithLifecycle()
     val recentMerchant by overViewViewModel.recentMerchant.collectAsStateWithLifecycle()
     val currentMonthCategory by overViewViewModel.monthlyCategoryExpense.collectAsStateWithLifecycle()
+    val budgetState by overViewViewModel.budgetState.collectAsStateWithLifecycle()
+    var currentBudgetPeriod by remember {
+        mutableStateOf(PeriodType.MONTH)
+    }
 
     if (userData != null) {
         Util.currentCurrencySymbol =
@@ -114,52 +119,61 @@ fun OverViewStartScreen(
                 .padding(dimensionResource(id = R.dimen.padding)),
             verticalArrangement = Arrangement.spacedBy(25.dp),
         ) {
-           /* if (currentMonthTotal == null) {
-                LoadingWithProgress(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
-                )
-            } else {*/
+            /* if (currentMonthTotal == null) {
+                 LoadingWithProgress(
+                     modifier = Modifier
+                         .fillMaxWidth()
+                         .weight(1f)
+                 )
+             } else {*/
 
-                OverviewTopBarProfile(
-                    onClick = {},
-                    user = userData,
-                    isSubscribed = isSubscribed,
-                    onSubscriptionChanged = overViewViewModel::onSubscriptionChanged )
+            OverviewTopBarProfile(
+                onClick = {},
+                user = userData,
+                isSubscribed = isSubscribed,
+                onSubscriptionChanged = overViewViewModel::onSubscriptionChanged
+            )
 
-                /* OverviewList(
-                     dataWithDayList = dataWithDayLazyPagingItems,
-                     isLoadMore = merchantDataWithDayPagingState.isLoadMore,
-                     bottomPadding = bottomPadding,
-                     merchantDataId = addDataId,
-                     isAddMerchantDataSuccess = addDataAnimRun,
-                     onAnimStop = {
-                         overViewViewModel.addMerchantDataSuccessAnimStop()
-                     }
-                 )*/
+            /* OverviewList(
+                 dataWithDayList = dataWithDayLazyPagingItems,
+                 isLoadMore = merchantDataWithDayPagingState.isLoadMore,
+                 bottomPadding = bottomPadding,
+                 merchantDataId = addDataId,
+                 isAddMerchantDataSuccess = addDataAnimRun,
+                 onAnimStop = {
+                     overViewViewModel.addMerchantDataSuccessAnimStop()
+                 }
+             )*/
 
-                OverviewData(
-                    currentPeriod = currentPeriod?.title ?: "",
-                    data = currentTotal,
-                    symbol = overViewViewModel.getSymbolFromCurrencyCode(userData?.currency ?: "USD"),
-                    categoryList = currentMonthCategory,
-                    recentTransaction = recentTransaction,
-                    recentMerchant = recentMerchant,
-                    onSeeAllTransactionClick = onSeeAllTransactionClick,
-                    onSeeAllMerchantClick = onSeeAllMerchantClick,
-                    onExploreAnalysisClick = onExploreAnalysisClick,
-                    onExploreBudgetClick = onExploreBudgetClick,
-                    merchantDataId = addEditDataId,
-                    isAddMerchantDataSuccess = addDataAnimRun,
-                    isEditMerchantDataSuccess = editAnimRun,
-                    onTransactionClick = onTransactionClick,
-                    onAnimStop = {
-                        overViewViewModel.addMerchantDataSuccessAnimStop()
-                    }
-                )
+            OverviewData(
+                currentPeriod = currentPeriod?.title ?: "",
+                data = currentTotal,
+                symbol = overViewViewModel.getSymbolFromCurrencyCode(userData?.currency ?: "USD"),
+                categoryList = currentMonthCategory,
+                recentTransaction = recentTransaction,
+                recentMerchant = recentMerchant,
+                onSeeAllTransactionClick = onSeeAllTransactionClick,
+                onSeeAllMerchantClick = onSeeAllMerchantClick,
+                onExploreAnalysisClick = onExploreAnalysisClick,
+                onExploreBudgetClick = onExploreBudgetClick,
+                merchantDataId = addEditDataId,
+                isAddMerchantDataSuccess = addDataAnimRun,
+                isEditMerchantDataSuccess = editAnimRun,
+                onTransactionClick = onTransactionClick,
+                onAnimStop = {
+                    overViewViewModel.addMerchantDataSuccessAnimStop()
+                },
+                budgetWithSpentAndCategoryIdList = budgetState.firstOrNull() { it.periodType == currentBudgetPeriod.id },
+                selectBudgetPeriod = currentBudgetPeriod,
+                onSelectBudgetPeriod = {
+                    currentBudgetPeriod = if (currentBudgetPeriod == PeriodType.MONTH)
+                        PeriodType.YEAR
+                    else
+                        PeriodType.MONTH
+                }
+            )
 
-                Spacer(modifier = Modifier.height(30.dp))
+            Spacer(modifier = Modifier.height(30.dp))
             //}
         }
     }
