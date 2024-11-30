@@ -12,7 +12,7 @@ internal fun getDateFromMillis(
     val calendar: Calendar = Calendar.getInstance().apply {
         timeInMillis = millis
     }
-    return formatter.format(calendar.time)
+    return if(millis != 0L) formatter.format(calendar.time) else ""
 }
 
 internal fun getTimeFromMillis(
@@ -23,7 +23,7 @@ internal fun getTimeFromMillis(
     val calendar: Calendar = Calendar.getInstance().apply {
         timeInMillis = millis
     }
-    return formatter.format(calendar.time)
+    return if(millis != 0L) formatter.format(calendar.time) else ""
 }
 
 internal fun getTodayDate(

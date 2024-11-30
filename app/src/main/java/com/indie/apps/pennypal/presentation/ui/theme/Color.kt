@@ -107,7 +107,7 @@ enum class Red(val color: Color) {
 private const val redPrimaryValue = 0xFFF86565
 
 enum class CategoryDark(val color: Color) {
-    Other(Color(0xFFB0B0B0)),
+    Other(Color(0xFF5FC3FA)),
     Bills(Color(0xFF7CA0E6)),
     Education(Color(0xFFFFEF60)),
     Entertainment(Color(0xFFFFC55F)),
@@ -127,7 +127,7 @@ enum class CategoryDark(val color: Color) {
 
 
 enum class CategoryLight(val color: Color) {
-    Other(Color(0xFF404040)),
+    Other(Color(0xFF00A1FA)),
     Bills(Color(0xFF00BFFF)),
     Education(Color(0xFFFFD700)),
     Entertainment(Color(0xFFFF8C00)),

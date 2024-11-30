@@ -106,7 +106,7 @@
     <string name="select_balance_view">Select Balance View</string>
     <string name="no_data">No Data</string>
     <string name="your_budget">Your Budget</string>
-    <string name="budget">Budget Analysis</string>
+    <string name="budget_analysis">Budget Analysis</string>
     <string name="add_budget">Add Budget</string>
     <string name="period">Period</string>
     <string name="select_period_type_placeholder">Select Period</string>
@@ -129,4 +129,12 @@
     <string name="title">Title</string>
     <string name="budget_title_placeholder">Enter Budget Title</string>
     <string name="edit_Budget">Edit Budget</string>
+    <string name="budget">Budget</string>
+    <string name="exceeded_limit_message">You\'ve exceeded your limit</string>
+    <string name="total_spent">Total Spent</string>
+    <string name="available_budget">Available Budget</string>
+    <string name="under_budget_message">Great job! You are under your budget.</string>
+    <string name="exceed_budget_message">Alert! You\'ve exceeded your budget.</string>
+    <string name="budgeted_category">Budgeted Categories</string>
+    <string name="included_category">Included Categories</string>
 </resources>

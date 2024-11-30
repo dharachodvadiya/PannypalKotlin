@@ -25,6 +25,7 @@ import com.indie.apps.pennypal.presentation.ui.screen.new_item.NewItemScreen
 import com.indie.apps.pennypal.presentation.ui.screen.overview.OverViewStartScreen
 import com.indie.apps.pennypal.presentation.ui.screen.overview_analysis.OverViewAnalysisScreen
 import com.indie.apps.pennypal.presentation.ui.screen.profile.ProfileScreen
+import com.indie.apps.pennypal.presentation.ui.screen.single_budget_analysis.SingleBudgetScreen
 import com.indie.apps.pennypal.util.Util
 
 
@@ -237,10 +238,33 @@ fun NavGraphBuilder.overViewRoute(
                 },
                 onBudgetEditClick = {
                     navController.navigate(
-                        ScreenNav.EDIT_BUDGET.route.replace(
-                            "{${Util.PARAM_EDIT_BUDGET_ID}}", it.toString()
+                        ScreenNav.SINGLE_BUDGET_ANALYSIS.route.replace(
+                            "{${Util.PARAM_BUDGET_ID}}", it.toString()
                         )
                     )
+
+                   /* navController.navigate(
+                        ScreenNav.EDIT_BUDGET.route.replace(
+                            "{${Util.PARAM_BUDGET_ID}}", it.toString()
+                        )
+                    )*/
+                }
+            )
+        }
+
+        composable(route = ScreenNav.SINGLE_BUDGET_ANALYSIS.route) {
+            bottomBarState.value = false
+            SingleBudgetScreen(
+                onNavigationUp = { navController.navigateUp() },
+                onEditClick = {
+                    navController.navigate(
+                        ScreenNav.EDIT_BUDGET.route.replace(
+                            "{${Util.PARAM_BUDGET_ID}}", it.toString()
+                        )
+                    )
+                },
+                onDeleteSuccess = {
+                    navController.navigateUp()
                 }
             )
         }

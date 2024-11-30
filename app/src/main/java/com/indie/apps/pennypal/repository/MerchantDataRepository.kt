@@ -9,6 +9,7 @@ import com.indie.apps.pennypal.data.module.MerchantDataWithNameWithDayTotal
 import com.indie.apps.pennypal.data.module.MerchantDataWithPaymentName
 import com.indie.apps.pennypal.data.module.balance.TotalMonthly
 import com.indie.apps.pennypal.data.module.balance.TotalYearly
+import com.indie.apps.pennypal.data.module.category.CategoryAmount
 import com.indie.apps.pennypal.data.module.category.CategoryMonthly
 import com.indie.apps.pennypal.data.module.category.CategoryYearly
 import kotlinx.coroutines.flow.Flow
@@ -80,4 +81,24 @@ interface MerchantDataRepository : BaseRepository<MerchantData> {
         endTime: Long,
         categoryIds: List<Long>
     ): Double
+
+    fun getCategoryWiseTotalAmountForMonth(
+        timeZoneOffsetInMilli: Int,
+        year: Int,
+        monthPlusOne: Int,
+        categoryIds: List<Long>
+    ): Flow<List<CategoryAmount>>
+
+    fun getCategoryWiseTotalAmountForYear(
+        timeZoneOffsetInMilli: Int,
+        year: Int,
+        categoryIds: List<Long>
+    ): Flow<List<CategoryAmount>>
+
+    fun getCategoryWiseTotalAmountForBetweenDates(
+        timeZoneOffsetInMilli: Int,
+        startTime: Long,
+        endTime: Long,
+        categoryIds: List<Long>
+    ): Flow<List<CategoryAmount>>
 }

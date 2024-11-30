@@ -11,7 +11,9 @@ data class BudgetWithCategoryResult(
     val endDate: Long?,
     val createdDate: Long,
     val categoryId: Long,
-    val categoryAmount: Double
+    val categoryAmount: Double,
+    val categoryName: String,
+    val categoryType: Int
 )
 
 fun List<BudgetWithCategoryResult>.toBudgetWithCategories(): BudgetWithCategory {
@@ -22,8 +24,8 @@ fun List<BudgetWithCategoryResult>.toBudgetWithCategories(): BudgetWithCategory 
         CategoryAmount(
             id = it.categoryId,
             amount = it.categoryAmount,
-            name = "",
-            type = 0
+            name = it.categoryName,
+            type = it.categoryType
         )
     }
 

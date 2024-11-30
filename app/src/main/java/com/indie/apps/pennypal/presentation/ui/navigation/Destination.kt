@@ -30,8 +30,9 @@ enum class ScreenNav(val route: String) {
     SETTING_START("setting/start"),
     OVERVIEW_ANALYSIS("overview/analysis"),
     BUDGET("budget"),
+    SINGLE_BUDGET_ANALYSIS("budget/{${Util.PARAM_BUDGET_ID}}"),
     ADD_BUDGET("add_budget"),
-    EDIT_BUDGET("edit_budget_data/{${Util.PARAM_EDIT_BUDGET_ID}}"),
+    EDIT_BUDGET("edit_budget_data/{${Util.PARAM_BUDGET_ID}}"),
 }
 
 enum class BottomNavItem(

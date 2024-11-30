@@ -2,6 +2,8 @@ package com.indie.apps.pennypal.repository
 
 import com.indie.apps.pennypal.data.database.dao.MerchantDataDao
 import com.indie.apps.pennypal.data.database.entity.MerchantData
+import com.indie.apps.pennypal.data.module.category.CategoryAmount
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class MerchantDataRepositoryImpl @Inject constructor(private val merchantDataDao: MerchantDataDao) :
@@ -41,12 +43,10 @@ class MerchantDataRepositoryImpl @Inject constructor(private val merchantDataDao
 
     override fun getMerchantsDataWithPaymentNameListFromMerchantId(
         merchantId: Long
-    ) =
-        merchantDataDao.getMerchantsDataWithPaymentNameListFromMerchantId(merchantId)
+    ) = merchantDataDao.getMerchantsDataWithPaymentNameListFromMerchantId(merchantId)
 
     override fun searchMerchantDataWithMerchantNameList(
-        searchQuery: String,
-        timeZoneOffsetInMilli: Int
+        searchQuery: String, timeZoneOffsetInMilli: Int
     ) = merchantDataDao.searchMerchantDataWithMerchantNameList(searchQuery, timeZoneOffsetInMilli)
 
     override suspend fun insert(obj: MerchantData) = merchantDataDao.insert(obj)
@@ -57,32 +57,24 @@ class MerchantDataRepositoryImpl @Inject constructor(private val merchantDataDao
         merchantDataDao.getCombinedDataWithLimit(timeZoneOffsetInMilli)
 
     override fun getTotalFromMonth(
-        timeZoneOffsetInMilli: Int,
-        monthOffset: Int
+        timeZoneOffsetInMilli: Int, monthOffset: Int
     ) = merchantDataDao.getTotalFromMonth(timeZoneOffsetInMilli, monthOffset)
 
 
     override fun getTotalFromYear(
-        timeZoneOffsetInMilli: Int,
-        offset: Int
+        timeZoneOffsetInMilli: Int, offset: Int
     ) = merchantDataDao.getTotalFromYear(timeZoneOffsetInMilli, offset)
 
     override fun getCategoryWiseExpenseFromMonth(
-        timeZoneOffsetInMilli: Int,
-        monthOffset: Int
-    ) =
-        merchantDataDao.getCategoryWiseExpenseFromMonth(timeZoneOffsetInMilli, monthOffset)
+        timeZoneOffsetInMilli: Int, monthOffset: Int
+    ) = merchantDataDao.getCategoryWiseExpenseFromMonth(timeZoneOffsetInMilli, monthOffset)
 
     override fun getCategoryWiseExpenseFromYear(
-        timeZoneOffsetInMilli: Int,
-        yearOffset: Int
+        timeZoneOffsetInMilli: Int, yearOffset: Int
     ) = merchantDataDao.getCategoryWiseExpenseFromYear(timeZoneOffsetInMilli, yearOffset)
 
     override suspend fun getTotalAmountForMonthAndCategory(
-        timeZoneOffsetInMilli: Int,
-        year: Int,
-        monthPlusOne: Int,
-        categoryIds: List<Long>
+        timeZoneOffsetInMilli: Int, year: Int, monthPlusOne: Int, categoryIds: List<Long>
     ) = merchantDataDao.getTotalAmountForMonthAndCategory(
         timeZoneOffsetInMilli = timeZoneOffsetInMilli,
         year = year.toString(),
@@ -91,19 +83,28 @@ class MerchantDataRepositoryImpl @Inject constructor(private val merchantDataDao
     )
 
     override suspend fun getTotalAmountForYearAndCategory(
-        timeZoneOffsetInMilli: Int,
-        year: Int,
-        categoryIds: List<Long>
+        timeZoneOffsetInMilli: Int, year: Int, categoryIds: List<Long>
     ) = merchantDataDao.getTotalAmountForYearAndCategory(
-        timeZoneOffsetInMilli,
-        year.toString(),
-        categoryIds
+        timeZoneOffsetInMilli, year.toString(), categoryIds
     )
 
     override suspend fun getTotalAmountForBetweenDatesAndCategory(
-        timeZoneOffsetInMilli: Int,
-        startTime: Long,
-        endTime: Long,
-        categoryIds: List<Long>
+        timeZoneOffsetInMilli: Int, startTime: Long, endTime: Long, categoryIds: List<Long>
     ) = merchantDataDao.getTotalAmountForBetweenDatesAndCategory(startTime, endTime, categoryIds)
+
+    override fun getCategoryWiseTotalAmountForMonth(
+        timeZoneOffsetInMilli: Int, year: Int, monthPlusOne: Int, categoryIds: List<Long>
+    ) = merchantDataDao.getCategoryWiseTotalAmountForMonth(
+        timeZoneOffsetInMilli, year.toString(), monthPlusOne.toString(), categoryIds
+    )
+
+    override fun getCategoryWiseTotalAmountForYear(
+        timeZoneOffsetInMilli: Int, year: Int, categoryIds: List<Long>
+    ) = merchantDataDao.getCategoryWiseTotalAmountForYear(
+        timeZoneOffsetInMilli, year.toString(), categoryIds
+    )
+
+    override fun getCategoryWiseTotalAmountForBetweenDates(
+        timeZoneOffsetInMilli: Int, startTime: Long, endTime: Long, categoryIds: List<Long>
+    ) = merchantDataDao.getCategoryWiseTotalAmountForBetweenDates(startTime, endTime, categoryIds)
 }

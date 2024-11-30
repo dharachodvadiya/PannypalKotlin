@@ -162,14 +162,8 @@ fun AddBudgetScreen(
                         remainingCategoryAmount = remainingAmount,
                         currentMonth = getDateFromMillis(currentMonthInMilli, monthFormat),
                         currentYear = getDateFromMillis(currentYearInMilli, yearFormat),
-                        currentFromDate = if (currentFromTimeInMilli != 0L) getDateFromMillis(
-                            currentFromTimeInMilli,
-                            dateFormat
-                        ) else "",
-                        currentToDate = if (currentToTimeInMilli != 0L) getDateFromMillis(
-                            currentToTimeInMilli,
-                            dateFormat
-                        ) else "",
+                        currentFromDate = getDateFromMillis(currentFromTimeInMilli, dateFormat),
+                        currentToDate = getDateFromMillis(currentToTimeInMilli, dateFormat),
                         periodErrorText = periodErrorText,
                         periodFromErrorText = periodFromErrorText,
                         periodToErrorText = periodToErrorText,

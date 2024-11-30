@@ -73,9 +73,12 @@ interface BudgetDao : BaseDao<Budget> {
             b.end_date As endDate,
             b.created_date As createdDate,
             bc.category_id As categoryId,
-            bc.amount As categoryAmount
+            bc.amount As categoryAmount,
+            c.name AS categoryName,
+            c.type AS categoryType
         FROM budget b
         LEFT JOIN budget_category bc ON b.id = bc.budget_id
+        LEFT JOIN category c ON c.id = bc.category_id
         WHERE b.id = :budgetId
     """)
     fun getBudgetWithCategoryFromId(budgetId: Long): Flow<List<BudgetWithCategoryResult>>

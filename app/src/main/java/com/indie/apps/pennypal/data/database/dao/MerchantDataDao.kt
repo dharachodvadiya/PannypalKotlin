@@ -12,6 +12,7 @@ import com.indie.apps.pennypal.data.module.MerchantDataWithNameWithDayTotal
 import com.indie.apps.pennypal.data.module.MerchantDataWithPaymentName
 import com.indie.apps.pennypal.data.module.balance.TotalMonthly
 import com.indie.apps.pennypal.data.module.balance.TotalYearly
+import com.indie.apps.pennypal.data.module.category.CategoryAmount
 import com.indie.apps.pennypal.data.module.category.CategoryMonthly
 import com.indie.apps.pennypal.data.module.category.CategoryYearly
 import kotlinx.coroutines.flow.Flow
@@ -368,4 +369,75 @@ interface MerchantDataDao : BaseDao<MerchantData> {
         endTime: Long,
         categoryIds: List<Long>
     ): Double
+
+    @Query("""
+        SELECT 
+            c.id AS id,
+            c.name,
+            c.type,
+            SUM(md.amount) AS amount
+        FROM 
+            merchant_data md
+        JOIN 
+            category c ON md.category_id = c.id
+        WHERE
+            strftime('%Y', ((md.date_milli + :timeZoneOffsetInMilli) / 1000), 'unixepoch') = :year
+            AND strftime('%m', ((md.date_milli + :timeZoneOffsetInMilli) / 1000), 'unixepoch') = :monthPlusOne
+            AND md.category_id IN (:categoryIds)
+            AND md.type = -1
+        GROUP BY 
+            c.id, c.name, c.type
+    """)
+    fun getCategoryWiseTotalAmountForMonth(
+        timeZoneOffsetInMilli: Int,
+        year: String,
+        monthPlusOne: String,
+        categoryIds: List<Long>
+    ): Flow<List<CategoryAmount>>
+
+    @Query("""
+        SELECT 
+            c.id AS id,
+            c.name,
+            c.type,
+            SUM(md.amount) AS amount
+        FROM 
+            merchant_data md
+        JOIN 
+            category c ON md.category_id = c.id
+        WHERE
+            strftime('%Y', ((md.date_milli + :timeZoneOffsetInMilli) / 1000), 'unixepoch') = :year
+            AND md.category_id IN (:categoryIds)
+            AND md.type = -1
+        GROUP BY 
+            c.id, c.name, c.type
+    """)
+    fun getCategoryWiseTotalAmountForYear(
+        timeZoneOffsetInMilli: Int,
+        year: String,
+        categoryIds: List<Long>
+    ): Flow<List<CategoryAmount>>
+
+    @Query("""
+        SELECT 
+            c.id AS id,
+            c.name,
+            c.type,
+            SUM(md.amount) AS amount
+        FROM 
+            merchant_data md
+        JOIN 
+            category c ON md.category_id = c.id
+        WHERE
+            md.date_milli BETWEEN :startTime AND :endTime
+            AND md.category_id IN (:categoryIds)
+            AND md.type = -1
+        GROUP BY 
+            c.id, c.name, c.type
+    """)
+    fun getCategoryWiseTotalAmountForBetweenDates(
+        startTime: Long,
+        endTime: Long,
+        categoryIds: List<Long>
+    ): Flow<List<CategoryAmount>>
 }

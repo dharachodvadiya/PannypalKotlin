@@ -33,7 +33,7 @@ fun BudgetScreen(
     onBudgetEditClick : (Long) -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
-    val title = stringResource(id = R.string.budget)
+    val title = stringResource(id = R.string.budget_analysis)
 
     val monthBudgetState by budgetViewModel.monthlyBudgets.collectAsStateWithLifecycle()
     val yearBudgetState by budgetViewModel.yearlyBudgets.collectAsStateWithLifecycle()

@@ -32,7 +32,7 @@ class AddBudgetViewModel @Inject constructor(
 ) : ViewModel() {
 
     val budgetEditId =
-        savedStateHandle.get<String>(Util.PARAM_EDIT_BUDGET_ID)?.toLong() ?: 0
+        savedStateHandle.get<String>(Util.PARAM_BUDGET_ID)?.toLong() ?: 0
     private var editBudgetData: BudgetWithCategory? = null
 
     val currentPeriod = MutableStateFlow(BudgetPeriodType.MONTH.id)
@@ -104,14 +104,17 @@ class AddBudgetViewModel @Inject constructor(
                         currentToTimeInMilli.value = editBudgetData!!.endDate!!
                     }
 
-                    setSelectedCategory(editBudgetData!!.category.map { cat -> cat.id })
+                    /*setSelectedCategory(editBudgetData!!.category.map { cat -> cat.id })
                     editBudgetData!!.category.onEach { cat ->
                         setCategoryAmount(id = cat.id, amount = cat.amount.toString())
-                    }
+                    }*/
+
+                    selectedCategoryList.value = editBudgetData!!.category
+
 
                     updateBudgetTitleText(editBudgetData!!.title)
                     updateAmountText(Util.getFormattedString(editBudgetData!!.amount))
-
+                    updateRemainingAmount()
                     uiState.value = Resource.Success(Unit)
 
                 }
