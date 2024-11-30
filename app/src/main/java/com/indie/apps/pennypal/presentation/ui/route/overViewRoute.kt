@@ -243,11 +243,11 @@ fun NavGraphBuilder.overViewRoute(
                         )
                     )
 
-                   /* navController.navigate(
-                        ScreenNav.EDIT_BUDGET.route.replace(
-                            "{${Util.PARAM_BUDGET_ID}}", it.toString()
-                        )
-                    )*/
+                    /* navController.navigate(
+                         ScreenNav.EDIT_BUDGET.route.replace(
+                             "{${Util.PARAM_BUDGET_ID}}", it.toString()
+                         )
+                     )*/
                 }
             )
         }
@@ -281,10 +281,16 @@ fun NavGraphBuilder.overViewRoute(
             bottomBarState.value = false
             AddBudgetScreen(
                 onNavigationUp = { navController.navigateUp() },
-                onSave = {_,_ ->
+                onSave = { _, _ ->
                     navController.popBackStack()
                 },
-                onSelectCategory = {
+                onSelectCategory = { selectedIds ->
+                    backStackEntry
+                        ?.savedStateHandle
+                        ?.set(
+                            Util.SAVE_STATE_SELECT_CATEGORY_ID_LIST,
+                            Gson().toJson(selectedIds)
+                        )
                     navController.navigate(DialogNav.MULTI_SELECT_CATEGORY.route)
                 },
                 selectedCategoryIds = categoryIds
@@ -303,10 +309,16 @@ fun NavGraphBuilder.overViewRoute(
             bottomBarState.value = false
             AddBudgetScreen(
                 onNavigationUp = { navController.navigateUp() },
-                onSave = {_,_ ->
+                onSave = { _, _ ->
                     navController.popBackStack()
                 },
-                onSelectCategory = {
+                onSelectCategory = { selectedIds ->
+                    backStackEntry
+                        ?.savedStateHandle
+                        ?.set(
+                            Util.SAVE_STATE_SELECT_CATEGORY_ID_LIST,
+                            Gson().toJson(selectedIds)
+                        )
                     navController.navigate(DialogNav.MULTI_SELECT_CATEGORY.route)
                 },
                 selectedCategoryIds = categoryIds

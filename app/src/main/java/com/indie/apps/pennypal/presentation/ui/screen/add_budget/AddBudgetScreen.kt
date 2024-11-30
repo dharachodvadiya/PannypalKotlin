@@ -51,7 +51,7 @@ fun AddBudgetScreen(
     onNavigationUp: () -> Unit,
     onSave: (Boolean, Long) -> Unit,
     selectedCategoryIds: List<Long> = emptyList(),
-    onSelectCategory: () -> Unit,
+    onSelectCategory: (List<Long>) -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
 
@@ -147,7 +147,9 @@ fun AddBudgetScreen(
                     }
 
                     AddBudgetFieldItem(
-                        onSelectCategory = onSelectCategory,
+                        onSelectCategory = {
+                            onSelectCategory(selectedCategoryList.map { it.id })
+                        },
                         selectBudgetPeriod = PeriodType.entries.first { it.id == currentPeriod },
                         onSelectFromDate = {
                             openFromDateDialog = true

@@ -79,6 +79,8 @@ class AddBudgetViewModel @Inject constructor(
                         setCurrentMonth(calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR))
                         setCurrentYear(calendar.get(Calendar.YEAR))
 
+                        selectedCategoryList.value = categoryList.map { it.toCategoryAmount() }
+
                         uiState.value = Resource.Success(Unit)
 
                     } else {
