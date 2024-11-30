@@ -4,8 +4,6 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import com.indie.apps.pennypal.data.database.entity.Budget
-import com.indie.apps.pennypal.data.database.entity.BudgetCategory
-import com.indie.apps.pennypal.data.module.budget.BudgetWithCategory
 import com.indie.apps.pennypal.data.module.budget.BudgetWithCategoryResult
 import com.indie.apps.pennypal.data.module.budget.BudgetWithSpentAndCategoryIds
 import kotlinx.coroutines.flow.Flow
@@ -63,7 +61,8 @@ interface BudgetDao : BaseDao<Budget> {
     ): Flow<List<BudgetWithSpentAndCategoryIds>>
 
     @Transaction
-    @Query("""
+    @Query(
+        """
         SELECT 
             b.id As budgetId,
             b.title ,
@@ -80,7 +79,8 @@ interface BudgetDao : BaseDao<Budget> {
         LEFT JOIN budget_category bc ON b.id = bc.budget_id
         LEFT JOIN category c ON c.id = bc.category_id
         WHERE b.id = :budgetId
-    """)
+    """
+    )
     fun getBudgetWithCategoryFromId(budgetId: Long): Flow<List<BudgetWithCategoryResult>>
 
     @Transaction
