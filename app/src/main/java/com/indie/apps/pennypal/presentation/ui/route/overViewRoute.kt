@@ -269,7 +269,8 @@ fun NavGraphBuilder.overViewRoute(
                              "{${Util.PARAM_BUDGET_ID}}", it.toString()
                          )
                      )*/
-                }
+                },
+                onBudgetMenuClick = {},
             )
         }
 

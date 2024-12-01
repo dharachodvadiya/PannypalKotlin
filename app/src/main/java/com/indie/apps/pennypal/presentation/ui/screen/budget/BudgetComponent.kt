@@ -25,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
+import com.indie.apps.pennypal.data.database.enum.BudgetMenu
 import com.indie.apps.pennypal.data.module.budget.BudgetWithSpentAndCategoryIdList
 import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
 import com.indie.apps.pennypal.presentation.ui.component.TopBarWithTitle
@@ -38,8 +39,7 @@ import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 fun BudgetTopBar(
     title: String = "",
     onNavigationUp: () -> Unit,
-    onUpcomingBudgetClick: () -> Unit,
-    onPastBudgetClick: () -> Unit,
+    onBudgetMenuClick: (Int) -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -62,14 +62,14 @@ fun BudgetTopBar(
                     DropdownMenuItem(
                         onClick = {
                             expanded = false
-                            onUpcomingBudgetClick()
+                            onBudgetMenuClick(BudgetMenu.UPCOMING.id)
                         },
                         text = { CustomText(text = stringResource(id = R.string.upcoming_boudget)) })
 
                     DropdownMenuItem(
                         onClick = {
                             expanded = false
-                            onPastBudgetClick()
+                            onBudgetMenuClick(BudgetMenu.PAST.id)
                         },
                         text = { CustomText(text = stringResource(id = R.string.past_boudget)) })
                 }
