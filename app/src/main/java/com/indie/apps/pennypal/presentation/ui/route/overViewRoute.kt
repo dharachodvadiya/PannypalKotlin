@@ -94,6 +94,11 @@ fun NavGraphBuilder.overViewRoute(
                 addMerchantId = merchantId ?: -1L,
                 onSetBudgetClick = {
                     navController.navigate(ScreenNav.ADD_BUDGET.route)
+
+                    navController.currentBackStackEntry?.savedStateHandle?.set(
+                        Util.SAVE_STATE_PERIOD_TYPE,
+                        it
+                    )
                 }
             )
         }
@@ -246,6 +251,11 @@ fun NavGraphBuilder.overViewRoute(
                 onNavigationUp = { navController.navigateUp() },
                 onAddClick = {
                     navController.navigate(ScreenNav.ADD_BUDGET.route)
+
+                    navController.currentBackStackEntry?.savedStateHandle?.set(
+                        Util.SAVE_STATE_PERIOD_TYPE,
+                        it
+                    )
                 },
                 onBudgetEditClick = {
                     navController.navigate(
@@ -289,6 +299,9 @@ fun NavGraphBuilder.overViewRoute(
                 Gson().fromJson(it, object : TypeToken<List<Long>>() {}.type)
             } ?: emptyList()
 
+            val periodType =
+                backStackEntry.savedStateHandle.get<Int>(Util.SAVE_STATE_PERIOD_TYPE)
+
             bottomBarState.value = false
             AddBudgetScreen(
                 onNavigationUp = { navController.navigateUp() },
@@ -304,7 +317,8 @@ fun NavGraphBuilder.overViewRoute(
                         )
                     navController.navigate(DialogNav.MULTI_SELECT_CATEGORY.route)
                 },
-                selectedCategoryIds = categoryIds
+                selectedCategoryIds = categoryIds,
+                selectedPeriodType = periodType ?: 1
             )
         }
 
@@ -332,7 +346,8 @@ fun NavGraphBuilder.overViewRoute(
                         )
                     navController.navigate(DialogNav.MULTI_SELECT_CATEGORY.route)
                 },
-                selectedCategoryIds = categoryIds
+                selectedCategoryIds = categoryIds,
+                selectedPeriodType = 1
             )
         }
 

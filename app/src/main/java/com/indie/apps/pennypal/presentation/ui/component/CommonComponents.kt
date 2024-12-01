@@ -433,11 +433,17 @@ fun NoDataMessage(
     iconSize: Dp = 50.dp,
     titleTextStyle: TextStyle = MyAppTheme.typography.Regular51,
     detailsTextStyle: TextStyle = MyAppTheme.typography.Regular44,
+    titleColor: Color = MyAppTheme.colors.gray2,
+    detailsColor: Color = MyAppTheme.colors.gray3,
+    iconColor: Color = MyAppTheme.colors.gray2,
+    isClickable: Boolean = false,
+    onClick: () -> Unit = {},
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier.fillMaxSize()
 ) {
     Box(
         modifier = modifier
-            .background(MyAppTheme.colors.transparent),
+            .background(MyAppTheme.colors.transparent)
+            .clickable(enabled = isClickable) { onClick() },
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -449,20 +455,20 @@ fun NoDataMessage(
             Icon(
                 painter = painterResource(painterRes),
                 contentDescription = "no transaction",
-                tint = MyAppTheme.colors.gray2,
+                tint = iconColor,
                 modifier = Modifier.size(iconSize)
             )
 
             CustomText(
                 text = title,
                 style = titleTextStyle,
-                color = MyAppTheme.colors.gray2,
+                color = titleColor,
                 textAlign = TextAlign.Center
             )
             CustomText(
                 text = details,
                 style = detailsTextStyle,
-                color = MyAppTheme.colors.gray3,
+                color = detailsColor,
                 textAlign = TextAlign.Center
             )
 

@@ -428,7 +428,7 @@ fun OverviewData(
     onSeeAllMerchantClick: () -> Unit,
     onExploreAnalysisClick: () -> Unit,
     onExploreBudgetClick: () -> Unit,
-    onSetBudgetClick: () -> Unit,
+    onSetBudgetClick: (Int) -> Unit,
     onTransactionClick: (Long) -> Unit,
     isAddMerchantDataSuccess: Boolean = false,
     isEditMerchantDataSuccess: Boolean = false,
@@ -800,7 +800,7 @@ fun OverviewBudgetData(
     onExploreBudgetClick: () -> Unit,
     selectBudgetPeriod: PeriodType,
     onSelectBudgetPeriod: (PeriodType) -> Unit,
-    onSetBudgetClick: () -> Unit,
+    onSetBudgetClick: (Int) -> Unit,
     isSelectionEnable: Boolean,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
@@ -850,8 +850,14 @@ fun OverviewBudgetData(
                         else
                             R.string.add_monthly_budget
 
+                    val periodId =
+                        if (budgetWithSpentAndCategoryIdList.periodType == PeriodType.MONTH.id)
+                            PeriodType.YEAR.id
+                        else
+                            PeriodType.MONTH.id
+
                     PrimaryButton(
-                        onClick = onSetBudgetClick,
+                        onClick = { onSetBudgetClick(periodId) },
                         modifier = Modifier.padding(dimensionResource(id = R.dimen.item_inner_padding))
                     ) {
                         CustomText(
@@ -866,7 +872,7 @@ fun OverviewBudgetData(
 
             } else {
                 OverviewNoBudgetItem(
-                    onSetBudgetClick = onSetBudgetClick
+                    onSetBudgetClick = { onSetBudgetClick(PeriodType.MONTH.id) }
                 )
             }
 

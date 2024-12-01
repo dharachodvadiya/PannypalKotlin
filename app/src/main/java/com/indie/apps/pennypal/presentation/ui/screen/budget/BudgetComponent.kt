@@ -1,69 +1,39 @@
 package com.indie.apps.pennypal.presentation.ui.screen.budget
 
 import android.annotation.SuppressLint
-import androidx.annotation.StringRes
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.Icon
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.module.budget.BudgetWithSpentAndCategoryIdList
+import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
 import com.indie.apps.pennypal.presentation.ui.component.TopBarWithTitle
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomProgressItem
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListItem
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
-import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
-import com.indie.apps.pennypal.util.Util
 
 @Composable
 fun BudgetTopBar(
     title: String = "",
     onNavigationUp: () -> Unit,
-    onAddClick: () -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
-    TopBarWithTitle(title = title, onNavigationUp = {
-        onNavigationUp()
-    }, contentAlignment = Alignment.Center, trailingContent = {
-        PrimaryButton(
-            bgColor = MyAppTheme.colors.white,
-            borderStroke = BorderStroke(
-                width = 1.dp, color = MyAppTheme.colors.gray1
-            ),
-            onClick = onAddClick,
-            modifier = Modifier.size(dimensionResource(R.dimen.top_bar_profile))
-        ) {
-            Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = "Add",
-                tint = MyAppTheme.colors.gray1
-            )
-        }
-    }, modifier = modifier
+    TopBarWithTitle(
+        title = title, onNavigationUp = {
+            onNavigationUp()
+        }, contentAlignment = Alignment.Center, modifier = modifier
     )
 }
 
@@ -71,7 +41,12 @@ fun BudgetTopBar(
 fun BudgetGroupItem(
     title: Int,
     budgetList: List<BudgetWithSpentAndCategoryIdList>,
-    onBudgetItemClick : (Long) -> Unit,
+    onBudgetItemClick: (Long) -> Unit,
+    noDataTitleId: Int,
+    noDataDetailId: Int,
+    btnTextId: Int,
+    onAddClick: () -> Unit,
+    isShowAddButton: Boolean = false,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
 
@@ -81,11 +56,33 @@ fun BudgetGroupItem(
             .roundedCornerBackground(MyAppTheme.colors.itemBg)
             .padding(dimensionResource(id = R.dimen.item_inner_padding))
     ) {
-        CustomText(
-            text = stringResource(id = title),
-            style = MyAppTheme.typography.Regular51,
-            color = MyAppTheme.colors.gray1
-        )
+
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            CustomText(
+                text = stringResource(id = title),
+                style = MyAppTheme.typography.Regular51,
+                color = MyAppTheme.colors.gray1
+            )
+
+            if (isShowAddButton && budgetList.isNotEmpty()) {
+
+                Spacer(modifier = Modifier.weight(1f))
+                PrimaryButton(
+                    onClick = onAddClick
+                ) {
+                    CustomText(
+                        text = stringResource(id = R.string.set_up_budget),
+                        style = MyAppTheme.typography.Medium40,
+                        color = MyAppTheme.colors.gray0,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+        }
+
         budgetList.forEach { item ->
             CustomProgressItem(
                 name = item.title,
@@ -95,6 +92,33 @@ fun BudgetGroupItem(
                     onBudgetItemClick(item.id)
                 }
             )
+        }
+
+        if (budgetList.isEmpty()) {
+
+            NoDataMessage(
+                title = stringResource(id = noDataTitleId),
+                details = stringResource(id = noDataDetailId),
+                iconSize = 0.dp,
+                titleColor = MyAppTheme.colors.gray0,
+                detailsColor = MyAppTheme.colors.gray2,
+                titleTextStyle = MyAppTheme.typography.Medium54,
+                isClickable = false,
+                onClick = {},
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = dimensionResource(id = R.dimen.item_inner_padding))
+            )
+
+            PrimaryButton(onClick = onAddClick) {
+                CustomText(
+                    text = stringResource(id = btnTextId),
+                    style = MyAppTheme.typography.Regular44,
+                    color = MyAppTheme.colors.gray0,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
         }
 
     }

@@ -40,7 +40,7 @@ fun OverViewStartScreen(
     onSeeAllMerchantClick: () -> Unit,
     onExploreAnalysisClick: () -> Unit,
     onExploreBudgetClick: () -> Unit,
-    onSetBudgetClick: () -> Unit,
+    onSetBudgetClick: (Int) -> Unit,
     onTransactionClick: (Long) -> Unit,
     addEditMerchantDataId: Long,
     addMerchantId: Long,
@@ -77,8 +77,7 @@ fun OverViewStartScreen(
             overViewViewModel.getSymbolFromCurrencyCode(userData!!.currency)
     }
     LaunchedEffect(addMerchantId) {
-        if(addMerchantId != -1L)
-        {
+        if (addMerchantId != -1L) {
             overViewViewModel.addMerchantSuccess()
         }
     }
@@ -189,7 +188,7 @@ fun OverViewStartScreen(
                 isAddMerchantSuccess = addMerchantAnimRun,
                 merchantId = addMerchantId,
                 onSetBudgetClick = onSetBudgetClick,
-                isSelectionEnable = budgetState.count() == 2
+                isSelectionEnable = budgetState.count() { it.periodType == PeriodType.MONTH.id || it.periodType == PeriodType.YEAR.id } == 2
             )
 
             Spacer(modifier = Modifier.height(30.dp))
@@ -212,7 +211,7 @@ private fun OverViewScreenPreview() {
             onTransactionClick = {},
             onExploreAnalysisClick = {},
             onExploreBudgetClick = {},
-            onAddMerchant ={},
+            onAddMerchant = {},
             addMerchantId = -1L,
             onSetBudgetClick = {}
         )

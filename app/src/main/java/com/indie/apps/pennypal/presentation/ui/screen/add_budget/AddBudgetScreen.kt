@@ -52,6 +52,7 @@ fun AddBudgetScreen(
     onSave: (Boolean, Long) -> Unit,
     selectedCategoryIds: List<Long> = emptyList(),
     onSelectCategory: (List<Long>) -> Unit,
+    selectedPeriodType: Int,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
 
@@ -65,6 +66,10 @@ fun AddBudgetScreen(
 
     LaunchedEffect(selectedCategoryIds) {
         addBudgetViewModel.setSelectedCategory(selectedCategoryIds)
+    }
+
+    LaunchedEffect(selectedPeriodType) {
+        addBudgetViewModel.setSelectPeriodType(selectedPeriodType)
     }
 
     val currentPeriod by addBudgetViewModel.currentPeriod.collectAsStateWithLifecycle()
@@ -290,7 +295,8 @@ private fun OverViewScreenPreview() {
         AddBudgetScreen(
             onNavigationUp = {},
             onSelectCategory = {},
-            onSave = { _, _ -> }
+            onSave = { _, _ -> },
+            selectedPeriodType = 1
         )
     }
 }

@@ -194,8 +194,13 @@ class AddBudgetViewModel @Inject constructor(
         }.timeInMillis
     }
 
+
+    fun setSelectPeriodType(id: Int) {
+        currentPeriod.value = id
+    }
+
     fun setSelectedCategory(idList: List<Long>) {
-        if(isSetAsNewSelectedCategory){
+        if (isSetAsNewSelectedCategory) {
             isSetAsNewSelectedCategory = false
             return
         }
@@ -365,8 +370,8 @@ class AddBudgetViewModel @Inject constructor(
             }
         }
     }
-    private fun setEntryExistError()
-    {
+
+    private fun setEntryExistError() {
         when (currentPeriod.value) {
             PeriodType.MONTH.id -> {
                 monthError = ErrorMessage.BUDGET_EXIST_MONTH

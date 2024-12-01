@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.indie.apps.pennypal.R
+import com.indie.apps.pennypal.data.database.enum.PeriodType
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
@@ -29,8 +30,8 @@ import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 fun BudgetScreen(
     budgetViewModel: BudgetViewModel = hiltViewModel(),
     onNavigationUp: () -> Unit,
-    onAddClick: () -> Unit,
-    onBudgetEditClick : (Long) -> Unit,
+    onAddClick: (Int) -> Unit,
+    onBudgetEditClick: (Long) -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     val title = stringResource(id = R.string.budget_analysis)
@@ -44,8 +45,7 @@ fun BudgetScreen(
         topBar = {
             BudgetTopBar(
                 title = title,
-                onNavigationUp = onNavigationUp,
-                onAddClick = onAddClick
+                onNavigationUp = onNavigationUp
             )
         }
     ) { innerPadding ->
@@ -66,19 +66,32 @@ fun BudgetScreen(
             BudgetGroupItem(
                 title = R.string.month,
                 budgetList = monthBudgetState,
-                onBudgetItemClick = onBudgetEditClick
+                onBudgetItemClick = onBudgetEditClick,
+                noDataTitleId = R.string.set_first_month_budget_title,
+                noDataDetailId = R.string.set_first_month_budget_detail,
+                btnTextId = R.string.set_up_month_budget,
+                onAddClick = { onAddClick(PeriodType.MONTH.id) }
             )
 
             BudgetGroupItem(
                 title = R.string.year,
                 budgetList = yearBudgetState,
-                onBudgetItemClick = onBudgetEditClick
+                onBudgetItemClick = onBudgetEditClick,
+                noDataTitleId = R.string.set_first_year_budget_title,
+                noDataDetailId = R.string.set_first_year_budget_detail,
+                btnTextId = R.string.set_up_year_budget,
+                onAddClick = { onAddClick(PeriodType.YEAR.id) }
             )
 
             BudgetGroupItem(
                 title = R.string.one_time,
                 budgetList = oneTimeBudgetState,
-                onBudgetItemClick = onBudgetEditClick
+                onBudgetItemClick = onBudgetEditClick,
+                noDataTitleId = R.string.set_first_onetime_budget_title,
+                noDataDetailId = R.string.set_first_onetime_budget_detail,
+                btnTextId = R.string.set_up_one_time_budget,
+                onAddClick = { onAddClick(PeriodType.ONE_TIME.id) },
+                isShowAddButton = true
             )
         }
     }

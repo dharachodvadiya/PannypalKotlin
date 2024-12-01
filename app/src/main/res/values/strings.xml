@@ -147,4 +147,13 @@
     <string name="set_up_budget">Set Up Budget</string>
     <string name="add_yearly_budget">Add yearly budget</string>
     <string name="add_monthly_budget">Add monthly budget</string>
+    <string name="set_first_month_budget_title">Start Planning Your Monthly Budget?</string>
+    <string name="set_first_year_budget_title">Set Up Your Annual Budget.</string>
+    <string name="set_first_month_budget_detail">It looks like you haven’t set a monthly budget yet. Tap below to get started with your first one.</string>
+    <string name="set_first_year_budget_detail">Your yearly budget is missing. Click below to create your first annual budget and start planning.</string>
+    <string name="set_first_onetime_budget_title">Want to create a One-Time Budget?</string>
+    <string name="set_first_onetime_budget_detail">You haven’t set up a one-time budget yet. Set one up now to track specific expenses.</string>
+    <string name="set_up_month_budget">Add Monthly Budget</string>
+    <string name="set_up_year_budget">Add Yearly Budget</string>
+    <string name="set_up_one_time_budget">Add One-time Budget</string>
 </resources>
