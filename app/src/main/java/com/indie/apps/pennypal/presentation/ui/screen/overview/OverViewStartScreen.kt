@@ -12,6 +12,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -39,9 +40,12 @@ fun OverViewStartScreen(
     onSeeAllMerchantClick: () -> Unit,
     onExploreAnalysisClick: () -> Unit,
     onExploreBudgetClick: () -> Unit,
+    onSetBudgetClick: () -> Unit,
     onTransactionClick: (Long) -> Unit,
     addEditMerchantDataId: Long,
+    addMerchantId: Long,
     onNavigationUp: () -> Unit,
+    onAddMerchant: () -> Unit,
     isAddMerchantDataSuccess: Boolean = false,
     isEditSuccess: Boolean = false,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
@@ -58,6 +62,7 @@ fun OverViewStartScreen(
     val currentTotal by overViewViewModel.currentTotal.collectAsStateWithLifecycle()
     val addDataAnimRun by overViewViewModel.addDataAnimRun.collectAsStateWithLifecycle()
     val editAnimRun by overViewViewModel.editAnimRun.collectAsStateWithLifecycle()
+    val addMerchantAnimRun by overViewViewModel.addMerchantAnimRun.collectAsStateWithLifecycle()
 
     val recentTransaction by overViewViewModel.recentTransaction.collectAsStateWithLifecycle()
     val recentMerchant by overViewViewModel.recentMerchant.collectAsStateWithLifecycle()
@@ -70,6 +75,12 @@ fun OverViewStartScreen(
     if (userData != null) {
         Util.currentCurrencySymbol =
             overViewViewModel.getSymbolFromCurrencyCode(userData!!.currency)
+    }
+    LaunchedEffect(addMerchantId) {
+        if(addMerchantId != -1L)
+        {
+            overViewViewModel.addMerchantSuccess()
+        }
     }
 
     var isAddDataSuccess by remember {
@@ -163,14 +174,22 @@ fun OverViewStartScreen(
                 onAnimStop = {
                     overViewViewModel.addMerchantDataSuccessAnimStop()
                 },
-                budgetWithSpentAndCategoryIdList = budgetState.firstOrNull() { it.periodType == currentBudgetPeriod.id },
+                budgetWithSpentAndCategoryIdList = budgetState.firstOrNull() { it.periodType == PeriodType.MONTH.id || it.periodType == PeriodType.YEAR.id },
                 selectBudgetPeriod = currentBudgetPeriod,
                 onSelectBudgetPeriod = {
                     currentBudgetPeriod = if (currentBudgetPeriod == PeriodType.MONTH)
                         PeriodType.YEAR
                     else
                         PeriodType.MONTH
-                }
+                },
+                onAddMerchant = onAddMerchant,
+                onMerchantAnimStop = {
+                    overViewViewModel.addMerchantSuccessAnimStop()
+                },
+                isAddMerchantSuccess = addMerchantAnimRun,
+                merchantId = addMerchantId,
+                onSetBudgetClick = onSetBudgetClick,
+                isSelectionEnable = budgetState.count() == 2
             )
 
             Spacer(modifier = Modifier.height(30.dp))
@@ -192,7 +211,10 @@ private fun OverViewScreenPreview() {
             onSeeAllMerchantClick = {},
             onTransactionClick = {},
             onExploreAnalysisClick = {},
-            onExploreBudgetClick = {}
+            onExploreBudgetClick = {},
+            onAddMerchant ={},
+            addMerchantId = -1L,
+            onSetBudgetClick = {}
         )
     }
 }

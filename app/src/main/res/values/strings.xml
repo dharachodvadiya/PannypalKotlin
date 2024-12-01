@@ -47,12 +47,12 @@
     <string name="merchant_data_edit_success_message">Merchant Data Edit Successfully</string>
     <string name="phone_number_not_added">Not Added</string>
     <string name="no_transactions_yet">No Transactions Yet</string>
-    <string name="latest_transactions_appear_here">Your latest transactions will appear here. Track your Income and Expense. Click + to start transaction.</string>
+    <string name="latest_transactions_appear_here">Your latest transactions will appear here. Track your Income and Expense. Click "+" button to start transaction.</string>
     <string name="no_transactions">No Transactions!</string>
     <string name="no_merchants">No Merchants Yet!</string>
     <string name="no_merchants_details">Click + to add new merchant.</string>
-    <string name="no_merchants_details_with_transaction">Click top + to add new merchant and click bottom + to add new transaction.</string>
-    <string name="no_data_with_transaction">Click top + to add new transaction.</string>
+    <string name="no_merchants_details_with_transaction">Click top "+" button to add new merchant and click bottom "+" button to add new transaction.</string>
+    <string name="no_data_with_transaction">Click top "+" button to add new transaction.</string>
     <string name="currency_and_format"><![CDATA[Currency & Format]]></string>
     <string name="user_update_success_message">Successfully Updated</string>
     <string name="of">of</string>
@@ -141,4 +141,10 @@
     <string name="budget_edit_success_toast">Budget Edited Successfully</string>
     <string name="budget_add_success_toast">Budget Added</string>
     <string name="period_not_edit_toast">You can not edit Period</string>
+    <string name="no_data_with_transaction1">Your latest transaction will appear here. Track your spending and income. Click "+" button to add new transaction."</string>
+    <string name="no_budget_title">No budget for this month?</string>
+    <string name="no_budget_details">Setting a budget for your spending is a crusial step in achieving your financial goals.</string>
+    <string name="set_up_budget">Set Up Budget</string>
+    <string name="add_yearly_budget">Add yearly budget</string>
+    <string name="add_monthly_budget">Add monthly budget</string>
 </resources>

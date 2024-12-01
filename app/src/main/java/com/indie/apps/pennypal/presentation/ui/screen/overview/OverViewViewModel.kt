@@ -55,6 +55,9 @@ class OverViewViewModel @Inject constructor(
     var addDataAnimRun = MutableStateFlow(false)
         private set
 
+    var addMerchantAnimRun = MutableStateFlow(false)
+        private set
+
     var editAnimRun = MutableStateFlow(false)
 
     /*val pagedMerchantDataWithDay: Flow<PagingData<MerchantDataWithNameWithDayTotal>> =
@@ -172,6 +175,20 @@ class OverViewViewModel @Inject constructor(
     fun addMerchantDataSuccessAnimStop() {
         if (addDataAnimRun.value)
             addDataAnimRun.value = false
+    }
+
+    @SuppressLint("SuspiciousIndentation")
+    fun addMerchantSuccess() {
+        addMerchantAnimRun.value = true
+        viewModelScope.launch {
+            delay(Util.LIST_ITEM_ANIM_DELAY)
+            addMerchantSuccessAnimStop()
+        }
+    }
+
+    fun addMerchantSuccessAnimStop() {
+        if (addMerchantAnimRun.value)
+            addMerchantAnimRun.value = false
     }
 
     fun editDataSuccess() {

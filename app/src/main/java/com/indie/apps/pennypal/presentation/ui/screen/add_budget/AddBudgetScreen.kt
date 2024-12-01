@@ -63,6 +63,10 @@ fun AddBudgetScreen(
 
     var isCategoryExpanded by remember { mutableStateOf(false) }
 
+    LaunchedEffect(selectedCategoryIds) {
+        addBudgetViewModel.setSelectedCategory(selectedCategoryIds)
+    }
+
     val currentPeriod by addBudgetViewModel.currentPeriod.collectAsStateWithLifecycle()
     val currentMonthInMilli by addBudgetViewModel.currentMonthInMilli.collectAsStateWithLifecycle()
     val currentYearInMilli by addBudgetViewModel.currentYearInMilli.collectAsStateWithLifecycle()
@@ -78,9 +82,7 @@ fun AddBudgetScreen(
     val categoryBudgetErrorText by addBudgetViewModel.categoryBudgetErrorText.collectAsStateWithLifecycle()
     val selectedCategoryList by addBudgetViewModel.selectedCategoryList.collectAsStateWithLifecycle()
 
-    LaunchedEffect(selectedCategoryIds) {
-        addBudgetViewModel.setSelectedCategory(selectedCategoryIds)
-    }
+
     val context = LocalContext.current
     val budgetEditToast = stringResource(id = R.string.budget_edit_success_toast)
     val budgetAddToast = stringResource(id = R.string.budget_add_success_toast)
@@ -102,7 +104,7 @@ fun AddBudgetScreen(
         }
 
         is Resource.Success -> {
-            val title = if (addBudgetViewModel.budgetEditId == 0L)
+            val title = if (addBudgetViewModel.budgetEditId == -1L)
                 stringResource(id = R.string.add_budget)
             else
                 stringResource(id = R.string.edit_Budget)
@@ -145,7 +147,6 @@ fun AddBudgetScreen(
                             onSelect = addBudgetViewModel::setCurrentPeriod,
                         )
                     }
-
                     AddBudgetFieldItem(
                         onSelectCategory = {
                             onSelectCategory(selectedCategoryList.map { it.id })

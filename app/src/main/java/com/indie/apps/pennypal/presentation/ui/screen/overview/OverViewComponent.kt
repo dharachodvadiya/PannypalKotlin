@@ -19,13 +19,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material.icons.filled.NorthEast
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.SouthWest
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -33,6 +35,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
@@ -40,6 +43,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -53,6 +57,7 @@ import com.indie.apps.pennypal.data.module.TabItemInfo
 import com.indie.apps.pennypal.data.module.balance.TotalWithCurrency
 import com.indie.apps.pennypal.data.module.budget.BudgetWithSpentAndCategoryIdList
 import com.indie.apps.pennypal.data.module.category.CategoryAmount
+import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
 import com.indie.apps.pennypal.presentation.ui.component.PeriodText
 import com.indie.apps.pennypal.presentation.ui.component.chart.PieChart
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.AutoSizeText
@@ -423,11 +428,17 @@ fun OverviewData(
     onSeeAllMerchantClick: () -> Unit,
     onExploreAnalysisClick: () -> Unit,
     onExploreBudgetClick: () -> Unit,
+    onSetBudgetClick: () -> Unit,
     onTransactionClick: (Long) -> Unit,
     isAddMerchantDataSuccess: Boolean = false,
     isEditMerchantDataSuccess: Boolean = false,
+    isAddMerchantSuccess: Boolean = false,
+    isSelectionEnable: Boolean,
     merchantDataId: Long = 1L,
-    onAnimStop: () -> Unit
+    merchantId: Long = 1L,
+    onAnimStop: () -> Unit,
+    onMerchantAnimStop: () -> Unit,
+    onAddMerchant: () -> Unit
 ) {
 
     PeriodText(
@@ -452,20 +463,28 @@ fun OverviewData(
 
     OverviewMerchantData(
         recentMerchant = recentMerchant,
-        onSeeAllMerchantClick = onSeeAllMerchantClick
+        onSeeAllMerchantClick = onSeeAllMerchantClick,
+        onAddMerchant = onAddMerchant,
+        isAddMerchantSuccess = isAddMerchantSuccess,
+        merchantId = merchantId,
+        onAnimStop = onMerchantAnimStop
     )
 
-    OverviewAnalysisData(
-        currentPeriod = currentPeriod,
-        categoryList = categoryList,
-        onExploreAnalysisClick = onExploreAnalysisClick
-    )
+    if (categoryList.isNotEmpty()) {
+        OverviewAnalysisData(
+            currentPeriod = currentPeriod,
+            categoryList = categoryList,
+            onExploreAnalysisClick = onExploreAnalysisClick
+        )
+    }
 
     OverviewBudgetData(
         budgetWithSpentAndCategoryIdList = budgetWithSpentAndCategoryIdList,
         onExploreBudgetClick = onExploreBudgetClick,
         selectBudgetPeriod = selectBudgetPeriod,
-        onSelectBudgetPeriod = onSelectBudgetPeriod
+        onSelectBudgetPeriod = onSelectBudgetPeriod,
+        onSetBudgetClick = onSetBudgetClick,
+        isSelectionEnable = isSelectionEnable
     )
 }
 
@@ -574,57 +593,68 @@ fun OverviewTransactionData(
         content = {
             val scope = rememberCoroutineScope()
 
-            recentTransaction.forEach { item ->
+            if (recentTransaction.isNotEmpty()) {
+                recentTransaction.forEach { item ->
 
-                val itemAnimateScale = remember {
-                    Animatable(0f)
-                }
-
-                val baseColor = MyAppTheme.colors.itemBg
-                val targetAnimColor = MyAppTheme.colors.lightBlue1
-
-                val itemAnimateColor = remember {
-                    androidx.compose.animation.Animatable(baseColor)
-                }
-
-                val modifierAdd: Modifier =
-                    if (merchantDataId == item.id && isAddMerchantDataSuccess) {
-                        scope.launch {
-                            itemAnimateScale.animateTo(
-                                targetValue = 1f,
-                                animationSpec = tween(Util.ADD_ITEM_ANIM_TIME)
-                            )
-                        }
-                        if (itemAnimateScale.value == 1f) {
-                            onAnimStop()
-                        }
-                        Modifier.scale(itemAnimateScale.value)
-                    } else if ((merchantDataId == item.id && isEditMerchantDataSuccess)
-                    ) {
-                        scope.launch {
-                            itemAnimateColor.animateTo(
-                                targetValue = targetAnimColor,
-                                animationSpec = tween(Util.EDIT_ITEM_ANIM_TIME)
-                            )
-                            itemAnimateColor.animateTo(
-                                targetValue = baseColor,
-                                animationSpec = tween(Util.EDIT_ITEM_ANIM_TIME)
-                            )
-                        }
-                        Modifier
-                    } else {
-                        Modifier
+                    val itemAnimateScale = remember {
+                        Animatable(0f)
                     }
 
-                TransactionItem(
-                    item = item,
-                    isSelected = false,
-                    onClick = {
-                        onTransactionClick(item.id)
-                    },
-                    onLongClick = { },
-                    itemBgColor = itemAnimateColor.value,
-                    modifier = modifierAdd
+                    val baseColor = MyAppTheme.colors.itemBg
+                    val targetAnimColor = MyAppTheme.colors.lightBlue1
+
+                    val itemAnimateColor = remember {
+                        androidx.compose.animation.Animatable(baseColor)
+                    }
+
+                    val modifierAdd: Modifier =
+                        if (merchantDataId == item.id && isAddMerchantDataSuccess) {
+                            scope.launch {
+                                itemAnimateScale.animateTo(
+                                    targetValue = 1f,
+                                    animationSpec = tween(Util.ADD_ITEM_ANIM_TIME)
+                                )
+                            }
+                            if (itemAnimateScale.value == 1f) {
+                                onAnimStop()
+                            }
+                            Modifier.scale(itemAnimateScale.value)
+                        } else if ((merchantDataId == item.id && isEditMerchantDataSuccess)
+                        ) {
+                            scope.launch {
+                                itemAnimateColor.animateTo(
+                                    targetValue = targetAnimColor,
+                                    animationSpec = tween(Util.EDIT_ITEM_ANIM_TIME)
+                                )
+                                itemAnimateColor.animateTo(
+                                    targetValue = baseColor,
+                                    animationSpec = tween(Util.EDIT_ITEM_ANIM_TIME)
+                                )
+                            }
+                            Modifier
+                        } else {
+                            Modifier
+                        }
+
+                    TransactionItem(
+                        item = item,
+                        isSelected = false,
+                        onClick = {
+                            onTransactionClick(item.id)
+                        },
+                        onLongClick = { },
+                        itemBgColor = itemAnimateColor.value,
+                        modifier = modifierAdd
+                    )
+                }
+            } else {
+                NoDataMessage(
+                    title = stringResource(id = R.string.no_transaction),
+                    details = stringResource(id = R.string.no_data_with_transaction1),
+                    iconSize = 50.dp,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = dimensionResource(id = R.dimen.padding))
                 )
             }
         },
@@ -636,6 +666,10 @@ fun OverviewTransactionData(
 fun OverviewMerchantData(
     recentMerchant: List<MerchantNameAndDetails>,
     onSeeAllMerchantClick: () -> Unit,
+    onAddMerchant: () -> Unit,
+    isAddMerchantSuccess: Boolean = false,
+    merchantId: Long = 1L,
+    onAnimStop: () -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     OverviewItem(
@@ -646,12 +680,54 @@ fun OverviewMerchantData(
                 horizontalArrangement = Arrangement.Absolute.SpaceEvenly,
                 modifier = Modifier.fillMaxWidth()
             ) {
+                val scope = rememberCoroutineScope()
+
                 recentMerchant.forEach { item ->
+
+                    val itemAnimateScale = remember {
+                        Animatable(0f)
+                    }
+                    val modifierAdd: Modifier =
+                        if (merchantId == item.id && isAddMerchantSuccess) {
+                            scope.launch {
+                                itemAnimateScale.animateTo(
+                                    targetValue = 1f,
+                                    animationSpec = tween(Util.ADD_ITEM_ANIM_TIME)
+                                )
+                            }
+                            if (itemAnimateScale.value == 1f) {
+                                onAnimStop()
+                            }
+                            Modifier.scale(itemAnimateScale.value)
+                        } else {
+                            Modifier
+                        }
+
                     MerchantItem(
                         item = item,
-                        modifier = Modifier
-                            .weight(1f)
+                        modifier = modifierAdd
+
                     )
+                }
+
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = modifier
+                        .weight(1f)
+                        .padding(5.dp)
+                ) {
+                    RoundImage(
+                        imageVector = Icons.Default.Add,
+                        imageVectorSize = 30.dp,
+                        tint = MyAppTheme.colors.gray2,
+                        backGround = MyAppTheme.colors.bottomBg,
+                        contentDescription = "add",
+                        modifier = Modifier
+                            .size(55.dp)
+                            .clip(CircleShape)
+                            .clickable { onAddMerchant() }
+                    )
+
                 }
 
                 repeat(4 - recentMerchant.size) {
@@ -724,6 +800,8 @@ fun OverviewBudgetData(
     onExploreBudgetClick: () -> Unit,
     selectBudgetPeriod: PeriodType,
     onSelectBudgetPeriod: (PeriodType) -> Unit,
+    onSetBudgetClick: () -> Unit,
+    isSelectionEnable: Boolean,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     OverviewItem(
@@ -751,11 +829,13 @@ fun OverviewBudgetData(
                     }
                 } ?: ""
 
-                OverviewBudgetSelectionButton(
-                    list = PeriodType.entries,
-                    selectBudgetPeriod = PeriodType.entries.first { it == selectBudgetPeriod },
-                    onSelect = onSelectBudgetPeriod
-                )
+                if (isSelectionEnable) {
+                    OverviewBudgetSelectionButton(
+                        list = PeriodType.entries,
+                        selectBudgetPeriod = PeriodType.entries.first { it == selectBudgetPeriod },
+                        onSelect = onSelectBudgetPeriod
+                    )
+                }
 
                 SingleBudgetOverAllAnalysis(
                     totalBudgetAmount = budgetWithSpentAndCategoryIdList.budgetAmount,
@@ -763,12 +843,84 @@ fun OverviewBudgetData(
                     timeString = timeString
                 )
 
+                if (!isSelectionEnable) {
+                    val btnTextId =
+                        if (budgetWithSpentAndCategoryIdList.periodType == PeriodType.MONTH.id)
+                            R.string.add_yearly_budget
+                        else
+                            R.string.add_monthly_budget
+
+                    PrimaryButton(
+                        onClick = onSetBudgetClick,
+                        modifier = Modifier.padding(dimensionResource(id = R.dimen.item_inner_padding))
+                    ) {
+                        CustomText(
+                            text = stringResource(id = btnTextId),
+                            style = MyAppTheme.typography.Regular44,
+                            color = MyAppTheme.colors.gray0,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                }
+
+            } else {
+                OverviewNoBudgetItem(
+                    onSetBudgetClick = onSetBudgetClick
+                )
             }
 
         },
         isBgEnable = true,
         modifier = modifier.clickable { onExploreBudgetClick() }
     )
+}
+
+@Composable
+private fun OverviewNoBudgetItem(
+    onSetBudgetClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(dimensionResource(id = R.dimen.padding)),
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        Column(
+            modifier = Modifier.fillMaxWidth(0.75f),
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.item_inner_padding))
+        ) {
+
+            CustomText(
+                text = stringResource(id = R.string.no_budget_title),
+                style = MyAppTheme.typography.Regular51,
+                color = MyAppTheme.colors.gray1
+            )
+            CustomText(
+                text = stringResource(id = R.string.no_budget_details),
+                style = MyAppTheme.typography.Regular44,
+                color = MyAppTheme.colors.gray2
+            )
+
+            PrimaryButton(onClick = onSetBudgetClick) {
+                CustomText(
+                    text = stringResource(id = R.string.set_up_budget),
+                    style = MyAppTheme.typography.Regular44,
+                    color = MyAppTheme.colors.gray0,
+                    textAlign = TextAlign.Center
+                )
+            }
+
+        }
+
+        Icon(
+            imageVector = Icons.Filled.AttachMoney,
+            contentDescription = "no transaction",
+            tint = MyAppTheme.colors.gray2,
+            modifier = Modifier.size(50.dp)
+        )
+    }
 }
 
 @Composable
@@ -977,16 +1129,16 @@ fun OverviewTopBarProfile(
         Spacer(modifier = Modifier.weight(1f))
 
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Checkbox(checked = isSubscribed, onCheckedChange = onSubscriptionChanged)
-            CustomText(
-                text = "Subscribed",
-                style = MyAppTheme.typography.Regular57,
-                color = MyAppTheme.colors.black
-            )
-        }
+        /* Row(
+             verticalAlignment = Alignment.CenterVertically
+         ) {
+             Checkbox(checked = isSubscribed, onCheckedChange = onSubscriptionChanged)
+             CustomText(
+                 text = "Subscribed",
+                 style = MyAppTheme.typography.Regular57,
+                 color = MyAppTheme.colors.black
+             )
+         }*/
 
     }
 }

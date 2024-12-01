@@ -32,13 +32,13 @@ class AddBudgetViewModel @Inject constructor(
 ) : ViewModel() {
 
     val budgetEditId =
-        savedStateHandle.get<String>(Util.PARAM_BUDGET_ID)?.toLong() ?: 0
+        savedStateHandle.get<String>(Util.PARAM_BUDGET_ID)?.toLong() ?: -1L
     private var editBudgetData: BudgetWithCategory? = null
 
     val currentPeriod = MutableStateFlow(PeriodType.MONTH.id)
 
-    var monthError = ""
-    var yearError = ""
+    private var monthError = ""
+    private var yearError = ""
 
     val periodErrorText = MutableStateFlow("")
     val periodFromErrorText = MutableStateFlow("")
@@ -63,6 +63,8 @@ class AddBudgetViewModel @Inject constructor(
 
     val uiState = MutableStateFlow<Resource<Unit>>(Resource.Loading())
 
+    private var isSetAsNewSelectedCategory = !isEditData()
+
     init {
 
         uiState.value = Resource.Loading()
@@ -73,13 +75,13 @@ class AddBudgetViewModel @Inject constructor(
                 ).collect { newCategories ->
                     categoryList = newCategories
 
-                    if (budgetEditId == 0L) {
+                    if (budgetEditId == -1L) {
                         val calendar = Calendar.getInstance()
 
                         setCurrentMonth(calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR))
                         setCurrentYear(calendar.get(Calendar.YEAR))
 
-                        selectedCategoryList.value = categoryList.map { it.toCategoryAmount() }
+                        selectedCategoryList.value = newCategories.map { it.toCategoryAmount() }
 
                         uiState.value = Resource.Success(Unit)
 
@@ -90,7 +92,7 @@ class AddBudgetViewModel @Inject constructor(
         }
     }
 
-    fun isEditData() = (budgetEditId != 0L)
+    fun isEditData() = (budgetEditId != -1L)
 
     private fun setEditData() {
         viewModelScope.launch {
@@ -193,6 +195,10 @@ class AddBudgetViewModel @Inject constructor(
     }
 
     fun setSelectedCategory(idList: List<Long>) {
+        if(isSetAsNewSelectedCategory){
+            isSetAsNewSelectedCategory = false
+            return
+        }
         val idSet = idList.toSet()
 
         val newList = mutableListOf<CategoryAmount>()
@@ -273,7 +279,7 @@ class AddBudgetViewModel @Inject constructor(
         } else if (remainingAmount.value < 0) {
             categoryBudgetErrorText.value = ErrorMessage.CATEGORY_LIMIT
         } else {
-            if (budgetEditId == 0L) {
+            if (budgetEditId == -1L) {
                 val startDate = when (currentPeriod.value) {
                     PeriodType.ONE_TIME.id -> currentFromTimeInMilli.value
                     PeriodType.MONTH.id -> currentMonthInMilli.value
