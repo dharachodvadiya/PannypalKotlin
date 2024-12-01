@@ -21,6 +21,7 @@ import com.indie.apps.pennypal.presentation.ui.navigation.ScreenNav
 import com.indie.apps.pennypal.presentation.ui.screen.add_budget.AddBudgetScreen
 import com.indie.apps.pennypal.presentation.ui.screen.all_data.AllDataScreen
 import com.indie.apps.pennypal.presentation.ui.screen.budget.BudgetScreen
+import com.indie.apps.pennypal.presentation.ui.screen.budget_filter.BudgetFilterScreen
 import com.indie.apps.pennypal.presentation.ui.screen.new_item.NewItemScreen
 import com.indie.apps.pennypal.presentation.ui.screen.overview.OverViewStartScreen
 import com.indie.apps.pennypal.presentation.ui.screen.overview_analysis.OverViewAnalysisScreen
@@ -270,7 +271,14 @@ fun NavGraphBuilder.overViewRoute(
                          )
                      )*/
                 },
-                onBudgetMenuClick = {},
+                onBudgetMenuClick = {
+                    navController.navigate(ScreenNav.BUDGET_FILTER.route)
+
+                    navController.currentBackStackEntry?.savedStateHandle?.set(
+                        Util.SAVE_STATE_BUDGET_FILTER_ID,
+                        it
+                    )
+                },
             )
         }
 
@@ -349,6 +357,32 @@ fun NavGraphBuilder.overViewRoute(
                 },
                 selectedCategoryIds = categoryIds,
                 selectedPeriodType = 1
+            )
+        }
+
+        composable(route = ScreenNav.BUDGET_FILTER.route) {backStackEntry->
+            bottomBarState.value = false
+
+            val menuId =
+                backStackEntry.savedStateHandle.get<Int>(Util.SAVE_STATE_BUDGET_FILTER_ID)
+            BudgetFilterScreen(
+                onNavigationUp = { navController.navigateUp() },
+                onAddClick = {
+                    navController.navigate(ScreenNav.ADD_BUDGET.route)
+
+                    navController.currentBackStackEntry?.savedStateHandle?.set(
+                        Util.SAVE_STATE_PERIOD_TYPE,
+                        it
+                    )
+                },
+                onBudgetEditClick = {
+                    navController.navigate(
+                        ScreenNav.SINGLE_BUDGET_ANALYSIS.route.replace(
+                            "{${Util.PARAM_BUDGET_ID}}", it.toString()
+                        )
+                    )
+                },
+                budgetFilterId = menuId ?: 1
             )
         }
 
