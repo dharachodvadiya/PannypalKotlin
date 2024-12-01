@@ -7,7 +7,17 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -28,12 +38,45 @@ import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 fun BudgetTopBar(
     title: String = "",
     onNavigationUp: () -> Unit,
+    onUpcomingBudgetClick: () -> Unit,
+    onPastBudgetClick: () -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
+    var expanded by remember { mutableStateOf(false) }
+
     TopBarWithTitle(
         title = title, onNavigationUp = {
             onNavigationUp()
-        }, contentAlignment = Alignment.Center, modifier = modifier
+        },
+        trailingContent = {
+
+            Column {
+                IconButton(onClick = { expanded = !expanded }) {
+                    Icon(Icons.Default.MoreVert, contentDescription = "More Options")
+                }
+
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    DropdownMenuItem(
+                        onClick = {
+                            expanded = false
+                            onUpcomingBudgetClick()
+                        },
+                        text = { CustomText(text = stringResource(id = R.string.upcoming_boudget)) })
+
+                    DropdownMenuItem(
+                        onClick = {
+                            expanded = false
+                            onPastBudgetClick()
+                        },
+                        text = { CustomText(text = stringResource(id = R.string.past_boudget)) })
+                }
+            }
+        },
+        contentAlignment = Alignment.Center,
+        modifier = modifier
     )
 }
 

@@ -156,4 +156,6 @@
     <string name="set_up_month_budget">Add Monthly Budget</string>
     <string name="set_up_year_budget">Add Yearly Budget</string>
     <string name="set_up_one_time_budget">Add One-time Budget</string>
+    <string name="upcoming_boudget">Upcoming Budget</string>
+    <string name="past_boudget">Past Budget</string>
 </resources>

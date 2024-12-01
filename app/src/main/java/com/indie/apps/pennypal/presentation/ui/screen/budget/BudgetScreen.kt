@@ -32,6 +32,8 @@ fun BudgetScreen(
     onNavigationUp: () -> Unit,
     onAddClick: (Int) -> Unit,
     onBudgetEditClick: (Long) -> Unit,
+    onUpcomingBudgetClick: () -> Unit,
+    onPastBudgetClick: () -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     val title = stringResource(id = R.string.budget_analysis)
@@ -45,7 +47,9 @@ fun BudgetScreen(
         topBar = {
             BudgetTopBar(
                 title = title,
-                onNavigationUp = onNavigationUp
+                onNavigationUp = onNavigationUp,
+                onUpcomingBudgetClick = onUpcomingBudgetClick,
+                onPastBudgetClick = onPastBudgetClick
             )
         }
     ) { innerPadding ->
@@ -105,8 +109,9 @@ private fun OverViewScreenPreview() {
         BudgetScreen(
             onNavigationUp = {},
             onAddClick = {},
-            onBudgetEditClick = {
-            }
+            onBudgetEditClick = {},
+            onUpcomingBudgetClick = {},
+            onPastBudgetClick = {}
         )
     }
 }
