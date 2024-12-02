@@ -9,12 +9,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
-class GetBudgetFromPeriodUseCase @Inject constructor(
+class GetBudgetWithSpentFromPeriodUseCase @Inject constructor(
     private val budgetRepository: BudgetRepository,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) {
     fun loadFromMonth(year: Int, month: Int): Flow<List<BudgetWithSpentAndCategoryIdList>> {
-        return budgetRepository.getBudgetsWithCategoryIdListFromMonth(
+        return budgetRepository.getBudgetsAndSpentWithCategoryIdListFromMonth(
             month = month,
             year = year,
             timeZoneOffsetInMilli = Util.TIME_ZONE_OFFSET_IN_MILLI

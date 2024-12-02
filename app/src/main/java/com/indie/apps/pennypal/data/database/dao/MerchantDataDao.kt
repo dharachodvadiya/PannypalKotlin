@@ -326,15 +326,17 @@ interface MerchantDataDao : BaseDao<MerchantData> {
         yearOffset: Int
     ): Flow<List<CategoryYearly>>
 
-    @Query("""
+    @Query(
+        """
         SELECT IFNULL(SUM(amount), 0.0) 
         FROM merchant_data
         WHERE
             strftime('%Y', ((date_milli + :timeZoneOffsetInMilli) / 1000), 'unixepoch') = :year
-            AND strftime('%m', ((date_milli + :timeZoneOffsetInMilli) / 1000), 'unixepoch') = :monthPlusOne
+            AND strftime('%m', ((date_milli + :timeZoneOffsetInMilli) / 1000), 'unixepoch') = printf('%02d', :monthPlusOne)
             AND category_id IN (:categoryIds)
             AND type = -1
-    """)
+    """
+    )
     suspend fun getTotalAmountForMonthAndCategory(
         timeZoneOffsetInMilli: Int,
         year: String,
@@ -342,35 +344,40 @@ interface MerchantDataDao : BaseDao<MerchantData> {
         categoryIds: List<Long>
     ): Double
 
-    @Query("""
+    @Query(
+        """
         SELECT IFNULL(SUM(amount), 0.0) 
         FROM merchant_data
         WHERE
             strftime('%Y', ((date_milli + :timeZoneOffsetInMilli) / 1000), 'unixepoch') = :year
             AND category_id IN (:categoryIds)
             AND type = -1
-    """)
+    """
+    )
     suspend fun getTotalAmountForYearAndCategory(
         timeZoneOffsetInMilli: Int,
         year: String,
         categoryIds: List<Long>
     ): Double
 
-    @Query("""
+    @Query(
+        """
         SELECT IFNULL(SUM(amount), 0.0) 
         FROM merchant_data
         WHERE
             date_milli BETWEEN :startTime AND :endTime
             AND category_id IN (:categoryIds)
             AND type = -1
-    """)
+    """
+    )
     suspend fun getTotalAmountForBetweenDatesAndCategory(
         startTime: Long,
         endTime: Long,
         categoryIds: List<Long>
     ): Double
 
-    @Query("""
+    @Query(
+        """
         SELECT 
             c.id AS id,
             c.name,
@@ -382,12 +389,13 @@ interface MerchantDataDao : BaseDao<MerchantData> {
             category c ON md.category_id = c.id
         WHERE
             strftime('%Y', ((md.date_milli + :timeZoneOffsetInMilli) / 1000), 'unixepoch') = :year
-            AND strftime('%m', ((md.date_milli + :timeZoneOffsetInMilli) / 1000), 'unixepoch') = :monthPlusOne
+            AND strftime('%m', ((md.date_milli + :timeZoneOffsetInMilli) / 1000), 'unixepoch') = printf('%02d', :monthPlusOne)
             AND md.category_id IN (:categoryIds)
             AND md.type = -1
         GROUP BY 
             c.id, c.name, c.type
-    """)
+    """
+    )
     fun getCategoryWiseTotalAmountForMonth(
         timeZoneOffsetInMilli: Int,
         year: String,
@@ -395,7 +403,8 @@ interface MerchantDataDao : BaseDao<MerchantData> {
         categoryIds: List<Long>
     ): Flow<List<CategoryAmount>>
 
-    @Query("""
+    @Query(
+        """
         SELECT 
             c.id AS id,
             c.name,
@@ -411,14 +420,16 @@ interface MerchantDataDao : BaseDao<MerchantData> {
             AND md.type = -1
         GROUP BY 
             c.id, c.name, c.type
-    """)
+    """
+    )
     fun getCategoryWiseTotalAmountForYear(
         timeZoneOffsetInMilli: Int,
         year: String,
         categoryIds: List<Long>
     ): Flow<List<CategoryAmount>>
 
-    @Query("""
+    @Query(
+        """
         SELECT 
             c.id AS id,
             c.name,
@@ -434,7 +445,8 @@ interface MerchantDataDao : BaseDao<MerchantData> {
             AND md.type = -1
         GROUP BY 
             c.id, c.name, c.type
-    """)
+    """
+    )
     fun getCategoryWiseTotalAmountForBetweenDates(
         startTime: Long,
         endTime: Long,

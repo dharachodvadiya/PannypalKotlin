@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.data.database.dao
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
@@ -32,7 +33,7 @@ interface BudgetDao : BaseDao<Budget> {
         (
             b.period_type = 1
             AND strftime('%Y', (b.start_date + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = :year
-            AND strftime('%m', (b.start_date + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = :monthPlusOne
+            AND strftime('%m', (b.start_date + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = printf('%02d', :monthPlusOne)
         )
         OR
         (
@@ -42,10 +43,10 @@ interface BudgetDao : BaseDao<Budget> {
         OR
         (
             b.period_type = 3  -- ONE_TIME budget
-            AND strftime('%m', (b.start_date + :timeZoneOffsetInMilli) / 1000, 'unixepoch') <= :monthPlusOne
+            AND strftime('%m', (b.start_date + :timeZoneOffsetInMilli) / 1000, 'unixepoch') <= printf('%02d', :monthPlusOne)
             AND strftime('%Y', (b.start_date + :timeZoneOffsetInMilli) / 1000, 'unixepoch') <= :year
             AND (
-                (strftime('%m', (b.end_date + :timeZoneOffsetInMilli) / 1000, 'unixepoch') >= :monthPlusOne
+                (strftime('%m', (b.end_date + :timeZoneOffsetInMilli) / 1000, 'unixepoch') >= printf('%02d', :monthPlusOne)
                     AND strftime('%Y', (b.end_date + :timeZoneOffsetInMilli) / 1000, 'unixepoch') >= :year) 
                 OR 
                 (strftime('%Y', (b.end_date + :timeZoneOffsetInMilli) / 1000, 'unixepoch') > :year)
@@ -91,7 +92,7 @@ interface BudgetDao : BaseDao<Budget> {
     WHERE 
         b.period_type = 1
             AND strftime('%Y', (b.start_date + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = :year
-            AND strftime('%m', (b.start_date + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = :monthPlusOne
+            AND strftime('%m', (b.start_date + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = printf('%02d', :monthPlusOne)
     """
     )
     fun getBudgetDataFromMonth(
@@ -114,4 +115,112 @@ interface BudgetDao : BaseDao<Budget> {
         year: String,
         timeZoneOffsetInMilli: Int
     ): Flow<List<Budget>>
+
+    @Transaction
+    @Query(
+        """
+    SELECT 
+        b.id, 
+        b.title, 
+        b.amount AS budgetAmount, 
+        b.start_date As startDate,
+        b.end_date As endDate,
+        b.period_type As periodType, 
+        GROUP_CONCAT(bc.category_id) AS categoryIds,
+        0.0 As spentAmount
+    FROM budget b
+    LEFT JOIN budget_category bc ON b.id = bc.budget_id
+    WHERE 
+        (
+            b.period_type = 1
+            AND b.period_type = :periodType
+            AND (
+                strftime('%Y', (b.start_date + :timeZoneOffsetInMilli) / 1000, 'unixepoch') < :year
+                OR (
+                    strftime('%Y', (b.start_date + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = :year
+                    AND strftime('%m', (b.start_date + :timeZoneOffsetInMilli) / 1000, 'unixepoch') < printf('%02d', :monthPlusOne)
+                )
+            )
+        )
+        OR
+        (
+            b.period_type = 2
+            AND b.period_type = :periodType
+            AND strftime('%Y', (b.start_date + :timeZoneOffsetInMilli) / 1000, 'unixepoch') < :year
+        )
+        OR
+        (
+            b.period_type = 3
+            AND b.period_type = :periodType
+            AND (
+                strftime('%Y', (b.end_date + :timeZoneOffsetInMilli) / 1000, 'unixepoch') < :year
+                OR (
+                    strftime('%Y', (b.end_date + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = :year
+                    AND strftime('%m', (b.end_date + :timeZoneOffsetInMilli) / 1000, 'unixepoch') < printf('%02d', :monthPlusOne)
+                )
+            )
+        )
+    GROUP BY b.id
+    """
+    )
+    fun getPastBudgetsWithCategoryIdListFromPeriodType(
+        year: String,
+        monthPlusOne: String,
+        periodType: Int,
+        timeZoneOffsetInMilli: Int
+    ): PagingSource<Int, BudgetWithSpentAndCategoryIds>
+
+    @Transaction
+    @Query(
+        """
+    SELECT 
+        b.id, 
+        b.title, 
+        b.amount AS budgetAmount, 
+        b.start_date As startDate,
+        b.end_date As endDate,
+        b.period_type As periodType, 
+        GROUP_CONCAT(bc.category_id) AS categoryIds,
+        0.0 As spentAmount
+    FROM budget b
+    LEFT JOIN budget_category bc ON b.id = bc.budget_id
+    WHERE 
+        (
+            b.period_type = 1
+            AND b.period_type == :periodType
+            AND (
+                strftime('%Y', (b.start_date + :timeZoneOffsetInMilli) / 1000, 'unixepoch') > :year
+                OR (
+                    strftime('%Y', (b.start_date + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = :year
+                    AND strftime('%m', (b.start_date + :timeZoneOffsetInMilli) / 1000, 'unixepoch') > printf('%02d', :monthPlusOne)
+                    )
+                )
+        )
+        OR
+        (
+            b.period_type = 2
+            AND b.period_type == :periodType
+            AND strftime('%Y', (b.start_date + :timeZoneOffsetInMilli) / 1000, 'unixepoch') > :year
+        )
+        OR
+        (
+            b.period_type = 3
+            AND b.period_type == :periodType
+            AND (
+                strftime('%Y', (b.start_date + :timeZoneOffsetInMilli) / 1000, 'unixepoch') > :year
+                OR (
+                    strftime('%Y', (b.start_date + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = :year
+                    AND strftime('%m', (b.start_date + :timeZoneOffsetInMilli) / 1000, 'unixepoch') >= printf('%02d', :monthPlusOne)
+                )
+            )
+        )
+    GROUP BY b.id
+    """
+    )
+    fun getUpComingBudgetsWithCategoryIdListFromPeriodType(
+        year: String,
+        monthPlusOne: String,
+        periodType: Int,
+        timeZoneOffsetInMilli: Int
+    ): PagingSource<Int, BudgetWithSpentAndCategoryIds>
 }

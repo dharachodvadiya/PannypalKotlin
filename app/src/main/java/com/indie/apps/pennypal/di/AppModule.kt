@@ -8,8 +8,6 @@ import com.indie.apps.contacts.data.repo.impl.ContactsRepositoryImpl
 import com.indie.apps.cpp.data.CountryDb
 import com.indie.apps.cpp.data.repository.CountryRepository
 import com.indie.apps.cpp.data.repository.CountryRepositoryImpl
-import com.indie.apps.pennypal.data.database.dao.BudgetCategoryDao
-import com.indie.apps.pennypal.data.database.dao.BudgetDao
 import com.indie.apps.pennypal.data.database.db.AppDatabase
 import com.indie.apps.pennypal.data.preference.PreferenceManager
 import com.indie.apps.pennypal.repository.BillingRepository
@@ -126,6 +124,10 @@ object AppModule {
     fun provideBudgetRepository(
         database: AppDatabase
     ): BudgetRepository {
-        return BudgetRepositoryImpl(database.budgetDao(), database.budgetCategoryDao())
+        return BudgetRepositoryImpl(
+            database.budgetDao(),
+            database.budgetCategoryDao(),
+            database.merchantDataDao()
+        )
     }
 }
