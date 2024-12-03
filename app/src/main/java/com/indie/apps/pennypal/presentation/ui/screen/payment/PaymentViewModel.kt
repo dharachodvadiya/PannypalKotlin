@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.indie.apps.pennypal.domain.usecase.DeletePaymentUseCase
 import com.indie.apps.pennypal.domain.usecase.GetPaymentListWithModeUseCase
 import com.indie.apps.pennypal.domain.usecase.GetUserProfileUseCase
-import com.indie.apps.pennypal.domain.usecase.UpdateUserDataUseCase
 import com.indie.apps.pennypal.util.Resource
 import com.indie.apps.pennypal.util.Util
 import dagger.hilt.android.lifecycle.HiltViewModel
