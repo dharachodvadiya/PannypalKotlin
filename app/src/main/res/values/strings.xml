@@ -143,7 +143,7 @@
     <string name="period_not_edit_toast">You can not edit Period</string>
     <string name="no_data_with_transaction1">Your latest transaction will appear here. Track your spending and income. Click "+" button to add new transaction."</string>
     <string name="no_budget_title">No budget for this month?</string>
-    <string name="no_budget_details">Setting a budget for your spending is a crusial step in achieving your financial goals.</string>
+    <string name="no_budget_details">Setting a budget for your spending is a crucial step in achieving your financial goals.</string>
     <string name="set_up_budget">Set Up Budget</string>
     <string name="add_yearly_budget">Add yearly budget</string>
     <string name="add_monthly_budget">Add monthly budget</string>
@@ -158,4 +158,5 @@
     <string name="set_up_one_time_budget">Add One-time Budget</string>
     <string name="upcoming_boudget">Upcoming Budget</string>
     <string name="past_boudget">Past Budget</string>
+    <string name="no_budget_found">No budget found</string>
 </resources>

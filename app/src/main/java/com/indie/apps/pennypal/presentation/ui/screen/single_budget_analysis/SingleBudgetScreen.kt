@@ -92,7 +92,7 @@ fun SingleBudgetScreen(
                     val monthFormat = SimpleDateFormat("MMMM yyyy")
 
                     val timeString = budgetData?.let { tmpBudgetData ->
-                        when (budgetData!!.periodType) {
+                        when (tmpBudgetData!!.periodType) {
                             PeriodType.MONTH.id -> getDateFromMillis(
                                 tmpBudgetData.startDate,
                                 monthFormat

@@ -173,7 +173,7 @@ fun OverViewStartScreen(
                 onAnimStop = {
                     overViewViewModel.addMerchantDataSuccessAnimStop()
                 },
-                budgetWithSpentAndCategoryIdList = budgetState.firstOrNull() { it.periodType == PeriodType.MONTH.id || it.periodType == PeriodType.YEAR.id },
+                budgetWithSpentAndCategoryIdList = budgetState.firstOrNull() { it.periodType == currentBudgetPeriod.id || it.periodType == currentBudgetPeriod.id },
                 selectBudgetPeriod = currentBudgetPeriod,
                 onSelectBudgetPeriod = {
                     currentBudgetPeriod = if (currentBudgetPeriod == PeriodType.MONTH)

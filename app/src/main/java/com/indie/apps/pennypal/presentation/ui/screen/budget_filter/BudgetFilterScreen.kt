@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Scaffold
@@ -24,11 +25,16 @@ import androidx.paging.compose.itemKey
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.database.enum.BudgetMenu
 import com.indie.apps.pennypal.data.database.enum.PeriodType
+import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomProgressItem
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomProgressItemWithDate
 import com.indie.apps.pennypal.presentation.ui.screen.add_budget.AddBudgetTopSelectionButton
+import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
+import com.indie.apps.pennypal.util.getDateFromMillis
+import java.text.SimpleDateFormat
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
@@ -82,21 +88,76 @@ fun BudgetFilterScreen(
                 onSelect = viewModel::setCurrentPeriod,
             )
 
-            if (!pagingState.isRefresh && lazyPagingData.itemCount != 0) {
-                LazyColumn {
-                    items(count = lazyPagingData.itemCount,
-                        key = lazyPagingData.itemKey { item -> item.id }
-                    ) { index ->
-                        val item = lazyPagingData[index]
-                        if (item != null) {
-                            CustomProgressItem(
-                                name = item.title,
-                                totalAmount = item.budgetAmount,
-                                spentAmount = item.spentAmount,
-                                onClick = {
-                                    onBudgetEditClick(item.id)
-                                }
-                            )
+            if (pagingState.isRefresh && (lazyPagingData.itemCount == 0)) {
+                LoadingWithProgress(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .background(MyAppTheme.colors.transparent)
+                )
+            } else if (lazyPagingData.itemCount == 0) {
+                NoDataMessage(
+                    title = stringResource(id = R.string.no_budget_found),
+                    details = "",
+                    iconSize = 70.dp,
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth()
+                )
+            } else {
+
+                if (!pagingState.isRefresh && lazyPagingData.itemCount != 0) {
+                    LazyColumn {
+                        items(count = lazyPagingData.itemCount,
+                            key = lazyPagingData.itemKey { item -> item.id }
+                        ) { index ->
+
+                            val item = lazyPagingData[index]
+                            if (item != null) {
+
+                                val dateFormat = SimpleDateFormat("dd MMM yyyy")
+                                val yearFormat = SimpleDateFormat("yyyy")
+                                val monthFormat = SimpleDateFormat("MMMM yyyy")
+
+                                val timeString = item?.let { tmpBudgetData ->
+                                    when (tmpBudgetData!!.periodType) {
+                                        PeriodType.MONTH.id -> getDateFromMillis(
+                                            tmpBudgetData.startDate,
+                                            monthFormat
+                                        )
+
+                                        PeriodType.YEAR.id -> getDateFromMillis(
+                                            tmpBudgetData.startDate,
+                                            yearFormat
+                                        )
+
+                                        PeriodType.ONE_TIME.id -> "${
+                                            getDateFromMillis(
+                                                tmpBudgetData.startDate,
+                                                dateFormat
+                                            )
+                                        } - ${
+                                            tmpBudgetData.endDate?.let { date ->
+                                                getDateFromMillis(
+                                                    date, dateFormat
+                                                )
+                                            }
+                                        }"
+
+                                        else -> ""
+                                    }
+                                } ?: ""
+
+                                CustomProgressItemWithDate(
+                                    name = item.title,
+                                    totalAmount = item.budgetAmount,
+                                    spentAmount = item.spentAmount,
+                                    date = timeString,
+                                    onClick = {
+                                        onBudgetEditClick(item.id)
+                                    }
+                                )
+                            }
                         }
                     }
                 }

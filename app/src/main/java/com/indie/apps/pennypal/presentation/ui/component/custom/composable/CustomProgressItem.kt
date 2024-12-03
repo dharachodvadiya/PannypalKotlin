@@ -149,6 +149,138 @@ fun CustomProgressItem(
     )
 }
 
+@Composable
+fun CustomProgressItemWithDate(
+    name: String,
+    date: String,
+    totalAmount: Double,
+    spentAmount: Double,
+    onClick: () -> Unit = {},
+    isClickable: Boolean = true,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
+) {
+
+    ListItem(
+        isClickable = isClickable,
+        onClick = onClick,
+        content = {
+            Column {
+
+                val remainAmount = totalAmount - spentAmount
+
+                CustomText(
+                    text = name,
+                    style = MyAppTheme.typography.Regular46,
+                    color = MyAppTheme.colors.black,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Spacer(modifier = Modifier.height(5.dp))
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    CustomText(
+                        text = date,
+                        style = MyAppTheme.typography.Regular46,
+                        color = MyAppTheme.colors.gray1,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+
+                    CustomText(
+                        text = Util.getFormattedStringWithSymbol(remainAmount),
+                        style = MyAppTheme.typography.Regular46,
+                        color = if (remainAmount < 0) MyAppTheme.colors.redBg else MyAppTheme.colors.black,
+                        overflow = TextOverflow.Ellipsis,
+                        textAlign = TextAlign.Right,
+                        maxLines = 1,
+                    )
+                }
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    CustomText(
+                        text = "${stringResource(R.string.budget)} : ${
+                            Util.getFormattedStringWithSymbol(
+                                totalAmount
+                            )
+                        }",
+                        style = MyAppTheme.typography.Medium40,
+                        color = MyAppTheme.colors.gray2,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+
+                    CustomText(
+                        text = "${stringResource(R.string.remaining)}",
+                        style = MyAppTheme.typography.Medium40,
+                        color = MyAppTheme.colors.gray2,
+                        overflow = TextOverflow.Ellipsis,
+                        textAlign = TextAlign.Right,
+                        maxLines = 1,
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.item_inner_padding)))
+
+                // Progress Bar
+                val totalBudgetAmount = totalAmount
+
+                // Calculate the percentage of the budget spent
+                val progress = if (totalBudgetAmount > 0) {
+                    (spentAmount / totalBudgetAmount).coerceIn(0.0, 1.0)
+                        .toFloat() // Ensure it stays within 0 to 1 range
+                } else {
+                    0.0F
+                }
+
+                // Display progress bar
+                LinearProgressIndicator(
+                    progress = progress,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(5.dp))
+                        .height(10.dp),
+                    color = if (remainAmount < 0) MyAppTheme.colors.redBg else MyAppTheme.colors.lightBlue1,
+                    trackColor = MyAppTheme.colors.gray1.copy(0.2f)
+                )
+                if (remainAmount < 0) {
+
+                    Spacer(modifier = Modifier.height(5.dp))
+                    CustomText(
+                        text = "${stringResource(R.string.exceeded_limit_message)}",
+                        style = MyAppTheme.typography.Regular44,
+                        color = MyAppTheme.colors.redBg.copy(alpha = 0.7f),
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1,
+                    )
+                }
+
+            }
+
+        },
+        trailingContent = {
+            if(isClickable)
+            {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                    contentDescription = "edit",
+                    tint = MyAppTheme.colors.black,
+                    modifier = Modifier.padding(start = 10.dp)
+                )
+            }
+
+
+        },
+        modifier = modifier,
+        itemBgColor = MyAppTheme.colors.transparent
+    )
+}
+
 @Preview
 @Composable
 private fun CustomProgressItemPreview() {
@@ -158,6 +290,20 @@ private fun CustomProgressItemPreview() {
             totalAmount = 100.0,
             spentAmount = 30.0,
             onClick = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun CustomProgressItemDatePreview() {
+    PennyPalTheme(darkTheme = true) {
+        CustomProgressItemWithDate(
+            name = "aaa",
+            totalAmount = 100.0,
+            spentAmount = 30.0,
+            onClick = {},
+            date = "25 january 2024"
         )
     }
 }

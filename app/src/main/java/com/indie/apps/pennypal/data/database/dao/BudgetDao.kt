@@ -161,6 +161,7 @@ interface BudgetDao : BaseDao<Budget> {
             )
         )
     GROUP BY b.id
+    ORDER BY b.start_date DESC
     """
     )
     fun getPastBudgetsWithCategoryIdListFromPeriodType(
@@ -210,11 +211,12 @@ interface BudgetDao : BaseDao<Budget> {
                 strftime('%Y', (b.start_date + :timeZoneOffsetInMilli) / 1000, 'unixepoch') > :year
                 OR (
                     strftime('%Y', (b.start_date + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = :year
-                    AND strftime('%m', (b.start_date + :timeZoneOffsetInMilli) / 1000, 'unixepoch') >= printf('%02d', :monthPlusOne)
+                    AND strftime('%m', (b.start_date + :timeZoneOffsetInMilli) / 1000, 'unixepoch') > printf('%02d', :monthPlusOne)
                 )
             )
         )
     GROUP BY b.id
+    ORDER BY b.start_date DESC
     """
     )
     fun getUpComingBudgetsWithCategoryIdListFromPeriodType(
