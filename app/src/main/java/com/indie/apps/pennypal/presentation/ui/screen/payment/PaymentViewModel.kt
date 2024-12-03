@@ -19,7 +19,6 @@ import javax.inject.Inject
 @HiltViewModel
 class PaymentViewModel @Inject constructor(
     private val deletePaymentUseCase: DeletePaymentUseCase,
-    private val updateUserDataUseCase: UpdateUserDataUseCase,
     userProfileUseCase: GetUserProfileUseCase,
     getPaymentListWithModeUseCase: GetPaymentListWithModeUseCase,
 ) : ViewModel() {
