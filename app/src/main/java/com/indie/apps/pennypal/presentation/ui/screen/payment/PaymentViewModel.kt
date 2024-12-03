@@ -31,14 +31,8 @@ class PaymentViewModel @Inject constructor(
     val paymentWithModeState = getPaymentListWithModeUseCase.loadData()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
 
-
-    val isInEditMode = MutableStateFlow(false)
-
     var editAnimRun = MutableStateFlow(false)
 
-    fun setEditMode(isEditable: Boolean) {
-        isInEditMode.value = isEditable
-    }
 
     fun editPaymentSuccess() {
         editAnimRun.value = true
@@ -60,7 +54,6 @@ class PaymentViewModel @Inject constructor(
                             is Resource.Loading -> {}
                             is Resource.Success -> {
                                 onSuccess()
-                                isInEditMode.value = false
                             }
 
                             is Resource.Error -> {

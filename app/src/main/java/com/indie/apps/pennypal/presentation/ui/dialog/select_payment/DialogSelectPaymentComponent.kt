@@ -38,7 +38,7 @@ fun SelectPaymentDialogField(
 
             AccountTypeItem(
                 titleId = R.string.bank,
-                isEditMode = true,
+                isSelectable = true,
                 isEditable = false,
                 dataList = bankList,
                 selectPaymentId = currentId,
@@ -53,7 +53,7 @@ fun SelectPaymentDialogField(
         if(cashList.isNotEmpty()){
             AccountTypeItem(
                 titleId = R.string.bank,
-                isEditMode = true,
+                isSelectable = true,
                 isEditable = false,
                 dataList = cashList,
                 selectPaymentId = currentId,

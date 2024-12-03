@@ -82,9 +82,7 @@ fun TopBarWithTitle(
         onBackClick = onNavigationUp,
         content = {
             CustomText(
-                text = title,
-                style = titleStyle,
-                color = MyAppTheme.colors.black
+                text = title, style = titleStyle, color = MyAppTheme.colors.black
             )
         },
         modifier = modifier,
@@ -96,19 +94,15 @@ fun TopBarWithTitle(
 
 @Composable
 fun UserProfile(
-    borderWidth: Float = 0f,
-    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
+    borderWidth: Float = 0f, @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     MyAppTheme.colors.gradientBlue
     val borderModifier = if (borderWidth > 0) {
-        Modifier
-            .border(
-                BorderStroke(
-                    width = borderWidth.dp,
-                    color = MyAppTheme.colors.gray2
-                ),
-                shape = CircleShape
-            )
+        Modifier.border(
+            BorderStroke(
+                width = borderWidth.dp, color = MyAppTheme.colors.gray2
+            ), shape = CircleShape
+        )
     } else {
         Modifier
     }
@@ -123,17 +117,13 @@ fun UserProfile(
                 blurRadius = 5.dp,
             )
             .background(
-                color = MyAppTheme.colors.lightBlue2,
-                shape = CircleShape
-            ),
-        contentAlignment = Alignment.Center
+                color = MyAppTheme.colors.lightBlue2, shape = CircleShape
+            ), contentAlignment = Alignment.Center
     ) {
         Icon(
             imageVector = Icons.Default.Person,
             contentDescription = "User",
-            modifier = Modifier
-                .size(dimensionResource(id = R.dimen.user_image_size))
-            /*.graphicsLayer(alpha = 0.99f)
+            modifier = Modifier.size(dimensionResource(id = R.dimen.user_image_size))/*.graphicsLayer(alpha = 0.99f)
             .drawWithCache {
                 onDrawWithContent {
                     drawContent()
@@ -179,12 +169,9 @@ fun DialogSearchView(
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-            .padding(
-                horizontal = dimensionResource(id = R.dimen.padding),
-                vertical = 7.dp
-            )
+        verticalAlignment = Alignment.CenterVertically, modifier = modifier.padding(
+            horizontal = dimensionResource(id = R.dimen.padding), vertical = 7.dp
+        )
     ) {
         SearchView(
             trailingIcon = Icons.Default.Search,
@@ -221,10 +208,9 @@ fun DialogTextFieldItem(
     textTrailingContent: @Composable (() -> Unit)? = null,
 ) {
     Column(
-        modifier = modifier
-            .padding(
-                vertical = 5.dp
-            )
+        modifier = modifier.padding(
+            vertical = 5.dp
+        )
     ) {
         label?.let {
             CustomText(
@@ -247,8 +233,7 @@ fun DialogTextFieldItem(
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.item_content_padding)))
             }
             MyAppTextField(
-                value = textState.text,
-                /*onValueChange = {
+                value = textState.text,/*onValueChange = {
                     textState.disableError()
                     textState.text = it
                 },*/
@@ -303,10 +288,9 @@ fun DialogSelectableItem(
     trailingContent: @Composable (() -> Unit)? = null
 ) {
     Column(
-        modifier = modifier
-            .padding(
-                vertical = 5.dp
-            )
+        modifier = modifier.padding(
+            vertical = 5.dp
+        )
     ) {
         label?.let {
             CustomText(
@@ -329,14 +313,12 @@ fun DialogSelectableItem(
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.item_content_padding)))
             }
 
-            Row(
-                modifier = Modifier
-                    .roundedCornerBackground(MyAppTheme.colors.itemBg)
-                    .clickable(enabled = isSelectable) { onClick() }
-                    .padding(dimensionResource(id = R.dimen.padding)),
+            Row(modifier = Modifier
+                .roundedCornerBackground(MyAppTheme.colors.itemBg)
+                .clickable(enabled = isSelectable) { onClick() }
+                .padding(dimensionResource(id = R.dimen.padding)),
                 horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+                verticalAlignment = Alignment.CenterVertically) {
 
                 if (leadingContent != null) {
                     leadingContent()
@@ -346,16 +328,14 @@ fun DialogSelectableItem(
                 if (text.isNullOrEmpty()) {
                     CustomText(
                         text = stringResource(id = placeholder),
-                        modifier = Modifier
-                            .weight(1f),
+                        modifier = Modifier.weight(1f),
                         style = MyAppTheme.typography.Regular46,
                         color = MyAppTheme.colors.gray2.copy(alpha = 0.7f)
                     )
                 } else {
                     CustomText(
                         text = text,
-                        modifier = Modifier
-                            .weight(1f),
+                        modifier = Modifier.weight(1f),
                         style = MyAppTheme.typography.Medium46,
                         color = MyAppTheme.colors.black,
                         maxLines = 1,
@@ -386,43 +366,33 @@ fun ConfirmationDialog(
     @StringRes positiveText: Int = R.string.confirm,
     @StringRes negativeText: Int = R.string.dismiss
 ) {
-    AlertDialog(
-        title = {
-            CustomText(
-                text = stringResource(id = dialogTitle),
-                style = MyAppTheme.typography.Semibold57,
-                color = MyAppTheme.colors.black
-            )
-        },
-        text = {
-            CustomText(
-                text = stringResource(id = dialogText),
-                style = MyAppTheme.typography.Regular46,
-                color = MyAppTheme.colors.gray2
-            )
-        },
-        onDismissRequest = {
-            onDismissRequest()
-        },
-        confirmButton = {
-            TextButton(
-                onClick = {
-                    onConfirmation()
-                }
-            ) {
-                CustomText(stringResource(id = positiveText))
-            }
-        },
-        dismissButton = {
-            TextButton(
-                onClick = {
-                    onDismissRequest()
-                }
-            ) {
-                CustomText(stringResource(id = negativeText))
-            }
+    AlertDialog(title = {
+        CustomText(
+            text = stringResource(id = dialogTitle),
+            style = MyAppTheme.typography.Semibold57,
+            color = MyAppTheme.colors.black
+        )
+    }, text = {
+        CustomText(
+            text = stringResource(id = dialogText),
+            style = MyAppTheme.typography.Regular46,
+            color = MyAppTheme.colors.gray2
+        )
+    }, onDismissRequest = {
+        onDismissRequest()
+    }, confirmButton = {
+        TextButton(onClick = {
+            onConfirmation()
+        }) {
+            CustomText(stringResource(id = positiveText))
         }
-    )
+    }, dismissButton = {
+        TextButton(onClick = {
+            onDismissRequest()
+        }) {
+            CustomText(stringResource(id = negativeText))
+        }
+    })
 }
 
 @Composable
@@ -443,8 +413,7 @@ fun NoDataMessage(
     Box(
         modifier = modifier
             .background(MyAppTheme.colors.transparent)
-            .clickable(enabled = isClickable) { onClick() },
-        contentAlignment = Alignment.Center
+            .clickable(enabled = isClickable) { onClick() }, contentAlignment = Alignment.Center
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(0.75f),
@@ -505,9 +474,7 @@ fun TextWithRadioButton(
         }
 
         CustomText(
-            text = name,
-            style = MyAppTheme.typography.Semibold52_5,
-            color = MyAppTheme.colors.black
+            text = name, style = MyAppTheme.typography.Semibold52_5, color = MyAppTheme.colors.black
         )
     }
 }
@@ -515,8 +482,9 @@ fun TextWithRadioButton(
 @Composable
 fun AccountItem(
     isSelected: Boolean,
-    isEditMode: Boolean,
+    isSelectable: Boolean,
     isEditable: Boolean,
+    isPreAdded: Boolean,
     name: String,
     onSelect: () -> Unit,
     onEditClick: () -> Unit,
@@ -525,16 +493,16 @@ fun AccountItem(
     modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = modifier
+        modifier = Modifier
             .height(40.dp)
             .fillMaxWidth()
             .roundedCornerBackground(MyAppTheme.colors.transparent)
-            .clickable(enabled = isEditMode) { onSelect() },
+            .then(modifier)
+            .clickable(enabled = isSelectable || isEditable) { onSelect() },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.item_padding))
     ) {
-        if (isEditMode)
-            RadioButton(selected = isSelected, onClick = onSelect)
+        if (isSelectable) RadioButton(selected = isSelected, onClick = onSelect)
         Icon(
             painter = painterResource(symbolId),
             contentDescription = "bank",
@@ -543,31 +511,25 @@ fun AccountItem(
         )
         Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.item_padding)))
         CustomText(
-            text = name,
-            style = MyAppTheme.typography.Semibold52_5,
-            color = MyAppTheme.colors.black
+            text = name, style = MyAppTheme.typography.Semibold52_5, color = MyAppTheme.colors.black
         )
 
-        if (isEditMode && isEditable) {
+        if (isEditable && !isPreAdded) {
             Spacer(modifier = Modifier.weight(1f))
 
-            Icon(
-                imageVector = Icons.Default.Edit,
+            Icon(imageVector = Icons.Default.Edit,
                 contentDescription = "edit",
                 modifier = Modifier
                     .roundedCornerBackground(MyAppTheme.colors.transparent)
-                    .clickable { onEditClick() }
-            )
+                    .clickable { onEditClick() })
 
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.item_padding)))
 
-            Icon(
-                imageVector = Icons.Default.Delete,
+            Icon(imageVector = Icons.Default.Delete,
                 contentDescription = "delete",
                 modifier = Modifier
                     .roundedCornerBackground(MyAppTheme.colors.transparent)
-                    .clickable { onDeleteClick() }
-            )
+                    .clickable { onDeleteClick() })
         }
     }
 }
@@ -578,8 +540,8 @@ fun AccountTypeItem(
     selectPaymentId: Long,
     editAnimPaymentId: Long = 0L,
     editAnimRun: Boolean = false,
-    isEditMode: Boolean = false,
-    isEditable: Boolean = false,
+    isSelectable: Boolean,
+    isEditable: Boolean,
     dataList: List<PaymentWithMode>,
     onSelect: (PaymentWithMode) -> Unit = {},
     onEditClick: (Long) -> Unit = {},
@@ -599,8 +561,7 @@ fun AccountTypeItem(
         Column(
             modifier = modifier
                 .fillMaxWidth()
-                .roundedCornerBackground(MyAppTheme.colors.itemBg)
-                /*.background(
+                .roundedCornerBackground(MyAppTheme.colors.itemBg)/*.background(
                     shape = RoundedCornerShape(dimensionResource(id = R.dimen.round_corner)),
                     color = MyAppTheme.colors.itemBg
                 )*/
@@ -620,8 +581,7 @@ fun AccountTypeItem(
                             animationSpec = tween(Util.EDIT_ITEM_ANIM_TIME)
                         )
                         itemAnimateColor.animateTo(
-                            targetValue = baseColor,
-                            animationSpec = tween(Util.EDIT_ITEM_ANIM_TIME)
+                            targetValue = baseColor, animationSpec = tween(Util.EDIT_ITEM_ANIM_TIME)
                         )
                     }
                     modifier.background(itemAnimateColor.value)
@@ -631,14 +591,15 @@ fun AccountTypeItem(
 
                 AccountItem(
                     isSelected = item.id == selectPaymentId,
-                    isEditMode = isEditMode,
+                    isSelectable = isSelectable,
+                    isEditable = isEditable,
                     name = item.name,
                     symbolId = getPaymentModeIcon(item.name),
-                    isEditable = (item.preAdded == 0 && isEditable),
                     onSelect = { onSelect(item) },
+                    modifier = modifierColor,
                     onDeleteClick = { onDeleteClick(item) },
                     onEditClick = { onEditClick(item.id) },
-                    modifier = modifierColor
+                    isPreAdded = item.preAdded == 1
                 )
             }
         }
@@ -671,11 +632,9 @@ private fun UserProfilePreview() {
 @Composable
 private fun DialogTextFieldItemPreview() {
     PennyPalTheme(darkTheme = true) {
-        DialogTextFieldItem(
-            imageVector = Icons.Default.PersonOutline,
+        DialogTextFieldItem(imageVector = Icons.Default.PersonOutline,
             placeholder = R.string.amount_placeholder,
-            onTextChange = {}
-        )
+            onTextChange = {})
     }
 }
 
@@ -692,9 +651,7 @@ private fun NoTransactionMessagePreview() {
 
 fun Context.showToast(message: String) = run {
     Toast.makeText(
-        this,
-        message,
-        Toast.LENGTH_SHORT
+        this, message, Toast.LENGTH_SHORT
     ).show()
 }
 
@@ -706,9 +663,7 @@ fun PeriodText(
 ) {
 
     Box(
-        modifier = modifier
-            .fillMaxWidth(),
-        contentAlignment = Alignment.Center
+        modifier = modifier.fillMaxWidth(), contentAlignment = Alignment.Center
     ) {
         Box(
             modifier = Modifier
@@ -719,9 +674,7 @@ fun PeriodText(
                 )
         ) {
             CustomText(
-                text = text,
-                style = textStyle,
-                color = MyAppTheme.colors.black
+                text = text, style = textStyle, color = MyAppTheme.colors.black
             )
         }
     }

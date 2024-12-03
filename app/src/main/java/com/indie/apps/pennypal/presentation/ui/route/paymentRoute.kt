@@ -35,15 +35,22 @@ fun NavGraphBuilder.paymentRoute(
             PaymentScreen(
                 isEditSuccess = isEditSuccess ?: false,
                 paymentId = editAddId ?: -1L,
+                onDefaultPaymentChange = {currentId ->
+                    navController.navigate(DialogNav.SELECT_PAYMENT.route)
+                    navController.currentBackStackEntry?.savedStateHandle?.set(
+                        Util.SAVE_STATE_SELECT_PAYMENT_ID, currentId
+                    )
+
+                    navController.currentBackStackEntry?.savedStateHandle?.set(
+                        Util.SAVE_STATE_SAVABLE_DIALOG, true
+                    )
+                },
                 onEditPaymentClick = {
                     navController.navigate(DialogNav.ADD_EDIT_PAYMENT.route)
 
                     navController.currentBackStackEntry
                         ?.savedStateHandle
                         ?.set(Util.SAVE_STATE_PAYMENT_EDIT_ID, it)
-                },
-                onModeChange = { isEditMode ->
-                    bottomBarState.value = !isEditMode
                 },
                 onAddPaymentClick = {
                     navController.navigate(DialogNav.ADD_EDIT_PAYMENT.route)

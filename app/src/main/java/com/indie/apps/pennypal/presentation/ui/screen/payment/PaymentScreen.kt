@@ -3,10 +3,8 @@ package com.indie.apps.pennypal.presentation.ui.screen.payment
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -17,7 +15,6 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -27,7 +24,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -35,12 +31,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.presentation.ui.component.AccountTypeItem
-import com.indie.apps.pennypal.presentation.ui.component.BottomSaveButton
 import com.indie.apps.pennypal.presentation.ui.component.ConfirmationDialog
 import com.indie.apps.pennypal.presentation.ui.component.TopBarWithTitle
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
-import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.component.showToast
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
@@ -51,34 +45,18 @@ fun PaymentScreen(
     isEditSuccess: Boolean = false,
     onEditPaymentClick: (Long) -> Unit,
     onAddPaymentClick: () -> Unit,
+    onDefaultPaymentChange: (Long) -> Unit,
     onNavigationUp: () -> Unit,
-    paymentId: Long = 0L,
-    onModeChange: (Boolean) -> Unit
+    paymentId: Long = 0L
 ) {
-
-    val isEditMode by paymentViewModel.isInEditMode.collectAsStateWithLifecycle()
 
     val paymentWithModeList by paymentViewModel.paymentWithModeState.collectAsStateWithLifecycle()
     val userData by paymentViewModel.userState.collectAsStateWithLifecycle()
 
-    var defaultPaymentId by remember {
-        mutableLongStateOf(1L)
-    }
-
-    LaunchedEffect(isEditMode) {
-        if (isEditMode)
-            defaultPaymentId = userData?.paymentId ?: 1L
-    }
-
-    LaunchedEffect(Unit) {
-        onModeChange(false)
-    }
     val context = LocalContext.current
     val paymentDeleteToast = stringResource(id = R.string.payment_delete_success_message)
     var openDeleteDialog by remember { mutableStateOf(false) }
-    var openDiscardDialog by remember { mutableStateOf(false) }
     var deletePaymentId by remember { mutableLongStateOf(0) }
-
     val editAnimRun by paymentViewModel.editAnimRun.collectAsStateWithLifecycle()
 
     var editedPaymentId by remember {
@@ -96,60 +74,37 @@ fun PaymentScreen(
         isEditPaymentSuccessState = isEditSuccess
     }
 
-    BackHandler(){
-        if(isEditMode){
-            openDiscardDialog = true
-        }else{
-            onNavigationUp()
-        }
+    BackHandler() {
+        onNavigationUp()
     }
 
     Scaffold(
         topBar = {
             TopBarWithTitle(
-                isBackEnable = isEditMode,
                 onNavigationUp = {
-                    openDiscardDialog = true
+                    onNavigationUp()
 
                 },
-                title = if (isEditMode) stringResource(id = R.string.edit_account_details) else stringResource(
-                    id = R.string.accounts
-                ),
+                title = stringResource(id = R.string.accounts),
                 contentAlignment = Alignment.Center,
                 bgColor = MyAppTheme.colors.transparent,
                 trailingContent = {
-                    if (isEditMode) {
-                        PrimaryButton(
-                            bgColor = MyAppTheme.colors.white,
-                            borderStroke = BorderStroke(
-                                width = 1.dp,
-                                color = MyAppTheme.colors.gray1
-                            ),
-                            onClick = onAddPaymentClick,
-                            modifier = Modifier
-                                .size(dimensionResource(R.dimen.top_bar_profile))
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Add,
-                                contentDescription = "Add",
-                                tint = MyAppTheme.colors.gray1
-                            )
-                        }
-                    } else {
+                    PrimaryButton(
+                        bgColor = MyAppTheme.colors.white,
+                        borderStroke = BorderStroke(
+                            width = 1.dp,
+                            color = MyAppTheme.colors.gray1
+                        ),
+                        onClick = onAddPaymentClick,
+                        modifier = Modifier
+                            .size(dimensionResource(R.dimen.top_bar_profile))
+                    ) {
                         Icon(
-                            painter = painterResource(id = R.drawable.ic_edit),
-                            contentDescription = "edit",
-                            tint = MyAppTheme.colors.black,
-                            modifier = Modifier
-                                .roundedCornerBackground(MyAppTheme.colors.transparent)
-                                .size(25.dp)
-                                .clickable {
-                                    paymentViewModel.setEditMode(true)
-                                    onModeChange(true)
-                                }
+                            imageVector = Icons.Default.Add,
+                            contentDescription = "Add",
+                            tint = MyAppTheme.colors.gray1
                         )
                     }
-
                 }
             )
         }
@@ -160,7 +115,7 @@ fun PaymentScreen(
                 .fillMaxSize()
                 .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
                 .padding(innerPadding)
-                .padding(horizontal = dimensionResource(id =  R.dimen.padding))
+                .padding(horizontal = dimensionResource(id = R.dimen.padding))
                 .verticalScroll(scrollState),
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding))
         ) {
@@ -172,9 +127,12 @@ fun PaymentScreen(
                 "Cash"
             }
 
-            if (!isEditMode) {
-                PaymentModeDefaultItem(paymentName)
-            }
+            PaymentModeDefaultItem(
+                paymentModeName = paymentName,
+                onDefaultPaymentChange = {
+                    onDefaultPaymentChange(userData?.paymentId ?: 1L)
+                }
+            )
 
             val bankList = paymentWithModeList.filter { item ->
                 item.modeName != "Cash"
@@ -189,55 +147,40 @@ fun PaymentScreen(
 
                     AccountTypeItem(
                         titleId = R.string.bank,
-                        isEditMode = isEditMode,
-                        isEditable = isEditMode,
+                        isSelectable = false,
+                        isEditable = true,
                         dataList = bankList,
-                        selectPaymentId = defaultPaymentId,
-                        onSelect = {
-                            defaultPaymentId = it.id
+                        selectPaymentId = userData?.paymentId ?: 1L,
+                        onEditClick = {
+                            onEditPaymentClick(it)
                         },
-                        onEditClick = onEditPaymentClick,
-                        editAnimPaymentId = editedPaymentId,
-                        editAnimRun = editAnimRun,
                         onDeleteClick = {
                             deletePaymentId = it.id
                             openDeleteDialog = true
-                        }
+                        },
+                        editAnimPaymentId = editedPaymentId,
+                        editAnimRun = editAnimRun,
                     )
                 }
 
                 if (cashList.isNotEmpty()) {
                     AccountTypeItem(
-                        titleId = R.string.cash,
-                        isEditMode = isEditMode,
-                        isEditable = isEditMode,
+                        titleId = R.string.bank,
+                        isSelectable = false,
+                        isEditable = true,
                         dataList = cashList,
-                        selectPaymentId = defaultPaymentId,
-                        onSelect = {
-                            defaultPaymentId = it.id
+                        selectPaymentId = userData?.paymentId ?: 1L,
+                        onEditClick = {
+                            onEditPaymentClick(it)
                         },
-                        onEditClick = {},
-                        editAnimPaymentId = editedPaymentId,
-                        editAnimRun = editAnimRun,
                         onDeleteClick = {
                             deletePaymentId = it.id
                             openDeleteDialog = true
-                            //onDeletePaymentClick(it.toPaymentWithIdName())
-                        }
+                        },
+                        editAnimPaymentId = editedPaymentId,
+                        editAnimRun = editAnimRun,
                     )
                 }
-            }
-
-            if (isEditMode) {
-                Spacer(modifier = Modifier.weight(1f))
-                BottomSaveButton(
-                    onClick = {
-                        paymentViewModel.saveEditedData(defaultPaymentId) {
-                            onModeChange(false)
-                        }
-                    },
-                    modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.padding))
-                )
             }
         }
 
@@ -247,9 +190,6 @@ fun PaymentScreen(
                 dialogText = R.string.delete_payment_dialog_text,
                 onConfirmation = {
                     paymentViewModel.onDeleteDialogClick(deletePaymentId) {
-                        if (deletePaymentId == defaultPaymentId) {
-                            defaultPaymentId = 1L
-                        }
                         openDeleteDialog = false
                         deletePaymentId = 0
                         context.showToast(paymentDeleteToast)
@@ -261,24 +201,6 @@ fun PaymentScreen(
                 }
             )
         }
-
-        if (openDiscardDialog) {
-            ConfirmationDialog(
-                dialogTitle = R.string.discard_dialog_title,
-                dialogText = R.string.discard_dialog_text,
-                onConfirmation = {
-                    openDiscardDialog = false
-                    paymentViewModel.setEditMode(false)
-                    onModeChange(false)
-                },
-                onDismissRequest = {
-                    openDiscardDialog = false
-                },
-                positiveText = R.string.discard,
-                negativeText = R.string.cancel
-            )
-        }
-
     }
 }
 
@@ -287,10 +209,10 @@ fun PaymentScreen(
 private fun PaymentScreenPreview() {
     PennyPalTheme(darkTheme = true) {
         PaymentScreen(
-            onModeChange = {},
             onEditPaymentClick = {},
             onAddPaymentClick = {},
-            onNavigationUp = {}
+            onNavigationUp = {},
+            onDefaultPaymentChange = {}
         )
     }
 }
