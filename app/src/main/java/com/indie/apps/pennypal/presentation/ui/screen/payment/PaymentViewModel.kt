@@ -43,28 +43,6 @@ class PaymentViewModel @Inject constructor(
         }
     }
 
-    fun saveEditedData(defaultPaymentId: Long, onSuccess: () -> Unit) {
-        viewModelScope.launch {
-            if (userState.value != null) {
-                val user = userState.value!!.copy(paymentId = defaultPaymentId)
-                updateUserDataUseCase
-                    .updateData(user)
-                    .collect {
-                        when (it) {
-                            is Resource.Loading -> {}
-                            is Resource.Success -> {
-                                onSuccess()
-                            }
-
-                            is Resource.Error -> {
-                            }
-                        }
-                    }
-            }
-        }
-
-    }
-
     fun onDeleteDialogClick(deleteId: Long, onSuccess: () -> Unit) {
         viewModelScope.launch {
             deletePaymentUseCase
