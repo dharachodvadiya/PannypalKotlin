@@ -51,7 +51,7 @@ fun CustomMonthPickerDialog(
     modifier: Modifier = Modifier
 ) {
     //val state = rememberDatePickerState(currentTimeInMilli + Util.TIME_ZONE_OFFSET_IN_MILLI)
-    val selectedYear by remember { mutableIntStateOf(currentYear) }
+    //val selectedYear by remember { mutableIntStateOf(currentYear) }
 
     val months = listOf(
         "JAN",

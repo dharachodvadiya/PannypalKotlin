@@ -145,7 +145,7 @@ fun BudgetFilterScreen(
 
                                         else -> ""
                                     }
-                                } ?: ""
+                                }
 
                                 CustomProgressItemWithDate(
                                     name = item.title,
