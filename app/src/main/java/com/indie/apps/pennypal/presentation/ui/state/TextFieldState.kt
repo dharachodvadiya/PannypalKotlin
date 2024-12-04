@@ -54,7 +54,7 @@ class TextFieldState {
         this.errorText = newErrorText
     }
 
-    fun clearError() {
+    private fun clearError() {
         displayErrors = false
         this.errorText = ""
     }

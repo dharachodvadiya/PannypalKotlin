@@ -319,7 +319,7 @@ fun NavGraphBuilder.overViewRoute(
                 },
                 onSelectCategory = { selectedIds ->
                     backStackEntry
-                        ?.savedStateHandle
+                        .savedStateHandle
                         ?.set(
                             Util.SAVE_STATE_SELECT_CATEGORY_ID_LIST,
                             Gson().toJson(selectedIds)
@@ -348,7 +348,7 @@ fun NavGraphBuilder.overViewRoute(
                 },
                 onSelectCategory = { selectedIds ->
                     backStackEntry
-                        ?.savedStateHandle
+                        .savedStateHandle
                         ?.set(
                             Util.SAVE_STATE_SELECT_CATEGORY_ID_LIST,
                             Gson().toJson(selectedIds)

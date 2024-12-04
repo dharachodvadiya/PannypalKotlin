@@ -458,7 +458,7 @@ fun TextWithRadioButton(
             .height(40.dp)
             .fillMaxWidth()
             .roundedCornerBackground(MyAppTheme.colors.transparent)
-            .clickable() { onSelect() },
+            .clickable { onSelect() },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.item_padding))
     ) {

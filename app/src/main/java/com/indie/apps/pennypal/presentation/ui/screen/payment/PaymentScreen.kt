@@ -74,7 +74,7 @@ fun PaymentScreen(
         isEditPaymentSuccessState = isEditSuccess
     }
 
-    BackHandler() {
+    BackHandler {
         onNavigationUp()
     }
 

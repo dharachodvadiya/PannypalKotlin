@@ -189,14 +189,6 @@ fun MerchantDataBottomBar(
     onDeleteClick: () -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier.fillMaxWidth()
 ) {
-    if (isEditable || isDeletable) {
-
-
-    } else {
-
-
-    }
-
     Row(
         modifier = modifier.padding(dimensionResource(id = R.dimen.padding))
     ) {

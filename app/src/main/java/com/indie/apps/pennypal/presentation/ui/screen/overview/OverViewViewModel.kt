@@ -15,7 +15,6 @@ import com.indie.apps.pennypal.repository.PreferenceRepository
 import com.indie.apps.pennypal.util.ShowDataPeriod
 import com.indie.apps.pennypal.util.Util
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -74,7 +73,6 @@ class OverViewViewModel @Inject constructor(
 
     private val calendar: Calendar = Calendar.getInstance()
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     val budgetState = getBudgetFromPeriodUseCase.loadFromMonth(
         year = calendar.get(Calendar.YEAR),
         month = calendar.get(Calendar.MONTH)

@@ -28,7 +28,7 @@ fun CustomTimePickerDialog(
     onTimeSelected: (Calendar) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val initCal = Calendar.getInstance().apply() {
+    val initCal = Calendar.getInstance().apply {
         timeInMillis = currentTimeInMilli
     }
 

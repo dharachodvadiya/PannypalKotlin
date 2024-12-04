@@ -1,7 +1,5 @@
 package com.indie.apps.pennypal.data.module
 
-import androidx.room.ColumnInfo
-
 class MerchantDataWithAllData(
     val id: Long = 0,
     val merchantId: Long,

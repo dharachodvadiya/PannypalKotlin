@@ -80,7 +80,7 @@ fun MultiSelectCategoryDialogField(
                 .padding(horizontal = dimensionResource(id = R.dimen.padding))
                 .verticalScroll(rememberScrollState())
         ) {
-            categoryList.forEach() { item ->
+            categoryList.forEach { item ->
                 SelectedCategoryItem(
                     name = item.name,
                     isSelected = selectedList.contains(item.id),

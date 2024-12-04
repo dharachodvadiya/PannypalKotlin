@@ -1,6 +1,5 @@
 package com.indie.apps.pennypal.data.module
 
-import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector

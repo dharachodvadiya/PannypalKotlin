@@ -24,7 +24,7 @@ class BudgetFilterViewModel @Inject constructor(
 ) : ViewModel() {
     private val calendar: Calendar = Calendar.getInstance()
     val currentPeriod = MutableStateFlow(PeriodType.MONTH.id)
-    val currentFilter = MutableStateFlow(BudgetMenu.PAST.id)
+    private val currentFilter = MutableStateFlow(BudgetMenu.PAST.id)
     private val trigger = MutableSharedFlow<Unit>(replay = 1)
 
     val pagedData = trigger

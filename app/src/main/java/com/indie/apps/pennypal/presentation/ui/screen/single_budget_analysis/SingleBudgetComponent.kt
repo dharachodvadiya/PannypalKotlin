@@ -237,7 +237,7 @@ fun BudgetedCategoryAnalysis(
                 color = MyAppTheme.colors.gray1
             )
 
-            categoryLimitList.forEach() { item ->
+            categoryLimitList.forEach { item ->
 
                 if (item.amount > 0) {
                     CustomProgressItem(
@@ -277,7 +277,7 @@ fun IncludedCategoryAnalysis(
         val categoryList = mutableListOf<CategoryAmount>()
 
         categoryLimitList.forEach { item ->
-            val spentItem = categorySpentList.firstOrNull() { it.id == item.id }
+            val spentItem = categorySpentList.firstOrNull { it.id == item.id }
             if (spentItem != null) {
                 categoryList.add(spentItem)
             } else {

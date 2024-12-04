@@ -195,7 +195,7 @@ fun BottomNavigationBarCustom1(
                     .height(dimensionResource(id = R.dimen.bottom_bar))
                     .background(MyAppTheme.colors.bottomBg)
             ) {
-                tabs.forEachIndexed() { index, item ->
+                tabs.forEachIndexed { index, item ->
                     BottomNavigationBarCustom1Item(
                         item = item,
                         onTabSelected = { onTabSelected(item) },

@@ -16,7 +16,7 @@ class SelectBalanceViewViewModel @Inject constructor(
     val optionList = MutableStateFlow<List<ShowDataPeriod>>(ShowDataPeriod.entries)
 
     val currentOptionIndex =
-        MutableStateFlow<Int>(preferenceRepository.getInt(Util.PREF_BALANCE_VIEW, 1))
+        MutableStateFlow(preferenceRepository.getInt(Util.PREF_BALANCE_VIEW, 1))
 
     fun onSaveOption(option: ShowDataPeriod, onSuccess: () -> Unit) {
         preferenceRepository.putInt(Util.PREF_BALANCE_VIEW, option.index)

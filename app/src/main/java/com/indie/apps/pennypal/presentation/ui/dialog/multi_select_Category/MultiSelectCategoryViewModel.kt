@@ -79,7 +79,7 @@ class MultiSelectCategoryViewModel @Inject constructor(
 
     fun selectAllClick(isSelectAll: Boolean) {
         if (isSelectAll) {
-            categoryList.value.forEach() {
+            categoryList.value.forEach {
                 if (!selectedList.contains(it.id))
                     selectedList.add(it.id)
             }

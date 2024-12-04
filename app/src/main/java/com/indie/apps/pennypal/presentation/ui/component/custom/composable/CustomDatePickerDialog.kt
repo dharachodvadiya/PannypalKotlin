@@ -57,7 +57,7 @@ fun CustomDatePickerDialog(
                 ) {
                     PrimaryButton(onClick = {
                         if (state.selectedDateMillis != null) {
-                            val selectedCalender = Calendar.getInstance().apply() {
+                            val selectedCalender = Calendar.getInstance().apply {
                                 timeInMillis = state.selectedDateMillis!!
                             }
 

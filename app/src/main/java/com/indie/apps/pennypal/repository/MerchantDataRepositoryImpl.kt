@@ -2,8 +2,6 @@ package com.indie.apps.pennypal.repository
 
 import com.indie.apps.pennypal.data.database.dao.MerchantDataDao
 import com.indie.apps.pennypal.data.database.entity.MerchantData
-import com.indie.apps.pennypal.data.module.category.CategoryAmount
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class MerchantDataRepositoryImpl @Inject constructor(private val merchantDataDao: MerchantDataDao) :

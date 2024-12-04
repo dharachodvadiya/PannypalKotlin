@@ -3,8 +3,6 @@ package com.indie.apps.pennypal.domain.usecase
 import com.indie.apps.pennypal.data.database.entity.MerchantData
 import com.indie.apps.pennypal.di.IoDispatcher
 import com.indie.apps.pennypal.repository.MerchantDataRepository
-import com.indie.apps.pennypal.repository.MerchantRepository
-import com.indie.apps.pennypal.repository.UserRepository
 import com.indie.apps.pennypal.util.Resource
 import com.indie.apps.pennypal.util.handleException
 import kotlinx.coroutines.CoroutineDispatcher
@@ -15,8 +13,6 @@ import javax.inject.Inject
 
 class AddMerchantDataUseCase @Inject constructor(
     private val merchantDataRepository: MerchantDataRepository,
-    private val merchantRepository: MerchantRepository,
-    private val userRepository: UserRepository,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) {
 

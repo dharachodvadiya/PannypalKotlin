@@ -168,7 +168,7 @@ fun onContactUsClick(context: Context) {
     }
     try {
         context.startActivity(Intent.createChooser(intent, "Send mail"))
-    } catch (e: ActivityNotFoundException) {
+    } catch (_: ActivityNotFoundException) {
 
     }
 

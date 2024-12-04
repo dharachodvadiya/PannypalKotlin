@@ -110,15 +110,7 @@ fun OverViewStartScreen(
         isEditDataSuccess = isEditSuccess
     }
 
-    Scaffold(
-        /*topBar = {
-            OverviewTopBar(
-                onProfileClick = onProfileClick
-            )
-        }*//*, floatingActionButton = {
-        OverviewAppFloatingButton(onClick = onNewEntry)
-    }*/
-    ) { innerPadding ->
+    Scaffold { innerPadding ->
         val scrollState = rememberScrollState()
         Column(
             modifier = modifier
@@ -173,7 +165,7 @@ fun OverViewStartScreen(
                 onAnimStop = {
                     overViewViewModel.addMerchantDataSuccessAnimStop()
                 },
-                budgetWithSpentAndCategoryIdList = budgetState.firstOrNull() { it.periodType == currentBudgetPeriod.id || it.periodType == currentBudgetPeriod.id },
+                budgetWithSpentAndCategoryIdList = budgetState.firstOrNull { it.periodType == currentBudgetPeriod.id || it.periodType == currentBudgetPeriod.id },
                 selectBudgetPeriod = currentBudgetPeriod,
                 onSelectBudgetPeriod = {
                     currentBudgetPeriod = if (currentBudgetPeriod == PeriodType.MONTH)
@@ -188,7 +180,7 @@ fun OverViewStartScreen(
                 isAddMerchantSuccess = addMerchantAnimRun,
                 merchantId = addMerchantId,
                 onSetBudgetClick = onSetBudgetClick,
-                isSelectionEnable = budgetState.count() { it.periodType == PeriodType.MONTH.id || it.periodType == PeriodType.YEAR.id } == 2
+                isSelectionEnable = budgetState.count { it.periodType == PeriodType.MONTH.id || it.periodType == PeriodType.YEAR.id } == 2
             )
 
             Spacer(modifier = Modifier.height(30.dp))

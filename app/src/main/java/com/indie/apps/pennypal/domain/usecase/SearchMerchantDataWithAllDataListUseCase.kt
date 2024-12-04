@@ -5,9 +5,8 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.indie.apps.pennypal.data.module.MerchantDataWithAllData
 import com.indie.apps.pennypal.di.IoDispatcher
-import com.indie.apps.pennypal.data.module.MerchantDataWithName
-import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.repository.MerchantDataRepository
+import com.indie.apps.pennypal.util.Util
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn

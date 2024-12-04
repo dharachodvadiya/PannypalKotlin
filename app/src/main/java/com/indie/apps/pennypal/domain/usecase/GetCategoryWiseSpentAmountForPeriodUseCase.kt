@@ -3,12 +3,9 @@ package com.indie.apps.pennypal.domain.usecase
 import com.indie.apps.pennypal.data.module.category.CategoryAmount
 import com.indie.apps.pennypal.di.IoDispatcher
 import com.indie.apps.pennypal.repository.MerchantDataRepository
-import com.indie.apps.pennypal.util.Resource
 import com.indie.apps.pennypal.util.Util
-import com.indie.apps.pennypal.util.handleException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 

@@ -22,7 +22,7 @@ fun DialogSelectBalanceViewData(
     Column(
         modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding))
     ) {
-        optionList.forEach() { item ->
+        optionList.forEach { item ->
             TextWithRadioButton(
                 isSelected = item.index == selectedIndex,
                 name = item.title,

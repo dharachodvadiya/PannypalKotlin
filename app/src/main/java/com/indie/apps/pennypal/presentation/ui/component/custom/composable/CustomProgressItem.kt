@@ -84,7 +84,7 @@ fun CustomProgressItem(
                     Spacer(modifier = Modifier.weight(1f))
 
                     CustomText(
-                        text = "${stringResource(R.string.remaining)}",
+                        text = stringResource(R.string.remaining),
                         style = MyAppTheme.typography.Medium40,
                         color = MyAppTheme.colors.gray2,
                         overflow = TextOverflow.Ellipsis,
@@ -120,7 +120,7 @@ fun CustomProgressItem(
 
                     Spacer(modifier = Modifier.height(5.dp))
                     CustomText(
-                        text = "${stringResource(R.string.exceeded_limit_message)}",
+                        text = stringResource(R.string.exceeded_limit_message),
                         style = MyAppTheme.typography.Regular44,
                         color = MyAppTheme.colors.redBg.copy(alpha = 0.7f),
                         overflow = TextOverflow.Ellipsis,
@@ -216,7 +216,7 @@ fun CustomProgressItemWithDate(
                     Spacer(modifier = Modifier.weight(1f))
 
                     CustomText(
-                        text = "${stringResource(R.string.remaining)}",
+                        text = stringResource(R.string.remaining),
                         style = MyAppTheme.typography.Medium40,
                         color = MyAppTheme.colors.gray2,
                         overflow = TextOverflow.Ellipsis,
@@ -252,7 +252,7 @@ fun CustomProgressItemWithDate(
 
                     Spacer(modifier = Modifier.height(5.dp))
                     CustomText(
-                        text = "${stringResource(R.string.exceeded_limit_message)}",
+                        text = stringResource(R.string.exceeded_limit_message),
                         style = MyAppTheme.typography.Regular44,
                         color = MyAppTheme.colors.redBg.copy(alpha = 0.7f),
                         overflow = TextOverflow.Ellipsis,

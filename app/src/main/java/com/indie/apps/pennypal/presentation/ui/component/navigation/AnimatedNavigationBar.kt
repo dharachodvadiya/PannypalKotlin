@@ -18,7 +18,6 @@ import androidx.compose.material.icons.filled.RemoveRedEye
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -151,7 +150,7 @@ fun AnimatedNavigationBar(
 @Preview
 @Composable
 private fun BottomNavPreviewCustom1() {
-    PennyPalTheme() {
+    PennyPalTheme {
         val list = listOf(
             ButtonData("1", Icons.Default.RemoveRedEye),
             ButtonData("1", Icons.Default.RemoveRedEye),

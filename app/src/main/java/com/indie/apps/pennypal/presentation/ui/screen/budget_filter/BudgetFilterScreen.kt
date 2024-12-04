@@ -27,7 +27,6 @@ import com.indie.apps.pennypal.data.database.enum.BudgetMenu
 import com.indie.apps.pennypal.data.database.enum.PeriodType
 import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomProgressItem
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomProgressItemWithDate
 import com.indie.apps.pennypal.presentation.ui.screen.add_budget.AddBudgetTopSelectionButton
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
@@ -119,8 +118,8 @@ fun BudgetFilterScreen(
                                 val yearFormat = SimpleDateFormat("yyyy")
                                 val monthFormat = SimpleDateFormat("MMMM yyyy")
 
-                                val timeString = item?.let { tmpBudgetData ->
-                                    when (tmpBudgetData!!.periodType) {
+                                val timeString = item.let { tmpBudgetData ->
+                                    when (tmpBudgetData.periodType) {
                                         PeriodType.MONTH.id -> getDateFromMillis(
                                             tmpBudgetData.startDate,
                                             monthFormat

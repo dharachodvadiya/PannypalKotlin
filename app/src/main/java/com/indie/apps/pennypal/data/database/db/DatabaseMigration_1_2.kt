@@ -31,7 +31,7 @@ fun updateUserTable(database: SupportSQLiteDatabase, countryRepository: CountryR
 
     val cursor = database.query("SELECT currency FROM user WHERE id = 1")
 
-    try {
+    cursor.use { cursor ->
         var currency = ""
         while (cursor.moveToNext()) {
             currency = cursor.getString(cursor.getColumnIndex("currency"))
@@ -48,8 +48,6 @@ fun updateUserTable(database: SupportSQLiteDatabase, countryRepository: CountryR
         database.execSQL("DROP TABLE user")
         // Rename the new table to the old table name
         database.execSQL("ALTER TABLE user_new RENAME TO user")
-    } finally {
-        cursor.close()
     }
 
 

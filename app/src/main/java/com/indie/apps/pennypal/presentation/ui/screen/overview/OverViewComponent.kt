@@ -827,7 +827,7 @@ fun OverviewBudgetData(
 
                         else -> ""
                     }
-                } ?: ""
+                }
 
                 if (isSelectionEnable) {
                     OverviewBudgetSelectionButton(
