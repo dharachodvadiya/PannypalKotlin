@@ -9,12 +9,12 @@ plugins {
 
 android {
     namespace = "com.indie.apps.pennypal"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.indie.apps.pennypal"
         minSdk = 26
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 5
         versionName = "1.4"
 

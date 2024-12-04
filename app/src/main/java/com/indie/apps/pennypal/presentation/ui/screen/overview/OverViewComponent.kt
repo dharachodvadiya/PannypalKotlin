@@ -690,14 +690,17 @@ fun OverviewMerchantData(
                     val modifierAdd: Modifier =
                         if (merchantId == item.id && isAddMerchantSuccess) {
                             scope.launch {
+
                                 itemAnimateScale.animateTo(
                                     targetValue = 1f,
                                     animationSpec = tween(Util.ADD_ITEM_ANIM_TIME)
                                 )
+                                if (itemAnimateScale.value == 1f) {
+                                    itemAnimateScale.snapTo(0f)
+                                    onAnimStop()
+                                }
                             }
-                            if (itemAnimateScale.value == 1f) {
-                                onAnimStop()
-                            }
+
                             Modifier.scale(itemAnimateScale.value)
                         } else {
                             Modifier
@@ -713,7 +716,6 @@ fun OverviewMerchantData(
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = modifier
-                        .weight(1f)
                         .padding(5.dp)
                 ) {
                     RoundImage(

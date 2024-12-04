@@ -35,7 +35,7 @@ fun RoundImage(
     backGround: Color,
     innerPadding: Dp = 0.dp,
     contentDescription: String,
-    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier.size(dimensionResource(id = R.dimen.item_image))
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     Box(
         contentAlignment = Alignment.Center,
@@ -79,7 +79,7 @@ fun RoundImageWithText(
     tint: Color = MyAppTheme.colors.black,
     backGround: Color,
     innerPadding: Dp = 0.dp,
-    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier.size(dimensionResource(id = R.dimen.item_image))
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     Box(
         contentAlignment = Alignment.Center,
