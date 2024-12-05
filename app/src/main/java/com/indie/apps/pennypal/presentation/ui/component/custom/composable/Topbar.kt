@@ -6,9 +6,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
@@ -35,11 +38,14 @@ fun TopBar(
     contentAlignment: Alignment = Alignment.CenterStart,
     bgColor: Color = MyAppTheme.colors.transparent
 ) {
+    val topStatusBarPadding = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .fillMaxWidth()
             .background(bgColor)
+            .padding(top = topStatusBarPadding)
             .height(dimensionResource(R.dimen.top_bar))
             .padding(horizontal = dimensionResource(R.dimen.padding)),
         horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding))

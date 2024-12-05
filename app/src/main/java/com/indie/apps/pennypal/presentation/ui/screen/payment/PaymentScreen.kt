@@ -5,6 +5,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -47,7 +48,8 @@ fun PaymentScreen(
     onAddPaymentClick: () -> Unit,
     onDefaultPaymentChange: (Long) -> Unit,
     onNavigationUp: () -> Unit,
-    paymentId: Long = 0L
+    paymentId: Long = 0L,
+    bottomPadding: PaddingValues,
 ) {
 
     val paymentWithModeList by paymentViewModel.paymentWithModeState.collectAsStateWithLifecycle()
@@ -108,13 +110,16 @@ fun PaymentScreen(
                 }
             )
         }
-    ) { innerPadding ->
+    ) { topBarPadding ->
         val scrollState = rememberScrollState()
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
-                .padding(innerPadding)
+                .padding(
+                    top = topBarPadding.calculateTopPadding(),
+                    bottom = bottomPadding.calculateBottomPadding()
+                )
                 .padding(horizontal = dimensionResource(id = R.dimen.padding))
                 .verticalScroll(scrollState),
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding))
@@ -212,7 +217,8 @@ private fun PaymentScreenPreview() {
             onEditPaymentClick = {},
             onAddPaymentClick = {},
             onNavigationUp = {},
-            onDefaultPaymentChange = {}
+            onDefaultPaymentChange = {},
+            bottomPadding = PaddingValues(0.dp)
         )
     }
 }

@@ -202,17 +202,16 @@ fun MerchantScreen(
                     merchantViewModel.searchData()
                 }
             })
-    }) { innerPadding ->
+    }) { topBarPadding ->
 
         Box(
             modifier = Modifier
                 .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
                 //.padding(bottomPadding)
-                .padding(innerPadding)
+                .padding(top = topBarPadding.calculateTopPadding())
                 .fillMaxSize()
                 .padding(horizontal = dimensionResource(id = R.dimen.padding))
         )
-
         {
             if (pagingState.isRefresh && (lazyPagingData.itemCount == 0 || isAddSuccess)) {
                 LoadingWithProgress(
@@ -250,7 +249,7 @@ fun MerchantScreen(
                     modifier = modifier
                         .fillMaxSize(),
                     //verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.item_inner_padding)),
-                    contentPadding = bottomPadding
+                    contentPadding = PaddingValues(bottom = bottomPadding.calculateBottomPadding())
                 ) {
                     items(count = lazyPagingData.itemCount,
                         key = lazyPagingData.itemKey { item -> item.id }

@@ -22,7 +22,7 @@ fun NavGraphBuilder.paymentRoute(
         route = BottomNavItem.ACCOUNTS.route
     ) {
         composable(route = ScreenNav.PAYMENT_START.route) { backStackEntry ->
-            //bottomBarState.value = true
+            bottomBarState.value = true
 
             val savedStateHandle = backStackEntry.savedStateHandle
             
@@ -57,7 +57,8 @@ fun NavGraphBuilder.paymentRoute(
                 },
                 onNavigationUp = {
                     navController.popBackStack()
-                }
+                },
+                bottomPadding = innerPadding
             )
         }
     }

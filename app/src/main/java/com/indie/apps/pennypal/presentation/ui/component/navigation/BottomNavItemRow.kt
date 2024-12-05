@@ -9,8 +9,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -159,10 +162,11 @@ fun BottomNavigationBarCustom1(
             circleRadius = circleRadius,
             cornerRadius = 0.dp,
         )
+        val bottomNavPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
 
         Box(
             modifier = modifier
-                .height(dimensionResource(R.dimen.bottom_bar) + circleRadius)
+                .height(dimensionResource(R.dimen.bottom_bar) + circleRadius + bottomNavPadding)
                 .fillMaxWidth()
                 .background(MyAppTheme.colors.transparent)
                 .clickable(onClick = { }, enabled = false, role = Role.Button),
@@ -173,7 +177,7 @@ fun BottomNavigationBarCustom1(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
                     //.offset { IntOffset(0, -90) }
-                    .padding(PaddingValues(bottom = 30.dp))
+                    .padding(PaddingValues(bottom = 30.dp + bottomNavPadding))
                     .zIndex(1f)
                     .size(circleRadius * 2)
                     .clip(CircleShape)
@@ -192,8 +196,10 @@ fun BottomNavigationBarCustom1(
                         clip = true
                     }
                     .fillMaxWidth()
-                    .height(dimensionResource(id = R.dimen.bottom_bar))
                     .background(MyAppTheme.colors.bottomBg)
+                    .padding(bottom = bottomNavPadding)
+                    .height(dimensionResource(id = R.dimen.bottom_bar))
+
             ) {
                 tabs.forEachIndexed { index, item ->
                     BottomNavigationBarCustom1Item(

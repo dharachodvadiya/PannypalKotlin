@@ -100,7 +100,8 @@ fun NavGraphBuilder.overViewRoute(
                         Util.SAVE_STATE_PERIOD_TYPE,
                         it
                     )
-                }
+                },
+                bottomPadding = innerPadding
             )
         }
         composable(route = ScreenNav.NEW_ITEM.route) { backStackEntry ->
@@ -236,7 +237,6 @@ fun NavGraphBuilder.overViewRoute(
                 editAddId = merchantDataId ?: -1,
                 isEditSuccess = isEditMerchantDataSuccess ?: false,
                 isAddSuccess = isAddMerchantDataSuccess ?: false,
-                bottomPadding = innerPadding,
             )
         }
         composable(route = ScreenNav.OVERVIEW_ANALYSIS.route) {

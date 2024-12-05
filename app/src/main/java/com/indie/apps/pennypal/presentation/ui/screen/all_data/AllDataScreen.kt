@@ -11,7 +11,6 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -64,7 +63,6 @@ fun AllDataScreen(
     isEditSuccess: Boolean = false,
     isAddSuccess: Boolean = false,
     editAddId: Long = 1L,
-    bottomPadding: PaddingValues,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -126,10 +124,12 @@ fun AllDataScreen(
             isDeletable = isDeletable,
             onAddClick = { allDataViewModel.onAddClick { onAddClick() } },
             onDeleteClick = { allDataViewModel.onDeleteClick { openAlertDialog = true } },
-            onNavigationUp = { allDataViewModel.onNavigationUp {
-                if(!isDeletable)
-                    onNavigationUp()
-            } },
+            onNavigationUp = {
+                allDataViewModel.onNavigationUp {
+                    if (!isDeletable)
+                        onNavigationUp()
+                }
+            },
             onSearchTextChange = {
                 allDataViewModel.updateSearchText(it)
                 job?.cancel()
@@ -185,7 +185,6 @@ fun AllDataScreen(
                     modifier = modifier
                         .fillMaxSize(),
                     //verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.item_inner_padding)),
-                    contentPadding = bottomPadding
                 ) {
                     items(count = lazyPagingData.itemCount,
                         key = lazyPagingData.itemKey { item -> item.id }
@@ -302,7 +301,7 @@ fun AllDataScreen(
                         allDataViewModel.onDeleteDialogClick {
                             openAlertDialog = false
                             context.showToast(merchantDeleteToast)
-                       }
+                        }
                     },
                     onDismissRequest = { openAlertDialog = false }
                 )
@@ -321,7 +320,6 @@ private fun MerchantScreenPreview() {
             onAddClick = {},
             onDataClick = {},
             onNavigationUp = {},
-            bottomPadding = PaddingValues(0.dp)
         )
     }
 }

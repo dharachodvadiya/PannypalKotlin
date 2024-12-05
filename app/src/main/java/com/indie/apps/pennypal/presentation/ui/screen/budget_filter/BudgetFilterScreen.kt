@@ -76,7 +76,7 @@ fun BudgetFilterScreen(
                 .fillMaxSize()
                 .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
                 .padding(innerPadding)
-                .padding(horizontal = dimensionResource(id = R.dimen.padding)),
+                .padding(horizontal = dimensionResource(id = R.dimen.item_inner_padding)),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -48,6 +49,7 @@ fun OverViewStartScreen(
     onAddMerchant: () -> Unit,
     isAddMerchantDataSuccess: Boolean = false,
     isEditSuccess: Boolean = false,
+    bottomPadding: PaddingValues,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     /* val dataWithDayLazyPagingItems =
@@ -110,15 +112,19 @@ fun OverViewStartScreen(
         isEditDataSuccess = isEditSuccess
     }
 
-    Scaffold { innerPadding ->
+    Scaffold { topBarPadding ->
+
         val scrollState = rememberScrollState()
         Column(
             modifier = modifier
                 .fillMaxSize()
                 .verticalScroll(scrollState)
                 .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
-                .padding(innerPadding)
-                .padding(dimensionResource(id = R.dimen.padding)),
+                .padding(dimensionResource(id = R.dimen.padding))
+                .padding(
+                    top = topBarPadding.calculateTopPadding(),
+                    bottom = bottomPadding.calculateBottomPadding()
+                ),
             verticalArrangement = Arrangement.spacedBy(25.dp),
         ) {
             /* if (currentMonthTotal == null) {
@@ -205,7 +211,8 @@ private fun OverViewScreenPreview() {
             onExploreBudgetClick = {},
             onAddMerchant = {},
             addMerchantId = -1L,
-            onSetBudgetClick = {}
+            onSetBudgetClick = {},
+            bottomPadding = PaddingValues(0.dp)
         )
     }
 }
