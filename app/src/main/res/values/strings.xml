@@ -159,4 +159,6 @@
     <string name="upcoming_boudget">Upcoming Budget</string>
     <string name="past_boudget">Past Budget</string>
     <string name="no_budget_found">No budget found</string>
+    <string name="backup_Data">Backup Data</string>
+    <string name="restore_Data">Restore Data</string>
 </resources>

@@ -2,7 +2,7 @@
   "project_info": {
     "project_number": "543082646910",
     "project_id": "pennypal-cf8cc",
-    "storage_bucket": "pennypal-cf8cc.appspot.com"
+    "storage_bucket": "pennypal-cf8cc.firebasestorage.app"
   },
   "client": [
     {
@@ -12,7 +12,20 @@
           "package_name": "com.indie.apps.pennypal"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "543082646910-g5e556taes6ro79b465hrl6ebai7q0j3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.indie.apps.pennypal",
+            "certificate_hash": "8e42b45361b23401529975bce9794e50b96af8bd"
+          }
+        },
+        {
+          "client_id": "543082646910-is4lcvu1m56v6u2pjaeq1mqf2ndutved.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBZcRpIThdHkzBO8OFDEAK8CpoFcsf78h4"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "543082646910-is4lcvu1m56v6u2pjaeq1mqf2ndutved.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

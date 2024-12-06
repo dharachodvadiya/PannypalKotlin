@@ -1,5 +1,7 @@
 package com.indie.apps.pennypal.presentation.ui.screen.setting
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,6 +12,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,12 +41,39 @@ fun SettingScreen(
 
     val generalList by settingViewModel.generalList.collectAsStateWithLifecycle()
     val moreList by settingViewModel.moreList.collectAsStateWithLifecycle()
+    val backupRestoreList by settingViewModel.backupRestoreList.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
+
+    val effect by settingViewModel.effect.collectAsStateWithLifecycle()
+
+    val signInLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult(),
+        onResult = {
+            settingViewModel.onEvent(
+                MainEvent.OnSignInResult(
+                    it.data ?: return@rememberLauncherForActivityResult
+                )
+            )
+        }
+    )
+
+    LaunchedEffect(key1 = effect) {
+        when (effect) {
+            is MainEffect.SignIn -> {
+                signInLauncher.launch(
+                    (effect as MainEffect.SignIn).intent
+                )
+            }
+
+            null -> Unit
+        }
+    }
 
     SettingScreenData(
         generalList = generalList,
         moreList = moreList,
+        backupRestoreList = backupRestoreList,
         onSelect = {
             settingViewModel.onSelectOption(
                 item = it,
@@ -54,6 +84,9 @@ fun SettingScreen(
                 onRate = { onRateClick(context) },
                 onPrivacyPolicy = { onPrivacyPolicyClick(context) },
                 onContactUs = { onContactUsClick(context) },
+                onGoogleSignIn = {
+                    settingViewModel.onEvent(MainEvent.SignInGoogle)
+                }
             )
         },
         bottomPadding = bottomPadding
@@ -64,6 +97,7 @@ fun SettingScreen(
 fun SettingScreenData(
     generalList: List<MoreItem>,
     moreList: List<MoreItem>,
+    backupRestoreList: List<MoreItem>,
     onSelect: (MoreItem) -> Unit,
     bottomPadding: PaddingValues
 ) {
@@ -92,10 +126,6 @@ fun SettingScreenData(
                 .verticalScroll(scrollState),
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding))
         ) {
-            /*val generalList = listOf(
-                MoreItem(title = R.string.currency_and_format, subTitle = "USD($)"),
-                MoreItem(title = R.string.default_payment_mode, subTitle =  "Cash"),
-            )*/
             SettingTypeItem(
                 titleId = R.string.general,
                 dataList = generalList,
@@ -103,12 +133,13 @@ fun SettingScreenData(
                 arrowIconEnable = true
             )
 
-            /*val moreList = listOf(
-                MoreItem(title = R.string.share, icon = R.drawable.ic_share),
-                MoreItem(title = R.string.rate, icon = R.drawable.ic_rate),
-                MoreItem(title = R.string.privacy_policy, icon = R.drawable.ic_privacy),
-                MoreItem(title = R.string.contact_us, icon = R.drawable.ic_contact_us),
-            )*/
+            SettingTypeItem(
+                titleId = R.string.more,
+                dataList = backupRestoreList,
+                onSelect = onSelect,
+                arrowIconEnable = false
+            )
+
             SettingTypeItem(
                 titleId = R.string.more,
                 dataList = moreList,

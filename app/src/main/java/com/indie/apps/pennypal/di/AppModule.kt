@@ -1,6 +1,9 @@
 package com.indie.apps.pennypal.di
 
 import android.content.Context
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.indie.apps.contacts.data.provider.ContactsProvider
 import com.indie.apps.contacts.data.provider.impl.ContactsProviderImpl
 import com.indie.apps.contacts.data.repo.ContactsRepository
@@ -10,6 +13,8 @@ import com.indie.apps.cpp.data.repository.CountryRepository
 import com.indie.apps.cpp.data.repository.CountryRepositoryImpl
 import com.indie.apps.pennypal.data.database.db.AppDatabase
 import com.indie.apps.pennypal.data.preference.PreferenceManager
+import com.indie.apps.pennypal.repository.AuthRepository
+import com.indie.apps.pennypal.repository.AuthRepositoryImpl
 import com.indie.apps.pennypal.repository.BillingRepository
 import com.indie.apps.pennypal.repository.BillingRepositoryImpl
 import com.indie.apps.pennypal.repository.BudgetRepository
@@ -129,5 +134,21 @@ object AppModule {
             database.budgetCategoryDao(),
             database.merchantDataDao()
         )
+    }
+
+    @Provides
+    fun provideAuthRepository(googleSignInClient : GoogleSignInClient): AuthRepository {
+        return AuthRepositoryImpl(googleSignInClient)
+    }
+
+    @Provides
+    fun getGoogleSignInClient(@ApplicationContext context: Context): GoogleSignInClient {
+        val signInOptions = GoogleSignInOptions
+            .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken("543082646910-is4lcvu1m56v6u2pjaeq1mqf2ndutved.apps.googleusercontent.com")
+            .requestEmail()
+            .build()
+
+        return GoogleSignIn.getClient(context, signInOptions)
     }
 }
