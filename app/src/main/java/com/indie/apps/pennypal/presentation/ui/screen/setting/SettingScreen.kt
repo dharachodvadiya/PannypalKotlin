@@ -27,11 +27,14 @@ import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.module.MoreItem
 import com.indie.apps.pennypal.presentation.ui.component.TopBarWithTitle
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
+import com.indie.apps.pennypal.presentation.ui.component.getRequestCode
+import com.indie.apps.pennypal.presentation.ui.component.setRequestCode
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.util.SettingEffect
 import com.indie.apps.pennypal.util.SyncEffect
 import com.indie.apps.pennypal.util.SyncEvent
+import com.indie.apps.pennypal.util.Util
 
 @Composable
 fun SettingScreen(
@@ -48,50 +51,56 @@ fun SettingScreen(
 
     val context = LocalContext.current
 
-    val effect by settingViewModel.syncEffect.collectAsStateWithLifecycle()
-    val settingEffect by settingViewModel.settingEffect.collectAsStateWithLifecycle()
-
-    val signInLauncher = rememberLauncherForActivityResult(
+    val activityResultLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult(),
         onResult = {
-            settingViewModel.onEvent(
-                SyncEvent.OnSignInResult(
-                    it.data ?: return@rememberLauncherForActivityResult
-                )
-            )
+            when (it.data?.getRequestCode()) {
+                Util.REQUEST_CODE_GOOGLE_SIGN_IN -> {
+                    settingViewModel.onEvent(
+                        SyncEvent.OnSignInResult(
+                            it.data ?: return@rememberLauncherForActivityResult
+                        )
+                    )
+                }
+
+                else -> {
+
+                }
+            }
+
         }
     )
 
-    LaunchedEffect(key1 = effect) {
-        when (effect) {
-            is SyncEffect.SignIn -> {
-                signInLauncher.launch(
-                    (effect as SyncEffect.SignIn).intent
-                )
-            }
+    LaunchedEffect(key1 = settingViewModel.syncEffect) {
+        settingViewModel.syncEffect.collect() { effect ->
+            when (effect) {
+                is SyncEffect.SignIn -> {
+                    effect.intent.setRequestCode(Util.REQUEST_CODE_GOOGLE_SIGN_IN)
+                    activityResultLauncher.launch(
+                        effect.intent
+                    )
+                }
 
-            null -> Unit
+                else -> Unit
+            }
         }
     }
 
-    LaunchedEffect(key1 = settingEffect) {
-        when (settingEffect) {
+    LaunchedEffect(key1 = settingViewModel.settingEffect) {
+        settingViewModel.settingEffect.collect { settingEffect ->
+            when (settingEffect) {
 
-            is SettingEffect.OnCurrencyChange -> onCurrencyChange((settingEffect as SettingEffect.OnCurrencyChange).countryCode)
-            is SettingEffect.OnDefaultPaymentChange -> onDefaultPaymentChange((settingEffect as SettingEffect.OnDefaultPaymentChange).id)
-            SettingEffect.OnBalanceViewChange -> onBalanceViewChange()
+                is SettingEffect.OnCurrencyChange -> onCurrencyChange(settingEffect.countryCode)
+                is SettingEffect.OnDefaultPaymentChange -> onDefaultPaymentChange(settingEffect.id)
+                SettingEffect.OnBalanceViewChange -> onBalanceViewChange()
 
-            SettingEffect.Share -> onShareClick(context)
-            SettingEffect.Rate -> onRateClick(context)
-            SettingEffect.PrivacyPolicy -> onPrivacyPolicyClick(context)
-            SettingEffect.ContactUs -> onContactUsClick(context)
+                SettingEffect.Share -> onShareClick(context)
+                SettingEffect.Rate -> onRateClick(context)
+                SettingEffect.PrivacyPolicy -> onPrivacyPolicyClick(context)
+                SettingEffect.ContactUs -> onContactUsClick(context)
 
-            SettingEffect.Backup -> settingViewModel.onEvent(SyncEvent.SignInGoogle)
-            SettingEffect.Restore -> {
-
-            }
-
-            null -> {
+                SettingEffect.Backup -> settingViewModel.onEvent(SyncEvent.SignInGoogle)
+                SettingEffect.Restore -> {}
             }
         }
     }

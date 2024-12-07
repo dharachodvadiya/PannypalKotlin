@@ -67,6 +67,9 @@ object Util {
 
     const val PREF_BALANCE_VIEW = "overview_balance_view"
 
+
+    const val REQUEST_CODE_GOOGLE_SIGN_IN = 101
+
     val TIME_ZONE_OFFSET_IN_MILLI = TimeZone.getDefault().rawOffset
 
     fun getFormattedStringWithSymbol(

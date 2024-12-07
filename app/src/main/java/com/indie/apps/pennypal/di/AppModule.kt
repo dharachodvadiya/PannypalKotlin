@@ -137,8 +137,8 @@ object AppModule {
     }
 
     @Provides
-    fun provideAuthRepository(googleSignInClient : GoogleSignInClient): AuthRepository {
-        return AuthRepositoryImpl(googleSignInClient)
+    fun provideAuthRepository(googleSignInClient : GoogleSignInClient, @ApplicationContext context: Context): AuthRepository {
+        return AuthRepositoryImpl(googleSignInClient, context)
     }
 
     @Provides

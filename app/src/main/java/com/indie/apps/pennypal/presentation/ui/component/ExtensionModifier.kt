@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.component
 
+import android.content.Intent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -19,3 +20,10 @@ internal fun Modifier.roundedCornerBackground(
     .clip(RoundedCornerShape(10.dp))
     .then(if (border != null) Modifier.border(border, RoundedCornerShape(10.dp)) else Modifier)
     .background(color = backgroundColor, shape = RoundedCornerShape(10.dp))
+
+internal fun Intent.setRequestCode(requestCode : Int)
+{
+    this.putExtra("requestCode", requestCode)
+}
+
+internal fun Intent.getRequestCode() = this.getIntExtra("requestCode", 0)
