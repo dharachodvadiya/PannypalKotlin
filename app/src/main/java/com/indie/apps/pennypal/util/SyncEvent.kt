@@ -11,4 +11,7 @@ sealed class SyncEvent {
     data object SignOut : SyncEvent()
     data class OnSignInResult(val intent: Intent) : SyncEvent()
 
+    data object Backup:SyncEvent()
+    data object Restore:SyncEvent()
+
 }

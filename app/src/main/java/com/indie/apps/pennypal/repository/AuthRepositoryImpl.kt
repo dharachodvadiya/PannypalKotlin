@@ -7,6 +7,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
+import com.google.api.client.http.javanet.NetHttpTransport
+import com.google.api.client.json.gson.GsonFactory
+import com.google.api.services.drive.Drive
+import com.google.api.services.drive.DriveScopes
 import com.indie.apps.pennypal.data.module.UserInfoResult
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.tasks.await
@@ -17,35 +22,33 @@ class AuthRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context,
 ) : AuthRepository {
 
-    /*  private val oneTap = Identity.getSignInClient(context)
-      private val signInRequest = BeginSignInRequest.builder().setGoogleIdTokenRequestOptions(
-          BeginSignInRequest.GoogleIdTokenRequestOptions.builder().setSupported(true)
-              .setServerClientId(
-                  "521870746383-i9k9ke25vpa3co2tqbmkslm4i4lo2nla.apps.googleusercontent.com"
-              ).setFilterByAuthorizedAccounts(false)
-              .build()
-      ).setAutoSelectEnabled(true).build()*/
-
+    private val credential =
+        GoogleAccountCredential.usingOAuth2(context, listOf(DriveScopes.DRIVE_FILE))
+    private var googleSignInAccount: GoogleSignInAccount? =
+        GoogleSignIn.getLastSignedInAccount(context)
 
     override suspend fun signInGoogle(): Intent {
-        println("aaaaaa signin = ${isSignedIn()}")
+        println("aaaaa start signin")
         return googleSignInClient.signInIntent
-        //return oneTap.beginSignIn(signInRequest).await().pendingIntent.intentSender
     }
 
     override suspend fun signOut() {
-
-        //val googleSignInClient = GoogleSignIn.getClient(context, gso)
         googleSignInClient.signOut().await()
-        //oneTap.signOut().await()
     }
 
     override suspend fun isSignedIn(): Boolean {
-        return GoogleSignIn.getLastSignedInAccount(context) != null
+        println("aaaaa issignin ${googleSignInAccount != null}")
+        return googleSignInAccount != null
     }
 
     override suspend fun getUserInfo(): UserInfoResult? {
-        TODO("Not yet implemented")
+        return googleSignInAccount?.let {
+            UserInfoResult(
+                email = googleSignInAccount!!.email,
+                displayName = googleSignInAccount!!.displayName,
+                idToken = googleSignInAccount!!.idToken
+            )
+        }
     }
 
     override suspend fun getSignInResult(intent: Intent): UserInfoResult {
@@ -60,7 +63,19 @@ class AuthRepositoryImpl @Inject constructor(
                 idToken = account.idToken
             )
         } catch (e: ApiException) {
-            throw SignInException("Google sign-in failed with error code: ${e.statusCode}", e)
+            throw SignInException("aaaa Google sign-in failed with error code: ${e.statusCode}", e)
+        }
+    }
+
+    override suspend fun getGoogleDrive(): Drive? {
+        return if (googleSignInAccount != null) {
+            credential.setSelectedAccount(googleSignInAccount!!.account);
+            Drive.Builder(
+                NetHttpTransport(), GsonFactory.getDefaultInstance(),
+                credential
+            ).build()
+        } else {
+            null
         }
     }
 

@@ -12,6 +12,9 @@ import java.util.TimeZone
 object Util {
     var isSubscribed = false
 
+    const val DB_NAME = "pennypal_money_db"
+    const val DB_BACKUP_NAME = "pennypal_money_backup"
+
     var currentCurrencySymbol = "$"
     const val SEARCH_NEWS_TIME_DELAY = 500L
 

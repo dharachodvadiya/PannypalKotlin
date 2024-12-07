@@ -54,6 +54,7 @@ fun SettingScreen(
     val activityResultLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult(),
         onResult = {
+            println("aaaa ${it.data?.getRequestCode()}   ... result = ${it.resultCode}")
             when (it.data?.getRequestCode()) {
                 Util.REQUEST_CODE_GOOGLE_SIGN_IN -> {
                     settingViewModel.onEvent(

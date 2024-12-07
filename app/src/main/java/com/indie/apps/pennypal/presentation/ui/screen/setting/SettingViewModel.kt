@@ -7,6 +7,7 @@ import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.module.MoreItem
 import com.indie.apps.pennypal.domain.usecase.GetGeneralSettingUseCase
 import com.indie.apps.pennypal.repository.AuthRepository
+import com.indie.apps.pennypal.repository.BackupRepository
 import com.indie.apps.pennypal.util.SettingEffect
 import com.indie.apps.pennypal.util.SettingOption
 import com.indie.apps.pennypal.util.SyncEffect
@@ -24,7 +25,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingViewModel @Inject constructor(
     getGeneralSettingUseCase: GetGeneralSettingUseCase,
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val backupRepository: BackupRepository
 ) : ViewModel() {
 
     private var isSignInProcess = false
@@ -94,9 +96,9 @@ class SettingViewModel @Inject constructor(
 
             SyncEvent.SignInGoogle -> {
                 viewModelScope.launch(Dispatchers.IO) {
-                    if (isSignInProcess) return@launch
+                    //if (isSignInProcess) return@launch
 
-                    isSignInProcess = true
+                    //isSignInProcess = true
                     val getGoogleSignIn = authRepository.signInGoogle()
                     syncEffect.emit(SyncEffect.SignIn(getGoogleSignIn))
                 }
@@ -108,11 +110,22 @@ class SettingViewModel @Inject constructor(
 
                 }
             }
+
+            SyncEvent.Backup -> {
+                viewModelScope.launch(Dispatchers.IO) {
+                    if(authRepository.isSignedIn())
+                        backupRepository.backup()
+                    else
+                        onEvent(SyncEvent.SignInGoogle)
+                }
+            }
+            SyncEvent.Restore -> {}
         }
     }
 
     private suspend fun onSignInResult(intent: Intent) {
         isSignInProcess = false
+        println("aaaaa getSigninResult")
         try {
             val getResult = authRepository.getSignInResult(intent)
             println("aaaa resule = ${getResult.email}")

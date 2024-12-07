@@ -1,6 +1,7 @@
 package com.indie.apps.pennypal.repository
 
 import android.content.Intent
+import com.google.api.services.drive.Drive
 import com.indie.apps.pennypal.data.module.UserInfoResult
 
 interface AuthRepository {
@@ -10,5 +11,7 @@ interface AuthRepository {
     suspend fun getUserInfo(): UserInfoResult?
 
     suspend fun getSignInResult(intent: Intent): UserInfoResult
+
+    suspend fun getGoogleDrive(): Drive?
 }
 
