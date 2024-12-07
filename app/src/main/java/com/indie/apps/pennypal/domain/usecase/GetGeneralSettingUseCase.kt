@@ -6,6 +6,7 @@ import com.indie.apps.pennypal.data.module.MoreItem
 import com.indie.apps.pennypal.di.IoDispatcher
 import com.indie.apps.pennypal.repository.PreferenceRepository
 import com.indie.apps.pennypal.repository.UserRepository
+import com.indie.apps.pennypal.util.SettingOption
 import com.indie.apps.pennypal.util.ShowDataPeriod
 import com.indie.apps.pennypal.util.Util
 import kotlinx.coroutines.CoroutineDispatcher
@@ -47,16 +48,19 @@ class GetGeneralSettingUseCase @Inject constructor(
                                 userWithPaymentName.currency
                             )
                         })",
-                        id = countryRepository.getCountryCodeFromCurrencyCode(userWithPaymentName.currency)
+                        id = countryRepository.getCountryCodeFromCurrencyCode(userWithPaymentName.currency),
+                        option = SettingOption.CURRENCY_CHANGE
                     ),
                     MoreItem(
                         title = R.string.default_payment_mode,
                         subTitle = userWithPaymentName.paymentName,
-                        id = userWithPaymentName.paymentId.toString()
+                        id = userWithPaymentName.paymentId.toString(),
+                        option = SettingOption.PAYMENT_CHANGE
                     ),
                     MoreItem(
                         title = R.string.home_page_balance_view,
-                        subTitle = balanceViewValue
+                        subTitle = balanceViewValue,
+                        option = SettingOption.BALANCE_VIEW_CHANGE
                     )
                 )
             }

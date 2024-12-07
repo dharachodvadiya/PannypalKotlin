@@ -29,6 +29,9 @@ import com.indie.apps.pennypal.presentation.ui.component.TopBarWithTitle
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
+import com.indie.apps.pennypal.util.SettingEffect
+import com.indie.apps.pennypal.util.SyncEffect
+import com.indie.apps.pennypal.util.SyncEvent
 
 @Composable
 fun SettingScreen(
@@ -45,13 +48,14 @@ fun SettingScreen(
 
     val context = LocalContext.current
 
-    val effect by settingViewModel.effect.collectAsStateWithLifecycle()
+    val effect by settingViewModel.syncEffect.collectAsStateWithLifecycle()
+    val settingEffect by settingViewModel.settingEffect.collectAsStateWithLifecycle()
 
     val signInLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult(),
         onResult = {
             settingViewModel.onEvent(
-                MainEvent.OnSignInResult(
+                SyncEvent.OnSignInResult(
                     it.data ?: return@rememberLauncherForActivityResult
                 )
             )
@@ -60,13 +64,35 @@ fun SettingScreen(
 
     LaunchedEffect(key1 = effect) {
         when (effect) {
-            is MainEffect.SignIn -> {
+            is SyncEffect.SignIn -> {
                 signInLauncher.launch(
-                    (effect as MainEffect.SignIn).intent
+                    (effect as SyncEffect.SignIn).intent
                 )
             }
 
             null -> Unit
+        }
+    }
+
+    LaunchedEffect(key1 = settingEffect) {
+        when (settingEffect) {
+
+            is SettingEffect.OnCurrencyChange -> onCurrencyChange((settingEffect as SettingEffect.OnCurrencyChange).countryCode)
+            is SettingEffect.OnDefaultPaymentChange -> onDefaultPaymentChange((settingEffect as SettingEffect.OnDefaultPaymentChange).id)
+            SettingEffect.OnBalanceViewChange -> onBalanceViewChange()
+
+            SettingEffect.Share -> onShareClick(context)
+            SettingEffect.Rate -> onRateClick(context)
+            SettingEffect.PrivacyPolicy -> onPrivacyPolicyClick(context)
+            SettingEffect.ContactUs -> onContactUsClick(context)
+
+            SettingEffect.Backup -> settingViewModel.onEvent(SyncEvent.SignInGoogle)
+            SettingEffect.Restore -> {
+
+            }
+
+            null -> {
+            }
         }
     }
 
@@ -76,17 +102,7 @@ fun SettingScreen(
         backupRestoreList = backupRestoreList,
         onSelect = {
             settingViewModel.onSelectOption(
-                item = it,
-                onCurrencyChange = onCurrencyChange,
-                onDefaultPaymentChange = onDefaultPaymentChange,
-                onBalanceViewChange = onBalanceViewChange,
-                onShare = { onShareClick(context) },
-                onRate = { onRateClick(context) },
-                onPrivacyPolicy = { onPrivacyPolicyClick(context) },
-                onContactUs = { onContactUsClick(context) },
-                onGoogleSignIn = {
-                    settingViewModel.onEvent(MainEvent.SignInGoogle)
-                }
+                item = it
             )
         },
         bottomPadding = bottomPadding
