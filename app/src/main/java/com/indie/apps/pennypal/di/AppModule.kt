@@ -1,9 +1,6 @@
 package com.indie.apps.pennypal.di
 
 import android.content.Context
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.indie.apps.contacts.data.provider.ContactsProvider
 import com.indie.apps.contacts.data.provider.impl.ContactsProviderImpl
 import com.indie.apps.contacts.data.repo.ContactsRepository
@@ -140,10 +137,9 @@ object AppModule {
 
     @Provides
     fun provideAuthRepository(
-        googleSignInClient: GoogleSignInClient,
         @ApplicationContext context: Context
     ): AuthRepository {
-        return AuthRepositoryImpl(googleSignInClient, context)
+        return AuthRepositoryImpl(context)
     }
 
     @Provides
@@ -152,16 +148,5 @@ object AppModule {
         authRepository: AuthRepository
     ): BackupRepository {
         return BackupRepositoryImpl(context, authRepository)
-    }
-
-    @Provides
-    fun getGoogleSignInClient(@ApplicationContext context: Context): GoogleSignInClient {
-        val signInOptions = GoogleSignInOptions
-            .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken("543082646910-is4lcvu1m56v6u2pjaeq1mqf2ndutved.apps.googleusercontent.com")
-            .requestEmail()
-            .build()
-
-        return GoogleSignIn.getClient(context, signInOptions)
     }
 }

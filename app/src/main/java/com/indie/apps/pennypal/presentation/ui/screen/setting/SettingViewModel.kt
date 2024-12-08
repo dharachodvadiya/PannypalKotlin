@@ -18,7 +18,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -95,10 +94,14 @@ class SettingViewModel @Inject constructor(
             }
 
             SyncEvent.SignInGoogle -> {
-                viewModelScope.launch(Dispatchers.IO) {
-                    //if (isSignInProcess) return@launch
+                /* viewModelScope.launch(Dispatchers.IO) {
+                     if (isSignInProcess) return@launch
 
-                    //isSignInProcess = true
+                     isSignInProcess = true
+                     val getGoogleSignIn = authRepository.signInGoogle()
+                     syncEffect.emit(SyncEffect.SignIn(getGoogleSignIn))
+                 }*/
+                viewModelScope.launch(Dispatchers.IO) {
                     val getGoogleSignIn = authRepository.signInGoogle()
                     syncEffect.emit(SyncEffect.SignIn(getGoogleSignIn))
                 }
@@ -107,30 +110,48 @@ class SettingViewModel @Inject constructor(
             SyncEvent.SignOut -> {
                 viewModelScope.launch(Dispatchers.IO) {
                     authRepository.signOut()
-
                 }
             }
 
             SyncEvent.Backup -> {
                 viewModelScope.launch(Dispatchers.IO) {
-                    if(authRepository.isSignedIn())
+                    if (authRepository.isSignedIn())
                         backupRepository.backup()
-                    else
+                    else {
                         onEvent(SyncEvent.SignInGoogle)
+                    }
                 }
             }
-            SyncEvent.Restore -> {}
+
+            SyncEvent.GetFiles -> TODO()
+            is SyncEvent.OnAuthorize -> {
+                viewModelScope.launch(Dispatchers.IO) {
+                    authRepository.authorizeGoogleDriveResult(mainEvent.intent)
+                }
+            }
+
+            is SyncEvent.Restore -> {
+                viewModelScope.launch(Dispatchers.IO) {
+                    backupRepository.restore()
+                }
+            }
         }
     }
 
     private suspend fun onSignInResult(intent: Intent) {
         isSignInProcess = false
-        println("aaaaa getSigninResult")
-        try {
-            val getResult = authRepository.getSignInResult(intent)
-            println("aaaa resule = ${getResult.email}")
-        }catch (e : Exception){
-
+        val getResult = authRepository.getSignInResult(intent)
+        if (getResult != null) {
+            println("aaaaa getSigninResult success ${getResult.email}")
+            val authorizeGoogleDrive = authRepository.authorizeGoogleDrive()
+            if (authorizeGoogleDrive.hasResolution()) {
+                println("aaaaa getSigninResult 111")
+                syncEffect.emit(
+                    SyncEffect.Authorize(authorizeGoogleDrive.pendingIntent!!.intentSender)
+                )
+            }
+        } else {
+            println("aaaaa getSigninResult fail")
         }
 
     }

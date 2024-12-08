@@ -1,6 +1,7 @@
 package com.indie.apps.pennypal.presentation.ui.screen.setting
 
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -28,13 +29,11 @@ import com.indie.apps.pennypal.data.module.MoreItem
 import com.indie.apps.pennypal.presentation.ui.component.TopBarWithTitle
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.getRequestCode
-import com.indie.apps.pennypal.presentation.ui.component.setRequestCode
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.util.SettingEffect
 import com.indie.apps.pennypal.util.SyncEffect
 import com.indie.apps.pennypal.util.SyncEvent
-import com.indie.apps.pennypal.util.Util
 
 @Composable
 fun SettingScreen(
@@ -52,10 +51,16 @@ fun SettingScreen(
     val context = LocalContext.current
 
     val activityResultLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult(),
+        contract = ActivityResultContracts.StartIntentSenderForResult(),
         onResult = {
             println("aaaa ${it.data?.getRequestCode()}   ... result = ${it.resultCode}")
-            when (it.data?.getRequestCode()) {
+
+            settingViewModel.onEvent(
+                SyncEvent.OnSignInResult(
+                    it.data ?: return@rememberLauncherForActivityResult
+                )
+            )
+            /*when (it.data?.getRequestCode()) {
                 Util.REQUEST_CODE_GOOGLE_SIGN_IN -> {
                     settingViewModel.onEvent(
                         SyncEvent.OnSignInResult(
@@ -67,8 +72,19 @@ fun SettingScreen(
                 else -> {
 
                 }
-            }
+            }*/
 
+        }
+    )
+
+    val authorizeLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartIntentSenderForResult(),
+        onResult = {
+            settingViewModel.onEvent(
+                SyncEvent.OnAuthorize(
+                    it.data ?: return@rememberLauncherForActivityResult
+                )
+            )
         }
     )
 
@@ -76,9 +92,20 @@ fun SettingScreen(
         settingViewModel.syncEffect.collect() { effect ->
             when (effect) {
                 is SyncEffect.SignIn -> {
-                    effect.intent.setRequestCode(Util.REQUEST_CODE_GOOGLE_SIGN_IN)
+                    /*effect.intent.setRequestCode(Util.REQUEST_CODE_GOOGLE_SIGN_IN)
                     activityResultLauncher.launch(
                         effect.intent
+                    )*/
+                    activityResultLauncher.launch(
+                        IntentSenderRequest.Builder((effect as SyncEffect.SignIn).intentSender)
+                            .build()
+                    )
+                }
+
+                is SyncEffect.Authorize -> {
+                    authorizeLauncher.launch(
+                        IntentSenderRequest.Builder((effect as SyncEffect.Authorize).intentSender)
+                            .build()
                     )
                 }
 
@@ -100,8 +127,10 @@ fun SettingScreen(
                 SettingEffect.PrivacyPolicy -> onPrivacyPolicyClick(context)
                 SettingEffect.ContactUs -> onContactUsClick(context)
 
-                SettingEffect.Backup -> settingViewModel.onEvent(SyncEvent.SignInGoogle)
-                SettingEffect.Restore -> {}
+                SettingEffect.Backup -> settingViewModel.onEvent(SyncEvent.Backup)
+                SettingEffect.Restore -> {
+                    settingViewModel.onEvent(SyncEvent.SignInGoogle)
+                }
             }
         }
     }
