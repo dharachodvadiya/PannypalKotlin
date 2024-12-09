@@ -15,9 +15,14 @@ sealed class SyncEvent {
     data object Backup : SyncEvent()
 
     data class OnSignInResult(val intent: Intent) : SyncEvent()
-    data class OnAuthorize(val intent: Intent) : SyncEvent()
-    data class Restore(val fileId: String) : SyncEvent()
+    data class OnAuthorizeResult(val intent: Intent) : SyncEvent()
+    data object Restore : SyncEvent()
 
     data object GetFiles : SyncEvent()
+}
 
+enum class AuthProcess {
+    BACK_UP,
+    RESTORE,
+    NONE
 }

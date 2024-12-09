@@ -145,8 +145,10 @@ object AppModule {
     @Provides
     fun provideBackupRepository(
         @ApplicationContext context: Context,
-        authRepository: AuthRepository
+        authRepository: AuthRepository,
+        countryRepository: CountryRepository,
+        appDatabase: AppDatabase
     ): BackupRepository {
-        return BackupRepositoryImpl(context, authRepository)
+        return BackupRepositoryImpl(context, authRepository, countryRepository, appDatabase)
     }
 }

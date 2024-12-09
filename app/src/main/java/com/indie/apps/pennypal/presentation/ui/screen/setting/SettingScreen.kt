@@ -28,9 +28,10 @@ import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.module.MoreItem
 import com.indie.apps.pennypal.presentation.ui.component.TopBarWithTitle
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
-import com.indie.apps.pennypal.presentation.ui.component.getRequestCode
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomProgressDialog
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
+import com.indie.apps.pennypal.util.AuthProcess
 import com.indie.apps.pennypal.util.SettingEffect
 import com.indie.apps.pennypal.util.SyncEffect
 import com.indie.apps.pennypal.util.SyncEvent
@@ -48,32 +49,25 @@ fun SettingScreen(
     val moreList by settingViewModel.moreList.collectAsStateWithLifecycle()
     val backupRestoreList by settingViewModel.backupRestoreList.collectAsStateWithLifecycle()
 
+
+    val processingState by settingViewModel.processingState.collectAsStateWithLifecycle()
+
+    when (processingState) {
+        AuthProcess.BACK_UP -> CustomProgressDialog(R.string.backup_Data)
+        AuthProcess.RESTORE -> CustomProgressDialog(R.string.restore_Data)
+        AuthProcess.NONE -> {}
+    }
+
     val context = LocalContext.current
 
     val activityResultLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartIntentSenderForResult(),
         onResult = {
-            println("aaaa ${it.data?.getRequestCode()}   ... result = ${it.resultCode}")
-
             settingViewModel.onEvent(
                 SyncEvent.OnSignInResult(
                     it.data ?: return@rememberLauncherForActivityResult
                 )
             )
-            /*when (it.data?.getRequestCode()) {
-                Util.REQUEST_CODE_GOOGLE_SIGN_IN -> {
-                    settingViewModel.onEvent(
-                        SyncEvent.OnSignInResult(
-                            it.data ?: return@rememberLauncherForActivityResult
-                        )
-                    )
-                }
-
-                else -> {
-
-                }
-            }*/
-
         }
     )
 
@@ -81,7 +75,7 @@ fun SettingScreen(
         contract = ActivityResultContracts.StartIntentSenderForResult(),
         onResult = {
             settingViewModel.onEvent(
-                SyncEvent.OnAuthorize(
+                SyncEvent.OnAuthorizeResult(
                     it.data ?: return@rememberLauncherForActivityResult
                 )
             )
@@ -128,9 +122,8 @@ fun SettingScreen(
                 SettingEffect.ContactUs -> onContactUsClick(context)
 
                 SettingEffect.Backup -> settingViewModel.onEvent(SyncEvent.Backup)
-                SettingEffect.Restore -> {
-                    settingViewModel.onEvent(SyncEvent.SignInGoogle)
-                }
+                SettingEffect.Restore -> settingViewModel.onEvent(SyncEvent.Restore)
+                SettingEffect.GoogleSignIn -> settingViewModel.onEvent(SyncEvent.SignInGoogle)
             }
         }
     }

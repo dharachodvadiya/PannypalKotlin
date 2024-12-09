@@ -17,6 +17,6 @@ interface AuthRepository {
     suspend fun getGoogleDrive(): Drive?
 
     suspend fun authorizeGoogleDrive(): AuthorizationResult
-    suspend fun authorizeGoogleDriveResult(intent: Intent): AuthorizationResult
+    suspend fun authorizeGoogleDriveResult(intent: Intent): AuthorizationResult?
 }
 

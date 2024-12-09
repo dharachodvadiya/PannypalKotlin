@@ -8,6 +8,7 @@ import com.indie.apps.pennypal.data.module.MoreItem
 import com.indie.apps.pennypal.domain.usecase.GetGeneralSettingUseCase
 import com.indie.apps.pennypal.repository.AuthRepository
 import com.indie.apps.pennypal.repository.BackupRepository
+import com.indie.apps.pennypal.util.AuthProcess
 import com.indie.apps.pennypal.util.SettingEffect
 import com.indie.apps.pennypal.util.SettingOption
 import com.indie.apps.pennypal.util.SyncEffect
@@ -33,40 +34,28 @@ class SettingViewModel @Inject constructor(
     val syncEffect = MutableSharedFlow<SyncEffect?>(replay = 0)
     val settingEffect = MutableSharedFlow<SettingEffect>(replay = 0)
 
-    val generalList = getGeneralSettingUseCase
-        .loadData()
+    val processingState = MutableStateFlow(AuthProcess.NONE)
+
+    val generalList = getGeneralSettingUseCase.loadData()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
     val moreList = MutableStateFlow(
         listOf(
-            MoreItem(
-                title = R.string.share,
-                icon = R.drawable.ic_share,
-                option = SettingOption.SHARE
-            ),
-            MoreItem(title = R.string.rate, icon = R.drawable.ic_rate, option = SettingOption.RATE),
-            MoreItem(
-                title = R.string.privacy_policy,
-                icon = R.drawable.ic_privacy,
-                option = SettingOption.PRIVACY_POLICY
-            ),
-            MoreItem(
-                title = R.string.contact_us,
-                icon = R.drawable.ic_contact_us,
-                option = SettingOption.CONTACT_US
-            ),
+            MoreItem(R.string.share, SettingOption.SHARE, R.drawable.ic_share),
+            MoreItem(R.string.rate, SettingOption.RATE, R.drawable.ic_rate),
+            MoreItem(R.string.privacy_policy, SettingOption.PRIVACY_POLICY, R.drawable.ic_privacy),
+            MoreItem(R.string.contact_us, SettingOption.CONTACT_US, R.drawable.ic_contact_us),
         )
     )
 
     val backupRestoreList = MutableStateFlow(
         listOf(
-            MoreItem(title = R.string.backup_Data, option = SettingOption.BACKUP),
-            MoreItem(title = R.string.restore_Data, option = SettingOption.RESTORE),
+            MoreItem(R.string.backup_Data, SettingOption.BACKUP),
+            MoreItem(R.string.restore_Data, SettingOption.RESTORE),
+            MoreItem(R.string.login_with_google, SettingOption.GOOGLE_SIGN_IN),
         )
     )
 
-    fun onSelectOption(
-        item: MoreItem,
-    ) {
+    fun onSelectOption(item: MoreItem) {
         viewModelScope.launch {
             settingEffect.emit(
                 when (item.option) {
@@ -79,6 +68,7 @@ class SettingViewModel @Inject constructor(
                     SettingOption.CONTACT_US -> SettingEffect.ContactUs
                     SettingOption.BACKUP -> SettingEffect.Backup
                     SettingOption.RESTORE -> SettingEffect.Restore
+                    SettingOption.GOOGLE_SIGN_IN -> SettingEffect.GoogleSignIn
                 }
             )
         }
@@ -86,74 +76,75 @@ class SettingViewModel @Inject constructor(
     }
 
     fun onEvent(mainEvent: SyncEvent) {
-        when (mainEvent) {
-            is SyncEvent.OnSignInResult -> {
-                viewModelScope.launch(Dispatchers.IO) {
-                    onSignInResult(mainEvent.intent)
-                }
-            }
-
-            SyncEvent.SignInGoogle -> {
-                /* viewModelScope.launch(Dispatchers.IO) {
-                     if (isSignInProcess) return@launch
-
-                     isSignInProcess = true
-                     val getGoogleSignIn = authRepository.signInGoogle()
-                     syncEffect.emit(SyncEffect.SignIn(getGoogleSignIn))
-                 }*/
-                viewModelScope.launch(Dispatchers.IO) {
-                    val getGoogleSignIn = authRepository.signInGoogle()
-                    syncEffect.emit(SyncEffect.SignIn(getGoogleSignIn))
-                }
-            }
-
-            SyncEvent.SignOut -> {
-                viewModelScope.launch(Dispatchers.IO) {
-                    authRepository.signOut()
-                }
-            }
-
-            SyncEvent.Backup -> {
-                viewModelScope.launch(Dispatchers.IO) {
-                    if (authRepository.isSignedIn())
-                        backupRepository.backup()
-                    else {
-                        onEvent(SyncEvent.SignInGoogle)
-                    }
-                }
-            }
-
-            SyncEvent.GetFiles -> TODO()
-            is SyncEvent.OnAuthorize -> {
-                viewModelScope.launch(Dispatchers.IO) {
-                    authRepository.authorizeGoogleDriveResult(mainEvent.intent)
-                }
-            }
-
-            is SyncEvent.Restore -> {
-                viewModelScope.launch(Dispatchers.IO) {
-                    backupRepository.restore()
-                }
+        viewModelScope.launch((Dispatchers.IO)) {
+            when (mainEvent) {
+                SyncEvent.SignInGoogle -> handleSignInGoogle()
+                is SyncEvent.OnSignInResult -> handleSignInResult(mainEvent.intent)
+                is SyncEvent.OnAuthorizeResult -> handleAuthorizeResult(mainEvent.intent)
+                SyncEvent.SignOut -> authRepository.signOut()
+                SyncEvent.Backup -> handleBackup()
+                is SyncEvent.Restore -> handleRestore()
+                SyncEvent.GetFiles -> TODO()
             }
         }
     }
 
-    private suspend fun onSignInResult(intent: Intent) {
+
+    private suspend fun handleSignInGoogle() {
+        if (!authRepository.isSignedIn()) {
+            val getGoogleSignIn = authRepository.signInGoogle()
+            syncEffect.emit(SyncEffect.SignIn(getGoogleSignIn))
+        }
+    }
+
+    private suspend fun handleSignInResult(intent: Intent) {
         isSignInProcess = false
         val getResult = authRepository.getSignInResult(intent)
         if (getResult != null) {
-            println("aaaaa getSigninResult success ${getResult.email}")
             val authorizeGoogleDrive = authRepository.authorizeGoogleDrive()
             if (authorizeGoogleDrive.hasResolution()) {
-                println("aaaaa getSigninResult 111")
                 syncEffect.emit(
                     SyncEffect.Authorize(authorizeGoogleDrive.pendingIntent!!.intentSender)
                 )
+            } else {
+                continueAuthProcess()
             }
-        } else {
-            println("aaaaa getSigninResult fail")
         }
 
+    }
+
+    private suspend fun handleAuthorizeResult(intent: Intent) {
+        val result = authRepository.authorizeGoogleDriveResult(intent)
+
+        if (result != null) continueAuthProcess()
+    }
+
+    private suspend fun handleBackup() {
+        processingState.value = AuthProcess.BACK_UP
+        if (authRepository.isSignedIn()) {
+            backupRepository.backup()
+            processingState.value = AuthProcess.NONE
+        } else {
+            onEvent(SyncEvent.SignInGoogle)
+        }
+    }
+
+    private suspend fun handleRestore() {
+        processingState.value = AuthProcess.RESTORE
+        if (authRepository.isSignedIn()) {
+            backupRepository.restore()
+            processingState.value = AuthProcess.NONE
+        } else {
+            onEvent(SyncEvent.SignInGoogle)
+        }
+    }
+
+    private fun continueAuthProcess() {
+        when (processingState.value) {
+            AuthProcess.BACK_UP -> onEvent(SyncEvent.Backup)
+            AuthProcess.RESTORE -> onEvent(SyncEvent.Restore)
+            AuthProcess.NONE -> {}
+        }
     }
 }
 

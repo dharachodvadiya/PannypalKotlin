@@ -43,7 +43,7 @@ import kotlinx.coroutines.launch
         Budget::class,
         BudgetCategory::class
     ],
-    version = 3,
+    version = Util.DB_VERSION,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -57,24 +57,49 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun budgetDao(): BudgetDao
     abstract fun budgetCategoryDao(): BudgetCategoryDao
 
+    fun migrateDatabaseIfNeeded(context: Context, countryRepository: CountryRepository) {
+
+        val currentDbVersion = getCurrentDatabaseVersion(context)
+        val requiredDbVersion = Util.DB_VERSION // The current version of the database schema
+
+        if (currentDbVersion < requiredDbVersion) {
+            val db = migrateDb(context, countryRepository)
+            // Triggering a migration if necessary (e.g., after restoring an old version of the DB)
+            db.openHelper.writableDatabase // Accessing the database triggers migration if required
+        }
+    }
+
     companion object {
         @Volatile
         private var INSTANCE: AppDatabase? = null
 
         fun getInstance(context: Context, countryRepository: CountryRepository): AppDatabase {
             synchronized(this) {
-                return INSTANCE ?: Room.databaseBuilder(
-                    context.applicationContext,
-                    AppDatabase::class.java,
-                    "pennypal_money_db"
-                )
-                    .addMigrations(Migration1to2(countryRepository))
-                    .addMigrations(Migration2to3())
-                    .addCallback(Callback(countryRepository))
-                    .build().also {
-                        INSTANCE = it
-                    }
+                return INSTANCE ?: migrateDb(context, countryRepository).also {
+                    INSTANCE = it
+                }
             }
+        }
+
+        private fun migrateDb(context: Context, countryRepository: CountryRepository): AppDatabase {
+            return getDbBuilder(context)
+                .addMigrations(Migration1to2(countryRepository))
+                .addMigrations(Migration2to3())
+                .addCallback(Callback(countryRepository))
+                .build()
+        }
+
+        private fun getDbBuilder(context: Context): Builder<AppDatabase> {
+            return Room.databaseBuilder(
+                context.applicationContext,
+                AppDatabase::class.java,
+                Util.DB_NAME
+            )
+        }
+
+        private fun getCurrentDatabaseVersion(context: Context): Int {
+            val db = getDbBuilder(context).build()
+            return db.openHelper.readableDatabase.version
         }
 
         private class Callback(private val countryRepository: CountryRepository) :
@@ -92,19 +117,11 @@ abstract class AppDatabase : RoomDatabase() {
 
             @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
             suspend fun populateDatabase(db: AppDatabase) {
-
                 populatePaymentModeDb(db)
                 populatePaymentDb(db)
                 populateUserDb(db)
                 populateCategoryDb(db)
 
-
-                /*val merchantDao = db.merchantDao()
-            for (i in 1..100) {
-                MerchantRepositoryImpl(merchantDao).insert(Merchant(name = "hello $i"))
-
-            }
-*/
             }
 
             private suspend fun populateUserDb(db: AppDatabase) {

@@ -48,23 +48,19 @@ class AuthRepositoryImpl @Inject constructor(
 
 
     override suspend fun signInGoogle(): IntentSender {
-        println("aaaa signInGoogle")
         return oneTap.beginSignIn(signInRequest).await().pendingIntent.intentSender
     }
 
     override suspend fun signOut() {
-        println("aaaa signOut")
         oneTap.signOut().await()
         firebaseAuth.signOut()
     }
 
     override suspend fun isSignedIn(): Boolean {
-        println("aaaa isSignedIn")
         return firebaseAuth.currentUser != null
     }
 
     override suspend fun getUserInfo(): UserInfoResult? {
-        println("aaaa getUserInfo")
         val currentUser = firebaseAuth.currentUser
         return if (currentUser != null) {
             UserInfoResult(
@@ -76,7 +72,6 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getSignInResult(intent: Intent): UserInfoResult? {
-        println("aaaa getSignInResult")
         try {
             val credential = oneTap.getSignInCredentialFromIntent(intent)
             val googleIdToken = credential.googleIdToken
@@ -90,28 +85,28 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getGoogleDrive(): Drive? {
-        println("aaaa getGoogleDrive")
         val currentUser = firebaseAuth.currentUser
         return if (currentUser != null) {
-            println("aaaa getGoogleDrive 111")
             credential.selectedAccount = currentUser.email?.let { Account(it, "google.com") }
             Drive.Builder(
                 NetHttpTransport(), GsonFactory.getDefaultInstance(),
                 credential
             ).build()
         } else {
-            println("aaaa getGoogleDrive 222")
             null
         }
     }
 
     override suspend fun authorizeGoogleDrive(): AuthorizationResult {
-        println("aaaa authorizeGoogleDrive")
         return authorize.authorize(authorizationRequest).await()
     }
 
-    override suspend fun authorizeGoogleDriveResult(intent: Intent): AuthorizationResult {
-        println("aaaa authorizeGoogleDriveResult")
-        return authorize.getAuthorizationResultFromIntent(intent)
+    override suspend fun authorizeGoogleDriveResult(intent: Intent): AuthorizationResult? {
+        try {
+            return authorize.getAuthorizationResultFromIntent(intent)
+        } catch (e: Exception) {
+            return null
+        }
+
     }
 }
