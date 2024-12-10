@@ -11,6 +11,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -93,7 +94,7 @@ fun TopBarWithTitle(
 }
 
 @Composable
-fun UserProfile(
+fun UserProfileRound(
     borderWidth: Float = 0f, @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     MyAppTheme.colors.gradientBlue
@@ -131,6 +132,30 @@ fun UserProfile(
                 }
             }*/,
             tint = MyAppTheme.colors.black
+        )
+    }
+}
+
+@Composable
+fun UserProfileRect(
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Absolute.Center,
+        modifier = modifier
+            .roundedCornerBackground(
+                MyAppTheme.colors.white, BorderStroke(
+                    width = 1.dp,
+                    color = MyAppTheme.colors.gray1
+                )
+            )
+            .padding(dimensionResource(R.dimen.button_horizontal_padding))
+    ) {
+        Icon(
+            imageVector = Icons.Filled.Person,
+            contentDescription = "Profile",
+            tint = MyAppTheme.colors.gray1
         )
     }
 }
@@ -479,6 +504,7 @@ fun TextWithRadioButton(
     }
 }
 
+@SuppressLint("UnrememberedMutableInteractionSource")
 @Composable
 fun AccountItem(
     isSelected: Boolean,
@@ -498,7 +524,13 @@ fun AccountItem(
             .fillMaxWidth()
             .roundedCornerBackground(MyAppTheme.colors.transparent)
             .then(modifier)
-            .clickable(enabled = isSelectable || isEditable) { onSelect() },
+            .clickable(
+                enabled = isSelectable || isEditable,
+                interactionSource = MutableInteractionSource(),
+                indication = null
+            ) {
+                onSelect()
+            },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.item_padding))
     ) {
@@ -624,7 +656,15 @@ private fun MyAppTopBarPreview() {
 @Composable
 private fun UserProfilePreview() {
     PennyPalTheme(darkTheme = true) {
-        UserProfile()
+        UserProfileRound()
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun UserProfileRectPreview() {
+    PennyPalTheme(darkTheme = true) {
+        UserProfileRect()
     }
 }
 

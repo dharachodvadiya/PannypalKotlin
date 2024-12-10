@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -289,6 +290,7 @@ fun NewEntryDateTimeItem(
     }
 }
 
+@SuppressLint("UnrememberedMutableInteractionSource")
 @Composable
 fun DateTimeSelectableItem(
     imageVector: ImageVector,
@@ -300,7 +302,10 @@ fun DateTimeSelectableItem(
         modifier = modifier
             .padding(horizontal = dimensionResource(id = R.dimen.item_inner_padding))
             .roundedCornerBackground(MyAppTheme.colors.transparent)
-            .clickable {
+            .clickable(
+                interactionSource = MutableInteractionSource(),
+                indication = null
+            ) {
                 onSelect()
             },
         verticalAlignment = Alignment.CenterVertically

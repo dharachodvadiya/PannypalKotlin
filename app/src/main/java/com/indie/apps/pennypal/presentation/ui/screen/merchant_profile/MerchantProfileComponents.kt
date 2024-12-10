@@ -24,7 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.presentation.ui.component.UserProfile
+import com.indie.apps.pennypal.presentation.ui.component.UserProfileRound
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
@@ -48,7 +48,7 @@ fun MerchantProfileTopSection(
             )
     ) {
 
-        UserProfile()
+        UserProfileRound()
         Spacer(modifier = Modifier.height(20.dp))
         CustomText(
             text = name, style = MyAppTheme.typography.Semibold60, color = MyAppTheme.colors.black

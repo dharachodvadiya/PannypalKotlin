@@ -4,9 +4,9 @@ import android.annotation.SuppressLint
 import androidx.annotation.StringRes
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,7 +26,6 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material.icons.filled.NorthEast
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.SouthWest
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
@@ -59,6 +58,7 @@ import com.indie.apps.pennypal.data.module.budget.BudgetWithSpentAndCategoryIdLi
 import com.indie.apps.pennypal.data.module.category.CategoryAmount
 import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
 import com.indie.apps.pennypal.presentation.ui.component.PeriodText
+import com.indie.apps.pennypal.presentation.ui.component.UserProfileRect
 import com.indie.apps.pennypal.presentation.ui.component.chart.PieChart
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.AutoSizeText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomTab
@@ -114,15 +114,12 @@ fun OverviewTopBar(
     )*/
 
     TopBar(
-        isBackEnable = false,
-        leadingContent = {
-            OverviewTopBarProfile(
-                onClick = onProfileClick,
+        isBackEnable = false, leadingContent = {
+            OverviewTopBarProfile(onClick = onProfileClick,
                 user = null,
                 isSubscribed = false,
                 onSubscriptionChanged = {})
-        },
-        modifier = modifier
+        }, modifier = modifier
     )
 }
 
@@ -338,8 +335,7 @@ fun OverviewBalanceItem(
         horizontalAlignment = horizontalAlignment
     ) {
         Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = modifier
+            verticalAlignment = Alignment.CenterVertically, modifier = modifier
         ) {
             RoundImage(
                 imageVector = imageVector,
@@ -500,8 +496,7 @@ fun OverviewBalanceView(
     } else {
         data.totalIncome - data.totalExpense
     }
-    val colorStroke =
-        if (balance >= 0) MyAppTheme.colors.greenBg else MyAppTheme.colors.redBg
+    val colorStroke = if (balance >= 0) MyAppTheme.colors.greenBg else MyAppTheme.colors.redBg
 
     Box(
         modifier = modifier
@@ -611,16 +606,14 @@ fun OverviewTransactionData(
                         if (merchantDataId == item.id && isAddMerchantDataSuccess) {
                             scope.launch {
                                 itemAnimateScale.animateTo(
-                                    targetValue = 1f,
-                                    animationSpec = tween(Util.ADD_ITEM_ANIM_TIME)
+                                    targetValue = 1f, animationSpec = tween(Util.ADD_ITEM_ANIM_TIME)
                                 )
                             }
                             if (itemAnimateScale.value == 1f) {
                                 onAnimStop()
                             }
                             Modifier.scale(itemAnimateScale.value)
-                        } else if ((merchantDataId == item.id && isEditMerchantDataSuccess)
-                        ) {
+                        } else if ((merchantDataId == item.id && isEditMerchantDataSuccess)) {
                             scope.launch {
                                 itemAnimateColor.animateTo(
                                     targetValue = targetAnimColor,
@@ -687,39 +680,34 @@ fun OverviewMerchantData(
                     val itemAnimateScale = remember {
                         Animatable(0f)
                     }
-                    val modifierAdd: Modifier =
-                        if (merchantId == item.id && isAddMerchantSuccess) {
-                            scope.launch {
+                    val modifierAdd: Modifier = if (merchantId == item.id && isAddMerchantSuccess) {
+                        scope.launch {
 
-                                itemAnimateScale.animateTo(
-                                    targetValue = 1f,
-                                    animationSpec = tween(Util.ADD_ITEM_ANIM_TIME)
-                                )
-                                if (itemAnimateScale.value == 1f) {
-                                    itemAnimateScale.snapTo(0f)
-                                    onAnimStop()
-                                }
+                            itemAnimateScale.animateTo(
+                                targetValue = 1f, animationSpec = tween(Util.ADD_ITEM_ANIM_TIME)
+                            )
+                            if (itemAnimateScale.value == 1f) {
+                                itemAnimateScale.snapTo(0f)
+                                onAnimStop()
                             }
-
-                            Modifier.scale(itemAnimateScale.value)
-                        } else {
-                            Modifier
                         }
 
+                        Modifier.scale(itemAnimateScale.value)
+                    } else {
+                        Modifier
+                    }
+
                     MerchantItem(
-                        item = item,
-                        modifier = modifierAdd
+                        item = item, modifier = modifierAdd
 
                     )
                 }
 
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = modifier
-                        .padding(5.dp)
+                    modifier = modifier.padding(5.dp)
                 ) {
-                    RoundImage(
-                        imageVector = Icons.Default.Add,
+                    RoundImage(imageVector = Icons.Default.Add,
                         imageVectorSize = 30.dp,
                         tint = MyAppTheme.colors.gray2,
                         backGround = MyAppTheme.colors.bottomBg,
@@ -727,8 +715,7 @@ fun OverviewMerchantData(
                         modifier = Modifier
                             .size(55.dp)
                             .clip(CircleShape)
-                            .clickable { onAddMerchant() }
-                    )
+                            .clickable { onAddMerchant() })
 
                 }
 
@@ -756,19 +743,16 @@ fun OverviewAnalysisData(
         content = {
             val chartData = categoryList.map { item ->
                 ChartData(
-                    name = item.name,
-                    amount = item.amount,
-                    color = getCategoryColor(item.name)
+                    name = item.name, amount = item.amount, color = getCategoryColor(item.name)
                 )
             }
 
-            Row(
-                modifier = Modifier
-                    .clickable { onExploreAnalysisClick() }
-            ) {
+            Row(modifier = Modifier.clickable(
+                interactionSource = MutableInteractionSource(),
+                indication = null
+            ) { onExploreAnalysisClick() }) {
                 PieChart(
-                    data = chartData,
-                    modifier = Modifier.align(Alignment.CenterVertically)
+                    data = chartData, modifier = Modifier.align(Alignment.CenterVertically)
                 )
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.item_inner_padding)))
 
@@ -806,8 +790,7 @@ fun OverviewBudgetData(
     isSelectionEnable: Boolean,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
-    OverviewItem(
-        title = stringResource(id = R.string.your_budget),
+    OverviewItem(title = stringResource(id = R.string.your_budget),
         trailingText = R.string.explore,
         onSeeAllClick = onExploreBudgetClick,
         content = {
@@ -818,13 +801,11 @@ fun OverviewBudgetData(
                 val timeString = budgetWithSpentAndCategoryIdList.let { tmpBudgetData ->
                     when (budgetWithSpentAndCategoryIdList.periodType) {
                         PeriodType.MONTH.id -> getDateFromMillis(
-                            tmpBudgetData.startDate,
-                            monthFormat
+                            tmpBudgetData.startDate, monthFormat
                         )
 
                         PeriodType.YEAR.id -> getDateFromMillis(
-                            tmpBudgetData.startDate,
-                            yearFormat
+                            tmpBudgetData.startDate, yearFormat
                         )
 
                         else -> ""
@@ -847,16 +828,12 @@ fun OverviewBudgetData(
 
                 if (!isSelectionEnable) {
                     val btnTextId =
-                        if (budgetWithSpentAndCategoryIdList.periodType == PeriodType.MONTH.id)
-                            R.string.add_yearly_budget
-                        else
-                            R.string.add_monthly_budget
+                        if (budgetWithSpentAndCategoryIdList.periodType == PeriodType.MONTH.id) R.string.add_yearly_budget
+                        else R.string.add_monthly_budget
 
                     val periodId =
-                        if (budgetWithSpentAndCategoryIdList.periodType == PeriodType.MONTH.id)
-                            PeriodType.YEAR.id
-                        else
-                            PeriodType.MONTH.id
+                        if (budgetWithSpentAndCategoryIdList.periodType == PeriodType.MONTH.id) PeriodType.YEAR.id
+                        else PeriodType.MONTH.id
 
                     PrimaryButton(
                         onClick = { onSetBudgetClick(periodId) },
@@ -873,21 +850,20 @@ fun OverviewBudgetData(
                 }
 
             } else {
-                OverviewNoBudgetItem(
-                    onSetBudgetClick = { onSetBudgetClick(PeriodType.MONTH.id) }
-                )
+                OverviewNoBudgetItem(onSetBudgetClick = { onSetBudgetClick(PeriodType.MONTH.id) })
             }
 
         },
         isBgEnable = true,
-        modifier = modifier.clickable { onExploreBudgetClick() }
-    )
+        modifier = modifier.clickable(
+            interactionSource = MutableInteractionSource(),
+            indication = null
+        ) { onExploreBudgetClick() })
 }
 
 @Composable
 private fun OverviewNoBudgetItem(
-    onSetBudgetClick: () -> Unit,
-    modifier: Modifier = Modifier
+    onSetBudgetClick: () -> Unit, modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier
@@ -933,14 +909,11 @@ private fun OverviewNoBudgetItem(
 
 @Composable
 fun OverviewAnalyticDataItem(
-    name: String,
-    color: Color,
-    modifier: Modifier = Modifier
+    name: String, color: Color, modifier: Modifier = Modifier
 ) {
 
     Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
+        verticalAlignment = Alignment.CenterVertically, modifier = modifier
     ) {
         Box(
             modifier = Modifier
@@ -960,12 +933,10 @@ fun OverviewAnalyticDataItem(
 
 @Composable
 fun MerchantItem(
-    item: MerchantNameAndDetails,
-    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
+    item: MerchantNameAndDetails, @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.padding(5.dp)
+        horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier.padding(5.dp)
     ) {
         /*RoundImage(
             imageVector = Icons.Default.Person,
@@ -1005,6 +976,7 @@ fun MerchantItem(
     }
 }
 
+@SuppressLint("UnrememberedMutableInteractionSource")
 @Composable
 fun OverviewItem(
     onSeeAllClick: () -> Unit,
@@ -1016,8 +988,7 @@ fun OverviewItem(
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier
-            .fillMaxWidth()
+        modifier = modifier.fillMaxWidth()
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -1032,10 +1003,9 @@ fun OverviewItem(
 
             if (enableSeeAll) {
 
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.clickable { onSeeAllClick() }
-                ) {
+                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.clickable(
+                    interactionSource = MutableInteractionSource(), indication = null
+                ) { onSeeAllClick() }) {
                     CustomText(
                         text = stringResource(id = trailingText),
                         style = MyAppTheme.typography.Semibold40,
@@ -1055,10 +1025,8 @@ fun OverviewItem(
 
         if (isBgEnable) {
             Column(
-                modifier = Modifier
-                    .roundedCornerBackground(MyAppTheme.colors.itemBg)
-            )
-            {
+                modifier = Modifier.roundedCornerBackground(MyAppTheme.colors.itemBg)
+            ) {
                 content()
             }
         } else {
@@ -1107,16 +1075,15 @@ fun OverviewTopBarProfile(
 
 
     Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
+        verticalAlignment = Alignment.CenterVertically, modifier = modifier
     ) {
-        PrimaryButton(
+        /*PrimaryButton(
             bgColor = MyAppTheme.colors.white,
             borderStroke = BorderStroke(
-                width = 1.dp,
-                color = MyAppTheme.colors.gray1
+                width = 1.dp, color = MyAppTheme.colors.gray1
             ),
             onClick = onClick,
+            enabled = false,
             modifier = Modifier.size(dimensionResource(R.dimen.top_bar_profile))
         ) {
             Icon(
@@ -1124,7 +1091,9 @@ fun OverviewTopBarProfile(
                 contentDescription = "Profile",
                 tint = MyAppTheme.colors.gray1
             )
-        }
+        }*/
+
+        UserProfileRect()
 
         Spacer(modifier = Modifier.width(15.dp))
 
@@ -1149,8 +1118,7 @@ fun OverviewTopBarProfile(
          }*/
 
     }
-}
-/*
+}/*
 @Composable
 fun OverviewAppFloatingButton(
     onClick: () -> Unit, modifier: Modifier = Modifier
@@ -1205,8 +1173,7 @@ fun OverviewBudgetSelectionButton(
                 top = dimensionResource(id = R.dimen.item_padding),
                 end = dimensionResource(id = R.dimen.item_padding)
             )
-            .fillMaxWidth(),
-        horizontalArrangement = Arrangement.End
+            .fillMaxWidth(), horizontalArrangement = Arrangement.End
     ) {
         CustomTab(
             tabList = tabItems,
@@ -1228,8 +1195,7 @@ fun OverviewBudgetSelectionButton(
 @Composable
 private fun TopBarProfilePreview() {
     PennyPalTheme(darkTheme = true) {
-        OverviewTopBarProfile(
-            onClick = { },
+        OverviewTopBarProfile(onClick = { },
             user = null,
             isSubscribed = false,
             onSubscriptionChanged = {})

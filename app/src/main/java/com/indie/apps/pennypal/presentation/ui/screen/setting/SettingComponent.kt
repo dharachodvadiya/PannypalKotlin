@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.annotation.StringRes
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -16,11 +15,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.NavigateNext
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -33,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.database.entity.User
 import com.indie.apps.pennypal.data.module.MoreItem
+import com.indie.apps.pennypal.presentation.ui.component.UserProfileRect
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
@@ -205,13 +203,14 @@ fun SettingProfileItem(
                 indication = null,
             ) { onClick() }
         ) {
-            PrimaryButton(
+            /*PrimaryButton(
                 bgColor = MyAppTheme.colors.white,
                 borderStroke = BorderStroke(
                     width = 1.dp,
                     color = MyAppTheme.colors.gray1
                 ),
                 onClick = {},
+                enabled = false,
                 modifier = Modifier.size(dimensionResource(R.dimen.top_bar_profile))
             ) {
                 Icon(
@@ -219,7 +218,8 @@ fun SettingProfileItem(
                     contentDescription = "Profile",
                     tint = MyAppTheme.colors.gray1
                 )
-            }
+            }*/
+            UserProfileRect()
 
             Spacer(modifier = Modifier.width(15.dp))
 
