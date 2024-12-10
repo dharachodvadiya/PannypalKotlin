@@ -91,7 +91,8 @@ class SettingViewModel @Inject constructor(
                 SyncEvent.SignOut -> authRepository.signOut()
                 SyncEvent.Backup -> handleBackup()
                 is SyncEvent.Restore -> handleRestore()
-                SyncEvent.GetFiles -> TODO()
+                SyncEvent.GetFiles -> {
+                }
             }
         }
     }
