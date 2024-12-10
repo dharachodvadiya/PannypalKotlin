@@ -57,8 +57,8 @@ class SettingViewModel @Inject constructor(
 
     val backupRestoreList = MutableStateFlow(
         listOf(
-            MoreItem(R.string.backup_Data, SettingOption.BACKUP),
-            MoreItem(R.string.restore_Data, SettingOption.RESTORE),
+            MoreItem(R.string.backup_Data, SettingOption.BACKUP, R.drawable.ic_backup),
+            MoreItem(R.string.restore_Data, SettingOption.RESTORE, R.drawable.ic_restore),
         )
     )
 
