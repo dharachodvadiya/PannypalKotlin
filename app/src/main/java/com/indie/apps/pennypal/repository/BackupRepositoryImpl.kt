@@ -136,8 +136,4 @@ class BackupRepositoryImpl @Inject constructor(
     }
 }
 
-data class DriveFileInfo(
-    val id: String,
-    val nameFile: String,
-)
 

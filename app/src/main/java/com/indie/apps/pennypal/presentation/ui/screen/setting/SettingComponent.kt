@@ -182,6 +182,7 @@ fun onContactUsClick(context: Context) {
 
 }
 
+@SuppressLint("SimpleDateFormat")
 @Composable
 fun SettingProfileItem(
     user: User?,

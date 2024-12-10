@@ -13,6 +13,7 @@ import com.indie.apps.pennypal.data.module.budget.toBudgetCategoryList
 import com.indie.apps.pennypal.data.module.budget.toBudgetWithCategories
 import com.indie.apps.pennypal.data.module.budget.toBudgetWithSpentAndCategoryIdList
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
@@ -33,6 +34,7 @@ class BudgetRepositoryImpl @Inject constructor(
         return count
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     override fun getBudgetsAndSpentWithCategoryIdListFromMonth(
         timeZoneOffsetInMilli: Int,
         year: Int,
