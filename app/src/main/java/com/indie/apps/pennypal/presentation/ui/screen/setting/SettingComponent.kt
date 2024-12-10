@@ -8,6 +8,7 @@ import android.net.Uri
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -82,6 +83,7 @@ fun SettingTypeItem(
     }
 }
 
+@SuppressLint("UnrememberedMutableInteractionSource")
 @Composable
 fun SettingItem(
     data: MoreItem,
@@ -95,7 +97,10 @@ fun SettingItem(
         modifier = modifier
             .fillMaxWidth()
             .roundedCornerBackground(MyAppTheme.colors.transparent)
-            .clickable { onClick() }
+            .clickable(
+                interactionSource = MutableInteractionSource(),
+                indication = null,
+            ) { onClick() }
             /*.background(
                 shape = RoundedCornerShape(dimensionResource(id = R.dimen.round_corner)),
                 color = MyAppTheme.colors.bottomBg
@@ -182,7 +187,7 @@ fun onContactUsClick(context: Context) {
 
 }
 
-@SuppressLint("SimpleDateFormat")
+@SuppressLint("SimpleDateFormat", "UnrememberedMutableInteractionSource")
 @Composable
 fun SettingProfileItem(
     user: User?,
@@ -195,7 +200,10 @@ fun SettingProfileItem(
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.clickable { onClick() }
+            modifier = Modifier.clickable(
+                interactionSource = MutableInteractionSource(),
+                indication = null,
+            ) { onClick() }
         ) {
             PrimaryButton(
                 bgColor = MyAppTheme.colors.white,

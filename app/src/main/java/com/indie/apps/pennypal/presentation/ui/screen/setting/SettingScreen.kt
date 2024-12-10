@@ -139,6 +139,9 @@ fun SettingScreen(
         onBackup = {
             settingViewModel.onEvent(SyncEvent.Backup)
         },
+        onProfileClick = {
+            settingViewModel.onEvent(SyncEvent.SignInGoogle)
+        },
         bottomPadding = bottomPadding,
         user = userState
     )
@@ -151,6 +154,7 @@ fun SettingScreenData(
     backupRestoreList: List<MoreItem>,
     onSelect: (MoreItem) -> Unit,
     onBackup: () -> Unit,
+    onProfileClick: () -> Unit,
     bottomPadding: PaddingValues,
     user: User?
 ) {
@@ -173,7 +177,7 @@ fun SettingScreenData(
 
             SettingProfileItem(
                 user = user,
-                onClick = {},
+                onClick = onProfileClick,
                 onBackup = onBackup
             )
 

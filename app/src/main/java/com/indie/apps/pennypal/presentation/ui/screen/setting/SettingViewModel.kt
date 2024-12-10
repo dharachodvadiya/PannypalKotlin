@@ -32,7 +32,7 @@ class SettingViewModel @Inject constructor(
     private val backupRepository: BackupRepository
 ) : ViewModel() {
 
-    private var isSignInProcess = false
+    private var isInProcess = false
 
     var userState = userRepository.getUser()
         .map { it.copy(email = if (authRepository.isSignedIn()) authRepository.getUserInfo()?.email else null) }
@@ -98,14 +98,15 @@ class SettingViewModel @Inject constructor(
 
 
     private suspend fun handleSignInGoogle() {
-        if (!authRepository.isSignedIn()) {
+        if (!authRepository.isSignedIn() && !isInProcess) {
+            isInProcess = true
             val getGoogleSignIn = authRepository.signInGoogle()
             syncEffect.emit(SyncEffect.SignIn(getGoogleSignIn))
         }
     }
 
     private suspend fun handleSignInResult(intent: Intent) {
-        isSignInProcess = false
+        isInProcess = false
         val getResult = authRepository.getSignInResult(intent)
         if (getResult != null) {
             val authorizeGoogleDrive = authRepository.authorizeGoogleDrive()
@@ -116,35 +117,48 @@ class SettingViewModel @Inject constructor(
             } else {
                 continueAuthProcess()
             }
+        } else {
+            processingState.value = AuthProcess.NONE
         }
 
     }
 
     private suspend fun handleAuthorizeResult(intent: Intent) {
+        isInProcess = false
         val result = authRepository.authorizeGoogleDriveResult(intent)
 
-        if (result != null) continueAuthProcess()
+        if (result != null) continueAuthProcess() else processingState.value = AuthProcess.NONE
     }
 
     private suspend fun handleBackup() {
-        userRepository.updateLastSyncTime(System.currentTimeMillis())
-        processingState.value = AuthProcess.BACK_UP
-        if (authRepository.isSignedIn()) {
-            backupRepository.backup()
-            processingState.value = AuthProcess.NONE
-        } else {
-            onEvent(SyncEvent.SignInGoogle)
+        if (!isInProcess) {
+            isInProcess = true
+            userRepository.updateLastSyncTime(System.currentTimeMillis())
+            processingState.value = AuthProcess.BACK_UP
+            if (authRepository.isSignedIn()) {
+                backupRepository.backup()
+                processingState.value = AuthProcess.NONE
+                isInProcess = false
+            } else {
+                isInProcess = false
+                onEvent(SyncEvent.SignInGoogle)
+            }
         }
     }
 
     private suspend fun handleRestore() {
-        processingState.value = AuthProcess.RESTORE
-        if (authRepository.isSignedIn()) {
-            backupRepository.restore()
-            processingState.value = AuthProcess.NONE
-            refreshState()
-        } else {
-            onEvent(SyncEvent.SignInGoogle)
+        if (!isInProcess) {
+            isInProcess = true
+            processingState.value = AuthProcess.RESTORE
+            if (authRepository.isSignedIn()) {
+                backupRepository.restore()
+                processingState.value = AuthProcess.NONE
+                isInProcess = false
+                refreshState()
+            } else {
+                isInProcess = false
+                onEvent(SyncEvent.SignInGoogle)
+            }
         }
     }
 
