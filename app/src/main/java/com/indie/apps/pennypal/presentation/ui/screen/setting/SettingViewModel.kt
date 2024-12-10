@@ -8,6 +8,7 @@ import com.indie.apps.pennypal.data.module.MoreItem
 import com.indie.apps.pennypal.domain.usecase.GetGeneralSettingUseCase
 import com.indie.apps.pennypal.repository.AuthRepository
 import com.indie.apps.pennypal.repository.BackupRepository
+import com.indie.apps.pennypal.repository.UserRepository
 import com.indie.apps.pennypal.util.AuthProcess
 import com.indie.apps.pennypal.util.SettingEffect
 import com.indie.apps.pennypal.util.SettingOption
@@ -18,26 +19,33 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SettingViewModel @Inject constructor(
-    getGeneralSettingUseCase: GetGeneralSettingUseCase,
+    private val getGeneralSettingUseCase: GetGeneralSettingUseCase,
+    private val userRepository: UserRepository,
     private val authRepository: AuthRepository,
     private val backupRepository: BackupRepository
 ) : ViewModel() {
 
     private var isSignInProcess = false
 
+    var userState = userRepository.getUser()
+        .map { it.copy(email = if (authRepository.isSignedIn()) authRepository.getUserInfo()?.email else null) }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), null)
+
     val syncEffect = MutableSharedFlow<SyncEffect?>(replay = 0)
     val settingEffect = MutableSharedFlow<SettingEffect>(replay = 0)
 
     val processingState = MutableStateFlow(AuthProcess.NONE)
 
-    val generalList = getGeneralSettingUseCase.loadData()
+    var generalList = getGeneralSettingUseCase.loadData()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
+
     val moreList = MutableStateFlow(
         listOf(
             MoreItem(R.string.share, SettingOption.SHARE, R.drawable.ic_share),
@@ -51,7 +59,6 @@ class SettingViewModel @Inject constructor(
         listOf(
             MoreItem(R.string.backup_Data, SettingOption.BACKUP),
             MoreItem(R.string.restore_Data, SettingOption.RESTORE),
-            MoreItem(R.string.login_with_google, SettingOption.GOOGLE_SIGN_IN),
         )
     )
 
@@ -120,6 +127,7 @@ class SettingViewModel @Inject constructor(
     }
 
     private suspend fun handleBackup() {
+        userRepository.updateLastSyncTime(System.currentTimeMillis())
         processingState.value = AuthProcess.BACK_UP
         if (authRepository.isSignedIn()) {
             backupRepository.backup()
@@ -134,6 +142,7 @@ class SettingViewModel @Inject constructor(
         if (authRepository.isSignedIn()) {
             backupRepository.restore()
             processingState.value = AuthProcess.NONE
+            refreshState()
         } else {
             onEvent(SyncEvent.SignInGoogle)
         }
@@ -145,6 +154,15 @@ class SettingViewModel @Inject constructor(
             AuthProcess.RESTORE -> onEvent(SyncEvent.Restore)
             AuthProcess.NONE -> {}
         }
+    }
+
+    private fun refreshState() {
+        userState = userRepository.getUser()
+            .map { it.copy(email = if (authRepository.isSignedIn()) authRepository.getUserInfo()?.email else null) }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), null)
+
+        generalList = getGeneralSettingUseCase.loadData()
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
     }
 }
 

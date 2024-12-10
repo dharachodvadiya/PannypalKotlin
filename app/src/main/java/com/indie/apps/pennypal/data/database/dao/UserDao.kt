@@ -47,6 +47,10 @@ interface UserDao : BaseDao<User> {
    // suspend fun updateAmount(incomeAmt: Double, expenseAmt: Double): Int
 
     @Transaction
+    @Query("UPDATE user SET last_sync_date_milli = :lastSyncDateInMilli WHERE ID = 1")
+    suspend fun updateLastSyncTime(lastSyncDateInMilli: Long): Int
+
+    @Transaction
     @Query("UPDATE user SET payment_id = 1 WHERE ID = 1")
     suspend fun updateWithDefaultPayment(): Int
 }

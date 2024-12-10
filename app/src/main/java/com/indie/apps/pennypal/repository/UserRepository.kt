@@ -14,6 +14,8 @@ interface UserRepository : BaseRepository<User> {
 
     suspend fun updateCurrency(currency : String, currencyCountryCode : String): Int
 
+    suspend fun updateLastSyncTime(lastSyncDateInMilli: Long): Int
+
     //suspend fun updateAmount(incomeAmt: Double, expenseAmt: Double): Int
 
     suspend fun updateWithDefaultPayment(): Int

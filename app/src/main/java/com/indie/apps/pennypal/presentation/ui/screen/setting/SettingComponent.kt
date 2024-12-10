@@ -6,16 +6,20 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.annotation.StringRes
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.NavigateNext
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -26,11 +30,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
+import com.indie.apps.pennypal.data.database.entity.User
 import com.indie.apps.pennypal.data.module.MoreItem
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.screen.payment.AccountHeadingItem
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
+import com.indie.apps.pennypal.util.getDateFromMillis
+import com.indie.apps.pennypal.util.getTimeFromMillis
+import java.text.SimpleDateFormat
 
 
 @Composable
@@ -44,8 +53,7 @@ fun SettingTypeItem(
 
     Column(
         modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = dimensionResource(id = R.dimen.padding)),
+            .fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding))
     ) {
         AccountHeadingItem(titleId)
@@ -173,3 +181,106 @@ fun onContactUsClick(context: Context) {
     }
 
 }
+
+@Composable
+fun SettingProfileItem(
+    user: User?,
+    onClick: () -> Unit,
+    onBackup: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.clickable { onClick() }
+        ) {
+            PrimaryButton(
+                bgColor = MyAppTheme.colors.white,
+                borderStroke = BorderStroke(
+                    width = 1.dp,
+                    color = MyAppTheme.colors.gray1
+                ),
+                onClick = {},
+                modifier = Modifier.size(dimensionResource(R.dimen.top_bar_profile))
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Person,
+                    contentDescription = "Profile",
+                    tint = MyAppTheme.colors.gray1
+                )
+            }
+
+            Spacer(modifier = Modifier.width(15.dp))
+
+            Column {
+                CustomText(
+                    text = user?.name ?: "",
+                    style = MyAppTheme.typography.Regular57,
+                    color = MyAppTheme.colors.black
+                )
+
+                CustomText(
+                    text = user?.email ?: stringResource(id = R.string.sign_in),
+                    style = MyAppTheme.typography.Regular44,
+                    color = MyAppTheme.colors.gray0
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(5.dp))
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            val dateFormat = SimpleDateFormat("dd MMM yyyy")
+            val timeFormat = SimpleDateFormat("hh:mm aa")
+
+            val str = if (user?.lastSyncDateInMilli != 0L) "${
+                user?.let {
+                    getDateFromMillis(
+                        it.lastSyncDateInMilli,
+                        dateFormat
+                    )
+                }
+            } ${
+                user?.let {
+                    getTimeFromMillis(
+                        it.lastSyncDateInMilli,
+                        timeFormat
+                    )
+                }
+            }" else stringResource(id = R.string.no_backup_created)
+
+            CustomText(
+                text = stringResource(id = R.string.last_backup) + " ",
+                style = MyAppTheme.typography.Medium40,
+                color = MyAppTheme.colors.gray1.copy(alpha = 0.7f)
+            )
+
+            CustomText(
+                text = str,
+                style = MyAppTheme.typography.Medium40,
+                color = MyAppTheme.colors.gray1.copy(alpha = 0.5f)
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            PrimaryButton(
+                bgColor = MyAppTheme.colors.transparent,
+                onClick = onBackup
+            ) {
+                CustomText(
+                    text = stringResource(id = R.string.backup_now),
+                    style = MyAppTheme.typography.Bold49_5,
+                    color = MyAppTheme.colors.gray0
+                )
+            }
+        }
+        Divider()
+    }
+
+
+}
+

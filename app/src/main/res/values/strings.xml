@@ -161,4 +161,8 @@
     <string name="no_budget_found">No budget found</string>
     <string name="backup_Data">Backup Data</string>
     <string name="restore_Data">Restore Data</string>
+    <string name="sign_in">Sign In</string>
+    <string name="last_backup">Last Backup:</string>
+    <string name="backup_now">Backup now</string>
+    <string name="no_backup_created">No backup created.</string>
 </resources>

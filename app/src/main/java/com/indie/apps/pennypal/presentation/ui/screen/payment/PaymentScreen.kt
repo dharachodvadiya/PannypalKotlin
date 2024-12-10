@@ -115,13 +115,13 @@ fun PaymentScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .verticalScroll(scrollState)
                 .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
+                .padding(horizontal = dimensionResource(id = R.dimen.padding))
                 .padding(
                     top = topBarPadding.calculateTopPadding(),
                     bottom = bottomPadding.calculateBottomPadding()
-                )
-                .padding(horizontal = dimensionResource(id = R.dimen.padding))
-                .verticalScroll(scrollState),
+                ),
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding))
         ) {
             val paymentName = if (paymentWithModeList.isNotEmpty()) {

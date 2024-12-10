@@ -15,18 +15,16 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.indie.apps.pennypal.R
+import com.indie.apps.pennypal.data.database.entity.User
 import com.indie.apps.pennypal.data.module.MoreItem
-import com.indie.apps.pennypal.presentation.ui.component.TopBarWithTitle
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomProgressDialog
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
@@ -48,6 +46,7 @@ fun SettingScreen(
     val generalList by settingViewModel.generalList.collectAsStateWithLifecycle()
     val moreList by settingViewModel.moreList.collectAsStateWithLifecycle()
     val backupRestoreList by settingViewModel.backupRestoreList.collectAsStateWithLifecycle()
+    val userState by settingViewModel.userState.collectAsStateWithLifecycle()
 
 
     val processingState by settingViewModel.processingState.collectAsStateWithLifecycle()
@@ -137,7 +136,11 @@ fun SettingScreen(
                 item = it
             )
         },
-        bottomPadding = bottomPadding
+        onBackup = {
+            settingViewModel.onEvent(SyncEvent.Backup)
+        },
+        bottomPadding = bottomPadding,
+        user = userState
     )
 }
 
@@ -147,33 +150,33 @@ fun SettingScreenData(
     moreList: List<MoreItem>,
     backupRestoreList: List<MoreItem>,
     onSelect: (MoreItem) -> Unit,
-    bottomPadding: PaddingValues
+    onBackup: () -> Unit,
+    bottomPadding: PaddingValues,
+    user: User?
 ) {
-    Scaffold(
-        topBar = {
-            TopBarWithTitle(
-                isBackEnable = false,
-                onNavigationUp = {},
-                title = stringResource(id = R.string.setting),
-                contentAlignment = Alignment.Center,
-                bgColor = MyAppTheme.colors.transparent,
-            )
-        }
-    ) { topBarPadding ->
+    Scaffold() { topBarPadding ->
 
         val scrollState = rememberScrollState()
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .verticalScroll(scrollState)
                 .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
+                .padding(dimensionResource(id = R.dimen.padding))
                 .padding(
                     top = topBarPadding.calculateTopPadding(),
                     bottom = bottomPadding.calculateBottomPadding()
-                )
-                .verticalScroll(scrollState),
+                ),
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding))
         ) {
+
+            SettingProfileItem(
+                user = user,
+                onClick = {},
+                onBackup = onBackup
+            )
+
             SettingTypeItem(
                 titleId = R.string.general,
                 dataList = generalList,

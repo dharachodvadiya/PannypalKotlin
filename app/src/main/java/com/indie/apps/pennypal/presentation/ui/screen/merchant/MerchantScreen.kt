@@ -206,10 +206,10 @@ fun MerchantScreen(
 
         Box(
             modifier = Modifier
+                .fillMaxSize()
                 .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
                 //.padding(bottomPadding)
                 .padding(top = topBarPadding.calculateTopPadding())
-                .fillMaxSize()
                 .padding(horizontal = dimensionResource(id = R.dimen.padding))
         )
         {
