@@ -16,7 +16,7 @@ class SearchMerchantDataWithAllDataListUseCase @Inject constructor(
     private val merchantDataRepository: MerchantDataRepository,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) {
-    fun loadData(searchQuery : String): Flow<PagingData<MerchantDataWithAllData>> {
+    fun loadData(searchQuery: String): Flow<PagingData<MerchantDataWithAllData>> {
 
         return Pager(
             PagingConfig(
@@ -33,7 +33,6 @@ class SearchMerchantDataWithAllDataListUseCase @Inject constructor(
     fun getLast3Data(): Flow<List<MerchantDataWithAllData>> {
 
         return merchantDataRepository.getRecentMerchantsDataWithAllDataList()
-            .flowOn(dispatcher)
     }
 
 }

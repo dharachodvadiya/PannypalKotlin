@@ -59,7 +59,7 @@ class BackupRepositoryImpl @Inject constructor(
 
                 }
 
-            } catch (e: Exception) {
+            } catch (_: Exception) {
 
             }
         }
@@ -73,7 +73,7 @@ class BackupRepositoryImpl @Inject constructor(
                 val parentFile = getOrCreateBackupFolder(drive)
                 val fileList = getAllBackupFiles(drive, parentFile.id)
                 if (fileList.files.isNotEmpty()) {
-                    fileList.files.forEach() { driveFile ->
+                    fileList.files.forEach { driveFile ->
 
                         val outputStream: OutputStream = withContext(Dispatchers.IO) {
                             FileOutputStream(dbPath.parent?.plus("/${driveFile.name}") ?: "")
@@ -107,7 +107,7 @@ class BackupRepositoryImpl @Inject constructor(
         }
 
         val filePath = File(dbPath.parent, fileName)
-        val mediaContent = FileContent("application/octet-stream", filePath);
+        val mediaContent = FileContent("application/octet-stream", filePath)
 
         if (fileId == null) {
             storageFile.setParents(Collections.singletonList(parentId))

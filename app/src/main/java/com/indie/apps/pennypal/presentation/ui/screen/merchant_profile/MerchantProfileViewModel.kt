@@ -4,9 +4,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.indie.apps.pennypal.data.database.entity.Merchant
-import com.indie.apps.pennypal.domain.usecase.GetMerchantFromIdUseCase
-import com.indie.apps.pennypal.util.Util
+import com.indie.apps.pennypal.repository.MerchantRepository
 import com.indie.apps.pennypal.util.Resource
+import com.indie.apps.pennypal.util.Util
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MerchantProfileViewModel @Inject constructor(
-    private val getMerchantFromIdUseCase: GetMerchantFromIdUseCase,
+    private val merchantRepository: MerchantRepository,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -27,8 +27,9 @@ class MerchantProfileViewModel @Inject constructor(
     }
 
     private fun getData() = viewModelScope.launch {
-        getMerchantFromIdUseCase
-            .getData(savedStateHandle.get<String>(Util.PARAM_MERCHANT_ID)?.toLong() ?: 0)
+        merchantRepository.getMerchantFromId(
+            savedStateHandle.get<String>(Util.PARAM_MERCHANT_ID)?.toLong() ?: 0
+        )
             .collect {
                 //  uiState = it
                 _uiState.emit(Resource.Success(it))

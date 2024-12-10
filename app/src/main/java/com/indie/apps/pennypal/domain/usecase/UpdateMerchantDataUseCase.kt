@@ -17,8 +17,7 @@ class UpdateMerchantDataUseCase @Inject constructor(
 ) {
 
     suspend fun updateData(
-        merchantDataNew: MerchantData,
-        merchantDataOld: MerchantData
+        merchantDataNew: MerchantData
     ): Flow<Resource<Int>> {
         return flow {
 

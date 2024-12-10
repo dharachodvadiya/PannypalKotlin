@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.indie.apps.cpp.data.repository.CountryRepository
 import com.indie.apps.pennypal.data.database.entity.User
 import com.indie.apps.pennypal.domain.usecase.GetTotalFromPreferencePeriodUseCase
-import com.indie.apps.pennypal.domain.usecase.GetUserProfileUseCase
 import com.indie.apps.pennypal.domain.usecase.UpdateUserDataUseCase
+import com.indie.apps.pennypal.repository.UserRepository
 import com.indie.apps.pennypal.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,7 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     getMonthlyTotalUseCase: GetTotalFromPreferencePeriodUseCase,
-    private val userProfileUseCase: GetUserProfileUseCase,
+    private val userRepository: UserRepository,
     private val updateUserDataUseCase: UpdateUserDataUseCase,
     private val countryRepository: CountryRepository
 ) : ViewModel() {
@@ -63,8 +63,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun getData() = viewModelScope.launch {
-        userProfileUseCase
-            .loadData()
+        userRepository.getUser()
             .collect {
 
                 userData = it

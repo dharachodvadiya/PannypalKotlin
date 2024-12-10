@@ -12,9 +12,11 @@ import com.indie.apps.pennypal.data.module.budget.toBudget
 import com.indie.apps.pennypal.data.module.budget.toBudgetCategoryList
 import com.indie.apps.pennypal.data.module.budget.toBudgetWithCategories
 import com.indie.apps.pennypal.data.module.budget.toBudgetWithSpentAndCategoryIdList
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import java.util.Calendar
 import javax.inject.Inject
@@ -23,6 +25,7 @@ class BudgetRepositoryImpl @Inject constructor(
     private val budgetDao: BudgetDao,
     private val budgetCategoryDao: BudgetCategoryDao,
     private val merchantDataDao: MerchantDataDao,
+    private val dispatcher: CoroutineDispatcher
 ) : BudgetRepository {
     override suspend fun deleteBudget(id: Long): Int {
         val count = budgetDao.deleteBudgetFromId(id)
@@ -101,10 +104,11 @@ class BudgetRepositoryImpl @Inject constructor(
             // Emit the list once all items are processed
             emit(budgetWithSpentList)
         }
-    }
+    }.flowOn(dispatcher)
 
     override fun getBudgetWithCategoryFromId(budgetId: Long) =
         budgetDao.getBudgetWithCategoryFromId(budgetId).map { it.toBudgetWithCategories() }
+            .flowOn(dispatcher)
 
     override fun getPastBudgetsWithCategoryIdListFromPeriodType(
         timeZoneOffsetInMilli: Int,

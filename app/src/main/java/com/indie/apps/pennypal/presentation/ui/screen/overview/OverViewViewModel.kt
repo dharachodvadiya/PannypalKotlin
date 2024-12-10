@@ -4,14 +4,14 @@ import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.indie.apps.cpp.data.repository.CountryRepository
-import com.indie.apps.pennypal.domain.usecase.GetBudgetWithSpentFromPeriodUseCase
 import com.indie.apps.pennypal.domain.usecase.GetCategoryWiseExpenseFromPreferencePeriodUseCase
 import com.indie.apps.pennypal.domain.usecase.GetTotalFromPreferencePeriodUseCase
-import com.indie.apps.pennypal.domain.usecase.GetUserProfileUseCase
 import com.indie.apps.pennypal.domain.usecase.SearchMerchantDataWithAllDataListUseCase
 import com.indie.apps.pennypal.domain.usecase.SearchMerchantNameAndDetailListUseCase
 import com.indie.apps.pennypal.repository.BillingRepository
+import com.indie.apps.pennypal.repository.BudgetRepository
 import com.indie.apps.pennypal.repository.PreferenceRepository
+import com.indie.apps.pennypal.repository.UserRepository
 import com.indie.apps.pennypal.util.ShowDataPeriod
 import com.indie.apps.pennypal.util.Util
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,20 +25,20 @@ import javax.inject.Inject
 
 @HiltViewModel
 class OverViewViewModel @Inject constructor(
-    userProfileUseCase: GetUserProfileUseCase,
+    userRepository: UserRepository,
     getTotalFromPreferencePeriodUseCase: GetTotalFromPreferencePeriodUseCase,
     searchMerchantDataWithAllDataListUseCase: SearchMerchantDataWithAllDataListUseCase,
     searchMerchantNameAndDetailListUseCase: SearchMerchantNameAndDetailListUseCase,
     getCategoryWiseExpenseFromPreferencePeriodUseCase: GetCategoryWiseExpenseFromPreferencePeriodUseCase,
     preferenceRepository: PreferenceRepository,
-    getBudgetFromPeriodUseCase: GetBudgetWithSpentFromPeriodUseCase,
+    budgetRepository: BudgetRepository,
     private val billingRepository: BillingRepository,
     private val countryRepository: CountryRepository
 ) : ViewModel() {
 
     //val searchTextState by mutableStateOf(TextFieldState())
 
-    val userData = userProfileUseCase.loadData()
+    val userData = userRepository.getUser()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), null)
 
     val currentTotal = getTotalFromPreferencePeriodUseCase.loadData()
@@ -73,9 +73,10 @@ class OverViewViewModel @Inject constructor(
 
     private val calendar: Calendar = Calendar.getInstance()
 
-    val budgetState = getBudgetFromPeriodUseCase.loadFromMonth(
+    val budgetState = budgetRepository.getBudgetsAndSpentWithCategoryIdListFromMonth(
         year = calendar.get(Calendar.YEAR),
-        month = calendar.get(Calendar.MONTH)
+        month = calendar.get(Calendar.MONTH),
+        timeZoneOffsetInMilli = Util.TIME_ZONE_OFFSET_IN_MILLI
     ).stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
 
     private val periodIndex = preferenceRepository.getInt(Util.PREF_BALANCE_VIEW, 1)

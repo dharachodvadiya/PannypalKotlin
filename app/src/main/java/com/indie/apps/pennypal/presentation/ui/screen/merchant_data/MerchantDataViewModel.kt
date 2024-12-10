@@ -9,8 +9,8 @@ import androidx.paging.cachedIn
 import com.indie.apps.pennypal.data.module.MerchantDataWithPaymentName
 import com.indie.apps.pennypal.domain.usecase.DeleteMultipleMerchantDataUseCase
 import com.indie.apps.pennypal.domain.usecase.GetMerchantDataWithPaymentNameListFromMerchantIdUseCase
-import com.indie.apps.pennypal.domain.usecase.GetMerchantFromIdUseCase
 import com.indie.apps.pennypal.presentation.ui.state.PagingState
+import com.indie.apps.pennypal.repository.MerchantRepository
 import com.indie.apps.pennypal.util.Resource
 import com.indie.apps.pennypal.util.Util
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,7 +27,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MerchantDataViewModel @Inject constructor(
-    getMerchantFromIdUseCase: GetMerchantFromIdUseCase,
+    merchantRepository: MerchantRepository,
     //getMerchantDataListFromMerchantId: GetMerchantDataListFromMerchantIdUseCase,
     getMerchantDataWithPaymentNameListFromMerchantIdUseCase: GetMerchantDataWithPaymentNameListFromMerchantIdUseCase,
     private val deleteMultipleMerchantDataUseCase: DeleteMultipleMerchantDataUseCase,
@@ -50,8 +50,7 @@ class MerchantDataViewModel @Inject constructor(
     var deleteAnimRun = MutableStateFlow(false)
     private lateinit var previousData: PagingData<MerchantDataWithPaymentName>
 
-    val merchantState = getMerchantFromIdUseCase
-        .getData(merchantId)
+    val merchantState = merchantRepository.getMerchantFromId(merchantId)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), null)
 
     private val trigger = MutableSharedFlow<Unit>(replay = 1)

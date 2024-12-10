@@ -37,6 +37,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Singleton
 
@@ -62,33 +63,51 @@ object AppModule {
         PreferenceManager.getInstance(context)
 
     @Provides
-    fun provideUserRepository(database: AppDatabase): UserRepository {
-        return UserRepositoryImpl(database.userDao())
+    fun provideUserRepository(
+        database: AppDatabase,
+        @IoDispatcher dispatcher: CoroutineDispatcher
+    ): UserRepository {
+        return UserRepositoryImpl(database.userDao(), dispatcher)
     }
 
     @Provides
-    fun providePaymentRepository(database: AppDatabase): PaymentRepository {
-        return PaymentRepositoryImpl(database.paymentDao())
+    fun providePaymentRepository(
+        database: AppDatabase,
+        @IoDispatcher dispatcher: CoroutineDispatcher
+    ): PaymentRepository {
+        return PaymentRepositoryImpl(database.paymentDao(), dispatcher)
     }
 
     @Provides
-    fun providePaymentModeRepository(database: AppDatabase): PaymentModeRepository {
-        return PaymentModeRepositoryImpl(database.paymentModeDao())
+    fun providePaymentModeRepository(
+        database: AppDatabase,
+        @IoDispatcher dispatcher: CoroutineDispatcher
+    ): PaymentModeRepository {
+        return PaymentModeRepositoryImpl(database.paymentModeDao(), dispatcher)
     }
 
     @Provides
-    fun provideMerchantRepository(database: AppDatabase): MerchantRepository {
-        return MerchantRepositoryImpl(database.merchantDao())
+    fun provideMerchantRepository(
+        database: AppDatabase,
+        @IoDispatcher dispatcher: CoroutineDispatcher
+    ): MerchantRepository {
+        return MerchantRepositoryImpl(database.merchantDao(), dispatcher)
     }
 
     @Provides
-    fun provideMerchantDataRepository(database: AppDatabase): MerchantDataRepository {
-        return MerchantDataRepositoryImpl(database.merchantDataDao())
+    fun provideMerchantDataRepository(
+        database: AppDatabase,
+        @IoDispatcher dispatcher: CoroutineDispatcher
+    ): MerchantDataRepository {
+        return MerchantDataRepositoryImpl(database.merchantDataDao(), dispatcher)
     }
 
     @Provides
-    fun provideCategoryRepository(database: AppDatabase): CategoryRepository {
-        return CategoryRepositoryImpl(database.categoryDao())
+    fun provideCategoryRepository(
+        database: AppDatabase,
+        @IoDispatcher dispatcher: CoroutineDispatcher
+    ): CategoryRepository {
+        return CategoryRepositoryImpl(database.categoryDao(), dispatcher)
     }
 
     @Provides
@@ -126,12 +145,14 @@ object AppModule {
 
     @Provides
     fun provideBudgetRepository(
-        database: AppDatabase
+        database: AppDatabase,
+        @IoDispatcher dispatcher: CoroutineDispatcher
     ): BudgetRepository {
         return BudgetRepositoryImpl(
             database.budgetDao(),
             database.budgetCategoryDao(),
-            database.merchantDataDao()
+            database.merchantDataDao(),
+            dispatcher
         )
     }
 

@@ -3,8 +3,8 @@ package com.indie.apps.pennypal.presentation.ui.dialog.multi_select_Category
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.indie.apps.pennypal.domain.usecase.SearchCategoryListUseCase
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
+import com.indie.apps.pennypal.repository.CategoryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MultiSelectCategoryViewModel @Inject constructor(
-    searchCategoryListUseCase: SearchCategoryListUseCase
+    private val categoryRepository: CategoryRepository,
 ) : ViewModel() {
 
     val searchTextState = MutableStateFlow(TextFieldState())
@@ -28,11 +28,10 @@ class MultiSelectCategoryViewModel @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     val categoryList = trigger
         .flatMapLatest {
-            searchCategoryListUseCase
-                .loadData(
-                    searchQuery = searchTextState.value.text,
-                    type = -1
-                )
+            categoryRepository.searchCategoryFromTypeList(
+                searchQuery = searchTextState.value.text,
+                type = -1
+            )
                 .onEach {
                     if (it.isEmpty()) {
                         selectAllState.value = false

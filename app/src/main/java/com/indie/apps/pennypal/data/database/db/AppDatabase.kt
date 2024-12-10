@@ -135,7 +135,7 @@ abstract class AppDatabase : RoomDatabase() {
                     )
                 val userDao = db.userDao()
 
-                UserRepositoryImpl(userDao).insert(user)
+                UserRepositoryImpl(userDao, Dispatchers.IO).insert(user)
             }
 
             private suspend fun populatePaymentDb(db: AppDatabase) {
@@ -147,7 +147,7 @@ abstract class AppDatabase : RoomDatabase() {
                     Payment(name = "Credit Card", preAdded = 1, modeId = 4) //id = 3
                 )
 
-                PaymentRepositoryImpl(paymentDao).insertPaymentList(preAddedPayments)
+                PaymentRepositoryImpl(paymentDao, Dispatchers.IO).insertPaymentList(preAddedPayments)
             }
 
             private suspend fun populatePaymentModeDb(db: AppDatabase) {
@@ -163,7 +163,7 @@ abstract class AppDatabase : RoomDatabase() {
                     PaymentMode(name = "Upi") //id = 7
                 )
 
-                PaymentModeRepositoryImpl(paymentModeDao).insertPaymentModeList(preAddedPaymentMode)
+                PaymentModeRepositoryImpl(paymentModeDao, Dispatchers.IO).insertPaymentModeList(preAddedPaymentMode)
             }
 
             private suspend fun populateCategoryDb(db: AppDatabase) {
@@ -187,7 +187,7 @@ abstract class AppDatabase : RoomDatabase() {
                     Category(name = "Rewards", preAdded = 1, type = 1), //id = 16
                 )
 
-                CategoryRepositoryImpl(categoryDao).insertCategoryList(preAddedCategory)
+                CategoryRepositoryImpl(categoryDao, Dispatchers.IO).insertCategoryList(preAddedCategory)
 
             }
 

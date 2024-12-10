@@ -2,9 +2,14 @@ package com.indie.apps.pennypal.repository
 
 import com.indie.apps.pennypal.data.database.dao.MerchantDataDao
 import com.indie.apps.pennypal.data.database.entity.MerchantData
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
-class MerchantDataRepositoryImpl @Inject constructor(private val merchantDataDao: MerchantDataDao) :
+class MerchantDataRepositoryImpl @Inject constructor(
+    private val merchantDataDao: MerchantDataDao,
+    private val dispatcher: CoroutineDispatcher
+) :
     MerchantDataRepository {
     override suspend fun updateMerchantDataPaymentId(oldPaymentId: Long, newPaymentId: Long) =
         merchantDataDao.updateMerchantDataPaymentId(oldPaymentId, newPaymentId)
@@ -37,7 +42,7 @@ class MerchantDataRepositoryImpl @Inject constructor(private val merchantDataDao
     ) = merchantDataDao.searchMerchantsDataWithAllDataList(searchQuery)
 
     override fun getRecentMerchantsDataWithAllDataList() =
-        merchantDataDao.getRecentMerchantsDataWithAllDataList()
+        merchantDataDao.getRecentMerchantsDataWithAllDataList().flowOn(dispatcher)
 
     override fun getMerchantsDataWithPaymentNameListFromMerchantId(
         merchantId: Long
@@ -56,20 +61,22 @@ class MerchantDataRepositoryImpl @Inject constructor(private val merchantDataDao
 
     override fun getTotalFromMonth(
         timeZoneOffsetInMilli: Int, monthOffset: Int
-    ) = merchantDataDao.getTotalFromMonth(timeZoneOffsetInMilli, monthOffset)
+    ) = merchantDataDao.getTotalFromMonth(timeZoneOffsetInMilli, monthOffset).flowOn(dispatcher)
 
 
     override fun getTotalFromYear(
         timeZoneOffsetInMilli: Int, offset: Int
-    ) = merchantDataDao.getTotalFromYear(timeZoneOffsetInMilli, offset)
+    ) = merchantDataDao.getTotalFromYear(timeZoneOffsetInMilli, offset).flowOn(dispatcher)
 
     override fun getCategoryWiseExpenseFromMonth(
         timeZoneOffsetInMilli: Int, monthOffset: Int
     ) = merchantDataDao.getCategoryWiseExpenseFromMonth(timeZoneOffsetInMilli, monthOffset)
+        .flowOn(dispatcher)
 
     override fun getCategoryWiseExpenseFromYear(
         timeZoneOffsetInMilli: Int, yearOffset: Int
     ) = merchantDataDao.getCategoryWiseExpenseFromYear(timeZoneOffsetInMilli, yearOffset)
+        .flowOn(dispatcher)
 
     override suspend fun getTotalAmountForMonthAndCategory(
         timeZoneOffsetInMilli: Int, year: Int, monthPlusOne: Int, categoryIds: List<Long>
@@ -94,15 +101,16 @@ class MerchantDataRepositoryImpl @Inject constructor(private val merchantDataDao
         timeZoneOffsetInMilli: Int, year: Int, monthPlusOne: Int, categoryIds: List<Long>
     ) = merchantDataDao.getCategoryWiseTotalAmountForMonth(
         timeZoneOffsetInMilli, year.toString(), monthPlusOne.toString(), categoryIds
-    )
+    ).flowOn(dispatcher)
 
     override fun getCategoryWiseTotalAmountForYear(
         timeZoneOffsetInMilli: Int, year: Int, categoryIds: List<Long>
     ) = merchantDataDao.getCategoryWiseTotalAmountForYear(
         timeZoneOffsetInMilli, year.toString(), categoryIds
-    )
+    ).flowOn(dispatcher)
 
     override fun getCategoryWiseTotalAmountForBetweenDates(
         timeZoneOffsetInMilli: Int, startTime: Long, endTime: Long, categoryIds: List<Long>
     ) = merchantDataDao.getCategoryWiseTotalAmountForBetweenDates(startTime, endTime, categoryIds)
+        .flowOn(dispatcher)
 }

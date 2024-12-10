@@ -102,10 +102,10 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun authorizeGoogleDriveResult(intent: Intent): AuthorizationResult? {
-        try {
-            return authorize.getAuthorizationResultFromIntent(intent)
+        return try {
+            authorize.getAuthorizationResultFromIntent(intent)
         } catch (e: Exception) {
-            return null
+            null
         }
 
     }

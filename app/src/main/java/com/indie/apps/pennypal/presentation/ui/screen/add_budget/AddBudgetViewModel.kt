@@ -9,10 +9,10 @@ import com.indie.apps.pennypal.data.database.enum.PeriodType
 import com.indie.apps.pennypal.data.module.budget.BudgetWithCategory
 import com.indie.apps.pennypal.data.module.category.CategoryAmount
 import com.indie.apps.pennypal.domain.usecase.AddBudgetUseCase
-import com.indie.apps.pennypal.domain.usecase.GetBudgetWithCategoryFromBudgetIdUseCase
-import com.indie.apps.pennypal.domain.usecase.GetCategoryListUseCase
 import com.indie.apps.pennypal.domain.usecase.UpdateBudgetUseCase
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
+import com.indie.apps.pennypal.repository.BudgetRepository
+import com.indie.apps.pennypal.repository.CategoryRepository
 import com.indie.apps.pennypal.util.ErrorMessage
 import com.indie.apps.pennypal.util.Resource
 import com.indie.apps.pennypal.util.Util
@@ -24,10 +24,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddBudgetViewModel @Inject constructor(
-    getCategoryListUseCase: GetCategoryListUseCase,
+    private val categoryRepository: CategoryRepository,
     private val addBudgetUseCase: AddBudgetUseCase,
     private val updateBudgetUseCase: UpdateBudgetUseCase,
-    private val getBudgetWithCategoryFromBudgetIdUseCase: GetBudgetWithCategoryFromBudgetIdUseCase,
+    private val budgetRepository: BudgetRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -69,26 +69,25 @@ class AddBudgetViewModel @Inject constructor(
 
         uiState.value = Resource.Loading()
         viewModelScope.launch {
-            getCategoryListUseCase
-                .loadData(
-                    type = -1
-                ).collect { newCategories ->
-                    categoryList = newCategories
+            categoryRepository.getCategoryFromTypeList(
+                type = -1
+            ).collect { newCategories ->
+                categoryList = newCategories
 
-                    if (budgetEditId == -1L) {
-                        val calendar = Calendar.getInstance()
+                if (budgetEditId == -1L) {
+                    val calendar = Calendar.getInstance()
 
-                        setCurrentMonth(calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR))
-                        setCurrentYear(calendar.get(Calendar.YEAR))
+                    setCurrentMonth(calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR))
+                    setCurrentYear(calendar.get(Calendar.YEAR))
 
-                        selectedCategoryList.value = newCategories.map { it.toCategoryAmount() }
+                    selectedCategoryList.value = newCategories.map { it.toCategoryAmount() }
 
-                        uiState.value = Resource.Success(Unit)
+                    uiState.value = Resource.Success(Unit)
 
-                    } else {
-                        setEditData()
-                    }
+                } else {
+                    setEditData()
                 }
+            }
         }
     }
 
@@ -97,18 +96,24 @@ class AddBudgetViewModel @Inject constructor(
     private fun setEditData() {
         viewModelScope.launch {
             try {
-                getBudgetWithCategoryFromBudgetIdUseCase.loadData(budgetEditId).collect {
+                budgetRepository.getBudgetWithCategoryFromId(budgetEditId).collect {
                     editBudgetData = it
 
                     currentPeriod.value = editBudgetData!!.periodType
 
-                    if (currentPeriod.value == PeriodType.MONTH.id) {
-                        currentMonthInMilli.value = editBudgetData!!.startDate
-                    } else if (currentPeriod.value == PeriodType.YEAR.id) {
-                        currentYearInMilli.value = editBudgetData!!.startDate
-                    } else if (currentPeriod.value == PeriodType.ONE_TIME.id) {
-                        currentFromTimeInMilli.value = editBudgetData!!.startDate
-                        currentToTimeInMilli.value = editBudgetData!!.endDate!!
+                    when (currentPeriod.value) {
+                        PeriodType.MONTH.id -> {
+                            currentMonthInMilli.value = editBudgetData!!.startDate
+                        }
+
+                        PeriodType.YEAR.id -> {
+                            currentYearInMilli.value = editBudgetData!!.startDate
+                        }
+
+                        PeriodType.ONE_TIME.id -> {
+                            currentFromTimeInMilli.value = editBudgetData!!.startDate
+                            currentToTimeInMilli.value = editBudgetData!!.endDate!!
+                        }
                     }
 
                     /*setSelectedCategory(editBudgetData!!.category.map { cat -> cat.id })

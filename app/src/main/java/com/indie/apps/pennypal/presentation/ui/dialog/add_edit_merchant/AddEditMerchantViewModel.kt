@@ -6,9 +6,9 @@ import com.indie.apps.cpp.data.repository.CountryRepository
 import com.indie.apps.pennypal.data.database.entity.Merchant
 import com.indie.apps.pennypal.data.module.ContactNumberAndCode
 import com.indie.apps.pennypal.domain.usecase.AddMerchantUseCase
-import com.indie.apps.pennypal.domain.usecase.GetMerchantFromIdUseCase
 import com.indie.apps.pennypal.domain.usecase.UpdateMerchantUseCase
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
+import com.indie.apps.pennypal.repository.MerchantRepository
 import com.indie.apps.pennypal.util.ErrorMessage
 import com.indie.apps.pennypal.util.Resource
 import com.indie.apps.pennypal.util.Util
@@ -21,7 +21,7 @@ import javax.inject.Inject
 class AddEditMerchantViewModel @Inject constructor(
     private val addMerchantUseCase: AddMerchantUseCase,
     private val updateMerchantUseCase: UpdateMerchantUseCase,
-    private val getMerchantFromIdUseCase: GetMerchantFromIdUseCase,
+    private val merchantRepository: MerchantRepository,
     private val countryRepository: CountryRepository
 ) : ViewModel() {
 
@@ -40,8 +40,7 @@ class AddEditMerchantViewModel @Inject constructor(
         editId = id
         if (editId != null) {
             viewModelScope.launch {
-                getMerchantFromIdUseCase
-                    .getData(editId!!)
+                merchantRepository.getMerchantFromId(editId!!)
                     .collect {
                         editMerchant = it
 
@@ -66,7 +65,7 @@ class AddEditMerchantViewModel @Inject constructor(
         countryDialCode.value = code
     }
 
-    fun setContactData(data : ContactNumberAndCode) {
+    fun setContactData(data: ContactNumberAndCode) {
         //merchantName.value.text = data.name
         //phoneNumber.value.text = data.phoneNumber
 
@@ -159,7 +158,7 @@ class AddEditMerchantViewModel @Inject constructor(
     fun getDefaultCurrencyCode() =
         countryRepository.getDialCodeFromCountryCode(countryRepository.getDefaultCountryCode())
 
-    fun updateNameText(text : String) = merchantName.value.updateText(text)
-    fun updatePhoneNoText(text : String) = phoneNumber.value.updateText(text)
-    fun updateDescText(text : String) = description.value.updateText(text)
+    fun updateNameText(text: String) = merchantName.value.updateText(text)
+    fun updatePhoneNoText(text: String) = phoneNumber.value.updateText(text)
+    fun updateDescText(text: String) = description.value.updateText(text)
 }

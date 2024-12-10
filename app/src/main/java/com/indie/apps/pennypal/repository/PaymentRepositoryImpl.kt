@@ -2,9 +2,14 @@ package com.indie.apps.pennypal.repository
 
 import com.indie.apps.pennypal.data.database.dao.PaymentDao
 import com.indie.apps.pennypal.data.database.entity.Payment
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
-class PaymentRepositoryImpl @Inject constructor(private val paymentDao: PaymentDao) :
+class PaymentRepositoryImpl @Inject constructor(
+    private val paymentDao: PaymentDao,
+    private val dispatcher: CoroutineDispatcher
+) :
     PaymentRepository {
 
     override suspend fun deleteCustomPayment(paymentId: Long) =
@@ -13,9 +18,9 @@ class PaymentRepositoryImpl @Inject constructor(private val paymentDao: PaymentD
     override suspend fun getPaymentFromId(paymentId: Long) =
         paymentDao.getPaymentFromId(paymentId)
 
-    override fun getPaymentList() = paymentDao.getPaymentList()
+    override fun getPaymentList() = paymentDao.getPaymentList().flowOn(dispatcher)
 
-    override fun getPaymentListWithMode() = paymentDao.getPaymentListWithMode()
+    override fun getPaymentListWithMode() = paymentDao.getPaymentListWithMode().flowOn(dispatcher)
 
     override suspend fun insertPaymentList(payments: List<Payment>) =
         paymentDao.insertPaymentList(payments)

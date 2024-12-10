@@ -6,9 +6,9 @@ import com.indie.apps.pennypal.data.database.entity.Payment
 import com.indie.apps.pennypal.data.database.entity.PaymentMode
 import com.indie.apps.pennypal.domain.usecase.AddPaymentUseCase
 import com.indie.apps.pennypal.domain.usecase.GetPaymentFromIdUseCase
-import com.indie.apps.pennypal.domain.usecase.GetPaymentModeListUseCase
 import com.indie.apps.pennypal.domain.usecase.UpdatePaymentUseCase
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
+import com.indie.apps.pennypal.repository.PaymentModeRepository
 import com.indie.apps.pennypal.util.ErrorMessage
 import com.indie.apps.pennypal.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,7 +24,7 @@ class AddEditPaymentViewModel @Inject constructor(
     private val addPaymentUseCase: AddPaymentUseCase,
     private val updatePaymentUseCase: UpdatePaymentUseCase,
     private val getPaymentFromIdUseCase: GetPaymentFromIdUseCase,
-    getPaymentModeListUseCase: GetPaymentModeListUseCase,
+    paymentModeRepository: PaymentModeRepository,
 ) : ViewModel() {
 
     val paymentTypeState = MutableStateFlow(TextFieldState())
@@ -36,7 +36,7 @@ class AddEditPaymentViewModel @Inject constructor(
 
     private var editPayment: Payment? = null
 
-    val paymentModeState = getPaymentModeListUseCase.loadData()
+    val paymentModeState = paymentModeRepository.getPaymentModeList()
         .map { paymentList ->
 
             val newList = emptyList<PaymentMode>().toMutableList()
@@ -84,7 +84,7 @@ class AddEditPaymentViewModel @Inject constructor(
                 viewModelScope.launch {
                     if (editId != null) {
 
-                        if(editPayment != null) {
+                        if (editPayment != null) {
 
                             val payment = editPayment!!.copy(
                                 id = editId!!,
@@ -145,6 +145,6 @@ class AddEditPaymentViewModel @Inject constructor(
 
     }
 
-    fun updatePaymentTypeText(text : String) = paymentTypeState.value.updateText(text)
+    fun updatePaymentTypeText(text: String) = paymentTypeState.value.updateText(text)
 
 }

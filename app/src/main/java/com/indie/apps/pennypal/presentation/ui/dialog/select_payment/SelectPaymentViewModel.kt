@@ -2,8 +2,8 @@ package com.indie.apps.pennypal.presentation.ui.dialog.select_payment
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.indie.apps.pennypal.domain.usecase.GetPaymentListWithModeUseCase
 import com.indie.apps.pennypal.domain.usecase.UpdateUserPaymentDataUseCase
+import com.indie.apps.pennypal.repository.PaymentRepository
 import com.indie.apps.pennypal.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
@@ -13,12 +13,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SelectPaymentViewModel @Inject constructor(
-    getPaymentListWithModeUseCase: GetPaymentListWithModeUseCase,
+    paymentRepository: PaymentRepository,
     private val updateUserPaymentDataUseCase: UpdateUserPaymentDataUseCase,
 ) : ViewModel() {
 
-    val paymentState = getPaymentListWithModeUseCase
-        .loadData()
+    val paymentState = paymentRepository.getPaymentListWithMode()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
 
     fun saveDefaultPayment(paymentId: Long, onSuccess: () -> Unit) {

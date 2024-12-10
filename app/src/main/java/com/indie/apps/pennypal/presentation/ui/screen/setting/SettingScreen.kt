@@ -82,7 +82,7 @@ fun SettingScreen(
     )
 
     LaunchedEffect(key1 = settingViewModel.syncEffect) {
-        settingViewModel.syncEffect.collect() { effect ->
+        settingViewModel.syncEffect.collect { effect ->
             when (effect) {
                 is SyncEffect.SignIn -> {
                     /*effect.intent.setRequestCode(Util.REQUEST_CODE_GOOGLE_SIGN_IN)
@@ -90,14 +90,14 @@ fun SettingScreen(
                         effect.intent
                     )*/
                     activityResultLauncher.launch(
-                        IntentSenderRequest.Builder((effect as SyncEffect.SignIn).intentSender)
+                        IntentSenderRequest.Builder(effect.intentSender)
                             .build()
                     )
                 }
 
                 is SyncEffect.Authorize -> {
                     authorizeLauncher.launch(
-                        IntentSenderRequest.Builder((effect as SyncEffect.Authorize).intentSender)
+                        IntentSenderRequest.Builder(effect.intentSender)
                             .build()
                     )
                 }
@@ -154,7 +154,7 @@ fun SettingScreenData(
     bottomPadding: PaddingValues,
     user: User?
 ) {
-    Scaffold() { topBarPadding ->
+    Scaffold { topBarPadding ->
 
         val scrollState = rememberScrollState()
 

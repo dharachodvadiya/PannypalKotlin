@@ -9,13 +9,13 @@ import com.indie.apps.pennypal.data.database.entity.Payment
 import com.indie.apps.pennypal.data.database.entity.toMerchantNameAndDetails
 import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
 import com.indie.apps.pennypal.domain.usecase.AddMerchantDataUseCase
-import com.indie.apps.pennypal.domain.usecase.GetCategoryFromIdUseCase
 import com.indie.apps.pennypal.domain.usecase.GetMerchantDataFromIdUseCase
-import com.indie.apps.pennypal.domain.usecase.GetMerchantFromIdUseCase
 import com.indie.apps.pennypal.domain.usecase.GetPaymentFromIdUseCase
-import com.indie.apps.pennypal.domain.usecase.GetUserProfileUseCase
 import com.indie.apps.pennypal.domain.usecase.UpdateMerchantDataUseCase
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
+import com.indie.apps.pennypal.repository.CategoryRepository
+import com.indie.apps.pennypal.repository.MerchantRepository
+import com.indie.apps.pennypal.repository.UserRepository
 import com.indie.apps.pennypal.util.ErrorMessage
 import com.indie.apps.pennypal.util.Resource
 import com.indie.apps.pennypal.util.Util
@@ -30,11 +30,11 @@ import javax.inject.Inject
 class NewItemViewModel @Inject constructor(
     private val addMerchantDataUseCase: AddMerchantDataUseCase,
     private val updateMerchantDataUseCase: UpdateMerchantDataUseCase,
-    private val getUserProfileUseCase: GetUserProfileUseCase,
+    private val userRepository: UserRepository,
     private val getMerchantDataFromIdUseCase: GetMerchantDataFromIdUseCase,
-    private val getMerchantFromIdUseCase: GetMerchantFromIdUseCase,
+    private val merchantRepository: MerchantRepository,
     private val getPaymentFromIdUseCase: GetPaymentFromIdUseCase,
-    private val getCategoryFromIdUseCase: GetCategoryFromIdUseCase,
+    private val categoryRepository: CategoryRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -76,7 +76,7 @@ class NewItemViewModel @Inject constructor(
     private fun loadUserData() {
         uiState.value = Resource.Loading()
         viewModelScope.launch {
-            getUserProfileUseCase.loadData()
+            userRepository.getUser()
                 .collect {
                     loadPaymentData(it.paymentId)
                     uiState.value = Resource.Success(Unit)
@@ -114,7 +114,7 @@ class NewItemViewModel @Inject constructor(
 
                                 var merchantJob: Job? = null
                                 merchantJob = launch {
-                                    getMerchantFromIdUseCase.getData(editMerchantData!!.merchantId)
+                                    merchantRepository.getMerchantFromId(editMerchantData!!.merchantId)
                                         .collect {
                                             setMerchantData(it.toMerchantNameAndDetails())
                                             merchantJob?.cancel()
@@ -145,7 +145,7 @@ class NewItemViewModel @Inject constructor(
 
     private fun loadCategoryData(id: Long) {
         viewModelScope.launch {
-            getCategoryFromIdUseCase.getData(id)
+            categoryRepository.getCategoryFromId(id)
                 .collect {
                     setCategory(it)
                 }
@@ -249,7 +249,7 @@ class NewItemViewModel @Inject constructor(
 
                     viewModelScope.launch {
                         updateMerchantDataUseCase.updateData(
-                            merchantDataNew = merchantData, merchantDataOld = editMerchantData!!
+                            merchantDataNew = merchantData
                         ).collect {
                             when (it) {
                                 is Resource.Loading -> {}

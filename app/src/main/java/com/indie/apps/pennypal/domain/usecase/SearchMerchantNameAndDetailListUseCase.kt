@@ -34,7 +34,6 @@ class SearchMerchantNameAndDetailListUseCase @Inject constructor(
     fun getLast3Data(): Flow<List<MerchantNameAndDetails>> {
 
         return merchantRepository.getRecentMerchantNameAndDetailList()
-            .flowOn(dispatcher)
     }
 
     /*  fun loadData(searchQuery : String) : Flow<PagingData<MerchantNameAndDetails>>{

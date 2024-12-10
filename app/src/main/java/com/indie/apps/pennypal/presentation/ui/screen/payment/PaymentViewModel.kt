@@ -3,8 +3,8 @@ package com.indie.apps.pennypal.presentation.ui.screen.payment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.indie.apps.pennypal.domain.usecase.DeletePaymentUseCase
-import com.indie.apps.pennypal.domain.usecase.GetPaymentListWithModeUseCase
-import com.indie.apps.pennypal.domain.usecase.GetUserProfileUseCase
+import com.indie.apps.pennypal.repository.PaymentRepository
+import com.indie.apps.pennypal.repository.UserRepository
 import com.indie.apps.pennypal.util.Resource
 import com.indie.apps.pennypal.util.Util
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,15 +18,14 @@ import javax.inject.Inject
 @HiltViewModel
 class PaymentViewModel @Inject constructor(
     private val deletePaymentUseCase: DeletePaymentUseCase,
-    userProfileUseCase: GetUserProfileUseCase,
-    getPaymentListWithModeUseCase: GetPaymentListWithModeUseCase,
+    userRepository: UserRepository,
+    paymentRepository: PaymentRepository,
 ) : ViewModel() {
 
-    val userState = userProfileUseCase
-        .loadData()
+    val userState = userRepository.getUser()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), null)
 
-    val paymentWithModeState = getPaymentListWithModeUseCase.loadData()
+    val paymentWithModeState = paymentRepository.getPaymentListWithMode()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
 
     var editAnimRun = MutableStateFlow(false)

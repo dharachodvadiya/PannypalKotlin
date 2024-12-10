@@ -7,8 +7,8 @@ import com.indie.apps.pennypal.data.database.enum.PeriodType
 import com.indie.apps.pennypal.data.module.budget.BudgetWithCategory
 import com.indie.apps.pennypal.data.module.category.CategoryAmount
 import com.indie.apps.pennypal.domain.usecase.DeleteSingleBudgetDataUseCase
-import com.indie.apps.pennypal.domain.usecase.GetBudgetWithCategoryFromBudgetIdUseCase
 import com.indie.apps.pennypal.domain.usecase.GetCategoryWiseSpentAmountForPeriodUseCase
+import com.indie.apps.pennypal.repository.BudgetRepository
 import com.indie.apps.pennypal.util.Resource
 import com.indie.apps.pennypal.util.Util
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,13 +19,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SingleBudgetViewModel @Inject constructor(
-    private val getBudgetWithCategoryFromBudgetIdUseCase: GetBudgetWithCategoryFromBudgetIdUseCase,
+    private val budgetRepository: BudgetRepository,
     private val getCategoryWiseSpentAmountForPeriodUseCase: GetCategoryWiseSpentAmountForPeriodUseCase,
     private val deleteSingleBudgetDataUseCase: DeleteSingleBudgetDataUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    val budgetId =
+    private val budgetId =
         savedStateHandle.get<String>(Util.PARAM_BUDGET_ID)?.toLong() ?: 0
     var budgetData = MutableStateFlow<BudgetWithCategory?>(null)
     var spentCategoryData = MutableStateFlow<List<CategoryAmount>>(emptyList())
@@ -36,7 +36,7 @@ class SingleBudgetViewModel @Inject constructor(
         uiState.value = Resource.Loading()
         viewModelScope.launch {
             try {
-                getBudgetWithCategoryFromBudgetIdUseCase.loadData(budgetId).collect {
+                budgetRepository.getBudgetWithCategoryFromId(budgetId).collect {
                     //budgetData = it
                     budgetData.value = it
                     loadCategoryWiseSpentData(it)
