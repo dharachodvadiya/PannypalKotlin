@@ -25,7 +25,9 @@ import com.google.android.play.core.install.InstallStateUpdatedListener
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
+import com.indie.apps.pennypal.repository.PreferenceRepository
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -38,6 +40,9 @@ class MainActivity : ComponentActivity() {
     // State for managing update progress
     private var isUpdating by mutableStateOf(false)
     private var updateProgress by mutableIntStateOf(0)
+
+    @Inject
+    lateinit var preferenceRepository: PreferenceRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,10 +58,12 @@ class MainActivity : ComponentActivity() {
             WindowCompat.setDecorFitsSystemWindows(window, false)
             val systemUiController = rememberSystemUiController()
             SideEffect {
-                systemUiController.setSystemBarsColor(color = Color.Transparent,
-                    isNavigationBarContrastEnforced = false)
+                systemUiController.setSystemBarsColor(
+                    color = Color.Transparent,
+                    isNavigationBarContrastEnforced = false
+                )
             }
-            PennyPalApp() // Pass the state to the app
+            PennyPalApp(preferenceRepository) // Pass the state to the app
         }
     }
 

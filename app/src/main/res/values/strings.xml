@@ -165,4 +165,16 @@
     <string name="last_backup">Last Backup:</string>
     <string name="backup_now">Backup now</string>
     <string name="no_backup_created">No backup created.</string>
+    <string name="lets_begin">Let\'s Begin</string>
+    <string name="continue_text">Continue</string>
+    <string name="skip">Skip</string>
+    <string name="introTitle3">Keep your financial information private</string>
+    <string name="introSubTitle3">We believe your financial data is yours alone. That\'s why it\'s stored exclusively on your device, ensuring 100% privacy.</string>
+    <string name="introTitle2">Cut down unnecessary expenses</string>
+    <string name="introSubTitle2">Track and categorize your expenses easily to identify areas where you can save money.</string>
+    <string name="introTitle1">Grow your savings every month</string>
+    <string name="introSubTitle1">Plan your spending with monthly budgets and start saving every month.</string>
+    <string name="name">Name</string>
+    <string name="intro_currency_title">In which currency you want to add expenses?</string>
+    <string name="intro_name_title">What should we call you?</string>
 </resources>

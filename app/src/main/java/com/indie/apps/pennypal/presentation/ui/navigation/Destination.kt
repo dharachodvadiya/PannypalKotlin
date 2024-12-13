@@ -18,6 +18,7 @@ enum class DialogNav(val route: String) {
 }
 
 enum class ScreenNav(val route: String) {
+    BOARDING("boarding"),
     OVERVIEW_START("overview/start"),
     SEE_ALL_DATA("overview/see_all_data"),
     NEW_ITEM("overview/new_item"),
@@ -46,5 +47,14 @@ enum class BottomNavItem(
     MERCHANTS(R.string.merchants, R.drawable.ic_person_fill, R.drawable.ic_person, "merchant"),
     ACCOUNTS(R.string.accounts, R.drawable.ic_bank_fill, R.drawable.ic_bank, "accounts"),
     SETTING(R.string.setting, R.drawable.ic_setting_fill, R.drawable.ic_setting, "setting"),
+}
+
+enum class OnBoardingPage {
+    BEGIN,
+    INTRO,
+    SET_NAME,
+    SET_CURRENCY,
+    WELCOME,
+    RESTORE
 }
 

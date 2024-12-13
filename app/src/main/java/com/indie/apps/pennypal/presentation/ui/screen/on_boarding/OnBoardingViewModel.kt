@@ -1,0 +1,149 @@
+package com.indie.apps.pennypal.presentation.ui.screen.on_boarding
+
+import androidx.annotation.StringRes
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.indie.apps.cpp.data.repository.CountryRepository
+import com.indie.apps.pennypal.R
+import com.indie.apps.pennypal.domain.usecase.UpdateUserCurrencyDataUseCase
+import com.indie.apps.pennypal.domain.usecase.UpdateUserNameUseCase
+import com.indie.apps.pennypal.presentation.ui.navigation.OnBoardingPage
+import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
+import com.indie.apps.pennypal.repository.UserRepository
+import com.indie.apps.pennypal.util.ErrorMessage
+import com.indie.apps.pennypal.util.Resource
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+@HiltViewModel
+class OnBoardingViewModel @Inject constructor(
+    userRepository: UserRepository,
+    private val countryRepository: CountryRepository,
+    private val updateUserNameUseCase: UpdateUserNameUseCase,
+    private val updateUserCurrencyDataUseCase: UpdateUserCurrencyDataUseCase,
+) : ViewModel() {
+
+    val currentPageState = MutableStateFlow(OnBoardingPage.BEGIN)
+    val currencyCountryCode = MutableStateFlow("")
+    val currencyText = MutableStateFlow("")
+    val nameState = MutableStateFlow(TextFieldState())
+
+    val introDataList = listOf(
+        IntroData(R.string.introTitle1, R.string.introSubTitle1),
+        IntroData(R.string.introTitle2, R.string.introSubTitle2),
+        IntroData(R.string.introTitle3, R.string.introSubTitle3)
+    )
+
+    init {
+        viewModelScope.launch {
+            userRepository.getUser()
+                .collect { user ->
+
+                    if (currencyCountryCode.value.isEmpty()) setCountryCode(user.currencyCountryCode)
+                    updateNameText(user.name)
+
+                }
+        }
+    }
+
+    fun onContinueClick(currentPage: OnBoardingPage, onBoardingComplete: () -> Unit) {
+        when (currentPage) {
+            OnBoardingPage.BEGIN -> currentPageState.value = OnBoardingPage.INTRO
+            OnBoardingPage.INTRO -> currentPageState.value = OnBoardingPage.SET_NAME
+            OnBoardingPage.SET_NAME -> {
+                saveName { currentPageState.value = OnBoardingPage.SET_CURRENCY }
+            }
+
+            OnBoardingPage.SET_CURRENCY -> {
+                saveCurrency { currentPageState.value = OnBoardingPage.WELCOME }
+            }
+
+            OnBoardingPage.WELCOME -> currentPageState.value = OnBoardingPage.RESTORE
+            OnBoardingPage.RESTORE -> onBoardingComplete()
+        }
+    }
+
+    fun onBackClick(currentPage: OnBoardingPage) {
+        when (currentPage) {
+            OnBoardingPage.BEGIN -> {}
+            OnBoardingPage.INTRO -> currentPageState.value = OnBoardingPage.BEGIN
+            OnBoardingPage.SET_NAME -> currentPageState.value = OnBoardingPage.INTRO
+            OnBoardingPage.SET_CURRENCY -> currentPageState.value = OnBoardingPage.SET_NAME
+            OnBoardingPage.WELCOME -> currentPageState.value = OnBoardingPage.SET_CURRENCY
+            OnBoardingPage.RESTORE -> {}
+        }
+    }
+
+    fun setCountryCode(code: String) {
+        currencyCountryCode.value = code
+        currencyText.value = getCurrencyText()
+    }
+
+    fun getDefaultCurrencyCode() =
+        countryRepository.getDefaultCountryCode()
+
+    private fun getCurrencyText(): String {
+        val currencyCode =
+            countryRepository.getCurrencyCodeFromCountryCode(currencyCountryCode.value)
+        val currencySymbol = countryRepository.getSymbolFromCurrencyCode(currencyCode)
+        return "$currencyCode ($currencySymbol)"
+    }
+
+    fun updateNameText(text: String) {
+        nameState.value.updateText(text)
+    }
+
+    private fun saveName(onSuccess: () -> Unit) {
+        if (nameState.value.text.isEmpty()) {
+            nameState.value.setError(ErrorMessage.USER_NAME_EMPTY)
+            return
+        }
+
+        viewModelScope.launch {
+            updateUserNameUseCase
+                .updateData(
+                    name = nameState.value.text
+                )
+                .collect {
+                    when (it) {
+                        is Resource.Loading -> {}
+                        is Resource.Success -> {
+                            onSuccess()
+                        }
+
+                        is Resource.Error -> {
+                        }
+                    }
+                }
+        }
+    }
+
+    private fun saveCurrency(onSuccess: () -> Unit) {
+        viewModelScope.launch {
+            updateUserCurrencyDataUseCase
+                .updateData(
+                    currency = countryRepository.getCurrencyCodeFromCountryCode(currencyCountryCode.value),
+                    currencyCountryCode = currencyCountryCode.value
+                )
+                .collect {
+                    when (it) {
+                        is Resource.Loading -> {}
+                        is Resource.Success -> {
+                            onSuccess()
+                        }
+
+                        is Resource.Error -> {
+                        }
+                    }
+                }
+        }
+    }
+
+}
+
+data class IntroData(
+    @StringRes val title: Int,
+    @StringRes val subTitle: Int
+)

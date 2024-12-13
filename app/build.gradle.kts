@@ -166,6 +166,9 @@ dependencies {
     implementation ("com.google.oauth-client:google-oauth-client-jetty:1.34.1")
     implementation ("com.google.auth:google-auth-library-oauth2-http:1.19.0")
 
+    implementation("com.google.accompanist:accompanist-pager:0.25.1") // Check for the latest version
+    implementation("com.google.accompanist:accompanist-pager-indicators:0.25.1") // For indicators
+
 }
 
 kapt {

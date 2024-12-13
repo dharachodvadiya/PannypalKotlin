@@ -19,6 +19,9 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun updateCurrency(currency: String, currencyCountryCode: String) =
         userDao.updateCurrency(currency, currencyCountryCode)
 
+    override suspend fun updateName(name: String) =
+        userDao.updateName(name)
+
     override suspend fun updateLastSyncTime(lastSyncDateInMilli: Long) =
         userDao.updateLastSyncTime(lastSyncDateInMilli)
 

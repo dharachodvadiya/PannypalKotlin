@@ -12,6 +12,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
@@ -38,16 +39,20 @@ import com.indie.apps.pennypal.presentation.ui.route.merchantRoute
 import com.indie.apps.pennypal.presentation.ui.route.overViewRoute
 import com.indie.apps.pennypal.presentation.ui.route.paymentRoute
 import com.indie.apps.pennypal.presentation.ui.route.settingRoute
+import com.indie.apps.pennypal.presentation.ui.screen.on_boarding.OnBoardingScreen
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
+import com.indie.apps.pennypal.repository.PreferenceRepository
 import com.indie.apps.pennypal.util.Util
 
 @Composable
-fun PennyPalApp() {
+fun PennyPalApp(preferenceRepository: PreferenceRepository) {
     val context = LocalContext.current
     val paymentSaveToast = stringResource(id = R.string.payment_save_success_toast)
     val paymentEditToast = stringResource(id = R.string.payment_edit_success_toast)
     val merchantSaveToast = stringResource(id = R.string.merchant_save_success_toast)
     val merchantEditToast = stringResource(id = R.string.merchant_edit_success_message)
+
+    val isFirstLaunch = preferenceRepository.getBoolean(Util.PREF_NEW_INSTALL, true)
     PennyPalTheme(darkTheme = true) {
         val navController = rememberNavController()
         val currentBackStack by navController.currentBackStackEntryAsState()
@@ -82,7 +87,7 @@ fun PennyPalApp() {
 
             NavHost(
                 navController = navController,
-                startDestination = BottomNavItem.OVERVIEW.route,
+                startDestination = if (isFirstLaunch) ScreenNav.BOARDING.route else BottomNavItem.OVERVIEW.route,
                 enterTransition = {
                     EnterTransition.None
                 },
@@ -90,10 +95,39 @@ fun PennyPalApp() {
                     ExitTransition.None
                 }
             ) {
+
                 overViewRoute(navController, bottomBarState, innerPadding)
                 merchantRoute(navController, bottomBarState, innerPadding)
                 paymentRoute(navController, bottomBarState, innerPadding)
                 settingRoute(navController, bottomBarState, innerPadding)
+
+                composable(route = ScreenNav.BOARDING.route) { backStackEntry ->
+                    bottomBarState.value = false
+
+                    val countryCode: String? =
+                        backStackEntry.savedStateHandle.get<String>(Util.SAVE_STATE_COUNTRY_CODE)
+
+                    OnBoardingScreen(
+                        onBoardingComplete = {
+                            bottomBarState.value = true
+                            navController.navigate(ScreenNav.OVERVIEW_START.route) {
+                                navController.popBackStack()
+                            }
+                        },
+                        onCurrencyChange = {
+                            navController.navigate(DialogNav.COUNTRY_PICKER.route)
+
+                            navController.currentBackStackEntry?.savedStateHandle?.set(
+                                Util.SAVE_STATE_SHOW_CURRENCY,
+                                true
+                            )
+                            navController.currentBackStackEntry?.savedStateHandle?.set(
+                                Util.SAVE_STATE_SAVABLE_DIALOG, false
+                            )
+                        },
+                        countryCode = countryCode
+                    )
+                }
 
                 dialog(
                     route = DialogNav.SELECT_MERCHANT.route,
@@ -377,6 +411,6 @@ fun PennyPalApp() {
 @Composable
 private fun MainScreenPreview() {
     PennyPalTheme(darkTheme = true) {
-        PennyPalApp()
+        // PennyPalApp(preferenceRepository)
     }
 }

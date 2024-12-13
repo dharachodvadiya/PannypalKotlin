@@ -69,6 +69,7 @@ object Util {
 
 
     const val PREF_BALANCE_VIEW = "overview_balance_view"
+    const val PREF_NEW_INSTALL = "new_install"
 
 
     const val REQUEST_CODE_GOOGLE_SIGN_IN = 101

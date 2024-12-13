@@ -19,6 +19,7 @@ fun handleException(e: Throwable): AppError {
 }
 
 object ErrorMessage {
+    const val USER_NAME_EMPTY = "Enter Name"
     const val MERCHANT_NAME_EMPTY = "Enter Merchant Name"
     const val AMOUNT_EMPTY = "Enter Amount"
     const val AMOUNT_PAYMENT_TYPE = "Enter Payment Type"

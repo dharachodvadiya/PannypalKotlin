@@ -12,7 +12,9 @@ interface UserRepository : BaseRepository<User> {
 
     suspend fun updatePayment(paymentId: Long): Int
 
-    suspend fun updateCurrency(currency : String, currencyCountryCode : String): Int
+    suspend fun updateCurrency(currency: String, currencyCountryCode: String): Int
+
+    suspend fun updateName(name: String): Int
 
     suspend fun updateLastSyncTime(lastSyncDateInMilli: Long): Int
 
