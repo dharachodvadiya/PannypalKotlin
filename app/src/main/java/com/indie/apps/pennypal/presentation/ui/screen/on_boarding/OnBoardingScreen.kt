@@ -9,21 +9,33 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomProgressDialog
+import com.indie.apps.pennypal.presentation.ui.component.showToast
 import com.indie.apps.pennypal.presentation.ui.navigation.OnBoardingPage
+import com.indie.apps.pennypal.presentation.ui.screen.AuthViewModel
+import com.indie.apps.pennypal.presentation.ui.screen.SignInLauncher
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
+import com.indie.apps.pennypal.util.AuthProcess
+import com.indie.apps.pennypal.util.SyncEvent
 
+@SuppressLint("StateFlowValueCalledInComposition", "RememberReturnType")
 @Composable
 fun OnBoardingScreen(
     viewModel: OnBoardingViewModel = hiltViewModel(),
+    authViewModel: AuthViewModel = hiltViewModel(),
     countryCode: String?,
     onCurrencyChange: () -> Unit,
     onBoardingComplete: () -> Unit,
@@ -32,16 +44,69 @@ fun OnBoardingScreen(
     val currentPageState by viewModel.currentPageState.collectAsStateWithLifecycle()
     val currencyText by viewModel.currencyText.collectAsStateWithLifecycle()
     val nameState by viewModel.nameState.collectAsStateWithLifecycle()
+    val isSignInProcess = remember {
+        mutableStateOf(false)
+    }
 
     LaunchedEffect(countryCode) {
         viewModel.setCountryCode(countryCode ?: viewModel.getDefaultCurrencyCode())
     }
 
+    val processingState by authViewModel.processingState.collectAsStateWithLifecycle()
+
+    when (processingState) {
+        AuthProcess.BACK_UP -> CustomProgressDialog(R.string.backup_Data)
+        AuthProcess.RESTORE -> CustomProgressDialog(R.string.restore_Data)
+        AuthProcess.NONE -> {}
+    }
+
+    if (isSignInProcess.value) {
+        CustomProgressDialog(R.string.sign_in)
+    }
+
+    val restoreSuccessMessage = stringResource(id = R.string.restore_success)
+    val loginSuccessMessage = stringResource(id = R.string.signin_success)
+
+    val context = LocalContext.current
+    SignInLauncher(authViewModel,
+        onLoginSuccess = {
+            authViewModel.isBackupAvailable { isBackUpAvailable ->
+
+                context.showToast(loginSuccessMessage)
+                isSignInProcess.value = false
+                viewModel.onContinueClick(currentPageState,
+                    isBackUpAvailable = isBackUpAvailable,
+                    onBoardingComplete = {
+                        onBoardingComplete()
+                    })
+            }
+
+        },
+        onRestoreSuccess = {
+            context.showToast(restoreSuccessMessage)
+            viewModel.onContinueClick(currentPageState,
+                onBoardingComplete = {
+                    onBoardingComplete()
+                })
+        },
+        onLoginFail = { isSignInProcess.value = false })
+
     OnBoardingScreenStart(
         onBoardingPage = currentPageState,
         onClick = {
-            viewModel.onContinueClick(it) {
-                onBoardingComplete()
+            if (viewModel.isLoginClick(it)) {
+                isSignInProcess.value = true
+                authViewModel.onEvent(
+                    mainEvent = SyncEvent.SignInGoogle
+                )
+            } else if (viewModel.isRestoreClick(it)) {
+                authViewModel.onEvent(
+                    mainEvent = SyncEvent.Restore
+                )
+            } else {
+                viewModel.onContinueClick(it, onBoardingComplete = {
+                    onBoardingComplete()
+                })
             }
         },
         introData = viewModel.introDataList,

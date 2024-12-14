@@ -222,7 +222,7 @@ fun OnBoardingRestorePage(
 ) {
     OnBoardingPage(
         onClick = onClick,
-        buttonText = R.string.save,
+        buttonText = R.string.restore_Data,
         content = {
         },
         isBackEnable = false,

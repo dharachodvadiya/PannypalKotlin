@@ -59,7 +59,7 @@ class BackupRepositoryImpl @Inject constructor(
 
                 }
 
-            } catch (e : Exception) {
+            } catch (e: Exception) {
                 throw (e)
             }
         }
@@ -89,6 +89,21 @@ class BackupRepositoryImpl @Inject constructor(
             }
         } catch (e: IOException) {
             throw (e)
+        }
+    }
+
+    override suspend fun isBackupAvailable(): Boolean {
+        try {
+            val drive = authRepository.getGoogleDrive()
+            if (drive != null) {
+
+                val parentFile = getOrCreateBackupFolder(drive)
+                val fileList = getAllBackupFiles(drive, parentFile.id)
+                return fileList.files.isNotEmpty()
+            }
+            return false
+        } catch (e: IOException) {
+            return false
         }
     }
 

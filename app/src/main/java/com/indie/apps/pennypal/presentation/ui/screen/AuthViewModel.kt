@@ -14,6 +14,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,6 +26,15 @@ class AuthViewModel @Inject constructor(
     val syncEffect = MutableSharedFlow<SyncEffect?>(replay = 0)
     val syncCallBackEvent = MutableSharedFlow<SyncCallBackEvent?>(replay = 0)
     val processingState = MutableStateFlow(AuthProcess.NONE)
+
+    fun isBackupAvailable(callBack: (Boolean) -> Unit) {
+        viewModelScope.launch((Dispatchers.IO)) {
+            val isAvailable = backupRepository.isBackupAvailable()
+            withContext(Dispatchers.Main) {
+                callBack(isAvailable)
+            }
+        }
+    }
 
     fun onEvent(
         mainEvent: SyncEvent,
@@ -51,10 +61,18 @@ class AuthViewModel @Inject constructor(
 
     private suspend fun handleSignInGoogle() {
         println("aaaaa handleSignInGoogle")
-        if (!authRepository.isSignedIn() && !isInProcess) {
-            isInProcess = true
-            val getGoogleSignIn = authRepository.signInGoogle()
-            syncEffect.emit(SyncEffect.SignIn(getGoogleSignIn))
+        if (!isInProcess) {
+            if (!authRepository.isSignedIn()) {
+                isInProcess = true
+                val getGoogleSignIn = authRepository.signInGoogle()
+                syncEffect.emit(SyncEffect.SignIn(getGoogleSignIn))
+            } else {
+                syncCallBackEvent.emit(
+                    SyncCallBackEvent.OnLoginSuccess(
+                        authRepository.getUserInfo()
+                    )
+                )
+            }
         }
     }
 

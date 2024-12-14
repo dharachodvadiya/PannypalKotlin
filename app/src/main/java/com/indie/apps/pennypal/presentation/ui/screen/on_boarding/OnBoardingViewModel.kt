@@ -14,6 +14,10 @@ import com.indie.apps.pennypal.util.ErrorMessage
 import com.indie.apps.pennypal.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,6 +28,15 @@ class OnBoardingViewModel @Inject constructor(
     private val updateUserNameUseCase: UpdateUserNameUseCase,
     private val updateUserCurrencyDataUseCase: UpdateUserCurrencyDataUseCase,
 ) : ViewModel() {
+
+    val userData = userRepository.getUser()
+        .onEach { user ->
+            if (user != null) {
+                if (currencyCountryCode.value.isEmpty()) setCountryCode(user.currencyCountryCode)
+                updateNameText(user.name)
+            }
+        }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), null)
 
     val currentPageState = MutableStateFlow(OnBoardingPage.BEGIN)
     val currencyCountryCode = MutableStateFlow("")
@@ -37,18 +50,23 @@ class OnBoardingViewModel @Inject constructor(
     )
 
     init {
-        viewModelScope.launch {
+        /*viewModelScope.launch {
             userRepository.getUser()
                 .collect { user ->
-
+                    println("aaaaa $user")
                     if (currencyCountryCode.value.isEmpty()) setCountryCode(user.currencyCountryCode)
                     updateNameText(user.name)
 
                 }
-        }
+        }*/
+        viewModelScope.launch { userData.collect() }
     }
 
-    fun onContinueClick(currentPage: OnBoardingPage, onBoardingComplete: () -> Unit) {
+    fun onContinueClick(
+        currentPage: OnBoardingPage,
+        onBoardingComplete: () -> Unit,
+        isBackUpAvailable: Boolean = false
+    ) {
         when (currentPage) {
             OnBoardingPage.BEGIN -> currentPageState.value = OnBoardingPage.INTRO
             OnBoardingPage.INTRO -> currentPageState.value = OnBoardingPage.SET_NAME
@@ -60,10 +78,15 @@ class OnBoardingViewModel @Inject constructor(
                 saveCurrency { currentPageState.value = OnBoardingPage.WELCOME }
             }
 
-            OnBoardingPage.WELCOME -> currentPageState.value = OnBoardingPage.RESTORE
+            OnBoardingPage.WELCOME -> if (isBackUpAvailable) currentPageState.value =
+                OnBoardingPage.RESTORE else onBoardingComplete()
+
             OnBoardingPage.RESTORE -> onBoardingComplete()
         }
     }
+
+    fun isLoginClick(currentPage: OnBoardingPage) = currentPage == OnBoardingPage.WELCOME
+    fun isRestoreClick(currentPage: OnBoardingPage) = currentPage == OnBoardingPage.RESTORE
 
     fun onBackClick(currentPage: OnBoardingPage) {
         when (currentPage) {
