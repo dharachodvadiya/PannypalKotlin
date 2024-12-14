@@ -177,4 +177,7 @@
     <string name="name">Name</string>
     <string name="intro_currency_title">In which currency you want to add expenses?</string>
     <string name="intro_name_title">What should we call you?</string>
+    <string name="backup_success">Successfully backed up data</string>
+    <string name="signin_success">Successfully SignIn</string>
+    <string name="restore_success">Successfully Restored Data</string>
 </resources>

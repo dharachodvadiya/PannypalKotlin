@@ -59,8 +59,8 @@ class BackupRepositoryImpl @Inject constructor(
 
                 }
 
-            } catch (_: Exception) {
-
+            } catch (e : Exception) {
+                throw (e)
             }
         }
     }
@@ -88,7 +88,7 @@ class BackupRepositoryImpl @Inject constructor(
                 }
             }
         } catch (e: IOException) {
-            e.printStackTrace()
+            throw (e)
         }
     }
 

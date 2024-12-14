@@ -1,21 +1,15 @@
 package com.indie.apps.pennypal.presentation.ui.screen.setting
 
-import android.content.Intent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.module.MoreItem
 import com.indie.apps.pennypal.domain.usecase.GetGeneralSettingUseCase
 import com.indie.apps.pennypal.repository.AuthRepository
-import com.indie.apps.pennypal.repository.BackupRepository
 import com.indie.apps.pennypal.repository.UserRepository
-import com.indie.apps.pennypal.util.AuthProcess
 import com.indie.apps.pennypal.util.SettingEffect
 import com.indie.apps.pennypal.util.SettingOption
-import com.indie.apps.pennypal.util.SyncEffect
-import com.indie.apps.pennypal.util.SyncEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -29,19 +23,19 @@ class SettingViewModel @Inject constructor(
     private val getGeneralSettingUseCase: GetGeneralSettingUseCase,
     private val userRepository: UserRepository,
     private val authRepository: AuthRepository,
-    private val backupRepository: BackupRepository
+   // private val backupRepository: BackupRepository
 ) : ViewModel() {
 
-    private var isInProcess = false
+    //private var isInProcess = false
 
     var userState = userRepository.getUser()
         .map { it.copy(email = if (authRepository.isSignedIn()) authRepository.getUserInfo()?.email else null) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), null)
 
-    val syncEffect = MutableSharedFlow<SyncEffect?>(replay = 0)
+    //val syncEffect = MutableSharedFlow<SyncEffect?>(replay = 0)
     val settingEffect = MutableSharedFlow<SettingEffect>(replay = 0)
 
-    val processingState = MutableStateFlow(AuthProcess.NONE)
+    //val processingState = MutableStateFlow(AuthProcess.NONE)
 
     var generalList = getGeneralSettingUseCase.loadData()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
@@ -73,7 +67,10 @@ class SettingViewModel @Inject constructor(
                     SettingOption.RATE -> SettingEffect.Rate
                     SettingOption.PRIVACY_POLICY -> SettingEffect.PrivacyPolicy
                     SettingOption.CONTACT_US -> SettingEffect.ContactUs
-                    SettingOption.BACKUP -> SettingEffect.Backup
+                    SettingOption.BACKUP -> {
+                        updateSyncTime()
+                        SettingEffect.Backup
+                    }
                     SettingOption.RESTORE -> SettingEffect.Restore
                     SettingOption.GOOGLE_SIGN_IN -> SettingEffect.GoogleSignIn
                 }
@@ -82,7 +79,13 @@ class SettingViewModel @Inject constructor(
 
     }
 
-    fun onEvent(mainEvent: SyncEvent) {
+    fun updateSyncTime(){
+        viewModelScope.launch {
+            userRepository.updateLastSyncTime(System.currentTimeMillis())
+        }
+    }
+
+   /* fun onEvent(mainEvent: SyncEvent) {
         viewModelScope.launch((Dispatchers.IO)) {
             when (mainEvent) {
                 SyncEvent.SignInGoogle -> handleSignInGoogle()
@@ -95,18 +98,18 @@ class SettingViewModel @Inject constructor(
                 }
             }
         }
-    }
+    }*/
 
 
-    private suspend fun handleSignInGoogle() {
+    /*private suspend fun handleSignInGoogle() {
         if (!authRepository.isSignedIn() && !isInProcess) {
             isInProcess = true
             val getGoogleSignIn = authRepository.signInGoogle()
             syncEffect.emit(SyncEffect.SignIn(getGoogleSignIn))
         }
-    }
+    }*/
 
-    private suspend fun handleSignInResult(intent: Intent) {
+   /* private suspend fun handleSignInResult(intent: Intent) {
         isInProcess = false
         val getResult = authRepository.getSignInResult(intent)
         if (getResult != null) {
@@ -122,16 +125,16 @@ class SettingViewModel @Inject constructor(
             processingState.value = AuthProcess.NONE
         }
 
-    }
+    }*/
 
-    private suspend fun handleAuthorizeResult(intent: Intent) {
+   /* private suspend fun handleAuthorizeResult(intent: Intent) {
         isInProcess = false
         val result = authRepository.authorizeGoogleDriveResult(intent)
 
         if (result != null) continueAuthProcess() else processingState.value = AuthProcess.NONE
-    }
+    }*/
 
-    private suspend fun handleBackup() {
+    /*private suspend fun handleBackup() {
         if (!isInProcess) {
             isInProcess = true
             userRepository.updateLastSyncTime(System.currentTimeMillis())
@@ -145,9 +148,9 @@ class SettingViewModel @Inject constructor(
                 onEvent(SyncEvent.SignInGoogle)
             }
         }
-    }
+    }*/
 
-    private suspend fun handleRestore() {
+    /*private suspend fun handleRestore() {
         if (!isInProcess) {
             isInProcess = true
             processingState.value = AuthProcess.RESTORE
@@ -161,17 +164,17 @@ class SettingViewModel @Inject constructor(
                 onEvent(SyncEvent.SignInGoogle)
             }
         }
-    }
+    }*/
 
-    private fun continueAuthProcess() {
+   /* private fun continueAuthProcess() {
         when (processingState.value) {
             AuthProcess.BACK_UP -> onEvent(SyncEvent.Backup)
             AuthProcess.RESTORE -> onEvent(SyncEvent.Restore)
             AuthProcess.NONE -> {}
         }
-    }
+    }*/
 
-    private fun refreshState() {
+    fun refreshState() {
         userState = userRepository.getUser()
             .map { it.copy(email = if (authRepository.isSignedIn()) authRepository.getUserInfo()?.email else null) }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), null)

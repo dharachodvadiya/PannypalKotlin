@@ -1,8 +1,5 @@
 package com.indie.apps.pennypal.presentation.ui.screen.setting
 
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.IntentSenderRequest
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -27,16 +25,19 @@ import com.indie.apps.pennypal.data.database.entity.User
 import com.indie.apps.pennypal.data.module.MoreItem
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomProgressDialog
+import com.indie.apps.pennypal.presentation.ui.component.showToast
+import com.indie.apps.pennypal.presentation.ui.screen.AuthViewModel
+import com.indie.apps.pennypal.presentation.ui.screen.SignInLauncher
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.util.AuthProcess
 import com.indie.apps.pennypal.util.SettingEffect
-import com.indie.apps.pennypal.util.SyncEffect
 import com.indie.apps.pennypal.util.SyncEvent
 
 @Composable
 fun SettingScreen(
     settingViewModel: SettingViewModel = hiltViewModel(),
+    authViewModel: AuthViewModel = hiltViewModel(),
     onCurrencyChange: (String) -> Unit,
     onDefaultPaymentChange: (Long) -> Unit,
     onBalanceViewChange: () -> Unit,
@@ -48,8 +49,12 @@ fun SettingScreen(
     val backupRestoreList by settingViewModel.backupRestoreList.collectAsStateWithLifecycle()
     val userState by settingViewModel.userState.collectAsStateWithLifecycle()
 
+    val backupSuccessMessage = stringResource(id = R.string.backup_success)
+    val restoreSuccessMessage = stringResource(id = R.string.restore_success)
+    val loginSuccessMessage = stringResource(id = R.string.signin_success)
 
-    val processingState by settingViewModel.processingState.collectAsStateWithLifecycle()
+
+    val processingState by authViewModel.processingState.collectAsStateWithLifecycle()
 
     when (processingState) {
         AuthProcess.BACK_UP -> CustomProgressDialog(R.string.backup_Data)
@@ -59,53 +64,17 @@ fun SettingScreen(
 
     val context = LocalContext.current
 
-    val activityResultLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartIntentSenderForResult(),
-        onResult = {
-            settingViewModel.onEvent(
-                SyncEvent.OnSignInResult(
-                    it.data ?: return@rememberLauncherForActivityResult
-                )
-            )
-        }
-    )
-
-    val authorizeLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartIntentSenderForResult(),
-        onResult = {
-            settingViewModel.onEvent(
-                SyncEvent.OnAuthorizeResult(
-                    it.data ?: return@rememberLauncherForActivityResult
-                )
-            )
-        }
-    )
-
-    LaunchedEffect(key1 = settingViewModel.syncEffect) {
-        settingViewModel.syncEffect.collect { effect ->
-            when (effect) {
-                is SyncEffect.SignIn -> {
-                    /*effect.intent.setRequestCode(Util.REQUEST_CODE_GOOGLE_SIGN_IN)
-                    activityResultLauncher.launch(
-                        effect.intent
-                    )*/
-                    activityResultLauncher.launch(
-                        IntentSenderRequest.Builder(effect.intentSender)
-                            .build()
-                    )
-                }
-
-                is SyncEffect.Authorize -> {
-                    authorizeLauncher.launch(
-                        IntentSenderRequest.Builder(effect.intentSender)
-                            .build()
-                    )
-                }
-
-                else -> Unit
-            }
-        }
-    }
+    SignInLauncher(authViewModel,
+        onLoginSuccess = {
+            context.showToast(loginSuccessMessage)
+        },
+        onRestoreSuccess = {
+            settingViewModel.refreshState()
+            context.showToast(restoreSuccessMessage)
+        },
+        onBackUpSuccess = {
+            context.showToast(backupSuccessMessage)
+        })
 
     LaunchedEffect(key1 = settingViewModel.settingEffect) {
         settingViewModel.settingEffect.collect { settingEffect ->
@@ -120,9 +89,17 @@ fun SettingScreen(
                 SettingEffect.PrivacyPolicy -> onPrivacyPolicyClick(context)
                 SettingEffect.ContactUs -> onContactUsClick(context)
 
-                SettingEffect.Backup -> settingViewModel.onEvent(SyncEvent.Backup)
-                SettingEffect.Restore -> settingViewModel.onEvent(SyncEvent.Restore)
-                SettingEffect.GoogleSignIn -> settingViewModel.onEvent(SyncEvent.SignInGoogle)
+                SettingEffect.Backup -> authViewModel.onEvent(
+                    mainEvent = SyncEvent.Backup,
+                )
+
+                SettingEffect.GoogleSignIn -> authViewModel.onEvent(
+                    mainEvent = SyncEvent.SignInGoogle,
+                )
+
+                SettingEffect.Restore -> authViewModel.onEvent(
+                    mainEvent = SyncEvent.Restore,
+                )
             }
         }
     }
@@ -137,10 +114,15 @@ fun SettingScreen(
             )
         },
         onBackup = {
-            settingViewModel.onEvent(SyncEvent.Backup)
+            settingViewModel.updateSyncTime()
+            authViewModel.onEvent(
+                mainEvent = SyncEvent.Backup,
+            )
         },
         onProfileClick = {
-            settingViewModel.onEvent(SyncEvent.SignInGoogle)
+            authViewModel.onEvent(
+                mainEvent = SyncEvent.SignInGoogle,
+            )
         },
         bottomPadding = bottomPadding,
         user = userState
