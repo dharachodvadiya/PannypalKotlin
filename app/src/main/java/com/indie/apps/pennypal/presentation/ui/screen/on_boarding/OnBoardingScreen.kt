@@ -109,6 +109,14 @@ fun OnBoardingScreen(
                 })
             }
         },
+        onEndClick = {
+            viewModel.onContinueClick(
+                currentPageState, onBoardingComplete = {
+                    onBoardingComplete()
+                },
+                isBackUpAvailable = false
+            )
+        },
         introData = viewModel.introDataList,
         modifier = modifier,
         onBackClick = viewModel::onBackClick,
@@ -128,6 +136,7 @@ fun OnBoardingScreenStart(
     onClick: (OnBoardingPage) -> Unit,
     onBackClick: (OnBoardingPage) -> Unit,
     onCurrencySelect: () -> Unit,
+    onEndClick: () -> Unit,
     introData: List<IntroData>,
     currencyText: String,
     nameState: TextFieldState,
@@ -170,9 +179,14 @@ fun OnBoardingScreenStart(
 
                 OnBoardingPage.WELCOME -> OnBoardingWelcomePage(
                     onClick = { onClick(onBoardingPage) },
-                    onBackClick = { onBackClick(onBoardingPage) })
+                    onBackClick = { onBackClick(onBoardingPage) },
+                    onGuestLoginClick = onEndClick
+                )
 
-                OnBoardingPage.RESTORE -> OnBoardingRestorePage(onClick = { onClick(onBoardingPage) })
+                OnBoardingPage.RESTORE -> OnBoardingRestorePage(
+                    onClick = { onClick(onBoardingPage) },
+                    onEndClick = onEndClick
+                )
             }
         }
     }

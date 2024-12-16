@@ -52,7 +52,8 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
     val merchantSaveToast = stringResource(id = R.string.merchant_save_success_toast)
     val merchantEditToast = stringResource(id = R.string.merchant_edit_success_message)
 
-    val isFirstLaunch = preferenceRepository.getBoolean(Util.PREF_NEW_INSTALL, true)
+    // val isFirstLaunch = preferenceRepository.getBoolean(Util.PREF_NEW_INSTALL, true)
+    val isFirstLaunch = true
     PennyPalTheme(darkTheme = true) {
         val navController = rememberNavController()
         val currentBackStack by navController.currentBackStackEntryAsState()

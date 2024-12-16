@@ -8,6 +8,7 @@ import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -165,6 +166,7 @@ fun BottomSaveButton(
     @StringRes textId: Int = R.string.save,
     onClick: () -> Unit,
     enabled: Boolean = true,
+    @DrawableRes icon: Int? = null,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     PrimaryButton(
@@ -176,13 +178,26 @@ fun BottomSaveButton(
         onClick = onClick,
         enabled = enabled
     ) {
-        CustomText(
-            text = stringResource(id = textId),
-            style = MyAppTheme.typography.Bold49_5,
-            color = MyAppTheme.colors.black,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth()
-        )
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            if (icon != null)
+                Image(
+                    painter = painterResource(id = icon),
+                    contentDescription = "icon",
+                    modifier = Modifier.size(25.dp)
+                )
+
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.padding)))
+            CustomText(
+                text = stringResource(id = textId),
+                style = MyAppTheme.typography.Bold49_5,
+                color = MyAppTheme.colors.black,
+                textAlign = TextAlign.Center,
+            )
+        }
+
     }
 }
 

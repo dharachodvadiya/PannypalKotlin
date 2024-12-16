@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.screen.on_boarding
 
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,9 +10,11 @@ import com.indie.apps.pennypal.domain.usecase.UpdateUserCurrencyDataUseCase
 import com.indie.apps.pennypal.domain.usecase.UpdateUserNameUseCase
 import com.indie.apps.pennypal.presentation.ui.navigation.OnBoardingPage
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
+import com.indie.apps.pennypal.repository.PreferenceRepository
 import com.indie.apps.pennypal.repository.UserRepository
 import com.indie.apps.pennypal.util.ErrorMessage
 import com.indie.apps.pennypal.util.Resource
+import com.indie.apps.pennypal.util.Util
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -27,6 +30,7 @@ class OnBoardingViewModel @Inject constructor(
     private val countryRepository: CountryRepository,
     private val updateUserNameUseCase: UpdateUserNameUseCase,
     private val updateUserCurrencyDataUseCase: UpdateUserCurrencyDataUseCase,
+    private val preferenceRepository: PreferenceRepository
 ) : ViewModel() {
 
     val userData = userRepository.getUser()
@@ -44,9 +48,9 @@ class OnBoardingViewModel @Inject constructor(
     val nameState = MutableStateFlow(TextFieldState())
 
     val introDataList = listOf(
-        IntroData(R.string.introTitle1, R.string.introSubTitle1),
-        IntroData(R.string.introTitle2, R.string.introSubTitle2),
-        IntroData(R.string.introTitle3, R.string.introSubTitle3)
+        IntroData(R.string.introTitle1, R.string.introSubTitle1, R.drawable.grow),
+        IntroData(R.string.introTitle2, R.string.introSubTitle2, R.drawable.cross),
+        IntroData(R.string.introTitle3, R.string.introSubTitle3, R.drawable.resource_private)
     )
 
     init {
@@ -75,7 +79,10 @@ class OnBoardingViewModel @Inject constructor(
             }
 
             OnBoardingPage.SET_CURRENCY -> {
-                saveCurrency { currentPageState.value = OnBoardingPage.WELCOME }
+                saveCurrency {
+                    currentPageState.value = OnBoardingPage.WELCOME
+                    preferenceRepository.putBoolean(Util.PREF_NEW_INSTALL, false)
+                }
             }
 
             OnBoardingPage.WELCOME -> if (isBackUpAvailable) currentPageState.value =
@@ -168,5 +175,6 @@ class OnBoardingViewModel @Inject constructor(
 
 data class IntroData(
     @StringRes val title: Int,
-    @StringRes val subTitle: Int
+    @StringRes val subTitle: Int,
+    @DrawableRes val imageId: Int
 )

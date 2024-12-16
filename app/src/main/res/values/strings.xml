@@ -4,7 +4,7 @@
     <string name="merchants">Merchants</string>
     <string name="new_entry">New Transaction</string>
     <string name="balance">Balance</string>
-    <string name="login_with_google">Login With Google</string>
+    <string name="login_with_google">Continue With Google</string>
     <string name="profile">Profile</string>
     <string name="new_item">Add New Transaction</string>
     <string name="received">Received</string>
@@ -180,4 +180,9 @@
     <string name="backup_success">Successfully backed up data</string>
     <string name="signin_success">Successfully SignIn</string>
     <string name="restore_success">Successfully Restored Data</string>
+    <string name="welcome_title">You\'re All Set!</string>
+    <string name="welcome_subtitle">Congratulations on starting your journey towards better financial management</string>
+    <string name="start_without_login">Let\'s Start Without Login</string>
+    <string name="begin_title">Organize Your life with PennyPal</string>
+    <string name="begin_subtitle">PennyPal helps you to build new habits based on behavior science</string>
 </resources>
