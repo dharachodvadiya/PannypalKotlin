@@ -2,11 +2,11 @@ package com.indie.apps.pennypal.presentation.ui.screen.new_item
 
 import android.annotation.SuppressLint
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -19,7 +19,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -37,7 +36,6 @@ import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrus
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomDatePickerDialog
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomTimePickerDialog
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
-import com.indie.apps.pennypal.presentation.ui.state.rememberImeState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.util.Resource
@@ -131,14 +129,14 @@ fun NewItemScreen(
                 )
             }) { padding ->
 
-                val imeState by rememberImeState {}
+                //val imeState by rememberImeState {}
                 val scrollState = rememberScrollState()
 
-                LaunchedEffect(key1 = imeState) {
-                    if (imeState && haveFocus) {
+               /* LaunchedEffect(key1 = haveFocus) {
+                    if (haveFocus) {
                         scrollState.animateScrollTo(scrollState.maxValue, tween(300))
                     }
-                }
+                }*/
 
                 Column(
                     modifier = modifier
@@ -146,10 +144,11 @@ fun NewItemScreen(
                         .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
                         .padding(padding)
                         .padding(horizontal = dimensionResource(id = R.dimen.padding))
+                        .imePadding()
                         .verticalScroll(scrollState)
-                        .onFocusEvent {
-                            haveFocus = it.isFocused
-                        }
+                        /*.onFocusEvent {
+                           // haveFocus = it.isFocused
+                        }*/
                 ) {
                     NewEntryTopSelectionButton(
                         received = received,
