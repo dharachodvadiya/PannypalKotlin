@@ -128,7 +128,7 @@ dependencies {
     kspAndroidTest("com.google.dagger:hilt-android-compiler:$hiltVersion")
     androidTestAnnotationProcessor("com.google.dagger:hilt-android-compiler:$hiltVersion")
 
-    val navVersion = "2.8.5"
+    val navVersion = "2.7.7"
     // Testing Navigation
     androidTestImplementation("androidx.navigation:navigation-testing:$navVersion")
 

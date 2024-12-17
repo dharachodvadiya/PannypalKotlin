@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
@@ -42,7 +43,15 @@ fun CustomDatePickerDialog(
                     .roundedCornerBackground(backgroundColor = MyAppTheme.colors.bottomBg)
 
             ) {
-                DatePicker(state = state)
+                val colors = DatePickerDefaults.colors().copy(
+                    containerColor = MyAppTheme.colors.bottomBg,
+                    selectedDayContentColor = MyAppTheme.colors.black
+
+                )
+                DatePicker(
+                    state = state,
+                    colors = colors
+                )
 
                 Row(
                     modifier = Modifier

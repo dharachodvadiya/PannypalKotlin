@@ -137,7 +137,8 @@ private fun MerchantDataTopBarItem(
                     tint = MyAppTheme.colors.black,
                     backGround = bgColor,
                     contentDescription = "person",
-                    imageVectorSize = 27.dp
+                    imageVectorSize = 27.dp,
+                    modifier = Modifier.size(40.dp)
                 )
             }
         },
