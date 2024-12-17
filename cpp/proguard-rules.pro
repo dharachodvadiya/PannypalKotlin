@@ -19,3 +19,17 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+-keep class com.indie.apps.cpp.data.CountryDb { *; }
+-keep class com.indie.apps.cpp.data.CountryDb$Companion { *; }
+
+# Prevent removal of TypeToken constructor
+-keepclassmembers class com.google.gson.reflect.TypeToken {
+    <init>(...);
+}
+
+# Keep the Country class and its fields intact
+-keep class com.indie.apps.cpp.data.model.Country { *; }
+-keep class com.indie.apps.cpp.data.repository.CountryRepository { *; }
+-keep class com.indie.apps.cpp.data.repository.CountryRepositoryImpl { *; }
+-keep class com.indie.apps.cpp.data.utils.GetCountryFlagKt { *; }
+-keep class com.indie.apps.cpp.data.utils.GetNumberHintKt { *; }

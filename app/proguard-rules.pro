@@ -50,5 +50,82 @@
 -keep,allowobfuscation,allowshrinking class com.google.gson.reflect.TypeToken
 -keep,allowobfuscation,allowshrinking class * extends com.google.gson.reflect.TypeToken
 
+# Google Play Services Authentication
+-keep class com.google.android.gms.auth.** { *; }
+-keep class com.google.android.gms.common.** { *; }
+-keep class com.google.android.gms.tasks.** { *; }
+-keep class com.google.android.gms.auth.api.signin.** { *; }
+-keep class com.google.android.gms.auth.api.identity.** { *; }
+
+# Firebase Authentication
+-keep class com.google.firebase.auth.** { *; }
+-keep class com.google.firebase.auth.internal.** { *; }
+-keep class com.google.firebase.auth.api.** { *; }
+
+# Google Drive API
+-keep class com.google.api.services.drive.** { *; }
+-keep class com.google.api.client.googleapis.json.** { *; }
+-keep class com.google.api.client.googleapis.auth.** { *; }
+-keep class com.google.api.client.auth.oauth2.** { *; }
+-keep class com.google.api.client.json.** { *; }
+-keep class com.google.api.client.util.** { *; }
+-keep class com.google.api.client.http.** { *; }
+-keep class com.google.api.client.googleapis.** { *; }
+-keep class com.google.api.client.auth.** { *; }
+-keep class com.google.api.client.googleapis.json.GoogleJsonError { *; }
+
+# Google API Client
+-keep class com.google.api.client.** { *; }
+-keep class com.google.api.client.util.** { *; }
+-keep class com.google.api.client.json.** { *; }
+-keep class com.google.api.client.auth.** { *; }
+-keepclassmembers class * {
+    @com.google.api.client.util.Key <fields>;
+}
+-keepclassmembers class * {
+    @com.google.api.client.util.Key <methods>;
+}
+
+# Google OAuth Client
+-keep class com.google.oauth.client.** { *; }
+-keep class com.google.oauth.client.auth.** { *; }
+-keep class com.google.oauth.client.http.** { *; }
+-keep class com.google.oauth.client.util.** { *; }
+
+# Google Auth Library
+-keep class com.google.auth.** { *; }
+-keep class com.google.auth.oauth2.** { *; }
+-keep class com.google.auth.http.** { *; }
+-keep class com.google.auth.transport.** { *; }
+-keep class com.google.auth.Credentials { *; }
+-keep class com.google.auth.oauth2.** { *; }
+
+# Accompanist Pager
+-keep class com.google.accompanist.pager.** { *; }
+-keep class com.google.accompanist.pager.indicators.** { *; }
+
+-dontwarn com.sun.net.httpserver.Headers
+-dontwarn com.sun.net.httpserver.HttpContext
+-dontwarn com.sun.net.httpserver.HttpExchange
+-dontwarn com.sun.net.httpserver.HttpHandler
+-dontwarn com.sun.net.httpserver.HttpServer
+-dontwarn java.awt.Desktop$Action
+-dontwarn java.awt.Desktop
+
+-dontwarn com.indie.apps.contacts.common.Result$Error
+-dontwarn com.indie.apps.contacts.common.Result$Loading
+-dontwarn com.indie.apps.contacts.common.Result$Success
+-dontwarn com.indie.apps.contacts.common.Result
+-dontwarn com.indie.apps.contacts.data.model.ContactNumInfo
+-dontwarn com.indie.apps.contacts.data.provider.ContactsProvider
+-dontwarn com.indie.apps.contacts.data.provider.impl.ContactsProviderImpl
+-dontwarn com.indie.apps.contacts.data.repo.ContactsRepository
+-dontwarn com.indie.apps.contacts.data.repo.impl.ContactsRepositoryImpl
+-dontwarn com.indie.apps.cpp.data.CountryDb$Companion
+-dontwarn com.indie.apps.cpp.data.CountryDb
+-dontwarn com.indie.apps.cpp.data.repository.CountryRepository
+-dontwarn com.indie.apps.cpp.data.repository.CountryRepositoryImpl
+
+
 
 ##---------------End: proguard configuration for Gson  ----------

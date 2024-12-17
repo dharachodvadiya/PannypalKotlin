@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.indie.apps.contacts"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 26
@@ -15,12 +15,12 @@ android {
 
     buildTypes {
         debug {
-            isMinifyEnabled = true
+            /*isMinifyEnabled = true
             //isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
-            )
+            )*/
         }
         release {
             isMinifyEnabled = true
@@ -41,7 +41,7 @@ android {
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.13.1")
+    implementation("androidx.core:core-ktx:1.15.0")
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("com.google.android.material:material:1.12.0")
     implementation("com.google.accompanist:accompanist-permissions:0.34.0")
