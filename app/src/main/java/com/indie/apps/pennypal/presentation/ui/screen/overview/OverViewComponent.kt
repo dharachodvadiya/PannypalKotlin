@@ -729,6 +729,7 @@ fun OverviewMerchantData(
     )
 }
 
+@SuppressLint("UnrememberedMutableInteractionSource")
 @Composable
 fun OverviewAnalysisData(
     currentPeriod: String,
@@ -779,7 +780,7 @@ fun OverviewAnalysisData(
     )
 }
 
-@SuppressLint("SimpleDateFormat")
+@SuppressLint("SimpleDateFormat", "UnrememberedMutableInteractionSource")
 @Composable
 fun OverviewBudgetData(
     budgetWithSpentAndCategoryIdList: BudgetWithSpentAndCategoryIdList?,

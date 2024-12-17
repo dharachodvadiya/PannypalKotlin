@@ -19,7 +19,7 @@ class DeletePaymentUseCase @Inject constructor(
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) {
 
-    suspend fun deleteData(deleteId: Long): Flow<Resource<Int>> {
+    fun deleteData(deleteId: Long): Flow<Resource<Int>> {
         return flow {
             try {
                 emit(Resource.Loading())

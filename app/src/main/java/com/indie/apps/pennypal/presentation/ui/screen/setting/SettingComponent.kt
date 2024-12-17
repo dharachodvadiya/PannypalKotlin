@@ -18,7 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.NavigateNext
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -142,7 +142,7 @@ fun SettingItem(
     }
 
     if (showDivider)
-        Divider(color = MyAppTheme.colors.gray3.copy(alpha = 0.5f))
+        HorizontalDivider(color = MyAppTheme.colors.gray3.copy(alpha = 0.5f))
 }
 
 fun onShareClick(context: Context) {
@@ -287,7 +287,7 @@ fun SettingProfileItem(
                 )
             }
         }
-        Divider()
+        HorizontalDivider()
     }
 
 

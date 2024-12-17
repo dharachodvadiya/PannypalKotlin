@@ -15,7 +15,7 @@ class DeleteMultipleMerchantUseCase @Inject constructor(
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) {
 
-    suspend fun deleteData(ids: List<Long>): Flow<Resource<Int>> {
+    fun deleteData(ids: List<Long>): Flow<Resource<Int>> {
         return flow {
 
             try {

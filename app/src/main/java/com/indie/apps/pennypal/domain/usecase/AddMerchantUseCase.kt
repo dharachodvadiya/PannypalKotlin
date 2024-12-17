@@ -15,7 +15,7 @@ class AddMerchantUseCase @Inject constructor(
     private val merchantRepository: MerchantRepository,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) {
-    suspend fun addMerchant(merchant: Merchant): Flow<Resource<Long>> {
+    fun addMerchant(merchant: Merchant): Flow<Resource<Long>> {
         return flow {
             emit(Resource.Loading())
             try {

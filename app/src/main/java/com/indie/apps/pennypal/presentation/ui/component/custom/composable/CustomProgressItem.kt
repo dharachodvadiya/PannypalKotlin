@@ -108,13 +108,13 @@ fun CustomProgressItem(
 
                 // Display progress bar
                 LinearProgressIndicator(
-                    progress = progress,
+                    progress = { progress },
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(5.dp))
                         .height(10.dp),
                     color = if (remainAmount < 0) MyAppTheme.colors.redBg else MyAppTheme.colors.lightBlue1,
-                    trackColor = MyAppTheme.colors.gray1.copy(0.2f)
+                    trackColor = MyAppTheme.colors.gray1.copy(0.2f),
                 )
                 if (remainAmount < 0) {
 
@@ -240,13 +240,13 @@ fun CustomProgressItemWithDate(
 
                 // Display progress bar
                 LinearProgressIndicator(
-                    progress = progress,
+                    progress = { progress },
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(5.dp))
                         .height(10.dp),
                     color = if (remainAmount < 0) MyAppTheme.colors.redBg else MyAppTheme.colors.lightBlue1,
-                    trackColor = MyAppTheme.colors.gray1.copy(0.2f)
+                    trackColor = MyAppTheme.colors.gray1.copy(0.2f),
                 )
                 if (remainAmount < 0) {
 

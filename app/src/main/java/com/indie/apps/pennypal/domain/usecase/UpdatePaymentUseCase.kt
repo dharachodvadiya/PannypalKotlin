@@ -15,7 +15,7 @@ class UpdatePaymentUseCase @Inject constructor(
     private val paymentRepository: PaymentRepository,
     @IoDispatcher private val dispatcher: CoroutineDispatcher) {
 
-    suspend fun updateData(payment: Payment) : Flow<Resource<Int>>{
+    fun updateData(payment: Payment) : Flow<Resource<Int>>{
         return flow{
 
             try {

@@ -39,7 +39,7 @@ class AuthViewModel @Inject constructor(
     fun onEvent(
         mainEvent: SyncEvent,
     ) {
-        println("aaaaa onEvent $mainEvent")
+        //println("aaaaa onEvent $mainEvent")
         viewModelScope.launch((Dispatchers.IO)) {
             when (mainEvent) {
                 SyncEvent.SignInGoogle -> handleSignInGoogle()
@@ -60,7 +60,7 @@ class AuthViewModel @Inject constructor(
     }
 
     private suspend fun handleSignInGoogle() {
-        println("aaaaa handleSignInGoogle")
+        //println("aaaaa handleSignInGoogle")
         if (!isInProcess) {
             if (!authRepository.isSignedIn()) {
                 isInProcess = true
@@ -77,7 +77,7 @@ class AuthViewModel @Inject constructor(
     }
 
     private suspend fun handleSignInResult(intent: Intent) {
-        println("aaaaa handleSignInResult")
+        //println("aaaaa handleSignInResult")
         val getResult = authRepository.getSignInResult(intent)
         if (getResult != null) {
             val authorizeGoogleDrive = authRepository.authorizeGoogleDrive()
@@ -101,7 +101,7 @@ class AuthViewModel @Inject constructor(
     }
 
     private suspend fun handleAuthorizeResult(intent: Intent) {
-        println("aaaaa handleAuthorizeResult")
+        //println("aaaaa handleAuthorizeResult")
         val result = authRepository.authorizeGoogleDriveResult(intent)
 
         if (result != null) {
@@ -125,7 +125,7 @@ class AuthViewModel @Inject constructor(
     }
 
     private suspend fun handleBackup() {
-        println("aaaaa handleBackup")
+        //println("aaaaa handleBackup")
         if (!isInProcess) {
             isInProcess = true
             processingState.value = AuthProcess.BACK_UP
@@ -154,7 +154,7 @@ class AuthViewModel @Inject constructor(
     }
 
     private suspend fun handleRestore() {
-        println("aaaaa handleRestore")
+        //println("aaaaa handleRestore")
         if (!isInProcess) {
             isInProcess = true
             processingState.value = AuthProcess.RESTORE
@@ -181,7 +181,7 @@ class AuthViewModel @Inject constructor(
     }
 
     private fun continueBackUpOrRestoreProcess() {
-        println("aaaaa continueBackUpOrRestoreProcess")
+        //println("aaaaa continueBackUpOrRestoreProcess")
         when (processingState.value) {
             AuthProcess.BACK_UP -> onEvent(SyncEvent.Backup)
             AuthProcess.RESTORE -> onEvent(SyncEvent.Restore)

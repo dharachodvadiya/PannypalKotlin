@@ -15,7 +15,7 @@ class UpdateUserDataUseCase @Inject constructor(
     private val userRepository: UserRepository,
     @IoDispatcher private val dispatcher: CoroutineDispatcher) {
 
-    suspend fun updateData(user: User) : Flow<Resource<Int>>{
+    fun updateData(user: User) : Flow<Resource<Int>>{
         return flow{
 
             try {

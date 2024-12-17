@@ -35,7 +35,7 @@ import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.util.getDateFromMillis
 import java.text.SimpleDateFormat
 
-@SuppressLint("StateFlowValueCalledInComposition")
+@SuppressLint("StateFlowValueCalledInComposition", "SimpleDateFormat")
 @Composable
 fun BudgetFilterScreen(
     viewModel: BudgetFilterViewModel = hiltViewModel(),

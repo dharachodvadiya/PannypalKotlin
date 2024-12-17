@@ -16,7 +16,7 @@ class AddPaymentUseCase @Inject constructor(
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) {
 
-    suspend fun addPayment(payment: Payment): Flow<Resource<Long>> {
+    fun addPayment(payment: Payment): Flow<Resource<Long>> {
         return flow {
             emit(Resource.Loading())
             try {

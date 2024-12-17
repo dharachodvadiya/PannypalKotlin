@@ -15,7 +15,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AutoGraph
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.runtime.Composable
@@ -190,7 +190,7 @@ fun SingleBudgetOverAllAnalysis(
             }
         }
 
-        Divider()
+        HorizontalDivider()
         Row(
             modifier = Modifier
                 .padding(
@@ -347,13 +347,13 @@ private fun CategorySpentListItem(
 
                 // Display progress bar
                 LinearProgressIndicator(
-                    progress = progress,
+                    progress = { progress },
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(2.dp))
                         .height(5.dp),
                     color = getCategoryColor(item.name),
-                    trackColor = MyAppTheme.colors.gray1.copy(0.2f)
+                    trackColor = MyAppTheme.colors.gray1.copy(0.2f),
                 )
             }
 

@@ -17,7 +17,7 @@ class DeleteSingleMerchantDataUseCase @Inject constructor(
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) {
 
-    suspend operator fun invoke(): Flow<Resource<Int>> {
+    operator fun invoke(): Flow<Resource<Int>> {
         return flow {
 
             try {

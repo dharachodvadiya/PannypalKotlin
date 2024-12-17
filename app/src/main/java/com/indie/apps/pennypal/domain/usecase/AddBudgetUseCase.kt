@@ -16,7 +16,7 @@ class AddBudgetUseCase @Inject constructor(
     private val budgetRepository: BudgetRepository,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) {
-    suspend fun addData(
+    fun addData(
         budgetWithCategory: BudgetWithCategory,
         year: Int,
         month: Int

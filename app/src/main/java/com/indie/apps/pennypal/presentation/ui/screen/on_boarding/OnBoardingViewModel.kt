@@ -33,7 +33,7 @@ class OnBoardingViewModel @Inject constructor(
     private val preferenceRepository: PreferenceRepository
 ) : ViewModel() {
 
-    val userData = userRepository.getUser()
+    private val userData = userRepository.getUser()
         .onEach { user ->
             if (user != null) {
                 if (currencyCountryCode.value.isEmpty()) setCountryCode(user.currencyCountryCode)
