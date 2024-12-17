@@ -1,11 +1,12 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("kotlin-kapt")
+    //id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
     id("org.jetbrains.kotlin.plugin.compose")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -109,8 +110,8 @@ dependencies {
     testImplementation("androidx.room:room-paging:$roomVersion")
     annotationProcessor("androidx.room:room-compiler:$roomVersion")
     testAnnotationProcessor("androidx.room:room-compiler:$roomVersion")
-    kapt("androidx.room:room-compiler:$roomVersion")
-    kaptTest("androidx.room:room-compiler:$roomVersion")
+    ksp("androidx.room:room-compiler:$roomVersion")
+    kspTest("androidx.room:room-compiler:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
     testImplementation("androidx.room:room-ktx:$roomVersion")
 
@@ -118,13 +119,13 @@ dependencies {
     val hiltVersion = "2.49"
     implementation("com.google.dagger:hilt-android:$hiltVersion")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
-    kapt("com.google.dagger:hilt-android-compiler:$hiltVersion")
+    ksp("com.google.dagger:hilt-android-compiler:$hiltVersion")
 
     testImplementation("com.google.dagger:hilt-android-testing:$hiltVersion")
-    kaptTest("com.google.dagger:hilt-android-compiler:$hiltVersion")
+    kspTest("com.google.dagger:hilt-android-compiler:$hiltVersion")
     testAnnotationProcessor("com.google.dagger:hilt-android-compiler:$hiltVersion")
     androidTestImplementation("com.google.dagger:hilt-android-testing:$hiltVersion")
-    kaptAndroidTest("com.google.dagger:hilt-android-compiler:$hiltVersion")
+    kspAndroidTest("com.google.dagger:hilt-android-compiler:$hiltVersion")
     androidTestAnnotationProcessor("com.google.dagger:hilt-android-compiler:$hiltVersion")
 
     val navVersion = "2.8.5"
@@ -171,7 +172,8 @@ dependencies {
     implementation("com.google.accompanist:accompanist-pager-indicators:0.25.1") // For indicators
 
 }
+/*
 
 kapt {
     correctErrorTypes = true
-}
+}*/
