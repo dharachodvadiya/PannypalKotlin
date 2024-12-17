@@ -112,20 +112,4 @@
 -dontwarn java.awt.Desktop$Action
 -dontwarn java.awt.Desktop
 
--dontwarn com.indie.apps.contacts.common.Result$Error
--dontwarn com.indie.apps.contacts.common.Result$Loading
--dontwarn com.indie.apps.contacts.common.Result$Success
--dontwarn com.indie.apps.contacts.common.Result
--dontwarn com.indie.apps.contacts.data.model.ContactNumInfo
--dontwarn com.indie.apps.contacts.data.provider.ContactsProvider
--dontwarn com.indie.apps.contacts.data.provider.impl.ContactsProviderImpl
--dontwarn com.indie.apps.contacts.data.repo.ContactsRepository
--dontwarn com.indie.apps.contacts.data.repo.impl.ContactsRepositoryImpl
--dontwarn com.indie.apps.cpp.data.CountryDb$Companion
--dontwarn com.indie.apps.cpp.data.CountryDb
--dontwarn com.indie.apps.cpp.data.repository.CountryRepository
--dontwarn com.indie.apps.cpp.data.repository.CountryRepositoryImpl
-
-
-
 ##---------------End: proguard configuration for Gson  ----------
