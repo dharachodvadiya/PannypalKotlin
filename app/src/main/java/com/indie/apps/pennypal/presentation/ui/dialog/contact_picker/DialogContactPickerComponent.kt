@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -128,7 +129,8 @@ private fun SearchContactPickerListItem(
                     //brush = linearGradientsBrush(MyAppTheme.colors.gradientBlue),
                     tint = MyAppTheme.colors.black,
                     backGround = bgColor,
-                    contentDescription = "person"
+                    contentDescription = "person",
+                    modifier = Modifier.size(40.dp)
                 )
             },
             content = {
