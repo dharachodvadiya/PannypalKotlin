@@ -157,14 +157,21 @@ dependencies {
     implementation("com.google.android.play:app-update:2.1.0")
     implementation("com.google.android.play:app-update-ktx:2.1.0")
 
+
+    // Google SignIn
+    implementation("androidx.credentials:credentials:1.3.0")
+    implementation("androidx.credentials:credentials-play-services-auth:1.3.0")
+    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
+
     //GDrive login/backup
     implementation ("com.google.android.gms:play-services-auth:21.3.0")
     implementation ("com.google.firebase:firebase-auth")
     implementation ("com.google.apis:google-api-services-drive:v3-rev20220815-2.0.0")
-    implementation ("com.google.api-client:google-api-client:2.0.0")
+
+   // implementation ("com.google.api-client:google-api-client:2.0.0")
     implementation ("com.google.api-client:google-api-client-android:1.32.1")
-    implementation ("com.google.oauth-client:google-oauth-client-jetty:1.34.1")
-    implementation ("com.google.auth:google-auth-library-oauth2-http:1.19.0")
+    //implementation ("com.google.oauth-client:google-oauth-client-jetty:1.34.1")
+   // implementation ("com.google.auth:google-auth-library-oauth2-http:1.19.0")
 
     implementation("com.google.accompanist:accompanist-pager:0.25.1") // Check for the latest version
     implementation("com.google.accompanist:accompanist-pager-indicators:0.25.1") // For indicators

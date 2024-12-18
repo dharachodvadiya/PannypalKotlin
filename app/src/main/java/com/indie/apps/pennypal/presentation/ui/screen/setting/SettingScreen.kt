@@ -60,12 +60,14 @@ fun SettingScreen(
         AuthProcess.BACK_UP -> CustomProgressDialog(R.string.backup_Data)
         AuthProcess.RESTORE -> CustomProgressDialog(R.string.restore_Data)
         AuthProcess.NONE -> {}
+        AuthProcess.SIGN_IN -> CustomProgressDialog(R.string.sign_in)
     }
 
     val context = LocalContext.current
 
     SignInLauncher(authViewModel,
         onLoginSuccess = {
+            settingViewModel.refreshState()
             context.showToast(loginSuccessMessage)
         },
         onRestoreSuccess = {

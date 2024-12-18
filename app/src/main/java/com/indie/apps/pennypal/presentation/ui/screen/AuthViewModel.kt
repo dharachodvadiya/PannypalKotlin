@@ -1,6 +1,7 @@
 package com.indie.apps.pennypal.presentation.ui.screen
 
 import android.content.Intent
+import androidx.credentials.Credential
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.indie.apps.pennypal.repository.AuthRepository
@@ -19,7 +20,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val authRepository: AuthRepository, private val backupRepository: BackupRepository
+    private val authRepository: AuthRepository,
+    private val backupRepository: BackupRepository
 ) : ViewModel() {
 
     private var isInProcess = false
@@ -44,7 +46,10 @@ class AuthViewModel @Inject constructor(
             when (mainEvent) {
                 SyncEvent.SignInGoogle -> handleSignInGoogle()
 
-                is SyncEvent.OnSignInResult -> handleSignInResult(intent = mainEvent.intent)
+                is SyncEvent.OnSignInResult -> handleSignInResult(
+                    mainEvent.credential,
+                    mainEvent.errorMessage
+                )
 
                 is SyncEvent.OnAuthorizeResult -> handleAuthorizeResult(intent = mainEvent.intent)
 
@@ -60,21 +65,20 @@ class AuthViewModel @Inject constructor(
     }
 
     private suspend fun handleSignInGoogle() {
-        //println("aaaaa handleSignInGoogle")
         if (!isInProcess) {
             if (!authRepository.isSignedIn()) {
+                if (processingState.value == AuthProcess.NONE)
+                    processingState.value = AuthProcess.SIGN_IN
                 isInProcess = true
                 val getGoogleSignIn = authRepository.signInGoogle()
-                if(getGoogleSignIn != null) {
+                if (getGoogleSignIn != null) {
                     syncEffect.emit(SyncEffect.SignIn(getGoogleSignIn))
-                }else{
-                    syncCallBackEvent.emit(
-                        SyncCallBackEvent.OnLoginFail("get IntentSender fail")
-                    )
+                } else {
+                    resetProcessState()
                 }
             } else {
                 syncCallBackEvent.emit(
-                    SyncCallBackEvent.OnLoginSuccess(
+                    SyncCallBackEvent.OnLoggedIn(
                         authRepository.getUserInfo()
                     )
                 )
@@ -82,32 +86,33 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    private suspend fun handleSignInResult(intent: Intent) {
-        //println("aaaaa handleSignInResult")
-        val getResult = authRepository.getSignInResult(intent)
-        if (getResult != null) {
-            val authorizeGoogleDrive = authRepository.authorizeGoogleDrive()
-            if (authorizeGoogleDrive.hasResolution()) {
-                syncEffect.emit(
-                    SyncEffect.Authorize(authorizeGoogleDrive.pendingIntent!!.intentSender)
-                )
-            } else {
-                isInProcess = false
-                //onLoginSuccess(getResult)
-                syncCallBackEvent.emit(SyncCallBackEvent.OnLoginSuccess(getResult))
-                continueBackUpOrRestoreProcess()
+    private suspend fun handleSignInResult(credential: Credential?, errorMessage: String?) {
+        if (credential != null) {
+            val getResult = authRepository.getSignInResult(credential)
+            if (getResult != null) {
+                val authorizeGoogleDrive = authRepository.authorizeGoogleDrive()
+                if (authorizeGoogleDrive.hasResolution()) {
+                    syncEffect.emit(
+                        SyncEffect.Authorize(authorizeGoogleDrive.pendingIntent!!.intentSender)
+                    )
+                    return
+                } else {
+                    isInProcess = false
+                    //onLoginSuccess(getResult)
+                    syncCallBackEvent.emit(SyncCallBackEvent.OnLoginSuccess(getResult))
+                    continueBackUpOrRestoreProcess()
+                    return
+                }
             }
-        } else {
-            resetProcessState()
-            //onLoginFail("Login Fail")
-            syncCallBackEvent.emit(
-                SyncCallBackEvent.OnLoginFail("Login Fail")
-            )
         }
+
+        resetProcessState()
+        syncCallBackEvent.emit(
+            SyncCallBackEvent.OnLoginFail(errorMessage ?: "Login Fail")
+        )
     }
 
     private suspend fun handleAuthorizeResult(intent: Intent) {
-        //println("aaaaa handleAuthorizeResult")
         val result = authRepository.authorizeGoogleDriveResult(intent)
 
         if (result != null) {
@@ -131,7 +136,6 @@ class AuthViewModel @Inject constructor(
     }
 
     private suspend fun handleBackup() {
-        //println("aaaaa handleBackup")
         if (!isInProcess) {
             isInProcess = true
             processingState.value = AuthProcess.BACK_UP
@@ -160,7 +164,6 @@ class AuthViewModel @Inject constructor(
     }
 
     private suspend fun handleRestore() {
-        //println("aaaaa handleRestore")
         if (!isInProcess) {
             isInProcess = true
             processingState.value = AuthProcess.RESTORE
@@ -187,11 +190,11 @@ class AuthViewModel @Inject constructor(
     }
 
     private fun continueBackUpOrRestoreProcess() {
-        //println("aaaaa continueBackUpOrRestoreProcess")
         when (processingState.value) {
             AuthProcess.BACK_UP -> onEvent(SyncEvent.Backup)
             AuthProcess.RESTORE -> onEvent(SyncEvent.Restore)
-            AuthProcess.NONE -> {}
+            AuthProcess.NONE -> resetProcessState()
+            AuthProcess.SIGN_IN -> resetProcessState()
         }
     }
 

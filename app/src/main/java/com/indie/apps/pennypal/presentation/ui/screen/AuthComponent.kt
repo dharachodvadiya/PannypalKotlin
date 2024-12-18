@@ -5,6 +5,9 @@ import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalContext
+import androidx.credentials.CredentialManager
+import androidx.credentials.GetCredentialResponse
 import com.indie.apps.pennypal.data.module.UserInfoResult
 import com.indie.apps.pennypal.util.SyncCallBackEvent
 import com.indie.apps.pennypal.util.SyncEffect
@@ -14,6 +17,7 @@ import com.indie.apps.pennypal.util.SyncEvent
 fun SignInLauncher(
     authViewModel: AuthViewModel,
     onLoginSuccess: (UserInfoResult?) -> Unit = {},
+    onLoggedIn: (UserInfoResult?) -> Unit = {},
     onLoginFail: (String) -> Unit = {},
     onBackUpSuccess: () -> Unit = {},
     onBackUpFail: (String) -> Unit = {},
@@ -21,7 +25,7 @@ fun SignInLauncher(
     onRestoreFail: (String) -> Unit = {}
 ) {
 
-    val activityResultLauncher = rememberLauncherForActivityResult(
+    /*val activityResultLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartIntentSenderForResult(),
         onResult = {
             authViewModel.onEvent(
@@ -30,7 +34,7 @@ fun SignInLauncher(
                 )
             )
         }
-    )
+    )*/
 
     val authorizeLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartIntentSenderForResult(),
@@ -42,15 +46,30 @@ fun SignInLauncher(
             )
         }
     )
+    val context = LocalContext.current
 
     LaunchedEffect(key1 = authViewModel.syncEffect) {
         authViewModel.syncEffect.collect { effect ->
             when (effect) {
                 is SyncEffect.SignIn -> {
-                    activityResultLauncher.launch(
+                    val credentialManager = CredentialManager.create(context)
+                    try {
+                        val result: GetCredentialResponse = credentialManager.getCredential(
+                            request = effect.getCredentialRequest,
+                            context = context,
+                        )
+                        authViewModel.onEvent(
+                            SyncEvent.OnSignInResult(result.credential)
+                        )
+                    } catch (e: Exception) {
+                        authViewModel.onEvent(
+                            SyncEvent.OnSignInResult(errorMessage = e.message)
+                        )
+                    }
+                    /*activityResultLauncher.launch(
                         IntentSenderRequest.Builder(effect.intentSender)
                             .build()
-                    )
+                    )*/
                 }
 
                 is SyncEffect.Authorize -> {
@@ -69,6 +88,8 @@ fun SignInLauncher(
         authViewModel.syncCallBackEvent.collect { effect ->
             when (effect) {
                 is SyncCallBackEvent.OnLoginSuccess -> onLoginSuccess(effect.userInfo)
+
+                is SyncCallBackEvent.OnLoggedIn -> onLoggedIn(effect.userInfo)
 
                 is SyncCallBackEvent.OnLoginFail -> onLoginFail(effect.message)
 

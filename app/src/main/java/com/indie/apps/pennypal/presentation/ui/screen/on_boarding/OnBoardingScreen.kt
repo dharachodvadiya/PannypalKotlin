@@ -9,8 +9,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
@@ -44,9 +42,6 @@ fun OnBoardingScreen(
     val currentPageState by viewModel.currentPageState.collectAsStateWithLifecycle()
     val currencyText by viewModel.currencyText.collectAsStateWithLifecycle()
     val nameState by viewModel.nameState.collectAsStateWithLifecycle()
-    val isSignInProcess = remember {
-        mutableStateOf(false)
-    }
 
     LaunchedEffect(countryCode) {
         viewModel.setCountryCode(countryCode ?: viewModel.getDefaultCurrencyCode())
@@ -58,12 +53,8 @@ fun OnBoardingScreen(
         AuthProcess.BACK_UP -> CustomProgressDialog(R.string.backup_Data)
         AuthProcess.RESTORE -> CustomProgressDialog(R.string.restore_Data)
         AuthProcess.NONE -> {}
+        AuthProcess.SIGN_IN -> CustomProgressDialog(R.string.sign_in)
     }
-
-    if (isSignInProcess.value) {
-        CustomProgressDialog(R.string.sign_in)
-    }
-
     val restoreSuccessMessage = stringResource(id = R.string.restore_success)
     val loginSuccessMessage = stringResource(id = R.string.signin_success)
 
@@ -73,7 +64,6 @@ fun OnBoardingScreen(
             authViewModel.isBackupAvailable { isBackUpAvailable ->
 
                 context.showToast(loginSuccessMessage)
-                isSignInProcess.value = false
                 viewModel.onContinueClick(currentPageState,
                     isBackUpAvailable = isBackUpAvailable,
                     onBoardingComplete = {
@@ -89,13 +79,12 @@ fun OnBoardingScreen(
                     onBoardingComplete()
                 })
         },
-        onLoginFail = { isSignInProcess.value = false })
+        onLoginFail = {})
 
     OnBoardingScreenStart(
         onBoardingPage = currentPageState,
         onClick = {
             if (viewModel.isLoginClick(it)) {
-                isSignInProcess.value = true
                 authViewModel.onEvent(
                     mainEvent = SyncEvent.SignInGoogle
                 )

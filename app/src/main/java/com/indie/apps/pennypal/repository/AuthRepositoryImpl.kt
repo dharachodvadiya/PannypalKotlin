@@ -3,12 +3,16 @@ package com.indie.apps.pennypal.repository
 import android.accounts.Account
 import android.content.Context
 import android.content.Intent
-import android.content.IntentSender
+import androidx.credentials.Credential
+import androidx.credentials.CustomCredential
+import androidx.credentials.GetCredentialRequest
 import com.google.android.gms.auth.api.identity.AuthorizationRequest
 import com.google.android.gms.auth.api.identity.AuthorizationResult
-import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.common.api.Scope
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import com.google.api.client.http.javanet.NetHttpTransport
 import com.google.api.client.json.gson.GsonFactory
@@ -31,14 +35,6 @@ class AuthRepositoryImpl @Inject constructor(
     private val authorizationRequest =
         AuthorizationRequest.builder().setRequestedScopes(scopes).build()
 
-    private val oneTap = Identity.getSignInClient(context)
-    private val signInRequest = BeginSignInRequest.builder().setGoogleIdTokenRequestOptions(
-        BeginSignInRequest.GoogleIdTokenRequestOptions.builder().setSupported(true)
-            .setServerClientId(
-                "543082646910-is4lcvu1m56v6u2pjaeq1mqf2ndutved.apps.googleusercontent.com"
-            ).setFilterByAuthorizedAccounts(false).build()
-    ).setAutoSelectEnabled(true).build()
-
     private val authorize = Identity.getAuthorizationClient(context)
 
     private val firebaseAuth = Firebase.auth
@@ -46,10 +42,19 @@ class AuthRepositoryImpl @Inject constructor(
     private val credential =
         GoogleAccountCredential.usingOAuth2(context, listOf(DriveScopes.DRIVE_FILE))
 
+    private val googleIdOption: GetGoogleIdOption = GetGoogleIdOption
+        .Builder()
+        .setFilterByAuthorizedAccounts(false)
+        .setServerClientId("543082646910-is4lcvu1m56v6u2pjaeq1mqf2ndutved.apps.googleusercontent.com")
+        .setAutoSelectEnabled(false)
+        .build()
 
-    override suspend fun signInGoogle(): IntentSender? {
+    override suspend fun signInGoogle(): GetCredentialRequest? {
         return try {
-            oneTap.beginSignIn(signInRequest).await().pendingIntent.intentSender
+            GetCredentialRequest
+                .Builder()
+                .addCredentialOption(googleIdOption)
+                .build()
         } catch (e: Exception) {
             null
         }
@@ -57,7 +62,7 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun signOut() {
-        oneTap.signOut().await()
+        // oneTap.signOut().await()
         firebaseAuth.signOut()
     }
 
@@ -76,17 +81,32 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getSignInResult(intent: Intent): UserInfoResult? {
-        try {
-            val credential = oneTap.getSignInCredentialFromIntent(intent)
-            val googleIdToken = credential.googleIdToken
-            val googleCredential = GoogleAuthProvider.getCredential(googleIdToken, null)
-            val authResult = firebaseAuth.signInWithCredential(googleCredential).await()
-            return UserInfoResult(authResult.user!!.email!!)
-        } catch (e: Exception) {
-            return null
-        }
+    override suspend fun getSignInResult(credential: Credential): UserInfoResult? {
+        when (credential) {
+            is CustomCredential -> {
+                if (credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
+                    try {
+                        val googleIdTokenCredential = GoogleIdTokenCredential
+                            .createFrom(credential.data)
+                        val googleIdToken = googleIdTokenCredential.idToken
+                        val googleCredential = GoogleAuthProvider.getCredential(googleIdToken, null)
+                        val authResult = firebaseAuth.signInWithCredential(googleCredential).await()
+                        return UserInfoResult(authResult.user!!.email!!)
 
+                    } catch (e: GoogleIdTokenParsingException) {
+                        println("aaa Received an invalid google id token response $e")
+                        return null
+                    }
+                } else {
+                    println("aaa Unexpected type of credential ... ${credential.type}")
+                }
+            }
+
+            else -> {
+                println("aaa Unexpected type of credential... ${credential.type}")
+            }
+        }
+        return null
     }
 
     override suspend fun getGoogleDrive(): Drive? {
