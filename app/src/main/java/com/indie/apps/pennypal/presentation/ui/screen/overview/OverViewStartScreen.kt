@@ -37,6 +37,7 @@ import com.indie.apps.pennypal.util.Util
 fun OverViewStartScreen(
     overViewViewModel: OverViewViewModel = hiltViewModel(),
     onProfileClick: () -> Unit,
+    onMerchantClick: (Long) -> Unit,
     onSeeAllTransactionClick: () -> Unit,
     onSeeAllMerchantClick: () -> Unit,
     onExploreAnalysisClick: () -> Unit,
@@ -186,6 +187,7 @@ fun OverViewStartScreen(
                 isAddMerchantSuccess = addMerchantAnimRun,
                 merchantId = addMerchantId,
                 onSetBudgetClick = onSetBudgetClick,
+                onMerchantClick = onMerchantClick,
                 isSelectionEnable = budgetState.count { it.periodType == PeriodType.MONTH.id || it.periodType == PeriodType.YEAR.id } == 2
             )
 
@@ -212,7 +214,8 @@ private fun OverViewScreenPreview() {
             onAddMerchant = {},
             addMerchantId = -1L,
             onSetBudgetClick = {},
-            bottomPadding = PaddingValues(0.dp)
+            bottomPadding = PaddingValues(0.dp),
+            onMerchantClick = {}
         )
     }
 }

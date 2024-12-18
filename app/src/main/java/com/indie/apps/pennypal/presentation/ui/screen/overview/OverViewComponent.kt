@@ -426,6 +426,7 @@ fun OverviewData(
     onExploreBudgetClick: () -> Unit,
     onSetBudgetClick: (Int) -> Unit,
     onTransactionClick: (Long) -> Unit,
+    onMerchantClick: (Long) -> Unit,
     isAddMerchantDataSuccess: Boolean = false,
     isEditMerchantDataSuccess: Boolean = false,
     isAddMerchantSuccess: Boolean = false,
@@ -463,7 +464,8 @@ fun OverviewData(
         onAddMerchant = onAddMerchant,
         isAddMerchantSuccess = isAddMerchantSuccess,
         merchantId = merchantId,
-        onAnimStop = onMerchantAnimStop
+        onAnimStop = onMerchantAnimStop,
+        onMerchantClick = onMerchantClick
     )
 
     if (categoryList.isNotEmpty()) {
@@ -663,6 +665,7 @@ fun OverviewMerchantData(
     isAddMerchantSuccess: Boolean = false,
     merchantId: Long = 1L,
     onAnimStop: () -> Unit,
+    onMerchantClick: (Long) -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     OverviewItem(
@@ -698,7 +701,11 @@ fun OverviewMerchantData(
                     }
 
                     MerchantItem(
-                        item = item, modifier = modifierAdd
+                        item = item,
+                        modifier = modifierAdd,
+                        onClick = {
+                            onMerchantClick(item.id)
+                        }
 
                     )
                 }
@@ -934,10 +941,15 @@ fun OverviewAnalyticDataItem(
 
 @Composable
 fun MerchantItem(
-    item: MerchantNameAndDetails, @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
+    item: MerchantNameAndDetails,
+    onClick: () -> Unit,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier.padding(5.dp)
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+            .padding(5.dp)
+            .clickable() { onClick() }
     ) {
         /*RoundImage(
             imageVector = Icons.Default.Person,

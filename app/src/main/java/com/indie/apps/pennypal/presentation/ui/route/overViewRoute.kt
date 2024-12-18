@@ -101,6 +101,13 @@ fun NavGraphBuilder.overViewRoute(
                         it
                     )
                 },
+                onMerchantClick = {
+                    navController.navigate(
+                        ScreenNav.MERCHANT_DATA.route.replace(
+                            "{${Util.PARAM_MERCHANT_ID}}", it.toString()
+                        )
+                    )
+                },
                 bottomPadding = innerPadding
             )
         }
@@ -319,7 +326,8 @@ fun NavGraphBuilder.overViewRoute(
                 },
                 onSelectCategory = { selectedIds ->
                     backStackEntry
-                        .savedStateHandle[Util.SAVE_STATE_SELECT_CATEGORY_ID_LIST] = Gson().toJson(selectedIds)
+                        .savedStateHandle[Util.SAVE_STATE_SELECT_CATEGORY_ID_LIST] =
+                        Gson().toJson(selectedIds)
                     navController.navigate(DialogNav.MULTI_SELECT_CATEGORY.route)
                 },
                 selectedCategoryIds = categoryIds,
@@ -344,7 +352,8 @@ fun NavGraphBuilder.overViewRoute(
                 },
                 onSelectCategory = { selectedIds ->
                     backStackEntry
-                        .savedStateHandle[Util.SAVE_STATE_SELECT_CATEGORY_ID_LIST] = Gson().toJson(selectedIds)
+                        .savedStateHandle[Util.SAVE_STATE_SELECT_CATEGORY_ID_LIST] =
+                        Gson().toJson(selectedIds)
                     navController.navigate(DialogNav.MULTI_SELECT_CATEGORY.route)
                 },
                 selectedCategoryIds = categoryIds,
@@ -352,7 +361,7 @@ fun NavGraphBuilder.overViewRoute(
             )
         }
 
-        composable(route = ScreenNav.BUDGET_FILTER.route) {backStackEntry->
+        composable(route = ScreenNav.BUDGET_FILTER.route) { backStackEntry ->
             bottomBarState.value = false
 
             val menuId =
