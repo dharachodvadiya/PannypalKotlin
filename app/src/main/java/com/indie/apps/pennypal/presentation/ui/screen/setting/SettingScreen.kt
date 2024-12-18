@@ -76,6 +76,12 @@ fun SettingScreen(
         },
         onBackUpSuccess = {
             context.showToast(backupSuccessMessage)
+        },
+        onRestoreFail = {
+            context.showToast(it)
+        },
+        onBackUpFail = {
+            context.showToast(it)
         })
 
     LaunchedEffect(key1 = settingViewModel.settingEffect) {
