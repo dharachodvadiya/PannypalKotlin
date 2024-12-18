@@ -7,7 +7,7 @@ import com.google.api.services.drive.Drive
 import com.indie.apps.pennypal.data.module.UserInfoResult
 
 interface AuthRepository {
-    suspend fun signInGoogle(): IntentSender
+    suspend fun signInGoogle(): IntentSender?
     suspend fun signOut()
     suspend fun isSignedIn(): Boolean
     suspend fun getUserInfo(): UserInfoResult?

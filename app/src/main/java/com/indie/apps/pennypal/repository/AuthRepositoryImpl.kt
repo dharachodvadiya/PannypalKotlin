@@ -47,8 +47,13 @@ class AuthRepositoryImpl @Inject constructor(
         GoogleAccountCredential.usingOAuth2(context, listOf(DriveScopes.DRIVE_FILE))
 
 
-    override suspend fun signInGoogle(): IntentSender {
-        return oneTap.beginSignIn(signInRequest).await().pendingIntent.intentSender
+    override suspend fun signInGoogle(): IntentSender? {
+        return try {
+            oneTap.beginSignIn(signInRequest).await().pendingIntent.intentSender
+        } catch (e: Exception) {
+            null
+        }
+
     }
 
     override suspend fun signOut() {

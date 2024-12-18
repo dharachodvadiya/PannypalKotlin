@@ -974,6 +974,7 @@ fun MerchantItem(
             color = MyAppTheme.colors.black,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
+            textAlign = TextAlign.Center,
             modifier = Modifier.size(55.dp)
         )
 

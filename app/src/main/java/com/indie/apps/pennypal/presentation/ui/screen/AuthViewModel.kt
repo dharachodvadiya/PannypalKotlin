@@ -65,7 +65,13 @@ class AuthViewModel @Inject constructor(
             if (!authRepository.isSignedIn()) {
                 isInProcess = true
                 val getGoogleSignIn = authRepository.signInGoogle()
-                syncEffect.emit(SyncEffect.SignIn(getGoogleSignIn))
+                if(getGoogleSignIn != null) {
+                    syncEffect.emit(SyncEffect.SignIn(getGoogleSignIn))
+                }else{
+                    syncCallBackEvent.emit(
+                        SyncCallBackEvent.OnLoginFail("get IntentSender fail")
+                    )
+                }
             } else {
                 syncCallBackEvent.emit(
                     SyncCallBackEvent.OnLoginSuccess(
