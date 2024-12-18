@@ -1,7 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.dialog.select_category
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -20,6 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.database.entity.Category
+import com.indie.apps.pennypal.presentation.ui.component.clickableWithNoRipple
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
@@ -68,7 +68,7 @@ fun CategoryItem(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
             .roundedCornerBackground(backgroundColor = MyAppTheme.colors.transparent)
-            .clickable {
+            .clickableWithNoRipple {
                 onClick()
             }
     ) {

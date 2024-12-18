@@ -2,7 +2,6 @@ package com.indie.apps.pennypal.presentation.ui.component.custom.composable
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -23,6 +22,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
+import com.indie.apps.pennypal.presentation.ui.component.clickableWithNoRipple
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
@@ -59,9 +59,9 @@ fun TopBar(
                 contentDescription = "Back",
                 modifier = Modifier
                     .roundedCornerBackground(MyAppTheme.colors.transparent)
-                    .clickable {
-                    onBackClick()
-                })
+                    .clickableWithNoRipple {
+                        onBackClick()
+                    })
         }
 
         if (leadingContent != null) {

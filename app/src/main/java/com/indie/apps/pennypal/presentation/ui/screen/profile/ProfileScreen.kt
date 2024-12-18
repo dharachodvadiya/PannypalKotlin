@@ -1,7 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.screen.profile
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
@@ -22,9 +21,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.database.entity.User
-import com.indie.apps.pennypal.presentation.ui.component.showToast
 import com.indie.apps.pennypal.presentation.ui.component.TopBarWithTitle
+import com.indie.apps.pennypal.presentation.ui.component.clickableWithNoRipple
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
+import com.indie.apps.pennypal.presentation.ui.component.showToast
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
@@ -92,9 +92,9 @@ private fun ProfileScreenData(
                             contentDescription = "save",
                             modifier = Modifier
                                 .roundedCornerBackground(MyAppTheme.colors.bottomBg)
-                                .clickable {
-                                onSaveClick(user)
-                            })
+                                .clickableWithNoRipple {
+                                    onSaveClick(user)
+                                })
                     }
 
                 }

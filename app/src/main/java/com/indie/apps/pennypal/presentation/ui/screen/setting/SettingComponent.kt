@@ -6,8 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.annotation.StringRes
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,6 +29,7 @@ import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.database.entity.User
 import com.indie.apps.pennypal.data.module.MoreItem
 import com.indie.apps.pennypal.presentation.ui.component.UserProfileRect
+import com.indie.apps.pennypal.presentation.ui.component.clickableWithNoRipple
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
@@ -95,9 +94,9 @@ fun SettingItem(
         modifier = modifier
             .fillMaxWidth()
             .roundedCornerBackground(MyAppTheme.colors.transparent)
-            .clickable(
-                interactionSource = MutableInteractionSource(),
-                indication = null,
+            .clickableWithNoRipple(
+                //    interactionSource = MutableInteractionSource(),
+                //   indication = null,
             ) { onClick() }
             /*.background(
                 shape = RoundedCornerShape(dimensionResource(id = R.dimen.round_corner)),
@@ -198,9 +197,9 @@ fun SettingProfileItem(
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.clickable(
-                interactionSource = MutableInteractionSource(),
-                indication = null,
+            modifier = Modifier.clickableWithNoRipple(
+                //    interactionSource = MutableInteractionSource(),
+                //   indication = null,
             ) { onClick() }
         ) {
             /*PrimaryButton(

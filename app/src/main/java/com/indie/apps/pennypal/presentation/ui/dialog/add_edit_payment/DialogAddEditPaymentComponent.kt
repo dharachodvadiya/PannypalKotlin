@@ -3,7 +3,6 @@ package com.indie.apps.pennypal.presentation.ui.dialog.add_edit_payment
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -23,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.database.entity.PaymentMode
 import com.indie.apps.pennypal.presentation.ui.component.DialogTextFieldItem
+import com.indie.apps.pennypal.presentation.ui.component.clickableWithNoRipple
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
@@ -85,7 +85,7 @@ fun PaymentModeItem(
             )
             .background(color = MyAppTheme.colors.transparent, shape = shape)
             .clip(shape = shape)
-            .clickable { onClick() }
+            .clickableWithNoRipple { onClick() }
             .padding(
                 horizontal = dimensionResource(R.dimen.bottom_bar_item_horizontal_padding),
                 vertical = dimensionResource(R.dimen.bottom_bar_item_vertical_padding)

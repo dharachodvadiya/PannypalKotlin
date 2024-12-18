@@ -1,7 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.component.custom.composable
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,6 +14,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.indie.apps.pennypal.presentation.ui.component.clickableWithNoRipple
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
@@ -51,7 +51,7 @@ fun SearchView(
                     Icon(
                         modifier = Modifier
                             .roundedCornerBackground(MyAppTheme.colors.transparent)
-                            .clickable {
+                            .clickableWithNoRipple {
                                 if (textState.text.isNotEmpty()) {
                                     //textState.text = ""
                                     onTextChange("")
@@ -65,7 +65,7 @@ fun SearchView(
                     Icon(
                         modifier = Modifier
                             .roundedCornerBackground(MyAppTheme.colors.transparent)
-                            .clickable {
+                            .clickableWithNoRipple {
                                 if (textState.text.isNotEmpty()) {
                                     //textState.text = ""
                                     onTextChange("")

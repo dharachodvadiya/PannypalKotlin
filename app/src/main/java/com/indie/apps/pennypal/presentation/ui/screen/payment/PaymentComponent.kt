@@ -1,7 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.screen.payment
 
 import androidx.annotation.StringRes
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,6 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
+import com.indie.apps.pennypal.presentation.ui.component.clickableWithNoRipple
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
@@ -32,7 +32,7 @@ fun PaymentModeDefaultItem(
         modifier = modifier
             .fillMaxWidth()
             .roundedCornerBackground(MyAppTheme.colors.itemBg)
-            .clickable { onDefaultPaymentChange() }
+            .clickableWithNoRipple { onDefaultPaymentChange() }
             /* .background(
                  shape = RoundedCornerShape(dimensionResource(id = R.dimen.round_corner)),
                  color = MyAppTheme.colors.itemBg

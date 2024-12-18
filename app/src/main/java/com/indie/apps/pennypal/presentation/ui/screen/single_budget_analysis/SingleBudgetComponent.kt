@@ -1,7 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.screen.single_budget_analysis
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -37,6 +36,7 @@ import com.indie.apps.pennypal.data.module.ChartData
 import com.indie.apps.pennypal.data.module.category.CategoryAmount
 import com.indie.apps.pennypal.presentation.ui.component.TopBarWithTitle
 import com.indie.apps.pennypal.presentation.ui.component.chart.PieChart
+import com.indie.apps.pennypal.presentation.ui.component.clickableWithNoRipple
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomProgressItem
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListItem
@@ -70,7 +70,7 @@ fun SingleBudgetTopBar(
                     modifier = Modifier
                         .roundedCornerBackground(MyAppTheme.colors.transparent)
                         .size(25.dp)
-                        .clickable { onDeleteClick() }
+                        .clickableWithNoRipple { onDeleteClick() }
                 )
                 Spacer(modifier = Modifier.width(15.dp))
                 Icon(
@@ -80,7 +80,7 @@ fun SingleBudgetTopBar(
                     modifier = Modifier
                         .roundedCornerBackground(MyAppTheme.colors.transparent)
                         .size(25.dp)
-                        .clickable { onEditClick() }
+                        .clickableWithNoRipple { onEditClick() }
                 )
             }
 

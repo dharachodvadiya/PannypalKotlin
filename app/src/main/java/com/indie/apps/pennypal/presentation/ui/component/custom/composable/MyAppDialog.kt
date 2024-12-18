@@ -3,7 +3,6 @@ package com.indie.apps.pennypal.presentation.ui.component.custom.composable
 import android.annotation.SuppressLint
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,6 +24,7 @@ import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.presentation.ui.component.BottomSaveButton
 import com.indie.apps.pennypal.presentation.ui.component.DialogTextFieldItem
 import com.indie.apps.pennypal.presentation.ui.component.TopBarWithTitle
+import com.indie.apps.pennypal.presentation.ui.component.clickableWithNoRipple
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
@@ -106,7 +106,7 @@ private fun DialogTopBar(
                     contentDescription = "close",
                     modifier = Modifier
                         .roundedCornerBackground(MyAppTheme.colors.transparent)
-                        .clickable {
+                        .clickableWithNoRipple {
                             onNavigationUp()
                         })
         },

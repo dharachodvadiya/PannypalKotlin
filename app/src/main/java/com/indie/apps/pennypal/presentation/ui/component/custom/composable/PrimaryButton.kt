@@ -3,7 +3,6 @@ package com.indie.apps.pennypal.presentation.ui.component.custom.composable
 import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -23,6 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
+import com.indie.apps.pennypal.presentation.ui.component.clickableWithNoRipple
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
@@ -35,8 +35,8 @@ fun PrimaryButton(
     borderStroke: BorderStroke? = null,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    horizontalPadding : Dp = dimensionResource(R.dimen.button_horizontal_padding),
-    verticalPadding : Dp = dimensionResource(R.dimen.button_item_vertical_padding),
+    horizontalPadding: Dp = dimensionResource(R.dimen.button_horizontal_padding),
+    verticalPadding: Dp = dimensionResource(R.dimen.button_item_vertical_padding),
     content: @Composable RowScope.() -> Unit,
 ) {
     val containerColor = if (enabled) bgColor else MyAppTheme.colors.gray2
@@ -52,7 +52,7 @@ fun PrimaryButton(
         modifier = modifier
             .roundedCornerBackground(MyAppTheme.colors.transparent, borderStroke)
             .then(buttonModifier)
-            .clickable(enabled = enabled) { onClick() }
+            .clickableWithNoRipple(enabled = enabled) { onClick() }
             .padding(
                 horizontal = horizontalPadding,
                 vertical = verticalPadding

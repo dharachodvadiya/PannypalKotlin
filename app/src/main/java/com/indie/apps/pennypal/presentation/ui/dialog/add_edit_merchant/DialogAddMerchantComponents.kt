@@ -2,7 +2,6 @@ package com.indie.apps.pennypal.presentation.ui.dialog.add_edit_merchant
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -24,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.presentation.ui.component.DialogTextFieldItem
+import com.indie.apps.pennypal.presentation.ui.component.clickableWithNoRipple
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
@@ -82,7 +82,7 @@ fun AddMerchantDialogField(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .roundedCornerBackground(MyAppTheme.colors.transparent)
-                        .clickable { onCpp() }
+                        .clickableWithNoRipple { onCpp() }
                 ) {
                     CustomText(text = countryCode)
                     Spacer(modifier = Modifier.width(5.dp))

@@ -2,7 +2,6 @@ package com.indie.apps.pennypal.presentation.ui.dialog.contact_picker
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -28,6 +27,7 @@ import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.module.ContactNumberAndName
 import com.indie.apps.pennypal.presentation.ui.component.DialogSearchView
 import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
+import com.indie.apps.pennypal.presentation.ui.component.clickableWithNoRipple
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListItem
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
@@ -165,7 +165,7 @@ private fun SearchContactPickerListItem(
                         Modifier
                             .roundedCornerBackground(MyAppTheme.colors.transparent)
                             .rotate(if (item.expanded.value) 180f else 0f)
-                            .clickable { dropdownClick() }
+                            .clickableWithNoRipple { dropdownClick() }
                     )
 
                 }
@@ -201,7 +201,7 @@ private fun ContactNumberItem(
             .roundedCornerBackground(MyAppTheme.colors.transparent)
             //.background(MyAppTheme.colors.transparent)
             .padding(PaddingValues(start = 50.dp))
-            .clickable(role = Role.Button) { onSelected() }
+            .clickableWithNoRipple(role = Role.Button) { onSelected() }
     ) {
         RadioButton(
             selected = selected,

@@ -2,7 +2,6 @@ package com.indie.apps.pennypal.presentation.ui.screen.all_data
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.module.MerchantDataWithAllData
+import com.indie.apps.pennypal.presentation.ui.component.clickableWithNoRipple
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListItem
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
@@ -96,7 +96,7 @@ fun AllDataTopBar(
                     modifier = Modifier
                         .roundedCornerBackground(MyAppTheme.colors.transparent)
                         .size(25.dp)
-                        .clickable { onDeleteClick() }
+                        .clickableWithNoRipple { onDeleteClick() }
                 )
             } else {
                 PrimaryButton(

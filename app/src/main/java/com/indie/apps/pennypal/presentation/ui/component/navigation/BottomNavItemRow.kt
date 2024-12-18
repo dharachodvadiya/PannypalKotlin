@@ -3,7 +3,6 @@ package com.indie.apps.pennypal.presentation.ui.component.navigation
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -40,6 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.indie.apps.pennypal.R
+import com.indie.apps.pennypal.presentation.ui.component.clickableWithNoRipple
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.component.linearGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
@@ -162,14 +162,15 @@ fun BottomNavigationBarCustom1(
             circleRadius = circleRadius,
             cornerRadius = 0.dp,
         )
-        val bottomNavPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+        val bottomNavPadding =
+            WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
 
         Box(
             modifier = modifier
                 .height(dimensionResource(R.dimen.bottom_bar) + circleRadius + bottomNavPadding)
                 .fillMaxWidth()
                 .background(MyAppTheme.colors.transparent)
-                .clickable(onClick = { }, enabled = false, role = Role.Button),
+                .clickableWithNoRipple(onClick = { }, enabled = false, role = Role.Button),
             contentAlignment = Alignment.BottomCenter
         ) {
 
@@ -182,7 +183,7 @@ fun BottomNavigationBarCustom1(
                     .size(circleRadius * 2)
                     .clip(CircleShape)
                     .background(MyAppTheme.colors.lightBlue2)
-                    .clickable(onClick = onAddClick, enabled = true, role = Role.Button)
+                    .clickableWithNoRipple(onClick = onAddClick, enabled = true, role = Role.Button)
             ) {
                 Icon(Icons.Default.Add, "Add", tint = MyAppTheme.colors.black)
             }
@@ -267,7 +268,7 @@ fun BottomNavigationBarCustom1Item(
         modifier = modifier
             .roundedCornerBackground(MyAppTheme.colors.transparent)
             //.background(MyAppTheme.colors.bottomBg)
-            .clickable { onTabSelected(item) }
+            .clickableWithNoRipple { onTabSelected(item) }
     ) {
         Icon(
             painter = if (isSelected)

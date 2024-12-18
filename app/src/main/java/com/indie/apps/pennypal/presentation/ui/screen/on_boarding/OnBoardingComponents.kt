@@ -4,8 +4,6 @@ import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,6 +39,7 @@ import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.presentation.ui.component.BottomSaveButton
 import com.indie.apps.pennypal.presentation.ui.component.DialogSelectableItem
 import com.indie.apps.pennypal.presentation.ui.component.DialogTextFieldItem
+import com.indie.apps.pennypal.presentation.ui.component.clickableWithNoRipple
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
@@ -260,8 +259,8 @@ fun OnBoardingWelcomePage(
         bottomContent = {
             Box(modifier = Modifier
                 .fillMaxWidth()
-                .clickable(
-                    interactionSource = MutableInteractionSource(), indication = null
+                .clickableWithNoRipple(
+                    //   interactionSource = MutableInteractionSource(), indication = null
                 ) { onGuestLoginClick() }
                 .padding(dimensionResource(id = R.dimen.padding)),
                 contentAlignment = Alignment.Center) {
@@ -323,8 +322,8 @@ fun OnBoardingRestorePage(
         bottomContent = {
             Box(modifier = Modifier
                 .fillMaxWidth()
-                .clickable(
-                    interactionSource = MutableInteractionSource(), indication = null
+                .clickableWithNoRipple(
+                    //   interactionSource = MutableInteractionSource(), indication = null
                 ) {
                     onEndClick()
                 }
@@ -367,7 +366,7 @@ private fun OnBoardingPage(
                     contentDescription = "Back",
                     modifier = Modifier
                         .roundedCornerBackground(MyAppTheme.colors.transparent)
-                        .clickable {
+                        .clickableWithNoRipple {
                             onBackClick()
                         },
                     tint = MyAppTheme.colors.black

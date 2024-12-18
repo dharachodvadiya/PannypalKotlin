@@ -5,8 +5,6 @@ import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.indie.apps.pennypal.R
+import com.indie.apps.pennypal.presentation.ui.component.clickableWithNoRipple
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
@@ -83,9 +82,9 @@ fun CustomYearPickerDialog(
                     Icon(
                         modifier = Modifier
                             .size(35.dp)
-                            .clickable(
-                                interactionSource = MutableInteractionSource(),
-                                indication = null,
+                            .clickableWithNoRipple(
+                                //  interactionSource = MutableInteractionSource(),
+                                //  indication = null,
                             ) {
                                 currentPage--
                             },
@@ -103,9 +102,9 @@ fun CustomYearPickerDialog(
                     Icon(
                         modifier = Modifier
                             .size(35.dp)
-                            .clickable(
-                                interactionSource = MutableInteractionSource(),
-                                indication = null,
+                            .clickableWithNoRipple(
+                                //   interactionSource = MutableInteractionSource(),
+                                //   indication = null,
                             ) {
                                 currentPage++
                             },
@@ -166,9 +165,9 @@ private fun YearPage(
             Box(
                 modifier = Modifier
                     .size(60.dp)
-                    .clickable(
-                        interactionSource = MutableInteractionSource(),
-                        indication = null,
+                    .clickableWithNoRipple(
+                        //   interactionSource = MutableInteractionSource(),
+                        //   indication = null,
                     ) {
                         onSelect(currYear)
                     }

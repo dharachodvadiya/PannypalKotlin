@@ -11,8 +11,6 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -355,7 +353,7 @@ fun DialogSelectableItem(
 
             Row(modifier = Modifier
                 .roundedCornerBackground(MyAppTheme.colors.itemBg)
-                .clickable(enabled = isSelectable) { onClick() }
+                .clickableWithNoRipple(enabled = isSelectable) { onClick() }
                 .padding(dimensionResource(id = R.dimen.padding)),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically) {
@@ -453,7 +451,8 @@ fun NoDataMessage(
     Box(
         modifier = modifier
             .background(MyAppTheme.colors.transparent)
-            .clickable(enabled = isClickable) { onClick() }, contentAlignment = Alignment.Center
+            .clickableWithNoRipple(enabled = isClickable) { onClick() },
+        contentAlignment = Alignment.Center
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(0.75f),
@@ -498,7 +497,7 @@ fun TextWithRadioButton(
             .height(40.dp)
             .fillMaxWidth()
             .roundedCornerBackground(MyAppTheme.colors.transparent)
-            .clickable { onSelect() },
+            .clickableWithNoRipple { onSelect() },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.item_padding))
     ) {
@@ -539,10 +538,10 @@ fun AccountItem(
             .fillMaxWidth()
             .roundedCornerBackground(MyAppTheme.colors.transparent)
             .then(modifier)
-            .clickable(
+            .clickableWithNoRipple(
                 enabled = isSelectable || isEditable,
-                interactionSource = MutableInteractionSource(),
-                indication = null
+                //interactionSource = MutableInteractionSource(),
+                // indication = null
             ) {
                 onSelect()
             },
@@ -568,7 +567,7 @@ fun AccountItem(
                 contentDescription = "edit",
                 modifier = Modifier
                     .roundedCornerBackground(MyAppTheme.colors.transparent)
-                    .clickable { onEditClick() })
+                    .clickableWithNoRipple { onEditClick() })
 
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.item_padding)))
 
@@ -576,7 +575,7 @@ fun AccountItem(
                 contentDescription = "delete",
                 modifier = Modifier
                     .roundedCornerBackground(MyAppTheme.colors.transparent)
-                    .clickable { onDeleteClick() })
+                    .clickableWithNoRipple { onDeleteClick() })
         }
     }
 }

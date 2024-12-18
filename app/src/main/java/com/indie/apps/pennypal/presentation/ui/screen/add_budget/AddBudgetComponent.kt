@@ -3,8 +3,6 @@ package com.indie.apps.pennypal.presentation.ui.screen.add_budget
 import android.annotation.SuppressLint
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -42,6 +40,7 @@ import com.indie.apps.pennypal.data.module.category.CategoryAmount
 import com.indie.apps.pennypal.presentation.ui.component.DialogSelectableItem
 import com.indie.apps.pennypal.presentation.ui.component.DialogTextFieldItem
 import com.indie.apps.pennypal.presentation.ui.component.TextFieldError
+import com.indie.apps.pennypal.presentation.ui.component.clickableWithNoRipple
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomTab
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListItem
@@ -234,7 +233,7 @@ fun AddBudgetPeriodFieldItem(
                         tint = MyAppTheme.colors.gray1,
                         modifier = Modifier
                             .roundedCornerBackground(MyAppTheme.colors.transparent)
-                            .clickable {
+                            .clickableWithNoRipple {
                                 onSelectFromDate()
                             })
                 },
@@ -255,7 +254,7 @@ fun AddBudgetPeriodFieldItem(
                         tint = MyAppTheme.colors.gray1,
                         modifier = Modifier
                             .roundedCornerBackground(MyAppTheme.colors.transparent)
-                            .clickable {
+                            .clickableWithNoRipple {
                                 onSelectToDate()
                             })
                 },
@@ -278,7 +277,7 @@ fun AddBudgetPeriodFieldItem(
                         tint = MyAppTheme.colors.gray1,
                         modifier = Modifier
                             .roundedCornerBackground(MyAppTheme.colors.transparent)
-                            .clickable {
+                            .clickableWithNoRipple {
                                 if (selectBudgetPeriod == PeriodType.MONTH) onSelectMonth()
                                 else onSelectYear()
                             })
@@ -312,9 +311,9 @@ fun AddBudgetCategoryListItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .roundedCornerBackground(MyAppTheme.colors.transparent)
-                .clickable(
-                    interactionSource = MutableInteractionSource(),
-                    indication = null,
+                .clickableWithNoRipple(
+                    //    interactionSource = MutableInteractionSource(),
+                    //    indication = null,
                 ) { onClick(!isExpanded) },
             verticalAlignment = Alignment.CenterVertically
         ) {

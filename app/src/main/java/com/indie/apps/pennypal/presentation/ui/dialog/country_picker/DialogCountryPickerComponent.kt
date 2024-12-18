@@ -2,7 +2,6 @@ package com.indie.apps.pennypal.presentation.ui.dialog.country_picker
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -23,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.indie.apps.cpp.data.model.Country
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.presentation.ui.component.DialogSearchView
+import com.indie.apps.pennypal.presentation.ui.component.clickableWithNoRipple
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
@@ -92,7 +92,7 @@ private fun SearchCppListItem(
     Row(
         modifier = modifier
             .roundedCornerBackground(MyAppTheme.colors.transparent)
-            .clickable {
+            .clickableWithNoRipple {
                 onClick(country)
             }
             .padding(12.dp),
@@ -136,7 +136,7 @@ private fun SearchCurrencyCppListItem(
         modifier = modifier
             .height(55.dp)
             .roundedCornerBackground(MyAppTheme.colors.transparent)
-            .clickable {
+            .clickableWithNoRipple {
                 onClick(country)
             }
             .padding(horizontal = dimensionResource(id = R.dimen.item_inner_padding)),

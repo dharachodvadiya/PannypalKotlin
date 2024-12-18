@@ -3,8 +3,6 @@ package com.indie.apps.pennypal.presentation.ui.screen.new_item
 import android.annotation.SuppressLint
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -35,6 +33,7 @@ import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.module.TabItemInfo
 import com.indie.apps.pennypal.presentation.ui.component.DialogSelectableItem
 import com.indie.apps.pennypal.presentation.ui.component.TextFieldError
+import com.indie.apps.pennypal.presentation.ui.component.clickableWithNoRipple
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomTab
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.MyAppTextField
@@ -302,9 +301,9 @@ fun DateTimeSelectableItem(
         modifier = modifier
             .padding(horizontal = dimensionResource(id = R.dimen.item_inner_padding))
             .roundedCornerBackground(MyAppTheme.colors.transparent)
-            .clickable(
-                interactionSource = MutableInteractionSource(),
-                indication = null
+            .clickableWithNoRipple(
+                //    interactionSource = MutableInteractionSource(),
+                //   indication = null
             ) {
                 onSelect()
             },

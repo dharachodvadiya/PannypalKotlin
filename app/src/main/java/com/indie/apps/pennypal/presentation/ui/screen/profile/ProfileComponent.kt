@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.database.entity.User
 import com.indie.apps.pennypal.presentation.ui.component.UserProfileRound
+import com.indie.apps.pennypal.presentation.ui.component.clickableWithNoRipple
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.AutoSizeText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
@@ -182,7 +182,7 @@ fun ProfileCurrencyItem(
             .fillMaxWidth()
             .padding(horizontal = dimensionResource(id = R.dimen.padding))
             .roundedCornerBackground(MyAppTheme.colors.bottomBg)
-            .clickable(role = Role.Button) { onClick() }
+            .clickableWithNoRipple(role = Role.Button) { onClick() }
             /*.background(
                 shape = RoundedCornerShape(dimensionResource(id = R.dimen.round_corner)),
                 color = MyAppTheme.colors.bottomBg

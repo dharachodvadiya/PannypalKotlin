@@ -5,8 +5,6 @@ import androidx.annotation.StringRes
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -60,6 +58,7 @@ import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
 import com.indie.apps.pennypal.presentation.ui.component.PeriodText
 import com.indie.apps.pennypal.presentation.ui.component.UserProfileRect
 import com.indie.apps.pennypal.presentation.ui.component.chart.PieChart
+import com.indie.apps.pennypal.presentation.ui.component.clickableWithNoRipple
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.AutoSizeText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomTab
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
@@ -722,7 +721,7 @@ fun OverviewMerchantData(
                         modifier = Modifier
                             .size(55.dp)
                             .clip(CircleShape)
-                            .clickable { onAddMerchant() })
+                            .clickableWithNoRipple { onAddMerchant() })
 
                 }
 
@@ -755,9 +754,9 @@ fun OverviewAnalysisData(
                 )
             }
 
-            Row(modifier = Modifier.clickable(
-                interactionSource = MutableInteractionSource(),
-                indication = null
+            Row(modifier = Modifier.clickableWithNoRipple(
+                // interactionSource = MutableInteractionSource(),
+                // indication = null
             ) { onExploreAnalysisClick() }) {
                 PieChart(
                     data = chartData, modifier = Modifier.align(Alignment.CenterVertically)
@@ -863,9 +862,9 @@ fun OverviewBudgetData(
 
         },
         isBgEnable = true,
-        modifier = modifier.clickable(
-            interactionSource = MutableInteractionSource(),
-            indication = null
+        modifier = modifier.clickableWithNoRipple(
+            // interactionSource = MutableInteractionSource(),
+            //  indication = null
         ) { onExploreBudgetClick() })
 }
 
@@ -949,7 +948,7 @@ fun MerchantItem(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
             .padding(5.dp)
-            .clickable() { onClick() }
+            .clickableWithNoRipple { onClick() }
     ) {
         /*RoundImage(
             imageVector = Icons.Default.Person,
@@ -974,7 +973,8 @@ fun MerchantItem(
             style = MyAppTheme.typography.Regular44,
             color = MyAppTheme.colors.black,
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.size(55.dp)
         )
 
         if (!item.details.isNullOrEmpty()) {
@@ -1016,9 +1016,11 @@ fun OverviewItem(
 
             if (enableSeeAll) {
 
-                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.clickable(
-                    interactionSource = MutableInteractionSource(), indication = null
-                ) { onSeeAllClick() }) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.clickableWithNoRipple(
+                        //  interactionSource = MutableInteractionSource(), indication = null
+                    ) { onSeeAllClick() }) {
                     CustomText(
                         text = stringResource(id = trailingText),
                         style = MyAppTheme.typography.Semibold40,
