@@ -41,7 +41,6 @@ class AuthViewModel @Inject constructor(
     fun onEvent(
         mainEvent: SyncEvent,
     ) {
-        //println("aaaaa onEvent $mainEvent")
         viewModelScope.launch((Dispatchers.IO)) {
             when (mainEvent) {
                 SyncEvent.SignInGoogle -> handleSignInGoogle()

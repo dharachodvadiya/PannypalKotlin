@@ -16,11 +16,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
@@ -106,16 +108,21 @@ fun CustomProgressItem(
                     0.0F
                 }
 
-                // Display progress bar
+                CustomLinearProgressIndicator(
+                    progress = progress,
+                    color = if (remainAmount < 0) MyAppTheme.colors.redBg else MyAppTheme.colors.lightBlue1
+                )
+               /* // Display progress bar
                 LinearProgressIndicator(
                     progress = { progress },
+                    gapSize = (-5).dp,
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(5.dp))
                         .height(10.dp),
                     color = if (remainAmount < 0) MyAppTheme.colors.redBg else MyAppTheme.colors.lightBlue1,
                     trackColor = MyAppTheme.colors.gray1.copy(0.2f),
-                )
+                )*/
                 if (remainAmount < 0) {
 
                     Spacer(modifier = Modifier.height(5.dp))
@@ -238,16 +245,22 @@ fun CustomProgressItemWithDate(
                     0.0F
                 }
 
-                // Display progress bar
+                CustomLinearProgressIndicator(
+                    progress = progress,
+                    color = if (remainAmount < 0) MyAppTheme.colors.redBg else MyAppTheme.colors.lightBlue1
+                )
+
+                /*// Display progress bar
                 LinearProgressIndicator(
                     progress = { progress },
+                    gapSize = (-5).dp,
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(5.dp))
                         .height(10.dp),
                     color = if (remainAmount < 0) MyAppTheme.colors.redBg else MyAppTheme.colors.lightBlue1,
                     trackColor = MyAppTheme.colors.gray1.copy(0.2f),
-                )
+                )*/
                 if (remainAmount < 0) {
 
                     Spacer(modifier = Modifier.height(5.dp))
@@ -281,12 +294,33 @@ fun CustomProgressItemWithDate(
     )
 }
 
+@Composable
+fun CustomLinearProgressIndicator(
+    progress : Float,
+    color : Color,
+    height : Dp = 10.dp,
+    cornerRadius: Dp = 5.dp
+)
+{
+    // Display progress bar
+    LinearProgressIndicator(
+        progress = { progress },
+        gapSize = (-5).dp,
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(cornerRadius))
+            .height(height),
+        color = color,
+        trackColor = MyAppTheme.colors.gray1.copy(0.2f),
+    )
+}
+
 @Preview
 @Composable
 private fun CustomProgressItemPreview() {
     PennyPalTheme(darkTheme = true) {
         CustomProgressItem(
-            name = "aaa",
+            name = "fsdf",
             totalAmount = 100.0,
             spentAmount = 30.0,
             onClick = {}
@@ -299,7 +333,7 @@ private fun CustomProgressItemPreview() {
 private fun CustomProgressItemDatePreview() {
     PennyPalTheme(darkTheme = true) {
         CustomProgressItemWithDate(
-            name = "aaa",
+            name = "fsds",
             totalAmount = 100.0,
             spentAmount = 30.0,
             onClick = {},

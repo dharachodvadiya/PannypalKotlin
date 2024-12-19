@@ -975,7 +975,7 @@ fun MerchantItem(
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             textAlign = TextAlign.Center,
-            modifier = Modifier.size(55.dp)
+            modifier = Modifier.width(55.dp)
         )
 
         if (!item.details.isNullOrEmpty()) {

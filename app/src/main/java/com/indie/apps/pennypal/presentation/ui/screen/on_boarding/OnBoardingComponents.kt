@@ -96,23 +96,6 @@ fun OnBoardingIntroPage(
             // Define a pager state
             val pagerState = rememberPagerState()
 
-            /*// CoroutineScope to launch auto-scroll feature
-            val scope = rememberCoroutineScope()
-
-            LaunchedEffect(true) {
-                println("aaaaa 111")
-                while (true) {
-                    println("aaaaa 222")
-                    delay(2000) // auto scroll every 3 seconds
-                    if (pagerState.currentPage < pages.size - 1) {
-                        pagerState.animateScrollToPage(pagerState.currentPage + 1)
-                    } else {
-                        pagerState.animateScrollToPage(0) // loop back to the first page
-                    }
-                    println("aaaaa 333")
-                }
-            }*/
-
             Column(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally

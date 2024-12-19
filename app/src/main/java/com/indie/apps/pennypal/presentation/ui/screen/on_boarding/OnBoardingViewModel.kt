@@ -54,15 +54,6 @@ class OnBoardingViewModel @Inject constructor(
     )
 
     init {
-        /*viewModelScope.launch {
-            userRepository.getUser()
-                .collect { user ->
-                    println("aaaaa $user")
-                    if (currencyCountryCode.value.isEmpty()) setCountryCode(user.currencyCountryCode)
-                    updateNameText(user.name)
-
-                }
-        }*/
         viewModelScope.launch { userData.collect() }
     }
 

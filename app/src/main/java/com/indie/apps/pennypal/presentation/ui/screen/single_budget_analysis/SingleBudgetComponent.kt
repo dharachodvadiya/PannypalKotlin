@@ -11,16 +11,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AutoGraph
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
@@ -37,6 +34,7 @@ import com.indie.apps.pennypal.data.module.category.CategoryAmount
 import com.indie.apps.pennypal.presentation.ui.component.TopBarWithTitle
 import com.indie.apps.pennypal.presentation.ui.component.chart.PieChart
 import com.indie.apps.pennypal.presentation.ui.component.clickableWithNoRipple
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomLinearProgressIndicator
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomProgressItem
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListItem
@@ -286,9 +284,10 @@ fun IncludedCategoryAnalysis(
         }
 
         Column {
-            categoryList.sortedByDescending { it.amount }.forEach { item ->
+            val sortedList =categoryList.sortedByDescending { it.amount }
+            sortedList.forEach { item ->
                 CategorySpentListItem(
-                    totalAmount = categoryList.first().amount,
+                    totalAmount = sortedList.first().amount,
                     item = item,
                     itemBgColor = MyAppTheme.colors.transparent
                 )
@@ -345,15 +344,23 @@ private fun CategorySpentListItem(
                     0.0F
                 }
 
-                // Display progress bar
+                /*// Display progress bar
                 LinearProgressIndicator(
                     progress = { progress },
+                    gapSize = (-5).dp,
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(2.dp))
                         .height(5.dp),
                     color = getCategoryColor(item.name),
                     trackColor = MyAppTheme.colors.gray1.copy(0.2f),
+                )*/
+
+                CustomLinearProgressIndicator(
+                    progress = progress,
+                    color = getCategoryColor(item.name),
+                    height = 5.dp,
+                    cornerRadius = 2.dp
                 )
             }
 

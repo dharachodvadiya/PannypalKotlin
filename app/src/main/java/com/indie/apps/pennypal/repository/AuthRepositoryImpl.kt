@@ -94,17 +94,17 @@ class AuthRepositoryImpl @Inject constructor(
                         return UserInfoResult(authResult.user!!.email!!)
 
                     } catch (e: GoogleIdTokenParsingException) {
-                        println("aaa Received an invalid google id token response $e")
+                        //println("aaa Received an invalid google id token response $e")
                         return null
                     }
-                } else {
+                } /*else {
                     println("aaa Unexpected type of credential ... ${credential.type}")
-                }
+                }*/
             }
-
+/*
             else -> {
                 println("aaa Unexpected type of credential... ${credential.type}")
-            }
+            }*/
         }
         return null
     }
