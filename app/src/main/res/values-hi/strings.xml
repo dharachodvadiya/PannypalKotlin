@@ -208,6 +208,10 @@
     <string name="gujarati">गुजराती</string>
     <string name="select">चुनें</string>
 
+    <string name="restore_title">अपना डेटा पुनर्स्थापित करें</string>
+    <string name="restore_subtitle">बैकअप उपलब्ध है। इस डिवाइस पर अपने खर्चों का प्रबंधन जारी रखने के लिए अपना डेटा पुनर्स्थापित करें।</string>
+
+
     <string-array name="months">
         <item>जनवरी</item>
         <item>फरवरी</item>

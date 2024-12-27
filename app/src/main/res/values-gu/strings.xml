@@ -208,6 +208,10 @@
     <string name="gujarati">ગુજરાતી</string>
     <string name="select">પસંદ કરો</string>
 
+    <string name="restore_title">તમારો ડેટા પુનઃસ્થાપિત કરો</string>
+    <string name="restore_subtitle">બેકઅપ ઉપલબ્ધ છે. આ ઉપકરણ પર તમારા ખર્ચનું સંચાલન ચાલુ રાખવા માટે તમારો ડેટા પુનઃસ્થાપિત કરો.</string>
+
+
     <string-array name="months">
         <item>જાન્યુઆરી</item>
         <item>ફેબ્રુઆરી</item>
