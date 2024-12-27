@@ -179,7 +179,7 @@ fun SettingScreenData(
             )
 
             SettingTypeItem(
-                titleId = R.string.more,
+                titleId = R.string.backup_restore,
                 dataList = backupRestoreList,
                 onSelect = onSelect,
                 arrowIconEnable = false

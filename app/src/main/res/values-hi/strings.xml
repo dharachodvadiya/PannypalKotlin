@@ -199,4 +199,5 @@
     <string name="from_date_greater_than_to_date">प्रारंभ तिथि से समाप्ति तिथि बड़ी होनी चाहिए</string>
     <string name="category_limit_within_total_budget">श्रेणी की सीमा आपके कुल बजट के भीतर होनी चाहिए</string>
     <string name="enter_budget_title">अपने बजट का शीर्षक दर्ज करें</string>
+    <string name="backup_restore">बैकअप और पुनर्स्थापना</string>
 </resources>

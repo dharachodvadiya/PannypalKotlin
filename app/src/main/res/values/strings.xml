@@ -199,4 +199,5 @@
     <string name="from_date_greater_than_to_date">From Date must be grater than To Date</string>
     <string name="category_limit_within_total_budget">Category limit must be within your total budget.</string>
     <string name="enter_budget_title">Enter Your Budget Title</string>
+    <string name="backup_restore"><![CDATA[Backup & Restore]]></string>
 </resources>
