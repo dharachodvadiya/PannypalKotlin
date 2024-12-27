@@ -241,7 +241,7 @@ fun NewEntryFieldItemSection(
             onTextChange = onAmountTextChange
         )
         TextFieldError(
-            textError = amount.errorText
+            textError = amount.errorText.asString()
         )
         Spacer(modifier = Modifier.height(10.dp))
 
@@ -253,7 +253,7 @@ fun NewEntryFieldItemSection(
             onTextChange = onDescTextChange
         )
         TextFieldError(
-            textError = description.errorText
+            textError = description.errorText.asString()
         )
 
     }

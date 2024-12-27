@@ -186,4 +186,17 @@
     <string name="begin_title">પેનીપાલ સાથે તમારા જીવનને સંકલિત કરો</string>
     <string name="begin_subtitle">પેનીપાલ તમને વૈજ્ઞાનિકો પર આધારિત નવી આદત બનાવવામાં મદદ કરશે </string>
     <string name="this_year">આ વર્ષ</string>
+    <string name="enter_name">નામ દાખલ કરો</string>
+    <string name="enter_merchant_name">નાણાં લેનારનું નામ દાખલ કરો</string>
+    <string name="enter_amount">રકમ દાખલ કરો</string>
+    <string name="enter_payment_type">ચુકવણી પ્રકાર દાખલ કરો</string>
+    <string name="merchant_name_already_used">નાણાં લેનારનું નામ પહેલાથી વપરાયેલું છે</string>
+    <string name="payment_name_already_used">ચુકવણી નામ પહેલાથી વપરાયેલું છે</string>
+    <string name="enter_valid_phone_number">માન્ય ફોન નંબર દાખલ કરો</string>
+    <string name="select_date">તારીખ પસંદ કરો</string>
+    <string name="budget_exist_for_this_month">આ મહિને બજેટ પહેલેથી ઉપલબ્ધ છે</string>
+    <string name="budget_exist_for_this_year">આ વર્ષ માટે બજેટ પહેલેથી ઉપલબ્ધ છે</string>
+    <string name="from_date_greater_than_to_date">પ્રારંભ તારીખ કરતાં અંત તારીખ મોટી હોવી જોઈએ</string>
+    <string name="category_limit_within_total_budget">વર્ગની મર્યાદા તમારા કુલ બજેટની અંદર હોવી જોઈએ</string>
+    <string name="enter_budget_title">તમારા બજેટનું શીર્ષક દાખલ કરો</string>
 </resources>

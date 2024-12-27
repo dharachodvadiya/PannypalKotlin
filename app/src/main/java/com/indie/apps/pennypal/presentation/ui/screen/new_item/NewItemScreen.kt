@@ -132,11 +132,11 @@ fun NewItemScreen(
                 //val imeState by rememberImeState {}
                 val scrollState = rememberScrollState()
 
-               /* LaunchedEffect(key1 = haveFocus) {
-                    if (haveFocus) {
-                        scrollState.animateScrollTo(scrollState.maxValue, tween(300))
-                    }
-                }*/
+                /* LaunchedEffect(key1 = haveFocus) {
+                     if (haveFocus) {
+                         scrollState.animateScrollTo(scrollState.maxValue, tween(300))
+                     }
+                 }*/
 
                 Column(
                     modifier = modifier
@@ -146,9 +146,9 @@ fun NewItemScreen(
                         .padding(horizontal = dimensionResource(id = R.dimen.padding))
                         .imePadding()
                         .verticalScroll(scrollState)
-                        /*.onFocusEvent {
-                           // haveFocus = it.isFocused
-                        }*/
+                    /*.onFocusEvent {
+                       // haveFocus = it.isFocused
+                    }*/
                 ) {
                     NewEntryTopSelectionButton(
                         received = received,
@@ -182,9 +182,9 @@ fun NewItemScreen(
                         categoryName = category?.name,
                         amount = amount,
                         description = description,
-                        merchantError = merchantError,
-                        paymentError = paymentError,
-                        categoryError = categoryError,
+                        merchantError = merchantError.asString(),
+                        paymentError = paymentError.asString(),
+                        categoryError = categoryError.asString(),
                         isMerchantLock = isMerchantLock,
                         onAmountTextChange = newItemViewModel::updateAmountText,
                         onDescTextChange = newItemViewModel::updateDescText

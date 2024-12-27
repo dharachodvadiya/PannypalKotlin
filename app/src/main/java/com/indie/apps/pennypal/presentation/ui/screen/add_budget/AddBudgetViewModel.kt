@@ -3,6 +3,7 @@ package com.indie.apps.pennypal.presentation.ui.screen.add_budget
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.database.entity.Category
 import com.indie.apps.pennypal.data.database.entity.toCategoryAmount
 import com.indie.apps.pennypal.data.database.enum.PeriodType
@@ -10,6 +11,7 @@ import com.indie.apps.pennypal.data.module.budget.BudgetWithCategory
 import com.indie.apps.pennypal.data.module.category.CategoryAmount
 import com.indie.apps.pennypal.domain.usecase.AddBudgetUseCase
 import com.indie.apps.pennypal.domain.usecase.UpdateBudgetUseCase
+import com.indie.apps.pennypal.presentation.ui.component.UiText
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.repository.BudgetRepository
 import com.indie.apps.pennypal.repository.CategoryRepository
@@ -37,14 +39,14 @@ class AddBudgetViewModel @Inject constructor(
 
     val currentPeriod = MutableStateFlow(PeriodType.MONTH.id)
 
-    private var monthError = ""
-    private var yearError = ""
+    private var monthError = UiText.StringResource(R.string.empty)
+    private var yearError = UiText.StringResource(R.string.empty)
 
-    val periodErrorText = MutableStateFlow("")
-    val periodFromErrorText = MutableStateFlow("")
-    val periodToErrorText = MutableStateFlow("")
-    val categoryErrorText = MutableStateFlow("")
-    val categoryBudgetErrorText = MutableStateFlow("")
+    val periodErrorText = MutableStateFlow(UiText.StringResource(R.string.empty))
+    val periodFromErrorText = MutableStateFlow(UiText.StringResource(R.string.empty))
+    val periodToErrorText = MutableStateFlow(UiText.StringResource(R.string.empty))
+    val categoryErrorText = MutableStateFlow(UiText.StringResource(R.string.empty))
+    val categoryBudgetErrorText = MutableStateFlow(UiText.StringResource(R.string.empty))
 
     val currentMonthInMilli = MutableStateFlow(0L)
     val currentYearInMilli = MutableStateFlow(0L)
@@ -149,7 +151,7 @@ class AddBudgetViewModel @Inject constructor(
             }
 
             else -> {
-                periodErrorText.value = ""
+                periodErrorText.value = UiText.StringResource(R.string.empty)
             }
         }
     }
@@ -260,7 +262,7 @@ class AddBudgetViewModel @Inject constructor(
         if (remainingAmount.value < 0) {
             categoryBudgetErrorText.value = ErrorMessage.CATEGORY_LIMIT
         } else {
-            categoryBudgetErrorText.value = ""
+            categoryBudgetErrorText.value = UiText.StringResource(R.string.empty)
         }
     }
 
@@ -276,7 +278,7 @@ class AddBudgetViewModel @Inject constructor(
             currentPeriod.value == PeriodType.ONE_TIME.id &&
             currentFromTimeInMilli.value >= currentToTimeInMilli.value
         ) {
-            periodFromErrorText.value = ""
+            periodFromErrorText.value = UiText.StringResource(R.string.empty)
             periodToErrorText.value = ErrorMessage.INCORRECT_DATE
         } else if (currentPeriod.value == PeriodType.MONTH.id && currentMonthInMilli.value == 0L) {
             periodErrorText.value = ErrorMessage.SELECT_MONTH
@@ -389,20 +391,20 @@ class AddBudgetViewModel @Inject constructor(
             }
 
             else -> {
-                periodErrorText.value = ""
+                periodErrorText.value = UiText.StringResource(R.string.empty)
             }
         }
     }
 
     private fun clearAllError() {
-        amount.value.setError("")
-        periodErrorText.value = ""
-        periodFromErrorText.value = ""
-        periodToErrorText.value = ""
-        categoryErrorText.value = ""
-        categoryBudgetErrorText.value = ""
-        monthError = ""
-        yearError = ""
+        amount.value.setError(UiText.StringResource(R.string.empty))
+        periodErrorText.value = UiText.StringResource(R.string.empty)
+        periodFromErrorText.value = UiText.StringResource(R.string.empty)
+        periodToErrorText.value = UiText.StringResource(R.string.empty)
+        categoryErrorText.value = UiText.StringResource(R.string.empty)
+        categoryBudgetErrorText.value = UiText.StringResource(R.string.empty)
+        monthError = UiText.StringResource(R.string.empty)
+        yearError = UiText.StringResource(R.string.empty)
 
     }
 

@@ -288,7 +288,7 @@ fun DialogTextFieldItem(
             )
         }
         TextFieldError(
-            textError = textState.getError()
+            textError = textState.getError().asString()
         )
     }
 

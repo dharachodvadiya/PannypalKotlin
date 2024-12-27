@@ -3,6 +3,7 @@ package com.indie.apps.pennypal.presentation.ui.screen.new_item
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.database.entity.Category
 import com.indie.apps.pennypal.data.database.entity.MerchantData
 import com.indie.apps.pennypal.data.database.entity.Payment
@@ -12,6 +13,7 @@ import com.indie.apps.pennypal.domain.usecase.AddMerchantDataUseCase
 import com.indie.apps.pennypal.domain.usecase.GetMerchantDataFromIdUseCase
 import com.indie.apps.pennypal.domain.usecase.GetPaymentFromIdUseCase
 import com.indie.apps.pennypal.domain.usecase.UpdateMerchantDataUseCase
+import com.indie.apps.pennypal.presentation.ui.component.UiText
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.repository.CategoryRepository
 import com.indie.apps.pennypal.repository.MerchantRepository
@@ -59,9 +61,9 @@ class NewItemViewModel @Inject constructor(
 
     val currentTimeInMilli = MutableStateFlow(0L)
 
-    var merchantError = MutableStateFlow("")
-    var paymentError = MutableStateFlow("")
-    var categoryError = MutableStateFlow("")
+    var merchantError = MutableStateFlow(UiText.StringResource(R.string.empty))
+    var paymentError = MutableStateFlow(UiText.StringResource(R.string.empty))
+    var categoryError = MutableStateFlow(UiText.StringResource(R.string.empty))
 
     val uiState = MutableStateFlow<Resource<Unit>>(Resource.Loading())
 
@@ -166,17 +168,17 @@ class NewItemViewModel @Inject constructor(
     }
 
     fun setMerchantData(data: MerchantNameAndDetails) {
-        merchantError.value = ""
+        merchantError.value = UiText.StringResource(R.string.empty)
         merchant.value = data
     }
 
     fun setPaymentData(data: Payment) {
-        paymentError.value = ""
+        paymentError.value = UiText.StringResource(R.string.empty)
         payment.value = data
     }
 
     fun setCategory(data: Category?) {
-        categoryError.value = ""
+        categoryError.value = UiText.StringResource(R.string.empty)
         category.value = data
 
         if (received.value) {

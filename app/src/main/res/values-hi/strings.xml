@@ -186,4 +186,17 @@
     <string name="begin_title">PennyPal के साथ अपने जीवन को व्यवस्थित करें</string>
     <string name="begin_subtitle">PennyPal आपको व्यवहार विज्ञान के आधार पर नई आदतें बनाने में मदद करता है</string>
     <string name="this_year">इस साल</string>
+    <string name="enter_name">नाम दर्ज करें</string>
+    <string name="enter_merchant_name">विक्रेता का नाम दर्ज करें</string>
+    <string name="enter_amount">राशि दर्ज करें</string>
+    <string name="enter_payment_type">भुगतान प्रकार दर्ज करें</string>
+    <string name="merchant_name_already_used">विक्रेता का नाम पहले से उपयोग में है</string>
+    <string name="payment_name_already_used">भुगतान नाम पहले से उपयोग में है</string>
+    <string name="enter_valid_phone_number">सही फोन नंबर दर्ज करें</string>
+    <string name="select_date">तारीख चुनें</string>
+    <string name="budget_exist_for_this_month">इस महीने का बजट पहले से उपलब्ध है</string>
+    <string name="budget_exist_for_this_year">इस साल का बजट पहले से उपलब्ध है</string>
+    <string name="from_date_greater_than_to_date">प्रारंभ तिथि से समाप्ति तिथि बड़ी होनी चाहिए</string>
+    <string name="category_limit_within_total_budget">श्रेणी की सीमा आपके कुल बजट के भीतर होनी चाहिए</string>
+    <string name="enter_budget_title">अपने बजट का शीर्षक दर्ज करें</string>
 </resources>

@@ -1,6 +1,8 @@
 package com.indie.apps.pennypal.util
 
 import android.database.sqlite.SQLiteConstraintException
+import com.indie.apps.pennypal.R
+import com.indie.apps.pennypal.presentation.ui.component.UiText
 import java.io.IOException
 
 sealed class AppError(val message: String) {
@@ -19,25 +21,24 @@ fun handleException(e: Throwable): AppError {
 }
 
 object ErrorMessage {
-    const val USER_NAME_EMPTY = "Enter Name"
-    const val MERCHANT_NAME_EMPTY = "Enter Merchant Name"
-    const val AMOUNT_EMPTY = "Enter Amount"
-    const val AMOUNT_PAYMENT_TYPE = "Enter Payment Type"
+    val USER_NAME_EMPTY = UiText.StringResource(R.string.enter_name)
+    val MERCHANT_NAME_EMPTY = UiText.StringResource(R.string.enter_merchant_name)
+    val AMOUNT_EMPTY = UiText.StringResource(R.string.enter_amount)
+    val AMOUNT_PAYMENT_TYPE = UiText.StringResource(R.string.enter_payment_type)
 
-    const val MERCHANT_EXIST = "Merchant Name Already Used"
-    const val PAYMENT_TYPE_EXIST = "Payment Name Already Used"
-    const val PHONE_NO_INVALID = "Enter Valid Phone Number"
-    const val SELECT_MERCHANT = "Select Merchant"
-    const val SELECT_PAYMENT = "Select Payment"
-    const val SELECT_CATEGORY = "Select Category"
+    val MERCHANT_EXIST = UiText.StringResource(R.string.merchant_name_already_used)
+    val PAYMENT_TYPE_EXIST = UiText.StringResource(R.string.payment_name_already_used)
+    val PHONE_NO_INVALID = UiText.StringResource(R.string.enter_valid_phone_number)
+    val SELECT_MERCHANT = UiText.StringResource(R.string.select_merchant)
+    val SELECT_PAYMENT = UiText.StringResource(R.string.select_payment)
+    val SELECT_CATEGORY = UiText.StringResource(R.string.select_category)
 
-    const val SELECT_MONTH = "Select Month"
-    const val SELECT_YEAR = "Select Year"
-    const val SELECT_DATE = "Select Date"
-    const val BUDGET_EXIST_MONTH = "Budget Exist For This Month"
-    const val BUDGET_EXIST_YEAR = "Budget Exist For This Year"
-    const val INCORRECT_DATE = "From Date must be grater than To Date"
-    const val CATEGORY_LIMIT = "Category limit must be within your total budget."
-    const val BUDGET_TITLE_EMPTY = "Enter Your Budget Title"
-
+    val SELECT_MONTH = UiText.StringResource(R.string.select_month)
+    val SELECT_YEAR = UiText.StringResource(R.string.select_year)
+    val SELECT_DATE = UiText.StringResource(R.string.select_date)
+    val BUDGET_EXIST_MONTH = UiText.StringResource(R.string.budget_exist_for_this_month)
+    val BUDGET_EXIST_YEAR = UiText.StringResource(R.string.budget_exist_for_this_year)
+    val INCORRECT_DATE = UiText.StringResource(R.string.from_date_greater_than_to_date)
+    val CATEGORY_LIMIT = UiText.StringResource(R.string.category_limit_within_total_budget)
+    val BUDGET_TITLE_EMPTY = UiText.StringResource(R.string.enter_budget_title)
 }

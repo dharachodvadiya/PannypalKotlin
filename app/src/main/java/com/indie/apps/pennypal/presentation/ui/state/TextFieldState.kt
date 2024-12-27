@@ -3,6 +3,8 @@ package com.indie.apps.pennypal.presentation.ui.state
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import com.indie.apps.pennypal.R
+import com.indie.apps.pennypal.presentation.ui.component.UiText
 
 /*class TextFieldState {
     var text: String by mutableStateOf("")
@@ -34,29 +36,25 @@ import androidx.compose.runtime.setValue
 class TextFieldState {
     var text: String by mutableStateOf("")
         private set
-    var errorText: String by mutableStateOf("")
+    var errorText: UiText by mutableStateOf(UiText.StringResource(R.string.empty))
         private set
 
     private var displayErrors: Boolean by mutableStateOf(false)
 
     private fun shouldShowErrors() = displayErrors
 
-    fun getError(): String {
-        return if (shouldShowErrors()) {
-            errorText
-        } else {
-            ""
-        }
+    fun getError(): UiText {
+        return errorText
     }
 
-    fun setError(newErrorText: String) {
+    fun setError(newErrorText: UiText) {
         displayErrors = true
         this.errorText = newErrorText
     }
 
     private fun clearError() {
         displayErrors = false
-        this.errorText = ""
+        this.errorText = UiText.StringResource(R.string.empty)
     }
 
     fun updateText(newText: String) {
