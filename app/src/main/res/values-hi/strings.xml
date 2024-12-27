@@ -86,8 +86,8 @@
     <string name="discard_dialog_title">हटाएं</string>
     <string name="discard_dialog_text">क्या आप वाकई परिवर्तन को हटाना चाहते हैं?</string>
     <string name="allow">अनुमति दें</string>
-    <string name="cancel">रद्द करें</string>
-    <string name="discard">हटाएं</string>
+    <string name="cancel">नहीं</string>
+    <string name="discard">हाँ</string>
     <string name="edit_dialog_title">बाहर जाएं</string>
     <string name="category">श्रेणी</string>
     <string name="add_category_placeholder">श्रेणी चुनें</string>
@@ -96,7 +96,7 @@
     <string name="no_transaction">कोई डेटा नहीं है</string>
     <string name="see_all">सभी देखें</string>
     <string name="recent_transaction">हाल के लेन-देन</string>
-    <string name="recent_merchant">हाल के विक्रेता</string>
+    <string name="recent_merchant">विक्रेता</string>
     <string name="this_month">इस महीने</string>
     <string name="expense_analysis">खर्च विश्लेषण</string>
     <string name="explore">और जानें</string>

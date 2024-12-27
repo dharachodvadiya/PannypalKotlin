@@ -86,8 +86,8 @@
     <string name="discard_dialog_title">Discard</string>
     <string name="discard_dialog_text">Are you sure you want to discard changes?</string>
     <string name="allow">Allow</string>
-    <string name="cancel">Cancel</string>
-    <string name="discard">Discard</string>
+    <string name="cancel">No</string>
+    <string name="discard">Yes</string>
     <string name="edit_dialog_title">Exit</string>
     <string name="category">Category</string>
     <string name="add_category_placeholder">Select Category</string>
