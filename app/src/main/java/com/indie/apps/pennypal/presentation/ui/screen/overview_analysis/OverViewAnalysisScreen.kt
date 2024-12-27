@@ -60,7 +60,7 @@ fun OverViewAnalysisScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            PeriodText(currentPeriod?.title ?: "")
+            PeriodText(currentPeriod?.let { stringResource(currentPeriod!!.title) } ?: "")
             OverViewAnalysisCategoryChart(
                 categoryList = currentMonthCategory
             )

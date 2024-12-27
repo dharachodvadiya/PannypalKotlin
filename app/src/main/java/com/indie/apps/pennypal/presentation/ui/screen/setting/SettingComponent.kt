@@ -121,9 +121,9 @@ fun SettingItem(
                 style = MyAppTheme.typography.Semibold50,
                 color = MyAppTheme.colors.black
             )
-            if (!data.subTitle.isNullOrEmpty()) {
+            data.subTitle?.let {
                 CustomText(
-                    text = data.subTitle,
+                    text = it.asString(),
                     style = MyAppTheme.typography.Medium40,
                     color = MyAppTheme.colors.gray2
                 )

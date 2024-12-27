@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.presentation.ui.component.TextWithRadioButton
@@ -25,7 +26,7 @@ fun DialogSelectBalanceViewData(
         optionList.forEach { item ->
             TextWithRadioButton(
                 isSelected = item.index == selectedIndex,
-                name = item.title,
+                name = stringResource(item.title),
                 onSelect = { onSelect(item) },
             )
 

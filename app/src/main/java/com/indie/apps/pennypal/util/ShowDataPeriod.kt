@@ -1,12 +1,14 @@
 package com.indie.apps.pennypal.util
 
+import com.indie.apps.pennypal.R
+
 enum class ShowDataPeriod(
-    val title: String,
+    val title: Int,
     val index: Int
 ) {
 
-    THIS_MONTH("This Month", 1),
-    THIS_YEAR("This Year", 3);
+    THIS_MONTH(R.string.this_month, 1),
+    THIS_YEAR(R.string.this_year, 3);
 
     companion object {
         fun fromIndex(index: Int): ShowDataPeriod? {
