@@ -41,10 +41,12 @@ fun SettingScreen(
     onCurrencyChange: (String) -> Unit,
     onDefaultPaymentChange: (Long) -> Unit,
     onBalanceViewChange: () -> Unit,
+    onLanguageChange: () -> Unit,
     bottomPadding: PaddingValues,
 ) {
 
     val generalList by settingViewModel.generalList.collectAsStateWithLifecycle()
+    val languageList by settingViewModel.languageList.collectAsStateWithLifecycle()
     val moreList by settingViewModel.moreList.collectAsStateWithLifecycle()
     val backupRestoreList by settingViewModel.backupRestoreList.collectAsStateWithLifecycle()
     val userState by settingViewModel.userState.collectAsStateWithLifecycle()
@@ -91,6 +93,9 @@ fun SettingScreen(
                 is SettingEffect.OnCurrencyChange -> onCurrencyChange(settingEffect.countryCode)
                 is SettingEffect.OnDefaultPaymentChange -> onDefaultPaymentChange(settingEffect.id)
                 SettingEffect.OnBalanceViewChange -> onBalanceViewChange()
+                SettingEffect.OnLanguageChange -> {
+                    onLanguageChange()
+                }
 
                 SettingEffect.Share -> onShareClick(context)
                 SettingEffect.Rate -> onRateClick(context)
@@ -114,6 +119,7 @@ fun SettingScreen(
 
     SettingScreenData(
         generalList = generalList,
+        languageList = languageList,
         moreList = moreList,
         backupRestoreList = backupRestoreList,
         onSelect = {
@@ -140,6 +146,7 @@ fun SettingScreen(
 @Composable
 fun SettingScreenData(
     generalList: List<MoreItem>,
+    languageList: List<MoreItem>,
     moreList: List<MoreItem>,
     backupRestoreList: List<MoreItem>,
     onSelect: (MoreItem) -> Unit,
@@ -179,6 +186,14 @@ fun SettingScreenData(
             )
 
             SettingTypeItem(
+                titleId = R.string.language_support,
+                dataList = languageList,
+                onSelect = onSelect,
+                arrowIconEnable = true
+            )
+
+
+            SettingTypeItem(
                 titleId = R.string.backup_restore,
                 dataList = backupRestoreList,
                 onSelect = onSelect,
@@ -204,7 +219,8 @@ private fun SettingScreenPreview() {
             onDefaultPaymentChange = {},
             onCurrencyChange = {},
             onBalanceViewChange = {},
-            bottomPadding = PaddingValues(0.dp)
+            bottomPadding = PaddingValues(0.dp),
+            onLanguageChange = {}
         )
     }
 }

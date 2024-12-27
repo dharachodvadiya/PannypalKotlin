@@ -31,6 +31,7 @@ import com.indie.apps.pennypal.presentation.ui.dialog.multi_select_Category.Dial
 import com.indie.apps.pennypal.presentation.ui.dialog.search_merchant.DialogSearchMerchant
 import com.indie.apps.pennypal.presentation.ui.dialog.select_balance_view.DialogSelectBalanceView
 import com.indie.apps.pennypal.presentation.ui.dialog.select_category.DialogSelectCategory
+import com.indie.apps.pennypal.presentation.ui.dialog.select_language.DialogLanguage
 import com.indie.apps.pennypal.presentation.ui.dialog.select_payment.DialogSelectPayment
 import com.indie.apps.pennypal.presentation.ui.navigation.BottomNavItem
 import com.indie.apps.pennypal.presentation.ui.navigation.DialogNav
@@ -52,7 +53,7 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
     val merchantSaveToast = stringResource(id = R.string.merchant_save_success_toast)
     val merchantEditToast = stringResource(id = R.string.merchant_edit_success_message)
 
-     val isFirstLaunch = preferenceRepository.getBoolean(Util.PREF_NEW_INSTALL, true)
+    val isFirstLaunch = preferenceRepository.getBoolean(Util.PREF_NEW_INSTALL, true)
     //val isFirstLaunch = true
     PennyPalTheme(darkTheme = true) {
         val navController = rememberNavController()
@@ -367,6 +368,16 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
                     dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
                 ) {
                     DialogSelectBalanceView(
+                        onSelect = { navController.popBackStack() },
+                        onNavigationUp = { navController.popBackStack() }
+                    )
+                }
+
+                dialog(
+                    route = DialogNav.SELECT_LANGUAGE.route,
+                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
+                ) {
+                    DialogLanguage(
                         onSelect = { navController.popBackStack() },
                         onNavigationUp = { navController.popBackStack() }
                     )

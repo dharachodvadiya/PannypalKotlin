@@ -200,4 +200,32 @@
     <string name="category_limit_within_total_budget">Category limit must be within your total budget.</string>
     <string name="enter_budget_title">Enter Your Budget Title</string>
     <string name="backup_restore"><![CDATA[Backup & Restore]]></string>
+    <string name="current_language">Current Language</string>
+    <string name="language_support"><![CDATA[Language & Support]]></string>
+    <string name="select_language">Select Language</string>
+    <string name="english">English</string>
+    <string name="hindi">Hindi</string>
+    <string name="gujarati">Gujarati</string>
+    <string name="select">Select</string>
+
+    <string name="en" translatable="false">en</string>
+    <string name="hi" translatable="false">hi</string>
+    <string name="gu" translatable="false">gu</string>
+    <string name="restore_title">Restore Your Data</string>
+    <string name="restore_subtitle">A backup is available. Restore your data to continue managing your expenses on this device.</string>
+
+    <string-array name="months">
+        <item>JAN</item>
+        <item>FEB</item>
+        <item>MAR</item>
+        <item>APR</item>
+        <item>MAY</item>
+        <item>JUN</item>
+        <item>JUL</item>
+        <item>AUG</item>
+        <item>SEP</item>
+        <item>OCT</item>
+        <item>NOV</item>
+        <item>DEC</item>
+    </string-array>
 </resources>

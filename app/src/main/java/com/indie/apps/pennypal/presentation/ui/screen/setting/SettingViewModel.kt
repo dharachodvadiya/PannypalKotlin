@@ -5,15 +5,22 @@ import androidx.lifecycle.viewModelScope
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.module.MoreItem
 import com.indie.apps.pennypal.domain.usecase.GetGeneralSettingUseCase
+import com.indie.apps.pennypal.presentation.ui.component.UiText
 import com.indie.apps.pennypal.repository.AuthRepository
+import com.indie.apps.pennypal.repository.PreferenceRepository
 import com.indie.apps.pennypal.repository.UserRepository
+import com.indie.apps.pennypal.util.AppLanguage
 import com.indie.apps.pennypal.util.SettingEffect
 import com.indie.apps.pennypal.util.SettingOption
+import com.indie.apps.pennypal.util.Util
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,7 +30,8 @@ class SettingViewModel @Inject constructor(
     private val getGeneralSettingUseCase: GetGeneralSettingUseCase,
     private val userRepository: UserRepository,
     private val authRepository: AuthRepository,
-   // private val backupRepository: BackupRepository
+    private val preferenceRepository: PreferenceRepository,
+    // private val backupRepository: BackupRepository
 ) : ViewModel() {
 
     //private var isInProcess = false
@@ -38,6 +46,28 @@ class SettingViewModel @Inject constructor(
     //val processingState = MutableStateFlow(AuthProcess.NONE)
 
     var generalList = getGeneralSettingUseCase.loadData()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
+
+    val languageList = preferenceRepository.preferenceChangeListener()
+        .onStart { emit(Util.PREF_APP_LANGUAGE) }
+        .map {
+            val language = AppLanguage.fromIndex(
+                preferenceRepository.getInt(
+                    Util.PREF_APP_LANGUAGE,
+                    1
+                )
+            )?.title
+            listOf(
+                MoreItem(
+                    R.string.current_language,
+                    SettingOption.LANGUAGE_CHANGE,
+                    subTitle = language?.let {
+                        UiText.StringResource(
+                            it
+                        )
+                    }),
+            )
+        }.flowOn(Dispatchers.IO)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
 
     val moreList = MutableStateFlow(
@@ -71,15 +101,17 @@ class SettingViewModel @Inject constructor(
                         updateSyncTime()
                         SettingEffect.Backup
                     }
+
                     SettingOption.RESTORE -> SettingEffect.Restore
                     SettingOption.GOOGLE_SIGN_IN -> SettingEffect.GoogleSignIn
+                    SettingOption.LANGUAGE_CHANGE -> SettingEffect.OnLanguageChange
                 }
             )
         }
 
     }
 
-    fun updateSyncTime(){
+    fun updateSyncTime() {
         viewModelScope.launch {
             userRepository.updateLastSyncTime(System.currentTimeMillis())
         }

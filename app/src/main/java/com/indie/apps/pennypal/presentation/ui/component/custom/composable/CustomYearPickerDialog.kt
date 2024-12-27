@@ -30,6 +30,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -109,7 +111,7 @@ fun CustomYearPickerDialog(
                                 currentPage++
                             },
                         imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                        contentDescription = "previous",
+                        contentDescription = "next",
                         tint = MyAppTheme.colors.black
                     )
 
@@ -127,16 +129,29 @@ fun CustomYearPickerDialog(
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
                 ) {
-                    PrimaryButton(onClick = {
-                        onDateSelected(selectedYear)
-                    }) {
-                        CustomText("Select")
+                    PrimaryButton(
+                        modifier = Modifier.width(80.dp),
+                        onClick = {
+                            onDateSelected(selectedYear)
+                        }) {
+                        CustomText(
+                            stringResource(R.string.select),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
                     }
 
                     Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.padding)))
 
-                    PrimaryButton(onClick = onDismiss) {
-                        CustomText("Cancel")
+                    PrimaryButton(
+                        modifier = Modifier.width(80.dp),
+                        onClick = onDismiss
+                    ) {
+                        CustomText(
+                            stringResource(R.string.dismiss),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
                     }
                 }
 

@@ -200,4 +200,26 @@
     <string name="category_limit_within_total_budget">श्रेणी की सीमा आपके कुल बजट के भीतर होनी चाहिए</string>
     <string name="enter_budget_title">अपने बजट का शीर्षक दर्ज करें</string>
     <string name="backup_restore">बैकअप और पुनर्स्थापना</string>
+    <string name="current_language">वर्तमान भाषा</string>
+    <string name="language_support">भाषा और सहायता</string>
+    <string name="select_language">भाषा चुनें</string>
+    <string name="english">अंग्रेज़ी</string>
+    <string name="hindi">हिंदी</string>
+    <string name="gujarati">गुजराती</string>
+    <string name="select">चुनें</string>
+
+    <string-array name="months">
+        <item>जनवरी</item>
+        <item>फरवरी</item>
+        <item>मार्च</item>
+        <item>अप्रैल</item>
+        <item>मई</item>
+        <item>जून</item>
+        <item>जुलाई</item>
+        <item>अगस्त</item>
+        <item>सितंबर</item>
+        <item>अक्टूबर</item>
+        <item>नवंबर</item>
+        <item>दिसंबर</item>
+    </string-array>
 </resources>

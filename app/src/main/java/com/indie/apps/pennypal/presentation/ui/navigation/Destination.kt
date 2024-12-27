@@ -15,6 +15,7 @@ enum class DialogNav(val route: String) {
     SELECT_CATEGORY("Dialog/SelectCategory"),
     MULTI_SELECT_CATEGORY("Dialog/MultiSelectCategory"),
     SELECT_BALANCE_VIEW("Dialog/SelectBalanceView"),
+    SELECT_LANGUAGE("Dialog/SelectLanguage"),
 }
 
 enum class ScreenNav(val route: String) {

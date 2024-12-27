@@ -238,7 +238,7 @@ private fun ProfileAmountWithIcon(
 
         Spacer(modifier = Modifier.height(10.dp))
         CustomText(
-            text = "Balance",
+            text = stringResource(R.string.balance),
             style = MyAppTheme.typography.Medium33,
             color = MyAppTheme.colors.gray2
         )

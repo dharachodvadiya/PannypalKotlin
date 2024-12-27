@@ -53,6 +53,9 @@ fun NavGraphBuilder.settingRoute(
                     navController.currentBackStackEntry?.savedStateHandle?.set(
                         Util.SAVE_STATE_SAVABLE_DIALOG, true
                     )
+                },
+                onLanguageChange = {
+                    navController.navigate(DialogNav.SELECT_LANGUAGE.route)
                 })
         }
     }

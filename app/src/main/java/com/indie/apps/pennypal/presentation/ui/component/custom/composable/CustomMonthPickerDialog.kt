@@ -30,6 +30,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -52,20 +55,7 @@ fun CustomMonthPickerDialog(
     //val state = rememberDatePickerState(currentTimeInMilli + Util.TIME_ZONE_OFFSET_IN_MILLI)
     //val selectedYear by remember { mutableIntStateOf(currentYear) }
 
-    val months = listOf(
-        "JAN",
-        "FEB",
-        "MAR",
-        "APR",
-        "MAY",
-        "JUN",
-        "JUL",
-        "AUG",
-        "SEP",
-        "OCT",
-        "NOV",
-        "DEC"
-    )
+    val months = stringArrayResource(R.array.months)
 
     var monthIndex by remember {
         mutableIntStateOf(currentMonth)
@@ -126,7 +116,7 @@ fun CustomMonthPickerDialog(
                                 year++
                             },
                         imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                        contentDescription = "previous",
+                        contentDescription = "next",
                         tint = MyAppTheme.colors.black
                     )
 
@@ -184,16 +174,29 @@ fun CustomMonthPickerDialog(
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
                 ) {
-                    PrimaryButton(onClick = {
-                        onDateSelected(year, monthIndex)
-                    }) {
-                        CustomText("Select")
+                    PrimaryButton(
+                        modifier = Modifier.width(80.dp),
+                        onClick = {
+                            onDateSelected(year, monthIndex)
+                        }) {
+                        CustomText(
+                            stringResource(R.string.select),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
                     }
 
                     Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.padding)))
 
-                    PrimaryButton(onClick = onDismiss) {
-                        CustomText("Cancel")
+                    PrimaryButton(
+                        modifier = Modifier.width(80.dp),
+                        onClick = onDismiss
+                    ) {
+                        CustomText(
+                            stringResource(R.string.dismiss),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
                     }
                 }
 

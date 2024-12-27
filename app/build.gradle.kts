@@ -24,6 +24,9 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        defaultConfig {
+            resourceConfigurations.addAll(listOf("en", "hi", "gu"))
+        }
     }
 
     buildTypes {
@@ -73,6 +76,10 @@ android {
             excludes += "META-INF/*.kotlin_module"
         }
     }
+
+    androidResources {
+        generateLocaleConfig = true
+    }
 }
 
 dependencies {
@@ -92,6 +99,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-compose-android:2.8.7")
     implementation(project(":cpp"))
     implementation(project(":contacts"))
+    implementation("androidx.appcompat:appcompat:1.7.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
@@ -164,14 +172,14 @@ dependencies {
     implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
 
     //GDrive login/backup
-    implementation ("com.google.android.gms:play-services-auth:21.3.0")
-    implementation ("com.google.firebase:firebase-auth")
-    implementation ("com.google.apis:google-api-services-drive:v3-rev20220815-2.0.0")
+    implementation("com.google.android.gms:play-services-auth:21.3.0")
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.apis:google-api-services-drive:v3-rev20220815-2.0.0")
 
-   // implementation ("com.google.api-client:google-api-client:2.0.0")
-    implementation ("com.google.api-client:google-api-client-android:1.32.1")
+    // implementation ("com.google.api-client:google-api-client:2.0.0")
+    implementation("com.google.api-client:google-api-client-android:1.32.1")
     //implementation ("com.google.oauth-client:google-oauth-client-jetty:1.34.1")
-   // implementation ("com.google.auth:google-auth-library-oauth2-http:1.19.0")
+    // implementation ("com.google.auth:google-auth-library-oauth2-http:1.19.0")
 
     implementation("com.google.accompanist:accompanist-pager:0.25.1") // Check for the latest version
     implementation("com.google.accompanist:accompanist-pager-indicators:0.25.1") // For indicators

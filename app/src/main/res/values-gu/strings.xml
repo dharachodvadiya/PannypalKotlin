@@ -200,4 +200,26 @@
     <string name="category_limit_within_total_budget">વર્ગની મર્યાદા તમારા કુલ બજેટની અંદર હોવી જોઈએ</string>
     <string name="enter_budget_title">તમારા બજેટનું શીર્ષક દાખલ કરો</string>
     <string name="backup_restore">બેકઅપ અને રીસ્ટોર</string>
+    <string name="current_language">વર્તમાન ભાષા</string>
+    <string name="language_support">ભાષા અને સપોર્ટ</string>
+    <string name="select_language">ભાષા પસંદ કરો</string>
+    <string name="english">અંગ્રેજી</string>
+    <string name="hindi">હિન્દી</string>
+    <string name="gujarati">ગુજરાતી</string>
+    <string name="select">પસંદ કરો</string>
+
+    <string-array name="months">
+        <item>જાન્યુઆરી</item>
+        <item>ફેબ્રુઆરી</item>
+        <item>માર્ચ</item>
+        <item>એપ્રિલ</item>
+        <item>મેઇ</item>
+        <item>જૂન</item>
+        <item>જુલાઈ</item>
+        <item>ઑગસ્ટ</item>
+        <item>સપ્ટેમ્બર</item>
+        <item>ઑક્ટોબર</item>
+        <item>નવેમ્બર</item>
+        <item>ડિસેમ્બર</item>
+    </string-array>
 </resources>

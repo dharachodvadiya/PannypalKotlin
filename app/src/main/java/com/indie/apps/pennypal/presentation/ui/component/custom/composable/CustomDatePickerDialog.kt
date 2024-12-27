@@ -15,6 +15,9 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.indie.apps.pennypal.R
@@ -64,31 +67,44 @@ fun CustomDatePickerDialog(
                         ),
                     horizontalArrangement = Arrangement.End
                 ) {
-                    PrimaryButton(onClick = {
-                        if (state.selectedDateMillis != null) {
-                            val selectedCalender = Calendar.getInstance().apply {
-                                timeInMillis = state.selectedDateMillis!!
-                            }
+                    PrimaryButton(
+                        modifier = Modifier.width(80.dp),
+                        onClick = {
+                            if (state.selectedDateMillis != null) {
+                                val selectedCalender = Calendar.getInstance().apply {
+                                    timeInMillis = state.selectedDateMillis!!
+                                }
 
-                            val calendar = Calendar.getInstance().apply {
-                                timeInMillis = currentTimeInMilli
-                                set(Calendar.YEAR, selectedCalender.get(Calendar.YEAR))
-                                set(Calendar.MONTH, selectedCalender.get(Calendar.MONTH))
-                                set(
-                                    Calendar.DAY_OF_MONTH,
-                                    selectedCalender.get(Calendar.DAY_OF_MONTH)
-                                )
+                                val calendar = Calendar.getInstance().apply {
+                                    timeInMillis = currentTimeInMilli
+                                    set(Calendar.YEAR, selectedCalender.get(Calendar.YEAR))
+                                    set(Calendar.MONTH, selectedCalender.get(Calendar.MONTH))
+                                    set(
+                                        Calendar.DAY_OF_MONTH,
+                                        selectedCalender.get(Calendar.DAY_OF_MONTH)
+                                    )
+                                }
+                                onDateSelected(calendar)
                             }
-                            onDateSelected(calendar)
-                        }
-                    }) {
-                        CustomText("Select")
+                        }) {
+                        CustomText(
+                            stringResource(R.string.select),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
                     }
 
                     Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.padding)))
 
-                    PrimaryButton(onClick = onDismiss) {
-                        CustomText("Cancel")
+                    PrimaryButton(
+                        modifier = Modifier.width(80.dp),
+                        onClick = onDismiss
+                    ) {
+                        CustomText(
+                            stringResource(R.string.dismiss),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
                     }
                 }
             }

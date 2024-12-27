@@ -288,13 +288,13 @@ fun OnBoardingRestorePage(
                         .padding(16.dp),
                 ) {
                     CustomText(
-                        text = "Restore Your Data",
+                        text = stringResource(R.string.restore_title),
                         color = MyAppTheme.colors.black,
                         style = MyAppTheme.typography.Semibold90,
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     CustomText(
-                        text = "A backup is available. Restore your data to continue managing your expenses on this device.",
+                        text = stringResource(R.string.restore_subtitle),
                         color = MyAppTheme.colors.gray1,
                         style = MyAppTheme.typography.Regular57,
                     )

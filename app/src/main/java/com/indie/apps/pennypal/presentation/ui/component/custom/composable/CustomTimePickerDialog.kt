@@ -14,6 +14,9 @@ import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
@@ -68,20 +71,33 @@ fun CustomTimePickerDialog(
                     horizontalArrangement = Arrangement.End
                 ) {
                     //Spacer(modifier = Modifier.weight(1f))
-                    PrimaryButton(onClick = {
+                    PrimaryButton(
+                        modifier = Modifier.width(80.dp),
+                        onClick = {
 
-                        initCal.set(Calendar.HOUR_OF_DAY, state.hour)
-                        initCal.set(Calendar.MINUTE, state.minute)
+                            initCal.set(Calendar.HOUR_OF_DAY, state.hour)
+                            initCal.set(Calendar.MINUTE, state.minute)
 
-                        onTimeSelected(initCal)
-                    }) {
-                        CustomText("Select")
+                            onTimeSelected(initCal)
+                        }) {
+                        CustomText(
+                            stringResource(R.string.select),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
                     }
 
                     Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.padding)))
 
-                    PrimaryButton(onClick = onDismiss) {
-                        CustomText("Cancel")
+                    PrimaryButton(
+                        modifier = Modifier.width(80.dp),
+                        onClick = onDismiss
+                    ) {
+                        CustomText(
+                            stringResource(R.string.dismiss),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
                     }
                 }
             }
