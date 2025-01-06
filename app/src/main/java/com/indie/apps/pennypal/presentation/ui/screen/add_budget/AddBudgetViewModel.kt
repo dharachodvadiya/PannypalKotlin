@@ -34,7 +34,7 @@ class AddBudgetViewModel @Inject constructor(
 ) : ViewModel() {
 
     val budgetEditId =
-        savedStateHandle.get<String>(Util.PARAM_BUDGET_ID)?.toLong() ?: -1L
+        savedStateHandle.get<String>(Util.PARAM_BUDGET_ID)?.toLongOrNull() ?: -1L
     private var editBudgetData: BudgetWithCategory? = null
 
     val currentPeriod = MutableStateFlow(PeriodType.MONTH.id)

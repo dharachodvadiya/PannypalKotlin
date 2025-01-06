@@ -17,7 +17,7 @@ internal fun NavGraphBuilder.navigateToSingleBudgetScreen(
             onNavigationUp = { navController.navigateUp() },
             onEditClick = {
                 navController.navigate(
-                    ScreenNav.EDIT_BUDGET.route.replace(
+                    ScreenNav.ADD_EDIT_BUDGET.route.replace(
                         "{${Util.PARAM_BUDGET_ID}}", it.toString()
                     )
                 )

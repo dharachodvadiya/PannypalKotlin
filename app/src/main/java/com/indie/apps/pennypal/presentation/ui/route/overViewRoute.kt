@@ -7,8 +7,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.navigation
 import com.indie.apps.pennypal.presentation.ui.navigation.BottomNavItem
 import com.indie.apps.pennypal.presentation.ui.navigation.ScreenNav
-import com.indie.apps.pennypal.presentation.ui.screen.add_budget.navigateToAddBudgetScreen
-import com.indie.apps.pennypal.presentation.ui.screen.add_budget.navigateToEditBudgetScreen
+import com.indie.apps.pennypal.presentation.ui.screen.add_budget.navigateToAddEditBudgetScreen
 import com.indie.apps.pennypal.presentation.ui.screen.all_data.navigateToAllDataScreen
 import com.indie.apps.pennypal.presentation.ui.screen.budget.navigateToBudgetScreen
 import com.indie.apps.pennypal.presentation.ui.screen.budget_filter.navigateToBudgetFilterScreen
@@ -42,9 +41,9 @@ fun NavGraphBuilder.overViewRoute(
 
         navigateToSingleBudgetScreen(navController, bottomBarState)
 
-        navigateToAddBudgetScreen(navController, bottomBarState)
+        //navigateToAddBudgetScreen(navController, bottomBarState)
 
-        navigateToEditBudgetScreen(navController, bottomBarState)
+        navigateToAddEditBudgetScreen(navController, bottomBarState)
 
         navigateToBudgetFilterScreen(navController, bottomBarState)
 

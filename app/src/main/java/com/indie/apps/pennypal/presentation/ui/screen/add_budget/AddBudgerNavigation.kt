@@ -10,7 +10,7 @@ import com.indie.apps.pennypal.presentation.ui.navigation.DialogNav
 import com.indie.apps.pennypal.presentation.ui.navigation.ScreenNav
 import com.indie.apps.pennypal.util.Util
 
-internal fun NavGraphBuilder.navigateToAddBudgetScreen(
+/*internal fun NavGraphBuilder.navigateToAddBudgetScreen(
     navController: NavHostController,
     bottomBarState: MutableState<Boolean>
 ) {
@@ -42,13 +42,13 @@ internal fun NavGraphBuilder.navigateToAddBudgetScreen(
             selectedPeriodType = periodType ?: 1
         )
     }
-}
+}*/
 
-internal fun NavGraphBuilder.navigateToEditBudgetScreen(
+internal fun NavGraphBuilder.navigateToAddEditBudgetScreen(
     navController: NavHostController,
     bottomBarState: MutableState<Boolean>
 ) {
-    composable(route = ScreenNav.EDIT_BUDGET.route) { backStackEntry ->
+    composable(route = ScreenNav.ADD_EDIT_BUDGET.route) { backStackEntry ->
 
         val gsonStringCategoryIds =
             backStackEntry.savedStateHandle.get<String>(Util.SAVE_STATE_SELECT_CATEGORY_ID_LIST)
@@ -57,8 +57,11 @@ internal fun NavGraphBuilder.navigateToEditBudgetScreen(
             Gson().fromJson(it, object : TypeToken<List<Long>>() {}.type)
         } ?: emptyList()
 
+        val periodType =
+            backStackEntry.savedStateHandle.get<Int>(Util.SAVE_STATE_PERIOD_TYPE)
+
         bottomBarState.value = false
-        AddBudgetScreen(
+        AddEditBudgetScreen(
             onNavigationUp = { navController.navigateUp() },
             onSave = { _, _ ->
                 navController.popBackStack()
@@ -70,7 +73,7 @@ internal fun NavGraphBuilder.navigateToEditBudgetScreen(
                 navController.navigate(DialogNav.MULTI_SELECT_CATEGORY.route)
             },
             selectedCategoryIds = categoryIds,
-            selectedPeriodType = 1
+            selectedPeriodType = periodType ?: 1
         )
     }
 }

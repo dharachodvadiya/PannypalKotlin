@@ -46,7 +46,7 @@ import java.util.Calendar
 
 @SuppressLint("StateFlowValueCalledInComposition", "SimpleDateFormat")
 @Composable
-fun AddBudgetScreen(
+fun AddEditBudgetScreen(
     addBudgetViewModel: AddBudgetViewModel = hiltViewModel(),
     onNavigationUp: () -> Unit,
     onSave: (Boolean, Long) -> Unit,
@@ -292,7 +292,7 @@ fun AddBudgetScreen(
 @Composable
 private fun OverViewScreenPreview() {
     PennyPalTheme(darkTheme = true) {
-        AddBudgetScreen(
+        AddEditBudgetScreen(
             onNavigationUp = {},
             onSelectCategory = {},
             onSave = { _, _ -> },

@@ -16,7 +16,7 @@ internal fun NavGraphBuilder.navigateToBudgetScreen(
         BudgetScreen(
             onNavigationUp = { navController.navigateUp() },
             onAddClick = {
-                navController.navigate(ScreenNav.ADD_BUDGET.route)
+                navController.navigate(ScreenNav.ADD_EDIT_BUDGET.route)
 
                 navController.currentBackStackEntry?.savedStateHandle?.set(
                     Util.SAVE_STATE_PERIOD_TYPE,
