@@ -57,7 +57,7 @@ internal fun NavGraphBuilder.navigateToOverViewStartScreen(
             },
             onTransactionClick = {
                 navController.navigate(
-                    ScreenNav.EDIT_MERCHANT_DATA.route.replace(
+                    ScreenNav.ADD_EDIT_MERCHANT_DATA.route.replace(
                         "{${Util.PARAM_EDIT_MERCHANT_DATA_ID}}", it.toString()
                     )
                 )

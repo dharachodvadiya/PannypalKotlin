@@ -31,13 +31,13 @@ internal fun NavGraphBuilder.navigateToAllDataScreen(
         AllDataScreen(
             onDataClick = {
                 navController.navigate(
-                    ScreenNav.EDIT_MERCHANT_DATA.route.replace(
+                    ScreenNav.ADD_EDIT_MERCHANT_DATA.route.replace(
                         "{${Util.PARAM_EDIT_MERCHANT_DATA_ID}}", it.toString()
                     )
                 )
             },
             onAddClick = {
-                navController.navigate(ScreenNav.NEW_ITEM.route)
+                navController.navigate(ScreenNav.ADD_EDIT_MERCHANT_DATA.route)
             },
             onNavigationUp = {
                 navController.navigateUp()

@@ -40,13 +40,13 @@ internal fun NavGraphBuilder.navigateToMerchantDataScreen(
             onNavigationUp = { navController.navigateUp() },
             onEditClick = {
                 navController.navigate(
-                    ScreenNav.EDIT_MERCHANT_DATA.route.replace(
+                    ScreenNav.ADD_EDIT_MERCHANT_DATA.route.replace(
                         "{${Util.PARAM_EDIT_MERCHANT_DATA_ID}}", it.toString()
                     )
                 )
             },
             onAddClick = {
-                navController.navigate(ScreenNav.NEW_ITEM.route)
+                navController.navigate(ScreenNav.ADD_EDIT_MERCHANT_DATA.route)
 
                 navController.currentBackStackEntry?.savedStateHandle?.set(
                     Util.SAVE_STATE_MERCHANT_NAME_DESC,

@@ -16,7 +16,7 @@ import com.indie.apps.pennypal.presentation.ui.navigation.DialogNav
 import com.indie.apps.pennypal.presentation.ui.navigation.ScreenNav
 import com.indie.apps.pennypal.util.Util
 
-internal fun NavGraphBuilder.navigateToAddItemScreen(
+/*internal fun NavGraphBuilder.navigateToAddItemScreen(
     navController: NavHostController,
     bottomBarState: MutableState<Boolean>
 ) {
@@ -103,13 +103,13 @@ internal fun NavGraphBuilder.navigateToAddItemScreen(
                 //navController.navigateUp()
             })
     }
-}
+}*/
 
 internal fun NavGraphBuilder.navigateToEditItemScreen(
     navController: NavHostController,
     bottomBarState: MutableState<Boolean>
 ) {
-    composable(route = ScreenNav.EDIT_MERCHANT_DATA.route) { backStackEntry ->
+    composable(route = ScreenNav.ADD_EDIT_MERCHANT_DATA.route) { backStackEntry ->
         bottomBarState.value = false
         val context = LocalContext.current
         val merchantDataSaveToast =
@@ -135,6 +135,9 @@ internal fun NavGraphBuilder.navigateToEditItemScreen(
         val category: Category? = if (gsonStringCategory != null) {
             Gson().fromJson(gsonStringCategory, Category::class.java)
         } else null
+
+        val isMerchantLock: Boolean? =
+            savedStateHandle.get<Boolean>(Util.SAVE_STATE_MERCHANT_LOCK)
 
 
         //savedStateHandle.remove<String>(Util.SAVE_STATE_MERCHANT_NAME_DESC)
@@ -168,7 +171,7 @@ internal fun NavGraphBuilder.navigateToEditItemScreen(
             merchantData = merchant,
             paymentData = payment,
             categoryData = category,
-            isMerchantLock = false,
+            isMerchantLock = isMerchantLock ?: false,
             onSaveSuccess = { isEdit, merchantDataId, merchantId ->
                 /*navController.navigateUp()*/
                 context.showToast(merchantDataSaveToast)

@@ -81,7 +81,7 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
                             }
                         }
                     },
-                    onAddClick = { navController.navigate(ScreenNav.NEW_ITEM.route) },
+                    onAddClick = { navController.navigate(ScreenNav.ADD_EDIT_MERCHANT_DATA.route) },
                     currentTab = currentScreen,
                     bottomBarState = bottomBarState.value
                 )

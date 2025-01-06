@@ -41,7 +41,7 @@ class NewItemViewModel @Inject constructor(
 ) : ViewModel() {
 
     val merchantEditId =
-        savedStateHandle.get<String>(Util.PARAM_EDIT_MERCHANT_DATA_ID)?.toLong() ?: 0
+        savedStateHandle.get<String>(Util.PARAM_EDIT_MERCHANT_DATA_ID)?.toLongOrNull() ?: 0
     private var editMerchantData: MerchantData? = null
 
     val merchant = MutableStateFlow<MerchantNameAndDetails?>(null)
