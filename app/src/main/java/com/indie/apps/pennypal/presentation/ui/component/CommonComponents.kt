@@ -353,7 +353,7 @@ fun DialogSelectableItem(
 
             Row(modifier = Modifier
                 .roundedCornerBackground(MyAppTheme.colors.itemBg)
-                .clickableWithNoRipple(enabled = isSelectable) { onClick() }
+                .clickableWithNoRipple { onClick() }
                 .padding(dimensionResource(id = R.dimen.padding)),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically) {

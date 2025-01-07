@@ -19,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -35,6 +36,7 @@ import com.indie.apps.pennypal.presentation.ui.component.TopBarWithTitle
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomDatePickerDialog
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomTimePickerDialog
+import com.indie.apps.pennypal.presentation.ui.component.showToast
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
@@ -93,6 +95,9 @@ fun NewItemScreen(
     var openTimeDialog by remember { mutableStateOf(false) }
 
     var openDiscardDialog by remember { mutableStateOf(false) }
+
+    val context = LocalContext.current
+    val merchantChangeToastMessage = stringResource(R.string.can_not_change_merchant)
 
     BackHandler {
         if (newItemViewModel.isEditData()) {
@@ -159,8 +164,12 @@ fun NewItemScreen(
                         currentTimeInMilli = currentTimeInMilli,
                         onMerchantSelect = {
                             if (enableButton) {
-                                focusManager.clearFocus()
-                                onMerchantSelect()
+                                if (isMerchantLock) {
+                                    context.showToast(merchantChangeToastMessage)
+                                } else {
+                                    focusManager.clearFocus()
+                                    onMerchantSelect()
+                                }
                             }
                         },
                         merchantName = merchant?.name,
