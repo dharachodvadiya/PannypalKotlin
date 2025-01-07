@@ -188,6 +188,7 @@ fun MerchantScreen(
                 id = R.string.selected_text
             ) else "",
             textState = searchTextState,
+            isSelected = merchantViewModel.getIsSelected(),
             isEditable = isEditable,
             isDeletable = isDeletable,
             onAddClick = { merchantViewModel.onAddClick { onAddClick() } },

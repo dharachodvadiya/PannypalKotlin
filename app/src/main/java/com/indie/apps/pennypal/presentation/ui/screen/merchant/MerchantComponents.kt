@@ -47,6 +47,7 @@ fun MerchantTopBar(
     title: String = "",
     isEditable: Boolean = false,
     isDeletable: Boolean = false,
+    isSelected: Boolean = false,
     onAddClick: () -> Unit,
     onEditClick: () -> Unit,
     onDeleteClick: () -> Unit,
@@ -56,10 +57,10 @@ fun MerchantTopBar(
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     TopBar(
-        isBackEnable = (isEditable || isDeletable),
+        isBackEnable = isSelected,
         onBackClick = onNavigationUp,
         content = {
-            if (!isEditable && !isDeletable) {
+            if (!isSelected) {
                 SearchView(
                     textState = textState,
                     onTextChange = onSearchTextChange,
@@ -85,7 +86,7 @@ fun MerchantTopBar(
         },
         trailingContent = {
 
-            if (isEditable || isDeletable) {
+            if (isSelected) {
                 Row {
                     if (isDeletable) {
                         Icon(

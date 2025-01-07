@@ -180,7 +180,7 @@ class MerchantViewModel @Inject constructor(
     }
 
     fun onItemClick(id: Long, callBack: (Long) -> Unit) {
-        if (!isEditable.value && !isDeletable.value) {
+        if (!getIsSelected()) {
             callBack(id)
         } else {
             setSelectItem(id)
@@ -209,13 +209,13 @@ class MerchantViewModel @Inject constructor(
         val selectedCount = selectedList.size
         if (selectedCount == 1) {
             isEditable.value = true
-            isDeletable.value = true
+            //isDeletable.value = true
         } else if (selectedCount > 1) {
             isEditable.value = false
-            isDeletable.value = true
+            //isDeletable.value = true
         } else {
             isEditable.value = false
-            isDeletable.value = false
+            //isDeletable.value = false
         }
     }
 
@@ -225,5 +225,7 @@ class MerchantViewModel @Inject constructor(
     }
 
     fun updateSearchText(text : String) = searchTextState.value.updateText(text)
+
+    fun getIsSelected() = selectedList.size!= 0
 
 }
