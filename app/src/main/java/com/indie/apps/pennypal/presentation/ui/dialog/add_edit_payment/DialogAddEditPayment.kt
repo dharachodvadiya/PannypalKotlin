@@ -6,7 +6,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -14,6 +16,7 @@ import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.database.entity.Payment
 import com.indie.apps.pennypal.presentation.ui.component.BottomSaveButton
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.MyAppDialog
+import com.indie.apps.pennypal.presentation.ui.component.showToast
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 
 @Composable
@@ -53,6 +56,10 @@ fun DialogAddPayment(
                 ),
         exit = slideOutVertically { fullHeight -> (fullHeight + fullHeight / 2) } + fadeOut()
     ) {*/
+    val context = LocalContext.current
+    val paymentSaveToast = stringResource(id = R.string.payment_save_success_toast)
+    val paymentEditToast = stringResource(id = R.string.payment_edit_success_toast)
+
     MyAppDialog(
         title = R.string.add_payment,
         onNavigationUp = {
@@ -71,7 +78,10 @@ fun DialogAddPayment(
         bottomContent = {
             BottomSaveButton(
                 onClick = {
-                    addPaymentViewModel.addEditPayment(onSuccess = onSaveSuccess)
+                    addPaymentViewModel.addEditPayment { payment, isEdit ->
+                        onSaveSuccess(payment, isEdit)
+                        context.showToast(if (isEdit) paymentEditToast else paymentSaveToast)
+                    }
                 },
                 modifier = Modifier.padding(dimensionResource(id = R.dimen.padding))
             )

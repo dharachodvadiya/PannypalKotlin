@@ -7,8 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.compose.NavHost
@@ -18,11 +16,9 @@ import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.database.entity.toMerchantNameAndDetails
 import com.indie.apps.pennypal.data.module.ContactNumberAndCode
 import com.indie.apps.pennypal.presentation.ui.component.navigation.BottomNavigationBarCustom1
-import com.indie.apps.pennypal.presentation.ui.component.showToast
 import com.indie.apps.pennypal.presentation.ui.dialog.add_edit_merchant.DialogAddMerchant
 import com.indie.apps.pennypal.presentation.ui.dialog.add_edit_payment.DialogAddPayment
 import com.indie.apps.pennypal.presentation.ui.dialog.contact_picker.DialogContactPicker
@@ -47,14 +43,8 @@ import com.indie.apps.pennypal.util.Util
 
 @Composable
 fun PennyPalApp(preferenceRepository: PreferenceRepository) {
-    val context = LocalContext.current
-    val paymentSaveToast = stringResource(id = R.string.payment_save_success_toast)
-    val paymentEditToast = stringResource(id = R.string.payment_edit_success_toast)
-    val merchantSaveToast = stringResource(id = R.string.merchant_save_success_toast)
-    val merchantEditToast = stringResource(id = R.string.merchant_edit_success_message)
 
     val isFirstLaunch = preferenceRepository.getBoolean(Util.PREF_NEW_INSTALL, true)
-    //val isFirstLaunch = true
     PennyPalTheme(darkTheme = true) {
         val navController = rememberNavController()
         val currentBackStack by navController.currentBackStackEntryAsState()
@@ -65,7 +55,6 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
         }
             ?: BottomNavItem.OVERVIEW
 
-        // State of bottomBar, set state to false, if current page route is "car_details"
         val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
 
         Scaffold(
@@ -176,7 +165,7 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
                         onNavigationUp = { navController.navigateUp() },
                         onSaveSuccess = { merchant, isEdit ->
                             //navController.navigateUp()
-                            context.showToast(if (isEdit) merchantEditToast else merchantSaveToast)
+                            //context.showToast(if (isEdit) merchantEditToast else merchantSaveToast)
 
                             if (merchant != null) {
                                 navController.previousBackStackEntry
@@ -229,7 +218,7 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
                         onNavigationUp = { navController.navigateUp() },
                         onSaveSuccess = { payment, isEdit ->
                             //navController.navigateUp()
-                            context.showToast(if (isEdit) paymentEditToast else paymentSaveToast)
+                            //context.showToast(if (isEdit) paymentEditToast else paymentSaveToast)
 
                             if (payment != null)
                                 navController.previousBackStackEntry

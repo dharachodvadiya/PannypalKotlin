@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -24,6 +25,7 @@ import com.indie.apps.pennypal.data.database.entity.Merchant
 import com.indie.apps.pennypal.data.module.ContactNumberAndCode
 import com.indie.apps.pennypal.presentation.ui.component.BottomSaveButton
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.MyAppDialog
+import com.indie.apps.pennypal.presentation.ui.component.showToast
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 
 
@@ -66,6 +68,9 @@ fun DialogAddMerchant(
 
     val permissionState = rememberPermissionState(Manifest.permission.READ_CONTACTS)
 
+    val merchantSaveToast = stringResource(id = R.string.merchant_save_success_toast)
+    val merchantEditToast = stringResource(id = R.string.merchant_edit_success_message)
+
     MyAppDialog(title = if (editId == null) R.string.add_merchant else R.string.edit_merchant,
         onNavigationUp = {
             if (enableButton) onNavigationUp()
@@ -104,9 +109,10 @@ fun DialogAddMerchant(
         }, bottomContent = {
             BottomSaveButton(
                 onClick = {
-                    addMerchantViewModel.addOrEditMerchant(
-                        onSuccess = onSaveSuccess
-                    )
+                    addMerchantViewModel.addOrEditMerchant {merchant, isEdit ->
+                        onSaveSuccess(merchant, isEdit)
+                        context.showToast(if (isEdit) merchantEditToast else merchantSaveToast)
+                    }
                 },
                 enabled = enableButton,
                 modifier = Modifier.padding(dimensionResource(id = R.dimen.padding))
