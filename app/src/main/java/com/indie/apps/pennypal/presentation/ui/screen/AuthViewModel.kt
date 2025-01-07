@@ -59,12 +59,18 @@ class AuthViewModel @Inject constructor(
                 is SyncEvent.Restore -> handleRestore()
 
                 SyncEvent.GetFiles -> {}
+                SyncEvent.SignInGoogleOrChange -> handleSignInGoogle(true)
             }
         }
     }
 
-    private suspend fun handleSignInGoogle() {
+    private suspend fun handleSignInGoogle(isChangeAccount : Boolean = false) {
         if (!isInProcess) {
+
+            if(isChangeAccount && authRepository.isSignedIn())
+            {
+                authRepository.signOut()
+            }
             if (!authRepository.isSignedIn()) {
                 if (processingState.value == AuthProcess.NONE)
                     processingState.value = AuthProcess.SIGN_IN

@@ -13,6 +13,7 @@ sealed class SettingEffect {
     data object Backup : SettingEffect()
     data object Restore : SettingEffect()
     data object GoogleSignIn : SettingEffect()
+    data object GoogleSignInOrChange : SettingEffect()
 
 }
 
@@ -28,4 +29,5 @@ enum class SettingOption {
     BACKUP,
     RESTORE,
     GOOGLE_SIGN_IN,
+    GOOGLE_SIGN_IN_OR_CHANGE,
 }

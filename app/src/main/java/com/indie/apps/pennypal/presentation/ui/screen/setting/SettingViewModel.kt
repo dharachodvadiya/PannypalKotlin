@@ -18,6 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
@@ -34,41 +35,22 @@ class SettingViewModel @Inject constructor(
     // private val backupRepository: BackupRepository
 ) : ViewModel() {
 
-    //private var isInProcess = false
+    val settingEffect = MutableSharedFlow<SettingEffect>(replay = 0)
+    private val refreshState = MutableSharedFlow<Unit>(replay = 0)
 
     var userState = userRepository.getUser()
-        .map { it.copy(email = if (authRepository.isSignedIn()) authRepository.getUserInfo()?.email else null) }
+        .map { it.copy(email = getCurrentEmail()) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), null)
-
-    //val syncEffect = MutableSharedFlow<SyncEffect?>(replay = 0)
-    val settingEffect = MutableSharedFlow<SettingEffect>(replay = 0)
-
-    //val processingState = MutableStateFlow(AuthProcess.NONE)
 
     var generalList = getGeneralSettingUseCase.loadData()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
 
-    val languageList = preferenceRepository.preferenceChangeListener()
-        .onStart { emit(Util.PREF_APP_LANGUAGE) }
-        .map {
-            val language = AppLanguage.fromIndex(
-                preferenceRepository.getInt(
-                    Util.PREF_APP_LANGUAGE,
-                    1
-                )
-            )?.title
-            listOf(
-                MoreItem(
-                    R.string.current_language,
-                    SettingOption.LANGUAGE_CHANGE,
-                    subTitle = language?.let {
-                        UiText.StringResource(
-                            it
-                        )
-                    }),
-            )
-        }.flowOn(Dispatchers.IO)
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
+    val languageList =
+        preferenceRepository.preferenceChangeListener().onStart { emit(Util.PREF_APP_LANGUAGE) }
+            .map {
+                getLanguageList()
+            }.flowOn(Dispatchers.IO)
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
 
     val moreList = MutableStateFlow(
         listOf(
@@ -79,12 +61,24 @@ class SettingViewModel @Inject constructor(
         )
     )
 
-    val backupRestoreList = MutableStateFlow(
-        listOf(
-            MoreItem(R.string.backup_Data, SettingOption.BACKUP, R.drawable.ic_backup),
-            MoreItem(R.string.restore_Data, SettingOption.RESTORE, R.drawable.ic_restore),
+    val backupRestoreList = combine(
+        refreshState.onStart { emit(Unit) },
+        MutableStateFlow(
+            listOf(
+                MoreItem(R.string.backup_Data, SettingOption.BACKUP, R.drawable.ic_backup),
+                MoreItem(R.string.restore_Data, SettingOption.RESTORE, R.drawable.ic_restore),
+                MoreItem(
+                    R.string.sign_in_change_account,
+                    SettingOption.GOOGLE_SIGN_IN_OR_CHANGE,
+                    R.drawable.ic_restore
+                )
+            )
         )
-    )
+    ) { _, list ->
+        val updatedList = list.toMutableList()
+        updatedList[2] = updatedList[2].copy(subTitle = getCurrentEmail()?.let { UiText.DynamicString(it) })
+        updatedList
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
 
     fun onSelectOption(item: MoreItem) {
         viewModelScope.launch {
@@ -105,6 +99,7 @@ class SettingViewModel @Inject constructor(
                     SettingOption.RESTORE -> SettingEffect.Restore
                     SettingOption.GOOGLE_SIGN_IN -> SettingEffect.GoogleSignIn
                     SettingOption.LANGUAGE_CHANGE -> SettingEffect.OnLanguageChange
+                    SettingOption.GOOGLE_SIGN_IN_OR_CHANGE -> SettingEffect.GoogleSignInOrChange
                 }
             )
         }
@@ -124,6 +119,27 @@ class SettingViewModel @Inject constructor(
 
         generalList = getGeneralSettingUseCase.loadData()
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
+
+        viewModelScope.launch {
+            refreshState.emit(Unit)
+        }
+    }
+
+    private suspend fun getCurrentEmail() = if (authRepository.isSignedIn()) authRepository.getUserInfo()?.email else null
+
+    private fun getLanguageList(): List<MoreItem> {
+        val language = AppLanguage.fromIndex(
+            preferenceRepository.getInt(
+                Util.PREF_APP_LANGUAGE, 1
+            )
+        )?.title
+        return listOf(
+            MoreItem(R.string.current_language,
+                SettingOption.LANGUAGE_CHANGE,
+                subTitle = language?.let {
+                    UiText.StringResource(it)
+                }),
+        )
     }
 }
 

@@ -113,6 +113,10 @@ fun SettingScreen(
                 SettingEffect.Restore -> authViewModel.onEvent(
                     mainEvent = SyncEvent.Restore,
                 )
+
+                SettingEffect.GoogleSignInOrChange -> authViewModel.onEvent(
+                    mainEvent = SyncEvent.SignInGoogleOrChange,
+                )
             }
         }
     }

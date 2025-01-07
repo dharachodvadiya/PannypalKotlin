@@ -13,6 +13,7 @@ sealed class SyncEffect {
 
 sealed class SyncEvent {
     data object SignInGoogle : SyncEvent()
+    data object SignInGoogleOrChange : SyncEvent()
     data object SignOut : SyncEvent()
 
     data object Backup : SyncEvent()

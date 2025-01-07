@@ -213,6 +213,7 @@
     <string name="gu" translatable="false">gu</string>
     <string name="restore_title">Restore Your Data</string>
     <string name="restore_subtitle">A backup is available. Restore your data to continue managing your expenses on this device.</string>
+    <string name="sign_in_change_account">SignIn Or Change Account</string>
 
     <string-array name="months">
         <item>JAN</item>
