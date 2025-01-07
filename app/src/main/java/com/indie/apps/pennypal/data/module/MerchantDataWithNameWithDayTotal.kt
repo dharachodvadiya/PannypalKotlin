@@ -10,7 +10,7 @@ data class MerchantDataWithNameWithDayTotal(
     val amount: Double?,
     val details: String?,
     val merchantName: String?,
-    val merchantId : Long,
+    val merchantId : Long?,
     val dateInMilli: Long,
     val type: Int?,
 )

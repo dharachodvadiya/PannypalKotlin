@@ -32,7 +32,7 @@
     <string name="select_country">Select Country</string>
     <string name="no_data_found">No Data Available</string>
     <string name="no_details">No Details</string>
-    <string name="merchant_data_save_success_message">Payee Data Save Successfully</string>
+    <string name="merchant_data_save_success_message">Transaction Save Successfully</string>
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
     <string name="selected_text">Selected</string>
@@ -40,11 +40,11 @@
     <string name="delete_item_dialog_text">Are you sure to delete this item??</string>
     <string name="delete_dialog_title">Delete</string>
     <string name="no_name">No Name</string>
-    <string name="merchant_data_delete_success_message">Delete Payee Data Successfully</string>
+    <string name="merchant_data_delete_success_message">Delete Transaction Successfully</string>
     <string name="merchant_delete_success_message">Merchants Delete Successfully</string>
     <string name="merchant_edit_success_message">Payee Edit Successfully</string>
     <string name="edit_merchant_data">Edit Entry</string>
-    <string name="merchant_data_edit_success_message">Payee Data Edit Successfully</string>
+    <string name="merchant_data_edit_success_message">Transaction Edit Successfully</string>
     <string name="phone_number_not_added">Not Added</string>
     <string name="no_transactions_yet">No Transactions Yet</string>
     <string name="latest_transactions_appear_here">Your latest transactions will appear here. Track your Income and Expense. Click "+" button to start transaction.</string>
@@ -214,6 +214,7 @@
     <string name="restore_title">Restore Your Data</string>
     <string name="restore_subtitle">A backup is available. Restore your data to continue managing your expenses on this device.</string>
     <string name="sign_in_change_account">SignIn Or Change Account</string>
+    <string name="merchant_optional">Payee (Optional)</string>
 
     <string-array name="months">
         <item>JAN</item>

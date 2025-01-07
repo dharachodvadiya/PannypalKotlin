@@ -72,7 +72,7 @@ interface MerchantDataDao : BaseDao<MerchantData> {
                 md.amount, 
                 md.type
         FROM merchant_data md
-        INNER JOIN merchant m ON md.merchant_id = m.id
+        LEFT JOIN merchant m ON md.merchant_id = m.id
         INNER JOIN category c ON md.category_id = c.id
         INNER JOIN payment_type p ON md.payment_id = p.id
         WHERE m.name LIKE  '%' || :searchQuery || '%' OR 
@@ -100,7 +100,7 @@ interface MerchantDataDao : BaseDao<MerchantData> {
                 md.amount, 
                 md.type
         FROM merchant_data md
-        INNER JOIN merchant m ON md.merchant_id = m.id
+        LEFT JOIN merchant m ON md.merchant_id = m.id
         INNER JOIN category c ON md.category_id = c.id
         INNER JOIN payment_type p ON md.payment_id = p.id
         ORDER BY md.date_milli DESC LIMIT 3
@@ -140,7 +140,7 @@ interface MerchantDataDao : BaseDao<MerchantData> {
                 md.type,
                 m.name as merchantName
         FROM merchant_data md
-        INNER JOIN merchant m ON md.merchant_id = m.id
+        LEFT JOIN merchant m ON md.merchant_id = m.id
         WHERE m.name LIKE  '%' || :searchQuery || '%' OR md.details LIKE  '%' || :searchQuery || '%'
         ORDER BY md.date_milli DESC
     """
@@ -194,7 +194,7 @@ interface MerchantDataDao : BaseDao<MerchantData> {
                 NULL as totalExpense  -- Placeholder for Records
             FROM 
                 merchant_data md
-            INNER JOIN 
+            LEFT JOIN 
                 merchant m ON md.merchant_id = m.id
         )
         SELECT 

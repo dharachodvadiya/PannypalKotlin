@@ -85,6 +85,7 @@ abstract class AppDatabase : RoomDatabase() {
             return getDbBuilder(context)
                 .addMigrations(Migration1to2(countryRepository))
                 .addMigrations(Migration2to3())
+                .addMigrations(Migration3to4())
                 .addCallback(Callback(countryRepository))
                 .build()
         }

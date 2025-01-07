@@ -39,7 +39,7 @@ data class MerchantData(
     val id: Long = 0,
 
     @ColumnInfo(name = "merchant_id")
-    val merchantId: Long,
+    val merchantId: Long? = null,
 
     @ColumnInfo(name = "category_id")
     val categoryId: Long,

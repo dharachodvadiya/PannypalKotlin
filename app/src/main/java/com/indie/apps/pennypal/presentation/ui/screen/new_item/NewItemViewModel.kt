@@ -116,11 +116,13 @@ class NewItemViewModel @Inject constructor(
 
                                 var merchantJob: Job? = null
                                 merchantJob = launch {
-                                    merchantRepository.getMerchantFromId(editMerchantData!!.merchantId)
-                                        .collect {
-                                            setMerchantData(it.toMerchantNameAndDetails())
-                                            merchantJob?.cancel()
-                                        }
+                                    editMerchantData!!.merchantId?.let { it1 ->
+                                        merchantRepository.getMerchantFromId(it1)
+                                            .collect {
+                                                setMerchantData(it.toMerchantNameAndDetails())
+                                                merchantJob?.cancel()
+                                            }
+                                    }
                                 }
 
                                 uiState.value = Resource.Success(Unit)
@@ -194,13 +196,13 @@ class NewItemViewModel @Inject constructor(
         }
     }
 
-    fun addOrEditMerchantData(onSuccess: (Boolean, Long, Long) -> Unit) {
+    fun addOrEditMerchantData(onSuccess: (Boolean, Long, Long?) -> Unit) {
         if (enableButton.value) {
             enableButton.value = false
-            if (merchant.value == null) {
+           /* if (merchant.value == null) {
                 merchantError.value = ErrorMessage.SELECT_MERCHANT
                 enableButton.value = true
-            } else if (category.value == null) {
+            } else */if (category.value == null) {
                 categoryError.value = ErrorMessage.SELECT_CATEGORY
                 enableButton.value = true
             } else if (amount.value.text.trim().isEmpty()) {
@@ -214,7 +216,7 @@ class NewItemViewModel @Inject constructor(
 
                 if (merchantEditId == 0L) {
                     val merchantData = MerchantData(
-                        merchantId = merchant.value!!.id,
+                        merchantId = merchant.value?.id,
                         paymentId = payment.value!!.id,
                         categoryId = category.value!!.id,
                         amount = amount,

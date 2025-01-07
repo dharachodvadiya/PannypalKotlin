@@ -184,7 +184,7 @@ fun NewEntryFieldItemSection(
 
         DialogSelectableItem(
             text = merchantName,
-            label = R.string.merchant,
+            label = R.string.merchant_optional,
             onClick = onMerchantSelect,
             placeholder = R.string.add_merchant_placeholder,
             isSelectable = !isMerchantLock,

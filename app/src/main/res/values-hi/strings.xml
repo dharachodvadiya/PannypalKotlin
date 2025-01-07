@@ -32,7 +32,7 @@
     <string name="select_country">देश चुनें</string>
     <string name="no_data_found">कोई डेटा उपलब्ध नहीं है</string>
     <string name="no_details">कोई विवरण नहीं है</string>
-    <string name="merchant_data_save_success_message">विक्रेता डेटा सफलतापूर्वक सहेजा गया</string>
+    <string name="merchant_data_save_success_message">वलेन-देन सफलतापूर्वक सहेजा गया</string>
     <string name="today">आज</string>
     <string name="yesterday">कल</string>
     <string name="selected_text">चुना हुआ</string>
@@ -40,11 +40,11 @@
     <string name="delete_item_dialog_text">क्या आप इस आइटम को हटाना चाहते हैं?</string>
     <string name="delete_dialog_title">हटाएं</string>
     <string name="no_name">कोई नाम नहीं है</string>
-    <string name="merchant_data_delete_success_message">विक्रेता डेटा सफलतापूर्वक हटाया गया</string>
+    <string name="merchant_data_delete_success_message">लेन-देन सफलतापूर्वक हटाया गया</string>
     <string name="merchant_delete_success_message">विक्रेता सफलतापूर्वक हटाया गया</string>
     <string name="merchant_edit_success_message">विक्रेता सफलतापूर्वक संपादित किया गया</string>
     <string name="edit_merchant_data">लेन-देन संपादित करें</string>
-    <string name="merchant_data_edit_success_message">विक्रेता डेटा सफलतापूर्वक संपादित किया गया</string>
+    <string name="merchant_data_edit_success_message">लेन-देन सफलतापूर्वक संपादित किया गया</string>
     <string name="phone_number_not_added">कोई डेटा नहीं है</string>
     <string name="no_transactions_yet">कोई लेन-देन नहीं हुआ है</string>
     <string name="latest_transactions_appear_here">आपके हाल के लेन-देन यहाँ दिखाई देंगे। अपनी आय और खर्चों को ट्रैक करें। लेन-देन शुरू करने के लिए "+" बटन पर क्लिक करें।</string>

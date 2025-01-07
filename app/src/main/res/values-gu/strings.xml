@@ -32,7 +32,7 @@
     <string name="select_country">દેશ પસંદ કરો</string>
     <string name="no_data_found">કોઈ ડેટા ઉપલબ્ધ નથી</string>
     <string name="no_details">કોઈ વિગતો નથી</string>
-    <string name="merchant_data_save_success_message">નાણાં લેનારના ડેટા સફળતાપૂર્વક સાચવાયા</string>
+    <string name="merchant_data_save_success_message">વ્યવહારના સફળતાપૂર્વક સાચવાયો</string>
     <string name="today">આજે</string>
     <string name="yesterday">કાલે</string>
     <string name="selected_text">પસંદ કરેલું</string>
@@ -40,11 +40,11 @@
     <string name="delete_item_dialog_text">શું તમે આ આઇટમને ડિલીટ કરવા માંગો છો?</string>
     <string name="delete_dialog_title">કાઢી નાખો</string>
     <string name="no_name">કોઈ નામ નથી</string>
-    <string name="merchant_data_delete_success_message">નાણાં લેનારના ડેટા સફળતાપૂર્વક હટાવાયા</string>
+    <string name="merchant_data_delete_success_message">વ્યવહાર સફળતાપૂર્વક હટાવાયો</string>
     <string name="merchant_delete_success_message">નાણાં લેનાર સફળતાપૂર્વક હટાવાયો</string>
     <string name="merchant_edit_success_message">"નાણાં લેનારના સફળતાપૂર્વક સંપાદિત કર્યા "</string>
     <string name="edit_merchant_data">વ્યવહાર સંપાદિત કરો</string>
-    <string name="merchant_data_edit_success_message">"નાણાં લેનારના ડેટા સફળતાપૂર્વક સંપાદિત કર્યા "</string>
+    <string name="merchant_data_edit_success_message">"વ્યવહાર સફળતાપૂર્વક સંપાદિત કર્યો"</string>
     <string name="phone_number_not_added">કોઈ ડેટા નથી</string>
     <string name="no_transactions_yet">કોઈ વ્યવહાર નથી</string>
     <string name="latest_transactions_appear_here">તમારા તાજેતરના ટ્રાન્ઝેક્શન્સ અહીં દેખાશે. તમારી આવક અને ખર્ચને ટ્રેક કરો. ટ્રાન્ઝેક્શન શરૂ કરવા માટે \"+\" બટન પર ક્લિક કરો.</string>

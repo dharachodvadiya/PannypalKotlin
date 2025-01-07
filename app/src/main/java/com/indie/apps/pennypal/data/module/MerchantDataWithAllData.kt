@@ -2,8 +2,8 @@ package com.indie.apps.pennypal.data.module
 
 class MerchantDataWithAllData(
     val id: Long = 0,
-    val merchantId: Long,
-    val merchantName: String,
+    val merchantId: Long?,
+    val merchantName: String?,
     val categoryId: Long,
     val categoryName: String,
     val paymentId: Long,

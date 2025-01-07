@@ -48,7 +48,7 @@ fun NewItemScreen(
     onCategorySelect: (Long?, Int) -> Unit,
     onNavigationUp: () -> Unit,
     isMerchantLock: Boolean,
-    onSaveSuccess: (Boolean, Long, Long) -> Unit,
+    onSaveSuccess: (Boolean, Long, Long?) -> Unit,
     merchantData: MerchantNameAndDetails? = null,
     paymentData: Payment? = null,
     categoryData: Category? = null,
