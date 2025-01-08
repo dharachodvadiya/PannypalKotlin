@@ -39,15 +39,11 @@ internal fun NavGraphBuilder.navigateToOverViewStartScreen(
 
 
         OverViewStartScreen(
-            onProfileClick = { navController.navigate(ScreenNav.PROFILE.route) },
             addEditMerchantDataId = merchantDataId ?: -1,
             isAddMerchantDataSuccess = isAddMerchantDataSuccess ?: false,
             isEditSuccess = isEditMerchantDataSuccess ?: false,
             onSeeAllTransactionClick = {
                 navController.navigate(ScreenNav.SEE_ALL_DATA.route)
-            },
-            onNavigationUp = {
-                navController.popBackStack()
             },
             onSeeAllMerchantClick = {
                 navController.navigate(BottomNavItem.MERCHANTS.route)

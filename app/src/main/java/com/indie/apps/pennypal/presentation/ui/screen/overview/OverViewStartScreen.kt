@@ -29,6 +29,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.database.enum.PeriodType
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.DoubleBackExitApp
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.util.Util
@@ -37,7 +38,6 @@ import com.indie.apps.pennypal.util.Util
 @Composable
 fun OverViewStartScreen(
     overViewViewModel: OverViewViewModel = hiltViewModel(),
-    onProfileClick: () -> Unit,
     onMerchantClick: (Long) -> Unit,
     onSeeAllTransactionClick: () -> Unit,
     onSeeAllMerchantClick: () -> Unit,
@@ -47,19 +47,12 @@ fun OverViewStartScreen(
     onTransactionClick: (Long) -> Unit,
     addEditMerchantDataId: Long,
     addMerchantId: Long,
-    onNavigationUp: () -> Unit,
     onAddMerchant: () -> Unit,
     isAddMerchantDataSuccess: Boolean = false,
     isEditSuccess: Boolean = false,
     bottomPadding: PaddingValues,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
-    /* val dataWithDayLazyPagingItems =
-         overViewViewModel.pagedMerchantDataWithDay.collectAsLazyPagingItems()
-     val merchantDataWithDayPagingState by overViewViewModel.merchantDataWithDayPagingState.collectAsStateWithLifecycle()
-     merchantDataWithDayPagingState.update(dataWithDayLazyPagingItems)
-     */
-
     val currentPeriod by overViewViewModel.currentPeriod.collectAsStateWithLifecycle()
     val isSubscribed by overViewViewModel.isSubscribed.collectAsStateWithLifecycle()
     val userData by overViewViewModel.userData.collectAsStateWithLifecycle()
@@ -113,6 +106,8 @@ fun OverViewStartScreen(
         }
         isEditDataSuccess = isEditSuccess
     }
+
+    DoubleBackExitApp()
 
     Scaffold { topBarPadding ->
 
@@ -204,9 +199,7 @@ fun OverViewStartScreen(
 private fun OverViewScreenPreview() {
     PennyPalTheme(darkTheme = true) {
         OverViewStartScreen(
-            onProfileClick = {},
             addEditMerchantDataId = -1,
-            onNavigationUp = {},
             onSeeAllTransactionClick = {},
             onSeeAllMerchantClick = {},
             onTransactionClick = {},

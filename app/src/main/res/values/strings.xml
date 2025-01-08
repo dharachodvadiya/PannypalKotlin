@@ -216,6 +216,7 @@
     <string name="sign_in_change_account">SignIn Or Change Account</string>
     <string name="merchant_optional">Payee (Optional)</string>
     <string name="edit_payment">Edit payment method</string>
+    <string name="press_back_again_to_exit_app">Press back again to exit</string>
 
     <string-array name="months">
         <item>JAN</item>
