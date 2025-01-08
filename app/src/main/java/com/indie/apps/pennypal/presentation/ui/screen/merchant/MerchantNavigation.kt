@@ -1,6 +1,7 @@
 package com.indie.apps.pennypal.presentation.ui.screen.merchant
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -29,15 +30,8 @@ internal fun NavGraphBuilder.navigateToMerchantScreen(
 
         val merchantId = savedStateHandle.get<Long>(Util.SAVE_STATE_MERCHANT_ADD_EDIT_ID)
 
-        savedStateHandle.remove<Boolean>(Util.SAVE_STATE_EDIT_MERCHANT_SUCCESS)
-        savedStateHandle.remove<Boolean>(Util.SAVE_STATE_ADD_MERCHANT_SUCCESS)
-        savedStateHandle.remove<Long>(Util.SAVE_STATE_ADD_EDIT_MERCHANT_SUCCESS_ID)
-
-        savedStateHandle.remove<Long>(Util.SAVE_STATE_MERCHANT_ADD_EDIT_ID)
-        savedStateHandle.remove<Long>(Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_ID)
-        savedStateHandle.remove<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_ADD_SUCCESS)
-
         bottomBarState.value = true
+
         MerchantScreen(
             isAddSuccess = isAddSuccess ?: false,
             isEditSuccess = isEditSuccess ?: false,
@@ -62,5 +56,15 @@ internal fun NavGraphBuilder.navigateToMerchantScreen(
             isAddMerchantDataSuccess = isAddMerchantDataSuccess ?: false,
             merchantId = merchantId ?: -1
         )
+
+        LaunchedEffect(Unit) {
+            savedStateHandle.remove<Boolean>(Util.SAVE_STATE_EDIT_MERCHANT_SUCCESS)
+            savedStateHandle.remove<Boolean>(Util.SAVE_STATE_ADD_MERCHANT_SUCCESS)
+            savedStateHandle.remove<Long>(Util.SAVE_STATE_ADD_EDIT_MERCHANT_SUCCESS_ID)
+
+            savedStateHandle.remove<Long>(Util.SAVE_STATE_MERCHANT_ADD_EDIT_ID)
+            savedStateHandle.remove<Long>(Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_ID)
+            savedStateHandle.remove<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_ADD_SUCCESS)
+        }
     }
 }

@@ -87,97 +87,34 @@ fun MerchantScreen(
     val editAnimRun by merchantViewModel.editAnimRun.collectAsStateWithLifecycle()
     val deleteAnimRun by merchantViewModel.deleteAnimRun.collectAsStateWithLifecycle()
 
-
-    /* var isEditSuccessState by remember {
-         mutableStateOf(false)
-     }*/
-
-    /*var addItemId by remember {
-        mutableStateOf(-1L)
-    }
-
-    var editItemId by remember {
-        mutableStateOf(-1L)
-    }*/
-
-    /*if (isEditAddSuccess != isEditSuccessState) {
-        isEditSuccessState = isEditAddSuccess
-        if (isEditSuccessState) {
-            addOrEditItemId = editAddId
-            merchantViewModel.setEditAddSuccess()
-        }
-    }*/
-
-    var isAddMerchantSuccessState by remember {
-        mutableStateOf(false)
-    }
-
     var addMerchantId by remember {
         mutableLongStateOf(-1L)
     }
-
-    if (isAddMerchantSuccessState != isAddSuccess) {
-        if (isAddSuccess) {
-            addMerchantId = editAddId
-            merchantViewModel.addMerchantSuccess()
-        }
-        isAddMerchantSuccessState = isAddSuccess
-    }
-
-    /*LaunchedEffect(isAddSuccess) {
-        if (isAddSuccess) {
-            merchantViewModel.addSuccess()
-            //addItemId = editAddId
-        }
-
-    }*/
-
-    var isEditMerchantSuccessState by remember {
-        mutableStateOf(false)
-    }
-
     var editMerchantId by remember {
         mutableLongStateOf(-1L)
     }
 
-    if (isEditMerchantSuccessState != isEditSuccess) {
+    LaunchedEffect(editAddId) {
+        if (isAddSuccess) {
+            addMerchantId = editAddId
+            merchantViewModel.addMerchantSuccess()
+        }
         if (isEditSuccess) {
             editMerchantId = editAddId
             merchantViewModel.editMerchantSuccess()
         }
-        isEditMerchantSuccessState = isEditSuccess
-    }
-
-    /* LaunchedEffect(isEditSuccess) {
-         if (isEditSuccess) {
-             merchantViewModel.editSuccess()
-             //editItemId = editAddId
-         }
-
-     }*/
-
-    var isAddMerchantDataSuccessState by remember {
-        mutableStateOf(false)
     }
 
     var addMerchantDataId by remember {
         mutableLongStateOf(-1L)
     }
 
-    if (isAddMerchantDataSuccessState != isAddMerchantDataSuccess) {
+    LaunchedEffect(merchantId) {
         if (isAddMerchantDataSuccess) {
             addMerchantDataId = merchantId
             merchantViewModel.addMerchantDataSuccess()
         }
-        isAddMerchantDataSuccessState = isAddMerchantDataSuccess
     }
-
-    /*LaunchedEffect(isAddMerchantDataSuccess) {
-        if (isAddMerchantDataSuccess) {
-            merchantViewModel.addMerchantDataSuccess()
-        }
-
-    }*/
 
     var openAlertDialog by remember { mutableStateOf(false) }
 
