@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -63,16 +64,12 @@ fun PaymentScreen(
     var editedPaymentId by remember {
         mutableLongStateOf(-1L)
     }
-    var isEditPaymentSuccessState by remember {
-        mutableStateOf(false)
-    }
 
-    if (isEditPaymentSuccessState != isEditSuccess) {
+    LaunchedEffect(paymentId) {
         if (isEditSuccess) {
             editedPaymentId = paymentId
             paymentViewModel.editPaymentSuccess()
         }
-        isEditPaymentSuccessState = isEditSuccess
     }
 
     Scaffold(
