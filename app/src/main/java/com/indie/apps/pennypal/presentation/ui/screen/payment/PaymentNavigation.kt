@@ -1,6 +1,7 @@
 package com.indie.apps.pennypal.presentation.ui.screen.payment
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -22,8 +23,10 @@ internal fun NavGraphBuilder.navigateToPaymentScreen(
         val isEditSuccess = savedStateHandle.get<Boolean>(Util.SAVE_STATE_PAYMENT_EDIT_SUCCESS)
         val editAddId = savedStateHandle.get<Long>(Util.SAVE_STATE_PAYMENT_ADD_EDIT_ID)
 
-        savedStateHandle.remove<Boolean>(Util.SAVE_STATE_PAYMENT_EDIT_SUCCESS)
-        savedStateHandle.remove<Boolean>(Util.SAVE_STATE_PAYMENT_ADD_EDIT_ID)
+        LaunchedEffect(Unit) {
+            savedStateHandle.remove<Boolean>(Util.SAVE_STATE_PAYMENT_EDIT_SUCCESS)
+            savedStateHandle.remove<Boolean>(Util.SAVE_STATE_PAYMENT_ADD_EDIT_ID)
+        }
 
         PaymentScreen(
             isEditSuccess = isEditSuccess ?: false,
