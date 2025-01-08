@@ -80,39 +80,19 @@ fun MerchantDataScreen(
 
     var openAlertDialog by remember { mutableStateOf(false) }
 
-    var isEditMerchantDataSuccessState by remember {
-        mutableStateOf(false)
-    }
-
     var addEditMerchantDataId by remember {
         mutableLongStateOf(-1L)
     }
 
-    if (isEditMerchantDataSuccessState != isEditSuccess) {
+    LaunchedEffect(merchantDataId) {
         if (isEditSuccess) {
             addEditMerchantDataId = merchantDataId
             merchantDataViewModel.editMerchantDataSuccess()
         }
-        isEditMerchantDataSuccessState = isEditSuccess
-    }
-
-    /*LaunchedEffect(isEditMerchantDataSuccess) {
-        if (isEditMerchantDataSuccess) {
-            merchantDataViewModel.editMerchantDataSuccess()
-        }
-
-    }*/
-
-    var isAddSuccessState by remember {
-        mutableStateOf(false)
-    }
-
-    if (isAddSuccessState != isAddSuccess) {
         if (isAddSuccess) {
             addEditMerchantDataId = merchantDataId
             merchantDataViewModel.addMerchantDataSuccess()
         }
-        isAddSuccessState = isAddSuccess
     }
 
     Scaffold(
