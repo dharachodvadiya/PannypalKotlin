@@ -64,8 +64,8 @@ fun MerchantScreen(
     isEditSuccess: Boolean = false,
     isAddSuccess: Boolean = false,
     isAddMerchantDataSuccess: Boolean = false,
-    editAddId: Long = 1L,
-    merchantId: Long = 1L,
+    editAddId: Long = -1L,
+    merchantId: Long = -1L,
     bottomPadding: PaddingValues,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {

@@ -62,7 +62,7 @@ fun AllDataScreen(
     onNavigationUp: () -> Unit,
     isEditSuccess: Boolean = false,
     isAddSuccess: Boolean = false,
-    editAddId: Long = 1L,
+    editAddId: Long = -1L,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current

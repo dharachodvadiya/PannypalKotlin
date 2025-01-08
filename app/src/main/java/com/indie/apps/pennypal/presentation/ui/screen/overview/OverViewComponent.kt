@@ -430,8 +430,8 @@ fun OverviewData(
     isEditMerchantDataSuccess: Boolean = false,
     isAddMerchantSuccess: Boolean = false,
     isSelectionEnable: Boolean,
-    merchantDataId: Long = 1L,
-    merchantId: Long = 1L,
+    merchantDataId: Long = -1L,
+    merchantId: Long = -1L,
     onAnimStop: () -> Unit,
     onMerchantAnimStop: () -> Unit,
     onAddMerchant: () -> Unit
@@ -579,7 +579,7 @@ fun OverviewTransactionData(
     onTransactionClick: (Long) -> Unit,
     isAddMerchantDataSuccess: Boolean = false,
     isEditMerchantDataSuccess: Boolean = false,
-    merchantDataId: Long = 1L,
+    merchantDataId: Long = -1L,
     onAnimStop: () -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
@@ -662,7 +662,7 @@ fun OverviewMerchantData(
     onSeeAllMerchantClick: () -> Unit,
     onAddMerchant: () -> Unit,
     isAddMerchantSuccess: Boolean = false,
-    merchantId: Long = 1L,
+    merchantId: Long = -1L,
     onAnimStop: () -> Unit,
     onMerchantClick: (Long) -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier

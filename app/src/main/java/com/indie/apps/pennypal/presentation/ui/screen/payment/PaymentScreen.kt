@@ -118,7 +118,7 @@ fun PaymentScreen(
         ) {
             val paymentName = if (paymentWithModeList.isNotEmpty()) {
                 paymentWithModeList.first { item ->
-                    item.id == (userData?.paymentId ?: 1L)
+                    item.id == (userData?.paymentId ?: -1L)
                 }.name
             } else {
                 "Cash"
@@ -127,7 +127,7 @@ fun PaymentScreen(
             PaymentModeDefaultItem(
                 paymentModeName = paymentName,
                 onDefaultPaymentChange = {
-                    onDefaultPaymentChange(userData?.paymentId ?: 1L)
+                    onDefaultPaymentChange(userData?.paymentId ?: -1L)
                 }
             )
 
@@ -147,7 +147,7 @@ fun PaymentScreen(
                         isSelectable = false,
                         isEditable = true,
                         dataList = bankList,
-                        selectPaymentId = userData?.paymentId ?: 1L,
+                        selectPaymentId = userData?.paymentId ?: -1L,
                         onEditClick = {
                             onEditPaymentClick(it)
                         },
@@ -166,7 +166,7 @@ fun PaymentScreen(
                         isSelectable = false,
                         isEditable = true,
                         dataList = cashList,
-                        selectPaymentId = userData?.paymentId ?: 1L,
+                        selectPaymentId = userData?.paymentId ?: -1L,
                         onEditClick = {
                             onEditPaymentClick(it)
                         },

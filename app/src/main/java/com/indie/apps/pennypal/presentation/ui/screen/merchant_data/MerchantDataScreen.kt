@@ -60,7 +60,7 @@ fun MerchantDataScreen(
     onAddClick: (MerchantNameAndDetails) -> Unit,
     isEditSuccess: Boolean = false,
     isAddSuccess: Boolean = false,
-    merchantDataId: Long = 1L,
+    merchantDataId: Long = -1L,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
 
