@@ -45,7 +45,7 @@ fun DialogAddMerchant(
 
     val context = LocalContext.current
     LaunchedEffect(code) {
-        addMerchantViewModel.setCountryCode(code ?: addMerchantViewModel.getDefaultCurrencyCode())
+        addMerchantViewModel.setCountryCode(code)
     }
 
     if (contactNumberAndCode != null) {
@@ -94,7 +94,7 @@ fun DialogAddMerchant(
                     }
 
                 },
-                countryCode = countryCode,
+                countryCode = countryCode ?: "",
                 onDescTextChange = addMerchantViewModel::updateDescText,
                 onNameTextChange = addMerchantViewModel::updateNameText,
                 onPhoneNoTextChange = addMerchantViewModel::updatePhoneNoText

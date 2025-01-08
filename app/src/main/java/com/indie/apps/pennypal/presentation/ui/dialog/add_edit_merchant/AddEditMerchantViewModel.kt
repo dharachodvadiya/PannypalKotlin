@@ -35,7 +35,7 @@ class AddEditMerchantViewModel @Inject constructor(
     val merchantName = MutableStateFlow(TextFieldState())
     val phoneNumber = MutableStateFlow(TextFieldState())
     val description = MutableStateFlow(TextFieldState())
-    val countryDialCode = MutableStateFlow("")
+    val countryDialCode = MutableStateFlow<String?>(null)
 
     val enableButton = MutableStateFlow(true)
 
@@ -44,6 +44,16 @@ class AddEditMerchantViewModel @Inject constructor(
     init {
         if (merchantEditId != -1L) {
             setEditId(merchantEditId)
+        } else {
+            viewModelScope.launch {
+                userRepository
+                    .getUser().collect() {
+                        if (countryDialCode.value == null) {
+                            countryDialCode.value =
+                                getDialCodeFromCountryCode(it.currencyCountryCode)
+                        }
+                    }
+            }
         }
     }
 
@@ -66,7 +76,7 @@ class AddEditMerchantViewModel @Inject constructor(
 
     fun getIsEditable() = merchantEditId != -1L
 
-    fun setCountryCode(code: String) {
+    fun setCountryCode(code: String?) {
         countryDialCode.value = code
     }
 
@@ -76,14 +86,20 @@ class AddEditMerchantViewModel @Inject constructor(
         updatePhoneNoText(data.phoneNumber)
 
         //countryDialCode.value = data.dialCode ?: getDefaultCurrencyCode()
-        setCountryCode(data.dialCode ?: getDefaultCurrencyCode())
+        setCountryCode(
+            data.dialCode ?: getDialCodeFromCountryCode(countryRepository.getDefaultCountryCode())
+        )
     }
 
     fun addOrEditMerchant(onSuccess: (Merchant?, Boolean) -> Unit) {
         if (enableButton.value) {
             enableButton.value = false
             val isValidNum = Util.isValidPhoneNumber(
-                countryCode = countryRepository.getCountryCodeFromDialCode(countryDialCode.value),
+                countryCode = countryDialCode.value?.let {
+                    countryRepository.getCountryCodeFromDialCode(
+                        it
+                    )
+                } ?: "",
                 phoneNumber = countryDialCode.value + phoneNumber.value.text
             )
 
@@ -159,8 +175,8 @@ class AddEditMerchantViewModel @Inject constructor(
 
     }
 
-    fun getDefaultCurrencyCode() =
-        countryRepository.getDialCodeFromCountryCode(countryRepository.getDefaultCountryCode())
+    private fun getDialCodeFromCountryCode(countryCode: String) =
+        countryRepository.getDialCodeFromCountryCode(countryCode)
 
     fun updateNameText(text: String) = merchantName.value.updateText(text)
     fun updatePhoneNoText(text: String) = phoneNumber.value.updateText(text)
