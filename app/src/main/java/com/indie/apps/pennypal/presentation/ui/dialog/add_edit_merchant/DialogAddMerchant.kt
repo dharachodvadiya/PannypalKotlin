@@ -41,11 +41,12 @@ fun DialogAddMerchant(
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
     code: String?
 ) {
-    val countryCode by addMerchantViewModel.countryDialCode.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
     LaunchedEffect(code) {
-        addMerchantViewModel.setCountryCode(code)
+        if (code != null) {
+            addMerchantViewModel.setCountryCode(code)
+        }
     }
 
     if (contactNumberAndCode != null) {
@@ -53,6 +54,7 @@ fun DialogAddMerchant(
             addMerchantViewModel.setContactData(contactNumberAndCode)
         }
     }
+    val countryCode by addMerchantViewModel.countryDialCode.collectAsStateWithLifecycle()
 
     val enableButton by addMerchantViewModel.enableButton.collectAsStateWithLifecycle()
     val merchantName by addMerchantViewModel.merchantName.collectAsStateWithLifecycle()

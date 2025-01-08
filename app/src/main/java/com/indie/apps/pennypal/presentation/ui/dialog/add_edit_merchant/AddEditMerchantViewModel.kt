@@ -76,7 +76,7 @@ class AddEditMerchantViewModel @Inject constructor(
 
     fun getIsEditable() = merchantEditId != -1L
 
-    fun setCountryCode(code: String?) {
+    fun setCountryCode(code: String) {
         countryDialCode.value = code
     }
 
