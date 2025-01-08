@@ -79,32 +79,18 @@ fun OverViewStartScreen(
         }
     }
 
-    var isAddDataSuccess by remember {
-        mutableStateOf(false)
-    }
-
     var addEditDataId by remember {
         mutableLongStateOf(-1L)
     }
-
-    if (isAddDataSuccess != isAddMerchantDataSuccess) {
+    LaunchedEffect(addEditMerchantDataId) {
         if (isAddMerchantDataSuccess) {
             addEditDataId = addEditMerchantDataId
             overViewViewModel.addMerchantDataSuccess()
         }
-        isAddDataSuccess = isAddMerchantDataSuccess
-    }
-
-    var isEditDataSuccess by remember {
-        mutableStateOf(false)
-    }
-
-    if (isEditDataSuccess != isEditSuccess) {
         if (isEditSuccess) {
             addEditDataId = addEditMerchantDataId
             overViewViewModel.editDataSuccess()
         }
-        isEditDataSuccess = isEditSuccess
     }
 
     DoubleBackExitApp()
