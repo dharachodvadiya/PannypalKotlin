@@ -178,6 +178,10 @@ fun AllDataScreen(
                     scrollOffset
                 )
 
+                LaunchedEffect(lazyPagingData.itemCount) {
+                    scrollState.scrollToItem(0,0)
+                }
+
                 // after each scroll, update values in ViewModel
                 LaunchedEffect(key1 = scrollState.isScrollInProgress) {
                     if (!scrollState.isScrollInProgress) {
