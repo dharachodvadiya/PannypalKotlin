@@ -23,6 +23,12 @@ internal fun NavGraphBuilder.navigateToAllDataScreen(
         val isAddMerchantDataSuccess: Boolean? =
             backStackEntry.savedStateHandle.get<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_ADD_SUCCESS)
 
+        LaunchedEffect(Unit) {
+            backStackEntry.savedStateHandle.remove<Long>(Util.SAVE_STATE_MERCHANT_ADD_EDIT_ID)
+            backStackEntry.savedStateHandle.remove<Long>(Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_ID)
+            backStackEntry.savedStateHandle.remove<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_EDIT_SUCCESS)
+            backStackEntry.savedStateHandle.remove<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_ADD_SUCCESS)
+        }
 
         bottomBarState.value = false
         AllDataScreen(
@@ -44,11 +50,6 @@ internal fun NavGraphBuilder.navigateToAllDataScreen(
             isAddSuccess = isAddMerchantDataSuccess ?: false,
         )
 
-        LaunchedEffect(Unit) {
-            backStackEntry.savedStateHandle.remove<Long>(Util.SAVE_STATE_MERCHANT_ADD_EDIT_ID)
-            backStackEntry.savedStateHandle.remove<Long>(Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_ID)
-            backStackEntry.savedStateHandle.remove<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_EDIT_SUCCESS)
-            backStackEntry.savedStateHandle.remove<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_ADD_SUCCESS)
-        }
+
     }
 }
