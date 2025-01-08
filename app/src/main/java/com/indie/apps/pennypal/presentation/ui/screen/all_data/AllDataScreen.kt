@@ -81,36 +81,46 @@ fun AllDataScreen(
     val editAnimRun by allDataViewModel.editAnimRun.collectAsStateWithLifecycle()
     val deleteAnimRun by allDataViewModel.deleteAnimRun.collectAsStateWithLifecycle()
 
-    var isAddMerchantSuccessState by remember {
-        mutableStateOf(false)
-    }
+    /* var isAddMerchantSuccessState by remember {
+         mutableStateOf(false)
+     }*/
 
     var addMerchantId by remember {
         mutableLongStateOf(-1L)
     }
-
-    if (isAddMerchantSuccessState != isAddSuccess) {
-        if (isAddSuccess) {
-            addMerchantId = editAddId
-            allDataViewModel.addDataSuccess()
-        }
-        isAddMerchantSuccessState = isAddSuccess
-    }
-    var isEditMerchantSuccessState by remember {
-        mutableStateOf(false)
-    }
-
     var editMerchantId by remember {
         mutableLongStateOf(-1L)
     }
 
-    if (isEditMerchantSuccessState != isEditSuccess) {
+    /* if (isAddMerchantSuccessState != isAddSuccess) {
+         if (isAddSuccess) {
+             addMerchantId = editAddId
+             allDataViewModel.addDataSuccess()
+         }
+         isAddMerchantSuccessState = isAddSuccess
+     }*/
+
+    LaunchedEffect(editAddId) {
+        if (isAddSuccess) {
+            addMerchantId = editAddId
+            allDataViewModel.addDataSuccess()
+        }
+        if (isEditSuccess) {
+            editMerchantId = editAddId
+            allDataViewModel.editDataSuccess()
+        }
+    }
+    /* var isEditMerchantSuccessState by remember {
+         mutableStateOf(false)
+     }*/
+
+    /*if (isEditMerchantSuccessState != isEditSuccess) {
         if (isEditSuccess) {
             editMerchantId = editAddId
             allDataViewModel.editDataSuccess()
         }
         isEditMerchantSuccessState = isEditSuccess
-    }
+    }*/
 
     var openAlertDialog by remember { mutableStateOf(false) }
 

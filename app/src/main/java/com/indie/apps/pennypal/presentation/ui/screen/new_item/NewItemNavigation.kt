@@ -1,17 +1,13 @@
 package com.indie.apps.pennypal.presentation.ui.screen.new_item
 
 import androidx.compose.runtime.MutableState
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.google.gson.Gson
-import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.database.entity.Category
 import com.indie.apps.pennypal.data.database.entity.Payment
 import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
-import com.indie.apps.pennypal.presentation.ui.component.showToast
 import com.indie.apps.pennypal.presentation.ui.navigation.DialogNav
 import com.indie.apps.pennypal.presentation.ui.navigation.ScreenNav
 import com.indie.apps.pennypal.util.Util
@@ -111,9 +107,9 @@ internal fun NavGraphBuilder.navigateToEditItemScreen(
 ) {
     composable(route = ScreenNav.ADD_EDIT_MERCHANT_DATA.route) { backStackEntry ->
         bottomBarState.value = false
-        val context = LocalContext.current
+        /*val context = LocalContext.current
         val merchantDataSaveToast =
-            stringResource(id = R.string.merchant_data_edit_success_message)
+            stringResource(id = R.string.merchant_data_edit_success_message)*/
 
         val savedStateHandle = backStackEntry.savedStateHandle
         // get data passed back from B
@@ -174,7 +170,7 @@ internal fun NavGraphBuilder.navigateToEditItemScreen(
             isMerchantLock = isMerchantLock ?: false,
             onSaveSuccess = { isEdit, merchantDataId, merchantId ->
                 /*navController.navigateUp()*/
-                context.showToast(merchantDataSaveToast)
+                //context.showToast(merchantDataSaveToast)
 
                 navController.previousBackStackEntry?.savedStateHandle?.set(
                     Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_ID, merchantDataId

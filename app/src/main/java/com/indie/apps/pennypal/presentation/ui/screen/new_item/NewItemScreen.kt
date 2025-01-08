@@ -98,6 +98,8 @@ fun NewItemScreen(
 
     val context = LocalContext.current
     val merchantChangeToastMessage = stringResource(R.string.can_not_change_merchant)
+    val merchantDataEditToast = stringResource(id = R.string.merchant_data_edit_success_message)
+    val merchantDataSaveToast = stringResource(id = R.string.merchant_data_save_success_message)
 
     BackHandler {
         if (newItemViewModel.isEditData()) {
@@ -201,7 +203,14 @@ fun NewItemScreen(
                     Spacer(modifier = Modifier.weight(1f))
                     BottomSaveButton(
                         onClick = {
-                            newItemViewModel.addOrEditMerchantData(onSuccess = onSaveSuccess)
+                            newItemViewModel.addOrEditMerchantData() { isEdit, id, merchantId ->
+                                onSaveSuccess(isEdit, id, merchantId)
+                                if (isEdit)
+                                    context.showToast(merchantDataEditToast)
+                                else
+                                    context.showToast(merchantDataSaveToast)
+
+                            }
                         },
                         enabled = enableButton,
                         modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.padding))

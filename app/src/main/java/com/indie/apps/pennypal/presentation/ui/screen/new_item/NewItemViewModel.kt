@@ -242,7 +242,7 @@ class NewItemViewModel @Inject constructor(
                     }
                 } else {
                     val merchantData = editMerchantData!!.copy(
-                        merchantId = merchant.value!!.id,
+                        merchantId = merchant.value?.id,
                         paymentId = payment.value!!.id,
                         categoryId = category.value!!.id,
                         amount = amount,
