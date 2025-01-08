@@ -62,8 +62,8 @@ class BudgetFilterViewModel @Inject constructor(
 
     val pagingState = MutableStateFlow(PagingState<BudgetWithSpentAndCategoryIdList>())
 
-    fun setCurrentPeriod(periodType: PeriodType) {
-        currentPeriod.value = periodType.id
+    fun setCurrentPeriod(periodId: Int) {
+        currentPeriod.value = periodId
         viewModelScope.launch {
             trigger.emit(Unit)
         }

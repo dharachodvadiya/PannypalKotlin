@@ -43,6 +43,7 @@ fun BudgetFilterScreen(
     onAddClick: (Int) -> Unit,
     onBudgetEditClick: (Long) -> Unit,
     budgetFilterId: Int,
+    periodType: Int?,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
 
@@ -59,6 +60,11 @@ fun BudgetFilterScreen(
 
     LaunchedEffect(budgetFilterId) {
         viewModel.setFilterId(budgetFilterId)
+    }
+
+    LaunchedEffect(periodType) {
+        if(periodType != null)
+            viewModel.setCurrentPeriod(periodType)
     }
 
     Scaffold(
@@ -84,7 +90,9 @@ fun BudgetFilterScreen(
             AddBudgetTopSelectionButton(
                 list = PeriodType.entries,
                 selectBudgetPeriod = PeriodType.entries.first { it.id == currentPeriod },
-                onSelect = viewModel::setCurrentPeriod,
+                onSelect = {
+                    viewModel.setCurrentPeriod(it.id)
+                },
             )
 
             if (pagingState.isRefresh && (lazyPagingData.itemCount == 0)) {
@@ -174,7 +182,8 @@ private fun OverViewScreenPreview() {
             onNavigationUp = {},
             onAddClick = {},
             onBudgetEditClick = {},
-            budgetFilterId = 1
+            budgetFilterId = 1,
+            periodType = null
         )
     }
 }

@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.screen.budget_filter
 
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -16,6 +17,10 @@ internal fun NavGraphBuilder.navigateToBudgetFilterScreen(
 
         val menuId =
             backStackEntry.savedStateHandle.get<Int>(Util.SAVE_STATE_BUDGET_FILTER_ID)
+
+        val periodType =
+            backStackEntry.savedStateHandle.get<Int>(Util.SAVE_STATE_PERIOD_TYPE)
+
         BudgetFilterScreen(
             onNavigationUp = { navController.navigateUp() },
             onAddClick = {
@@ -33,7 +38,12 @@ internal fun NavGraphBuilder.navigateToBudgetFilterScreen(
                     )
                 )
             },
-            budgetFilterId = menuId ?: 1
+            budgetFilterId = menuId ?: 1,
+            periodType = periodType,
         )
+
+        LaunchedEffect(Unit){
+            backStackEntry.savedStateHandle.remove<Int>(Util.SAVE_STATE_PERIOD_TYPE)
+        }
     }
 }

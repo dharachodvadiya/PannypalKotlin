@@ -49,7 +49,7 @@ import java.util.Calendar
 fun AddEditBudgetScreen(
     addBudgetViewModel: AddBudgetViewModel = hiltViewModel(),
     onNavigationUp: () -> Unit,
-    onSave: (Boolean, Long) -> Unit,
+    onSave: (Boolean, Long, Int) -> Unit,
     selectedCategoryIds: List<Long> = emptyList(),
     onSelectCategory: (List<Long>) -> Unit,
     selectedPeriodType: Int,
@@ -201,7 +201,7 @@ fun AddEditBudgetScreen(
                     BottomSaveButton(
                         onClick = {
                             addBudgetViewModel.saveData { isEdit, id ->
-                                onSave(isEdit, id)
+                                onSave(isEdit, id, currentPeriod)
                                 if (isEdit) {
                                     context.showToast(budgetEditToast)
                                 } else {
@@ -295,7 +295,7 @@ private fun OverViewScreenPreview() {
         AddEditBudgetScreen(
             onNavigationUp = {},
             onSelectCategory = {},
-            onSave = { _, _ -> },
+            onSave = { _, _, _ -> },
             selectedPeriodType = 1
         )
     }
