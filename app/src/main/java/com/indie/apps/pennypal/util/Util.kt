@@ -31,7 +31,7 @@ object Util {
     const val SAVE_STATE_COUNTRY_DIAL_CODE = "dial_code"
     const val SAVE_STATE_COUNTRY_CODE = "country_code"
 
-    const val SAVE_STATE_PAYMENT_EDIT_ID = "payment_edit_id"
+    //const val SAVE_STATE_PAYMENT_EDIT_ID = "payment_edit_id"
     const val SAVE_STATE_SELECT_PAYMENT_ID = "select_payment_id"
     const val SAVE_STATE_PAYMENT_EDIT_SUCCESS = "payment_edit_success"
     const val SAVE_STATE_PAYMENT_ADD_EDIT_ID = "payment_add_edit_id"
@@ -41,7 +41,7 @@ object Util {
     const val SAVE_STATE_SELECT_CATEGORY_ID_LIST = "select_category_id_list"
     const val SAVE_STATE_CATEGORY_TYPE = "category_type"
 
-    const val SAVE_STATE_MERCHANT_EDIT_ID = "merchant_edit_id"
+    //const val PARAM_MERCHANT_EDIT_ID = "merchant_edit_id"
     const val SAVE_STATE_ADD_MERCHANT_SUCCESS = "merchant_add_success"
     const val SAVE_STATE_EDIT_MERCHANT_SUCCESS = "merchant_edit_success"
     const val SAVE_STATE_ADD_EDIT_MERCHANT_SUCCESS_ID = "merchant_edit_add_id"
@@ -64,6 +64,7 @@ object Util {
     const val SAVE_STATE_BUDGET_FILTER_ID = "budget_filter_id"
 
     const val PARAM_MERCHANT_ID = "merchant_id"
+    const val PARAM_PAYMENT_ID = "payment_id"
     const val PARAM_EDIT_MERCHANT_DATA_ID = "edit_merchant_data_id"
     const val PARAM_BUDGET_ID = "budget_id"
 

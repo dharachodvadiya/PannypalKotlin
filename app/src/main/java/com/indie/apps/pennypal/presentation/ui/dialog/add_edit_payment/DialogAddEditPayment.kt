@@ -3,7 +3,6 @@ package com.indie.apps.pennypal.presentation.ui.dialog.add_edit_payment
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -24,7 +23,6 @@ fun DialogAddPayment(
     addPaymentViewModel: AddEditPaymentViewModel = hiltViewModel(),
     onNavigationUp: () -> Unit,
     onSaveSuccess: (Payment?, Boolean) -> Unit,
-    editId: Long? = null,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     val enableButton by addPaymentViewModel.enableButton.collectAsStateWithLifecycle()
@@ -32,10 +30,6 @@ fun DialogAddPayment(
 
     val paymentModeList by addPaymentViewModel.paymentModeState.collectAsStateWithLifecycle()
     val selectedModeId by addPaymentViewModel.selectedModeId.collectAsStateWithLifecycle()
-
-    LaunchedEffect(editId) {
-        addPaymentViewModel.setEditId(editId) // always call after set country code
-    }
 
     /*var showAnimatedDialog by remember { mutableStateOf(false) }
 
@@ -61,7 +55,7 @@ fun DialogAddPayment(
     val paymentEditToast = stringResource(id = R.string.payment_edit_success_toast)
 
     MyAppDialog(
-        title = R.string.add_payment,
+        title = if (!addPaymentViewModel.getIsEditable()) R.string.add_payment else R.string.edit_payment,
         onNavigationUp = {
             if (enableButton)
                 onNavigationUp()

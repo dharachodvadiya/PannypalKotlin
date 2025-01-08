@@ -52,11 +52,10 @@ internal fun NavGraphBuilder.navigateToMerchantScreen(
             onAddClick = { navController.navigate(DialogNav.ADD_EDIT_MERCHANT.route) },
             onEditClick = {
 
-                navController.navigate(DialogNav.ADD_EDIT_MERCHANT.route)
-
-                navController.currentBackStackEntry?.savedStateHandle?.set(
-                    Util.SAVE_STATE_MERCHANT_EDIT_ID,
-                    it
+                navController.navigate(
+                    DialogNav.ADD_EDIT_MERCHANT.route.replace(
+                        "{${Util.PARAM_MERCHANT_ID}}", it.toString()
+                    )
                 )
             },
             bottomPadding = innerPadding,

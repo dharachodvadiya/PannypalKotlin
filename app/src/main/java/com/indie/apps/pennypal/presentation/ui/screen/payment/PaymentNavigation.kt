@@ -28,7 +28,7 @@ internal fun NavGraphBuilder.navigateToPaymentScreen(
         PaymentScreen(
             isEditSuccess = isEditSuccess ?: false,
             paymentId = editAddId ?: -1L,
-            onDefaultPaymentChange = {currentId ->
+            onDefaultPaymentChange = { currentId ->
                 navController.navigate(DialogNav.SELECT_PAYMENT.route)
                 navController.currentBackStackEntry?.savedStateHandle?.set(
                     Util.SAVE_STATE_SELECT_PAYMENT_ID, currentId
@@ -39,11 +39,12 @@ internal fun NavGraphBuilder.navigateToPaymentScreen(
                 )
             },
             onEditPaymentClick = {
-                navController.navigate(DialogNav.ADD_EDIT_PAYMENT.route)
 
-                navController.currentBackStackEntry
-                    ?.savedStateHandle
-                    ?.set(Util.SAVE_STATE_PAYMENT_EDIT_ID, it)
+                navController.navigate(
+                    DialogNav.ADD_EDIT_PAYMENT.route.replace(
+                        "{${Util.PARAM_PAYMENT_ID}}", it.toString()
+                    )
+                )
             },
             onAddPaymentClick = {
                 navController.navigate(DialogNav.ADD_EDIT_PAYMENT.route)

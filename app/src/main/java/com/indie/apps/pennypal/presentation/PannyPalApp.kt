@@ -159,8 +159,6 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
                             Gson().fromJson(gsonStringContactData, ContactNumberAndCode::class.java)
                         } else null
 
-                    val editId = savedStateHandle.get<Long>(Util.SAVE_STATE_MERCHANT_EDIT_ID)
-
                     DialogAddMerchant(
                         onNavigationUp = { navController.navigateUp() },
                         onSaveSuccess = { merchant, isEdit ->
@@ -202,7 +200,7 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
                             navController.navigate(DialogNav.CONTACT_PICKER.route)
                         },
                         code = dialCode,
-                        editId = editId,
+                        //editId = editId,
                         contactNumberAndCode = contactData
                     )
                 }
@@ -211,14 +209,9 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
                     dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
                 ) { backStackEntry ->
 
-                    val editId: Long? = backStackEntry
-                        .savedStateHandle
-                        .get<Long>(Util.SAVE_STATE_PAYMENT_EDIT_ID)
                     DialogAddPayment(
                         onNavigationUp = { navController.navigateUp() },
                         onSaveSuccess = { payment, isEdit ->
-                            //navController.navigateUp()
-                            //context.showToast(if (isEdit) paymentEditToast else paymentSaveToast)
 
                             if (payment != null)
                                 navController.previousBackStackEntry
@@ -238,8 +231,7 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
                             }
 
                             navController.popBackStack()
-                        },
-                        editId = editId
+                        }
                     )
                 }
                 dialog(

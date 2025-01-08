@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.dialog.add_edit_payment
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.indie.apps.pennypal.data.database.entity.Payment
@@ -11,6 +12,7 @@ import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.repository.PaymentModeRepository
 import com.indie.apps.pennypal.util.ErrorMessage
 import com.indie.apps.pennypal.util.Resource
+import com.indie.apps.pennypal.util.Util
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -25,14 +27,16 @@ class AddEditPaymentViewModel @Inject constructor(
     private val updatePaymentUseCase: UpdatePaymentUseCase,
     private val getPaymentFromIdUseCase: GetPaymentFromIdUseCase,
     paymentModeRepository: PaymentModeRepository,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
+    private val paymentEditId =
+        savedStateHandle.get<String>(Util.PARAM_PAYMENT_ID)?.toLongOrNull() ?: -1
 
     val paymentTypeState = MutableStateFlow(TextFieldState())
     val enableButton = MutableStateFlow(true)
 
     val selectedModeId = MutableStateFlow(1L)
-
-    private var editId: Long? = null
 
     private var editPayment: Payment? = null
 
@@ -50,24 +54,27 @@ class AddEditPaymentViewModel @Inject constructor(
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
 
-    fun setEditId(id: Long?) {
-        editId = id
-        if (editId != null) {
-            viewModelScope.launch {
-                getPaymentFromIdUseCase
-                    .getData(editId!!)
-                    .collect {
-                        editPayment = it
-
-                        selectedModeId.value = editPayment!!.modeId
-                        //paymentTypeState.value.text = editPayment!!.name
-                        updatePaymentTypeText(editPayment!!.name)
-                    }
-            }
+    init {
+        if (paymentEditId != -1L) {
+            setEditId(paymentEditId)
         }
-
-
     }
+
+    private fun setEditId(id: Long) {
+        viewModelScope.launch {
+            getPaymentFromIdUseCase
+                .getData(id)
+                .collect {
+                    editPayment = it
+
+                    selectedModeId.value = editPayment!!.modeId
+                    //paymentTypeState.value.text = editPayment!!.name
+                    updatePaymentTypeText(editPayment!!.name)
+                }
+        }
+    }
+
+    fun getIsEditable() = paymentEditId != -1L
 
     fun onModeChange(id: Long) {
         selectedModeId.value = id
@@ -82,12 +89,12 @@ class AddEditPaymentViewModel @Inject constructor(
                 enableButton.value = true
             } else {
                 viewModelScope.launch {
-                    if (editId != null) {
+                    if (paymentEditId != -1L) {
 
                         if (editPayment != null) {
 
                             val payment = editPayment!!.copy(
-                                id = editId!!,
+                                id = paymentEditId,
                                 name = paymentTypeState.value.text.trim(),
                                 modeId = selectedModeId.value
                             )

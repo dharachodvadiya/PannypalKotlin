@@ -39,8 +39,7 @@ fun DialogAddMerchant(
     onContactBook: () -> Unit,
     contactNumberAndCode: ContactNumberAndCode?,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
-    code: String?,
-    editId: Long? = null,
+    code: String?
 ) {
     val countryCode by addMerchantViewModel.countryDialCode.collectAsStateWithLifecycle()
 
@@ -55,12 +54,6 @@ fun DialogAddMerchant(
         }
     }
 
-
-
-    LaunchedEffect(editId) {
-        addMerchantViewModel.setEditId(editId) // always call after set country code
-    }
-
     val enableButton by addMerchantViewModel.enableButton.collectAsStateWithLifecycle()
     val merchantName by addMerchantViewModel.merchantName.collectAsStateWithLifecycle()
     val phoneNumber by addMerchantViewModel.phoneNumber.collectAsStateWithLifecycle()
@@ -71,7 +64,7 @@ fun DialogAddMerchant(
     val merchantSaveToast = stringResource(id = R.string.merchant_save_success_toast)
     val merchantEditToast = stringResource(id = R.string.merchant_edit_success_message)
 
-    MyAppDialog(title = if (editId == null) R.string.add_merchant else R.string.edit_merchant,
+    MyAppDialog(title = if (!addMerchantViewModel.getIsEditable()) R.string.add_merchant else R.string.edit_merchant,
         onNavigationUp = {
             if (enableButton) onNavigationUp()
         },
@@ -109,7 +102,7 @@ fun DialogAddMerchant(
         }, bottomContent = {
             BottomSaveButton(
                 onClick = {
-                    addMerchantViewModel.addOrEditMerchant {merchant, isEdit ->
+                    addMerchantViewModel.addOrEditMerchant { merchant, isEdit ->
                         onSaveSuccess(merchant, isEdit)
                         context.showToast(if (isEdit) merchantEditToast else merchantSaveToast)
                     }

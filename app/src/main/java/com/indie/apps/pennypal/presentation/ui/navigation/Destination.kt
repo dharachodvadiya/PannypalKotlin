@@ -7,8 +7,8 @@ import com.indie.apps.pennypal.util.Util
 
 enum class DialogNav(val route: String) {
     SELECT_MERCHANT("Dialog/SelectMerchant"),
-    ADD_EDIT_MERCHANT("Dialog/AddMerchant"),
-    ADD_EDIT_PAYMENT("Dialog/AddEditPayment"),
+    ADD_EDIT_MERCHANT("Dialog/AddMerchant/{${Util.PARAM_MERCHANT_ID}}"),
+    ADD_EDIT_PAYMENT("Dialog/AddEditPayment/{${Util.PARAM_PAYMENT_ID}}"),
     COUNTRY_PICKER("Dialog/CountryCodePicker"),
     CONTACT_PICKER("Dialog/ContactPicker"),
     SELECT_PAYMENT("Dialog/SelectPayment"),
@@ -22,6 +22,7 @@ enum class ScreenNav(val route: String) {
     BOARDING("boarding"),
     OVERVIEW_START("overview/start"),
     SEE_ALL_DATA("overview/see_all_data"),
+
     //NEW_ITEM("overview/new_item"),
     PROFILE("overview/profile"),
     MERCHANT_START("merchant/start"),
@@ -34,6 +35,7 @@ enum class ScreenNav(val route: String) {
     BUDGET("budget"),
     BUDGET_FILTER("budget_filter"),
     SINGLE_BUDGET_ANALYSIS("budget/{${Util.PARAM_BUDGET_ID}}"),
+
     //ADD_BUDGET("add_budget"),
     ADD_EDIT_BUDGET("add_edit_budget_data/{${Util.PARAM_BUDGET_ID}}"),
 }
