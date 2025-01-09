@@ -55,6 +55,7 @@ enum class BottomNavItem(
 enum class OnBoardingPage {
     BEGIN,
     INTRO,
+    SET_LANGUAGE,
     SET_NAME,
     SET_CURRENCY,
     WELCOME,

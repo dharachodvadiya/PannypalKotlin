@@ -23,9 +23,11 @@ import com.indie.apps.pennypal.presentation.ui.component.showToast
 import com.indie.apps.pennypal.presentation.ui.navigation.OnBoardingPage
 import com.indie.apps.pennypal.presentation.ui.screen.AuthViewModel
 import com.indie.apps.pennypal.presentation.ui.screen.SignInLauncher
+import com.indie.apps.pennypal.presentation.ui.screen.changeLanguage
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
+import com.indie.apps.pennypal.util.AppLanguage
 import com.indie.apps.pennypal.util.AuthProcess
 import com.indie.apps.pennypal.util.SyncEvent
 
@@ -81,6 +83,10 @@ fun OnBoardingScreen(
         },
         onLoginFail = {})
 
+    val currentLanguageIndex by viewModel.currentLanguageIndex.collectAsStateWithLifecycle()
+    val languageList by viewModel.languageList.collectAsStateWithLifecycle()
+
+
     OnBoardingScreenStart(
         onBoardingPage = currentPageState,
         onClick = {
@@ -114,7 +120,14 @@ fun OnBoardingScreen(
         },
         currencyText = currencyText,
         nameState = nameState,
-        onNameTextChange = viewModel::updateNameText
+        onNameTextChange = viewModel::updateNameText,
+        optionList = languageList,
+        selectedIndex = currentLanguageIndex,
+        onSelect = {
+            viewModel.onLanguageSelect(it) { languageCode ->
+                changeLanguage(context = context, languageCode.asString(context))
+            }
+        }
     )
 }
 
@@ -129,9 +142,13 @@ fun OnBoardingScreenStart(
     introData: List<IntroData>,
     currencyText: String,
     nameState: TextFieldState,
+    optionList: List<AppLanguage>,
+    selectedIndex: Int,
+    onSelect: (AppLanguage) -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
     onNameTextChange: (String) -> Unit
 ) {
+    val context = LocalContext.current
     Scaffold { innerPadding ->
         Box(
             modifier = modifier
@@ -147,6 +164,14 @@ fun OnBoardingScreenStart(
                     onClick = { onClick(onBoardingPage) },
                     introData = introData,
                     onBackClick = { onBackClick(onBoardingPage) })
+
+                OnBoardingPage.SET_LANGUAGE -> OnBoardingSetLanguagePage(
+                    onClick = { onClick(onBoardingPage) },
+                    onBackClick = { onBackClick(onBoardingPage) },
+                    optionList = optionList,
+                    selectedIndex = selectedIndex,
+                    onSelect = onSelect
+                )
 
                 OnBoardingPage.SET_NAME -> OnBoardingSetNamePage(
                     onClick = { onClick(onBoardingPage) },

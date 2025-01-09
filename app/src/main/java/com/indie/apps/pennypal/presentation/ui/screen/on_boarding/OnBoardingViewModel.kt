@@ -8,10 +8,12 @@ import com.indie.apps.cpp.data.repository.CountryRepository
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.domain.usecase.UpdateUserCurrencyDataUseCase
 import com.indie.apps.pennypal.domain.usecase.UpdateUserNameUseCase
+import com.indie.apps.pennypal.presentation.ui.component.UiText
 import com.indie.apps.pennypal.presentation.ui.navigation.OnBoardingPage
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.repository.PreferenceRepository
 import com.indie.apps.pennypal.repository.UserRepository
+import com.indie.apps.pennypal.util.AppLanguage
 import com.indie.apps.pennypal.util.ErrorMessage
 import com.indie.apps.pennypal.util.Resource
 import com.indie.apps.pennypal.util.Util
@@ -53,6 +55,17 @@ class OnBoardingViewModel @Inject constructor(
         IntroData(R.string.introTitle3, R.string.introSubTitle3, R.drawable.resource_private)
     )
 
+    val languageList = MutableStateFlow<List<AppLanguage>>(AppLanguage.entries)
+
+    val currentLanguageIndex =
+        MutableStateFlow(preferenceRepository.getInt(Util.PREF_APP_LANGUAGE, 1))
+
+    fun onLanguageSelect(option: AppLanguage, onSuccess: (UiText) -> Unit) {
+        preferenceRepository.putInt(Util.PREF_APP_LANGUAGE, option.index)
+        currentLanguageIndex.value = option.index
+        onSuccess(option.languageCode)
+    }
+
     init {
         viewModelScope.launch { userData.collect() }
     }
@@ -64,7 +77,11 @@ class OnBoardingViewModel @Inject constructor(
     ) {
         when (currentPage) {
             OnBoardingPage.BEGIN -> currentPageState.value = OnBoardingPage.INTRO
-            OnBoardingPage.INTRO -> currentPageState.value = OnBoardingPage.SET_NAME
+            OnBoardingPage.INTRO -> currentPageState.value = OnBoardingPage.SET_LANGUAGE
+            OnBoardingPage.SET_LANGUAGE -> {
+                saveName { currentPageState.value = OnBoardingPage.SET_NAME }
+            }
+
             OnBoardingPage.SET_NAME -> {
                 saveName { currentPageState.value = OnBoardingPage.SET_CURRENCY }
             }
@@ -90,7 +107,8 @@ class OnBoardingViewModel @Inject constructor(
         when (currentPage) {
             OnBoardingPage.BEGIN -> {}
             OnBoardingPage.INTRO -> currentPageState.value = OnBoardingPage.BEGIN
-            OnBoardingPage.SET_NAME -> currentPageState.value = OnBoardingPage.INTRO
+            OnBoardingPage.SET_LANGUAGE -> currentPageState.value = OnBoardingPage.INTRO
+            OnBoardingPage.SET_NAME -> currentPageState.value = OnBoardingPage.SET_LANGUAGE
             OnBoardingPage.SET_CURRENCY -> currentPageState.value = OnBoardingPage.SET_NAME
             OnBoardingPage.WELCOME -> currentPageState.value = OnBoardingPage.SET_CURRENCY
             OnBoardingPage.RESTORE -> {}

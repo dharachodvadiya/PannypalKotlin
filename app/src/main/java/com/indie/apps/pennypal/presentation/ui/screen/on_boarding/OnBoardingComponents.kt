@@ -39,12 +39,14 @@ import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.presentation.ui.component.BottomSaveButton
 import com.indie.apps.pennypal.presentation.ui.component.DialogSelectableItem
 import com.indie.apps.pennypal.presentation.ui.component.DialogTextFieldItem
+import com.indie.apps.pennypal.presentation.ui.component.TextWithRadioButton
 import com.indie.apps.pennypal.presentation.ui.component.clickableWithNoRipple
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
+import com.indie.apps.pennypal.util.AppLanguage
 
 @Composable
 fun OnBoardingBeginPage(
@@ -116,6 +118,55 @@ fun OnBoardingIntroPage(
                         introData = introData[pageIndex]
                     )
                 }
+            }
+
+
+        }, onBackClick = onBackClick, modifier = modifier
+    )
+}
+
+@Composable
+fun OnBoardingSetLanguagePage(
+    onClick: () -> Unit,
+    onBackClick: () -> Unit,
+    optionList: List<AppLanguage>,
+    selectedIndex: Int,
+    onSelect: (AppLanguage) -> Unit,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
+) {
+    OnBoardingPage(
+        onClick = onClick, buttonText = R.string.continue_text, content = {
+
+            Column {
+                CustomText(
+                    text = stringResource(id = R.string.select_language),
+                    color = MyAppTheme.colors.black,
+                    modifier = Modifier.padding(16.dp),
+                    style = MyAppTheme.typography.Regular57
+                )
+
+                Column(
+                    modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding))
+                ) {
+                    optionList.forEach { item ->
+                        TextWithRadioButton(
+                            isSelected = item.index == selectedIndex,
+                            name = stringResource(item.title),
+                            onSelect = { onSelect(item) },
+                        )
+
+                    }
+
+                    Spacer(modifier = Modifier.height(50.dp))
+                }
+
+                /*DialogTextFieldItem(
+                    textState = nameState,
+                    placeholder = R.string.name,
+                    textTrailingContent = {},
+                    onTextChange = { onNameTextChange(it) },
+                    modifier = Modifier.padding(top = dimensionResource(id = R.dimen.padding))
+                )*/
             }
 
 
