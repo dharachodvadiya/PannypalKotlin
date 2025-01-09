@@ -62,6 +62,7 @@ object Util {
 
     const val SAVE_STATE_PERIOD_TYPE = "period_type"
     const val SAVE_STATE_BUDGET_FILTER_ID = "budget_filter_id"
+    const val SAVE_STATE_BUDGET_ID = "budget_id"
 
     const val PARAM_MERCHANT_ID = "merchant_id"
     const val PARAM_PAYMENT_ID = "payment_id"

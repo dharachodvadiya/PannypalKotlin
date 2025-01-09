@@ -140,7 +140,8 @@ fun MerchantDataScreen(
                 )
 
                 LaunchedEffect(lazyPagingData.itemCount) {
-                    scrollState.scrollToItem(0,0)
+                    if (addDataAnimRun)
+                        scrollState.scrollToItem(0, 0)
                 }
 
                 // after each scroll, update values in ViewModel

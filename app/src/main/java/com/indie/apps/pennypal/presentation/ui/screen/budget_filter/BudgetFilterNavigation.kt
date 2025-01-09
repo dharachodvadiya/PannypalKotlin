@@ -21,8 +21,12 @@ internal fun NavGraphBuilder.navigateToBudgetFilterScreen(
         val periodType =
             backStackEntry.savedStateHandle.get<Int>(Util.SAVE_STATE_PERIOD_TYPE)
 
-        LaunchedEffect(Unit){
+        val budgetId: Long? =
+            backStackEntry.savedStateHandle.get<Long>(Util.SAVE_STATE_BUDGET_ID)
+
+        LaunchedEffect(Unit) {
             backStackEntry.savedStateHandle.remove<Int>(Util.SAVE_STATE_PERIOD_TYPE)
+            backStackEntry.savedStateHandle.remove<Long>(Util.SAVE_STATE_BUDGET_ID)
         }
 
         BudgetFilterScreen(
@@ -44,6 +48,7 @@ internal fun NavGraphBuilder.navigateToBudgetFilterScreen(
             },
             budgetFilterId = menuId ?: 1,
             periodType = periodType,
+            budgetId = budgetId
         )
 
 

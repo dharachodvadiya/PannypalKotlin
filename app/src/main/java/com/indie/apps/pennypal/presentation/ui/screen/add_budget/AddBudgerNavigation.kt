@@ -63,11 +63,15 @@ internal fun NavGraphBuilder.navigateToAddEditBudgetScreen(
         bottomBarState.value = false
         AddEditBudgetScreen(
             onNavigationUp = { navController.navigateUp() },
-            onSave = { _, _, period ->
+            onSave = { _, id, period ->
                 navController.popBackStack()
                 navController.currentBackStackEntry?.savedStateHandle?.set(
                     Util.SAVE_STATE_PERIOD_TYPE,
                     period
+                )
+                navController.currentBackStackEntry?.savedStateHandle?.set(
+                    Util.SAVE_STATE_BUDGET_ID,
+                    id
                 )
             },
             onSelectCategory = { selectedIds ->

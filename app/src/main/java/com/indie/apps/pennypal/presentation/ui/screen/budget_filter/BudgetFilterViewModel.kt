@@ -9,8 +9,10 @@ import com.indie.apps.pennypal.data.module.budget.BudgetWithSpentAndCategoryIdLi
 import com.indie.apps.pennypal.domain.usecase.GetPastBudgetsAndSpentWithCategoryIdListFromPeriodType
 import com.indie.apps.pennypal.domain.usecase.GetUpComingBudgetsAndSpentWithCategoryIdListFromPeriodType
 import com.indie.apps.pennypal.presentation.ui.state.PagingState
+import com.indie.apps.pennypal.util.Util
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -27,6 +29,8 @@ class BudgetFilterViewModel @Inject constructor(
     val currentPeriod = MutableStateFlow(PeriodType.MONTH.id)
     private val currentFilter = MutableStateFlow(BudgetMenu.PAST.id)
     private val trigger = MutableSharedFlow<Unit>(replay = 1)
+
+    var addBudgetAnimRun = MutableStateFlow(false)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val pagedData = trigger
@@ -74,5 +78,19 @@ class BudgetFilterViewModel @Inject constructor(
         viewModelScope.launch {
             trigger.emit(Unit)
         }
+    }
+
+    fun addBudgetSuccess() {
+        addBudgetAnimRun.value = true
+
+        viewModelScope.launch {
+            delay(Util.LIST_ITEM_ANIM_DELAY)
+            addBudgetSuccessAnimStop()
+        }
+    }
+
+    fun addBudgetSuccessAnimStop() {
+        if (addBudgetAnimRun.value)
+            addBudgetAnimRun.value = false
     }
 }
