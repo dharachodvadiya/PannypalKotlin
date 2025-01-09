@@ -210,7 +210,10 @@
 
     <string name="restore_title">તમારો ડેટા પુનઃસ્થાપિત કરો</string>
     <string name="restore_subtitle">બેકઅપ ઉપલબ્ધ છે. આ ઉપકરણ પર તમારા ખર્ચનું સંચાલન ચાલુ રાખવા માટે તમારો ડેટા પુનઃસ્થાપિત કરો.</string>
-
+    <string name="sign_in_change_account">સાઇન ઇન કરો અથવા એકાઉન્ટ બદલો</string>
+    <string name="merchant_optional">નાણાં લેનાર (વૈકલ્પિક)</string>
+    <string name="edit_payment">ચુકવણી પદ્ધતિમાં ફેરફાર કરો</string>
+    <string name="press_back_again_to_exit_app">બહાર નીકળવા માટે ફરીથી પાછળ દબાવો</string>
 
     <string-array name="months">
         <item>જાન્યુઆરી</item>

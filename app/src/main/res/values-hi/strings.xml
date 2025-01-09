@@ -210,6 +210,10 @@
 
     <string name="restore_title">अपना डेटा पुनर्स्थापित करें</string>
     <string name="restore_subtitle">बैकअप उपलब्ध है। इस डिवाइस पर अपने खर्चों का प्रबंधन जारी रखने के लिए अपना डेटा पुनर्स्थापित करें।</string>
+    <string name="sign_in_change_account">साइन इन करें या खाता बदलें</string>
+    <string name="merchant_optional">भुगतान प्राप्तकर्ता (वैकल्पिक)</string>
+    <string name="edit_payment">भुगतान विधि संपादित करें</string>
+    <string name="press_back_again_to_exit_app">बाहर निकलने के लिए पुनः वापस दबाएँ</string>
 
 
     <string-array name="months">
