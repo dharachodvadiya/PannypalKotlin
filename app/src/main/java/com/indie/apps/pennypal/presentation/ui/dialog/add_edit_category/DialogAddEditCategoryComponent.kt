@@ -35,7 +35,7 @@ fun AddEditCategoryDialogField(
     selectCategoryType: CategoryType,
     onSelect: (CategoryType) -> Unit,
     textCategory: TextFieldState,
-    onPaymentTypeTextChange: (String) -> Unit,
+    onCategoryNameTextChange: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -76,7 +76,7 @@ fun AddEditCategoryDialogField(
             textState = textCategory,
             imageVector = ImageVector.vectorResource(getCategoryIcon("")),
             placeholder = R.string.add_category_placeholder,
-            onTextChange = onPaymentTypeTextChange
+            onTextChange = onCategoryNameTextChange
         )
         CustomText(
             text = stringResource(id = R.string.select_icon),

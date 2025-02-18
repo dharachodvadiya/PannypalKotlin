@@ -240,8 +240,10 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
                     dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
                 ) { backStackEntry ->
 
-                    DialogAddEditCategory(
-                        onNavigationUp = { navController.navigateUp() },
+                    val type =
+                        navController.previousBackStackEntry?.savedStateHandle?.get<Int>(Util.SAVE_STATE_CATEGORY_TYPE)
+
+                    DialogAddEditCategory(onNavigationUp = { navController.navigateUp() },
                         onSaveSuccess = { category, isEdit ->
 
                             /*if (category != null)
@@ -262,7 +264,8 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
                             }*/
 
                             navController.popBackStack()
-                        }
+                        },
+                        categoryType = type
                     )
                 }
                 dialog(

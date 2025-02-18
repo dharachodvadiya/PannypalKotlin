@@ -1,6 +1,7 @@
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -24,12 +25,19 @@ fun DialogAddEditCategory(
     viewModel: AddEditCategoryViewModel = hiltViewModel(),
     onNavigationUp: () -> Unit,
     onSaveSuccess: (Category?, Boolean) -> Unit,
+    categoryType: Int?,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     val enableButton by viewModel.enableButton.collectAsStateWithLifecycle()
     val categoryState by viewModel.categoryState.collectAsStateWithLifecycle()
 
-    val selectedModeId by viewModel.selectedTypeId.collectAsStateWithLifecycle()
+    val selectedCategoryId by viewModel.selectedCategoryId.collectAsStateWithLifecycle()
+
+    if (categoryType != null) {
+        LaunchedEffect(categoryType) {
+            viewModel.setSelectedCategoryId(categoryType)
+        }
+    }
 
     val context = LocalContext.current
     val categorySaveToast = stringResource(id = R.string.category_save_success_toast)
@@ -46,9 +54,9 @@ fun DialogAddEditCategory(
             AddEditCategoryDialogField(
                 textCategory = categoryState,
                 list = CategoryType.entries,
-                selectCategoryType = CategoryType.entries.first { it.id == selectedModeId },
+                selectCategoryType = CategoryType.entries.first { it.id == selectedCategoryId },
                 onSelect = viewModel::onModeChange,
-                onPaymentTypeTextChange = viewModel::updateCategoryTypeText
+                onCategoryNameTextChange = viewModel::updateCategoryTypeText
             )
         },
         bottomContent = {
@@ -73,7 +81,8 @@ private fun MyAppDialogPreview() {
     PennyPalTheme(darkTheme = true) {
         DialogAddEditCategory(
             onNavigationUp = {},
-            onSaveSuccess = { _, _ -> }
+            onSaveSuccess = { _, _ -> },
+            categoryType = null
         )
     }
 }

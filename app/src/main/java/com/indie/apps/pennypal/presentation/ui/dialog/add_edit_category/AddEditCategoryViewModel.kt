@@ -31,7 +31,7 @@ class AddEditCategoryViewModel @Inject constructor(
     val categoryState = MutableStateFlow(TextFieldState())
     val enableButton = MutableStateFlow(true)
 
-    val selectedTypeId = MutableStateFlow(1)
+    val selectedCategoryId = MutableStateFlow(-1)
 
     private var editCategory: Category? = null
 
@@ -39,6 +39,10 @@ class AddEditCategoryViewModel @Inject constructor(
         if (categoryEditId != -1L) {
             setEditId(categoryEditId)
         }
+    }
+    fun setSelectedCategoryId(type : Int)
+    {
+        selectedCategoryId.value = type
     }
 
     private fun setEditId(id: Long) {
@@ -48,7 +52,7 @@ class AddEditCategoryViewModel @Inject constructor(
                 .collect {
                     editCategory = it
 
-                    selectedTypeId.value = editCategory!!.type
+                    setSelectedCategoryId(editCategory!!.type)
                     updateCategoryTypeText(editCategory!!.name)
                 }
         }
@@ -57,7 +61,7 @@ class AddEditCategoryViewModel @Inject constructor(
     fun getIsEditable() = categoryEditId != -1L
 
     fun onModeChange(categoryType: CategoryType) {
-        selectedTypeId.value = categoryType.id
+        selectedCategoryId.value = categoryType.id
     }
 
     fun addEditCategory(onSuccess: (Category?, Boolean) -> Unit) {
@@ -76,7 +80,7 @@ class AddEditCategoryViewModel @Inject constructor(
                             val category = editCategory!!.copy(
                                 id = categoryEditId,
                                 name = categoryState.value.text.trim(),
-                                type = selectedTypeId.value
+                                type = selectedCategoryId.value
                             )
 
                             updateCategoryUseCase
@@ -100,7 +104,7 @@ class AddEditCategoryViewModel @Inject constructor(
                     } else {
                         val category = Category(
                             name = categoryState.value.text.trim(),
-                            type = selectedTypeId.value
+                            type = selectedCategoryId.value
                         )
                         addCategoryUseCase
                             .addCategory(category)
