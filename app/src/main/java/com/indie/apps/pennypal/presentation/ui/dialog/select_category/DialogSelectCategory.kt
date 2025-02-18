@@ -22,6 +22,7 @@ fun DialogSelectCategory(
     selectedId: Long,
     type: Int = -1,
     onSelect: (Category) -> Unit,
+    onAddCategory: () -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     LaunchedEffect(type) {
@@ -46,7 +47,8 @@ fun DialogSelectCategory(
                 categoryList = categoryList,
                 onSelectCategory = {
                     onSelect(it)
-                }
+                },
+                onAddCategory = onAddCategory
             )
         },
         modifier = modifier,
@@ -61,7 +63,8 @@ private fun MyAppDialogPreview() {
         DialogSelectCategory(
             onNavigationUp = {},
             onSelect = { },
-            selectedId = 1L
+            selectedId = 1L,
+            onAddCategory = {}
         )
     }
 }

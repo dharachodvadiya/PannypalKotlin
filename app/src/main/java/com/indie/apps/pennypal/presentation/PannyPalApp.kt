@@ -371,7 +371,10 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
                             navController.popBackStack()
                         },
                         selectedId = currentId ?: 0L,
-                        type = type ?: -1
+                        type = type ?: -1,
+                        onAddCategory = {
+                            navController.navigate(DialogNav.ADD_EDIT_CATEGORY.route)
+                        }
                     )
 
                 }

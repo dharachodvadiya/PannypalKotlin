@@ -50,8 +50,7 @@ internal fun NavGraphBuilder.navigateToPaymentScreen(
                 )
             },
             onAddPaymentClick = {
-                //navController.navigate(DialogNav.ADD_EDIT_PAYMENT.route)
-                navController.navigate(DialogNav.ADD_EDIT_CATEGORY.route)
+                navController.navigate(DialogNav.ADD_EDIT_PAYMENT.route)
             },
             onNavigationUp = {
                 navController.popBackStack()
