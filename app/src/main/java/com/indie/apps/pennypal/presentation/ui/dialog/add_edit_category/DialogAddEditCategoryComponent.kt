@@ -2,11 +2,14 @@ package com.indie.apps.pennypal.presentation.ui.dialog.add_edit_category
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -67,7 +70,7 @@ fun AddEditCategoryDialogField(
 
         }
 
-        Spacer(Modifier.height(10.dp))
+        Spacer(Modifier.height(dimensionResource(R.dimen.padding)))
 
         DialogTextFieldItem(
             textState = textCategory,
@@ -81,23 +84,20 @@ fun AddEditCategoryDialogField(
             color = MyAppTheme.colors.gray1
         )
         Spacer(Modifier.height(5.dp))
-        CategoryItem(
-            name = "",
-            isSelected = false,
-            onClick = {}
-        )
-        /*LazyVerticalGrid(
-            columns = GridCells.Fixed(4),
+
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(5),
             contentPadding = PaddingValues(dimensionResource(id = R.dimen.padding)),
             horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding))
-        ) {
-            CategoryItem(
-                name = "",
-                isSelected = false,
-                onClick = {}
-            )
-        }*/
+            userScrollEnabled = true,) {
+           items(20){
+               CategoryItem(
+                   name = "",
+                   isSelected = false,
+                   onClick = {}
+               )
+           }
+        }
 
         Spacer(modifier = Modifier.fillMaxHeight(0.1f))
 

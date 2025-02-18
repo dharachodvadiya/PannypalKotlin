@@ -41,6 +41,7 @@ fun DialogAddEditCategory(
             if (enableButton)
                 onNavigationUp()
         },
+        isFixHeight = true,
         content = {
             AddEditCategoryDialogField(
                 textCategory = categoryState,
