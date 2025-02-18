@@ -1,7 +1,7 @@
 package com.indie.apps.pennypal.data.database.enum
 
-object CategoryType {
-    const val EXPENSE = -1
-    const val INCOME = 1
-    const val BOTH = 0
+enum class CategoryType(val id: Int) {
+    EXPENSE(-1),
+    INCOME(1),
+    BOTH(0),
 }

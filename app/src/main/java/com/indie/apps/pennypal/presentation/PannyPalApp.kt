@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.presentation
 
+import DialogAddEditCategory
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.material3.Scaffold
@@ -229,6 +230,36 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
                                     ?.savedStateHandle
                                     ?.set(Util.SAVE_STATE_PAYMENT_ADD_EDIT_ID, payment.id)
                             }
+
+                            navController.popBackStack()
+                        }
+                    )
+                }
+                dialog(
+                    route = DialogNav.ADD_EDIT_CATEGORY.route,
+                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
+                ) { backStackEntry ->
+
+                    DialogAddEditCategory(
+                        onNavigationUp = { navController.navigateUp() },
+                        onSaveSuccess = { category, isEdit ->
+
+                            /*if (category != null)
+                                navController.previousBackStackEntry
+                                    ?.savedStateHandle
+                                    ?.set(Util.SAVE_STATE_CATEGORY, Gson().toJson(category))
+
+                            if (isEdit) {
+                                navController.previousBackStackEntry
+                                    ?.savedStateHandle
+                                    ?.set(Util.SAVE_STATE_CATEGORY_EDIT_SUCCESS, true)
+                            }
+
+                            if (category != null) {
+                                navController.previousBackStackEntry
+                                    ?.savedStateHandle
+                                    ?.set(Util.SAVE_STATE_CATEGORY_ADD_EDIT_ID, category.id)
+                            }*/
 
                             navController.popBackStack()
                         }

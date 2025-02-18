@@ -15,7 +15,7 @@
     <string name="description">વિગત</string>
     <string name="save">સાચવો</string>
     <string name="add_merchant_placeholder">નાણાં લેનાર પસંદ કરો</string>
-    <string name="add_payment_type_placeholder">" ચુકવણીનો પ્રકાર પસંદ કરો"</string>
+    <string name="add_payment_type_placeholder">" ચુકવણીનો પ્રકાર દા<ખલ></ખલ> કરો"</string>
     <string name="amount_placeholder">" રકમ દાખલ કરો"</string>
     <string name="description_placeholder">ટૂંકું વર્ણન દાખલ કરો</string>
     <string name="add_merchant">નાણાં લેનાર પસંદ કરો</string>
@@ -90,7 +90,7 @@
     <string name="discard">હા</string>
     <string name="edit_dialog_title">બહાર જાઓ</string>
     <string name="category">શ્રેણી</string>
-    <string name="add_category_placeholder">શ્રેણી પસંદ કરો</string>
+    <string name="select_category_placeholder">શ્રેણી પસંદ કરો</string>
     <string name="select_category">શ્રેણી પસંદ કરો</string>
     <string name="data_delete_success_message">ટ્રાન્ઝેક્શન સફળતાપૂર્વક કાઢી નાખ્યું</string>
     <string name="no_transaction">કોઈ ડેટા નથી</string>

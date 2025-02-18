@@ -9,6 +9,7 @@ enum class DialogNav(val route: String) {
     SELECT_MERCHANT("Dialog/SelectMerchant"),
     ADD_EDIT_MERCHANT("Dialog/AddMerchant/{${Util.PARAM_MERCHANT_ID}}"),
     ADD_EDIT_PAYMENT("Dialog/AddEditPayment/{${Util.PARAM_PAYMENT_ID}}"),
+    ADD_EDIT_CATEGORY("Dialog/AddEditCategory/{${Util.PARAM_CATEGORY_ID}}"),
     COUNTRY_PICKER("Dialog/CountryCodePicker"),
     CONTACT_PICKER("Dialog/ContactPicker"),
     SELECT_PAYMENT("Dialog/SelectPayment"),

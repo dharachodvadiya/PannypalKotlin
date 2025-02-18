@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.indie.apps.pennypal.data.database.entity.Category
+import com.indie.apps.pennypal.data.database.enum.CategoryType
 import com.indie.apps.pennypal.domain.usecase.AddCategoryUseCase
 import com.indie.apps.pennypal.domain.usecase.UpdateCategoryUseCase
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
@@ -55,8 +56,8 @@ class AddEditCategoryViewModel @Inject constructor(
 
     fun getIsEditable() = categoryEditId != -1L
 
-    fun onModeChange(id: Int) {
-        selectedTypeId.value = id
+    fun onModeChange(categoryType: CategoryType) {
+        selectedTypeId.value = categoryType.id
     }
 
     fun addEditCategory(onSuccess: (Category?, Boolean) -> Unit) {

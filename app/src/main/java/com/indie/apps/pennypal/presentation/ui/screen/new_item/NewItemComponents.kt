@@ -220,7 +220,7 @@ fun NewEntryFieldItemSection(
             text = categoryName ?: "",
             label = R.string.category,
             onClick = onCategorySelect,
-            placeholder = R.string.add_category_placeholder,
+            placeholder = R.string.select_category_placeholder,
             isSelectable = true,
             errorText = categoryError,
             trailingContent = {

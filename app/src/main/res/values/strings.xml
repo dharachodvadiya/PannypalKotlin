@@ -15,7 +15,7 @@
     <string name="description">Description</string>
     <string name="save">Save</string>
     <string name="add_merchant_placeholder">Select Payee</string>
-    <string name="add_payment_type_placeholder">Select Payment Type</string>
+    <string name="add_payment_type_placeholder">Enter Payment Type</string>
     <string name="amount_placeholder">Enter Amount</string>
     <string name="description_placeholder">Enter Short Description</string>
     <string name="add_merchant">Add Payee</string>
@@ -90,7 +90,7 @@
     <string name="discard">Yes</string>
     <string name="edit_dialog_title">Exit</string>
     <string name="category">Category</string>
-    <string name="add_category_placeholder">Select Category</string>
+    <string name="select_category_placeholder">Select Category</string>
     <string name="select_category">Select Category</string>
     <string name="data_delete_success_message">Transaction Deleted Successfully</string>
     <string name="no_transaction">No data yet</string>
@@ -223,6 +223,9 @@
     <string name="category_edit_success_toast">Category Edit Successfully</string>
     <string name="add_category">Add Category</string>
     <string name="edit_category">Edit Category</string>
+    <string name="add_category_placeholder">Enter Category</string>
+    <string name="both">Both</string>
+    <string name="select_icon">Select Icon</string>
 
     <string-array name="months">
         <item>JAN</item>

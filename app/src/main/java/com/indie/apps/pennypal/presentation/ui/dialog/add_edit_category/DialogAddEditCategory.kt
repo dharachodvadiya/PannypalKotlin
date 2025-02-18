@@ -1,5 +1,3 @@
-import com.indie.apps.pennypal.presentation.ui.dialog.add_edit_category.AddEditCategoryViewModel
-
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -13,13 +11,16 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.database.entity.Category
+import com.indie.apps.pennypal.data.database.enum.CategoryType
 import com.indie.apps.pennypal.presentation.ui.component.BottomSaveButton
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.MyAppDialog
 import com.indie.apps.pennypal.presentation.ui.component.showToast
+import com.indie.apps.pennypal.presentation.ui.dialog.add_edit_category.AddEditCategoryDialogField
+import com.indie.apps.pennypal.presentation.ui.dialog.add_edit_category.AddEditCategoryViewModel
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 
 @Composable
-fun DialogAddPayment(
+fun DialogAddEditCategory(
     viewModel: AddEditCategoryViewModel = hiltViewModel(),
     onNavigationUp: () -> Unit,
     onSaveSuccess: (Category?, Boolean) -> Unit,
@@ -41,12 +42,11 @@ fun DialogAddPayment(
                 onNavigationUp()
         },
         content = {
-            val paymentModeList
-            AddPaymentDialogField(
-                textPaymentState = categoryState,
-                paymentModeList = paymentModeList,
-                currentModId = selectedModeId,
-                onModeChange = viewModel::onModeChange,
+            AddEditCategoryDialogField(
+                textCategory = categoryState,
+                list = CategoryType.entries,
+                selectCategoryType = CategoryType.entries.first { it.id == selectedModeId },
+                onSelect = viewModel::onModeChange,
                 onPaymentTypeTextChange = viewModel::updateCategoryTypeText
             )
         },
@@ -70,7 +70,7 @@ fun DialogAddPayment(
 @Composable
 private fun MyAppDialogPreview() {
     PennyPalTheme(darkTheme = true) {
-        DialogAddPayment(
+        DialogAddEditCategory(
             onNavigationUp = {},
             onSaveSuccess = { _, _ -> }
         )

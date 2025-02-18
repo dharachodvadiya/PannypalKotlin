@@ -1,39 +1,37 @@
 package com.indie.apps.pennypal.presentation.ui.dialog.add_edit_category
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Payment
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.data.database.entity.PaymentMode
+import com.indie.apps.pennypal.data.database.enum.CategoryType
+import com.indie.apps.pennypal.data.module.TabItemInfo
 import com.indie.apps.pennypal.presentation.ui.component.DialogTextFieldItem
-import com.indie.apps.pennypal.presentation.ui.component.clickableWithNoRipple
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomTab
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
+import com.indie.apps.pennypal.presentation.ui.dialog.select_category.CategoryItem
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
+import com.indie.apps.pennypal.util.getCategoryIcon
+import kotlin.enums.EnumEntries
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun AddPaymentDialogField(
-    onModeChange: (Long) -> Unit,
-    currentModId: Long,
-    paymentModeList: List<PaymentMode>,
-    textPaymentState: TextFieldState,
+fun AddEditCategoryDialogField(
+    list: EnumEntries<CategoryType>,
+    selectCategoryType: CategoryType,
+    onSelect: (CategoryType) -> Unit,
+    textCategory: TextFieldState,
     onPaymentTypeTextChange: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -42,62 +40,66 @@ fun AddPaymentDialogField(
             horizontal = dimensionResource(id = R.dimen.padding)
         )
     ) {
+
+        val tabItems = list.map { period ->
+            TabItemInfo(
+                title = when (period) {
+                    CategoryType.INCOME -> R.string.received
+                    CategoryType.EXPENSE -> R.string.spent
+                    CategoryType.BOTH -> R.string.both
+                },
+                selectBgColor = MyAppTheme.colors.itemSelectedBg,
+                unSelectBgColor = MyAppTheme.colors.itemBg,
+                selectContentColor = MyAppTheme.colors.black,
+                unSelectContentColor = MyAppTheme.colors.gray1
+            )
+        }
+
+        Row(
+            modifier = modifier, horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            CustomTab(tabList = tabItems,
+                selectedIndex = list.indexOf(selectCategoryType),
+                onTabSelected = {
+                    onSelect(list[it])
+                }
+            )
+
+        }
+
+        Spacer(Modifier.height(10.dp))
+
         DialogTextFieldItem(
-            textState = textPaymentState,
-            imageVector = Icons.Default.Payment,
-            placeholder = R.string.add_payment_type_placeholder,
+            textState = textCategory,
+            imageVector = ImageVector.vectorResource(getCategoryIcon("")),
+            placeholder = R.string.add_category_placeholder,
             onTextChange = onPaymentTypeTextChange
         )
-
-        FlowRow {
-
-            paymentModeList.forEach { item ->
-                PaymentModeItem(
-                    isSelected = currentModId == item.id,
-                    text = item.name,
-                    onClick = { onModeChange(item.id) })
-            }
-        }
-        Spacer(modifier = Modifier.fillMaxHeight(0.1f))
-    }
-}
-
-@Composable
-fun PaymentModeItem(
-    isSelected: Boolean,
-    text: String,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val color = if (isSelected) MyAppTheme.colors.lightBlue1 else MyAppTheme.colors.gray2
-
-    val shape = RoundedCornerShape(100.dp)
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-            .padding(dimensionResource(id = R.dimen.item_padding))
-            .border(
-                BorderStroke(
-                    width = 1.dp,
-                    color = color
-                ),
-                shape = shape
-            )
-            .background(color = MyAppTheme.colors.transparent, shape = shape)
-            .clip(shape = shape)
-            .clickableWithNoRipple { onClick() }
-            .padding(
-                horizontal = dimensionResource(R.dimen.bottom_bar_item_horizontal_padding),
-                vertical = dimensionResource(R.dimen.bottom_bar_item_vertical_padding)
-            )
-
-    ) {
         CustomText(
-            text = text,
-            color = color,
-            style = MyAppTheme.typography.Medium40
+            text = stringResource(id = R.string.select_icon),
+            style = MyAppTheme.typography.Medium46,
+            color = MyAppTheme.colors.gray1
         )
+        Spacer(Modifier.height(5.dp))
+        CategoryItem(
+            name = "",
+            isSelected = false,
+            onClick = {}
+        )
+        /*LazyVerticalGrid(
+            columns = GridCells.Fixed(4),
+            contentPadding = PaddingValues(dimensionResource(id = R.dimen.padding)),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding))
+        ) {
+            CategoryItem(
+                name = "",
+                isSelected = false,
+                onClick = {}
+            )
+        }*/
+
+        Spacer(modifier = Modifier.fillMaxHeight(0.1f))
+
     }
-
 }
-
