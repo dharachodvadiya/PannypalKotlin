@@ -24,10 +24,12 @@ object ErrorMessage {
     val USER_NAME_EMPTY = UiText.StringResource(R.string.enter_name)
     val MERCHANT_NAME_EMPTY = UiText.StringResource(R.string.enter_merchant_name)
     val AMOUNT_EMPTY = UiText.StringResource(R.string.enter_amount)
-    val AMOUNT_PAYMENT_TYPE = UiText.StringResource(R.string.enter_payment_type)
+    val PAYMENT_TYPE_EMPTY = UiText.StringResource(R.string.enter_payment_type)
+    val CATEGORY_NAME_EMPTY = UiText.StringResource(R.string.enter_category_name)
 
     val MERCHANT_EXIST = UiText.StringResource(R.string.merchant_name_already_used)
     val PAYMENT_TYPE_EXIST = UiText.StringResource(R.string.payment_name_already_used)
+    val CATEGORY_EXIST = UiText.StringResource(R.string.category_name_already_used)
     val PHONE_NO_INVALID = UiText.StringResource(R.string.enter_valid_phone_number)
     val SELECT_MERCHANT = UiText.StringResource(R.string.select_merchant)
     val SELECT_PAYMENT = UiText.StringResource(R.string.select_payment)

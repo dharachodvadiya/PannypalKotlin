@@ -85,7 +85,7 @@ class AddEditPaymentViewModel @Inject constructor(
         if (enableButton.value) {
             enableButton.value = false
             if (paymentTypeState.value.text.trim().isEmpty()) {
-                paymentTypeState.value.setError(ErrorMessage.AMOUNT_PAYMENT_TYPE)
+                paymentTypeState.value.setError(ErrorMessage.PAYMENT_TYPE_EMPTY)
                 enableButton.value = true
             } else {
                 viewModelScope.launch {

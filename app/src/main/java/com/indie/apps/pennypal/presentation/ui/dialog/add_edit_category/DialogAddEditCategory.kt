@@ -1,0 +1,78 @@
+import com.indie.apps.pennypal.presentation.ui.dialog.add_edit_category.AddEditCategoryViewModel
+
+import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.padding
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.indie.apps.pennypal.R
+import com.indie.apps.pennypal.data.database.entity.Category
+import com.indie.apps.pennypal.presentation.ui.component.BottomSaveButton
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.MyAppDialog
+import com.indie.apps.pennypal.presentation.ui.component.showToast
+import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
+
+@Composable
+fun DialogAddPayment(
+    viewModel: AddEditCategoryViewModel = hiltViewModel(),
+    onNavigationUp: () -> Unit,
+    onSaveSuccess: (Category?, Boolean) -> Unit,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
+) {
+    val enableButton by viewModel.enableButton.collectAsStateWithLifecycle()
+    val categoryState by viewModel.categoryState.collectAsStateWithLifecycle()
+
+    val selectedModeId by viewModel.selectedTypeId.collectAsStateWithLifecycle()
+
+    val context = LocalContext.current
+    val categorySaveToast = stringResource(id = R.string.category_save_success_toast)
+    val categoryEditToast = stringResource(id = R.string.category_edit_success_toast)
+
+    MyAppDialog(
+        title = if (!viewModel.getIsEditable()) R.string.add_category else R.string.edit_category,
+        onNavigationUp = {
+            if (enableButton)
+                onNavigationUp()
+        },
+        content = {
+            val paymentModeList
+            AddPaymentDialogField(
+                textPaymentState = categoryState,
+                paymentModeList = paymentModeList,
+                currentModId = selectedModeId,
+                onModeChange = viewModel::onModeChange,
+                onPaymentTypeTextChange = viewModel::updateCategoryTypeText
+            )
+        },
+        bottomContent = {
+            BottomSaveButton(
+                onClick = {
+                    viewModel.addEditCategory { category, isEdit ->
+                        onSaveSuccess(category, isEdit)
+                        context.showToast(if (isEdit) categoryEditToast else categorySaveToast)
+                    }
+                },
+                modifier = Modifier.padding(dimensionResource(id = R.dimen.padding))
+            )
+        },
+        modifier = modifier
+    )
+    //}
+}
+
+@Preview
+@Composable
+private fun MyAppDialogPreview() {
+    PennyPalTheme(darkTheme = true) {
+        DialogAddPayment(
+            onNavigationUp = {},
+            onSaveSuccess = { _, _ -> }
+        )
+    }
+}

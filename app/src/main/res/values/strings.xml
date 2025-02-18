@@ -217,6 +217,12 @@
     <string name="merchant_optional">Payee (Optional)</string>
     <string name="edit_payment">Edit payment method</string>
     <string name="press_back_again_to_exit_app">Press back again to exit</string>
+    <string name="enter_category_name">Enter Category Name</string>
+    <string name="category_name_already_used">Category Name Already Used</string>
+    <string name="category_save_success_toast">Category Saved Successfully</string>
+    <string name="category_edit_success_toast">Category Edit Successfully</string>
+    <string name="add_category">Add Category</string>
+    <string name="edit_category">Edit Category</string>
 
     <string-array name="months">
         <item>JAN</item>
