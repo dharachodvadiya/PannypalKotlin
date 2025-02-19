@@ -9,8 +9,8 @@ class Migration4to5 : Migration(4, 5) {
     }
 
     private fun updateCategoryTable(database: SupportSQLiteDatabase) {
-        database.execSQL("ALTER TABLE category ADD COLUMN icon_id INTEGER DEFAULT 1")
-        database.execSQL("ALTER TABLE category ADD COLUMN icon_color_id INTEGER DEFAULT 1")
+        database.execSQL("ALTER TABLE category ADD COLUMN icon_id INTEGER NOT NULL DEFAULT 1")
+        database.execSQL("ALTER TABLE category ADD COLUMN icon_color_id INTEGER NOT NULL DEFAULT 1")
 
     }
 
