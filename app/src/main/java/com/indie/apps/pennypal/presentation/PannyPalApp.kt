@@ -3,13 +3,23 @@ package com.indie.apps.pennypal.presentation
 import DialogAddEditCategory
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
+import androidx.compose.ui.zIndex
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -19,7 +29,9 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.indie.apps.pennypal.data.database.entity.toMerchantNameAndDetails
 import com.indie.apps.pennypal.data.module.ContactNumberAndCode
+import com.indie.apps.pennypal.presentation.ui.component.clickableWithNoRipple
 import com.indie.apps.pennypal.presentation.ui.component.navigation.BottomNavigationBarCustom1
+import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.dialog.add_edit_merchant.DialogAddMerchant
 import com.indie.apps.pennypal.presentation.ui.dialog.add_edit_payment.DialogAddPayment
 import com.indie.apps.pennypal.presentation.ui.dialog.contact_picker.DialogContactPicker
@@ -38,6 +50,7 @@ import com.indie.apps.pennypal.presentation.ui.route.overViewRoute
 import com.indie.apps.pennypal.presentation.ui.route.paymentRoute
 import com.indie.apps.pennypal.presentation.ui.route.settingRoute
 import com.indie.apps.pennypal.presentation.ui.screen.on_boarding.OnBoardingScreen
+import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.repository.PreferenceRepository
 import com.indie.apps.pennypal.util.Util
@@ -59,6 +72,24 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
         val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
 
         Scaffold(
+            floatingActionButton = {
+                if (navController.currentDestination?.route == ScreenNav.OVERVIEW_START.route) {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            //.offset { IntOffset(0, -90) }
+                            //.padding(PaddingValues(bottom = 30.dp + bottomNavPadding))
+                            .zIndex(1f)
+                            .size(26.dp * 2)
+                            .roundedCornerBackground(MyAppTheme.colors.lightBlue2)
+                            .clickableWithNoRipple(onClick = {
+                                navController.navigate(ScreenNav.ADD_EDIT_MERCHANT_DATA.route)
+                            }, enabled = true, role = Role.Button)
+                    ) {
+                        Icon(Icons.Default.Add, "Add", tint = MyAppTheme.colors.black)
+                    }
+                }
+            },
             bottomBar = {
                 BottomNavigationBarCustom1(
                     tabs = BottomNavItem.entries.toTypedArray(),
@@ -71,7 +102,6 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
                             }
                         }
                     },
-                    onAddClick = { navController.navigate(ScreenNav.ADD_EDIT_MERCHANT_DATA.route) },
                     currentTab = currentScreen,
                     bottomBarState = bottomBarState.value
                 )

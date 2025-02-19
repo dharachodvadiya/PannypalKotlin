@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -14,21 +13,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -37,7 +28,6 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.presentation.ui.component.clickableWithNoRipple
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
@@ -141,6 +131,7 @@ fun BottomNavigationBarCustomItem(
     }
 }
 
+/*
 @Composable
 fun BottomNavigationBarCustom1(
     tabs: Array<BottomNavItem>,
@@ -217,6 +208,49 @@ fun BottomNavigationBarCustom1(
         }
     }
 }
+*/
+
+@Composable
+fun BottomNavigationBarCustom1(
+    tabs: Array<BottomNavItem>,
+    onTabSelected: (BottomNavItem) -> Unit,
+    currentTab: BottomNavItem,
+    modifier: Modifier = Modifier,
+    bottomBarState: Boolean = true
+) {
+    if (bottomBarState) {
+
+        val bottomNavPadding =
+            WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+        Box(
+            modifier = modifier
+                .height(dimensionResource(R.dimen.bottom_bar) + bottomNavPadding)
+                .fillMaxWidth()
+                .background(MyAppTheme.colors.transparent)
+                .clickableWithNoRipple(onClick = { }, enabled = false, role = Role.Button),
+            contentAlignment = Alignment.BottomCenter
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.Absolute.SpaceAround,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MyAppTheme.colors.bottomBg)
+                    .padding(bottom = bottomNavPadding)
+                    .height(dimensionResource(id = R.dimen.bottom_bar))
+
+            ) {
+                tabs.forEachIndexed { _, item ->
+                    BottomNavigationBarCustom1Item(
+                        item = item,
+                        onTabSelected = { onTabSelected(item) },
+                        currentTab = currentTab,
+                    )
+                }
+            }
+        }
+    }
+}
 
 @Composable
 fun BottomNavigationBarCustom1Item(
@@ -225,42 +259,6 @@ fun BottomNavigationBarCustom1Item(
     currentTab: BottomNavItem,
     modifier: Modifier = Modifier
 ) {
-    /*Surface(
-        onClick = {
-            onTabSelected(item)
-        },
-        modifier = modifier
-            .semantics { role = Role.Button },
-        //shape = RoundedCornerShape(100.dp),
-        //contentColor = MyAppTheme.colors.transparent
-    ) {
-        val isSelected = currentTab == item
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.background(MyAppTheme.colors.bottomBg)
-        ) {
-            Icon(
-                painter = if (isSelected)
-                    painterResource(id = item.selectedIcon)
-                else painterResource(
-                    id = item.unSelectedIcon
-                ),
-                contentDescription = stringResource(item.title),
-                tint = if (isSelected) MyAppTheme.colors.lightBlue1 else MyAppTheme.colors.inactiveDark
-            )
-            *//* if (isSelected) {
-                 Spacer(modifier = Modifier.width(5.dp))
-                 CustomText(
-                     text = stringResource(item.title),
-                     color = MyAppTheme.colors.lightBlue1,
-                     style = MyAppTheme.typography.Medium45_29
-                 )
-             }*//*
-
-        }
-    }*/
-
     val isSelected = currentTab == item
 
     Row(
@@ -279,30 +277,9 @@ fun BottomNavigationBarCustom1Item(
             contentDescription = stringResource(item.title),
             tint = if (isSelected) MyAppTheme.colors.lightBlue1 else MyAppTheme.colors.inactiveDark
         )
-        /* if (isSelected) {
-             Spacer(modifier = Modifier.width(5.dp))
-             CustomText(
-                 text = stringResource(item.title),
-                 color = MyAppTheme.colors.lightBlue1,
-                 style = MyAppTheme.typography.Medium45_29
-             )
-         }*/
-
     }
 
 }
-/*
-@Preview("dark theme", uiMode = UI_MODE_NIGHT_YES)
-@Composable
-private fun BottomNavPreviewDarkModeCustom() {
-    PennyPalTheme {
-        BottomNavigationBarCustom(
-            tabs = BottomNavItem.values(),
-            onTabSelected = {},
-            currentTab = BottomNavItem.OVERVIEW
-        )
-    }
-}*/
 
 @Preview
 @Composable
@@ -315,18 +292,6 @@ private fun BottomNavPreviewCustom() {
         )
     }
 }
-/*
-@Preview("dark theme", uiMode = UI_MODE_NIGHT_YES)
-@Composable
-private fun BottomNavPreviewDarkModeCustom1() {
-    PennyPalTheme {
-        BottomNavigationBarCustom1(
-            tabs = BottomNavItem.values(),
-            onTabSelected = {},
-            currentTab = BottomNavItem.OVERVIEW
-        )
-    }
-}*/
 
 @Preview
 @Composable
@@ -336,7 +301,6 @@ private fun BottomNavPreviewCustom1() {
             tabs = BottomNavItem.entries.toTypedArray(),
             onTabSelected = {},
             currentTab = BottomNavItem.OVERVIEW,
-            onAddClick = {}
         )
     }
 }
