@@ -75,7 +75,9 @@ interface BudgetDao : BaseDao<Budget> {
             bc.category_id As categoryId,
             bc.amount As categoryAmount,
             c.name AS categoryName,
-            c.type AS categoryType
+            c.type AS categoryType,
+            c.icon_id As categoryIconId,
+            c.icon_color_id As categoryIconColorId
         FROM budget b
         LEFT JOIN budget_category bc ON b.id = bc.budget_id
         LEFT JOIN category c ON c.id = bc.category_id

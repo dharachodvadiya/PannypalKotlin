@@ -13,11 +13,13 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
+import com.indie.apps.pennypal.data.database.entity.Category
 import com.indie.apps.pennypal.data.database.enum.CategoryType
 import com.indie.apps.pennypal.data.module.TabItemInfo
 import com.indie.apps.pennypal.presentation.ui.component.DialogTextFieldItem
@@ -26,7 +28,7 @@ import com.indie.apps.pennypal.presentation.ui.component.custom.composable.Custo
 import com.indie.apps.pennypal.presentation.ui.dialog.select_category.CategoryItem
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
-import com.indie.apps.pennypal.util.getCategoryIcon
+import com.indie.apps.pennypal.util.getCategoryIconById
 import kotlin.enums.EnumEntries
 
 @Composable
@@ -74,7 +76,7 @@ fun AddEditCategoryDialogField(
 
         DialogTextFieldItem(
             textState = textCategory,
-            imageVector = ImageVector.vectorResource(getCategoryIcon("")),
+            imageVector = ImageVector.vectorResource(getCategoryIconById(1, LocalContext.current)),
             placeholder = R.string.add_category_placeholder,
             onTextChange = onCategoryNameTextChange
         )
@@ -89,14 +91,15 @@ fun AddEditCategoryDialogField(
             columns = GridCells.Fixed(5),
             contentPadding = PaddingValues(dimensionResource(id = R.dimen.padding)),
             horizontalArrangement = Arrangement.SpaceEvenly,
-            userScrollEnabled = true,) {
-           items(20){
-               CategoryItem(
-                   name = "",
-                   isSelected = false,
-                   onClick = {}
-               )
-           }
+            userScrollEnabled = true,
+        ) {
+            items(20) {
+                CategoryItem(
+                    item = Category(name = ""),
+                    isSelected = false,
+                    onClick = {}
+                )
+            }
         }
 
         Spacer(modifier = Modifier.fillMaxHeight(0.1f))

@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -27,8 +28,8 @@ import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListI
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
-import com.indie.apps.pennypal.util.getCategoryColor
-import com.indie.apps.pennypal.util.getCategoryIcon
+import com.indie.apps.pennypal.util.getCategoryColorById
+import com.indie.apps.pennypal.util.getCategoryIconById
 
 @Composable
 fun MultiSelectCategoryDialogField(
@@ -82,7 +83,7 @@ fun MultiSelectCategoryDialogField(
         ) {
             categoryList.forEach { item ->
                 SelectedCategoryItem(
-                    name = item.name,
+                    item = item,
                     isSelected = selectedList.contains(item.id),
                     onClick = {
                         onSelectCategory(item)
@@ -95,13 +96,14 @@ fun MultiSelectCategoryDialogField(
 
 @Composable
 fun SelectedCategoryItem(
-    name: String,
+    item: Category,
     isSelected: Boolean = false,
     onClick: () -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
-    val tintColor = getCategoryColor(name)
-    val imageVector = ImageVector.vectorResource(getCategoryIcon(name))
+    val tintColor = getCategoryColorById(item.iconColorId)
+    val imageVector =
+        ImageVector.vectorResource(getCategoryIconById(item.iconId, LocalContext.current))
 
     ListItem(
         isClickable = true,
@@ -118,7 +120,7 @@ fun SelectedCategoryItem(
         },
         content = {
             CustomText(
-                text = name,
+                text = item.name,
                 style = MyAppTheme.typography.Semibold52_5,
                 color = MyAppTheme.colors.black,
                 maxLines = 1,

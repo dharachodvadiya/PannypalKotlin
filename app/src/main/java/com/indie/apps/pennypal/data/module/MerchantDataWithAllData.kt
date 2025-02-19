@@ -6,6 +6,8 @@ class MerchantDataWithAllData(
     val merchantName: String?,
     val categoryId: Long,
     val categoryName: String,
+    val categoryIconId: Int,
+    val categoryIconColorId: Int,
     val paymentId: Long,
     val paymentName: String,
     val dateInMilli: Long,

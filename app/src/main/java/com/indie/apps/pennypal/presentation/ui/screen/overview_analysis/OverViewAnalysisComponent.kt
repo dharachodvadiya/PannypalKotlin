@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -21,8 +22,8 @@ import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListI
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.util.Util
-import com.indie.apps.pennypal.util.getCategoryColor
-import com.indie.apps.pennypal.util.getCategoryIcon
+import com.indie.apps.pennypal.util.getCategoryColorById
+import com.indie.apps.pennypal.util.getCategoryIconById
 
 
 @Composable
@@ -34,7 +35,7 @@ fun OverViewAnalysisCategoryChart(
         ChartData(
             name = item.name,
             amount = item.amount,
-            color = getCategoryColor(item.name)
+            color = getCategoryColorById(item.iconColorId)
         )
     }
 
@@ -65,8 +66,9 @@ private fun CategoryListItem(
     itemBgColor: Color,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier.fillMaxWidth()
 ) {
-    val imageVector = ImageVector.vectorResource(getCategoryIcon(item.name))
-    val tintColor = getCategoryColor(item.name)
+    val imageVector =
+        ImageVector.vectorResource(getCategoryIconById(item.iconId, LocalContext.current))
+    val tintColor = getCategoryColorById(item.iconColorId)
 
     ListItem(
         isClickable = false,

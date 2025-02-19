@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -50,8 +51,8 @@ import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.util.Util
-import com.indie.apps.pennypal.util.getCategoryColor
-import com.indie.apps.pennypal.util.getCategoryIcon
+import com.indie.apps.pennypal.util.getCategoryColorById
+import com.indie.apps.pennypal.util.getCategoryIconById
 import kotlin.enums.EnumEntries
 
 @Composable
@@ -404,8 +405,9 @@ private fun CategoryListItem(
     onTextChange: (String) -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier.fillMaxWidth()
 ) {
-    val imageVector = ImageVector.vectorResource(getCategoryIcon(item.name))
-    val tintColor = getCategoryColor(item.name)
+    val imageVector =
+        ImageVector.vectorResource(getCategoryIconById(item.iconId, LocalContext.current))
+    val tintColor = getCategoryColorById(item.iconColorId)
     val textState = remember {
         mutableStateOf(TextFieldState().apply {
             if (item.amount != 0.0) updateText(

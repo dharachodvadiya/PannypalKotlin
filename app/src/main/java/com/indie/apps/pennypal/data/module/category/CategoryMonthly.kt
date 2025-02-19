@@ -5,7 +5,9 @@ data class CategoryMonthly(
     val name: String,
     val month: String,
     val amount: Double,
-    val type : Int
+    val type: Int,
+    val iconId: Int,
+    val iconColorId: Int
 )
 
-fun CategoryMonthly.toCategoryAmount() = CategoryAmount(id,name,amount,type)
+fun CategoryMonthly.toCategoryAmount() = CategoryAmount(id, name, amount, type, iconId, iconColorId)

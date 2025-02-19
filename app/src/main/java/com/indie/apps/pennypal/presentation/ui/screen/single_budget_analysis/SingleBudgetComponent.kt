@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -43,8 +44,8 @@ import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.util.Util
-import com.indie.apps.pennypal.util.getCategoryColor
-import com.indie.apps.pennypal.util.getCategoryIcon
+import com.indie.apps.pennypal.util.getCategoryColorById
+import com.indie.apps.pennypal.util.getCategoryIconById
 
 @Composable
 fun SingleBudgetTopBar(
@@ -284,7 +285,7 @@ fun IncludedCategoryAnalysis(
         }
 
         Column {
-            val sortedList =categoryList.sortedByDescending { it.amount }
+            val sortedList = categoryList.sortedByDescending { it.amount }
             sortedList.forEach { item ->
                 CategorySpentListItem(
                     totalAmount = sortedList.first().amount,
@@ -303,8 +304,9 @@ private fun CategorySpentListItem(
     itemBgColor: Color,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier.fillMaxWidth()
 ) {
-    val imageVector = ImageVector.vectorResource(getCategoryIcon(item.name))
-    val tintColor = getCategoryColor(item.name)
+    val imageVector =
+        ImageVector.vectorResource(getCategoryIconById(item.iconId, LocalContext.current))
+    val tintColor = getCategoryColorById(item.iconColorId)
 
     ListItem(
         isClickable = false,
@@ -358,7 +360,7 @@ private fun CategorySpentListItem(
 
                 CustomLinearProgressIndicator(
                     progress = progress,
-                    color = getCategoryColor(item.name),
+                    color = getCategoryColorById(item.iconColorId),
                     height = 5.dp,
                     cornerRadius = 2.dp
                 )

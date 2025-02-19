@@ -72,7 +72,7 @@ import com.indie.apps.pennypal.presentation.ui.screen.single_budget_analysis.Sin
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.util.Util
-import com.indie.apps.pennypal.util.getCategoryColor
+import com.indie.apps.pennypal.util.getCategoryColorById
 import com.indie.apps.pennypal.util.getColorFromId
 import com.indie.apps.pennypal.util.getDateFromMillis
 import com.indie.apps.pennypal.util.getFirstCharacterUppercase
@@ -750,7 +750,9 @@ fun OverviewAnalysisData(
         content = {
             val chartData = categoryList.map { item ->
                 ChartData(
-                    name = item.name, amount = item.amount, color = getCategoryColor(item.name)
+                    name = item.name,
+                    amount = item.amount,
+                    color = getCategoryColorById(item.iconColorId)
                 )
             }
 

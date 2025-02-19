@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -40,8 +41,8 @@ import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.util.Util
-import com.indie.apps.pennypal.util.getCategoryColor
-import com.indie.apps.pennypal.util.getCategoryIcon
+import com.indie.apps.pennypal.util.getCategoryColorById
+import com.indie.apps.pennypal.util.getCategoryIconById
 import com.indie.apps.pennypal.util.getDateFromMillis
 import com.indie.apps.pennypal.util.getTodayDate
 import com.indie.apps.pennypal.util.getYesterdayDate
@@ -134,7 +135,12 @@ fun TransactionItem(
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     val imageVector =
-        if (isSelected) Icons.Default.Done else ImageVector.vectorResource(getCategoryIcon(item.categoryName))
+        if (isSelected) Icons.Default.Done else ImageVector.vectorResource(
+            getCategoryIconById(
+                item.categoryIconId,
+                LocalContext.current
+            )
+        )
     val iconBgColor = if (isSelected) MyAppTheme.colors.brand else MyAppTheme.colors.lightBlue2
     val amount = if (item.type > 0) item.amount else item.amount * -1
     val amountColor = if (item.type >= 0) MyAppTheme.colors.greenText else MyAppTheme.colors.redText
@@ -148,7 +154,7 @@ fun TransactionItem(
                 imageVector = imageVector,
                 imageVectorSize = 24.dp,
                 //brush = linearGradientsBrush(MyAppTheme.colors.gradientBlue),
-                tint = getCategoryColor(item.categoryName),
+                tint = getCategoryColorById(item.categoryIconColorId),
                 backGround = iconBgColor,
                 contentDescription = "person",
                 modifier = Modifier.size(50.dp)

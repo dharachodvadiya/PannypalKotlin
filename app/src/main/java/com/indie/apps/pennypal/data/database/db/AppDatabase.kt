@@ -148,7 +148,10 @@ abstract class AppDatabase : RoomDatabase() {
                     Payment(name = "Credit Card", preAdded = 1, modeId = 4) //id = 3
                 )
 
-                PaymentRepositoryImpl(paymentDao, Dispatchers.IO).insertPaymentList(preAddedPayments)
+                PaymentRepositoryImpl(
+                    paymentDao,
+                    Dispatchers.IO
+                ).insertPaymentList(preAddedPayments)
             }
 
             private suspend fun populatePaymentModeDb(db: AppDatabase) {
@@ -164,31 +167,131 @@ abstract class AppDatabase : RoomDatabase() {
                     PaymentMode(name = "Upi") //id = 7
                 )
 
-                PaymentModeRepositoryImpl(paymentModeDao, Dispatchers.IO).insertPaymentModeList(preAddedPaymentMode)
+                PaymentModeRepositoryImpl(paymentModeDao, Dispatchers.IO).insertPaymentModeList(
+                    preAddedPaymentMode
+                )
             }
 
             private suspend fun populateCategoryDb(db: AppDatabase) {
                 val categoryDao = db.categoryDao()
                 val preAddedCategory = listOf(
-                    Category(name = "Other", preAdded = 1, type = 0), //id = 1
-                    Category(name = "Bills and Utilities", preAdded = 1, type = -1), //id = 2
-                    Category(name = "Education", preAdded = 1, type = -1), //id = 3
-                    Category(name = "Entertainment", preAdded = 1, type = -1), //id = 4
-                    Category(name = "Food and Dining", preAdded = 1, type = -1), //id = 5
-                    Category(name = "Gift and Donation", preAdded = 1, type = -1), //id = 6
-                    Category(name = "Insurance", preAdded = 1, type = -1), //id = 7
-                    Category(name = "Investments", preAdded = 1, type = -1), //id = 8
-                    Category(name = "Medical", preAdded = 1, type = -1), //id = 9
-                    Category(name = "Personal Care", preAdded = 1, type = -1), //id = 10
-                    Category(name = "Rent", preAdded = 1, type = 0), //id = 11
-                    Category(name = "Shopping", preAdded = 1, type = -1), //id = 12
-                    Category(name = "Taxes", preAdded = 1, type = -1), //id = 13
-                    Category(name = "Travelling", preAdded = 1, type = -1), //id = 14
-                    Category(name = "Salary", preAdded = 1, type = 1), //id = 15
-                    Category(name = "Rewards", preAdded = 1, type = 1), //id = 16
+                    Category(
+                        name = "Other",
+                        preAdded = 1,
+                        type = 0,
+                        iconId = 1,
+                        iconColorId = 1
+                    ), //id = 1
+                    Category(
+                        name = "Bills and Utilities",
+                        preAdded = 1,
+                        type = -1,
+                        iconId = 2,
+                        iconColorId = 2
+                    ), //id = 2
+                    Category(
+                        name = "Education",
+                        preAdded = 1,
+                        type = -1,
+                        iconId = 3,
+                        iconColorId = 3
+                    ), //id = 3
+                    Category(
+                        name = "Entertainment",
+                        preAdded = 1,
+                        type = -1,
+                        iconId = 4,
+                        iconColorId = 4
+                    ), //id = 4
+                    Category(
+                        name = "Food and Dining",
+                        preAdded = 1,
+                        type = -1,
+                        iconId = 5,
+                        iconColorId = 5
+                    ), //id = 5
+                    Category(
+                        name = "Gift and Donation",
+                        preAdded = 1,
+                        type = -1,
+                        iconId = 6,
+                        iconColorId = 6
+                    ), //id = 6
+                    Category(
+                        name = "Insurance",
+                        preAdded = 1,
+                        type = -1,
+                        iconId = 7,
+                        iconColorId = 7
+                    ), //id = 7
+                    Category(
+                        name = "Investments",
+                        preAdded = 1,
+                        type = -1,
+                        iconId = 8,
+                        iconColorId = 8
+                    ), //id = 8
+                    Category(
+                        name = "Medical",
+                        preAdded = 1,
+                        type = -1,
+                        iconId = 9,
+                        iconColorId = 9
+                    ), //id = 9
+                    Category(
+                        name = "Personal Care",
+                        preAdded = 1,
+                        type = -1,
+                        iconId = 10,
+                        iconColorId = 10
+                    ), //id = 10
+                    Category(
+                        name = "Rent",
+                        preAdded = 1,
+                        type = 0,
+                        iconId = 11,
+                        iconColorId = 11
+                    ), //id = 11
+                    Category(
+                        name = "Shopping",
+                        preAdded = 1,
+                        type = -1,
+                        iconId = 12,
+                        iconColorId = 12
+                    ), //id = 12
+                    Category(
+                        name = "Taxes",
+                        preAdded = 1,
+                        type = -1,
+                        iconId = 13,
+                        iconColorId = 13
+                    ), //id = 13
+                    Category(
+                        name = "Travelling",
+                        preAdded = 1,
+                        type = -1,
+                        iconId = 14,
+                        iconColorId = 14
+                    ), //id = 14
+                    Category(
+                        name = "Salary",
+                        preAdded = 1,
+                        type = 1,
+                        iconId = 15,
+                        iconColorId = 15
+                    ), //id = 15
+                    Category(
+                        name = "Rewards",
+                        preAdded = 1,
+                        type = 1,
+                        iconId = 16,
+                        iconColorId = 16
+                    ), //id = 16
                 )
 
-                CategoryRepositoryImpl(categoryDao, Dispatchers.IO).insertCategoryList(preAddedCategory)
+                CategoryRepositoryImpl(categoryDao, Dispatchers.IO).insertCategoryList(
+                    preAddedCategory
+                )
 
             }
 

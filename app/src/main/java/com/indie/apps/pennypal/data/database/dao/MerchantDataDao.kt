@@ -64,7 +64,9 @@ interface MerchantDataDao : BaseDao<MerchantData> {
                 md.merchant_id as merchantId, 
                 m.name as merchantName, 
                 md.category_id as categoryId, 
-                c.name as categoryName, 
+                c.name as categoryName,
+                c.icon_id as categoryIconId,
+                c.icon_color_id as categoryIconColorId,
                 md.payment_id as paymentId, 
                 p.name as paymentName, 
                 md.date_milli as dateInMilli,
@@ -92,7 +94,9 @@ interface MerchantDataDao : BaseDao<MerchantData> {
                 md.merchant_id as merchantId, 
                 m.name as merchantName, 
                 md.category_id as categoryId, 
-                c.name as categoryName, 
+                c.name as categoryName,
+                c.icon_id as categoryIconId,
+                c.icon_color_id as categoryIconColorId,
                 md.payment_id as paymentId, 
                 p.name as paymentName, 
                 md.date_milli as dateInMilli,
@@ -279,6 +283,8 @@ interface MerchantDataDao : BaseDao<MerchantData> {
             strftime('%Y-%m', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') as month,
             c.name AS name,
             c.type As type,
+            c.icon_id As iconId,
+            c.icon_color_id As iconColorId,
             SUM(CASE WHEN md.type = -1 THEN md.amount ELSE 0 END) AS amount
         FROM 
             merchant_data md
@@ -306,6 +312,8 @@ interface MerchantDataDao : BaseDao<MerchantData> {
             strftime('%Y', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') AS year,
             c.name AS name,
             c.type As type,
+            c.icon_id As iconId,
+            c.icon_color_id As iconColorId,
             SUM(CASE WHEN md.type = -1 THEN md.amount ELSE 0 END) AS amount
         FROM 
             merchant_data md
@@ -381,6 +389,8 @@ interface MerchantDataDao : BaseDao<MerchantData> {
         SELECT 
             c.id AS id,
             c.name,
+            c.icon_id As iconId,
+            c.icon_color_id As iconColorId,
             c.type,
             SUM(md.amount) AS amount
         FROM 
@@ -409,6 +419,8 @@ interface MerchantDataDao : BaseDao<MerchantData> {
             c.id AS id,
             c.name,
             c.type,
+            c.icon_id As iconId,
+            c.icon_color_id As iconColorId,
             SUM(md.amount) AS amount
         FROM 
             merchant_data md
@@ -434,6 +446,8 @@ interface MerchantDataDao : BaseDao<MerchantData> {
             c.id AS id,
             c.name,
             c.type,
+            c.icon_id As iconId,
+            c.icon_color_id As iconColorId,
             SUM(md.amount) AS amount
         FROM 
             merchant_data md

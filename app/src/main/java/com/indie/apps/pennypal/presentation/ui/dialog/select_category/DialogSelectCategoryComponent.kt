@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
@@ -33,8 +34,8 @@ import com.indie.apps.pennypal.presentation.ui.component.custom.composable.Round
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.util.Util
-import com.indie.apps.pennypal.util.getCategoryColor
-import com.indie.apps.pennypal.util.getCategoryIcon
+import com.indie.apps.pennypal.util.getCategoryColorById
+import com.indie.apps.pennypal.util.getCategoryIconById
 import kotlinx.coroutines.launch
 
 @SuppressLint("CoroutineCreationDuringComposition")
@@ -80,7 +81,7 @@ fun SelectCategoryDialogField(
 
 
             CategoryItem(
-                name = item.name,
+                item = item,
                 isSelected = currentId == item.id,
                 onClick = {
                     onSelectCategory(item)
@@ -90,7 +91,7 @@ fun SelectCategoryDialogField(
         }
         item {
             CategoryItem(
-                name = "",
+                item = Category(name = ""),
                 isSelected = false,
                 imageVector = Icons.Default.Add,
                 imageColor = MyAppTheme.colors.gray1,
@@ -103,7 +104,7 @@ fun SelectCategoryDialogField(
 
 @Composable
 fun CategoryItem(
-    name: String,
+    item: Category,
     isSelected: Boolean = false,
     onClick: () -> Unit,
     imageColor: Color? = null,
@@ -111,10 +112,11 @@ fun CategoryItem(
     imageVector: ImageVector? = null,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
-    val tintColor = getCategoryColor(name)
+    val tintColor = getCategoryColorById(item.iconColorId)
     val bgColor1 = if (isSelected) MyAppTheme.colors.itemSelectedBg else MyAppTheme.colors.brand
     val imageColor1 = if (isSelected) MyAppTheme.colors.black else tintColor
-    val imageVector1 = ImageVector.vectorResource(getCategoryIcon(name))
+    val imageVector1 =
+        ImageVector.vectorResource(getCategoryIconById(item.iconId, LocalContext.current))
 
 
     Column(
@@ -135,7 +137,7 @@ fun CategoryItem(
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.item_padding)))
 
         CustomText(
-            text = name,
+            text = item.name,
             style = MyAppTheme.typography.Medium40,
             color = MyAppTheme.colors.gray1,
             maxLines = 2,

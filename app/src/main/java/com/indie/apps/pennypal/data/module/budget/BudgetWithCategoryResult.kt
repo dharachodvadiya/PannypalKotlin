@@ -13,7 +13,9 @@ data class BudgetWithCategoryResult(
     val categoryId: Long,
     val categoryAmount: Double,
     val categoryName: String,
-    val categoryType: Int
+    val categoryType: Int,
+    val categoryIconId: Int,
+    val categoryIconColorId: Int
 )
 
 fun List<BudgetWithCategoryResult>.toBudgetWithCategories(): BudgetWithCategory {
@@ -25,7 +27,9 @@ fun List<BudgetWithCategoryResult>.toBudgetWithCategories(): BudgetWithCategory 
             id = it.categoryId,
             amount = it.categoryAmount,
             name = it.categoryName,
-            type = it.categoryType
+            type = it.categoryType,
+            iconId = it.categoryIconId,
+            iconColorId = it.categoryIconColorId
         )
     }
 
