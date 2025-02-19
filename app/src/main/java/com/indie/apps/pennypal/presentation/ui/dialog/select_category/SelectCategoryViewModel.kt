@@ -1,10 +1,13 @@
 package com.indie.apps.pennypal.presentation.ui.dialog.select_category
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.indie.apps.pennypal.data.database.entity.Category
 import com.indie.apps.pennypal.repository.CategoryRepository
+import com.indie.apps.pennypal.util.Util
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -16,6 +19,10 @@ class SelectCategoryViewModel @Inject constructor(
 
     val categoryList = MutableStateFlow<List<Category>>(emptyList())
 
+    var addCategoryAnimRun = MutableStateFlow(false)
+        private set
+
+
     fun setType(type: Int) {
         viewModelScope.launch {
             categoryRepository.getCategoryFromTypeList(type)
@@ -24,5 +31,20 @@ class SelectCategoryViewModel @Inject constructor(
                 }
         }
     }
+
+    @SuppressLint("SuspiciousIndentation")
+    fun addCategorySuccess() {
+        addCategoryAnimRun.value = true
+        viewModelScope.launch {
+            delay(Util.LIST_ITEM_ANIM_DELAY)
+            addCategorySuccessAnimStop()
+        }
+    }
+
+    fun addCategorySuccessAnimStop() {
+        if (addCategoryAnimRun.value)
+            addCategoryAnimRun.value = false
+    }
+
 
 }

@@ -1,29 +1,30 @@
 package com.indie.apps.pennypal.presentation.ui.dialog.select_category
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.database.entity.Category
 import com.indie.apps.pennypal.presentation.ui.component.clickableWithNoRipple
@@ -31,29 +32,60 @@ import com.indie.apps.pennypal.presentation.ui.component.custom.composable.Custo
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
+import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.util.getCategoryColor
 import com.indie.apps.pennypal.util.getCategoryIcon
+import kotlinx.coroutines.launch
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun SelectCategoryDialogField(
     currentId: Long,
     categoryList: List<Category>,
     onSelectCategory: (Category) -> Unit,
     onAddCategory: () -> Unit,
+    categoryId: Long = -1L,
+    onAnimStop: () -> Unit,
+    addCategoryAnimRun: Boolean = false
+
 ) {
+    val itemAnimateScale = remember {
+        Animatable(0f)
+    }
+    val scope = rememberCoroutineScope()
     LazyVerticalGrid(
         columns = GridCells.Fixed(4),
         contentPadding = PaddingValues(dimensionResource(id = R.dimen.padding)),
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding))
     ) {
+
         items(categoryList) { item ->
+
+            val modifierAdd: Modifier = if (categoryId == item.id && addCategoryAnimRun) {
+                scope.launch {
+                    itemAnimateScale.animateTo(
+                        targetValue = 1f, animationSpec = tween(Util.ADD_ITEM_ANIM_TIME)
+                    )
+                    if (itemAnimateScale.value == 1f) {
+                        itemAnimateScale.snapTo(0f)
+                        onAnimStop()
+                    }
+                }
+
+                Modifier.scale(itemAnimateScale.value)
+            } else {
+                Modifier
+            }
+
+
             CategoryItem(
                 name = item.name,
                 isSelected = currentId == item.id,
                 onClick = {
                     onSelectCategory(item)
-                }
+                },
+                modifier = modifierAdd
             )
         }
         item {

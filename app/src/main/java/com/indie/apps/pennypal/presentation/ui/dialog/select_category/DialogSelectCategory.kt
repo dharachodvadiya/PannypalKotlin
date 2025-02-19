@@ -23,6 +23,7 @@ fun DialogSelectCategory(
     type: Int = -1,
     onSelect: (Category) -> Unit,
     onAddCategory: () -> Unit,
+    addCategoryId: Long,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     LaunchedEffect(type) {
@@ -33,6 +34,14 @@ fun DialogSelectCategory(
     val currentId by remember {
         mutableLongStateOf(selectedId)
     }
+
+    val addCategoryAnimRun by selectCategoryViewModel.addCategoryAnimRun.collectAsStateWithLifecycle()
+    LaunchedEffect(addCategoryId) {
+        if (addCategoryId != -1L) {
+            selectCategoryViewModel.addCategorySuccess()
+        }
+    }
+
 
     //val paymentState = emptyList<PaymentWithMode>()
     MyAppDialog(
@@ -48,7 +57,12 @@ fun DialogSelectCategory(
                 onSelectCategory = {
                     onSelect(it)
                 },
-                onAddCategory = onAddCategory
+                onAddCategory = onAddCategory,
+                categoryId = addCategoryId,
+                addCategoryAnimRun = addCategoryAnimRun,
+                onAnimStop = {
+                    selectCategoryViewModel.addCategorySuccessAnimStop()
+                }
             )
         },
         modifier = modifier,
@@ -64,7 +78,8 @@ private fun MyAppDialogPreview() {
             onNavigationUp = {},
             onSelect = { },
             selectedId = 1L,
-            onAddCategory = {}
+            onAddCategory = {},
+            addCategoryId = -1,
         )
     }
 }

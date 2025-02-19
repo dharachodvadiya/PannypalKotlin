@@ -243,7 +243,8 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
                     val type =
                         navController.previousBackStackEntry?.savedStateHandle?.get<Int>(Util.SAVE_STATE_CATEGORY_TYPE)
 
-                    DialogAddEditCategory(onNavigationUp = { navController.navigateUp() },
+                    DialogAddEditCategory(
+                        onNavigationUp = { navController.navigateUp() },
                         onSaveSuccess = { category, isEdit ->
 
                             /*if (category != null)
@@ -251,17 +252,17 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
                                     ?.savedStateHandle
                                     ?.set(Util.SAVE_STATE_CATEGORY, Gson().toJson(category))
 
-                            if (isEdit) {
+                            */
+                            /*if (isEdit) {
                                 navController.previousBackStackEntry
                                     ?.savedStateHandle
                                     ?.set(Util.SAVE_STATE_CATEGORY_EDIT_SUCCESS, true)
-                            }
-
+                            }*/
                             if (category != null) {
                                 navController.previousBackStackEntry
                                     ?.savedStateHandle
                                     ?.set(Util.SAVE_STATE_CATEGORY_ADD_EDIT_ID, category.id)
-                            }*/
+                            }
 
                             navController.popBackStack()
                         },
@@ -361,6 +362,8 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
 
                     val type =
                         backStackEntry.savedStateHandle.get<Int>(Util.SAVE_STATE_CATEGORY_TYPE)
+                    val addEditId =
+                        backStackEntry.savedStateHandle.get<Long>(Util.SAVE_STATE_CATEGORY_ADD_EDIT_ID)
 
                     DialogSelectCategory(
                         onNavigationUp = { navController.navigateUp() },
@@ -377,7 +380,8 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
                         type = type ?: -1,
                         onAddCategory = {
                             navController.navigate(DialogNav.ADD_EDIT_CATEGORY.route)
-                        }
+                        },
+                        addCategoryId = addEditId ?: -1
                     )
 
                 }
