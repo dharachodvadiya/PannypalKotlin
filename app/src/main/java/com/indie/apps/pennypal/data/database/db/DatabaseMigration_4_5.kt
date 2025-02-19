@@ -12,6 +12,14 @@ class Migration4to5 : Migration(4, 5) {
         database.execSQL("ALTER TABLE category ADD COLUMN icon_id INTEGER NOT NULL DEFAULT 1")
         database.execSQL("ALTER TABLE category ADD COLUMN icon_color_id INTEGER NOT NULL DEFAULT 1")
 
+        updatePopulatedCategory(database)
+
+    }
+
+    private fun updatePopulatedCategory(database: SupportSQLiteDatabase) {
+        for (id in 1..16) {
+            database.execSQL("UPDATE category SET icon_id = $id, icon_color_id = $id WHERE id = $id;")
+        }
     }
 
 }
