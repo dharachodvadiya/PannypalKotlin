@@ -32,6 +32,8 @@ class AddEditCategoryViewModel @Inject constructor(
     val enableButton = MutableStateFlow(true)
 
     val selectedCategoryId = MutableStateFlow(-1)
+    val selectedCategoryIcon = MutableStateFlow(1)
+    val selectedCategoryIconColor = MutableStateFlow(1)
 
     private var editCategory: Category? = null
 
@@ -40,8 +42,8 @@ class AddEditCategoryViewModel @Inject constructor(
             setEditId(categoryEditId)
         }
     }
-    fun setSelectedCategoryId(type : Int)
-    {
+
+    fun setSelectedCategoryId(type: Int) {
         selectedCategoryId.value = type
     }
 
@@ -64,6 +66,14 @@ class AddEditCategoryViewModel @Inject constructor(
         selectedCategoryId.value = categoryType.id
     }
 
+    fun onCategoryIconColorChange(colorId: Int) {
+        selectedCategoryIconColor.value = colorId
+    }
+
+    fun onCategoryIconChange(iconId: Int) {
+        selectedCategoryIcon.value = iconId
+    }
+
     fun addEditCategory(onSuccess: (Category?, Boolean) -> Unit) {
 
         if (enableButton.value) {
@@ -80,7 +90,9 @@ class AddEditCategoryViewModel @Inject constructor(
                             val category = editCategory!!.copy(
                                 id = categoryEditId,
                                 name = categoryState.value.text.trim(),
-                                type = selectedCategoryId.value
+                                type = selectedCategoryId.value,
+                                iconId = selectedCategoryIcon.value,
+                                iconColorId = selectedCategoryIconColor.value
                             )
 
                             updateCategoryUseCase
@@ -104,7 +116,9 @@ class AddEditCategoryViewModel @Inject constructor(
                     } else {
                         val category = Category(
                             name = categoryState.value.text.trim(),
-                            type = selectedCategoryId.value
+                            type = selectedCategoryId.value,
+                            iconId = selectedCategoryIcon.value,
+                            iconColorId = selectedCategoryIconColor.value
                         )
                         addCategoryUseCase
                             .addCategory(category)

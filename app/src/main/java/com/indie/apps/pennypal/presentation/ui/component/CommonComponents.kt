@@ -32,6 +32,7 @@ import androidx.compose.material.icons.filled.PersonOutline
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -236,6 +237,7 @@ fun DialogSearchView(
 @Composable
 fun DialogTextFieldItem(
     imageVector: ImageVector? = null,
+    imageColor: Color = LocalContentColor.current,
     textState: TextFieldState = TextFieldState(),
     onTextChange: (String) -> Unit,
     placeholder: Int,
@@ -267,7 +269,7 @@ fun DialogTextFieldItem(
         ) {
 
             imageVector?.let {
-                Icon(imageVector = it, contentDescription = "")
+                Icon(imageVector = it, contentDescription = "", tint = imageColor)
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.item_content_padding)))
             }
             MyAppTextField(

@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Circle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -143,6 +144,35 @@ fun CategoryItem(
             maxLines = 2,
             textAlign = TextAlign.Center,
             overflow = TextOverflow.Ellipsis,
+        )
+    }
+}
+
+@Composable
+fun CategoryColorItem(
+    colorId: Int,
+    isSelected: Boolean = false,
+    onClick: () -> Unit,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
+) {
+    val tintColor = getCategoryColorById(colorId)
+    val bgColor1 = if (isSelected) tintColor else MyAppTheme.colors.brand
+    val imageVector1 = Icons.Filled.Circle
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+            .roundedCornerBackground(backgroundColor = MyAppTheme.colors.transparent)
+            .clickableWithNoRipple {
+                onClick()
+            }
+    ) {
+        RoundImage(
+            imageVector = imageVector1,
+            tint = tintColor,
+            backGround = bgColor1,
+            contentDescription = "category",
+            innerPadding = dimensionResource(id = R.dimen.item_inner_padding)
         )
     }
 }

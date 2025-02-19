@@ -8,8 +8,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -25,9 +26,11 @@ import com.indie.apps.pennypal.data.module.TabItemInfo
 import com.indie.apps.pennypal.presentation.ui.component.DialogTextFieldItem
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomTab
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
+import com.indie.apps.pennypal.presentation.ui.dialog.select_category.CategoryColorItem
 import com.indie.apps.pennypal.presentation.ui.dialog.select_category.CategoryItem
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
+import com.indie.apps.pennypal.util.getCategoryColorById
 import com.indie.apps.pennypal.util.getCategoryIconById
 import kotlin.enums.EnumEntries
 
@@ -35,15 +38,21 @@ import kotlin.enums.EnumEntries
 fun AddEditCategoryDialogField(
     list: EnumEntries<CategoryType>,
     selectCategoryType: CategoryType,
-    onSelect: (CategoryType) -> Unit,
+    onSelectCategoryType: (CategoryType) -> Unit,
+    selectedIcon: Int,
+    onSelectCategoryIcon: (Int) -> Unit,
+    selectedIconColor: Int,
+    onSelectCategoryIconColor: (Int) -> Unit,
     textCategory: TextFieldState,
     onCategoryNameTextChange: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier.padding(
-            horizontal = dimensionResource(id = R.dimen.padding)
-        )
+        modifier = modifier
+            .padding(
+                horizontal = dimensionResource(id = R.dimen.padding)
+            )
+            .verticalScroll(rememberScrollState())
     ) {
 
         val tabItems = list.map { period ->
@@ -66,7 +75,7 @@ fun AddEditCategoryDialogField(
             CustomTab(tabList = tabItems,
                 selectedIndex = list.indexOf(selectCategoryType),
                 onTabSelected = {
-                    onSelect(list[it])
+                    onSelectCategoryType(list[it])
                 }
             )
 
@@ -76,10 +85,43 @@ fun AddEditCategoryDialogField(
 
         DialogTextFieldItem(
             textState = textCategory,
-            imageVector = ImageVector.vectorResource(getCategoryIconById(1, LocalContext.current)),
+            imageVector = ImageVector.vectorResource(
+                getCategoryIconById(
+                    selectedIcon,
+                    LocalContext.current
+                )
+            ),
+            imageColor = getCategoryColorById(selectedIconColor),
             placeholder = R.string.add_category_placeholder,
             onTextChange = onCategoryNameTextChange
         )
+
+
+        CustomText(
+            text = stringResource(id = R.string.select_icon_color),
+            style = MyAppTheme.typography.Medium46,
+            color = MyAppTheme.colors.gray1
+        )
+        Spacer(Modifier.height(5.dp))
+
+
+        LazyRow(
+            contentPadding = PaddingValues(dimensionResource(id = R.dimen.padding)),
+            horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding)),
+            userScrollEnabled = true
+        ) {
+            items(15) { index ->
+                val id = index + 1
+                CategoryColorItem(
+                    colorId = id,
+                    isSelected = selectedIconColor == id,
+                    onClick = {
+                        onSelectCategoryIconColor(id)
+                    }
+                )
+            }
+        }
+
         CustomText(
             text = stringResource(id = R.string.select_icon),
             style = MyAppTheme.typography.Medium46,
@@ -87,20 +129,25 @@ fun AddEditCategoryDialogField(
         )
         Spacer(Modifier.height(5.dp))
 
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(5),
+        LazyRow(
             contentPadding = PaddingValues(dimensionResource(id = R.dimen.padding)),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            userScrollEnabled = true,
+            horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding)),
+            userScrollEnabled = true
         ) {
-            items(20) {
+            items(15) { index ->
+                val id = index + 1
                 CategoryItem(
-                    item = Category(name = ""),
-                    isSelected = false,
-                    onClick = {}
+                    item = Category(name = "", iconColorId = 1, iconId = id),
+                    isSelected = selectedIcon == id,
+                    onClick = {
+                        onSelectCategoryIcon(id)
+                    }
                 )
             }
         }
+
+
+
 
         Spacer(modifier = Modifier.fillMaxHeight(0.1f))
 

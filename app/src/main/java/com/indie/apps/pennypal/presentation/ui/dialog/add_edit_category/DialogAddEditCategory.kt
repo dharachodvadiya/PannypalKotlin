@@ -32,6 +32,8 @@ fun DialogAddEditCategory(
     val categoryState by viewModel.categoryState.collectAsStateWithLifecycle()
 
     val selectedCategoryId by viewModel.selectedCategoryId.collectAsStateWithLifecycle()
+    val selectedCategoryIconColor by viewModel.selectedCategoryIconColor.collectAsStateWithLifecycle()
+    val selectedCategoryIcon by viewModel.selectedCategoryIcon.collectAsStateWithLifecycle()
 
     if (categoryType != null) {
         LaunchedEffect(categoryType) {
@@ -55,8 +57,12 @@ fun DialogAddEditCategory(
                 textCategory = categoryState,
                 list = CategoryType.entries,
                 selectCategoryType = CategoryType.entries.first { it.id == selectedCategoryId },
-                onSelect = viewModel::onModeChange,
-                onCategoryNameTextChange = viewModel::updateCategoryTypeText
+                onSelectCategoryType = viewModel::onModeChange,
+                onCategoryNameTextChange = viewModel::updateCategoryTypeText,
+                onSelectCategoryIcon = viewModel::onCategoryIconChange,
+                onSelectCategoryIconColor = viewModel::onCategoryIconColorChange,
+                selectedIcon = selectedCategoryIcon,
+                selectedIconColor = selectedCategoryIconColor
             )
         },
         bottomContent = {
