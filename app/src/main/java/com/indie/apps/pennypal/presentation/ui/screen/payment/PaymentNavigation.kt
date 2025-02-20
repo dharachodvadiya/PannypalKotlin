@@ -23,7 +23,7 @@ internal fun NavGraphBuilder.navigateToPaymentScreen(
         val isEditSuccess = savedStateHandle.get<Boolean>(Util.SAVE_STATE_PAYMENT_EDIT_SUCCESS)
         val editAddId = savedStateHandle.get<Long>(Util.SAVE_STATE_PAYMENT_ADD_EDIT_ID)
 
-        LaunchedEffect(Unit) {
+        LaunchedEffect(editAddId) {
             savedStateHandle.remove<Boolean>(Util.SAVE_STATE_PAYMENT_EDIT_SUCCESS)
             savedStateHandle.remove<Boolean>(Util.SAVE_STATE_PAYMENT_ADD_EDIT_ID)
         }

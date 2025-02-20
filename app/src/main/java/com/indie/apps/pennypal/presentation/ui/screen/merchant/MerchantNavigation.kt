@@ -25,12 +25,12 @@ internal fun NavGraphBuilder.navigateToMerchantScreen(
 
         val editAddId = savedStateHandle.get<Long>(Util.SAVE_STATE_ADD_EDIT_MERCHANT_SUCCESS_ID)
 
-        val isAddMerchantDataSuccess =
-            savedStateHandle.get<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_ADD_SUCCESS)
+        /* val isAddMerchantDataSuccess =
+             savedStateHandle.get<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_ADD_SUCCESS)
 
-        val merchantId = savedStateHandle.get<Long>(Util.SAVE_STATE_MERCHANT_ADD_EDIT_ID)
+         val merchantId = savedStateHandle.get<Long>(Util.SAVE_STATE_MERCHANT_ADD_EDIT_ID)*/
 
-        LaunchedEffect(Unit) {
+        LaunchedEffect(editAddId) {
             savedStateHandle.remove<Boolean>(Util.SAVE_STATE_EDIT_MERCHANT_SUCCESS)
             savedStateHandle.remove<Boolean>(Util.SAVE_STATE_ADD_MERCHANT_SUCCESS)
             savedStateHandle.remove<Long>(Util.SAVE_STATE_ADD_EDIT_MERCHANT_SUCCESS_ID)
@@ -63,8 +63,8 @@ internal fun NavGraphBuilder.navigateToMerchantScreen(
                 )
             },
             bottomPadding = innerPadding,
-            isAddMerchantDataSuccess = isAddMerchantDataSuccess ?: false,
-            merchantId = merchantId ?: -1
+            isAddMerchantDataSuccess = false,
+            merchantId = -1
         )
 
 
