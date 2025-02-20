@@ -57,7 +57,9 @@ fun DialogAddEditCategory(
                 textCategory = categoryState,
                 list = CategoryType.entries,
                 selectCategoryType = CategoryType.entries.first { it.id == selectedCategoryId },
-                onSelectCategoryType = viewModel::onModeChange,
+                onSelectCategoryType = {
+                    viewModel.setSelectedCategoryId(it.id)
+                },
                 onCategoryNameTextChange = viewModel::updateCategoryTypeText,
                 onSelectCategoryIcon = viewModel::onCategoryIconChange,
                 onSelectCategoryIconColor = viewModel::onCategoryIconColorChange,

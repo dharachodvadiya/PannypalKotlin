@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.data.database.dao
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
@@ -23,4 +24,8 @@ interface CategoryDao : BaseDao<Category> {
     @Transaction
     @Query("SELECT * FROM category where (type = :type OR type = 0) AND name LIKE  '%' || :searchQuery || '%'")
     fun searchCategoryFromTypeList(type: Int, searchQuery: String): Flow<List<Category>>
+
+    @Transaction
+    @Query("SELECT * FROM category where name LIKE  '%' || :searchQuery || '%'")
+    fun searchCategoryList(searchQuery: String): PagingSource<Int, Category>
 }

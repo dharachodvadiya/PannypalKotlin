@@ -41,6 +41,7 @@ object Util {
     const val SAVE_STATE_SELECT_CATEGORY_ID_LIST = "select_category_id_list"
     const val SAVE_STATE_CATEGORY_TYPE = "category_type"
     const val SAVE_STATE_CATEGORY_EDIT_SUCCESS = "category_edit_success"
+    const val SAVE_STATE_CATEGORY_ADD_SUCCESS = "category_add_success"
     const val SAVE_STATE_CATEGORY_ADD_EDIT_ID = "category_add_edit_id"
 
     //const val PARAM_MERCHANT_EDIT_ID = "merchant_edit_id"

@@ -45,6 +45,7 @@ import com.indie.apps.pennypal.presentation.ui.dialog.select_payment.DialogSelec
 import com.indie.apps.pennypal.presentation.ui.navigation.BottomNavItem
 import com.indie.apps.pennypal.presentation.ui.navigation.DialogNav
 import com.indie.apps.pennypal.presentation.ui.navigation.ScreenNav
+import com.indie.apps.pennypal.presentation.ui.route.categoryRoute
 import com.indie.apps.pennypal.presentation.ui.route.merchantRoute
 import com.indie.apps.pennypal.presentation.ui.route.overViewRoute
 import com.indie.apps.pennypal.presentation.ui.route.paymentRoute
@@ -119,6 +120,7 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
             ) {
 
                 overViewRoute(navController, bottomBarState, innerPadding)
+                categoryRoute(navController, bottomBarState, innerPadding)
                 merchantRoute(navController, bottomBarState, innerPadding)
                 paymentRoute(navController, bottomBarState, innerPadding)
                 settingRoute(navController, bottomBarState, innerPadding)
@@ -288,6 +290,17 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
                                     ?.savedStateHandle
                                     ?.set(Util.SAVE_STATE_CATEGORY_EDIT_SUCCESS, true)
                             }*/
+
+                            if (isEdit) {
+                                navController.previousBackStackEntry
+                                    ?.savedStateHandle
+                                    ?.set(Util.SAVE_STATE_CATEGORY_EDIT_SUCCESS, true)
+                            } else {
+                                navController.previousBackStackEntry
+                                    ?.savedStateHandle
+                                    ?.set(Util.SAVE_STATE_CATEGORY_ADD_SUCCESS, true)
+
+                            }
                             if (category != null) {
                                 navController.previousBackStackEntry
                                     ?.savedStateHandle

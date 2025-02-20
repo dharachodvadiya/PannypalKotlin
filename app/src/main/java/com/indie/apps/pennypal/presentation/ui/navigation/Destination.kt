@@ -26,6 +26,7 @@ enum class ScreenNav(val route: String) {
 
     //NEW_ITEM("overview/new_item"),
     PROFILE("overview/profile"),
+    CATEGORY_START("category/start"),
     MERCHANT_START("merchant/start"),
     MERCHANT_DATA("merchant/merchant_data/{${Util.PARAM_MERCHANT_ID}}"),
     MERCHANT_PROFILE("merchant/merchant_profile/{${Util.PARAM_MERCHANT_ID}}"),
@@ -48,6 +49,7 @@ enum class BottomNavItem(
     val route: String
 ) {
     OVERVIEW(R.string.overview, R.drawable.ic_overview_fill, R.drawable.ic_overview, "overview"),
+    CATEGORY(R.string.category, R.drawable.ic_overview_fill, R.drawable.ic_overview, "category"),
     MERCHANTS(R.string.merchants, R.drawable.ic_person_fill, R.drawable.ic_person, "merchant"),
     ACCOUNTS(R.string.accounts, R.drawable.ic_bank_fill, R.drawable.ic_bank, "accounts"),
     SETTING(R.string.setting, R.drawable.ic_setting_fill, R.drawable.ic_setting, "setting"),

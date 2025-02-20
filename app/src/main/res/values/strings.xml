@@ -227,6 +227,7 @@
     <string name="both">Both</string>
     <string name="select_icon">Select Icon</string>
     <string name="select_icon_color">Select Icon Color</string>
+    <string name="category_delete_success_message">Category Deleted Successfully</string>
 
     <string-array name="months">
         <item>JAN</item>

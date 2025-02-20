@@ -4,7 +4,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.indie.apps.pennypal.data.database.entity.Category
-import com.indie.apps.pennypal.data.database.enum.CategoryType
 import com.indie.apps.pennypal.domain.usecase.AddCategoryUseCase
 import com.indie.apps.pennypal.domain.usecase.UpdateCategoryUseCase
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
@@ -56,15 +55,13 @@ class AddEditCategoryViewModel @Inject constructor(
 
                     setSelectedCategoryId(editCategory!!.type)
                     updateCategoryTypeText(editCategory!!.name)
+                    onCategoryIconColorChange(editCategory!!.iconColorId)
+                    onCategoryIconChange(editCategory!!.iconId)
                 }
         }
     }
 
     fun getIsEditable() = categoryEditId != -1L
-
-    fun onModeChange(categoryType: CategoryType) {
-        selectedCategoryId.value = categoryType.id
-    }
 
     fun onCategoryIconColorChange(colorId: Int) {
         selectedCategoryIconColor.value = colorId
