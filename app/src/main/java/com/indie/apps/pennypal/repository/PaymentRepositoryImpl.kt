@@ -33,7 +33,7 @@ class PaymentRepositoryImpl @Inject constructor(
         return try {
             paymentDao.insert(obj)
         } catch (e: Exception) {
-            val payments = paymentDao.getPaymentFromName(obj.name)
+            val payments = paymentDao.getSoftDeletedPaymentFromName(obj.name)
             if (payments != null)
                 paymentDao.update(obj.copy(id = payments.id)).toLong()
             else

@@ -46,8 +46,8 @@ interface PaymentDao : BaseDao<Payment> {
     suspend fun getPaymentFromId(id: Long): Payment
 
     @Transaction
-    @Query("SELECT * FROM payment_type where name = :name")
-    suspend fun getPaymentFromName(name : String): Payment?
+    @Query("SELECT * FROM payment_type where name = :name AND soft_delete = 1")
+    suspend fun getSoftDeletedPaymentFromName(name: String): Payment?
 
 
     @Transaction
