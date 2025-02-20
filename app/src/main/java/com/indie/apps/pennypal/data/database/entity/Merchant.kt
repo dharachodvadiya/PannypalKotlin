@@ -28,6 +28,9 @@ data class Merchant(
 
     val details: String? = null,
 
+    @ColumnInfo(name = "soft_delete")
+    val softDeleted: Int = 0,
+
     //@ColumnInfo(name = "income_amt")
     //val incomeAmount: Double = 0.0,
 

@@ -17,12 +17,16 @@ interface MerchantDao : BaseDao<Merchant> {
     //get data
 
     @Transaction
-    @Query("delete from merchant where id = :id")
-    suspend fun deleteMerchantWithId(id: Long): Int
+    @Query("UPDATE merchant SET soft_delete = 1 WHERE id = :id")
+    suspend fun softDeleteMerchantWithId(id: Long): Int
 
     @Transaction
-    @Query("delete from merchant where id IN (:idList)")
-    suspend fun deleteMerchantWithIdList(idList: List<Long>): Int
+    @Query("UPDATE merchant SET soft_delete = 1 WHERE id IN (:idList)")
+    suspend fun softDeleteMerchantWithIdList(idList: List<Long>): Int
+
+    @Transaction
+    @Query("SELECT * FROM merchant where name = :name AND soft_delete = 1")
+    suspend fun getSoftDeletedMerchantFromName(name: String): Merchant?
 
     @Transaction
     @Query("SELECT * FROM merchant where id = :id")
@@ -30,12 +34,12 @@ interface MerchantDao : BaseDao<Merchant> {
 
     @Transaction
     //@Query("SELECT * FROM merchant ORDER BY date_milli DESC")
-    @Query("SELECT * FROM merchant ORDER BY id DESC")
+    @Query("SELECT * FROM merchant where soft_delete = 0 ORDER BY id DESC")
     fun getMerchantList(): PagingSource<Int, Merchant>
 
     @Transaction
     //@Query("SELECT id, name, details FROM merchant WHERE name LIKE  '%' || :searchQuery || '%' OR details LIKE  '%' || :searchQuery || '%'ORDER BY date_milli DESC LIMIT :limit OFFSET :offset")
-    @Query("SELECT id, name, details FROM merchant WHERE name LIKE  '%' || :searchQuery || '%' OR details LIKE  '%' || :searchQuery || '%' ORDER BY id DESC LIMIT :limit OFFSET :offset ")
+    @Query("SELECT id, name, details FROM merchant WHERE (name LIKE  '%' || :searchQuery || '%' OR details LIKE  '%' || :searchQuery || '%') AND soft_delete = 0 ORDER BY id DESC LIMIT :limit OFFSET :offset ")
     suspend fun searchMerchantNameAndDetailList(
         searchQuery: String,
         limit: Int,
@@ -44,17 +48,17 @@ interface MerchantDao : BaseDao<Merchant> {
 
     @Transaction
     //@Query("SELECT id, name, details FROM merchant WHERE name LIKE  '%' || :searchQuery || '%' OR details LIKE  '%' || :searchQuery || '%'ORDER BY date_milli DESC")
-    @Query("SELECT id, name, details FROM merchant WHERE name LIKE  '%' || :searchQuery || '%' OR details LIKE  '%' || :searchQuery || '%' ORDER BY id DESC")
+    @Query("SELECT id, name, details FROM merchant WHERE (name LIKE  '%' || :searchQuery || '%' OR details LIKE  '%' || :searchQuery || '%') AND soft_delete = 0 ORDER BY id DESC")
     fun searchMerchantNameAndDetailList(searchQuery: String): PagingSource<Int, MerchantNameAndDetails>
 
     @Transaction
     //@Query("SELECT id, name, details FROM merchant WHERE name LIKE  '%' || :searchQuery || '%' OR details LIKE  '%' || :searchQuery || '%'ORDER BY date_milli DESC")
-    @Query("SELECT id, name, details FROM merchant ORDER BY id DESC LIMIT 4 ")
+    @Query("SELECT id, name, details FROM merchant where soft_delete = 0 ORDER BY id DESC LIMIT 4 ")
     fun getRecentMerchantNameAndDetailList(): Flow<List<MerchantNameAndDetails>>
 
     @Transaction
     //@Query("SELECT * FROM merchant WHERE name LIKE  '%' || :searchQuery || '%' OR details LIKE  '%' || :searchQuery || '%' ORDER BY date_milli DESC")
-    @Query("SELECT * FROM merchant WHERE name LIKE  '%' || :searchQuery || '%' OR details LIKE  '%' || :searchQuery || '%' ORDER BY id DESC")
+    @Query("SELECT * FROM merchant WHERE (name LIKE  '%' || :searchQuery || '%' OR details LIKE  '%' || :searchQuery || '%') AND soft_delete = 0 ORDER BY id DESC")
     fun searchMerchantList(searchQuery: String): PagingSource<Int, Merchant>
 
 

@@ -16,10 +16,10 @@ class MerchantRepositoryImpl @Inject constructor(
 ) :
     MerchantRepository {
 
-    override suspend fun deleteMerchantWithId(id: Long) = merchantDao.deleteMerchantWithId(id)
+    override suspend fun deleteMerchantWithId(id: Long) = merchantDao.softDeleteMerchantWithId(id)
 
     override suspend fun deleteMerchantWithIdList(idList: List<Long>) =
-        merchantDao.deleteMerchantWithIdList(idList)
+        merchantDao.softDeleteMerchantWithIdList(idList)
 
     override fun getMerchantList() =
         merchantDao.getMerchantList()
@@ -63,7 +63,21 @@ class MerchantRepositoryImpl @Inject constructor(
         searchQuery: String
     ) = merchantDao.searchMerchantList(searchQuery)
 
-    override suspend fun insert(obj: Merchant) = merchantDao.insert(obj)
+    override suspend fun insert(obj: Merchant): Long {
+        return try {
+            merchantDao.insert(obj)
+        } catch (e: Exception) {
+            val merchant = merchantDao.getSoftDeletedMerchantFromName(obj.name)
+            if (merchant != null) {
+                if (merchantDao.update(obj.copy(id = merchant.id)) > 0)
+                    merchant.id
+                else
+                    -1
+            } else
+                throw Exception(e)
+
+        }
+    }
 
     override suspend fun update(obj: Merchant) = merchantDao.update(obj)
 }

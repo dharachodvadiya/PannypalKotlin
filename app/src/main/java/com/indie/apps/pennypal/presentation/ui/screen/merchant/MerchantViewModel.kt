@@ -96,7 +96,7 @@ class MerchantViewModel @Inject constructor(
     }
 
     fun addMerchantSuccessAnimStop() {
-        if(addAnimRun.value)
+        if (addAnimRun.value)
             addAnimRun.value = false
     }
 
@@ -170,8 +170,7 @@ class MerchantViewModel @Inject constructor(
     }
 
     private fun onDeleteAnimStop() {
-        if(deleteAnimRun.value)
-        {
+        if (deleteAnimRun.value) {
             deleteAnimRun.value = false
             clearSelection()
             searchData()
@@ -209,13 +208,13 @@ class MerchantViewModel @Inject constructor(
         val selectedCount = selectedList.size
         if (selectedCount == 1) {
             isEditable.value = true
-            //isDeletable.value = true
+            isDeletable.value = true
         } else if (selectedCount > 1) {
             isEditable.value = false
-            //isDeletable.value = true
+            isDeletable.value = true
         } else {
             isEditable.value = false
-            //isDeletable.value = false
+            isDeletable.value = false
         }
     }
 
@@ -224,8 +223,8 @@ class MerchantViewModel @Inject constructor(
         this.scrollOffset.value = scrollOffset
     }
 
-    fun updateSearchText(text : String) = searchTextState.value.updateText(text)
+    fun updateSearchText(text: String) = searchTextState.value.updateText(text)
 
-    fun getIsSelected() = selectedList.size!= 0
+    fun getIsSelected() = selectedList.size != 0
 
 }

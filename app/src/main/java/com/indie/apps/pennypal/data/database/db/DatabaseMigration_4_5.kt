@@ -6,6 +6,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 class Migration4to5 : Migration(4, 5) {
     override fun migrate(db: SupportSQLiteDatabase) {
         updateCategoryTable(db)
+        updateMerchantTable(db)
     }
 
     private fun updateCategoryTable(database: SupportSQLiteDatabase) {
@@ -51,6 +52,10 @@ class Migration4to5 : Migration(4, 5) {
         for (id in 1..16) {
             database.execSQL("UPDATE category SET icon_id = $id, icon_color_id = $id WHERE id = $id;")
         }
+    }
+
+    private fun updateMerchantTable(database: SupportSQLiteDatabase) {
+        database.execSQL("ALTER TABLE merchant ADD COLUMN soft_delete INTEGER NOT NULL DEFAULT 0")
     }
 
 
