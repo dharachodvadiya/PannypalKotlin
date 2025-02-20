@@ -18,14 +18,14 @@ interface CategoryDao : BaseDao<Category> {
     fun getCategoryFromId(id: Long): Flow<Category>
 
     @Transaction
-    @Query("SELECT * FROM category where type = :type OR type = 0")
+    @Query("SELECT * FROM category where type = :type OR type = 0 ORDER BY id DESC")
     fun getCategoryFromTypeList(type: Int): Flow<List<Category>>
 
     @Transaction
-    @Query("SELECT * FROM category where (type = :type OR type = 0) AND name LIKE  '%' || :searchQuery || '%'")
+    @Query("SELECT * FROM category where (type = :type OR type = 0) AND name LIKE  '%' || :searchQuery || '%' ORDER BY id DESC")
     fun searchCategoryFromTypeList(type: Int, searchQuery: String): Flow<List<Category>>
 
     @Transaction
-    @Query("SELECT * FROM category where name LIKE  '%' || :searchQuery || '%'")
+    @Query("SELECT * FROM category where name LIKE  '%' || :searchQuery || '%' ORDER BY id DESC")
     fun searchCategoryList(searchQuery: String): PagingSource<Int, Category>
 }

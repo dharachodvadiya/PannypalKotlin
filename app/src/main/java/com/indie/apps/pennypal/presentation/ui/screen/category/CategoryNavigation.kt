@@ -30,7 +30,7 @@ internal fun NavGraphBuilder.navigateToCategoryScreen(
 
          val merchantId = savedStateHandle.get<Long>(Util.SAVE_STATE_MERCHANT_ADD_EDIT_ID)
  */
-        LaunchedEffect(Unit) {
+        LaunchedEffect(editAddId) {
             savedStateHandle.remove<Boolean>(Util.SAVE_STATE_CATEGORY_ADD_SUCCESS)
             savedStateHandle.remove<Boolean>(Util.SAVE_STATE_CATEGORY_EDIT_SUCCESS)
             savedStateHandle.remove<Long>(Util.SAVE_STATE_CATEGORY_ADD_EDIT_ID)
