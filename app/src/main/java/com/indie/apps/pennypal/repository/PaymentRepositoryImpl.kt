@@ -29,7 +29,18 @@ class PaymentRepositoryImpl @Inject constructor(
         searchQuery: String,
     ) = paymentDao.searchPaymentList(searchQuery)
 
-    override suspend fun insert(obj: Payment) = paymentDao.insert(obj)
+    override suspend fun insert(obj: Payment): Long {
+        return try {
+            paymentDao.insert(obj)
+        } catch (e: Exception) {
+            val payments = paymentDao.getPaymentFromName(obj.name)
+            if (payments != null)
+                paymentDao.update(obj.copy(id = payments.id)).toLong()
+            else
+                throw Exception(e)
+
+        }
+    }
 
     override suspend fun update(obj: Payment) = paymentDao.update(obj)
 }

@@ -46,6 +46,11 @@ interface PaymentDao : BaseDao<Payment> {
     suspend fun getPaymentFromId(id: Long): Payment
 
     @Transaction
+    @Query("SELECT * FROM payment_type where name = :name")
+    suspend fun getPaymentFromName(name : String): Payment?
+
+
+    @Transaction
     @Query("SELECT * FROM payment_type WHERE name LIKE :searchQuery || '%' AND soft_delete = 0")
     fun searchPaymentList(searchQuery: String): PagingSource<Int, Payment>
 
