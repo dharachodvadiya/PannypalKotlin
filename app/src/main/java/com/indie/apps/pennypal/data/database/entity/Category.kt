@@ -2,11 +2,13 @@ package com.indie.apps.pennypal.data.database.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.indie.apps.pennypal.data.module.category.CategoryAmount
 
 @Entity(
-    tableName = "category"
+    tableName = "category",
+    indices = [Index(value = ["name"], unique = true)]
 )
 data class Category(
     @PrimaryKey(autoGenerate = true)

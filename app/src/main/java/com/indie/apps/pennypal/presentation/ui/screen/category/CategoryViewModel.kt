@@ -6,9 +6,11 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.indie.apps.pennypal.data.database.entity.Category
+import com.indie.apps.pennypal.domain.usecase.DeleteMultipleCategoryUseCase
 import com.indie.apps.pennypal.domain.usecase.SearchCategoryListUseCase
 import com.indie.apps.pennypal.presentation.ui.state.PagingState
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
+import com.indie.apps.pennypal.util.Resource
 import com.indie.apps.pennypal.util.Util
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -23,7 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CategoryViewModel @Inject constructor(
     searchCategoryListUseCase: SearchCategoryListUseCase,
-    // private val deleteMultipleMerchantUseCase: DeleteMultipleMerchantUseCase
+    private val deleteMultipleCategoryUseCase: DeleteMultipleCategoryUseCase
 ) : ViewModel() {
 
     var scrollIndex = MutableStateFlow(0)
@@ -144,9 +146,9 @@ class CategoryViewModel @Inject constructor(
     }
 
     fun onDeleteDialogClick(onSuccess: () -> Unit) {
-        /*deleteAnimRun.value = true
+        deleteAnimRun.value = true
         viewModelScope.launch {
-            deleteMultipleMerchantUseCase
+            deleteMultipleCategoryUseCase
                 .deleteData(selectedList)
                 .collect {
                     when (it) {
@@ -163,7 +165,7 @@ class CategoryViewModel @Inject constructor(
                         }
                     }
                 }
-        }*/
+        }
 
     }
 
@@ -206,13 +208,13 @@ class CategoryViewModel @Inject constructor(
         val selectedCount = selectedList.size
         if (selectedCount == 1) {
             isEditable.value = true
-            //isDeletable.value = true
+            isDeletable.value = true
         } else if (selectedCount > 1) {
             isEditable.value = false
-            //isDeletable.value = true
+            isDeletable.value = true
         } else {
             isEditable.value = false
-            //isDeletable.value = false
+            isDeletable.value = false
         }
     }
 

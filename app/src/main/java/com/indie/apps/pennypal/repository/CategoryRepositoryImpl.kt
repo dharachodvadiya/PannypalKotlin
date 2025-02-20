@@ -14,6 +14,9 @@ class CategoryRepositoryImpl @Inject constructor(
     override suspend fun insertCategoryList(categories: List<Category>) =
         categoryDao.insertCategoryList(categories)
 
+    override suspend fun deleteMultipleCategory(idList: List<Long>) =
+        categoryDao.softDeleteCategoryList(idList)
+
     override fun getCategoryFromId(id: Long) = categoryDao.getCategoryFromId(id).flowOn(dispatcher)
 
     override fun getCategoryFromTypeList(type: Int) =
@@ -25,7 +28,21 @@ class CategoryRepositoryImpl @Inject constructor(
     override fun searchCategoryList(searchQuery: String) =
         categoryDao.searchCategoryList(searchQuery)
 
-    override suspend fun insert(obj: Category) = categoryDao.insert(obj)
+    override suspend fun insert(obj: Category): Long {
+        return try {
+            categoryDao.insert(obj)
+        } catch (e: Exception) {
+            val category = categoryDao.getSoftDeletedCategoryFromName(obj.name)
+            if (category != null) {
+                if (categoryDao.update(obj.copy(id = category.id)) > 0)
+                    category.id
+                else
+                    -1
+            } else
+                throw Exception(e)
+
+        }
+    }
 
     override suspend fun update(obj: Category) = categoryDao.update(obj)
 
