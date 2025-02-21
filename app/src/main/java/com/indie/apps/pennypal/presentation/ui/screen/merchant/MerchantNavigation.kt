@@ -64,7 +64,10 @@ internal fun NavGraphBuilder.navigateToMerchantScreen(
             },
             bottomPadding = innerPadding,
             isAddMerchantDataSuccess = false,
-            merchantId = -1
+            merchantId = -1,
+            onNavigationUp = {
+                navController.navigateUp()
+            }
         )
 
 

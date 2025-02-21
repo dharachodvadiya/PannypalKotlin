@@ -1,6 +1,7 @@
 package com.indie.apps.pennypal.presentation.ui.screen.merchant
 
 import android.annotation.SuppressLint
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
@@ -58,6 +59,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun MerchantScreen(
     merchantViewModel: MerchantViewModel = hiltViewModel(),
+    onNavigationUp: () -> Unit,
     onMerchantClick: (Long) -> Unit,
     onAddClick: () -> Unit,
     onEditClick: (Long) -> Unit,
@@ -92,6 +94,13 @@ fun MerchantScreen(
     }
     var editMerchantId by remember {
         mutableLongStateOf(-1L)
+    }
+
+    BackHandler {
+        if (merchantViewModel.getIsSelected())
+            merchantViewModel.onNavigationUp { }
+        else
+            onNavigationUp()
     }
 
     LaunchedEffect(editAddId) {
@@ -131,7 +140,12 @@ fun MerchantScreen(
             onAddClick = { merchantViewModel.onAddClick { onAddClick() } },
             onEditClick = { merchantViewModel.onEditClick { onEditClick(it) } },
             onDeleteClick = { merchantViewModel.onDeleteClick { openAlertDialog = true } },
-            onNavigationUp = { merchantViewModel.onNavigationUp { } },
+            onNavigationUp = {
+                if (merchantViewModel.getIsSelected())
+                    merchantViewModel.onNavigationUp { }
+                else
+                    onNavigationUp()
+            },
             onSearchTextChange = {
                 merchantViewModel.updateSearchText(it)
                 job?.cancel()
@@ -328,6 +342,7 @@ private fun MerchantScreenPreview() {
             onAddClick = {},
             onEditClick = {},
             onMerchantClick = {},
+            onNavigationUp = {},
             bottomPadding = PaddingValues(0.dp)
         )
     }

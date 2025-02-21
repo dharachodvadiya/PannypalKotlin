@@ -51,6 +51,7 @@ class MainActivity : AppCompatActivity() {
         setupUpdateResultLauncher()
         setupUpdateListener()
         checkForUpdate()
+        supportActionBar?.hide()
 
         setContent {
             //enableEdgeToEdge()

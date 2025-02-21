@@ -57,7 +57,7 @@ fun MerchantTopBar(
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     TopBar(
-        isBackEnable = isSelected,
+        isBackEnable = true,
         onBackClick = onNavigationUp,
         content = {
             if (!isSelected) {

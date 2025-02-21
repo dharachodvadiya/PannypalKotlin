@@ -1,6 +1,7 @@
 package com.indie.apps.pennypal.presentation.ui.screen.category
 
 import android.annotation.SuppressLint
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
@@ -57,6 +58,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun CategoryScreen(
     viewModel: CategoryViewModel = hiltViewModel(),
+    onNavigationUp: () -> Unit,
     onCategoryClick: (Long) -> Unit,
     onAddClick: () -> Unit,
     onEditClick: (Long) -> Unit,
@@ -85,6 +87,13 @@ fun CategoryScreen(
     val addDataAnimRun by viewModel.addDataAnimRun.collectAsStateWithLifecycle()
     val editAnimRun by viewModel.editAnimRun.collectAsStateWithLifecycle()
     val deleteAnimRun by viewModel.deleteAnimRun.collectAsStateWithLifecycle()
+
+    BackHandler {
+        if (viewModel.getIsSelected())
+            viewModel.onNavigationUp { }
+        else
+            onNavigationUp()
+    }
 
     var merchantId by remember {
         mutableLongStateOf(-1L)
@@ -126,7 +135,12 @@ fun CategoryScreen(
             onAddClick = { viewModel.onAddClick { onAddClick() } },
             onEditClick = { viewModel.onEditClick { onEditClick(it) } },
             onDeleteClick = { viewModel.onDeleteClick { openAlertDialog = true } },
-            onNavigationUp = { viewModel.onNavigationUp { } },
+            onNavigationUp = {
+                if (viewModel.getIsSelected())
+                    viewModel.onNavigationUp { }
+                else
+                    onNavigationUp()
+            },
             onSearchTextChange = {
                 viewModel.updateSearchText(it)
                 job?.cancel()
@@ -323,6 +337,7 @@ private fun MerchantScreenPreview() {
             onAddClick = {},
             onEditClick = {},
             onCategoryClick = {},
+            onNavigationUp = {},
             bottomPadding = PaddingValues(0.dp)
         )
     }
