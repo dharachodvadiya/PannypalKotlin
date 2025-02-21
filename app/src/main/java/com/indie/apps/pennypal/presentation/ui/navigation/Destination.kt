@@ -49,7 +49,7 @@ enum class BottomNavItem(
     val route: String
 ) {
     OVERVIEW(R.string.overview, R.drawable.ic_overview_fill, R.drawable.ic_overview, "overview"),
-    CATEGORY(R.string.category, R.drawable.ic_overview_fill, R.drawable.ic_overview, "category"),
+    CATEGORY(R.string.category, R.drawable.ic_category_fill, R.drawable.ic_category, "category"),
     MERCHANTS(R.string.merchants, R.drawable.ic_person_fill, R.drawable.ic_person, "merchant"),
     ACCOUNTS(R.string.accounts, R.drawable.ic_bank_fill, R.drawable.ic_bank, "accounts"),
     SETTING(R.string.setting, R.drawable.ic_setting_fill, R.drawable.ic_setting, "setting"),

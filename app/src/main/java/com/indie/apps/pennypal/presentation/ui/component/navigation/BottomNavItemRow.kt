@@ -264,7 +264,7 @@ fun BottomNavigationBarCustom1Item(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
-            .roundedCornerBackground(MyAppTheme.colors.transparent)
+            //.roundedCornerBackground(MyAppTheme.colors.transparent)
             //.background(MyAppTheme.colors.bottomBg)
             .clickableWithNoRipple { onTabSelected(item) }
     ) {
