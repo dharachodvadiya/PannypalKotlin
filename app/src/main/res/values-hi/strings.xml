@@ -101,7 +101,7 @@
     <string name="expense_analysis">खर्च विश्लेषण</string>
     <string name="explore">और जानें</string>
     <string name="analysis">विश्लेषण</string>
-    <string name="analysis_of">विश्लेषण</string>
+    <string name="analysis_of_this_month">इस महीने का विश्लेषण</string>
     <string name="home_page_balance_view">होम पेज बैलेंस दृश्य</string>
     <string name="select_balance_view">बैलेंस दृश्य चुनें</string>
     <string name="no_data">कोई डेटा नहीं है</string>

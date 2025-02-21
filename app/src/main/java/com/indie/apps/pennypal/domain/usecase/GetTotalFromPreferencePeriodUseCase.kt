@@ -28,7 +28,7 @@ class GetTotalFromPreferencePeriodUseCase @Inject constructor(
             )
         )
 
-        val balanceFlow =  when (balanceViewValue) {
+        val balanceFlow = when (balanceViewValue) {
             ShowDataPeriod.THIS_MONTH ->
                 merchantDataRepository
                     .getTotalFromMonth(Util.TIME_ZONE_OFFSET_IN_MILLI, 0)
@@ -39,10 +39,15 @@ class GetTotalFromPreferencePeriodUseCase @Inject constructor(
                     .getTotalFromYear(Util.TIME_ZONE_OFFSET_IN_MILLI, 0)
                     .map { it?.toTotalWithCurrency() }
 
+            ShowDataPeriod.ALL_TIME ->
+                merchantDataRepository
+                    .getTotalFromMonth(Util.TIME_ZONE_OFFSET_IN_MILLI, 0)
+                    .map { it?.toTotalWithCurrency() }
+
             null ->
                 merchantDataRepository
-                .getTotalFromMonth(Util.TIME_ZONE_OFFSET_IN_MILLI, 0)
-                .map { it?.toTotalWithCurrency() }
+                    .getTotalFromMonth(Util.TIME_ZONE_OFFSET_IN_MILLI, 0)
+                    .map { it?.toTotalWithCurrency() }
         }
 
         return balanceFlow

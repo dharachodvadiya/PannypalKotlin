@@ -37,6 +37,16 @@ interface MerchantDataRepository : BaseRepository<MerchantData> {
 
     fun getRecentMerchantsDataWithAllDataList(): Flow<List<MerchantDataWithAllData>>
 
+    fun getRecentMerchantsDataWithAllDataListFromMonth(
+        timeZoneOffsetInMilli: Int,
+        monthOffset: Int
+    ): Flow<List<MerchantDataWithAllData>>
+
+    fun getRecentMerchantsDataWithAllDataListFromYear(
+        timeZoneOffsetInMilli: Int,
+        yearOffset: Int
+    ): Flow<List<MerchantDataWithAllData>>
+
     fun getMerchantsDataWithPaymentNameListFromMerchantId(
         merchantId: Long
     ): PagingSource<Int, MerchantDataWithPaymentName>

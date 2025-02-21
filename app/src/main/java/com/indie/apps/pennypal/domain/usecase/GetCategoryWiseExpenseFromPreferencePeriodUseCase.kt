@@ -28,20 +28,29 @@ class GetCategoryWiseExpenseFromPreferencePeriodUseCase @Inject constructor(
             )
         )
 
-        val categoryFlow =  when (balanceViewValue) {
+        val categoryFlow = when (balanceViewValue) {
             ShowDataPeriod.THIS_MONTH ->
                 merchantDataRepository
                     .getCategoryWiseExpenseFromMonth(Util.TIME_ZONE_OFFSET_IN_MILLI, 0)
-                    .map { it.map { item-> item.toCategoryAmount() } }
+                    .map { it.map { item -> item.toCategoryAmount() } }
 
             ShowDataPeriod.THIS_YEAR ->
-                merchantDataRepository.getCategoryWiseExpenseFromYear(Util.TIME_ZONE_OFFSET_IN_MILLI, 0)
-                    .map { it.map { item-> item.toCategoryAmount() } }
+                merchantDataRepository
+                    .getCategoryWiseExpenseFromYear(
+                        Util.TIME_ZONE_OFFSET_IN_MILLI,
+                        0
+                    )
+                    .map { it.map { item -> item.toCategoryAmount() } }
+
+            ShowDataPeriod.ALL_TIME ->
+                merchantDataRepository
+                    .getCategoryWiseExpenseFromMonth(Util.TIME_ZONE_OFFSET_IN_MILLI, 0)
+                    .map { it.map { item -> item.toCategoryAmount() } }
 
             null ->
                 merchantDataRepository
                     .getCategoryWiseExpenseFromMonth(Util.TIME_ZONE_OFFSET_IN_MILLI, 0)
-                    .map { it.map { item-> item.toCategoryAmount() } }
+                    .map { it.map { item -> item.toCategoryAmount() } }
 
         }
 

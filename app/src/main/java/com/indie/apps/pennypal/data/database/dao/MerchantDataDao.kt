@@ -117,6 +117,66 @@ interface MerchantDataDao : BaseDao<MerchantData> {
     @Query(
         """
         SELECT md.id as id, 
+                md.merchant_id as merchantId, 
+                m.name as merchantName, 
+                md.category_id as categoryId, 
+                c.name as categoryName,
+                c.icon_id as categoryIconId,
+                c.icon_color_id as categoryIconColorId,
+                md.payment_id as paymentId, 
+                p.name as paymentName, 
+                md.date_milli as dateInMilli,
+                md.details, 
+                md.amount, 
+                md.type
+        FROM merchant_data md
+        LEFT JOIN merchant m ON md.merchant_id = m.id
+        INNER JOIN category c ON md.category_id = c.id
+        INNER JOIN payment_type p ON md.payment_id = p.id
+        WHERE strftime('%Y-%m', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = strftime('%Y-%m', 'now', '-' || :monthOffset || ' months')
+        ORDER BY md.date_milli DESC LIMIT 3
+    """
+    )
+
+    fun getRecentMerchantsDataWithAllDataListFromMonth(
+        timeZoneOffsetInMilli: Int,
+        monthOffset: Int
+    ): Flow<List<MerchantDataWithAllData>>
+
+    @Transaction
+    @Query(
+        """
+        SELECT md.id as id, 
+                md.merchant_id as merchantId, 
+                m.name as merchantName, 
+                md.category_id as categoryId, 
+                c.name as categoryName,
+                c.icon_id as categoryIconId,
+                c.icon_color_id as categoryIconColorId,
+                md.payment_id as paymentId, 
+                p.name as paymentName, 
+                md.date_milli as dateInMilli,
+                md.details, 
+                md.amount, 
+                md.type
+        FROM merchant_data md
+        LEFT JOIN merchant m ON md.merchant_id = m.id
+        INNER JOIN category c ON md.category_id = c.id
+        INNER JOIN payment_type p ON md.payment_id = p.id
+        WHERE strftime('%Y', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = strftime('%Y', 'now', '-' || :yearOffset || ' years')
+        ORDER BY md.date_milli DESC LIMIT 3
+    """
+    )
+
+    fun getRecentMerchantsDataWithAllDataListFromYear(
+        timeZoneOffsetInMilli: Int,
+        yearOffset: Int
+    ): Flow<List<MerchantDataWithAllData>>
+
+    @Transaction
+    @Query(
+        """
+        SELECT md.id as id, 
                 md.payment_id as paymentId, 
                 md.date_milli as dateInMilli,
                 md.details, 

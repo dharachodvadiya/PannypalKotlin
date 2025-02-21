@@ -55,7 +55,6 @@ import com.indie.apps.pennypal.data.module.balance.TotalWithCurrency
 import com.indie.apps.pennypal.data.module.budget.BudgetWithSpentAndCategoryIdList
 import com.indie.apps.pennypal.data.module.category.CategoryAmount
 import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
-import com.indie.apps.pennypal.presentation.ui.component.PeriodText
 import com.indie.apps.pennypal.presentation.ui.component.UserProfileRect
 import com.indie.apps.pennypal.presentation.ui.component.chart.PieChart
 import com.indie.apps.pennypal.presentation.ui.component.clickableWithNoRipple
@@ -71,6 +70,7 @@ import com.indie.apps.pennypal.presentation.ui.screen.all_data.TransactionItem
 import com.indie.apps.pennypal.presentation.ui.screen.single_budget_analysis.SingleBudgetOverAllAnalysis
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
+import com.indie.apps.pennypal.util.ShowDataPeriod
 import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.util.getCategoryColorById
 import com.indie.apps.pennypal.util.getColorFromId
@@ -410,7 +410,7 @@ fun OverviewListItem(
 
 @Composable
 fun OverviewData(
-    currentPeriod: String,
+    currentPeriod: ShowDataPeriod?,
     data: TotalWithCurrency?,
     symbol: String,
     recentTransaction: List<MerchantDataWithAllData>,
@@ -437,17 +437,19 @@ fun OverviewData(
     onAddMerchant: () -> Unit
 ) {
 
-    PeriodText(
+    /*PeriodText(
         text = currentPeriod,
         textStyle = MyAppTheme.typography.Regular51,
-    )
+    )*/
 
     OverviewBalanceView(
+        currentPeriod = currentPeriod,
         data = data,
         symbol = symbol,
     )
 
     OverviewTransactionData(
+        currentPeriod = currentPeriod,
         onTransactionClick = onTransactionClick,
         recentTransaction = recentTransaction,
         onSeeAllTransactionClick = onSeeAllTransactionClick,
@@ -487,6 +489,7 @@ fun OverviewData(
 
 @Composable
 fun OverviewBalanceView(
+    currentPeriod: ShowDataPeriod?,
     data: TotalWithCurrency?,
     symbol: String,
     modifier: Modifier = Modifier,
@@ -525,9 +528,15 @@ fun OverviewBalanceView(
                         .fillMaxSize()
                         .padding(dimensionResource(id = R.dimen.padding)),
                 ) {
+                    val str = when (currentPeriod) {
+                        ShowDataPeriod.THIS_MONTH -> stringResource(id = R.string.balance_of_this_month)
+                        ShowDataPeriod.THIS_YEAR -> stringResource(id = R.string.balance_of_this_year)
+                        ShowDataPeriod.ALL_TIME -> stringResource(id = R.string.balance)
+                        null -> stringResource(id = R.string.balance)
+                    }
                     Column {
                         CustomText(
-                            text = stringResource(id = R.string.balance),
+                            text = str,
                             style = MyAppTheme.typography.Regular57,
                             color = MyAppTheme.colors.gray1
                         )
@@ -574,6 +583,7 @@ fun OverviewBalanceView(
 
 @Composable
 fun OverviewTransactionData(
+    currentPeriod: ShowDataPeriod?,
     recentTransaction: List<MerchantDataWithAllData>,
     onSeeAllTransactionClick: () -> Unit,
     onTransactionClick: (Long) -> Unit,
@@ -583,8 +593,14 @@ fun OverviewTransactionData(
     onAnimStop: () -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
+    val str = when (currentPeriod) {
+        ShowDataPeriod.THIS_MONTH -> stringResource(id = R.string.recent_transaction_of_this_month)
+        ShowDataPeriod.THIS_YEAR -> stringResource(id = R.string.recent_transaction_of_this_year)
+        ShowDataPeriod.ALL_TIME -> stringResource(id = R.string.recent_transaction)
+        null -> stringResource(id = R.string.recent_transaction)
+    }
     OverviewItem(
-        title = stringResource(id = R.string.recent_transaction),
+        title = str,
         onSeeAllClick = onSeeAllTransactionClick,
         content = {
             val scope = rememberCoroutineScope()
@@ -738,13 +754,19 @@ fun OverviewMerchantData(
 @SuppressLint("UnrememberedMutableInteractionSource")
 @Composable
 fun OverviewAnalysisData(
-    currentPeriod: String,
+    currentPeriod: ShowDataPeriod?,
     onExploreAnalysisClick: () -> Unit,
     categoryList: List<CategoryAmount>,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
+    val str = when (currentPeriod) {
+        ShowDataPeriod.THIS_MONTH -> stringResource(id = R.string.analysis_of_this_month)
+        ShowDataPeriod.THIS_YEAR -> stringResource(id = R.string.analysis_of_this_year)
+        ShowDataPeriod.ALL_TIME -> stringResource(id = R.string.analysis)
+        null -> stringResource(id = R.string.analysis)
+    }
     OverviewItem(
-        title = stringResource(id = R.string.analysis_of) + " $currentPeriod",
+        title = str,
         trailingText = R.string.explore,
         onSeeAllClick = onExploreAnalysisClick,
         content = {

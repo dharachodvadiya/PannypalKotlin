@@ -101,7 +101,7 @@
     <string name="expense_analysis">ખર્ચ વિશ્લેષણ</string>
     <string name="explore">વધારે જુવો</string>
     <string name="analysis">વિશ્લેષણ</string>
-    <string name="analysis_of">વિશ્લેષણ </string>
+    <string name="analysis_of_this_month">આ મહિનાનું વિશ્લેષણ</string>
     <string name="home_page_balance_view">હોમ પેજ બેલેન્સ વ્યૂ</string>
     <string name="select_balance_view">બેલેન્સ વ્યૂ પસંદ કરો</string>
     <string name="no_data">કોઈ ડેટા નથી</string>

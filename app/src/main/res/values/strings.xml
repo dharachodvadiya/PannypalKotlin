@@ -101,7 +101,7 @@
     <string name="expense_analysis">Expense Analysis</string>
     <string name="explore">Explore</string>
     <string name="analysis">Analysis</string>
-    <string name="analysis_of">Analysis Of </string>
+    <string name="analysis_of_this_month">Analysis Of This Month</string>
     <string name="home_page_balance_view">Home Page Balance View</string>
     <string name="select_balance_view">Select Balance View</string>
     <string name="no_data">No Data</string>
@@ -228,6 +228,12 @@
     <string name="select_icon">Select Icon</string>
     <string name="select_icon_color">Select Icon Color</string>
     <string name="category_delete_success_message">Category Deleted Successfully</string>
+    <string name="balance_of_this_month">Balance Of This Month</string>
+    <string name="recent_transaction_of_this_month">Recent Transaction Of This Month</string>
+    <string name="balance_of_this_year">Balance Of This Year</string>
+    <string name="recent_transaction_of_this_year">Recent Transaction Of This Year</string>
+    <string name="analysis_of_this_year">Analysis Of This Year</string>
+    <string name="all_time">All Time</string>
 
     <string-array name="months">
         <item>JAN</item>
