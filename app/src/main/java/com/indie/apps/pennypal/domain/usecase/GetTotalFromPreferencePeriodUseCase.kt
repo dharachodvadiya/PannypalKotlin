@@ -41,12 +41,12 @@ class GetTotalFromPreferencePeriodUseCase @Inject constructor(
 
             ShowDataPeriod.ALL_TIME ->
                 merchantDataRepository
-                    .getTotalFromMonth(Util.TIME_ZONE_OFFSET_IN_MILLI, 0)
+                    .getTotal()
                     .map { it?.toTotalWithCurrency() }
 
             null ->
                 merchantDataRepository
-                    .getTotalFromMonth(Util.TIME_ZONE_OFFSET_IN_MILLI, 0)
+                    .getTotal()
                     .map { it?.toTotalWithCurrency() }
         }
 

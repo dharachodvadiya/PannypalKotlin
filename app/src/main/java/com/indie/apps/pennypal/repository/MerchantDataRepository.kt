@@ -7,8 +7,10 @@ import com.indie.apps.pennypal.data.module.MerchantDataWithAllData
 import com.indie.apps.pennypal.data.module.MerchantDataWithName
 import com.indie.apps.pennypal.data.module.MerchantDataWithNameWithDayTotal
 import com.indie.apps.pennypal.data.module.MerchantDataWithPaymentName
+import com.indie.apps.pennypal.data.module.balance.TotalAllTime
 import com.indie.apps.pennypal.data.module.balance.TotalMonthly
 import com.indie.apps.pennypal.data.module.balance.TotalYearly
+import com.indie.apps.pennypal.data.module.category.CategoryAllTime
 import com.indie.apps.pennypal.data.module.category.CategoryAmount
 import com.indie.apps.pennypal.data.module.category.CategoryMonthly
 import com.indie.apps.pennypal.data.module.category.CategoryYearly
@@ -62,10 +64,15 @@ interface MerchantDataRepository : BaseRepository<MerchantData> {
 
     fun getTotalFromYear(timeZoneOffsetInMilli: Int, offset: Int): Flow<TotalYearly?>
 
+    fun getTotal(): Flow<TotalAllTime?>
+
     fun getCategoryWiseExpenseFromMonth(
         timeZoneOffsetInMilli: Int,
         monthOffset: Int
     ): Flow<List<CategoryMonthly>>
+
+    fun getCategoryWiseExpense(
+    ): Flow<List<CategoryAllTime>>
 
     fun getCategoryWiseExpenseFromYear(
         timeZoneOffsetInMilli: Int,

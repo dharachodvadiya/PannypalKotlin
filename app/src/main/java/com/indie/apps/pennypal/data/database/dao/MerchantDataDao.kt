@@ -10,8 +10,10 @@ import com.indie.apps.pennypal.data.module.MerchantDataWithAllData
 import com.indie.apps.pennypal.data.module.MerchantDataWithName
 import com.indie.apps.pennypal.data.module.MerchantDataWithNameWithDayTotal
 import com.indie.apps.pennypal.data.module.MerchantDataWithPaymentName
+import com.indie.apps.pennypal.data.module.balance.TotalAllTime
 import com.indie.apps.pennypal.data.module.balance.TotalMonthly
 import com.indie.apps.pennypal.data.module.balance.TotalYearly
+import com.indie.apps.pennypal.data.module.category.CategoryAllTime
 import com.indie.apps.pennypal.data.module.category.CategoryAmount
 import com.indie.apps.pennypal.data.module.category.CategoryMonthly
 import com.indie.apps.pennypal.data.module.category.CategoryYearly
@@ -338,6 +340,20 @@ interface MerchantDataDao : BaseDao<MerchantData> {
 
     @Query(
         """
+        SELECT
+            IFNULL(SUM(CASE WHEN m.type >= 0 THEN m.amount ELSE 0 END), 0) AS totalIncome,
+            IFNULL(SUM(CASE WHEN m.type < 0 THEN m.amount ELSE 0 END), 0) AS totalExpense,
+            u.currency
+        FROM 
+            merchant_data m
+        JOIN 
+            user u ON u.id = 1
+    """
+    )
+    fun getTotal(): Flow<TotalAllTime>
+
+    @Query(
+        """
         SELECT 
             c.id AS id,
             strftime('%Y-%m', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') as month,
@@ -393,6 +409,30 @@ interface MerchantDataDao : BaseDao<MerchantData> {
         timeZoneOffsetInMilli: Int,
         yearOffset: Int
     ): Flow<List<CategoryYearly>>
+
+    @Query(
+        """
+        SELECT 
+            c.id AS id,
+            c.name AS name,
+            c.type As type,
+            c.icon_id As iconId,
+            c.icon_color_id As iconColorId,
+            SUM(CASE WHEN md.type = -1 THEN md.amount ELSE 0 END) AS amount
+        FROM 
+            merchant_data md
+        JOIN 
+            category c ON md.category_id = c.id
+        WHERE 
+            c.type != 1
+        GROUP BY 
+            c.name
+        ORDER BY 
+            amount DESC
+    """
+    )
+
+    fun getCategoryWiseExpense(): Flow<List<CategoryAllTime>>
 
     @Query(
         """

@@ -44,12 +44,12 @@ class GetCategoryWiseExpenseFromPreferencePeriodUseCase @Inject constructor(
 
             ShowDataPeriod.ALL_TIME ->
                 merchantDataRepository
-                    .getCategoryWiseExpenseFromMonth(Util.TIME_ZONE_OFFSET_IN_MILLI, 0)
+                    .getCategoryWiseExpense()
                     .map { it.map { item -> item.toCategoryAmount() } }
 
             null ->
                 merchantDataRepository
-                    .getCategoryWiseExpenseFromMonth(Util.TIME_ZONE_OFFSET_IN_MILLI, 0)
+                    .getCategoryWiseExpense()
                     .map { it.map { item -> item.toCategoryAmount() } }
 
         }

@@ -84,10 +84,15 @@ class MerchantDataRepositoryImpl @Inject constructor(
         timeZoneOffsetInMilli: Int, offset: Int
     ) = merchantDataDao.getTotalFromYear(timeZoneOffsetInMilli, offset).flowOn(dispatcher)
 
+    override fun getTotal() = merchantDataDao.getTotal()
+
     override fun getCategoryWiseExpenseFromMonth(
         timeZoneOffsetInMilli: Int, monthOffset: Int
     ) = merchantDataDao.getCategoryWiseExpenseFromMonth(timeZoneOffsetInMilli, monthOffset)
         .flowOn(dispatcher)
+
+    override fun getCategoryWiseExpense() =
+        merchantDataDao.getCategoryWiseExpense().flowOn(dispatcher)
 
     override fun getCategoryWiseExpenseFromYear(
         timeZoneOffsetInMilli: Int, yearOffset: Int
