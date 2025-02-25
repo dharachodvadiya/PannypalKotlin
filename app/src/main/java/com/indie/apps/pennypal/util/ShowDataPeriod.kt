@@ -1,6 +1,7 @@
 package com.indie.apps.pennypal.util
 
 import com.indie.apps.pennypal.R
+import com.indie.apps.pennypal.data.database.enum.AnalysisPeriod
 
 enum class ShowDataPeriod(
     val title: Int,
@@ -16,5 +17,13 @@ enum class ShowDataPeriod(
         fun fromIndex(index: Int): ShowDataPeriod? {
             return entries.find { it.index == index }
         }
+    }
+}
+
+fun ShowDataPeriod.toAnalysisPeriod(): AnalysisPeriod {
+    return when (this) {
+        ShowDataPeriod.THIS_MONTH -> AnalysisPeriod.MONTH
+        ShowDataPeriod.THIS_YEAR -> AnalysisPeriod.YEAR
+        ShowDataPeriod.ALL_TIME -> AnalysisPeriod.MONTH
     }
 }

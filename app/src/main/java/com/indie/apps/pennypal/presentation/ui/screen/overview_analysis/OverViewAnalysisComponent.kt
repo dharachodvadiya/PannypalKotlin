@@ -1,9 +1,15 @@
 package com.indie.apps.pennypal.presentation.ui.screen.overview_analysis
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -14,9 +20,14 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.indie.apps.pennypal.R
+import com.indie.apps.pennypal.data.database.enum.AnalysisPeriod
 import com.indie.apps.pennypal.data.module.ChartData
+import com.indie.apps.pennypal.data.module.TabItemInfo
 import com.indie.apps.pennypal.data.module.category.CategoryAmount
 import com.indie.apps.pennypal.presentation.ui.component.chart.PieChart
+import com.indie.apps.pennypal.presentation.ui.component.clickableWithNoRipple
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomTab
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListItem
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
@@ -24,6 +35,114 @@ import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.util.getCategoryColorById
 import com.indie.apps.pennypal.util.getCategoryIconById
+import kotlin.enums.EnumEntries
+
+@Composable
+fun AnalysisTopSelectionButton(
+    list: EnumEntries<AnalysisPeriod>,
+    selectedPeriod: AnalysisPeriod,
+    onSelect: (AnalysisPeriod) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+
+    val tabItems = list.map { period ->
+        TabItemInfo(
+            title = when (period) {
+                AnalysisPeriod.MONTH -> R.string.month
+                AnalysisPeriod.YEAR -> R.string.year
+            },
+            selectBgColor = MyAppTheme.colors.itemSelectedBg,
+            unSelectBgColor = MyAppTheme.colors.itemBg,
+            selectContentColor = MyAppTheme.colors.black,
+            unSelectContentColor = MyAppTheme.colors.gray1
+        )
+    }
+
+    Row(
+        modifier = modifier, horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        CustomTab(tabList = tabItems,
+            selectedIndex = list.indexOf(selectedPeriod),
+            onTabSelected = {
+                onSelect(list[it])
+            })
+
+    }
+
+}
+
+@Composable
+fun AnalysisMonthYearSelection(
+    onPreviousClick: () -> Unit,
+    onNextClick: () -> Unit,
+    onTextClick: () -> Unit,
+    textYearMonth: String,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+
+        /*Icon(
+            modifier = Modifier
+                .size(35.dp)
+                .clickableWithNoRipple {
+                    onPreviousClick()
+                },
+            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+            contentDescription = "previous",
+            tint = MyAppTheme.colors.black
+        )*/
+
+        RoundImage(
+            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+            backGround = MyAppTheme.colors.itemBg,
+            tint = MyAppTheme.colors.black,
+            contentDescription = "previous",
+            innerPadding = 5.dp,
+            modifier = Modifier
+                .clickableWithNoRipple {
+                    onPreviousClick()
+                },
+        )
+
+        CustomText(
+            modifier = Modifier
+                .clickableWithNoRipple { onTextClick() }
+                .padding(horizontal = 20.dp),
+            text = textYearMonth,
+            textAlign = TextAlign.Center,
+            color = MyAppTheme.colors.black
+        )
+
+        /* Icon(
+             modifier = Modifier
+                 .size(35.dp)
+                 .clickableWithNoRipple {
+                     onNextClick()
+                 },
+             imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+             contentDescription = "next",
+             tint = MyAppTheme.colors.black
+         )*/
+
+        RoundImage(
+            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+            backGround = MyAppTheme.colors.itemBg,
+            tint = MyAppTheme.colors.black,
+            contentDescription = "previous",
+            innerPadding = 5.dp,
+            modifier = Modifier
+
+                .clickableWithNoRipple {
+                    onNextClick()
+                },
+        )
+
+    }
+}
 
 
 @Composable
