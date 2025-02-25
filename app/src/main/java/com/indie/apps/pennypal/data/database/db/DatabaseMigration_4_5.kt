@@ -10,8 +10,8 @@ class Migration4to5 : Migration(4, 5) {
     }
 
     private fun updateCategoryTable(database: SupportSQLiteDatabase) {
-        database.execSQL("ALTER TABLE category ADD COLUMN icon_id INTEGER NOT NULL DEFAULT 1")
-        database.execSQL("ALTER TABLE category ADD COLUMN icon_color_id INTEGER NOT NULL DEFAULT 1")
+        //database.execSQL("ALTER TABLE category ADD COLUMN icon_id INTEGER NOT NULL DEFAULT 1")
+        //database.execSQL("ALTER TABLE category ADD COLUMN icon_color_id INTEGER NOT NULL DEFAULT 1")
 
         database.execSQL(
             """
@@ -28,30 +28,39 @@ class Migration4to5 : Migration(4, 5) {
         )
         database.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_category_name` ON `category_new` (`name`)")
 
-        // Step 2: Copy existing data into new table
+        /* // Step 2: Copy existing data into new table
+         database.execSQL(
+             """
+             INSERT INTO category_new (id, name, pre_added, soft_delete, type)
+             SELECT id, name, pre_added, soft_delete, type FROM category
+         """
+         )*/
+
         database.execSQL(
             """
             INSERT INTO category_new (id, name, pre_added, soft_delete, type, icon_id, icon_color_id)
-            SELECT id, name, pre_added, soft_delete, type, icon_id, icon_color_id FROM category
-        """.trimIndent()
+            SELECT id, name, pre_added, soft_delete, type, 1, 1 FROM category
+        """
         )
+
 
         // Step 3: Drop old table
         database.execSQL("DROP TABLE category")
 
         // Step 4: Rename new table to old table name
         database.execSQL("ALTER TABLE category_new RENAME TO category")
-        database.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_category_name` ON `category` (`name`)")
-
 
         updatePopulatedCategory(database)
 
     }
 
     private fun updatePopulatedCategory(database: SupportSQLiteDatabase) {
-        for (id in 1..16) {
+        /*for (id in 1..16) {
             database.execSQL("UPDATE category SET icon_id = $id, icon_color_id = $id WHERE id = $id;")
-        }
+        }*/
+
+        database.execSQL("UPDATE category SET icon_id = id, icon_color_id = id WHERE id BETWEEN 1 AND 16")
+
     }
 
     private fun updateMerchantTable(database: SupportSQLiteDatabase) {

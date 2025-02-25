@@ -57,7 +57,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun budgetDao(): BudgetDao
     abstract fun budgetCategoryDao(): BudgetCategoryDao
 
-    fun migrateDatabaseIfNeeded(context: Context, countryRepository: CountryRepository) {
+   /* fun migrateDatabaseIfNeeded(context: Context, countryRepository: CountryRepository) {
 
         val currentDbVersion = getCurrentDatabaseVersion(context)
         val requiredDbVersion = Util.DB_VERSION // The current version of the database schema
@@ -67,7 +67,7 @@ abstract class AppDatabase : RoomDatabase() {
             // Triggering a migration if necessary (e.g., after restoring an old version of the DB)
             db.openHelper.writableDatabase // Accessing the database triggers migration if required
         }
-    }
+    }*/
 
     companion object {
         @Volatile
@@ -85,11 +85,13 @@ abstract class AppDatabase : RoomDatabase() {
             synchronized(this) {
                 INSTANCE?.close() // Close the current instance before replacing it
                 INSTANCE = buildDatabase(context, countryRepository)
+                INSTANCE?.openHelper?.writableDatabase
             }
         }
 
         private fun buildDatabase(context: Context, countryRepository: CountryRepository): AppDatabase {
-            return getDbBuilder(context)
+            val builder = getDbBuilder(context)
+            return builder
                 .addMigrations(Migration1to2(countryRepository))
                 .addMigrations(Migration2to3())
                 .addMigrations(Migration3to4())
@@ -106,10 +108,10 @@ abstract class AppDatabase : RoomDatabase() {
             )
         }
 
-        private fun getCurrentDatabaseVersion(context: Context): Int {
-            val db = getDbBuilder(context).build()
-            return db.openHelper.readableDatabase.version
-        }
+        /* private fun getCurrentDatabaseVersion(context: Context): Int {
+             val db = getDbBuilder(context).build()
+             return db.openHelper.readableDatabase.version
+         }*/
 
         private class Callback(private val countryRepository: CountryRepository) :
             RoomDatabase.Callback() {
