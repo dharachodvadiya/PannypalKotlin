@@ -4,38 +4,73 @@ import android.icu.util.Calendar
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.indie.apps.pennypal.data.database.enum.AnalysisPeriod
-import com.indie.apps.pennypal.domain.usecase.GetCategoryWiseExpenseFromPreferencePeriodUseCase
+import com.indie.apps.pennypal.data.database.enum.toShowDataPeriod
+import com.indie.apps.pennypal.domain.usecase.GetCategoryWiseExpenseUseCase
 import com.indie.apps.pennypal.repository.PreferenceRepository
+import com.indie.apps.pennypal.util.Resource
 import com.indie.apps.pennypal.util.ShowDataPeriod
 import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.util.toAnalysisPeriod
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
 class OverViewAnalysisViewModel @Inject constructor(
-    getCategoryWiseExpenseFromPreferencePeriodUseCase: GetCategoryWiseExpenseFromPreferencePeriodUseCase,
+    getCategoryWiseExpenseUseCase: GetCategoryWiseExpenseUseCase,
     preferenceRepository: PreferenceRepository,
 ) : ViewModel() {
-
-    val categoryExpense = getCategoryWiseExpenseFromPreferencePeriodUseCase
-        .loadData()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
-
     private val periodIndex = preferenceRepository.getInt(Util.PREF_BALANCE_VIEW, 1)
-    val currentPeriod = MutableStateFlow(
-        ShowDataPeriod.fromIndex(periodIndex)?.toAnalysisPeriod() ?: AnalysisPeriod.MONTH
-    )
+
     val currentMonthInMilli = MutableStateFlow(Calendar.getInstance().timeInMillis)
     val currentYearInMilli = MutableStateFlow(Calendar.getInstance().timeInMillis)
 
+    val currentPeriod = MutableStateFlow(
+        ShowDataPeriod.fromIndex(periodIndex)?.toAnalysisPeriod() ?: AnalysisPeriod.MONTH
+    )
+
+    private val trigger = MutableSharedFlow<Unit>(replay = 1)
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val categoryExpense = trigger
+        .flatMapLatest {
+            val calendar = Calendar.getInstance().apply {
+                timeInMillis = when (currentPeriod.value) {
+                    AnalysisPeriod.YEAR -> currentYearInMilli.value
+                    AnalysisPeriod.MONTH -> currentMonthInMilli.value
+                }
+            }
+            getCategoryWiseExpenseUseCase
+                .loadData(
+                    year = calendar.get(java.util.Calendar.YEAR),
+                    month = calendar.get(java.util.Calendar.MONTH),
+                    currentPeriod.value.toShowDataPeriod()
+                )
+        }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), Resource.Loading())
+
+
+    init {
+        loadData()
+    }
+
+    fun loadData() {
+        viewModelScope.launch {
+            trigger.emit(Unit)
+        }
+    }
+
     fun setCurrentPeriod(period: AnalysisPeriod) {
         currentPeriod.value = period
+        loadData()
     }
 
     fun onPreviousClick() {
@@ -56,6 +91,7 @@ class OverViewAnalysisViewModel @Inject constructor(
                 currentYearInMilli.value = calendar.timeInMillis
             }
         }
+        loadData()
     }
 
     fun onNextClick() {
@@ -76,6 +112,7 @@ class OverViewAnalysisViewModel @Inject constructor(
                 currentYearInMilli.value = calendar.timeInMillis
             }
         }
+        loadData()
     }
 
     fun formatDateForDisplay(period: AnalysisPeriod, timeInMillis1: Long): String {

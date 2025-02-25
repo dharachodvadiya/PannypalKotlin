@@ -28,8 +28,10 @@ import com.indie.apps.pennypal.presentation.ui.component.TopBarWithTitle
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomMonthPickerDialog
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomYearPickerDialog
+import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
+import com.indie.apps.pennypal.util.Resource
 import java.util.Calendar
 
 @SuppressLint("StateFlowValueCalledInComposition")
@@ -42,7 +44,7 @@ fun OverViewAnalysisScreen(
     val currentPeriod by viewModel.currentPeriod.collectAsStateWithLifecycle()
     val currentYearInMilli by viewModel.currentYearInMilli.collectAsStateWithLifecycle()
     val currentMonthInMilli by viewModel.currentMonthInMilli.collectAsStateWithLifecycle()
-    val currentMonthCategory by viewModel.categoryExpense.collectAsStateWithLifecycle()
+    val categoryExpense by viewModel.categoryExpense.collectAsStateWithLifecycle()
     var openYearDialog by remember { mutableStateOf(false) }
     var openMonthDialog by remember { mutableStateOf(false) }
     val title = stringResource(id = R.string.analysis)
@@ -93,9 +95,20 @@ fun OverViewAnalysisScreen(
                 }
             )
             //PeriodText(currentPeriod?.let { stringResource(currentPeriod!!.title) } ?: "")
-            OverViewAnalysisCategoryChart(
-                categoryList = currentMonthCategory
-            )
+
+            when (categoryExpense) {
+                is Resource.Error -> {
+                    LoadingWithProgress()
+                }
+                is Resource.Loading -> {
+                    LoadingWithProgress()
+                }
+
+                is Resource.Success -> OverViewAnalysisCategoryChart(
+                    categoryList = categoryExpense.data ?: emptyList()
+                )
+            }
+
 
         }
     }

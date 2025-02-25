@@ -367,7 +367,8 @@ interface MerchantDataDao : BaseDao<MerchantData> {
         JOIN 
             category c ON md.category_id = c.id
         WHERE 
-            strftime('%Y-%m', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = strftime('%Y-%m', 'now', '-' || :monthOffset || ' months')
+             strftime('%Y', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = :year
+            AND strftime('%m', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = printf('%02d', :monthPlusOne)
             AND c.type != 1
         GROUP BY 
             month, c.name
@@ -376,10 +377,43 @@ interface MerchantDataDao : BaseDao<MerchantData> {
     """
     )
 
-    fun getCategoryWiseExpenseFromMonth(
+    fun getCategoryWiseExpenseFromMonthAsFlow(
         timeZoneOffsetInMilli: Int,
-        monthOffset: Int
+        year: String,
+        monthPlusOne: String
     ): Flow<List<CategoryMonthly>>
+
+    @Transaction
+    @Query(
+        """
+        SELECT 
+            c.id AS id,
+            strftime('%Y-%m', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') as month,
+            c.name AS name,
+            c.type As type,
+            c.icon_id As iconId,
+            c.icon_color_id As iconColorId,
+            SUM(CASE WHEN md.type = -1 THEN md.amount ELSE 0 END) AS amount
+        FROM 
+            merchant_data md
+        JOIN 
+            category c ON md.category_id = c.id
+        WHERE 
+             strftime('%Y', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = :year
+            AND strftime('%m', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = printf('%02d', :monthPlusOne)
+            AND c.type != 1
+        GROUP BY 
+            month, c.name
+        ORDER BY 
+            amount DESC
+    """
+    )
+
+    suspend fun getCategoryWiseExpenseFromMonth(
+        timeZoneOffsetInMilli: Int,
+        year: String,
+        monthPlusOne: String
+    ): List<CategoryMonthly>
 
     @Query(
         """
@@ -396,7 +430,7 @@ interface MerchantDataDao : BaseDao<MerchantData> {
         JOIN 
             category c ON md.category_id = c.id
         WHERE 
-            strftime('%Y', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = strftime('%Y', 'now', '-' || :yearOffset || ' years')
+            strftime('%Y', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = :year
             AND c.type != 1
         GROUP BY 
             year, c.name
@@ -405,10 +439,40 @@ interface MerchantDataDao : BaseDao<MerchantData> {
     """
     )
 
-    fun getCategoryWiseExpenseFromYear(
+    fun getCategoryWiseExpenseFromYearAsFlow(
         timeZoneOffsetInMilli: Int,
-        yearOffset: Int
+        year: String
     ): Flow<List<CategoryYearly>>
+
+    @Transaction
+    @Query(
+        """
+        SELECT 
+            c.id AS id,
+            strftime('%Y', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') AS year,
+            c.name AS name,
+            c.type As type,
+            c.icon_id As iconId,
+            c.icon_color_id As iconColorId,
+            SUM(CASE WHEN md.type = -1 THEN md.amount ELSE 0 END) AS amount
+        FROM 
+            merchant_data md
+        JOIN 
+            category c ON md.category_id = c.id
+        WHERE 
+            strftime('%Y', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = :year
+            AND c.type != 1
+        GROUP BY 
+            year, c.name
+        ORDER BY 
+            amount DESC
+    """
+    )
+
+    suspend fun getCategoryWiseExpenseFromYear(
+        timeZoneOffsetInMilli: Int,
+        year: String
+    ): List<CategoryYearly>
 
     @Query(
         """
@@ -432,7 +496,32 @@ interface MerchantDataDao : BaseDao<MerchantData> {
     """
     )
 
-    fun getCategoryWiseExpense(): Flow<List<CategoryAllTime>>
+    fun getCategoryWiseExpenseAsFlow(): Flow<List<CategoryAllTime>>
+
+    @Transaction
+    @Query(
+        """
+        SELECT 
+            c.id AS id,
+            c.name AS name,
+            c.type As type,
+            c.icon_id As iconId,
+            c.icon_color_id As iconColorId,
+            SUM(CASE WHEN md.type = -1 THEN md.amount ELSE 0 END) AS amount
+        FROM 
+            merchant_data md
+        JOIN 
+            category c ON md.category_id = c.id
+        WHERE 
+            c.type != 1
+        GROUP BY 
+            c.name
+        ORDER BY 
+            amount DESC
+    """
+    )
+
+    suspend fun getCategoryWiseExpense(): List<CategoryAllTime>
 
     @Query(
         """

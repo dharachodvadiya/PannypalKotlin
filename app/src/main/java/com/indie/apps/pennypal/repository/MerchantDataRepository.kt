@@ -66,18 +66,33 @@ interface MerchantDataRepository : BaseRepository<MerchantData> {
 
     fun getTotal(): Flow<TotalAllTime?>
 
-    fun getCategoryWiseExpenseFromMonth(
+    fun getCategoryWiseExpenseFromMonthAsFlow(
         timeZoneOffsetInMilli: Int,
-        monthOffset: Int
+        year: Int,
+        monthPlusOne: Int,
     ): Flow<List<CategoryMonthly>>
 
-    fun getCategoryWiseExpense(
+    suspend fun getCategoryWiseExpenseFromMonth(
+        timeZoneOffsetInMilli: Int,
+        year: Int,
+        monthPlusOne: Int,
+    ): List<CategoryMonthly>
+
+    fun getCategoryWiseExpenseAsFlow(
     ): Flow<List<CategoryAllTime>>
 
-    fun getCategoryWiseExpenseFromYear(
+    suspend fun getCategoryWiseExpense(
+    ): List<CategoryAllTime>
+
+    fun getCategoryWiseExpenseFromYearAsFlow(
         timeZoneOffsetInMilli: Int,
-        yearOffset: Int
+        year: Int
     ): Flow<List<CategoryYearly>>
+
+    suspend fun getCategoryWiseExpenseFromYear(
+        timeZoneOffsetInMilli: Int,
+        year: Int
+    ): List<CategoryYearly>
 
     suspend fun getTotalAmountForMonthAndCategory(
         timeZoneOffsetInMilli: Int,

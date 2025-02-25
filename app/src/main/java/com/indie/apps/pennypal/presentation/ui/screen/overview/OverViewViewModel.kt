@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.indie.apps.cpp.data.repository.CountryRepository
-import com.indie.apps.pennypal.domain.usecase.GetCategoryWiseExpenseFromPreferencePeriodUseCase
+import com.indie.apps.pennypal.domain.usecase.GetCategoryWiseExpenseUseCase
 import com.indie.apps.pennypal.domain.usecase.GetTotalFromPreferencePeriodUseCase
 import com.indie.apps.pennypal.domain.usecase.SearchMerchantDataWithAllDataListUseCase
 import com.indie.apps.pennypal.domain.usecase.SearchMerchantNameAndDetailListUseCase
@@ -29,7 +29,7 @@ class OverViewViewModel @Inject constructor(
     getTotalFromPreferencePeriodUseCase: GetTotalFromPreferencePeriodUseCase,
     searchMerchantDataWithAllDataListUseCase: SearchMerchantDataWithAllDataListUseCase,
     searchMerchantNameAndDetailListUseCase: SearchMerchantNameAndDetailListUseCase,
-    getCategoryWiseExpenseFromPreferencePeriodUseCase: GetCategoryWiseExpenseFromPreferencePeriodUseCase,
+    getCategoryWiseExpenseUseCase: GetCategoryWiseExpenseUseCase,
     preferenceRepository: PreferenceRepository,
     budgetRepository: BudgetRepository,
     private val billingRepository: BillingRepository,
@@ -59,6 +59,11 @@ class OverViewViewModel @Inject constructor(
     var merchantDataWithDayPagingState =
         MutableStateFlow(PagingState<MerchantDataWithNameWithDayTotal>())*/
 
+    private val periodIndex = preferenceRepository.getInt(Util.PREF_BALANCE_VIEW, 1)
+    val currentPeriod = MutableStateFlow(ShowDataPeriod.fromIndex(periodIndex))
+
+    private val calendar: Calendar = Calendar.getInstance()
+
     val recentTransaction = searchMerchantDataWithAllDataListUseCase
         .getLast3DataFromPeriod()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
@@ -67,11 +72,14 @@ class OverViewViewModel @Inject constructor(
         .getLast3Data()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
 
-    val monthlyCategoryExpense = getCategoryWiseExpenseFromPreferencePeriodUseCase
-        .loadData()
+    val monthlyCategoryExpense = getCategoryWiseExpenseUseCase
+        .loadDataAsFlow(
+            year = calendar.get(Calendar.YEAR),
+            month = calendar.get(Calendar.MONTH),
+            currentPeriod.value ?: ShowDataPeriod.THIS_MONTH
+        )
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
 
-    private val calendar: Calendar = Calendar.getInstance()
 
     val budgetState = budgetRepository.getBudgetsAndSpentWithCategoryIdListFromMonth(
         year = calendar.get(Calendar.YEAR),
@@ -79,8 +87,6 @@ class OverViewViewModel @Inject constructor(
         timeZoneOffsetInMilli = Util.TIME_ZONE_OFFSET_IN_MILLI
     ).stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
 
-    private val periodIndex = preferenceRepository.getInt(Util.PREF_BALANCE_VIEW, 1)
-    val currentPeriod = MutableStateFlow(ShowDataPeriod.fromIndex(periodIndex))
 
     val isSubscribed = MutableStateFlow(billingRepository.getSubscription())
 

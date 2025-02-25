@@ -86,18 +86,42 @@ class MerchantDataRepositoryImpl @Inject constructor(
 
     override fun getTotal() = merchantDataDao.getTotal()
 
-    override fun getCategoryWiseExpenseFromMonth(
-        timeZoneOffsetInMilli: Int, monthOffset: Int
-    ) = merchantDataDao.getCategoryWiseExpenseFromMonth(timeZoneOffsetInMilli, monthOffset)
+    override fun getCategoryWiseExpenseFromMonthAsFlow(
+        timeZoneOffsetInMilli: Int,
+        year: Int,
+        monthPlusOne: Int,
+    ) = merchantDataDao.getCategoryWiseExpenseFromMonthAsFlow(
+        timeZoneOffsetInMilli = timeZoneOffsetInMilli,
+        year = year.toString(),
+        monthPlusOne = monthPlusOne.toString()
+    )
         .flowOn(dispatcher)
 
-    override fun getCategoryWiseExpense() =
-        merchantDataDao.getCategoryWiseExpense().flowOn(dispatcher)
+    override suspend fun getCategoryWiseExpenseFromMonth(
+        timeZoneOffsetInMilli: Int,
+        year: Int,
+        monthPlusOne: Int
+    ) = merchantDataDao.getCategoryWiseExpenseFromMonth(
+        timeZoneOffsetInMilli = timeZoneOffsetInMilli,
+        year = year.toString(),
+        monthPlusOne = monthPlusOne.toString()
+    )
 
-    override fun getCategoryWiseExpenseFromYear(
-        timeZoneOffsetInMilli: Int, yearOffset: Int
-    ) = merchantDataDao.getCategoryWiseExpenseFromYear(timeZoneOffsetInMilli, yearOffset)
+    override fun getCategoryWiseExpenseAsFlow() =
+        merchantDataDao.getCategoryWiseExpenseAsFlow().flowOn(dispatcher)
+
+    override suspend fun getCategoryWiseExpense() =
+        merchantDataDao.getCategoryWiseExpense()
+
+    override fun getCategoryWiseExpenseFromYearAsFlow(
+        timeZoneOffsetInMilli: Int, year: Int
+    ) = merchantDataDao.getCategoryWiseExpenseFromYearAsFlow(timeZoneOffsetInMilli, year.toString())
         .flowOn(dispatcher)
+
+    override suspend fun getCategoryWiseExpenseFromYear(
+        timeZoneOffsetInMilli: Int,
+        year: Int
+    ) = merchantDataDao.getCategoryWiseExpenseFromYear(timeZoneOffsetInMilli, year.toString())
 
     override suspend fun getTotalAmountForMonthAndCategory(
         timeZoneOffsetInMilli: Int, year: Int, monthPlusOne: Int, categoryIds: List<Long>
