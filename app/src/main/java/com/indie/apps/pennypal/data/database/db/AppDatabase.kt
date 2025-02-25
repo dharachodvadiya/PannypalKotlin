@@ -63,7 +63,7 @@ abstract class AppDatabase : RoomDatabase() {
         val requiredDbVersion = Util.DB_VERSION // The current version of the database schema
 
         if (currentDbVersion < requiredDbVersion) {
-            val db = migrateDb(context, countryRepository)
+            val db = buildDatabase(context, countryRepository)
             // Triggering a migration if necessary (e.g., after restoring an old version of the DB)
             db.openHelper.writableDatabase // Accessing the database triggers migration if required
         }
@@ -75,13 +75,20 @@ abstract class AppDatabase : RoomDatabase() {
 
         fun getInstance(context: Context, countryRepository: CountryRepository): AppDatabase {
             synchronized(this) {
-                return INSTANCE ?: migrateDb(context, countryRepository).also {
+                return INSTANCE ?: buildDatabase(context, countryRepository).also {
                     INSTANCE = it
                 }
             }
         }
 
-        private fun migrateDb(context: Context, countryRepository: CountryRepository): AppDatabase {
+        fun resetDatabaseInstance(context: Context, countryRepository: CountryRepository) {
+            synchronized(this) {
+                INSTANCE?.close() // Close the current instance before replacing it
+                INSTANCE = buildDatabase(context, countryRepository)
+            }
+        }
+
+        private fun buildDatabase(context: Context, countryRepository: CountryRepository): AppDatabase {
             return getDbBuilder(context)
                 .addMigrations(Migration1to2(countryRepository))
                 .addMigrations(Migration2to3())

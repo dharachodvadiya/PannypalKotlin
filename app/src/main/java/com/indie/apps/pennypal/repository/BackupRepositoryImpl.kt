@@ -85,7 +85,8 @@ class BackupRepositoryImpl @Inject constructor(
 
                     //db Migration After Restore
 
-                    appDatabase.migrateDatabaseIfNeeded(context, countryRepository)
+                    //appDatabase.migrateDatabaseIfNeeded(context, countryRepository)
+                    AppDatabase.resetDatabaseInstance(context, countryRepository)
                     return
                 }
             }
