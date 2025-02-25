@@ -24,6 +24,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.database.enum.AnalysisPeriod
+import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
 import com.indie.apps.pennypal.presentation.ui.component.TopBarWithTitle
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomMonthPickerDialog
@@ -60,15 +61,15 @@ fun OverViewAnalysisScreen(
         }
     ) { innerPadding ->
 
-        val scrollState = rememberScrollState()
+        //val scrollState = rememberScrollState()
 
         Column(
             modifier = modifier
                 .fillMaxSize()
                 .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
                 .padding(innerPadding)
-                .padding(horizontal = dimensionResource(id = R.dimen.padding))
-                .verticalScroll(scrollState),
+                .padding(horizontal = dimensionResource(id = R.dimen.padding)),
+            // .verticalScroll(scrollState),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
@@ -98,15 +99,40 @@ fun OverViewAnalysisScreen(
 
             when (categoryExpense) {
                 is Resource.Error -> {
-                    LoadingWithProgress()
+
                 }
+
                 is Resource.Loading -> {
                     LoadingWithProgress()
                 }
 
-                is Resource.Success -> OverViewAnalysisCategoryChart(
-                    categoryList = categoryExpense.data ?: emptyList()
-                )
+                is Resource.Success -> {
+
+                    val scrollState = rememberScrollState()
+                    val dataList = categoryExpense.data ?: emptyList()
+
+                    if (dataList.isEmpty()) {
+                        NoDataMessage(
+                            title = stringResource(id = R.string.no_transaction),
+                            details = "",
+                            iconSize = 70.dp
+                        )
+                    } else {
+
+                        Column(
+                            modifier = modifier
+                                .fillMaxSize()
+                                .padding(horizontal = dimensionResource(id = R.dimen.padding))
+                                .verticalScroll(scrollState),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(20.dp)
+                        ) {
+                            OverViewAnalysisCategoryChart(
+                                categoryList = dataList
+                            )
+                        }
+                    }
+                }
             }
 
 
