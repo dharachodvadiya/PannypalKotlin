@@ -135,14 +135,14 @@ interface MerchantDataDao : BaseDao<MerchantData> {
         LEFT JOIN merchant m ON md.merchant_id = m.id
         INNER JOIN category c ON md.category_id = c.id
         INNER JOIN payment_type p ON md.payment_id = p.id
-        WHERE strftime('%Y-%m', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = strftime('%Y-%m', 'now', '-' || :monthOffset || ' months')
+        WHERE strftime('%m', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = printf('%02d', :monthPlusOne)
         ORDER BY md.date_milli DESC LIMIT 3
     """
     )
 
     fun getRecentMerchantsDataWithAllDataListFromMonth(
         timeZoneOffsetInMilli: Int,
-        monthOffset: Int
+        monthPlusOne: String
     ): Flow<List<MerchantDataWithAllData>>
 
     @Transaction
@@ -165,14 +165,14 @@ interface MerchantDataDao : BaseDao<MerchantData> {
         LEFT JOIN merchant m ON md.merchant_id = m.id
         INNER JOIN category c ON md.category_id = c.id
         INNER JOIN payment_type p ON md.payment_id = p.id
-        WHERE strftime('%Y', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = strftime('%Y', 'now', '-' || :yearOffset || ' years')
+        WHERE  strftime('%Y', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = :year
         ORDER BY md.date_milli DESC LIMIT 3
     """
     )
 
     fun getRecentMerchantsDataWithAllDataListFromYear(
         timeZoneOffsetInMilli: Int,
-        yearOffset: Int
+        year: String
     ): Flow<List<MerchantDataWithAllData>>
 
     @Transaction
@@ -347,7 +347,7 @@ interface MerchantDataDao : BaseDao<MerchantData> {
         timeZoneOffsetInMilli: Int,
         year: String,
         monthPlusOne: String
-    ):TotalMonthly
+    ): TotalMonthly
 
     @Query(
         """

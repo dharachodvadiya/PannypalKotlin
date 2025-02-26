@@ -33,7 +33,10 @@ class SearchMerchantDataWithAllDataListUseCase @Inject constructor(
             .flowOn(dispatcher)
     }
 
-    fun getLast3DataFromPeriod(): Flow<List<MerchantDataWithAllData>> {
+    fun getLast3DataFromPeriod(
+        year: Int,
+        month: Int
+    ): Flow<List<MerchantDataWithAllData>> {
 
         val balanceViewValue = ShowDataPeriod.fromIndex(
             preferenceRepository.getInt(
@@ -46,13 +49,13 @@ class SearchMerchantDataWithAllDataListUseCase @Inject constructor(
             ShowDataPeriod.THIS_MONTH ->
                 merchantDataRepository.getRecentMerchantsDataWithAllDataListFromMonth(
                     Util.TIME_ZONE_OFFSET_IN_MILLI,
-                    0
+                    month
                 )
 
             ShowDataPeriod.THIS_YEAR ->
                 merchantDataRepository.getRecentMerchantsDataWithAllDataListFromYear(
                     Util.TIME_ZONE_OFFSET_IN_MILLI,
-                    0
+                    year
                 )
 
             ShowDataPeriod.ALL_TIME ->

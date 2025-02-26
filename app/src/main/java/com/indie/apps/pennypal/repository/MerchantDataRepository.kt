@@ -41,12 +41,12 @@ interface MerchantDataRepository : BaseRepository<MerchantData> {
 
     fun getRecentMerchantsDataWithAllDataListFromMonth(
         timeZoneOffsetInMilli: Int,
-        monthOffset: Int
+        month: Int
     ): Flow<List<MerchantDataWithAllData>>
 
     fun getRecentMerchantsDataWithAllDataListFromYear(
         timeZoneOffsetInMilli: Int,
-        yearOffset: Int
+        year: Int
     ): Flow<List<MerchantDataWithAllData>>
 
     fun getMerchantsDataWithPaymentNameListFromMerchantId(

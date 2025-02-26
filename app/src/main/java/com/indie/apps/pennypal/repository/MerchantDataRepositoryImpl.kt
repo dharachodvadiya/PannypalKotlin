@@ -43,18 +43,18 @@ class MerchantDataRepositoryImpl @Inject constructor(
 
     override fun getRecentMerchantsDataWithAllDataListFromMonth(
         timeZoneOffsetInMilli: Int,
-        monthOffset: Int
+        month: Int
     ) = merchantDataDao.getRecentMerchantsDataWithAllDataListFromMonth(
         timeZoneOffsetInMilli,
-        monthOffset
+        (month + 1).toString()
     ).flowOn(dispatcher)
 
     override fun getRecentMerchantsDataWithAllDataListFromYear(
         timeZoneOffsetInMilli: Int,
-        yearOffset: Int
+        year: Int
     ) = merchantDataDao.getRecentMerchantsDataWithAllDataListFromYear(
         timeZoneOffsetInMilli,
-        yearOffset
+        year.toString()
     ).flowOn(dispatcher)
 
     override fun getRecentMerchantsDataWithAllDataList() =

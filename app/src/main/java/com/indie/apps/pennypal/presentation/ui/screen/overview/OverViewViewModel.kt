@@ -68,7 +68,10 @@ class OverViewViewModel @Inject constructor(
         MutableStateFlow(PagingState<MerchantDataWithNameWithDayTotal>())*/
 
     val recentTransaction = searchMerchantDataWithAllDataListUseCase
-        .getLast3DataFromPeriod()
+        .getLast3DataFromPeriod(
+            year = calendar.get(Calendar.YEAR),
+            month = calendar.get(Calendar.MONTH),
+        )
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
 
     val recentMerchant = searchMerchantNameAndDetailListUseCase
