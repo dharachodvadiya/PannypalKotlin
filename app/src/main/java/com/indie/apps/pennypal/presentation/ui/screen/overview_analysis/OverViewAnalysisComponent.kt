@@ -2,9 +2,11 @@ package com.indie.apps.pennypal.presentation.ui.screen.overview_analysis
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -16,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -31,6 +34,7 @@ import com.indie.apps.pennypal.presentation.ui.component.custom.composable.Custo
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListItem
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
+import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.util.getCategoryColorById
@@ -80,8 +84,8 @@ fun AnalysisMonthYearSelection(
     modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center,
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding)),
         verticalAlignment = Alignment.CenterVertically
     ) {
 
@@ -98,7 +102,7 @@ fun AnalysisMonthYearSelection(
 
         RoundImage(
             imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-            backGround = MyAppTheme.colors.itemBg,
+            backGround = MyAppTheme.colors.itemSelectedBg.copy(alpha = 0.5f),
             tint = MyAppTheme.colors.black,
             contentDescription = "previous",
             innerPadding = 5.dp,
@@ -107,15 +111,21 @@ fun AnalysisMonthYearSelection(
                     onPreviousClick()
                 },
         )
-
-        CustomText(
+        Box(
             modifier = Modifier
+                .height(34.dp)
+                .roundedCornerBackground(MyAppTheme.colors.itemSelectedBg.copy(alpha = 0.5f))
                 .clickableWithNoRipple { onTextClick() }
                 .padding(horizontal = 20.dp),
-            text = textYearMonth,
-            textAlign = TextAlign.Center,
-            color = MyAppTheme.colors.black
-        )
+            contentAlignment = Alignment.Center
+        ) {
+            CustomText(
+                text = textYearMonth,
+                textAlign = TextAlign.Center,
+                color = MyAppTheme.colors.black
+            )
+        }
+
 
         /* Icon(
              modifier = Modifier
@@ -130,7 +140,7 @@ fun AnalysisMonthYearSelection(
 
         RoundImage(
             imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-            backGround = MyAppTheme.colors.itemBg,
+            backGround = MyAppTheme.colors.itemSelectedBg.copy(alpha = 0.5f),
             tint = MyAppTheme.colors.black,
             contentDescription = "previous",
             innerPadding = 5.dp,
