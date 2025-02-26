@@ -103,7 +103,9 @@ fun OverViewAnalysisScreen(
                 }
 
                 is Resource.Loading -> {
-                    LoadingWithProgress()
+                    LoadingWithProgress(
+                        modifier = Modifier.fillMaxSize()
+                    )
                 }
 
                 is Resource.Success -> {
