@@ -1,12 +1,12 @@
 package com.indie.apps.pennypal.presentation.ui.screen.overview_analysis
 
 import android.annotation.SuppressLint
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -40,6 +40,7 @@ import com.indie.apps.pennypal.data.module.TabItemInfo
 import com.indie.apps.pennypal.data.module.category.CategoryAmount
 import com.indie.apps.pennypal.presentation.ui.component.chart.PieChart
 import com.indie.apps.pennypal.presentation.ui.component.clickableWithNoRipple
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.AutoSizeText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomTab
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListItem
@@ -177,116 +178,91 @@ fun AnalysisBalance(
         modifier = modifier
             .fillMaxWidth()
             .roundedCornerBackground(MyAppTheme.colors.itemBg)
+            .height(150.dp)
+            .padding(dimensionResource(id = R.dimen.padding)),
+    ) {
+        val str = stringResource(id = R.string.balance)
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            //horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            CustomText(
+                text = str,
+                style = MyAppTheme.typography.Regular57,
+                color = MyAppTheme.colors.gray2
+            )
+            AutoSizeText(
+                text = Util.getFormattedStringWithSymbol(remainAmount),
+                style = MyAppTheme.typography.Regular66_5,
+                color = MyAppTheme.colors.black,
+                maxLines = 1
+            )
+        }
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            AnalysisBalanceItem(
+                amount = Util.getFormattedStringWithSymbol(receiveAmount),
+                title = R.string.received,
+                horizontalAlignment = Alignment.Start,
+                imageVector = Icons.Default.SouthWest,
+                textColor = MyAppTheme.colors.greenBg
+            )
+            Spacer(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = dimensionResource(id = R.dimen.item_inner_padding))
+            )
+            AnalysisBalanceItem(
+                amount = Util.getFormattedStringWithSymbol(spentAmount),
+                title = R.string.spent,
+                horizontalAlignment = Alignment.End,
+                imageVector = Icons.Default.NorthEast,
+                textColor = MyAppTheme.colors.redBg
+            )
+        }
+
+    }
+}
+
+@Composable
+fun AnalysisBalanceItem(
+    amount: String,
+    @StringRes title: Int,
+    imageVector: ImageVector,
+    textColor: Color,
+    horizontalAlignment: Alignment.Horizontal,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        horizontalAlignment = horizontalAlignment
     ) {
         Row(
-            modifier = Modifier
-                .padding(dimensionResource(id = R.dimen.padding)),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically, modifier = modifier
         ) {
-            Column(
-                modifier = Modifier.defaultMinSize(minWidth = 150.dp)
-            ) {
-                CustomText(
-                    text = stringResource(R.string.balance),
-                    style = MyAppTheme.typography.Regular57,
-                    color = MyAppTheme.colors.gray2,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-
-                )
-                CustomText(
-                    text = Util.getFormattedStringWithSymbol(remainAmount),
-                    style = MyAppTheme.typography.Regular57,
-                    color = if (remainAmount < 0) MyAppTheme.colors.redBg else MyAppTheme.colors.greenBg,
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 1,
-                )
-
-                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.padding)))
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically, modifier = modifier
-                ) {
-                    RoundImage(
-                        imageVector = Icons.Default.SouthWest,
-                        tint = MyAppTheme.colors.gray2,
-                        backGround = MyAppTheme.colors.itemSelectedBg.copy(alpha = 0.3f),
-                        contentDescription = "amount",
-                        imageVectorSize = 13.dp,
-                        modifier = Modifier.size(17.dp)
-                    )
-                    Spacer(modifier = Modifier.width(5.dp))
-                    CustomText(
-                        text = stringResource(R.string.received),
-                        style = MyAppTheme.typography.Regular46,
-                        color = MyAppTheme.colors.gray2
-                    )
-                }
-                CustomText(
-                    text = Util.getFormattedStringWithSymbol(receiveAmount),
-                    style = MyAppTheme.typography.Regular57,
-                    color = MyAppTheme.colors.black,
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 1,
-                )
-
-                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.padding)))
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically, modifier = modifier
-                ) {
-                    RoundImage(
-                        imageVector = Icons.Default.NorthEast,
-                        tint = MyAppTheme.colors.gray2,
-                        backGround = MyAppTheme.colors.itemSelectedBg.copy(alpha = 0.3f),
-                        contentDescription = "amount",
-                        imageVectorSize = 13.dp,
-                        modifier = Modifier.size(17.dp)
-                    )
-                    Spacer(modifier = Modifier.width(5.dp))
-                    CustomText(
-                        text = stringResource(R.string.spent),
-                        style = MyAppTheme.typography.Regular46,
-                        color = MyAppTheme.colors.gray2
-                    )
-                }
-                CustomText(
-                    text = Util.getFormattedStringWithSymbol(spentAmount),
-                    style = MyAppTheme.typography.Regular57,
-                    color = MyAppTheme.colors.black,
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 1,
-                )
-            }
-            Box(
-                modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) {
-                val chartData = mutableListOf<ChartData>()
-                chartData.add(
-                    ChartData(
-                        name = "Spent",
-                        amount = spentAmount,
-                        color = MyAppTheme.colors.redBg
-                    )
-                )
-                if (remainAmount > 0) {
-                    chartData.add(
-                        ChartData(
-                            name = "Remain",
-                            amount = remainAmount,
-                            color = MyAppTheme.colors.greenBg
-                        )
-                    )
-                }
-
-                PieChart(
-                    data = chartData,
-                    radiusOuter = 50.dp,
-                    chartBarWidth = 30.dp
-                )
-            }
+            RoundImage(
+                imageVector = imageVector,
+                tint = MyAppTheme.colors.gray2,
+                backGround = MyAppTheme.colors.itemSelectedBg.copy(alpha = 0.3f),
+                contentDescription = "amount",
+                imageVectorSize = 13.dp,
+                modifier = Modifier.size(17.dp)
+            )
+            Spacer(modifier = Modifier.width(5.dp))
+            CustomText(
+                text = stringResource(title),
+                style = MyAppTheme.typography.Regular46,
+                color = MyAppTheme.colors.gray2
+            )
         }
+        AutoSizeText(
+            text = amount,
+            style = MyAppTheme.typography.Regular51,
+            color = textColor
+        )
     }
 }
 
