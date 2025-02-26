@@ -75,16 +75,37 @@ class MerchantDataRepositoryImpl @Inject constructor(
     override fun getMerchantDataWithNameWithDayTotal(timeZoneOffsetInMilli: Int) =
         merchantDataDao.getCombinedDataWithLimit(timeZoneOffsetInMilli)
 
-    override fun getTotalFromMonth(
-        timeZoneOffsetInMilli: Int, monthOffset: Int
-    ) = merchantDataDao.getTotalFromMonth(timeZoneOffsetInMilli, monthOffset).flowOn(dispatcher)
+    override fun getTotalFromMonthAsFlow(
+        timeZoneOffsetInMilli: Int,
+        year: Int,
+        monthPlusOne: Int
+    ) = merchantDataDao.getTotalFromMonthAsFlow(
+        timeZoneOffsetInMilli,
+        monthPlusOne = monthPlusOne.toString(),
+        year = year.toString()
+    ).flowOn(dispatcher)
 
+    override suspend fun getTotalFromMonth(
+        timeZoneOffsetInMilli: Int,
+        year: Int,
+        monthPlusOne: Int
+    ) = merchantDataDao.getTotalFromMonth(
+        timeZoneOffsetInMilli,
+        monthPlusOne = monthPlusOne.toString(),
+        year = year.toString()
+    )
 
-    override fun getTotalFromYear(
-        timeZoneOffsetInMilli: Int, offset: Int
-    ) = merchantDataDao.getTotalFromYear(timeZoneOffsetInMilli, offset).flowOn(dispatcher)
+    override fun getTotalFromYearAsFlow(
+        timeZoneOffsetInMilli: Int, year: Int
+    ) = merchantDataDao.getTotalFromYearAsFlow(timeZoneOffsetInMilli, year.toString())
+        .flowOn(dispatcher)
 
-    override fun getTotal() = merchantDataDao.getTotal()
+    override suspend fun getTotalFromYear(timeZoneOffsetInMilli: Int, year: Int) =
+        merchantDataDao.getTotalFromYear(timeZoneOffsetInMilli, year.toString())
+
+    override fun getTotalAsFlow() = merchantDataDao.getTotalAsFlow()
+
+    override suspend fun getTotal() = merchantDataDao.getTotal()
 
     override fun getCategoryWiseExpenseFromMonthAsFlow(
         timeZoneOffsetInMilli: Int,

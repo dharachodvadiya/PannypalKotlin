@@ -60,11 +60,25 @@ interface MerchantDataRepository : BaseRepository<MerchantData> {
 
     fun getMerchantDataWithNameWithDayTotal(timeZoneOffsetInMilli: Int): PagingSource<Int, MerchantDataWithNameWithDayTotal>
 
-    fun getTotalFromMonth(timeZoneOffsetInMilli: Int, monthOffset: Int): Flow<TotalMonthly?>
+    fun getTotalFromMonthAsFlow(
+        timeZoneOffsetInMilli: Int,
+        year: Int,
+        monthPlusOne: Int
+    ): Flow<TotalMonthly?>
 
-    fun getTotalFromYear(timeZoneOffsetInMilli: Int, offset: Int): Flow<TotalYearly?>
+    suspend fun getTotalFromMonth(
+        timeZoneOffsetInMilli: Int,
+        year: Int,
+        monthPlusOne: Int
+    ): TotalMonthly?
 
-    fun getTotal(): Flow<TotalAllTime?>
+    fun getTotalFromYearAsFlow(timeZoneOffsetInMilli: Int, year: Int): Flow<TotalYearly?>
+
+    suspend fun getTotalFromYear(timeZoneOffsetInMilli: Int, year: Int): TotalYearly?
+
+    fun getTotalAsFlow(): Flow<TotalAllTime?>
+
+    suspend fun getTotal(): TotalAllTime?
 
     fun getCategoryWiseExpenseFromMonthAsFlow(
         timeZoneOffsetInMilli: Int,

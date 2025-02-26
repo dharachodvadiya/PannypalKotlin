@@ -4,20 +4,22 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.indie.apps.cpp.data.repository.CountryRepository
 import com.indie.apps.pennypal.data.database.entity.User
-import com.indie.apps.pennypal.domain.usecase.GetTotalFromPreferencePeriodUseCase
+import com.indie.apps.pennypal.domain.usecase.GetTotalUseCase
 import com.indie.apps.pennypal.domain.usecase.UpdateUserDataUseCase
 import com.indie.apps.pennypal.repository.UserRepository
 import com.indie.apps.pennypal.util.Resource
+import com.indie.apps.pennypal.util.ShowDataPeriod
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    getMonthlyTotalUseCase: GetTotalFromPreferencePeriodUseCase,
+    getTotalUseCase: GetTotalUseCase,
     private val userRepository: UserRepository,
     private val updateUserDataUseCase: UpdateUserDataUseCase,
     private val countryRepository: CountryRepository
@@ -31,8 +33,13 @@ class ProfileViewModel @Inject constructor(
 
     //private val _uiState = MutableStateFlow<Resource<User>>(Resource.Loading())
     // val uiState = _uiState.asStateFlow()
+    private val calendar: Calendar = Calendar.getInstance()
 
-    val currentMonthTotal = getMonthlyTotalUseCase.loadData()
+    val currentMonthTotal = getTotalUseCase.loadDataAsFlow(
+        year = calendar.get(Calendar.YEAR),
+        month = calendar.get(Calendar.MONTH),
+        dataPeriod = ShowDataPeriod.ALL_TIME
+    )
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), null)
 
     private var userData: User? = null

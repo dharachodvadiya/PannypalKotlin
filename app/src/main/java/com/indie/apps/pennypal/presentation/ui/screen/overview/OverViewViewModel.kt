@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.indie.apps.cpp.data.repository.CountryRepository
 import com.indie.apps.pennypal.domain.usecase.GetCategoryWiseExpenseUseCase
-import com.indie.apps.pennypal.domain.usecase.GetTotalFromPreferencePeriodUseCase
+import com.indie.apps.pennypal.domain.usecase.GetTotalUseCase
 import com.indie.apps.pennypal.domain.usecase.SearchMerchantDataWithAllDataListUseCase
 import com.indie.apps.pennypal.domain.usecase.SearchMerchantNameAndDetailListUseCase
 import com.indie.apps.pennypal.repository.BillingRepository
@@ -26,7 +26,7 @@ import javax.inject.Inject
 @HiltViewModel
 class OverViewViewModel @Inject constructor(
     userRepository: UserRepository,
-    getTotalFromPreferencePeriodUseCase: GetTotalFromPreferencePeriodUseCase,
+    getTotalUseCase: GetTotalUseCase,
     searchMerchantDataWithAllDataListUseCase: SearchMerchantDataWithAllDataListUseCase,
     searchMerchantNameAndDetailListUseCase: SearchMerchantNameAndDetailListUseCase,
     getCategoryWiseExpenseUseCase: GetCategoryWiseExpenseUseCase,
@@ -36,12 +36,20 @@ class OverViewViewModel @Inject constructor(
     private val countryRepository: CountryRepository
 ) : ViewModel() {
 
+    private val calendar: Calendar = Calendar.getInstance()
+    private val periodIndex = preferenceRepository.getInt(Util.PREF_BALANCE_VIEW, 1)
+    val currentPeriod = MutableStateFlow(ShowDataPeriod.fromIndex(periodIndex))
+
     //val searchTextState by mutableStateOf(TextFieldState())
 
     val userData = userRepository.getUser()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), null)
 
-    val currentTotal = getTotalFromPreferencePeriodUseCase.loadData()
+    val currentTotal = getTotalUseCase.loadDataAsFlow(
+        year = calendar.get(Calendar.YEAR),
+        month = calendar.get(Calendar.MONTH),
+        currentPeriod.value ?: ShowDataPeriod.THIS_MONTH
+    )
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), null)
 
     var addDataAnimRun = MutableStateFlow(false)
@@ -58,11 +66,6 @@ class OverViewViewModel @Inject constructor(
             .cachedIn(viewModelScope)
     var merchantDataWithDayPagingState =
         MutableStateFlow(PagingState<MerchantDataWithNameWithDayTotal>())*/
-
-    private val periodIndex = preferenceRepository.getInt(Util.PREF_BALANCE_VIEW, 1)
-    val currentPeriod = MutableStateFlow(ShowDataPeriod.fromIndex(periodIndex))
-
-    private val calendar: Calendar = Calendar.getInstance()
 
     val recentTransaction = searchMerchantDataWithAllDataListUseCase
         .getLast3DataFromPeriod()

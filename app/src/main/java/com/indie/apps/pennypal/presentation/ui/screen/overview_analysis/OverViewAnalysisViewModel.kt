@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.indie.apps.pennypal.data.database.enum.AnalysisPeriod
 import com.indie.apps.pennypal.data.database.enum.toShowDataPeriod
 import com.indie.apps.pennypal.domain.usecase.GetCategoryWiseExpenseUseCase
+import com.indie.apps.pennypal.domain.usecase.GetTotalUseCase
 import com.indie.apps.pennypal.repository.PreferenceRepository
 import com.indie.apps.pennypal.util.Resource
 import com.indie.apps.pennypal.util.ShowDataPeriod
@@ -26,6 +27,7 @@ import javax.inject.Inject
 @HiltViewModel
 class OverViewAnalysisViewModel @Inject constructor(
     getCategoryWiseExpenseUseCase: GetCategoryWiseExpenseUseCase,
+    getTotalUseCase: GetTotalUseCase,
     preferenceRepository: PreferenceRepository,
 ) : ViewModel() {
     private val periodIndex = preferenceRepository.getInt(Util.PREF_BALANCE_VIEW, 1)
@@ -38,6 +40,23 @@ class OverViewAnalysisViewModel @Inject constructor(
     )
 
     private val trigger = MutableSharedFlow<Unit>(replay = 1)
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val currentTotal = trigger
+        .flatMapLatest {
+            val calendar = Calendar.getInstance().apply {
+                timeInMillis = when (currentPeriod.value) {
+                    AnalysisPeriod.YEAR -> currentYearInMilli.value
+                    AnalysisPeriod.MONTH -> currentMonthInMilli.value
+                }
+            }
+            getTotalUseCase.loadData(
+                year = calendar.get(java.util.Calendar.YEAR),
+                month = calendar.get(java.util.Calendar.MONTH),
+                currentPeriod.value.toShowDataPeriod()
+            )
+        }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), Resource.Loading())
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val categoryExpense = trigger
@@ -62,7 +81,8 @@ class OverViewAnalysisViewModel @Inject constructor(
         loadData()
     }
 
-    fun isLoading() = categoryExpense.value is Resource.Loading
+    fun isLoading() =
+        (categoryExpense.value is Resource.Loading || currentTotal.value is Resource.Loading)
 
     fun loadData() {
         viewModelScope.launch {
@@ -71,14 +91,14 @@ class OverViewAnalysisViewModel @Inject constructor(
     }
 
     fun setCurrentPeriod(period: AnalysisPeriod) {
-        if(isLoading())
+        if (isLoading())
             return
         currentPeriod.value = period
         loadData()
     }
 
     fun onPreviousClick() {
-        if(isLoading())
+        if (isLoading())
             return
         when (currentPeriod.value) {
             AnalysisPeriod.MONTH -> {
@@ -101,7 +121,7 @@ class OverViewAnalysisViewModel @Inject constructor(
     }
 
     fun onNextClick() {
-        if(isLoading())
+        if (isLoading())
             return
         when (currentPeriod.value) {
             AnalysisPeriod.MONTH -> {

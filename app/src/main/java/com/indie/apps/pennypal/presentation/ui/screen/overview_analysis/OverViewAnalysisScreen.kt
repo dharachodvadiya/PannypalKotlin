@@ -46,6 +46,7 @@ fun OverViewAnalysisScreen(
     val currentYearInMilli by viewModel.currentYearInMilli.collectAsStateWithLifecycle()
     val currentMonthInMilli by viewModel.currentMonthInMilli.collectAsStateWithLifecycle()
     val categoryExpense by viewModel.categoryExpense.collectAsStateWithLifecycle()
+    val currentTotal by viewModel.currentTotal.collectAsStateWithLifecycle()
     var openYearDialog by remember { mutableStateOf(false) }
     var openMonthDialog by remember { mutableStateOf(false) }
     val title = stringResource(id = R.string.analysis)
@@ -131,8 +132,8 @@ fun OverViewAnalysisScreen(
                             verticalArrangement = Arrangement.spacedBy(20.dp)
                         ) {
                             AnalysisBalance(
-                                spentAmount = 1000.0,
-                                receiveAmount = 5000.0
+                                spentAmount = currentTotal.data?.totalExpense ?: 0.0,
+                                receiveAmount = currentTotal.data?.totalIncome ?: 0.0
                             )
 
                             OverViewAnalysisCategoryChart(

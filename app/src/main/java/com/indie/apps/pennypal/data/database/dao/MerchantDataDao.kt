@@ -298,45 +298,106 @@ interface MerchantDataDao : BaseDao<MerchantData> {
 
     @Query(
         """
-        SELECT 
-            strftime('%Y-%m', (m.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') AS month,
-            IFNULL(SUM(CASE WHEN m.type >= 0 THEN m.amount ELSE 0 END), 0) AS totalIncome,
-            IFNULL(SUM(CASE WHEN m.type < 0 THEN m.amount ELSE 0 END), 0) AS totalExpense,
-            u.currency
-        FROM 
-            merchant_data m
-        JOIN 
-            user u ON u.id = 1
-        WHERE 
-            strftime('%Y-%m', (m.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = strftime('%Y-%m', 'now', '-' || :monthOffset || ' months')
-        GROUP BY 
-            month
-        ORDER BY 
-            month DESC
+    SELECT 
+        strftime('%Y-%m', (m.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') AS month,
+        IFNULL(SUM(CASE WHEN m.type >= 0 THEN m.amount ELSE 0 END), 0) AS totalIncome,
+        IFNULL(SUM(CASE WHEN m.type < 0 THEN m.amount ELSE 0 END), 0) AS totalExpense,
+        u.currency
+    FROM 
+        merchant_data m
+    JOIN 
+        user u ON u.id = 1
+    WHERE 
+        strftime('%Y', (m.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = :year
+        AND strftime('%m', (m.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = printf('%02d', :monthPlusOne)
+    GROUP BY 
+        month
+    ORDER BY 
+        month DESC
     """
     )
-    fun getTotalFromMonth(timeZoneOffsetInMilli: Int, monthOffset: Int): Flow<TotalMonthly>
+    fun getTotalFromMonthAsFlow(
+        timeZoneOffsetInMilli: Int,
+        year: String,
+        monthPlusOne: String
+    ): Flow<TotalMonthly>
+
+    @Transaction
+    @Query(
+        """
+    SELECT 
+        strftime('%Y-%m', (m.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') AS month,
+        IFNULL(SUM(CASE WHEN m.type >= 0 THEN m.amount ELSE 0 END), 0) AS totalIncome,
+        IFNULL(SUM(CASE WHEN m.type < 0 THEN m.amount ELSE 0 END), 0) AS totalExpense,
+        u.currency
+    FROM 
+        merchant_data m
+    JOIN 
+        user u ON u.id = 1
+    WHERE 
+        strftime('%Y', (m.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = :year
+        AND strftime('%m', (m.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = printf('%02d', :monthPlusOne)
+    GROUP BY 
+        month
+    ORDER BY 
+        month DESC
+    """
+    )
+    suspend fun getTotalFromMonth(
+        timeZoneOffsetInMilli: Int,
+        year: String,
+        monthPlusOne: String
+    ):TotalMonthly
 
     @Query(
         """
-        SELECT 
-            strftime('%Y', (m.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') AS year,
-            IFNULL(SUM(CASE WHEN m.type >= 0 THEN m.amount ELSE 0 END), 0) AS totalIncome,
-            IFNULL(SUM(CASE WHEN m.type < 0 THEN m.amount ELSE 0 END), 0) AS totalExpense,
-            u.currency
-        FROM 
-            merchant_data m
-        JOIN 
-            user u ON u.id = 1
-        WHERE 
-            strftime('%Y', (m.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = strftime('%Y', 'now', '-' || :yearOffset || ' years')
-        GROUP BY 
-            year
-        ORDER BY 
-            year DESC
+    SELECT 
+        strftime('%Y', (m.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') AS year,
+        IFNULL(SUM(CASE WHEN m.type >= 0 THEN m.amount ELSE 0 END), 0) AS totalIncome,
+        IFNULL(SUM(CASE WHEN m.type < 0 THEN m.amount ELSE 0 END), 0) AS totalExpense,
+        u.currency
+    FROM 
+        merchant_data m
+    JOIN 
+        user u ON u.id = 1
+    WHERE 
+        strftime('%Y', (m.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = :year
+    GROUP BY 
+        year
+    ORDER BY 
+        year DESC
     """
     )
-    fun getTotalFromYear(timeZoneOffsetInMilli: Int, yearOffset: Int): Flow<TotalYearly>
+    fun getTotalFromYearAsFlow(
+        timeZoneOffsetInMilli: Int,
+        year: String
+    ): Flow<TotalYearly>
+
+    @Transaction
+    @Query(
+        """
+    SELECT 
+        strftime('%Y', (m.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') AS year,
+        IFNULL(SUM(CASE WHEN m.type >= 0 THEN m.amount ELSE 0 END), 0) AS totalIncome,
+        IFNULL(SUM(CASE WHEN m.type < 0 THEN m.amount ELSE 0 END), 0) AS totalExpense,
+        u.currency
+    FROM 
+        merchant_data m
+    JOIN 
+        user u ON u.id = 1
+    WHERE 
+        strftime('%Y', (m.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = :year
+    GROUP BY 
+        year
+    ORDER BY 
+        year DESC
+    """
+    )
+    suspend fun getTotalFromYear(
+        timeZoneOffsetInMilli: Int,
+        year: String
+    ): TotalYearly
+
 
     @Query(
         """
@@ -350,7 +411,22 @@ interface MerchantDataDao : BaseDao<MerchantData> {
             user u ON u.id = 1
     """
     )
-    fun getTotal(): Flow<TotalAllTime>
+    fun getTotalAsFlow(): Flow<TotalAllTime>
+
+    @Transaction
+    @Query(
+        """
+        SELECT
+            IFNULL(SUM(CASE WHEN m.type >= 0 THEN m.amount ELSE 0 END), 0) AS totalIncome,
+            IFNULL(SUM(CASE WHEN m.type < 0 THEN m.amount ELSE 0 END), 0) AS totalExpense,
+            u.currency
+        FROM 
+            merchant_data m
+        JOIN 
+            user u ON u.id = 1
+    """
+    )
+    suspend fun getTotal(): TotalAllTime
 
     @Query(
         """
