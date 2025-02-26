@@ -18,6 +18,9 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.NorthEast
 import androidx.compose.material.icons.filled.SouthWest
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -168,7 +171,7 @@ fun AnalysisBalance(
     spentAmount: Double,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
-    val remainAmount = receiveAmount - spentAmount
+    val remainAmount by remember { derivedStateOf { receiveAmount - spentAmount } }
 
     Column(
         modifier = modifier

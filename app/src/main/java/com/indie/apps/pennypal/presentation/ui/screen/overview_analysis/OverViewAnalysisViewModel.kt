@@ -17,6 +17,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -44,12 +45,7 @@ class OverViewAnalysisViewModel @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     val currentTotal = trigger
         .flatMapLatest {
-            val calendar = Calendar.getInstance().apply {
-                timeInMillis = when (currentPeriod.value) {
-                    AnalysisPeriod.YEAR -> currentYearInMilli.value
-                    AnalysisPeriod.MONTH -> currentMonthInMilli.value
-                }
-            }
+            val calendar = getCurrentCalendar()
             getTotalUseCase.loadData(
                 year = calendar.get(java.util.Calendar.YEAR),
                 month = calendar.get(java.util.Calendar.MONTH),
@@ -61,12 +57,7 @@ class OverViewAnalysisViewModel @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     val categoryExpense = trigger
         .flatMapLatest {
-            val calendar = Calendar.getInstance().apply {
-                timeInMillis = when (currentPeriod.value) {
-                    AnalysisPeriod.YEAR -> currentYearInMilli.value
-                    AnalysisPeriod.MONTH -> currentMonthInMilli.value
-                }
-            }
+            val calendar = getCurrentCalendar()
             getCategoryWiseExpenseUseCase
                 .loadData(
                     year = calendar.get(java.util.Calendar.YEAR),
@@ -76,72 +67,44 @@ class OverViewAnalysisViewModel @Inject constructor(
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), Resource.Loading())
 
+    // ✅ Combined loading state
+    val isLoading = combine(currentTotal, categoryExpense) { total, expense ->
+        total is Resource.Loading || expense is Resource.Loading
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), true)
 
     init {
         loadData()
     }
 
-    fun isLoading() =
-        (categoryExpense.value is Resource.Loading || currentTotal.value is Resource.Loading)
-
     fun loadData() {
         viewModelScope.launch {
-            trigger.emit(Unit)
+            trigger.tryEmit(Unit)
         }
     }
 
     fun setCurrentPeriod(period: AnalysisPeriod) {
-        if (isLoading())
-            return
+        if (isLoading.value || currentPeriod.value == period) return
         currentPeriod.value = period
         loadData()
     }
 
-    fun onPreviousClick() {
-        if (isLoading())
-            return
+    private fun updateTime(amount: Int) {
+        if (isLoading.value) return
+        val calendar = getCurrentCalendar().apply {
+            when (currentPeriod.value) {
+                AnalysisPeriod.MONTH -> add(Calendar.MONTH, amount)
+                AnalysisPeriod.YEAR -> add(Calendar.YEAR, amount)
+            }
+        }
         when (currentPeriod.value) {
-            AnalysisPeriod.MONTH -> {
-                val calendar = Calendar.getInstance().apply {
-                    timeInMillis = currentMonthInMilli.value
-                    add(Calendar.MONTH, -1) // Move to previous month
-                }
-                currentMonthInMilli.value = calendar.timeInMillis
-            }
-
-            AnalysisPeriod.YEAR -> {
-                val calendar = Calendar.getInstance().apply {
-                    timeInMillis = currentYearInMilli.value
-                    add(Calendar.YEAR, -1) // Move to previous year
-                }
-                currentYearInMilli.value = calendar.timeInMillis
-            }
+            AnalysisPeriod.MONTH -> currentMonthInMilli.value = calendar.timeInMillis
+            AnalysisPeriod.YEAR -> currentYearInMilli.value = calendar.timeInMillis
         }
         loadData()
     }
 
-    fun onNextClick() {
-        if (isLoading())
-            return
-        when (currentPeriod.value) {
-            AnalysisPeriod.MONTH -> {
-                val calendar = Calendar.getInstance().apply {
-                    timeInMillis = currentMonthInMilli.value
-                    add(Calendar.MONTH, 1) // Move to next month
-                }
-                currentMonthInMilli.value = calendar.timeInMillis
-            }
-
-            AnalysisPeriod.YEAR -> {
-                val calendar = Calendar.getInstance().apply {
-                    timeInMillis = currentYearInMilli.value
-                    add(Calendar.YEAR, 1) // Move to next year
-                }
-                currentYearInMilli.value = calendar.timeInMillis
-            }
-        }
-        loadData()
-    }
+    fun onPreviousClick() = updateTime(-1)
+    fun onNextClick() = updateTime(1)
 
     fun formatDateForDisplay(period: AnalysisPeriod, timeInMillis1: Long): String {
         val calendar = Calendar.getInstance().apply { timeInMillis = timeInMillis1 }
@@ -163,12 +126,24 @@ class OverViewAnalysisViewModel @Inject constructor(
             set(java.util.Calendar.MONTH, month)
             set(java.util.Calendar.YEAR, year)
         }.timeInMillis
+        loadData()
     }
 
     fun setCurrentYear(year: Int) {
         currentYearInMilli.value = java.util.Calendar.getInstance().apply {
             set(java.util.Calendar.YEAR, year)
         }.timeInMillis
+        loadData()
     }
+
+    private fun getCurrentCalendar(): Calendar {
+        return Calendar.getInstance().apply {
+            timeInMillis = when (currentPeriod.value) {
+                AnalysisPeriod.YEAR -> currentYearInMilli.value
+                AnalysisPeriod.MONTH -> currentMonthInMilli.value
+            }
+        }
+    }
+
 
 }

@@ -42,11 +42,12 @@ fun OverViewAnalysisScreen(
     onNavigationUp: () -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
-    val currentPeriod by viewModel.currentPeriod.collectAsStateWithLifecycle()
-    val currentYearInMilli by viewModel.currentYearInMilli.collectAsStateWithLifecycle()
-    val currentMonthInMilli by viewModel.currentMonthInMilli.collectAsStateWithLifecycle()
-    val categoryExpense by viewModel.categoryExpense.collectAsStateWithLifecycle()
-    val currentTotal by viewModel.currentTotal.collectAsStateWithLifecycle()
+    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
+    val currentPeriod by remember { viewModel.currentPeriod }.collectAsStateWithLifecycle()
+    val currentYearInMilli by remember { viewModel.currentYearInMilli }.collectAsStateWithLifecycle()
+    val currentMonthInMilli by remember { viewModel.currentMonthInMilli }.collectAsStateWithLifecycle()
+    val categoryExpense by remember { viewModel.categoryExpense }.collectAsStateWithLifecycle()
+    val currentTotal by remember { viewModel.currentTotal }.collectAsStateWithLifecycle()
     var openYearDialog by remember { mutableStateOf(false) }
     var openMonthDialog by remember { mutableStateOf(false) }
     val title = stringResource(id = R.string.analysis)
@@ -90,7 +91,7 @@ fun OverViewAnalysisScreen(
                 onPreviousClick = viewModel::onPreviousClick,
                 onNextClick = viewModel::onNextClick,
                 onTextClick = {
-                    if (viewModel.isLoading())
+                    if (isLoading)
                         return@AnalysisMonthYearSelection
                     when (currentPeriod) {
                         AnalysisPeriod.MONTH -> openMonthDialog = true
@@ -100,18 +101,21 @@ fun OverViewAnalysisScreen(
             )
             //PeriodText(currentPeriod?.let { stringResource(currentPeriod!!.title) } ?: "")
 
-            when (categoryExpense) {
-                is Resource.Error -> {
+            when {
 
-                }
-
-                is Resource.Loading -> {
+                isLoading -> {
                     LoadingWithProgress(
                         modifier = Modifier.fillMaxSize()
                     )
                 }
 
-                is Resource.Success -> {
+                categoryExpense is Resource.Error || currentTotal is Resource.Error -> {
+                    LoadingWithProgress(
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+
+                categoryExpense is Resource.Success && currentTotal is Resource.Success -> {
 
                     val scrollState = rememberScrollState()
                     val dataList = categoryExpense.data ?: emptyList()
