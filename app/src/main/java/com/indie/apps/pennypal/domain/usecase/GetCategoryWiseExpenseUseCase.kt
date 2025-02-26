@@ -38,7 +38,7 @@ class GetCategoryWiseExpenseUseCase @Inject constructor(
                             .getCategoryWiseExpenseFromMonth(
                                 Util.TIME_ZONE_OFFSET_IN_MILLI,
                                 year = year,
-                                monthPlusOne = month + 1
+                                month = month
                             )
                             .map { item -> item.toCategoryAmount() }
 
@@ -83,7 +83,7 @@ class GetCategoryWiseExpenseUseCase @Inject constructor(
                     .getCategoryWiseExpenseFromMonthAsFlow(
                         Util.TIME_ZONE_OFFSET_IN_MILLI,
                         year = year,
-                        monthPlusOne = month + 1
+                        month = month
                     )
                     .map { it.map { item -> item.toCategoryAmount() } }
 

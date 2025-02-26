@@ -78,20 +78,20 @@ class MerchantDataRepositoryImpl @Inject constructor(
     override fun getTotalFromMonthAsFlow(
         timeZoneOffsetInMilli: Int,
         year: Int,
-        monthPlusOne: Int
+        month: Int
     ) = merchantDataDao.getTotalFromMonthAsFlow(
         timeZoneOffsetInMilli,
-        monthPlusOne = monthPlusOne.toString(),
+        monthPlusOne = (month + 1).toString(),
         year = year.toString()
     ).flowOn(dispatcher)
 
     override suspend fun getTotalFromMonth(
         timeZoneOffsetInMilli: Int,
         year: Int,
-        monthPlusOne: Int
+        month: Int
     ) = merchantDataDao.getTotalFromMonth(
         timeZoneOffsetInMilli,
-        monthPlusOne = monthPlusOne.toString(),
+        monthPlusOne = (month + 1).toString(),
         year = year.toString()
     )
 
@@ -110,22 +110,22 @@ class MerchantDataRepositoryImpl @Inject constructor(
     override fun getCategoryWiseExpenseFromMonthAsFlow(
         timeZoneOffsetInMilli: Int,
         year: Int,
-        monthPlusOne: Int,
+        month: Int,
     ) = merchantDataDao.getCategoryWiseExpenseFromMonthAsFlow(
         timeZoneOffsetInMilli = timeZoneOffsetInMilli,
         year = year.toString(),
-        monthPlusOne = monthPlusOne.toString()
+        monthPlusOne = (month + 1).toString()
     )
         .flowOn(dispatcher)
 
     override suspend fun getCategoryWiseExpenseFromMonth(
         timeZoneOffsetInMilli: Int,
         year: Int,
-        monthPlusOne: Int
+        month: Int
     ) = merchantDataDao.getCategoryWiseExpenseFromMonth(
         timeZoneOffsetInMilli = timeZoneOffsetInMilli,
         year = year.toString(),
-        monthPlusOne = monthPlusOne.toString()
+        monthPlusOne = (month + 1).toString()
     )
 
     override fun getCategoryWiseExpenseAsFlow() =
@@ -145,11 +145,11 @@ class MerchantDataRepositoryImpl @Inject constructor(
     ) = merchantDataDao.getCategoryWiseExpenseFromYear(timeZoneOffsetInMilli, year.toString())
 
     override suspend fun getTotalAmountForMonthAndCategory(
-        timeZoneOffsetInMilli: Int, year: Int, monthPlusOne: Int, categoryIds: List<Long>
+        timeZoneOffsetInMilli: Int, year: Int, month: Int, categoryIds: List<Long>
     ) = merchantDataDao.getTotalAmountForMonthAndCategory(
         timeZoneOffsetInMilli = timeZoneOffsetInMilli,
         year = year.toString(),
-        monthPlusOne = monthPlusOne.toString(),
+        monthPlusOne = (month + 1).toString(),
         categoryIds = categoryIds
     )
 
@@ -164,9 +164,9 @@ class MerchantDataRepositoryImpl @Inject constructor(
     ) = merchantDataDao.getTotalAmountForBetweenDatesAndCategory(startTime, endTime, categoryIds)
 
     override fun getCategoryWiseTotalAmountForMonth(
-        timeZoneOffsetInMilli: Int, year: Int, monthPlusOne: Int, categoryIds: List<Long>
+        timeZoneOffsetInMilli: Int, year: Int, month: Int, categoryIds: List<Long>
     ) = merchantDataDao.getCategoryWiseTotalAmountForMonth(
-        timeZoneOffsetInMilli, year.toString(), monthPlusOne.toString(), categoryIds
+        timeZoneOffsetInMilli, year.toString(), (month + 1).toString(), categoryIds
     ).flowOn(dispatcher)
 
     override fun getCategoryWiseTotalAmountForYear(

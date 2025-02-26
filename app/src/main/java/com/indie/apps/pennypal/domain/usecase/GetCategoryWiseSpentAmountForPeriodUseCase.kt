@@ -17,7 +17,7 @@ class GetCategoryWiseSpentAmountForPeriodUseCase @Inject constructor(
     ): Flow<List<CategoryAmount>> {
         return merchantDataRepository.getCategoryWiseTotalAmountForMonth(
             year = year,
-            monthPlusOne = month + 1,
+            month = month,
             categoryIds = categoryIds,
             timeZoneOffsetInMilli = Util.TIME_ZONE_OFFSET_IN_MILLI
         )

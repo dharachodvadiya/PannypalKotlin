@@ -41,7 +41,7 @@ class GetTotalUseCase @Inject constructor(
                     .getTotalFromMonthAsFlow(
                         Util.TIME_ZONE_OFFSET_IN_MILLI,
                         year = year,
-                        monthPlusOne = month + 1
+                        month = month
                     )
                     .map { it?.toTotalWithCurrency() }
 
@@ -76,7 +76,7 @@ class GetTotalUseCase @Inject constructor(
                             .getTotalFromMonth(
                                 Util.TIME_ZONE_OFFSET_IN_MILLI,
                                 year = year,
-                                monthPlusOne = month + 1
+                                month = month
                             )
                             ?.toTotalWithCurrency()
 

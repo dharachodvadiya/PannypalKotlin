@@ -57,7 +57,7 @@ class GetPastBudgetsAndSpentWithCategoryIdListFromPeriodType @Inject constructor
                                     merchantDataRepository.getTotalAmountForMonthAndCategory(
                                         timeZoneOffsetInMilli = Util.TIME_ZONE_OFFSET_IN_MILLI,
                                         year = startCal.get(Calendar.YEAR),
-                                        monthPlusOne = startCal.get(Calendar.MONTH) + 1,
+                                        month = startCal.get(Calendar.MONTH),
                                         categoryIds = budget.category
                                     )
 
