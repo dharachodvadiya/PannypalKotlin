@@ -62,6 +62,8 @@ class OverViewAnalysisViewModel @Inject constructor(
         loadData()
     }
 
+    fun isLoading() = categoryExpense.value is Resource.Loading
+
     fun loadData() {
         viewModelScope.launch {
             trigger.emit(Unit)
@@ -69,11 +71,15 @@ class OverViewAnalysisViewModel @Inject constructor(
     }
 
     fun setCurrentPeriod(period: AnalysisPeriod) {
+        if(isLoading())
+            return
         currentPeriod.value = period
         loadData()
     }
 
     fun onPreviousClick() {
+        if(isLoading())
+            return
         when (currentPeriod.value) {
             AnalysisPeriod.MONTH -> {
                 val calendar = Calendar.getInstance().apply {
@@ -95,6 +101,8 @@ class OverViewAnalysisViewModel @Inject constructor(
     }
 
     fun onNextClick() {
+        if(isLoading())
+            return
         when (currentPeriod.value) {
             AnalysisPeriod.MONTH -> {
                 val calendar = Calendar.getInstance().apply {

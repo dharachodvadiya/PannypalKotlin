@@ -89,6 +89,8 @@ fun OverViewAnalysisScreen(
                 onPreviousClick = viewModel::onPreviousClick,
                 onNextClick = viewModel::onNextClick,
                 onTextClick = {
+                    if(viewModel.isLoading())
+                        return@AnalysisMonthYearSelection
                     when (currentPeriod) {
                         AnalysisPeriod.MONTH -> openMonthDialog = true
                         AnalysisPeriod.YEAR -> openYearDialog = true
