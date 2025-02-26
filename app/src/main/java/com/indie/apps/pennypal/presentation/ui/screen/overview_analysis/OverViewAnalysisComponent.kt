@@ -5,13 +5,18 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.NorthEast
+import androidx.compose.material.icons.filled.SouthWest
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,9 +24,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.database.enum.AnalysisPeriod
@@ -36,6 +43,7 @@ import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListI
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
+import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.util.getCategoryColorById
 import com.indie.apps.pennypal.util.getCategoryIconById
@@ -154,6 +162,131 @@ fun AnalysisMonthYearSelection(
     }
 }
 
+@Composable
+fun AnalysisBalance(
+    receiveAmount: Double,
+    spentAmount: Double,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
+) {
+    val remainAmount = receiveAmount - spentAmount
+
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .roundedCornerBackground(MyAppTheme.colors.itemBg)
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(dimensionResource(id = R.dimen.padding)),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(
+                modifier = Modifier.defaultMinSize(minWidth = 150.dp)
+            ) {
+                CustomText(
+                    text = stringResource(R.string.balance),
+                    style = MyAppTheme.typography.Regular57,
+                    color = MyAppTheme.colors.gray2,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+
+                )
+                CustomText(
+                    text = Util.getFormattedStringWithSymbol(remainAmount),
+                    style = MyAppTheme.typography.Regular57,
+                    color = if (remainAmount < 0) MyAppTheme.colors.redBg else MyAppTheme.colors.greenBg,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1,
+                )
+
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.padding)))
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically, modifier = modifier
+                ) {
+                    RoundImage(
+                        imageVector = Icons.Default.SouthWest,
+                        tint = MyAppTheme.colors.gray2,
+                        backGround = MyAppTheme.colors.itemSelectedBg.copy(alpha = 0.3f),
+                        contentDescription = "amount",
+                        imageVectorSize = 13.dp,
+                        modifier = Modifier.size(17.dp)
+                    )
+                    Spacer(modifier = Modifier.width(5.dp))
+                    CustomText(
+                        text = stringResource(R.string.received),
+                        style = MyAppTheme.typography.Regular46,
+                        color = MyAppTheme.colors.gray2
+                    )
+                }
+                CustomText(
+                    text = Util.getFormattedStringWithSymbol(receiveAmount),
+                    style = MyAppTheme.typography.Regular57,
+                    color = MyAppTheme.colors.black,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1,
+                )
+
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.padding)))
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically, modifier = modifier
+                ) {
+                    RoundImage(
+                        imageVector = Icons.Default.NorthEast,
+                        tint = MyAppTheme.colors.gray2,
+                        backGround = MyAppTheme.colors.itemSelectedBg.copy(alpha = 0.3f),
+                        contentDescription = "amount",
+                        imageVectorSize = 13.dp,
+                        modifier = Modifier.size(17.dp)
+                    )
+                    Spacer(modifier = Modifier.width(5.dp))
+                    CustomText(
+                        text = stringResource(R.string.spent),
+                        style = MyAppTheme.typography.Regular46,
+                        color = MyAppTheme.colors.gray2
+                    )
+                }
+                CustomText(
+                    text = Util.getFormattedStringWithSymbol(spentAmount),
+                    style = MyAppTheme.typography.Regular57,
+                    color = MyAppTheme.colors.black,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1,
+                )
+            }
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                val chartData = mutableListOf<ChartData>()
+                chartData.add(
+                    ChartData(
+                        name = "Spent",
+                        amount = spentAmount,
+                        color = MyAppTheme.colors.redBg
+                    )
+                )
+                if (remainAmount > 0) {
+                    chartData.add(
+                        ChartData(
+                            name = "Remain",
+                            amount = remainAmount,
+                            color = MyAppTheme.colors.greenBg
+                        )
+                    )
+                }
+
+                PieChart(
+                    data = chartData,
+                    radiusOuter = 50.dp,
+                    chartBarWidth = 30.dp
+                )
+            }
+        }
+    }
+}
+
 
 @Composable
 fun OverViewAnalysisCategoryChart(
@@ -169,9 +302,21 @@ fun OverViewAnalysisCategoryChart(
     }
 
     Column(
-        modifier = modifier,
+        modifier = modifier
+            .roundedCornerBackground(MyAppTheme.colors.itemBg)
+            .padding(
+                vertical = dimensionResource(R.dimen.padding),
+                horizontal = dimensionResource(R.dimen.item_inner_padding)
+            ),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        CustomText(
+            text = stringResource(R.string.category_wise_spending),
+            style = MyAppTheme.typography.Regular51,
+            color = MyAppTheme.colors.gray1,
+            modifier = Modifier.fillMaxWidth()
+        )
+
         PieChart(
             data = chartData
         )
@@ -237,4 +382,16 @@ private fun CategoryListItem(
         modifier = modifier,
         itemBgColor = itemBgColor
     )
+}
+
+
+@Preview
+@Composable
+private fun BudgetListItemPreview() {
+    PennyPalTheme(darkTheme = true) {
+        AnalysisBalance(
+            receiveAmount = 100.0,
+            spentAmount = 20.0,
+        )
+    }
 }

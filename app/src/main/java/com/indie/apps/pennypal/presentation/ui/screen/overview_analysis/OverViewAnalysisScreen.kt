@@ -89,7 +89,7 @@ fun OverViewAnalysisScreen(
                 onPreviousClick = viewModel::onPreviousClick,
                 onNextClick = viewModel::onNextClick,
                 onTextClick = {
-                    if(viewModel.isLoading())
+                    if (viewModel.isLoading())
                         return@AnalysisMonthYearSelection
                     when (currentPeriod) {
                         AnalysisPeriod.MONTH -> openMonthDialog = true
@@ -126,11 +126,15 @@ fun OverViewAnalysisScreen(
                         Column(
                             modifier = modifier
                                 .fillMaxSize()
-                                .padding(horizontal = dimensionResource(id = R.dimen.padding))
                                 .verticalScroll(scrollState),
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.spacedBy(20.dp)
                         ) {
+                            AnalysisBalance(
+                                spentAmount = 1000.0,
+                                receiveAmount = 5000.0
+                            )
+
                             OverViewAnalysisCategoryChart(
                                 categoryList = dataList
                             )

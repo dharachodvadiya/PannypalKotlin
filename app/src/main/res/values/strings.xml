@@ -234,6 +234,7 @@
     <string name="recent_transaction_of_this_year">Recent Transaction Of This Year</string>
     <string name="analysis_of_this_year">Analysis Of This Year</string>
     <string name="all_time">All Time</string>
+    <string name="category_wise_spending">Category Wise Spending</string>
 
     <string-array name="months">
         <item>JAN</item>
