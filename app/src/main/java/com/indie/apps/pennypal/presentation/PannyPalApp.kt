@@ -99,7 +99,7 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
                             navController.navigate(newScreen.route) {
                                 launchSingleTop = true
                                 restoreState = true
-                                popUpTo(newScreen.route)
+                                popUpTo(ScreenNav.OVERVIEW_START.route)
                             }
                         }
                     },
