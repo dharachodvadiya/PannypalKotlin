@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -261,13 +263,14 @@ fun BottomNavigationBarCustom1Item(
 ) {
     val isSelected = currentTab == item
 
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
+    Column (
+        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
             //.roundedCornerBackground(MyAppTheme.colors.transparent)
             //.background(MyAppTheme.colors.bottomBg)
             .clickableWithNoRipple { onTabSelected(item) }
     ) {
+        val color = if (isSelected) MyAppTheme.colors.lightBlue1 else MyAppTheme.colors.inactiveDark
         Icon(
             painter = if (isSelected)
                 painterResource(id = item.selectedIcon)
@@ -275,7 +278,14 @@ fun BottomNavigationBarCustom1Item(
                 id = item.unSelectedIcon
             ),
             contentDescription = stringResource(item.title),
-            tint = if (isSelected) MyAppTheme.colors.lightBlue1 else MyAppTheme.colors.inactiveDark
+            tint = color,
+            modifier = Modifier.size(20.dp)
+        )
+        Spacer(modifier = Modifier.width(5.dp))
+        CustomText(
+            text = stringResource(item.title),
+            color = color,
+            style = MyAppTheme.typography.Medium40
         )
     }
 
