@@ -39,7 +39,7 @@ class MerchantDataRepositoryImpl @Inject constructor(
 
     override fun searchMerchantsDataWithAllDataList(
         searchQuery: String
-    ) = merchantDataDao.searchMerchantsDataWithAllDataList(searchQuery)
+    ) = merchantDataDao.searchMerchantsDataWithAllDataList(searchQuery.trim())
 
     override fun getRecentMerchantsDataWithAllDataListFromMonth(
         timeZoneOffsetInMilli: Int,
@@ -66,7 +66,7 @@ class MerchantDataRepositoryImpl @Inject constructor(
 
     override fun searchMerchantDataWithMerchantNameList(
         searchQuery: String, timeZoneOffsetInMilli: Int
-    ) = merchantDataDao.searchMerchantDataWithMerchantNameList(searchQuery, timeZoneOffsetInMilli)
+    ) = merchantDataDao.searchMerchantDataWithMerchantNameList(searchQuery.trim(), timeZoneOffsetInMilli)
 
     override suspend fun insert(obj: MerchantData) = merchantDataDao.insert(obj)
 

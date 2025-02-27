@@ -27,7 +27,7 @@ class PaymentRepositoryImpl @Inject constructor(
 
     override fun searchPaymentList(
         searchQuery: String,
-    ) = paymentDao.searchPaymentList(searchQuery)
+    ) = paymentDao.searchPaymentList(searchQuery.trim())
 
     override suspend fun insert(obj: Payment): Long {
         return try {

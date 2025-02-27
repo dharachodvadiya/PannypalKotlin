@@ -23,10 +23,10 @@ class CategoryRepositoryImpl @Inject constructor(
         categoryDao.getCategoryFromTypeList(type).flowOn(dispatcher)
 
     override fun searchCategoryFromTypeList(type: Int, searchQuery: String) =
-        categoryDao.searchCategoryFromTypeList(type, searchQuery).flowOn(dispatcher)
+        categoryDao.searchCategoryFromTypeList(type, searchQuery.trim()).flowOn(dispatcher)
 
     override fun searchCategoryList(searchQuery: String) =
-        categoryDao.searchCategoryList(searchQuery)
+        categoryDao.searchCategoryList(searchQuery.trim())
 
     override suspend fun insert(obj: Category): Long {
         return try {

@@ -44,7 +44,7 @@ class MerchantRepositoryImpl @Inject constructor(
 
     override fun searchMerchantNameAndDetailList(
         searchQuery: String
-    ) = merchantDao.searchMerchantNameAndDetailList(searchQuery)
+    ) = merchantDao.searchMerchantNameAndDetailList(searchQuery.trim())
 
     override fun getRecentMerchantNameAndDetailList() =
         merchantDao.getRecentMerchantNameAndDetailList().flowOn(dispatcher)
@@ -61,7 +61,7 @@ class MerchantRepositoryImpl @Inject constructor(
 
     override fun searchMerchantList(
         searchQuery: String
-    ) = merchantDao.searchMerchantList(searchQuery)
+    ) = merchantDao.searchMerchantList(searchQuery.trim())
 
     override suspend fun insert(obj: Merchant): Long {
         return try {
