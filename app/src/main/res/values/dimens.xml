@@ -6,7 +6,7 @@
     <dimen name="bottom_bar_item_horizontal_padding">15dp</dimen>
     <dimen name="bottom_bar_item_vertical_padding">5dp</dimen>
 
-    <dimen name="top_bar_profile">45dp</dimen>
+    <dimen name="top_bar_profile">40dp</dimen>
     <dimen name="padding">15dp</dimen>
     <dimen name="overview_item_padding">20dp</dimen>
     <dimen name="item_padding">5dp</dimen>
