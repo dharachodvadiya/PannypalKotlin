@@ -149,27 +149,6 @@ fun CategoryScreen(
                 .padding(horizontal = dimensionResource(id = R.dimen.padding))
         )
         {
-            SearchView(
-                textState = searchTextState,
-                onTextChange = {
-                    viewModel.updateSearchText(it)
-                    job?.cancel()
-                    job = MainScope().launch {
-                        delay(Util.SEARCH_NEWS_TIME_DELAY)
-                        viewModel.searchData()
-                    }
-                },
-                trailingIcon = Icons.Default.Search,
-                bgColor = MyAppTheme.colors.lightBlue2,
-                modifier = Modifier
-                    .height(dimensionResource(R.dimen.top_bar_profile)),
-                paddingValues = PaddingValues(
-                    top = 0.dp,
-                    bottom = 0.dp,
-                    start = dimensionResource(id = R.dimen.padding),
-                    end = 0.dp
-                )
-            )
 
             if (pagingState.isRefresh && (lazyPagingData.itemCount == 0 || isAddSuccess)) {
                 LoadingWithProgress(
@@ -184,6 +163,28 @@ fun CategoryScreen(
                     painterRes = R.drawable.person_off
                 )
             } else {
+
+                SearchView(
+                    textState = searchTextState,
+                    onTextChange = {
+                        viewModel.updateSearchText(it)
+                        job?.cancel()
+                        job = MainScope().launch {
+                            delay(Util.SEARCH_NEWS_TIME_DELAY)
+                            viewModel.searchData()
+                        }
+                    },
+                    trailingIcon = Icons.Default.Search,
+                    bgColor = MyAppTheme.colors.lightBlue2,
+                    modifier = Modifier
+                        .height(dimensionResource(R.dimen.top_bar_profile)),
+                    paddingValues = PaddingValues(
+                        top = 0.dp,
+                        bottom = 0.dp,
+                        start = dimensionResource(id = R.dimen.padding),
+                        end = 0.dp
+                    )
+                )
 
                 val scrollState: LazyListState = rememberLazyListState(
                     scrollIndex,

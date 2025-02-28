@@ -11,13 +11,17 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -45,6 +49,7 @@ import com.indie.apps.pennypal.data.database.entity.toMerchantNameAndDetails
 import com.indie.apps.pennypal.presentation.ui.component.ConfirmationDialog
 import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.SearchView
 import com.indie.apps.pennypal.presentation.ui.component.showToast
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
@@ -132,7 +137,7 @@ fun MerchantScreen(
         MerchantTopBar(
             title = if (selectedList.size > 0) "${selectedList.size} " + stringResource(
                 id = R.string.selected_text
-            ) else "",
+            ) else stringResource(R.string.merchants),
             textState = searchTextState,
             isSelected = merchantViewModel.getIsSelected(),
             isEditable = isEditable,
@@ -156,15 +161,14 @@ fun MerchantScreen(
             })
     }) { topBarPadding ->
 
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
                 //.padding(bottomPadding)
                 .padding(top = topBarPadding.calculateTopPadding())
                 .padding(horizontal = dimensionResource(id = R.dimen.padding))
-        )
-        {
+        ){
             if (pagingState.isRefresh && (lazyPagingData.itemCount == 0 || isAddSuccess)) {
                 LoadingWithProgress(
                     modifier = Modifier
@@ -178,6 +182,28 @@ fun MerchantScreen(
                     painterRes = R.drawable.person_off
                 )
             } else {
+
+                SearchView(
+                    textState = searchTextState,
+                    onTextChange = {
+                        merchantViewModel.updateSearchText(it)
+                        job?.cancel()
+                        job = MainScope().launch {
+                            delay(Util.SEARCH_NEWS_TIME_DELAY)
+                            merchantViewModel.searchData()
+                        }
+                    },
+                    trailingIcon = Icons.Default.Search,
+                    bgColor = MyAppTheme.colors.lightBlue2,
+                    modifier = Modifier
+                        .height(dimensionResource(R.dimen.top_bar_profile)),
+                    paddingValues = PaddingValues(
+                        top = 0.dp,
+                        bottom = 0.dp,
+                        start = dimensionResource(id = R.dimen.padding),
+                        end = 0.dp
+                    )
+                )
 
                 val scrollState: LazyListState = rememberLazyListState(
                     scrollIndex,

@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
@@ -28,6 +29,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
+import com.indie.apps.pennypal.presentation.ui.component.TopBarWithTitle
 import com.indie.apps.pennypal.presentation.ui.component.clickableWithNoRipple
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListItem
@@ -56,10 +58,12 @@ fun MerchantTopBar(
     onSearchTextChange: (String) -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
-    TopBar(
+    TopBarWithTitle(
         isBackEnable = true,
-        onBackClick = onNavigationUp,
-        content = {
+        onNavigationUp = onNavigationUp,
+        title = title,
+        contentAlignment = if(isSelected) Alignment.CenterStart else Alignment.Center,
+        /*content = {
             if (!isSelected) {
                 SearchView(
                     textState = textState,
@@ -83,7 +87,7 @@ fun MerchantTopBar(
                 )
             }
 
-        },
+        },*/
         trailingContent = {
 
             if (isSelected) {
