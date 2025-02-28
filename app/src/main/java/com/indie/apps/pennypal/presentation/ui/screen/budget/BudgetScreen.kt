@@ -82,7 +82,6 @@ fun BudgetScreen(
         ) {
             // Budget Period Selection
             item {
-                Spacer(Modifier.height(20.dp))
                 AddBudgetTopSelectionButton(
                     list = PeriodType.entries,
                     selectBudgetPeriod = PeriodType.entries.first { it.id == currentPeriod.id },
