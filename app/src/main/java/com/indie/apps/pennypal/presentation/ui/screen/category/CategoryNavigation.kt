@@ -46,13 +46,6 @@ internal fun NavGraphBuilder.navigateToCategoryScreen(
             isAddSuccess = isAddSuccess ?: false,
             isEditSuccess = isEditSuccess ?: false,
             merchantEditAddId = editAddId ?: -1,
-            onCategoryClick = {
-                /*navController.navigate(
-                    ScreenNav.MERCHANT_DATA.route.replace(
-                        "{${Util.PARAM_MERCHANT_ID}}", it.toString()
-                    )
-                )*/
-            },
             onAddClick = { navController.navigate(DialogNav.ADD_EDIT_CATEGORY.route) },
             onEditClick = {
 

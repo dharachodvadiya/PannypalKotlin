@@ -11,13 +11,17 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -44,6 +48,7 @@ import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.presentation.ui.component.ConfirmationDialog
 import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.SearchView
 import com.indie.apps.pennypal.presentation.ui.component.showToast
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
@@ -59,7 +64,6 @@ import kotlinx.coroutines.launch
 fun CategoryScreen(
     viewModel: CategoryViewModel = hiltViewModel(),
     onNavigationUp: () -> Unit,
-    onCategoryClick: (Long) -> Unit,
     onAddClick: () -> Unit,
     onEditClick: (Long) -> Unit,
     isEditSuccess: Boolean = false,
@@ -126,31 +130,17 @@ fun CategoryScreen(
     var job: Job? = null
     Scaffold(topBar = {
         CategoryTopBar(
-            title = "",
-            textState = searchTextState,
-            isSelected = false,
-            isEditable = false,
-            isDeletable = false,
+            title = stringResource(R.string.category),
             onAddClick = { viewModel.onAddClick { onAddClick() } },
-            onEditClick = { },
-            onDeleteClick = { },
             onNavigationUp = {
                 /* if (viewModel.getIsSelected())
                      viewModel.onNavigationUp { }
                  else*/
                 onNavigationUp()
-            },
-            onSearchTextChange = {
-                viewModel.updateSearchText(it)
-                job?.cancel()
-                job = MainScope().launch {
-                    delay(Util.SEARCH_NEWS_TIME_DELAY)
-                    viewModel.searchData()
-                }
             })
     }) { topBarPadding ->
 
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
@@ -159,6 +149,28 @@ fun CategoryScreen(
                 .padding(horizontal = dimensionResource(id = R.dimen.padding))
         )
         {
+            SearchView(
+                textState = searchTextState,
+                onTextChange = {
+                    viewModel.updateSearchText(it)
+                    job?.cancel()
+                    job = MainScope().launch {
+                        delay(Util.SEARCH_NEWS_TIME_DELAY)
+                        viewModel.searchData()
+                    }
+                },
+                trailingIcon = Icons.Default.Search,
+                bgColor = MyAppTheme.colors.lightBlue2,
+                modifier = Modifier
+                    .height(dimensionResource(R.dimen.top_bar_profile)),
+                paddingValues = PaddingValues(
+                    top = 0.dp,
+                    bottom = 0.dp,
+                    start = dimensionResource(id = R.dimen.padding),
+                    end = 0.dp
+                )
+            )
+
             if (pagingState.isRefresh && (lazyPagingData.itemCount == 0 || isAddSuccess)) {
                 LoadingWithProgress(
                     modifier = Modifier
@@ -339,7 +351,6 @@ private fun MerchantScreenPreview() {
         CategoryScreen(
             onAddClick = {},
             onEditClick = {},
-            onCategoryClick = {},
             onNavigationUp = {},
             bottomPadding = PaddingValues(0.dp)
         )
