@@ -34,80 +34,6 @@ class BudgetRepositoryImpl @Inject constructor(
         return count
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    override fun getBudgetsAndSpentWithCategoryIdListFromMonth(
-        timeZoneOffsetInMilli: Int,
-        year: Int,
-        month: Int
-    ) = budgetDao.getBudgetsWithCategoryIdListFromMonth(
-        timeZoneOffsetInMilli = timeZoneOffsetInMilli,
-        year = year.toString(),
-        monthPlusOne = (month + 1).toString()
-    ).map {
-        it.map { budget ->
-            budget.toBudgetWithSpentAndCategoryIdList()
-        }
-    }.flatMapConcat { budgets ->  // Sequentially process each budget
-        flow {
-            val budgetWithSpentList = mutableListOf<BudgetWithSpentAndCategoryIdList>()
-
-            // Process each budget one by one
-            for (budget in budgets) {
-
-                when (budget.periodType) {
-                    PeriodType.MONTH.id -> {
-                        val startCal: Calendar =
-                            Calendar.getInstance().apply { timeInMillis = budget.startDate }
-
-                        val amountMonth = merchantDataDao.getTotalAmountForMonthAndCategory(
-                            timeZoneOffsetInMilli = timeZoneOffsetInMilli,
-                            year = startCal.get(Calendar.YEAR).toString(),
-                            monthPlusOne = (startCal.get(Calendar.MONTH) + 1).toString(),
-                            categoryIds = budget.category
-                        )
-                        budgetWithSpentList.add(
-                            budget.copy(
-                                spentAmount = amountMonth
-                            )
-                        )
-                    }
-
-                    PeriodType.YEAR.id -> {
-                        val startCal: Calendar =
-                            Calendar.getInstance().apply { timeInMillis = budget.startDate }
-                        val amountYear = merchantDataDao.getTotalAmountForYearAndCategory(
-                            year = startCal.get(Calendar.YEAR).toString(),
-                            categoryIds = budget.category,
-                            timeZoneOffsetInMilli = timeZoneOffsetInMilli
-                        )
-                        budgetWithSpentList.add(
-                            budget.copy(
-                                spentAmount = amountYear
-                            )
-                        )
-                    }
-
-                    PeriodType.ONE_TIME.id -> {
-                        val amount = merchantDataDao.getTotalAmountForBetweenDatesAndCategory(
-                            startTime = budget.startDate,
-                            endTime = budget.endDate ?: 0,
-                            categoryIds = budget.category
-                        )
-
-                        budgetWithSpentList.add(
-                            budget.copy(
-                                spentAmount = amount
-                            )
-                        )
-                    }
-
-                }
-            }
-            // Emit the list once all items are processed
-            emit(budgetWithSpentList)
-        }
-    }.flowOn(dispatcher)
-
     override fun getBudgetWithCategoryFromId(budgetId: Long) =
         budgetDao.getBudgetWithCategoryFromId(budgetId).map { it.toBudgetWithCategories() }
             .flowOn(dispatcher)
@@ -209,6 +135,300 @@ class BudgetRepositoryImpl @Inject constructor(
             0
         }
     }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun getBudgetsAndSpentWithCategoryIdListFromMonth(
+        timeZoneOffsetInMilli: Int,
+        year: Int,
+        month: Int
+    ) = budgetDao.getBudgetsWithCategoryIdListFromMonth(
+        timeZoneOffsetInMilli = timeZoneOffsetInMilli,
+        year = year.toString(),
+        monthPlusOne = (month + 1).toString()
+    ).map {
+        it.map { budget ->
+            budget.toBudgetWithSpentAndCategoryIdList()
+        }
+    }.flatMapConcat { budgets ->  // Sequentially process each budget
+        flow {
+            val budgetWithSpentList = mutableListOf<BudgetWithSpentAndCategoryIdList>()
+
+            // Process each budget one by one
+            for (budget in budgets) {
+
+                when (budget.periodType) {
+                    PeriodType.MONTH.id -> {
+                        val startCal: Calendar =
+                            Calendar.getInstance().apply { timeInMillis = budget.startDate }
+
+                        val amountMonth = merchantDataDao.getTotalAmountForMonthAndCategory(
+                            timeZoneOffsetInMilli = timeZoneOffsetInMilli,
+                            year = startCal.get(Calendar.YEAR).toString(),
+                            monthPlusOne = (startCal.get(Calendar.MONTH) + 1).toString(),
+                            categoryIds = budget.category
+                        )
+                        budgetWithSpentList.add(
+                            budget.copy(
+                                spentAmount = amountMonth
+                            )
+                        )
+                    }
+
+                    PeriodType.YEAR.id -> {
+                        val startCal: Calendar =
+                            Calendar.getInstance().apply { timeInMillis = budget.startDate }
+                        val amountYear = merchantDataDao.getTotalAmountForYearAndCategory(
+                            year = startCal.get(Calendar.YEAR).toString(),
+                            categoryIds = budget.category,
+                            timeZoneOffsetInMilli = timeZoneOffsetInMilli
+                        )
+                        budgetWithSpentList.add(
+                            budget.copy(
+                                spentAmount = amountYear
+                            )
+                        )
+                    }
+
+                    PeriodType.ONE_TIME.id -> {
+                        val amount = merchantDataDao.getTotalAmountForBetweenDatesAndCategory(
+                            startTime = budget.startDate,
+                            endTime = budget.endDate ?: 0,
+                            categoryIds = budget.category
+                        )
+
+                        budgetWithSpentList.add(
+                            budget.copy(
+                                spentAmount = amount
+                            )
+                        )
+                    }
+
+                }
+            }
+            // Emit the list once all items are processed
+            emit(budgetWithSpentList)
+        }
+    }.flowOn(dispatcher)
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun getOneTimeBudgetsWithCategoryIdListFromMonth(
+        timeZoneOffsetInMilli: Int,
+        year: Int,
+        month: Int
+    ) = budgetDao.getOneTimeBudgetsWithCategoryIdListFromMonth(
+        timeZoneOffsetInMilli = timeZoneOffsetInMilli,
+        year = year.toString(),
+        monthPlusOne = (month + 1).toString()
+    ).map {
+        it.map { budget ->
+            budget.toBudgetWithSpentAndCategoryIdList()
+        }
+    }.flatMapConcat { budgets ->  // Sequentially process each budget
+        flow {
+            val budgetWithSpentList = mutableListOf<BudgetWithSpentAndCategoryIdList>()
+
+            // Process each budget one by one
+            for (budget in budgets) {
+
+                when (budget.periodType) {
+                    PeriodType.MONTH.id -> {
+                        val startCal: Calendar =
+                            Calendar.getInstance().apply { timeInMillis = budget.startDate }
+
+                        val amountMonth = merchantDataDao.getTotalAmountForMonthAndCategory(
+                            timeZoneOffsetInMilli = timeZoneOffsetInMilli,
+                            year = startCal.get(Calendar.YEAR).toString(),
+                            monthPlusOne = (startCal.get(Calendar.MONTH) + 1).toString(),
+                            categoryIds = budget.category
+                        )
+                        budgetWithSpentList.add(
+                            budget.copy(
+                                spentAmount = amountMonth
+                            )
+                        )
+                    }
+
+                    PeriodType.YEAR.id -> {
+                        val startCal: Calendar =
+                            Calendar.getInstance().apply { timeInMillis = budget.startDate }
+                        val amountYear = merchantDataDao.getTotalAmountForYearAndCategory(
+                            year = startCal.get(Calendar.YEAR).toString(),
+                            categoryIds = budget.category,
+                            timeZoneOffsetInMilli = timeZoneOffsetInMilli
+                        )
+                        budgetWithSpentList.add(
+                            budget.copy(
+                                spentAmount = amountYear
+                            )
+                        )
+                    }
+
+                    PeriodType.ONE_TIME.id -> {
+                        val amount = merchantDataDao.getTotalAmountForBetweenDatesAndCategory(
+                            startTime = budget.startDate,
+                            endTime = budget.endDate ?: 0,
+                            categoryIds = budget.category
+                        )
+
+                        budgetWithSpentList.add(
+                            budget.copy(
+                                spentAmount = amount
+                            )
+                        )
+                    }
+
+                }
+            }
+            // Emit the list once all items are processed
+            emit(budgetWithSpentList)
+        }
+    }.flowOn(dispatcher)
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun getMonthBudgetsAndSpentWithCategoryIdListFromMonth(
+        timeZoneOffsetInMilli: Int,
+        year: Int,
+        month: Int
+    ) = budgetDao.getMonthBudgetsWithCategoryIdListFromMonth(
+        timeZoneOffsetInMilli = timeZoneOffsetInMilli,
+        year = year.toString(),
+        monthPlusOne = (month + 1).toString()
+    ).map {
+        it.map { budget ->
+            budget.toBudgetWithSpentAndCategoryIdList()
+        }
+    }.flatMapConcat { budgets ->  // Sequentially process each budget
+        flow {
+            val budgetWithSpentList = mutableListOf<BudgetWithSpentAndCategoryIdList>()
+
+            // Process each budget one by one
+            for (budget in budgets) {
+
+                when (budget.periodType) {
+                    PeriodType.MONTH.id -> {
+                        val startCal: Calendar =
+                            Calendar.getInstance().apply { timeInMillis = budget.startDate }
+
+                        val amountMonth = merchantDataDao.getTotalAmountForMonthAndCategory(
+                            timeZoneOffsetInMilli = timeZoneOffsetInMilli,
+                            year = startCal.get(Calendar.YEAR).toString(),
+                            monthPlusOne = (startCal.get(Calendar.MONTH) + 1).toString(),
+                            categoryIds = budget.category
+                        )
+                        budgetWithSpentList.add(
+                            budget.copy(
+                                spentAmount = amountMonth
+                            )
+                        )
+                    }
+
+                    PeriodType.YEAR.id -> {
+                        val startCal: Calendar =
+                            Calendar.getInstance().apply { timeInMillis = budget.startDate }
+                        val amountYear = merchantDataDao.getTotalAmountForYearAndCategory(
+                            year = startCal.get(Calendar.YEAR).toString(),
+                            categoryIds = budget.category,
+                            timeZoneOffsetInMilli = timeZoneOffsetInMilli
+                        )
+                        budgetWithSpentList.add(
+                            budget.copy(
+                                spentAmount = amountYear
+                            )
+                        )
+                    }
+
+                    PeriodType.ONE_TIME.id -> {
+                        val amount = merchantDataDao.getTotalAmountForBetweenDatesAndCategory(
+                            startTime = budget.startDate,
+                            endTime = budget.endDate ?: 0,
+                            categoryIds = budget.category
+                        )
+
+                        budgetWithSpentList.add(
+                            budget.copy(
+                                spentAmount = amount
+                            )
+                        )
+                    }
+
+                }
+            }
+            // Emit the list once all items are processed
+            emit(budgetWithSpentList)
+        }
+    }.flowOn(dispatcher)
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun getYearBudgetsAndSpentWithCategoryIdListFromYear(
+        timeZoneOffsetInMilli: Int,
+        year: Int
+    ) = budgetDao.getYearBudgetsWithCategoryIdListFromYear(
+        timeZoneOffsetInMilli = timeZoneOffsetInMilli,
+        year = year.toString(),
+    ).map {
+        it.map { budget ->
+            budget.toBudgetWithSpentAndCategoryIdList()
+        }
+    }.flatMapConcat { budgets ->  // Sequentially process each budget
+        flow {
+            val budgetWithSpentList = mutableListOf<BudgetWithSpentAndCategoryIdList>()
+
+            // Process each budget one by one
+            for (budget in budgets) {
+
+                when (budget.periodType) {
+                    PeriodType.MONTH.id -> {
+                        val startCal: Calendar =
+                            Calendar.getInstance().apply { timeInMillis = budget.startDate }
+
+                        val amountMonth = merchantDataDao.getTotalAmountForMonthAndCategory(
+                            timeZoneOffsetInMilli = timeZoneOffsetInMilli,
+                            year = startCal.get(Calendar.YEAR).toString(),
+                            monthPlusOne = (startCal.get(Calendar.MONTH) + 1).toString(),
+                            categoryIds = budget.category
+                        )
+                        budgetWithSpentList.add(
+                            budget.copy(
+                                spentAmount = amountMonth
+                            )
+                        )
+                    }
+
+                    PeriodType.YEAR.id -> {
+                        val startCal: Calendar =
+                            Calendar.getInstance().apply { timeInMillis = budget.startDate }
+                        val amountYear = merchantDataDao.getTotalAmountForYearAndCategory(
+                            year = startCal.get(Calendar.YEAR).toString(),
+                            categoryIds = budget.category,
+                            timeZoneOffsetInMilli = timeZoneOffsetInMilli
+                        )
+                        budgetWithSpentList.add(
+                            budget.copy(
+                                spentAmount = amountYear
+                            )
+                        )
+                    }
+
+                    PeriodType.ONE_TIME.id -> {
+                        val amount = merchantDataDao.getTotalAmountForBetweenDatesAndCategory(
+                            startTime = budget.startDate,
+                            endTime = budget.endDate ?: 0,
+                            categoryIds = budget.category
+                        )
+
+                        budgetWithSpentList.add(
+                            budget.copy(
+                                spentAmount = amount
+                            )
+                        )
+                    }
+
+                }
+            }
+            // Emit the list once all items are processed
+            emit(budgetWithSpentList)
+        }
+    }.flowOn(dispatcher)
 
     override suspend fun update(obj: BudgetWithCategory): Int {
         val updateCount = budgetDao.update(obj.toBudget())

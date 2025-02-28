@@ -25,6 +25,47 @@ internal fun Modifier.roundedCornerBackground(
     .then(if (border != null) Modifier.border(border, RoundedCornerShape(10.dp)) else Modifier)
     .background(color = backgroundColor, shape = RoundedCornerShape(10.dp))
 
+internal fun Modifier.roundedCornerUpperBackground(
+    backgroundColor: Color,
+    border: BorderStroke? = null,
+    shadowElevation: Dp = 0.dp
+) = this
+    .shadow(shadowElevation, RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp), clip = false)
+    .clip(RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp))
+    .then(
+        if (border != null) Modifier.border(
+            border,
+            RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp)
+        ) else Modifier
+    )
+    .background(
+        color = backgroundColor,
+        shape = RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp)
+    )
+
+internal fun Modifier.roundedCornerLowerBackground(
+    backgroundColor: Color,
+    border: BorderStroke? = null,
+    shadowElevation: Dp = 0.dp
+) = this
+    .shadow(
+        shadowElevation,
+        RoundedCornerShape(bottomStart = 10.dp, bottomEnd = 10.dp),
+        clip = false
+    )
+    .clip(RoundedCornerShape(bottomStart = 10.dp, bottomEnd = 10.dp))
+    .then(
+        if (border != null) Modifier.border(
+            border,
+            RoundedCornerShape(bottomStart = 10.dp, bottomEnd = 10.dp)
+        ) else Modifier
+    )
+    .background(
+        color = backgroundColor,
+        shape = RoundedCornerShape(bottomStart = 10.dp, bottomEnd = 10.dp)
+    )
+
+
 internal fun Intent.setRequestCode(requestCode: Int) {
     this.putExtra("requestCode", requestCode)
 }

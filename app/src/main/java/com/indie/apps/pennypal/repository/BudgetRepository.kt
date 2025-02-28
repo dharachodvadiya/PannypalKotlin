@@ -21,6 +21,18 @@ interface BudgetRepository : BaseRepository<BudgetWithCategory> {
         timeZoneOffsetInMilli: Int, year: Int, month: Int
     ): Flow<List<BudgetWithSpentAndCategoryIdList>>
 
+    fun getOneTimeBudgetsWithCategoryIdListFromMonth(
+        timeZoneOffsetInMilli: Int, year: Int, month: Int
+    ): Flow<List<BudgetWithSpentAndCategoryIdList>>
+
+    fun getMonthBudgetsAndSpentWithCategoryIdListFromMonth(
+        timeZoneOffsetInMilli: Int, year: Int, month: Int
+    ): Flow<List<BudgetWithSpentAndCategoryIdList>>
+
+    fun getYearBudgetsAndSpentWithCategoryIdListFromYear(
+        timeZoneOffsetInMilli: Int, year: Int
+    ): Flow<List<BudgetWithSpentAndCategoryIdList>>
+
     fun getBudgetWithCategoryFromId(
         budgetId: Long
     ): Flow<BudgetWithCategory>

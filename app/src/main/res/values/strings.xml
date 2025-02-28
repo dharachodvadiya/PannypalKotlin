@@ -113,7 +113,7 @@
     <string name="budget_for">Budget For</string>
     <string name="month">Month</string>
     <string name="year">Year</string>
-    <string name="one_time">One-Timeone</string>
+    <string name="one_time">One-Time</string>
     <string name="select_all">Select All</string>
     <string name="from">From</string>
     <string name="to">To</string>
@@ -235,6 +235,7 @@
     <string name="analysis_of_this_year">Analysis Of This Year</string>
     <string name="all_time">All Time</string>
     <string name="category_wise_spending">Category Wise Spending</string>
+    <string name="active_budget">Active Budget</string>
 
     <string-array name="months">
         <item>JAN</item>
