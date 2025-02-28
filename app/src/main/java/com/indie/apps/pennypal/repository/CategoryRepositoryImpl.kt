@@ -17,6 +17,8 @@ class CategoryRepositoryImpl @Inject constructor(
     override suspend fun deleteMultipleCategory(idList: List<Long>) =
         categoryDao.softDeleteCategoryList(idList)
 
+    override suspend fun deleteCategory(id: Long) = categoryDao.softDeleteCategory(id)
+
     override fun getCategoryFromId(id: Long) = categoryDao.getCategoryFromId(id).flowOn(dispatcher)
 
     override fun getCategoryFromTypeList(type: Int) =

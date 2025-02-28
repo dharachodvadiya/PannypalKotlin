@@ -77,11 +77,11 @@ fun CategoryScreen(
     pagingState.update(lazyPagingData)
 
     val searchTextState by viewModel.searchTextState.collectAsStateWithLifecycle()
-    val isEditable by viewModel.isEditable.collectAsStateWithLifecycle()
-    val isDeletable by viewModel.isDeletable.collectAsStateWithLifecycle()
+    // val isEditable by viewModel.isEditable.collectAsStateWithLifecycle()
+    // val isDeletable by viewModel.isDeletable.collectAsStateWithLifecycle()
     val scrollOffset by viewModel.scrollOffset.collectAsStateWithLifecycle()
     val scrollIndex by viewModel.scrollIndex.collectAsStateWithLifecycle()
-    val selectedList = viewModel.selectedList
+    //  val selectedList = viewModel.selectedList
 
     val addAnimRun by viewModel.addAnimRun.collectAsStateWithLifecycle()
     val addDataAnimRun by viewModel.addDataAnimRun.collectAsStateWithLifecycle()
@@ -89,10 +89,10 @@ fun CategoryScreen(
     val deleteAnimRun by viewModel.deleteAnimRun.collectAsStateWithLifecycle()
 
     BackHandler {
-        if (viewModel.getIsSelected())
+        /*if (viewModel.getIsSelected())
             viewModel.onNavigationUp { }
-        else
-            onNavigationUp()
+        else*/
+        onNavigationUp()
     }
 
     var merchantId by remember {
@@ -121,25 +121,24 @@ fun CategoryScreen(
     }
 
     var openAlertDialog by remember { mutableStateOf(false) }
+    var deleteId by remember { mutableStateOf(-1L) }
 
     var job: Job? = null
     Scaffold(topBar = {
         CategoryTopBar(
-            title = if (selectedList.size > 0) "${selectedList.size} " + stringResource(
-                id = R.string.selected_text
-            ) else "",
+            title = "",
             textState = searchTextState,
-            isSelected = viewModel.getIsSelected(),
-            isEditable = isEditable,
-            isDeletable = isDeletable,
+            isSelected = false,
+            isEditable = false,
+            isDeletable = false,
             onAddClick = { viewModel.onAddClick { onAddClick() } },
-            onEditClick = { viewModel.onEditClick { onEditClick(it) } },
-            onDeleteClick = { viewModel.onDeleteClick { openAlertDialog = true } },
+            onEditClick = { },
+            onDeleteClick = { },
             onNavigationUp = {
-                if (viewModel.getIsSelected())
-                    viewModel.onNavigationUp { }
-                else
-                    onNavigationUp()
+                /* if (viewModel.getIsSelected())
+                     viewModel.onNavigationUp { }
+                 else*/
+                onNavigationUp()
             },
             onSearchTextChange = {
                 viewModel.updateSearchText(it)
@@ -267,7 +266,7 @@ fun CategoryScreen(
                             }
 
                             if (deleteAnimRun &&
-                                selectedList.contains(data.id)
+                                deleteId == data.id
                             ) {
                                 visible = false
                             }
@@ -280,15 +279,15 @@ fun CategoryScreen(
                             {
                                 CategoryListItem(
                                     item = data,
-                                    isSelected = selectedList.contains(data.id),
+                                    isSelected = false,
                                     onClick = {
-                                        viewModel.onItemClick(data.id) {
-                                            onCategoryClick(
-                                                it
-                                            )
-                                        }
+                                        onEditClick(data.id)
                                     },
-                                    onLongClick = { viewModel.onItemLongClick(data.id) },
+                                    onDeleteClick = {
+                                        deleteId = data.id
+                                        openAlertDialog = true
+                                    },
+                                    onLongClick = { },
                                     modifier = modifierAdd,
                                     itemBgColor = itemAnimateColor.value
                                 )
@@ -315,12 +314,16 @@ fun CategoryScreen(
                     dialogTitle = R.string.delete_dialog_title,
                     dialogText = R.string.delete_item_dialog_text,
                     onConfirmation = {
-                        viewModel.onDeleteDialogClick {
+                        viewModel.onDeleteDialogClick(deleteId) {
+                            deleteId = -1
                             openAlertDialog = false
                             context.showToast(categoryDeleteToast)
                         }
                     },
-                    onDismissRequest = { openAlertDialog = false }
+                    onDismissRequest = {
+                        deleteId = -1
+                        openAlertDialog = false
+                    }
                 )
             }
         }

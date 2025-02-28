@@ -1,12 +1,11 @@
 package com.indie.apps.pennypal.presentation.ui.screen.category
 
-import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.indie.apps.pennypal.data.database.entity.Category
-import com.indie.apps.pennypal.domain.usecase.DeleteMultipleCategoryUseCase
+import com.indie.apps.pennypal.domain.usecase.DeleteCategoryUseCase
 import com.indie.apps.pennypal.domain.usecase.SearchCategoryListUseCase
 import com.indie.apps.pennypal.presentation.ui.state.PagingState
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
@@ -25,7 +24,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CategoryViewModel @Inject constructor(
     searchCategoryListUseCase: SearchCategoryListUseCase,
-    private val deleteMultipleCategoryUseCase: DeleteMultipleCategoryUseCase
+    private val deleteCategoryUseCase: DeleteCategoryUseCase
 ) : ViewModel() {
 
     var scrollIndex = MutableStateFlow(0)
@@ -34,11 +33,11 @@ class CategoryViewModel @Inject constructor(
     val searchTextState = MutableStateFlow(TextFieldState())
     private val trigger = MutableSharedFlow<Unit>(replay = 1)
 
-    var selectedList = mutableStateListOf<Long>()
-        private set
+    //var selectedList = mutableStateListOf<Long>()
+    //    private set
 
-    var isEditable = MutableStateFlow(false)
-    var isDeletable = MutableStateFlow(false)
+    // var isEditable = MutableStateFlow(false)
+    //  var isDeletable = MutableStateFlow(false)
 
     var deleteAnimRun = MutableStateFlow(false)
     var addAnimRun = MutableStateFlow(false)
@@ -82,7 +81,7 @@ class CategoryViewModel @Inject constructor(
     }
 
     fun addCategorySuccess() {
-        clearSelection()
+        //clearSelection()
         clearSearch()
         scrollIndex.value = 0
         scrollOffset.value = 0
@@ -101,7 +100,7 @@ class CategoryViewModel @Inject constructor(
     }
 
     fun editCategorySuccess() {
-        clearSelection()
+        //clearSelection()
         //clearSearch()
 
         editAnimRun.value = true
@@ -114,7 +113,7 @@ class CategoryViewModel @Inject constructor(
 
     fun addMerchantDataSuccess() {
 
-        clearSelection()
+        //clearSelection()
         clearSearch()
         scrollIndex.value = 0
         scrollOffset.value = 0
@@ -127,29 +126,29 @@ class CategoryViewModel @Inject constructor(
         }
     }
 
-    fun onEditClick(onSuccess: (Long) -> Unit) {
+    /*fun onEditClick(onSuccess: (Long) -> Unit) {
         val id = selectedList[0]
         onSuccess(id)
-    }
+    }*/
 
-    fun onDeleteClick(onSuccess: () -> Unit) {
-        onSuccess()
-    }
+    /* fun onDeleteClick(onSuccess: () -> Unit) {
+         onSuccess()
+     }*/
 
     fun onAddClick(onSuccess: () -> Unit) {
         onSuccess()
     }
 
     fun onNavigationUp(onSuccess: () -> Unit) {
-        clearSelection()
+        //clearSelection()
         onSuccess()
     }
 
-    fun onDeleteDialogClick(onSuccess: () -> Unit) {
+    fun onDeleteDialogClick(id: Long, onSuccess: () -> Unit) {
         deleteAnimRun.value = true
         viewModelScope.launch {
-            deleteMultipleCategoryUseCase
-                .deleteData(selectedList)
+            deleteCategoryUseCase
+                .deleteData(id)
                 .collect {
                     when (it) {
                         is Resource.Loading -> {}
@@ -172,39 +171,39 @@ class CategoryViewModel @Inject constructor(
     private fun onDeleteAnimStop() {
         if (deleteAnimRun.value) {
             deleteAnimRun.value = false
-            clearSelection()
+            //clearSelection()
             searchData()
         }
 
     }
 
-    fun onItemClick(id: Long, callBack: (Long) -> Unit) {
-        if (!getIsSelected()) {
-            callBack(id)
-        } else {
-            setSelectItem(id)
-        }
-    }
+    /* fun onItemClick(id: Long, callBack: (Long) -> Unit) {
+         if (!getIsSelected()) {
+             callBack(id)
+         } else {
+             setSelectItem(id)
+         }
+     }
 
-    fun onItemLongClick(id: Long) {
-        setSelectItem(id)
-    }
+     fun onItemLongClick(id: Long) {
+         setSelectItem(id)
+     }*/
 
-    private fun setSelectItem(id: Long) {
-        if (selectedList.contains(id))
-            selectedList.remove(id)
-        else
-            selectedList.add(id)
+    /* private fun setSelectItem(id: Long) {
+         if (selectedList.contains(id))
+             selectedList.remove(id)
+         else
+             selectedList.add(id)
 
-        changeUpdateState()
-    }
+         changeUpdateState()
+     }
 
-    private fun clearSelection() {
-        selectedList.clear()
-        changeUpdateState()
-    }
+     private fun clearSelection() {
+         selectedList.clear()
+         changeUpdateState()
+     }*/
 
-    private fun changeUpdateState() {
+    /*private fun changeUpdateState() {
         val selectedCount = selectedList.size
         if (selectedCount == 1) {
             isEditable.value = true
@@ -216,7 +215,7 @@ class CategoryViewModel @Inject constructor(
             isEditable.value = false
             isDeletable.value = false
         }
-    }
+    }*/
 
     fun setScrollVal(scrollIndex: Int, scrollOffset: Int) {
         this.scrollIndex.value = scrollIndex
@@ -225,6 +224,6 @@ class CategoryViewModel @Inject constructor(
 
     fun updateSearchText(text: String) = searchTextState.value.updateText(text)
 
-    fun getIsSelected() = selectedList.size != 0
+    // fun getIsSelected() = selectedList.size != 0
 
 }

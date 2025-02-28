@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -142,9 +143,10 @@ fun CategoryListItem(
     item: Category,
     onLongClick: () -> Unit = {},
     onClick: () -> Unit,
+    onDeleteClick: () -> Unit,
     isSelected: Boolean = false,
     itemBgColor: Color,
-    leadingIconSize: Dp = 50.dp,
+    leadingIconSize: Dp = 40.dp,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier.fillMaxWidth()
 ) {
     val tintColor = getCategoryColorById(item.iconColorId)
@@ -166,6 +168,7 @@ fun CategoryListItem(
                         LocalContext.current
                     )
                 ),
+                imageVectorSize = 20.dp,
                 tint = imageColor1,
                 backGround = bgColor1,
                 modifier = Modifier.size(leadingIconSize),
@@ -191,6 +194,12 @@ fun CategoryListItem(
                  textAlign = TextAlign.Right,
                  maxLines = 1
              )*/
+
+            Icon(imageVector = Icons.Default.Close,
+                contentDescription = "edit",
+                modifier = Modifier
+                    .roundedCornerBackground(MyAppTheme.colors.transparent)
+                    .clickableWithNoRipple { onDeleteClick() })
 
         },
         isSetDivider = false,

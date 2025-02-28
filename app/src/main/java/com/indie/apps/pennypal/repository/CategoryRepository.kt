@@ -8,6 +8,7 @@ interface CategoryRepository : BaseRepository<Category> {
     suspend fun insertCategoryList(categories: List<Category>): List<Long>
 
     suspend fun deleteMultipleCategory(idList: List<Long>): Int
+    suspend fun deleteCategory(id: Long): Int
 
     fun getCategoryFromId(id: Long): Flow<Category>
 
