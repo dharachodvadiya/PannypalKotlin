@@ -236,6 +236,7 @@
     <string name="all_time">All Time</string>
     <string name="category_wise_spending">Category Wise Spending</string>
     <string name="active_budget">Active Budget</string>
+    <string name="transactions">Transactions</string>
 
     <string-array name="months">
         <item>JAN</item>

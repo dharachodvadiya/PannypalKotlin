@@ -11,12 +11,16 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -43,6 +47,7 @@ import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.presentation.ui.component.ConfirmationDialog
 import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.SearchView
 import com.indie.apps.pennypal.presentation.ui.component.showToast
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
@@ -129,7 +134,7 @@ fun AllDataScreen(
         AllDataTopBar(
             title = if (selectedList.size > 0) "${selectedList.size} " + stringResource(
                 id = R.string.selected_text
-            ) else "",
+            ) else stringResource(R.string.transactions),
             textState = searchTextState,
             isDeletable = isDeletable,
             onAddClick = { allDataViewModel.onAddClick { onAddClick() } },
@@ -172,6 +177,28 @@ fun AllDataScreen(
                     iconSize = 70.dp
                 )
             } else {
+
+                SearchView(
+                    textState = searchTextState,
+                    onTextChange = {
+                        allDataViewModel.updateSearchText(it)
+                        job?.cancel()
+                        job = MainScope().launch {
+                            delay(Util.SEARCH_NEWS_TIME_DELAY)
+                            allDataViewModel.searchData()
+                        }
+                    },
+                    trailingIcon = Icons.Default.Search,
+                    bgColor = MyAppTheme.colors.lightBlue2,
+                    modifier = Modifier
+                        .height(dimensionResource(R.dimen.top_bar_profile)),
+                    paddingValues = PaddingValues(
+                        top = 0.dp,
+                        bottom = 0.dp,
+                        start = dimensionResource(id = R.dimen.padding),
+                        end = 0.dp
+                    )
+                )
 
                 val scrollState: LazyListState = rememberLazyListState(
                     scrollIndex,
