@@ -161,7 +161,7 @@ fun TransactionItem(
         content = {
             Column {
                 CustomText(
-                    text = item.categoryName,
+                    text = if(item.details?.trim()?.isNotEmpty() == true) item.details else item.categoryName,
                     style = MyAppTheme.typography.Semibold52_5,
                     color = MyAppTheme.colors.black,
                     maxLines = 1,
@@ -169,7 +169,7 @@ fun TransactionItem(
                 )
                 if (!item.details.isNullOrEmpty()) {
                     CustomText(
-                        text = item.details,
+                        text = item.merchantName ?: "",
                         style = MyAppTheme.typography.Medium40,
                         color = MyAppTheme.colors.gray2,
                         maxLines = 1,
