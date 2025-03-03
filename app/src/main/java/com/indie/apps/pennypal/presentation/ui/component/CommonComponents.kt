@@ -28,11 +28,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.PersonOutline
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -40,6 +38,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
@@ -236,13 +236,14 @@ fun DialogSearchView(
 
 @Composable
 fun DialogTextFieldItem(
-    imageVector: ImageVector? = null,
-    imageColor: Color = LocalContentColor.current,
+    leadingIcon: @Composable (() -> Unit)? = null,
     textState: TextFieldState = TextFieldState(),
     onTextChange: (String) -> Unit,
     placeholder: Int,
     @StringRes label: Int? = null,
     keyboardType: KeyboardType = KeyboardType.Text,
+    bgColor: Color = MyAppTheme.colors.itemBg,
+    isBottomLineEnable: Boolean = false,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
     textLeadingContent: @Composable (() -> Unit)? = null,
     textTrailingContent: @Composable (() -> Unit)? = null,
@@ -260,6 +261,7 @@ fun DialogTextFieldItem(
             )
             Spacer(modifier = Modifier.height(5.dp))
         }
+        val colorDivider = MyAppTheme.colors.gray1
 
         Row(
             modifier = Modifier
@@ -267,9 +269,19 @@ fun DialogTextFieldItem(
                 .roundedCornerBackground(MyAppTheme.colors.transparent),
             verticalAlignment = Alignment.CenterVertically,
         ) {
+            val bottomLineModifier = if (isBottomLineEnable)
+                Modifier.drawBehind {
+                    drawLine(
+                        colorDivider,
+                        Offset(0f, size.height),
+                        Offset(size.width, size.height),
+                        2f
+                    )
+                } else Modifier
 
-            imageVector?.let {
-                Icon(imageVector = it, contentDescription = "", tint = imageColor)
+            leadingIcon?.let {
+                //Icon(imageVector = it, contentDescription = "", tint = imageColor)
+                leadingIcon()
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.item_content_padding)))
             }
             MyAppTextField(
@@ -284,8 +296,10 @@ fun DialogTextFieldItem(
                 textLeadingContent = textLeadingContent,
                 trailingIcon = textTrailingContent,
                 placeHolderTextStyle = MyAppTheme.typography.Regular46,
-                modifier = Modifier.height(dimensionResource(id = R.dimen.new_entry_field_height)),
-                bgColor = MyAppTheme.colors.itemBg,
+                modifier = Modifier
+                    .height(dimensionResource(id = R.dimen.new_entry_field_height))
+                    .then(bottomLineModifier),
+                bgColor = bgColor,
                 paddingValues = PaddingValues(horizontal = dimensionResource(id = R.dimen.item_content_padding))
             )
         }
@@ -688,7 +702,7 @@ private fun UserProfileRectPreview() {
 @Composable
 private fun DialogTextFieldItemPreview() {
     PennyPalTheme(darkTheme = true) {
-        DialogTextFieldItem(imageVector = Icons.Default.PersonOutline,
+        DialogTextFieldItem(leadingIcon = {},
             placeholder = R.string.amount_placeholder,
             onTextChange = {})
     }

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -156,11 +157,16 @@ fun AddBudgetFieldItem(
             label = R.string.amount,
             placeholder = R.string.amount_placeholder,
             textLeadingContent = {
-                CustomText(
-                    text = Util.currentCurrencySymbol,
-                    color = MyAppTheme.colors.gray1,
-                    style = MyAppTheme.typography.Regular66_5
-                )
+                Box(
+                    modifier = Modifier.size(24.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CustomText(
+                        text = Util.currentCurrencySymbol,
+                        color = MyAppTheme.colors.gray1,
+                        style = MyAppTheme.typography.Regular66_5
+                    )
+                }
             },
             keyboardType = KeyboardType.Number,
             onTextChange = onAmountTextChange

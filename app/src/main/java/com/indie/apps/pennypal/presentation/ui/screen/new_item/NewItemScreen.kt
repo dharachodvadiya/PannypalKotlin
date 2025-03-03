@@ -190,7 +190,7 @@ fun NewItemScreen(
                         onDateSelect = { openDateDialog = true },
                         onTimeSelect = { openTimeDialog = true },
                         paymentName = payment?.name,
-                        categoryName = category?.name,
+                        category = category,
                         amount = amount,
                         description = description,
                         merchantError = merchantError.asString(),

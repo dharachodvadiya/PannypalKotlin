@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -85,13 +86,19 @@ fun AddEditCategoryDialogField(
 
         DialogTextFieldItem(
             textState = textCategory,
-            imageVector = ImageVector.vectorResource(
-                getCategoryIconById(
-                    selectedIcon,
-                    LocalContext.current
+            leadingIcon = {
+                val icon = ImageVector.vectorResource(
+                    getCategoryIconById(
+                        selectedIcon,
+                        LocalContext.current
+                    )
                 )
-            ),
-            imageColor = getCategoryColorById(selectedIconColor),
+                Icon(
+                    imageVector = icon,
+                    contentDescription = "",
+                    tint = getCategoryColorById(selectedIconColor),
+                )
+            },
             placeholder = R.string.add_category_placeholder,
             onTextChange = onCategoryNameTextChange
         )

@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Payment
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,7 +45,13 @@ fun AddPaymentDialogField(
     ) {
         DialogTextFieldItem(
             textState = textPaymentState,
-            imageVector = Icons.Default.Payment,
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Payment,
+                    contentDescription = "",
+                    tint = MyAppTheme.colors.gray1
+                )
+            },
             placeholder = R.string.add_payment_type_placeholder,
             onTextChange = onPaymentTypeTextChange
         )

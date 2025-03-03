@@ -52,7 +52,13 @@ fun AddMerchantDialogField(
     ) {
         DialogTextFieldItem(
             textState = nameState,
-            imageVector = Icons.Default.PersonOutline,
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.PersonOutline,
+                    contentDescription = "",
+                    tint = MyAppTheme.colors.gray1
+                )
+            },
             placeholder = R.string.merchant_name_placeholder,
             textTrailingContent = {
                 PrimaryButton(
@@ -73,8 +79,13 @@ fun AddMerchantDialogField(
             onTextChange = onNameTextChange
         )
         DialogTextFieldItem(
-            textState = phoneNoState,
-            imageVector = Icons.Default.Phone,
+            textState = phoneNoState, leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Phone,
+                    contentDescription = "",
+                    tint = MyAppTheme.colors.gray1
+                )
+            },
             placeholder = R.string.phone_number_placeholder,
             textLeadingContent = {
 
@@ -97,8 +108,13 @@ fun AddMerchantDialogField(
             onTextChange = onPhoneNoTextChange
         )
         DialogTextFieldItem(
-            textState = descState,
-            imageVector = Icons.Default.Details,
+            textState = descState, leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Details,
+                    contentDescription = "",
+                    tint = MyAppTheme.colors.gray1
+                )
+            },
             placeholder = R.string.description_placeholder,
             onTextChange = onDescTextChange
         )
