@@ -13,6 +13,8 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -128,11 +130,113 @@ fun MyAppTextField(
 
 }
 
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MyAppOutLinedTextField(
+    value: String,
+    onValueChange: (String) -> Unit = {},
+    placeHolder: String = "Placeholder",
+    label: String = "label",
+    readOnly: Boolean = false,
+    textStyle: TextStyle = MyAppTheme.typography.Medium56,
+    placeHolderTextStyle: TextStyle = MyAppTheme.typography.Regular44,
+    labelTextStyle: TextStyle = MyAppTheme.typography.Regular44,
+    trailingIcon: @Composable (() -> Unit)? = null,
+    leadingIcon: @Composable (() -> Unit)? = null,
+    errorText: @Composable (() -> Unit)? = null,
+    imeAction: ImeAction = ImeAction.Default,
+    keyboardType: KeyboardType = KeyboardType.Text,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
+    textModifier: Modifier = Modifier,
+    bgColor: Color = MyAppTheme.colors.transparent,
+    placeHolderColor: Color = MyAppTheme.colors.gray2.copy(alpha = 0.7f),
+    labelColor: Color = MyAppTheme.colors.gray2,
+    onDoneAction: (() -> Unit)? = {},
+    onNextAction: (() -> Unit)? = null,
+    maxLines: Int = Int.MAX_VALUE,
+    isError: Boolean = false,
+    paddingValues: PaddingValues = PaddingValues(0.dp)
+) {
+
+    Row(
+        modifier = modifier
+            .roundedCornerBackground(bgColor)
+            .padding(vertical = 5.dp),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        /* if (textLeadingContent != null) {
+             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.item_content_padding)))
+             textLeadingContent()
+         }*/
+        val keyboardController = LocalSoftwareKeyboardController.current
+        val colors = TextFieldDefaults.colors(
+            focusedIndicatorColor = MyAppTheme.colors.transparent,
+            unfocusedIndicatorColor = MyAppTheme.colors.transparent,
+            disabledIndicatorColor = MyAppTheme.colors.transparent,
+            focusedContainerColor = MyAppTheme.colors.transparent,
+            unfocusedContainerColor = MyAppTheme.colors.transparent
+        )
+
+        OutlinedTextField(
+            value = value,
+            maxLines = maxLines,
+            modifier = textModifier
+                .fillMaxWidth(),
+            onValueChange = onValueChange,
+            textStyle = textStyle.copy(color = MyAppTheme.colors.black),
+            keyboardOptions = KeyboardOptions(imeAction = imeAction, keyboardType = keyboardType),
+            keyboardActions = KeyboardActions(onDone = {
+                keyboardController?.hide()
+                if (onDoneAction != null) {
+                    onDoneAction()
+                }
+            }, onNext = {
+                if (onNextAction != null) {
+                    onNextAction()
+                }
+            }, onSearch = {
+                keyboardController?.hide()
+            }, onSend = {
+                keyboardController?.hide()
+            }),
+            leadingIcon = leadingIcon,
+            trailingIcon = trailingIcon,
+            singleLine = true,
+            isError = isError,
+            readOnly = readOnly,
+            supportingText = errorText,
+            label = { Text(label, color = labelColor, style = labelTextStyle) },
+            placeholder = {
+                Text(
+                    placeHolder,
+                    color = placeHolderColor,
+                    style = placeHolderTextStyle
+                )
+            },
+        )
+    }
+
+
+}
+
 @Preview
 @Composable
 private fun MyAppTextFieldPreview() {
     PennyPalTheme(darkTheme = true) {
         MyAppTextField(
+            value = "",
+            onValueChange = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun MyAppTextFieldPreview1() {
+    PennyPalTheme(darkTheme = true) {
+        MyAppOutLinedTextField(
             value = "",
             onValueChange = {}
         )
