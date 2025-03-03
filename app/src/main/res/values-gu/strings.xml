@@ -51,7 +51,7 @@
     <string name="no_transactions">કોઈ વ્યવહાર નથી!</string>
     <string name="no_merchants">કોઈ નાણાં લેનાર નથી!</string>
     <string name="no_merchants_details">નવો નાણાં લેનાર ઉમેરવા માટે \"+\" બટન પર ક્લિક કરો.</string>
-    <string name="no_merchants_details_with_transaction">ઊપરના  \"+\" બટન પર નવો નાણાં લેનાર ઉમેરવા માટે ક્લિક કરો અને નીચે ના  \"+\" બટન પર નવો વ્યવહાર ઉમેરવા માટે ક્લિક કરો</string>
+    <string name="no_merchants_details_with_transaction">ઊપરના  \"+\" બટન પર નવો નાણાં લેનાર ઉમેરવા માટે ક્લિક કરો</string>
     <string name="no_data_with_transaction">ઊપરના  \"+\" નવો વ્યવહાર ઉમેરવા માટે ક્લિક કરો</string>
     <string name="currency_and_format">ચલણ અને પ્રતીક</string>
     <string name="user_update_success_message">"સફળતાપૂર્વક સંપાદિત કર્યુ "</string>
