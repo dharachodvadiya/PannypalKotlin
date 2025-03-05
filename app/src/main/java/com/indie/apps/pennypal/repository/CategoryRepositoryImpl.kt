@@ -24,6 +24,9 @@ class CategoryRepositoryImpl @Inject constructor(
     override fun getCategoryFromTypeList(type: Int) =
         categoryDao.getCategoryFromTypeList(type).flowOn(dispatcher)
 
+    override suspend fun getRecentUsedCategoryList(limit: Int) =
+        categoryDao.getRecentUsedCategoryList(limit)
+
     override fun searchCategoryFromTypeList(type: Int, searchQuery: String) =
         categoryDao.searchCategoryFromTypeList(type, searchQuery.trim()).flowOn(dispatcher)
 

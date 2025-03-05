@@ -5,6 +5,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,7 +27,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
@@ -36,6 +40,7 @@ import com.indie.apps.pennypal.presentation.ui.component.DialogTextFieldItem
 import com.indie.apps.pennypal.presentation.ui.component.clickableWithNoRipple
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomTab
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.FlowRowItem
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
@@ -140,11 +145,13 @@ private fun NewEntryButtonItem(
     }
 }*/
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun NewEntryFieldItemSection(
     onMerchantSelect: () -> Unit,
     onPaymentSelect: () -> Unit,
-    onCategorySelect: () -> Unit,
+    onSelectMoreCategory: () -> Unit,
+    onSelectCategory: (Category) -> Unit,
     merchantName: String? = null,
     paymentName: String? = null,
     category: Category? = null,
@@ -159,6 +166,7 @@ fun NewEntryFieldItemSection(
     description: TextFieldState = TextFieldState(),
     onAmountTextChange: (String) -> Unit,
     onDescTextChange: (String) -> Unit,
+    categories: List<Category>,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
 ) {
     Column(
@@ -187,6 +195,27 @@ fun NewEntryFieldItemSection(
         )*/
 
         DialogTextFieldItem(
+            textState = amount,
+            leadingIcon = {
+                Box(
+                    modifier = Modifier.size(24.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CustomText(
+                        text = Util.currentCurrencySymbol,
+                        color = MyAppTheme.colors.black,
+                        style = MyAppTheme.typography.Regular66_5
+                    )
+                }
+            },
+            placeholder = R.string.amount_placeholder,
+            bgColor = MyAppTheme.colors.transparent,
+            onTextChange = onAmountTextChange,
+            isBottomLineEnable = true,
+            keyboardType = KeyboardType.Number
+        )
+
+        DialogTextFieldItem(
             textState = description,
             leadingIcon = {
                 val icon = ImageVector.vectorResource(
@@ -207,6 +236,30 @@ fun NewEntryFieldItemSection(
             isBottomLineEnable = true
         )
 
+        FlowRow(
+            modifier = Modifier.fillMaxWidth(),
+            maxLines = 2
+        ) {
+
+            categories.onEach {
+                FlowRowItem(
+                    isSelected = category?.id == it.id,
+                    text = it.name,
+                    onClick = { onSelectCategory(it) })
+            }
+
+            FlowRowItem(
+                isSelected = false,
+                text = stringResource(R.string.select_more),
+                onClick = {
+                    onSelectMoreCategory()
+                },
+                bgColor = MyAppTheme.colors.gray3,
+                textColor = MyAppTheme.colors.gray1
+            )
+        }
+        Spacer(modifier = Modifier.height(20.dp))
+
         /*Spacer(modifier = Modifier.height(10.dp))
 
         NewEntryTextFieldItem(
@@ -219,26 +272,6 @@ fun NewEntryFieldItemSection(
         TextFieldError(
             textError = amount.errorText.asString()
         )*/
-
-        DialogTextFieldItem(
-            textState = amount,
-            leadingIcon = {
-                Box(
-                    modifier = Modifier.size(24.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CustomText(
-                        text = Util.currentCurrencySymbol,
-                        color = MyAppTheme.colors.gray1,
-                        style = MyAppTheme.typography.Regular66_5
-                    )
-                }
-            },
-            placeholder = R.string.amount_placeholder,
-            bgColor = MyAppTheme.colors.transparent,
-            onTextChange = onAmountTextChange,
-            isBottomLineEnable = true
-        )
 
         DialogSelectableItem(
             text = paymentName ?: "",
@@ -273,22 +306,22 @@ fun NewEntryFieldItemSection(
                 }
             }
         )
-
-        DialogSelectableItem(
-            text = category?.name ?: "",
-            label = R.string.category,
-            onClick = onCategorySelect,
-            placeholder = R.string.select_category_placeholder,
-            isSelectable = true,
-            errorText = categoryError,
-            trailingContent = {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                    contentDescription = "Add",
-                    tint = MyAppTheme.colors.gray1
-                )
-            }
-        )
+        /*
+                DialogSelectableItem(
+                    text = category?.name ?: "",
+                    label = R.string.category,
+                    onClick = onCategorySelect,
+                    placeholder = R.string.select_category_placeholder,
+                    isSelectable = true,
+                    errorText = categoryError,
+                    trailingContent = {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                            contentDescription = "Add",
+                            tint = MyAppTheme.colors.gray1
+                        )
+                    }
+                )*/
     }
 }
 
@@ -476,13 +509,15 @@ private fun TNewEntryFieldItemSectionPreview() {
         NewEntryFieldItemSection(
             onMerchantSelect = {},
             onPaymentSelect = {},
-            onCategorySelect = {},
+            onSelectMoreCategory = {},
             isMerchantLock = false,
             onDateSelect = {},
             onTimeSelect = {},
             currentTimeInMilli = 0L,
             onAmountTextChange = {},
-            onDescTextChange = {}
+            onDescTextChange = {},
+            categories = emptyList(),
+            onSelectCategory = {}
         )
     }
 }

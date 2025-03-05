@@ -86,6 +86,7 @@ fun NewItemScreen(
     val merchantError by newItemViewModel.merchantError.collectAsStateWithLifecycle()
     val paymentError by newItemViewModel.paymentError.collectAsStateWithLifecycle()
     val categoryError by newItemViewModel.categoryError.collectAsStateWithLifecycle()
+    val categories by newItemViewModel.categories.collectAsStateWithLifecycle()
 
     val focusManager = LocalFocusManager.current
 
@@ -181,11 +182,14 @@ fun NewItemScreen(
                                 onPaymentSelect(payment?.id)
                             }
                         },
-                        onCategorySelect = {
+                        onSelectMoreCategory = {
                             if (enableButton) {
                                 focusManager.clearFocus()
                                 onCategorySelect(category?.id, if (received) 1 else -1)
                             }
+                        },
+                        onSelectCategory = {
+                            newItemViewModel.setCategory(it)
                         },
                         onDateSelect = { openDateDialog = true },
                         onTimeSelect = { openTimeDialog = true },
@@ -198,7 +202,8 @@ fun NewItemScreen(
                         categoryError = categoryError.asString(),
                         isMerchantLock = isMerchantLock,
                         onAmountTextChange = newItemViewModel::updateAmountText,
-                        onDescTextChange = newItemViewModel::updateDescText
+                        onDescTextChange = newItemViewModel::updateDescText,
+                        categories = categories
                     )
                     Spacer(modifier = Modifier.weight(1f))
                     BottomSaveButton(

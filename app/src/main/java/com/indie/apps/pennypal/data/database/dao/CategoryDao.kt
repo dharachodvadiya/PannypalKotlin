@@ -32,6 +32,33 @@ interface CategoryDao : BaseDao<Category> {
     fun getCategoryFromTypeList(type: Int): Flow<List<Category>>
 
     @Transaction
+    @Query(
+        """WITH recent_categories AS (
+        SELECT c.*
+        FROM category c
+        JOIN merchant_data m ON c.id = m.category_id
+        WHERE c.soft_delete = 0
+        GROUP BY c.id
+        ORDER BY MAX(m.date_milli) DESC
+        LIMIT (:limit -1)
+    ),
+    
+    additional_categories AS (
+        SELECT * FROM category
+        WHERE id NOT IN (SELECT id FROM recent_categories)
+        AND soft_delete = 0
+        ORDER BY id ASC
+        LIMIT (:limit - (SELECT COUNT(*) FROM recent_categories))
+    )
+
+    SELECT * FROM recent_categories
+    UNION ALL
+    SELECT * FROM additional_categories
+"""
+    )
+    suspend fun getRecentUsedCategoryList(limit: Int): List<Category>
+
+    @Transaction
     @Query("SELECT * FROM category where (type = :type OR type = 0) AND name LIKE  '%' || :searchQuery || '%'  AND soft_delete = 0 ORDER BY id DESC")
     fun searchCategoryFromTypeList(type: Int, searchQuery: String): Flow<List<Category>>
 

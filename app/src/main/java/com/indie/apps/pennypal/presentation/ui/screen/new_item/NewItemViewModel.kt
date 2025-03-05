@@ -67,12 +67,17 @@ class NewItemViewModel @Inject constructor(
 
     val uiState = MutableStateFlow<Resource<Unit>>(Resource.Loading())
 
+    val categories = MutableStateFlow<List<Category>>(emptyList())
+
     init {
         if (merchantEditId == 0L) {
             loadUserData()
+            loadCategoryData(1L)
             setDateAndTime(Calendar.getInstance().timeInMillis)
         } else
             setEditData()
+
+        fetchLastUsedCategories()
     }
 
     private fun loadUserData() {
@@ -199,10 +204,10 @@ class NewItemViewModel @Inject constructor(
     fun addOrEditMerchantData(onSuccess: (Boolean, Long, Long?) -> Unit) {
         if (enableButton.value) {
             enableButton.value = false
-           /* if (merchant.value == null) {
-                merchantError.value = ErrorMessage.SELECT_MERCHANT
-                enableButton.value = true
-            } else */if (category.value == null) {
+            /* if (merchant.value == null) {
+                 merchantError.value = ErrorMessage.SELECT_MERCHANT
+                 enableButton.value = true
+             } else */if (category.value == null) {
                 categoryError.value = ErrorMessage.SELECT_CATEGORY
                 enableButton.value = true
             } else if (amount.value.text.trim().isEmpty()) {
@@ -278,4 +283,9 @@ class NewItemViewModel @Inject constructor(
     fun updateAmountText(text: String) = amount.value.updateText(text)
     fun updateDescText(text: String) = description.value.updateText(text)
 
+    fun fetchLastUsedCategories() {
+        viewModelScope.launch {
+            categories.value = categoryRepository.getRecentUsedCategoryList(5)
+        }
+    }
 }

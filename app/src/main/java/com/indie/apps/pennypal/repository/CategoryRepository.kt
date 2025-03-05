@@ -13,6 +13,7 @@ interface CategoryRepository : BaseRepository<Category> {
     fun getCategoryFromId(id: Long): Flow<Category>
 
     fun getCategoryFromTypeList(type: Int): Flow<List<Category>>
+    suspend fun getRecentUsedCategoryList(limit: Int): List<Category>
     fun searchCategoryFromTypeList(type: Int, searchQuery: String): Flow<List<Category>>
     fun searchCategoryList(searchQuery: String): PagingSource<Int, Category>
 }

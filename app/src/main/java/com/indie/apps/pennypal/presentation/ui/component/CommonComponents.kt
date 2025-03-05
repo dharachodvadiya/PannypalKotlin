@@ -249,9 +249,9 @@ fun DialogTextFieldItem(
     textTrailingContent: @Composable (() -> Unit)? = null,
 ) {
     Column(
-        modifier = modifier.padding(
+        /*modifier = modifier.padding(
             vertical = 5.dp
-        )
+        )*/
     ) {
         label?.let {
             CustomText(
