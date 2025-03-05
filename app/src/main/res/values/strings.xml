@@ -11,11 +11,11 @@
     <string name="spent">Spent</string>
     <string name="merchant">Recipient</string>
     <string name="amount">Amount</string>
-    <string name="payment_type">Payment Type</string>
+    <string name="payment_type">Payment Method</string>
     <string name="description">Description</string>
     <string name="save">Save</string>
     <string name="add_merchant_placeholder">Select Recipient</string>
-    <string name="add_payment_type_placeholder">Enter Payment Type</string>
+    <string name="add_payment_type_placeholder">Enter Payment Method</string>
     <string name="amount_placeholder">Enter Amount</string>
     <string name="description_placeholder">Enter Short Description</string>
     <string name="add_merchant">Add Recipient</string>
@@ -27,7 +27,7 @@
     <string name="edit_transaction">Edit</string>
     <string name="delete_transaction">Delete</string>
     <string name="loading">Loading…</string>
-    <string name="payment_save_success_toast">Payment Type Add Successfully</string>
+    <string name="payment_save_success_toast">Payment Method Add Successfully</string>
     <string name="merchant_save_success_toast">Recipient Add Successfully</string>
     <string name="select_country">Select Country</string>
     <string name="no_data_found">No Data Available</string>
@@ -76,7 +76,7 @@
     <string name="delete_payment">Delete Payment</string>
     <string name="delete_payment_text1">About to delete payment : </string>
     <string name="delete_payment_text2">If this method has been used for transactions, it will be change by selected alternative method.</string>
-    <string name="select_payment">Select Payment</string>
+    <string name="select_payment">Select Payment Method</string>
     <string name="general">General</string>
     <string name="more">More</string>
     <string name="share">Share</string>
@@ -189,7 +189,7 @@
     <string name="enter_name">Enter Name</string>
     <string name="enter_merchant_name">Enter Recipient Name</string>
     <string name="enter_amount">Enter Amount</string>
-    <string name="enter_payment_type">Enter Payment Type</string>
+    <string name="enter_payment_type">Enter Payment Method</string>
     <string name="merchant_name_already_used">Recipient Name Already Used</string>
     <string name="payment_name_already_used">Payment Name Already Used</string>
     <string name="enter_valid_phone_number">Enter Valid Phone Number</string>

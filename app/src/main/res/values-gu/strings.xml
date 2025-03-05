@@ -76,7 +76,7 @@
     <string name="delete_payment">ચૂકવણી કાઢો</string>
     <string name="delete_payment_text1">ચૂકવણી કાઢી રહી છે :</string>
     <string name="delete_payment_text2">જો આ પદ્ધતિનો ઉપયોગ વ્યવહારો માટે કરવામાં આવ્યો હશે , તો તે પસંદ કરેલ વૈકલ્પિક પદ્ધતિ દ્વારા બદલવામાં આવશે.</string>
-    <string name="select_payment">ચૂકવણી પસંદ કરો</string>
+    <string name="select_payment">ચૂકવણી પદ્ધતિ પસંદ કરો</string>
     <string name="general">સામાન્ય</string>
     <string name="more">વધારે</string>
     <string name="share">શેર કરો</string>
