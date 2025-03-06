@@ -39,13 +39,16 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -244,10 +247,13 @@ fun DialogTextFieldItem(
     keyboardType: KeyboardType = KeyboardType.Text,
     bgColor: Color = MyAppTheme.colors.itemBg,
     isBottomLineEnable: Boolean = false,
+    focusRequester: FocusRequester? = null,
+    nextFocusRequester: FocusRequester? = null,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
     textLeadingContent: @Composable (() -> Unit)? = null,
     textTrailingContent: @Composable (() -> Unit)? = null,
 ) {
+    val focusManager = LocalFocusManager.current
     Column(
         /*modifier = modifier.padding(
             vertical = 5.dp
@@ -300,6 +306,10 @@ fun DialogTextFieldItem(
                     .height(dimensionResource(id = R.dimen.new_entry_field_height))
                     .then(bottomLineModifier),
                 bgColor = bgColor,
+                focusRequester = focusRequester,
+                imeAction = nextFocusRequester?.let { ImeAction.Next } ?: ImeAction.Done,
+                onDoneAction = { focusManager.clearFocus() },
+                onNextAction = { nextFocusRequester?.requestFocus() },
                 paddingValues = PaddingValues(horizontal = dimensionResource(id = R.dimen.item_content_padding))
             )
         }

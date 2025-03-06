@@ -20,6 +20,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -55,7 +57,8 @@ fun MyAppTextField(
     onDoneAction: (() -> Unit)? = {},
     onNextAction: (() -> Unit)? = null,
     maxLines: Int = Int.MAX_VALUE,
-    paddingValues: PaddingValues = PaddingValues(0.dp)
+    paddingValues: PaddingValues = PaddingValues(0.dp),
+    focusRequester: FocusRequester? = null,
 ) {
     Row(
         modifier = modifier
@@ -82,7 +85,8 @@ fun MyAppTextField(
             value = value,
             maxLines = maxLines,
             modifier = textModifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .then(focusRequester?.let { Modifier.focusRequester(focusRequester) } ?: Modifier),
             onValueChange = onValueChange,
             textStyle = textStyle.copy(color = MyAppTheme.colors.black),
             keyboardOptions = KeyboardOptions(imeAction = imeAction, keyboardType = keyboardType),

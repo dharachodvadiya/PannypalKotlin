@@ -19,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.dimensionResource
@@ -89,6 +90,8 @@ fun NewItemScreen(
     val categories by newItemViewModel.categories.collectAsStateWithLifecycle()
 
     val focusManager = LocalFocusManager.current
+    val focusRequesterAmount = remember { FocusRequester() }
+    val focusRequesterDescription = remember { FocusRequester() }
 
     var haveFocus by remember { mutableStateOf(false) }
 
@@ -137,6 +140,11 @@ fun NewItemScreen(
                 )
             }) { padding ->
 
+
+                LaunchedEffect(Unit) {
+                    focusRequesterAmount.requestFocus()
+                }
+
                 //val imeState by rememberImeState {}
                 val scrollState = rememberScrollState()
 
@@ -160,7 +168,9 @@ fun NewItemScreen(
                 ) {
                     NewEntryTopSelectionButton(
                         received = received,
-                        onReceivedChange = newItemViewModel::onReceivedChange
+                        onReceivedChange ={
+                            newItemViewModel.onReceivedChange(it)
+                        }
                     )
                     NewEntryFieldItemSection(
                         modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.padding)),
@@ -203,7 +213,9 @@ fun NewItemScreen(
                         isMerchantLock = isMerchantLock,
                         onAmountTextChange = newItemViewModel::updateAmountText,
                         onDescTextChange = newItemViewModel::updateDescText,
-                        categories = categories
+                        categories = categories,
+                        focusRequesterAmount = focusRequesterAmount,
+                        focusRequesterDescription = focusRequesterDescription
                     )
                     Spacer(modifier = Modifier.weight(1f))
                     BottomSaveButton(
@@ -220,6 +232,7 @@ fun NewItemScreen(
                         enabled = enableButton,
                         modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.padding))
                     )
+
                 }
             }
         }
