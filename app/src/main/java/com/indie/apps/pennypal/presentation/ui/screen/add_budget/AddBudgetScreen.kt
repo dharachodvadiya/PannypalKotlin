@@ -19,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -95,6 +96,9 @@ fun AddEditBudgetScreen(
 
     var openDiscardDialog by remember { mutableStateOf(false) }
 
+    val focusRequesterTitle = remember { FocusRequester() }
+    val focusRequesterAmount = remember { FocusRequester() }
+
     BackHandler {
         if (addBudgetViewModel.isEditData()) {
             openDiscardDialog = true
@@ -109,6 +113,13 @@ fun AddEditBudgetScreen(
         }
 
         is Resource.Success -> {
+
+            LaunchedEffect(Unit) {
+                if (!addBudgetViewModel.isEditData())
+                    focusRequesterTitle.requestFocus()
+            }
+
+
             val title = if (addBudgetViewModel.budgetEditId == -1L)
                 stringResource(id = R.string.add_budget)
             else
@@ -193,7 +204,9 @@ fun AddEditBudgetScreen(
                         categoryBudgetErrorText = categoryBudgetErrorText.asString(),
                         onAmountTextChange = addBudgetViewModel::updateAmountText,
                         budgetTitle = budgetTitle,
-                        onBudgetTitleTextChange = addBudgetViewModel::updateBudgetTitleText
+                        onBudgetTitleTextChange = addBudgetViewModel::updateBudgetTitleText,
+                        focusRequesterAmount = focusRequesterAmount,
+                        focusRequesterTitle = focusRequesterTitle,
                     )
 
                     Spacer(modifier = Modifier.weight(1f))

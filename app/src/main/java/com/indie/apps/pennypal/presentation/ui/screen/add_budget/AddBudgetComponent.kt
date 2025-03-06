@@ -25,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -119,22 +120,49 @@ fun AddBudgetFieldItem(
     onAmountTextChange: (String) -> Unit,
     budgetTitle: TextFieldState,
     onBudgetTitleTextChange: (String) -> Unit,
+    focusRequesterAmount : FocusRequester,
+    focusRequesterTitle : FocusRequester,
 ) {
     Column(
         modifier = modifier.background(MyAppTheme.colors.transparent),
     ) {
         DialogTextFieldItem(
             textState = budgetTitle,
-            label = R.string.title,
             placeholder = R.string.budget_title_placeholder,
-            textLeadingContent = {
+            leadingIcon = {
                 Icon(
                     imageVector = Icons.Filled.Title,
                     contentDescription = "title",
                     tint = MyAppTheme.colors.gray1
                 )
             },
-            onTextChange = onBudgetTitleTextChange
+            onTextChange = onBudgetTitleTextChange,
+            bgColor = MyAppTheme.colors.transparent,
+            isBottomLineEnable = true,
+            focusRequester = focusRequesterTitle,
+            nextFocusRequester = focusRequesterAmount
+        )
+
+        DialogTextFieldItem(
+            textState = amount,
+            placeholder = R.string.amount_placeholder,
+            leadingIcon = {
+                Box(
+                    modifier = Modifier.size(24.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CustomText(
+                        text = Util.currentCurrencySymbol,
+                        color = MyAppTheme.colors.gray1,
+                        style = MyAppTheme.typography.Regular66_5
+                    )
+                }
+            },
+            keyboardType = KeyboardType.Number,
+            onTextChange = onAmountTextChange,
+            bgColor = MyAppTheme.colors.transparent,
+            isBottomLineEnable = true,
+            focusRequester = focusRequesterAmount
         )
 
         AddBudgetPeriodFieldItem(
@@ -152,25 +180,7 @@ fun AddBudgetFieldItem(
             periodToErrorText = periodToErrorText
         )
 
-        DialogTextFieldItem(
-            textState = amount,
-            label = R.string.amount,
-            placeholder = R.string.amount_placeholder,
-            textLeadingContent = {
-                Box(
-                    modifier = Modifier.size(24.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CustomText(
-                        text = Util.currentCurrencySymbol,
-                        color = MyAppTheme.colors.gray1,
-                        style = MyAppTheme.typography.Regular66_5
-                    )
-                }
-            },
-            keyboardType = KeyboardType.Number,
-            onTextChange = onAmountTextChange
-        )
+
 
         DialogSelectableItem(
             text = if (categoryList.isNotEmpty()) "${categoryList.size} ${stringResource(id = R.string.category_selected)}" else "",
@@ -312,7 +322,6 @@ fun AddBudgetCategoryListItem(
         modifier = modifier
             .roundedCornerBackground(MyAppTheme.colors.itemBg)
             .padding(dimensionResource(id = R.dimen.padding))
-            .animateContentSize(),
     ) {
         Row(
             modifier = Modifier
