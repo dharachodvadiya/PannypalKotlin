@@ -172,34 +172,7 @@ fun NewItemScreen(
                     NewEntryFieldItemSection(
                         modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.padding)),
                         currentTimeInMilli = currentTimeInMilli,
-                        onMerchantSelect = {
-                            if (enableButton) {
-                                if (isMerchantLock) {
-                                    context.showToast(merchantChangeToastMessage)
-                                } else {
-                                    focusManager.clearFocus()
-                                    onMerchantSelect()
-                                }
-                            }
-                        },
                         merchantName = merchant?.name,
-                        onPaymentSelect = {
-                            if (enableButton) {
-                                focusManager.clearFocus()
-                                onPaymentSelect(payment?.id)
-                            }
-                        },
-                        onSelectMoreCategory = {
-                            if (enableButton) {
-                                focusManager.clearFocus()
-                                onCategorySelect(category?.id, if (received) 1 else -1)
-                            }
-                        },
-                        onSelectCategory = {
-                            newItemViewModel.setCategory(it)
-                        },
-                        onDateSelect = { openDialog = DialogType.Date },
-                        onTimeSelect = { openDialog = DialogType.Time },
                         paymentName = payment?.name,
                         category = category,
                         amount = amount,
@@ -208,11 +181,57 @@ fun NewItemScreen(
                         paymentError = paymentError.asString(),
                         categoryError = categoryError.asString(),
                         isMerchantLock = isMerchantLock,
-                        onAmountTextChange = newItemViewModel::updateAmountText,
-                        onDescTextChange = newItemViewModel::updateDescText,
                         categories = categories,
                         focusRequesterAmount = focusRequesterAmount,
-                        focusRequesterDescription = focusRequesterDescription
+                        focusRequesterDescription = focusRequesterDescription,
+                        onEvent = { event ->
+                            when (event) {
+                                is NewEntryEvent.AmountChange -> {
+                                    newItemViewModel.updateAmountText(event.value)
+                                }
+
+                                is NewEntryEvent.CategorySelect -> {
+                                    newItemViewModel.setCategory(event.category)
+                                }
+
+                                NewEntryEvent.DateSelect -> {
+                                    openDialog = DialogType.Date
+                                }
+
+                                is NewEntryEvent.DescriptionChange -> {
+                                    newItemViewModel.updateDescText(event.value)
+                                }
+
+                                NewEntryEvent.MerchantSelect -> {
+                                    if (enableButton) {
+                                        if (isMerchantLock) {
+                                            context.showToast(merchantChangeToastMessage)
+                                        } else {
+                                            focusManager.clearFocus()
+                                            onMerchantSelect()
+                                        }
+                                    }
+                                }
+
+                                NewEntryEvent.MoreCategories -> {
+                                    if (enableButton) {
+                                        focusManager.clearFocus()
+                                        onCategorySelect(category?.id, if (received) 1 else -1)
+                                    }
+                                }
+
+                                NewEntryEvent.PaymentSelect -> {
+                                    if (enableButton) {
+                                        focusManager.clearFocus()
+                                        onPaymentSelect(payment?.id)
+                                    }
+                                }
+
+                                NewEntryEvent.TimeSelect -> {
+                                    openDialog = DialogType.Time
+                                }
+                            }
+                        }
                     )
                     Spacer(modifier = Modifier.weight(1f))
                     BottomSaveButton(

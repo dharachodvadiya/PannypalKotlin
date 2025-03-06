@@ -51,6 +51,17 @@ import com.indie.apps.pennypal.util.getDateFromMillis
 import com.indie.apps.pennypal.util.getTimeFromMillis
 import java.text.SimpleDateFormat
 
+sealed interface NewEntryEvent {
+    data object MerchantSelect : NewEntryEvent
+    data object PaymentSelect : NewEntryEvent
+    data class CategorySelect(val category: Category) : NewEntryEvent
+    data object MoreCategories : NewEntryEvent
+    data object DateSelect : NewEntryEvent
+    data object TimeSelect : NewEntryEvent
+    data class AmountChange(val value: String) : NewEntryEvent
+    data class DescriptionChange(val value: String) : NewEntryEvent
+}
+
 @Composable
 fun NewEntryTopSelectionButton(
     received: Boolean,
@@ -86,71 +97,13 @@ fun NewEntryTopSelectionButton(
             onTabSelected = {
                 onReceivedChange(it == 0)
             })
-        /*NewEntryButtonItem(
-            text = R.string.received,
-            onClick = {
-                onReceivedChange(true)
-            },
-            bgColor = MyAppTheme.colors.greenBg,
-            imageVector = Icons.Default.SouthWest,
-            modifier = Modifier.weight(0.47f),
-            selected = received
-        )
-        Spacer(modifier = Modifier.weight(0.06f))
-        NewEntryButtonItem(
-            text = R.string.spent,
-            onClick = {
-                onReceivedChange(false)
-            },
-            bgColor = MyAppTheme.colors.redBg,
-            imageVector = Icons.Default.NorthEast,
-            modifier = Modifier.weight(0.47f),
-            selected = !received
-        )*/
     }
 }
-/*
-@Composable
-private fun NewEntryButtonItem(
-    @StringRes text: Int,
-    onClick: () -> Unit,
-    bgColor: Color,
-    imageVector: ImageVector,
-    selected: Boolean = false,
-    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
-) {
-    val btnBgColor = if (selected) bgColor else MyAppTheme.colors.itemBg
-    val btnContentColor = if (selected) MyAppTheme.colors.black else MyAppTheme.colors.gray1
-    PrimaryButton(
-        bgColor = btnBgColor,
-        onClick = onClick,
-        modifier = modifier
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                imageVector = imageVector,
-                contentDescription = "",
-                tint = btnContentColor
-            )
-            Spacer(modifier = Modifier.width(5.dp))
-            CustomText(
-                text = stringResource(text),
-                style = MyAppTheme.typography.Medium45_29,
-                color = btnContentColor
-            )
-        }
-    }
-}*/
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun NewEntryFieldItemSection(
-    onMerchantSelect: () -> Unit,
-    onPaymentSelect: () -> Unit,
-    onSelectMoreCategory: () -> Unit,
-    onSelectCategory: (Category) -> Unit,
+    onEvent: (NewEntryEvent) -> Unit,
     merchantName: String? = null,
     paymentName: String? = null,
     category: Category? = null,
@@ -159,15 +112,11 @@ fun NewEntryFieldItemSection(
     categoryError: String = "",
     isMerchantLock: Boolean,
     currentTimeInMilli: Long,
-    onDateSelect: () -> Unit,
-    onTimeSelect: () -> Unit,
     amount: TextFieldState = TextFieldState(),
     description: TextFieldState = TextFieldState(),
-    onAmountTextChange: (String) -> Unit,
-    onDescTextChange: (String) -> Unit,
     categories: List<Category>,
-    focusRequesterAmount : FocusRequester,
-    focusRequesterDescription : FocusRequester,
+    focusRequesterAmount: FocusRequester,
+    focusRequesterDescription: FocusRequester,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
 ) {
     Column(
@@ -179,8 +128,8 @@ fun NewEntryFieldItemSection(
 
         NewEntryDateTimeItem(
             currentTimeInMilli = currentTimeInMilli,
-            onDateSelect = onDateSelect,
-            onTimeSelect = onTimeSelect
+            onDateSelect = {onEvent(NewEntryEvent.DateSelect)},
+            onTimeSelect = {onEvent(NewEntryEvent.TimeSelect)}
         )
 
         Spacer(modifier = Modifier.height(30.dp))
@@ -201,7 +150,7 @@ fun NewEntryFieldItemSection(
             },
             placeholder = R.string.amount_placeholder,
             bgColor = MyAppTheme.colors.transparent,
-            onTextChange = onAmountTextChange,
+            onTextChange = {onEvent(NewEntryEvent.AmountChange(it))},
             isBottomLineEnable = true,
             keyboardType = KeyboardType.Number,
             focusRequester = focusRequesterAmount,
@@ -225,7 +174,7 @@ fun NewEntryFieldItemSection(
             },
             placeholder = R.string.description_placeholder,
             bgColor = MyAppTheme.colors.transparent,
-            onTextChange = onDescTextChange,
+            onTextChange = {onEvent(NewEntryEvent.DescriptionChange(it))},
             isBottomLineEnable = true,
             focusRequester = focusRequesterDescription
         )
@@ -239,15 +188,13 @@ fun NewEntryFieldItemSection(
                 FlowRowItem(
                     isSelected = category?.id == it.id,
                     text = it.name,
-                    onClick = { onSelectCategory(it) })
+                    onClick = {onEvent(NewEntryEvent.CategorySelect(it))})
             }
 
             FlowRowItem(
                 isSelected = false,
                 text = stringResource(R.string.select_more),
-                onClick = {
-                    onSelectMoreCategory()
-                },
+                onClick ={onEvent(NewEntryEvent.MoreCategories)},
                 bgColor = MyAppTheme.colors.gray3,
                 textColor = MyAppTheme.colors.gray1
             )
@@ -257,7 +204,7 @@ fun NewEntryFieldItemSection(
         DialogSelectableItem(
             text = paymentName ?: "",
             label = R.string.payment_type,
-            onClick = onPaymentSelect,
+            onClick = {onEvent(NewEntryEvent.PaymentSelect)},
             placeholder = R.string.add_payment_type_placeholder,
             isSelectable = true,
             errorText = paymentError,
@@ -273,7 +220,7 @@ fun NewEntryFieldItemSection(
         DialogSelectableItem(
             text = merchantName,
             label = R.string.merchant_optional,
-            onClick = onMerchantSelect,
+            onClick = {onEvent(NewEntryEvent.MerchantSelect)},
             placeholder = R.string.add_merchant_placeholder,
             isSelectable = !isMerchantLock,
             errorText = merchantError,
@@ -332,10 +279,7 @@ fun DateTimeSelectableItem(
         modifier = modifier
             .padding(horizontal = dimensionResource(id = R.dimen.item_inner_padding))
             .roundedCornerBackground(MyAppTheme.colors.transparent)
-            .clickableWithNoRipple(
-                //    interactionSource = MutableInteractionSource(),
-                //   indication = null
-            ) {
+            .clickableWithNoRipple {
                 onSelect()
             },
         verticalAlignment = Alignment.CenterVertically
@@ -355,115 +299,3 @@ fun DateTimeSelectableItem(
         )
     }
 }
-
-/*@Composable
-fun NewEntrySelectableItem(
-    text: String? = null,
-    @StringRes label: Int,
-    @StringRes placeholder: Int,
-    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-    isSelectable: Boolean,
-    trailingContent: @Composable (() -> Unit)? = null
-) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-    ) {
-        CustomText(
-            text = stringResource(id = label),
-            style = MyAppTheme.typography.Medium46,
-            color = MyAppTheme.colors.gray1
-        )
-        Row(
-            modifier = Modifier
-                .padding(vertical = 5.dp)
-                .roundedCornerBackground(MyAppTheme.colors.itemBg)
-                .clickable(enabled = isSelectable) { onClick() }
-                .height(dimensionResource(id = R.dimen.new_entry_field_height))
-                *//*.background(
-                    shape = RoundedCornerShape(dimensionResource(id = R.dimen.round_corner)),
-                    color = MyAppTheme.colors.itemBg
-                )*//*
-                .padding(
-                    top = 0.dp,
-                    bottom = 0.dp,
-                    start = dimensionResource(id = R.dimen.padding),
-                    end = 4.dp
-                ),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            if (text.isNullOrEmpty()) {
-                CustomText(
-                    text = stringResource(id = placeholder),
-                    modifier = Modifier
-                        .weight(1f),
-                    style = MyAppTheme.typography.Regular46,
-                    color = MyAppTheme.colors.gray2
-                )
-            } else {
-                CustomText(
-                    text = text,
-                    modifier = Modifier
-                        .weight(1f),
-                    style = MyAppTheme.typography.Medium46,
-                    color = MyAppTheme.colors.black
-                )
-            }
-
-            if (trailingContent != null) {
-                Spacer(modifier = Modifier.weight(1f))
-                trailingContent()
-            }
-
-
-        }
-    }
-
-}*/
-/*
-@Composable
-private fun NewEntryTextFieldItem(
-    textState: TextFieldState = TextFieldState(),
-    onTextChange: (String) -> Unit,
-    @StringRes label: Int,
-    placeholder: Int,
-    keyboardType: KeyboardType = KeyboardType.Text,
-    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
-) {
-    val colorDivider = MyAppTheme.colors.gray1
-
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(vertical = 5.dp)
-            .drawBehind {
-                drawLine(
-                    colorDivider,
-                    Offset(0f, size.height),
-                    Offset(size.width, size.height),
-                    2f
-                )
-            }
-    ) {
-        CustomText(
-            text = stringResource(id = label),
-            style = MyAppTheme.typography.Medium46,
-            color = MyAppTheme.colors.gray1
-        )
-        MyAppTextField(
-            value = textState.text,
-            *//*onValueChange = {
-                textState.disableError()
-                textState.text = it
-            },*//*
-            onValueChange = onTextChange,
-            placeHolder = stringResource(placeholder),
-            textStyle = MyAppTheme.typography.Medium46,
-            keyboardType = keyboardType,
-            placeHolderTextStyle = MyAppTheme.typography.Regular46,
-            modifier = Modifier.height(dimensionResource(id = R.dimen.new_entry_field_height)),
-        )
-    }
-}*/
-
