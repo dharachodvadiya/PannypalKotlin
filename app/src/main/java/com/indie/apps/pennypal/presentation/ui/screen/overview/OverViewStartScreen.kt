@@ -1,6 +1,7 @@
 package com.indie.apps.pennypal.presentation.ui.screen.overview
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,11 +21,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.android.play.core.review.ReviewManagerFactory
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.database.enum.PeriodType
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
@@ -32,6 +35,7 @@ import com.indie.apps.pennypal.presentation.ui.component.custom.composable.Doubl
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.util.Util
+import com.indie.apps.pennypal.util.launchInAppReview
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
@@ -52,6 +56,14 @@ fun OverViewStartScreen(
     bottomPadding: PaddingValues,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
+
+
+    val localContext = LocalContext.current
+
+    val reviewManager = remember {
+        ReviewManagerFactory.create(localContext)
+    }
+
     val currentPeriod by overViewViewModel.currentPeriod.collectAsStateWithLifecycle()
     val isSubscribed by overViewViewModel.isSubscribed.collectAsStateWithLifecycle()
     val userData by overViewViewModel.userData.collectAsStateWithLifecycle()
@@ -85,6 +97,11 @@ fun OverViewStartScreen(
         if (isAddMerchantDataSuccess) {
             addEditDataId = addEditMerchantDataId
             overViewViewModel.addMerchantDataSuccess()
+
+            launchInAppReview(
+                activity = localContext as Activity,
+                reviewManager = reviewManager
+            )
         }
         if (isEditSuccess) {
             addEditDataId = addEditMerchantDataId

@@ -184,6 +184,9 @@ dependencies {
     implementation("com.google.accompanist:accompanist-pager:0.25.1") // Check for the latest version
     implementation("com.google.accompanist:accompanist-pager-indicators:0.25.1") // For indicators
 
+    implementation("com.google.android.play:review:2.0.2")
+    implementation("com.google.android.play:review-ktx:2.0.2")
+
 }
 /*
 
