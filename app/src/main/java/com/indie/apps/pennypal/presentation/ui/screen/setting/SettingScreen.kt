@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.screen.setting
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -42,6 +43,7 @@ fun SettingScreen(
     onDefaultPaymentChange: (Long) -> Unit,
     onBalanceViewChange: () -> Unit,
     onLanguageChange: () -> Unit,
+    onNavigationUp: () -> Unit,
     bottomPadding: PaddingValues,
 ) {
 
@@ -66,6 +68,10 @@ fun SettingScreen(
     }
 
     val context = LocalContext.current
+
+    BackHandler {
+        onNavigationUp()
+    }
 
     SignInLauncher(authViewModel,
         onLoginSuccess = {
@@ -224,7 +230,8 @@ private fun SettingScreenPreview() {
             onCurrencyChange = {},
             onBalanceViewChange = {},
             bottomPadding = PaddingValues(0.dp),
-            onLanguageChange = {}
+            onLanguageChange = {},
+            onNavigationUp = {}
         )
     }
 }

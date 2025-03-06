@@ -6,6 +6,7 @@ import androidx.compose.runtime.MutableState
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
+import com.indie.apps.pennypal.presentation.ui.navigation.BottomNavItem
 import com.indie.apps.pennypal.presentation.ui.navigation.DialogNav
 import com.indie.apps.pennypal.presentation.ui.navigation.ScreenNav
 import com.indie.apps.pennypal.util.Util
@@ -66,7 +67,10 @@ internal fun NavGraphBuilder.navigateToMerchantScreen(
             isAddMerchantDataSuccess = false,
             merchantId = -1,
             onNavigationUp = {
-                navController.navigateUp()
+                //navController.navigateUp()
+                navController.navigate(BottomNavItem.OVERVIEW.route) {
+                    launchSingleTop = true
+                }
             }
         )
 

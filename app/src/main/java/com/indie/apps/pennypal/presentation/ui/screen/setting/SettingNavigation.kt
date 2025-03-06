@@ -5,6 +5,7 @@ import androidx.compose.runtime.MutableState
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
+import com.indie.apps.pennypal.presentation.ui.navigation.BottomNavItem
 import com.indie.apps.pennypal.presentation.ui.navigation.DialogNav
 import com.indie.apps.pennypal.presentation.ui.navigation.ScreenNav
 import com.indie.apps.pennypal.util.Util
@@ -49,6 +50,12 @@ internal fun NavGraphBuilder.navigateToSettingScreen(
             },
             onLanguageChange = {
                 navController.navigate(DialogNav.SELECT_LANGUAGE.route)
+            },
+            onNavigationUp = {
+                //navController.popBackStack()
+                navController.navigate(BottomNavItem.OVERVIEW.route) {
+                    launchSingleTop = true
+                }
             })
     }
 }

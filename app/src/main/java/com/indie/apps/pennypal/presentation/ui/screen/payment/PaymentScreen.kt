@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.screen.payment
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -63,6 +64,10 @@ fun PaymentScreen(
 
     var editedPaymentId by remember {
         mutableLongStateOf(-1L)
+    }
+
+    BackHandler {
+        onNavigationUp()
     }
 
     LaunchedEffect(paymentId) {
