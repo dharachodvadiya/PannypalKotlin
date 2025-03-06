@@ -24,6 +24,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.TextStyle
@@ -59,7 +60,9 @@ fun MyAppTextField(
     maxLines: Int = Int.MAX_VALUE,
     paddingValues: PaddingValues = PaddingValues(0.dp),
     focusRequester: FocusRequester? = null,
+    nextFocusRequester: FocusRequester? = null,
 ) {
+    val focusManager = LocalFocusManager.current
     Row(
         modifier = modifier
             .roundedCornerBackground(bgColor)
@@ -95,10 +98,12 @@ fun MyAppTextField(
                 if (onDoneAction != null) {
                     onDoneAction()
                 }
+                focusManager.clearFocus()
             }, onNext = {
                 if (onNextAction != null) {
                     onNextAction()
                 }
+                nextFocusRequester?.requestFocus()
             }, onSearch = {
                 keyboardController?.hide()
             }, onSend = {

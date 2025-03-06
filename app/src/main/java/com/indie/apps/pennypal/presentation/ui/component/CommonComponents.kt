@@ -253,7 +253,6 @@ fun DialogTextFieldItem(
     textLeadingContent: @Composable (() -> Unit)? = null,
     textTrailingContent: @Composable (() -> Unit)? = null,
 ) {
-    val focusManager = LocalFocusManager.current
     Column(
         /*modifier = modifier.padding(
             vertical = 5.dp
@@ -307,9 +306,8 @@ fun DialogTextFieldItem(
                     .then(bottomLineModifier),
                 bgColor = bgColor,
                 focusRequester = focusRequester,
+                nextFocusRequester = nextFocusRequester,
                 imeAction = nextFocusRequester?.let { ImeAction.Next } ?: ImeAction.Done,
-                onDoneAction = { focusManager.clearFocus() },
-                onNextAction = { nextFocusRequester?.requestFocus() },
                 paddingValues = PaddingValues(horizontal = dimensionResource(id = R.dimen.item_content_padding))
             )
         }
