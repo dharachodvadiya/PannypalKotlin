@@ -170,6 +170,8 @@ fun BudgetScreen(
                     budgetViewModel.setCurrentYear(it)
                 }
             )
+
+            else -> {}
         }
     }
 

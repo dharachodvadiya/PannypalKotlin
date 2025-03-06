@@ -1,3 +1,3 @@
 package com.indie.apps.pennypal.data.database.enum
 
-enum class DialogType { Month, Year }
+enum class DialogType { Month, Year, Date, Time, Discard }

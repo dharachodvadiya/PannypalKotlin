@@ -30,6 +30,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.database.entity.Category
 import com.indie.apps.pennypal.data.database.entity.Payment
+import com.indie.apps.pennypal.data.database.enum.DialogType
 import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
 import com.indie.apps.pennypal.presentation.ui.component.BottomSaveButton
 import com.indie.apps.pennypal.presentation.ui.component.ConfirmationDialog
@@ -93,12 +94,7 @@ fun NewItemScreen(
     val focusRequesterAmount = remember { FocusRequester() }
     val focusRequesterDescription = remember { FocusRequester() }
 
-    var haveFocus by remember { mutableStateOf(false) }
-
-    var openDateDialog by remember { mutableStateOf(false) }
-    var openTimeDialog by remember { mutableStateOf(false) }
-
-    var openDiscardDialog by remember { mutableStateOf(false) }
+    var openDialog by remember { mutableStateOf<DialogType?>(null) }
 
     val context = LocalContext.current
     val merchantChangeToastMessage = stringResource(R.string.can_not_change_merchant)
@@ -107,7 +103,7 @@ fun NewItemScreen(
 
     BackHandler {
         if (newItemViewModel.isEditData()) {
-            openDiscardDialog = true
+            openDialog = DialogType.Discard
         } else {
             onNavigationUp()
         }
@@ -131,7 +127,7 @@ fun NewItemScreen(
                     onNavigationUp = {
                         if (enableButton) {
                             if (newItemViewModel.isEditData()) {
-                                openDiscardDialog = true
+                                openDialog = DialogType.Discard
                             } else {
                                 onNavigationUp()
                             }
@@ -142,7 +138,8 @@ fun NewItemScreen(
 
 
                 LaunchedEffect(Unit) {
-                    focusRequesterAmount.requestFocus()
+                    if (!newItemViewModel.isEditData())
+                        focusRequesterAmount.requestFocus()
                 }
 
                 //val imeState by rememberImeState {}
@@ -168,7 +165,7 @@ fun NewItemScreen(
                 ) {
                     NewEntryTopSelectionButton(
                         received = received,
-                        onReceivedChange ={
+                        onReceivedChange = {
                             newItemViewModel.onReceivedChange(it)
                         }
                     )
@@ -201,8 +198,8 @@ fun NewItemScreen(
                         onSelectCategory = {
                             newItemViewModel.setCategory(it)
                         },
-                        onDateSelect = { openDateDialog = true },
-                        onTimeSelect = { openTimeDialog = true },
+                        onDateSelect = { openDialog = DialogType.Date },
+                        onTimeSelect = { openDialog = DialogType.Time },
                         paymentName = payment?.name,
                         category = category,
                         amount = amount,
@@ -241,47 +238,52 @@ fun NewItemScreen(
             LoadingWithProgress()
         }
     }
-
-    if (openDiscardDialog) {
-        ConfirmationDialog(
-            dialogTitle = R.string.discard_dialog_title,
-            dialogText = R.string.discard_dialog_text,
-            onConfirmation = {
-                openDiscardDialog = false
-                onNavigationUp()
-            },
-            onDismissRequest = {
-                openDiscardDialog = false
-            },
-            positiveText = R.string.discard,
-            negativeText = R.string.cancel
-        )
-    }
-
-    if (openDateDialog) {
-        CustomDatePickerDialog(
-            currentTimeInMilli = currentTimeInMilli,
-            onDateSelected = {
-                newItemViewModel.setDateAndTime(it.timeInMillis)
-                openDateDialog = false
-            },
-            onDismiss = {
-                openDateDialog = false
+    openDialog?.let { dialog ->
+        when (dialog) {
+            DialogType.Date -> {
+                CustomDatePickerDialog(
+                    currentTimeInMilli = currentTimeInMilli,
+                    onDateSelected = {
+                        newItemViewModel.setDateAndTime(it.timeInMillis)
+                        openDialog = null
+                    },
+                    onDismiss = {
+                        openDialog = null
+                    }
+                )
             }
-        )
-    }
 
-    if (openTimeDialog) {
-        CustomTimePickerDialog(
-            currentTimeInMilli = currentTimeInMilli,
-            onTimeSelected = {
-                newItemViewModel.setDateAndTime(it.timeInMillis)
-                openTimeDialog = false
-            },
-            onDismiss = {
-                openTimeDialog = false
+            DialogType.Time -> {
+                CustomTimePickerDialog(
+                    currentTimeInMilli = currentTimeInMilli,
+                    onTimeSelected = {
+                        newItemViewModel.setDateAndTime(it.timeInMillis)
+                        openDialog = null
+                    },
+                    onDismiss = {
+                        openDialog = null
+                    }
+                )
             }
-        )
+
+            DialogType.Discard -> {
+                ConfirmationDialog(
+                    dialogTitle = R.string.discard_dialog_title,
+                    dialogText = R.string.discard_dialog_text,
+                    onConfirmation = {
+                        openDialog = null
+                        onNavigationUp()
+                    },
+                    onDismissRequest = {
+                        openDialog = null
+                    },
+                    positiveText = R.string.discard,
+                    negativeText = R.string.cancel
+                )
+            }
+
+            else -> {}
+        }
     }
 
 
