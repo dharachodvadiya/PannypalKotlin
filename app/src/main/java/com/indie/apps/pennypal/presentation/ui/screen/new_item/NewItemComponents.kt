@@ -19,6 +19,7 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.NorthEast
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.SouthWest
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -28,6 +29,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -48,6 +50,7 @@ import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.util.getCategoryColorById
 import com.indie.apps.pennypal.util.getCategoryIconById
 import com.indie.apps.pennypal.util.getDateFromMillis
+import com.indie.apps.pennypal.util.getPaymentModeIcon
 import com.indie.apps.pennypal.util.getTimeFromMillis
 import java.text.SimpleDateFormat
 
@@ -128,8 +131,8 @@ fun NewEntryFieldItemSection(
 
         NewEntryDateTimeItem(
             currentTimeInMilli = currentTimeInMilli,
-            onDateSelect = {onEvent(NewEntryEvent.DateSelect)},
-            onTimeSelect = {onEvent(NewEntryEvent.TimeSelect)}
+            onDateSelect = { onEvent(NewEntryEvent.DateSelect) },
+            onTimeSelect = { onEvent(NewEntryEvent.TimeSelect) }
         )
 
         Spacer(modifier = Modifier.height(30.dp))
@@ -150,7 +153,7 @@ fun NewEntryFieldItemSection(
             },
             placeholder = R.string.amount_placeholder,
             bgColor = MyAppTheme.colors.transparent,
-            onTextChange = {onEvent(NewEntryEvent.AmountChange(it))},
+            onTextChange = { onEvent(NewEntryEvent.AmountChange(it)) },
             isBottomLineEnable = true,
             keyboardType = KeyboardType.Number,
             focusRequester = focusRequesterAmount,
@@ -174,7 +177,7 @@ fun NewEntryFieldItemSection(
             },
             placeholder = R.string.description_placeholder,
             bgColor = MyAppTheme.colors.transparent,
-            onTextChange = {onEvent(NewEntryEvent.DescriptionChange(it))},
+            onTextChange = { onEvent(NewEntryEvent.DescriptionChange(it)) },
             isBottomLineEnable = true,
             focusRequester = focusRequesterDescription
         )
@@ -188,13 +191,13 @@ fun NewEntryFieldItemSection(
                 FlowRowItem(
                     isSelected = category?.id == it.id,
                     text = it.name,
-                    onClick = {onEvent(NewEntryEvent.CategorySelect(it))})
+                    onClick = { onEvent(NewEntryEvent.CategorySelect(it)) })
             }
 
             FlowRowItem(
                 isSelected = false,
                 text = stringResource(R.string.select_more),
-                onClick ={onEvent(NewEntryEvent.MoreCategories)},
+                onClick = { onEvent(NewEntryEvent.MoreCategories) },
                 bgColor = MyAppTheme.colors.gray3,
                 textColor = MyAppTheme.colors.gray1
             )
@@ -204,7 +207,7 @@ fun NewEntryFieldItemSection(
         DialogSelectableItem(
             text = paymentName ?: "",
             label = R.string.payment_type,
-            onClick = {onEvent(NewEntryEvent.PaymentSelect)},
+            onClick = { onEvent(NewEntryEvent.PaymentSelect) },
             placeholder = R.string.add_payment_type_placeholder,
             isSelectable = true,
             errorText = paymentError,
@@ -214,13 +217,21 @@ fun NewEntryFieldItemSection(
                     contentDescription = "Add",
                     tint = MyAppTheme.colors.gray1
                 )
-            }
+            },
+            leadingContent = {
+                val icon = painterResource(getPaymentModeIcon(paymentName ?: ""))
+                Icon(
+                    painter = icon,
+                    contentDescription = "",
+                    tint = MyAppTheme.colors.gray1,
+                )
+            },
         )
 
         DialogSelectableItem(
             text = merchantName,
             label = R.string.merchant_optional,
-            onClick = {onEvent(NewEntryEvent.MerchantSelect)},
+            onClick = { onEvent(NewEntryEvent.MerchantSelect) },
             placeholder = R.string.add_merchant_placeholder,
             isSelectable = !isMerchantLock,
             errorText = merchantError,
@@ -232,7 +243,14 @@ fun NewEntryFieldItemSection(
                         tint = MyAppTheme.colors.gray1,
                     )
                 }
-            }
+            },
+            leadingContent = {
+                Icon(
+                    imageVector = Icons.Default.Person,
+                    contentDescription = "",
+                    tint = MyAppTheme.colors.gray1,
+                )
+            },
         )
     }
 }
