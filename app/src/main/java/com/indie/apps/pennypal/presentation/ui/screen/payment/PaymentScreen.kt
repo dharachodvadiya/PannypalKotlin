@@ -122,9 +122,9 @@ fun PaymentScreen(
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding))
         ) {
             val paymentName = if (paymentWithModeList.isNotEmpty()) {
-                paymentWithModeList.first { item ->
+                paymentWithModeList.firstOrNull() { item ->
                     item.id == (userData?.paymentId ?: -1L)
-                }.name
+                }?.name ?: "Cash"
             } else {
                 "Cash"
             }

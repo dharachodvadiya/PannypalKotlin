@@ -56,7 +56,8 @@ fun DialogAddEditCategory(
             AddEditCategoryDialogField(
                 textCategory = categoryState,
                 list = CategoryType.entries,
-                selectCategoryType = CategoryType.entries.first { it.id == selectedCategoryId },
+                selectCategoryType = CategoryType.entries.firstOrNull() { it.id == selectedCategoryId }
+                    ?: CategoryType.EXPENSE,
                 onSelectCategoryType = {
                     viewModel.setSelectedCategoryId(it.id)
                 },

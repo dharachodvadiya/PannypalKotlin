@@ -127,7 +127,7 @@ class BudgetRepositoryImpl @Inject constructor(
 
             else -> emptyList()
         }
-        return if (budgetList.isNotEmpty() && budgetList.first().id == obj.id) {
+        return if (budgetList.isNotEmpty() && budgetList.firstOrNull()?.id == obj.id) {
             update(obj)
         } else if (budgetList.isEmpty()) {
             update(obj)

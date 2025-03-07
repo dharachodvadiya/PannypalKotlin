@@ -288,7 +288,7 @@ fun IncludedCategoryAnalysis(
             val sortedList = categoryList.sortedByDescending { it.amount }
             sortedList.forEach { item ->
                 CategorySpentListItem(
-                    totalAmount = sortedList.first().amount,
+                    totalAmount = sortedList.firstOrNull()?.amount ?: 0.0,
                     item = item,
                     itemBgColor = MyAppTheme.colors.transparent
                 )

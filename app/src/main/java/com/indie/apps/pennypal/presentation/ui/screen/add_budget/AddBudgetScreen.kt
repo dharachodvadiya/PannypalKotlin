@@ -159,7 +159,8 @@ fun AddEditBudgetScreen(
                     if (!addBudgetViewModel.isEditData()) {
                         AddBudgetTopSelectionButton(
                             list = PeriodType.entries,
-                            selectBudgetPeriod = PeriodType.entries.first { it.id == currentPeriod },
+                            selectBudgetPeriod = PeriodType.entries.firstOrNull { it.id == currentPeriod }
+                                ?: PeriodType.MONTH,
                             onSelect = addBudgetViewModel::setCurrentPeriod,
                         )
                     }
@@ -167,7 +168,8 @@ fun AddEditBudgetScreen(
                         onSelectCategory = {
                             onSelectCategory(selectedCategoryList.map { it.id })
                         },
-                        selectBudgetPeriod = PeriodType.entries.first { it.id == currentPeriod },
+                        selectBudgetPeriod = PeriodType.entries.firstOrNull() { it.id == currentPeriod }
+                            ?: PeriodType.MONTH,
                         onSelectFromDate = {
                             openFromDateDialog = true
                         },
