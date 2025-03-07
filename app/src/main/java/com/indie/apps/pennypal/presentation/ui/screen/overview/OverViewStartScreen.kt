@@ -60,9 +60,9 @@ fun OverViewStartScreen(
 
     val localContext = LocalContext.current
 
-    val reviewManager = remember {
+  /*  val reviewManager = remember {
         ReviewManagerFactory.create(localContext)
-    }
+    }*/
 
     val currentPeriod by overViewViewModel.currentPeriod.collectAsStateWithLifecycle()
     val isSubscribed by overViewViewModel.isSubscribed.collectAsStateWithLifecycle()
@@ -97,11 +97,11 @@ fun OverViewStartScreen(
         if (isAddMerchantDataSuccess) {
             addEditDataId = addEditMerchantDataId
             overViewViewModel.addMerchantDataSuccess()
-
+/*
             launchInAppReview(
                 activity = localContext as Activity,
                 reviewManager = reviewManager
-            )
+            )*/
         }
         if (isEditSuccess) {
             addEditDataId = addEditMerchantDataId
