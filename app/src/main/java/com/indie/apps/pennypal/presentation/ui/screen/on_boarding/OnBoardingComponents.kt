@@ -59,7 +59,7 @@ fun OnBoardingBeginPage(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceEvenly
             ) {
-                Image(painter = painterResource(id = R.drawable.intro), contentDescription = "img")
+                Image(painter = painterResource(id = R.drawable.intro), contentDescription = "img", modifier = Modifier.fillMaxSize(0.5f))
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
@@ -283,7 +283,7 @@ fun OnBoardingWelcomePage(
                     Image(
                         painter = painterResource(id = R.drawable.all_done),
                         contentDescription = "img",
-                        modifier = Modifier.size(200.dp)
+                        modifier = Modifier.fillMaxSize(0.7f)
                     )
                 }
             }
