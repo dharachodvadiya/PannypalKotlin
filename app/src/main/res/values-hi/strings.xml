@@ -215,6 +215,28 @@
     <string name="edit_payment">भुगतान विधि संपादित करें</string>
     <string name="press_back_again_to_exit_app">बाहर निकलने के लिए पुनः वापस दबाएँ</string>
 
+    <string name="enter_category_name">श्रेणी का नाम दर्ज करें</string>
+    <string name="category_name_already_used">श्रेणी का नाम पहले से उपयोग में है</string>
+    <string name="category_save_success_toast">श्रेणी सफलतापूर्वक सहेजी गई</string>
+    <string name="category_edit_success_toast">श्रेणी सफलतापूर्वक संपादित की गई</string>
+    <string name="add_category">नई श्रेणी जोड़ें</string>
+    <string name="edit_category">श्रेणी संपादित करें</string>
+    <string name="add_category_placeholder">श्रेणी दर्ज करें</string>
+    <string name="both">दोनों</string>
+    <string name="select_icon">चिह्न चुनें</string>
+    <string name="select_icon_color">चिह्न का रंग चुनें</string>
+    <string name="category_delete_success_message">श्रेणी सफलतापूर्वक हटाई गई</string>
+    <string name="balance_of_this_month">इस माह का शेष राशि</string>
+    <string name="recent_transaction_of_this_month">इस माह के हाल के लेनदेन</string>
+    <string name="balance_of_this_year">इस वर्ष की शेष राशि</string>
+    <string name="recent_transaction_of_this_year">इस वर्ष के हाल के लेनदेन</string>
+    <string name="analysis_of_this_year">इस वर्ष का विश्लेषण</string>
+    <string name="all_time">सभी समय</string>
+    <string name="category_wise_spending">श्रेणी के अनुसार खर्च</string>
+    <string name="active_budget">सक्रिय बजट</string>
+    <string name="transactions">लेनदेन</string>
+    <string name="select_more">और चुनें</string>
+
 
     <string-array name="months">
         <item>जनवरी</item>

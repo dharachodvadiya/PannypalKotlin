@@ -215,6 +215,28 @@
     <string name="edit_payment">ચુકવણી પદ્ધતિમાં ફેરફાર કરો</string>
     <string name="press_back_again_to_exit_app">બહાર નીકળવા માટે ફરીથી પાછળ દબાવો</string>
 
+    <string name="enter_category_name">શ્રેણીનું નામ દાખલ કરો</string>
+    <string name="category_name_already_used">શ્રેણીનું નામ પહેલેથી ઉપયોગમાં છે</string>
+    <string name="category_save_success_toast">શ્રેણી સફળતાપૂર્વક સંગ્રહિત થઈ</string>
+    <string name="category_edit_success_toast">શ્રેણી સફળતાપૂર્વક સંપાદિત થઈ</string>
+    <string name="add_category">નવી શ્રેણી ઉમેરો</string>
+    <string name="edit_category">શ્રેણી સંપાદિત કરો</string>
+    <string name="add_category_placeholder">શ્રેણી દાખલ કરો</string>
+    <string name="both">બન્ને</string>
+    <string name="select_icon">ચિહ્ન પસંદ કરો</string>
+    <string name="select_icon_color">ચિહ્નનો રંગ પસંદ કરો</string>
+    <string name="category_delete_success_message">શ્રેણી સફળતાપૂર્વક કાઢી નાખવામાં આવી</string>
+    <string name="balance_of_this_month">આ મહિનાનું બેલેન્સ</string>
+    <string name="recent_transaction_of_this_month">આ મહિનાના તાજેતરના વ્યવહાર</string>
+    <string name="balance_of_this_year">આ વર્ષનું બેલેન્સ</string>
+    <string name="recent_transaction_of_this_year">આ વર્ષના તાજેતરના વ્યવહાર</string>
+    <string name="analysis_of_this_year">આ વર્ષની વિશ્લેષણ</string>
+    <string name="all_time">બધા સમય માટે</string>
+    <string name="category_wise_spending">શ્રેણી મુજબ ખર્ચ</string>
+    <string name="active_budget">સક્રિય બજેટ</string>
+    <string name="transactions">વ્યવહારો</string>
+    <string name="select_more">વધુ પસંદ કરો</string>
+
     <string-array name="months">
         <item>જાન્યુઆરી</item>
         <item>ફેબ્રુઆરી</item>
