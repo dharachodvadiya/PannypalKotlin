@@ -9,11 +9,11 @@ import com.indie.apps.pennypal.data.database.db.AppDatabase
 import com.indie.apps.pennypal.util.Util
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import java.io.OutputStream
 import java.nio.file.NoSuchFileException
 import java.util.Collections
 import javax.inject.Inject
@@ -31,66 +31,129 @@ class BackupRepositoryImpl @Inject constructor(
 
     override suspend fun backup() {
 
-        withContext(Dispatchers.IO) {
+        try {
+            val drive = authRepository.getGoogleDrive()
+                ?: throw (IllegalStateException("Google Drive service not available"))
 
-            try {
-                val drive = authRepository.getGoogleDrive()
+            val parentFile = getOrCreateBackupFolder(drive)
+            val fileList = getAllBackupFiles(drive, parentFile.id)
 
-                if (drive != null) {
+            val dbFiles = listOf(
+                Util.DB_NAME,
+                "${Util.DB_NAME}-shm",
+                "${Util.DB_NAME}-wal"
+            )
 
-                    val parentFile = getOrCreateBackupFolder(drive)
-                    val fileList = getAllBackupFiles(drive, parentFile.id)
-
-                    if (fileList.files.isEmpty()) {
-                        createOrUpdateBackupFile(drive, null, Util.DB_NAME, parentFile.id)
-                        createOrUpdateBackupFile(drive, null, "${Util.DB_NAME}-shm", parentFile.id)
-                        createOrUpdateBackupFile(drive, null, "${Util.DB_NAME}-wal", parentFile.id)
+            /*if (fileList.files.isEmpty()) {
+                createOrUpdateBackupFile(drive, null, Util.DB_NAME, parentFile.id)
+                createOrUpdateBackupFile(drive, null, "${Util.DB_NAME}-shm", parentFile.id)
+                createOrUpdateBackupFile(drive, null, "${Util.DB_NAME}-wal", parentFile.id)
 
 
-                    } else {
-                        fileList.files.onEach { driveFile ->
-                            createOrUpdateBackupFile(
-                                drive,
-                                driveFile.id,
-                                driveFile.name,
-                                parentFile.name
-                            )
-                        }
-                    }
-
+            } else {
+                fileList.files.onEach { driveFile ->
+                    createOrUpdateBackupFile(
+                        drive,
+                        driveFile.id,
+                        driveFile.name,
+                        parentFile.name
+                    )
                 }
+            }*/
 
-            } catch (e: Exception) {
-                throw (e)
+            if (fileList.files.isEmpty()) {
+                // Create new backup files
+                dbFiles.forEachIndexed { index, fileName ->
+                    val uploadResult = uploadFileWithRetry(drive, null, fileName, parentFile.id)
+                    uploadResult.onFailure { e ->
+                        throw e
+                    }
+                    if (index < dbFiles.size - 1) {
+                        delay(500) // 500ms delay between uploads
+                    }
+                }
+            } else {
+                // Update existing backup files
+                fileList.files.forEachIndexed { index, driveFile ->
+                    val uploadResult =
+                        uploadFileWithRetry(drive, driveFile.id, driveFile.name, parentFile.id)
+                    uploadResult.onFailure { e ->
+                        throw e
+                    }
+                    if (index < fileList.files.size - 1) {
+                        delay(500) // 500ms delay between uploads
+                    }
+                }
             }
+
+        } catch (e: Exception) {
+            throw (e)
         }
     }
 
     override suspend fun restore() {
         try {
             val drive = authRepository.getGoogleDrive()
-            if (drive != null) {
+                ?: throw (IllegalStateException("Google Drive service not available"))
 
-                val parentFile = getOrCreateBackupFolder(drive)
-                val fileList = getAllBackupFiles(drive, parentFile.id)
-                if (fileList.files.isNotEmpty()) {
-                    fileList.files.forEach { driveFile ->
+            val parentFile = getOrCreateBackupFolder(drive)
+            val fileList = getAllBackupFiles(drive, parentFile.id)
 
-                        val outputStream: OutputStream = withContext(Dispatchers.IO) {
-                            FileOutputStream(dbPath.parent?.plus("/${driveFile.name}") ?: "")
-                        }
+            if (fileList.files.isEmpty()) {
+                throw (NoSuchFileException("No Backup Available"))
+            }
 
-                        drive.files().get(driveFile.id).executeMediaAndDownloadTo(outputStream)
-                    }
+            fileList.files.forEachIndexed { index, driveFile ->
+                println("aaaa repo 555 111 ${dbPath.parent}")
+                println("aaaa repo 555 111 111 ${driveFile.name}")
 
-                    //db Migration After Restore
+                // Sequential download with retry logic
+                val downloadResult = downloadFileWithRetry(drive, driveFile, dbPath, maxRetries = 3)
+                downloadResult.onFailure { e ->
+                    throw e // Propagate failure to caller
+                }
 
-                    //appDatabase.migrateDatabaseIfNeeded(context, countryRepository)
-                    AppDatabase.resetDatabaseInstance(context, countryRepository)
-                    return
+                // Small delay to avoid overwhelming the API (optional)
+                if (index < fileList.files.size - 1) {
+                    delay(500) // 500ms delay between downloads
                 }
             }
-            throw (NoSuchFileException("No Backup Available"))
+
+            /*fileList.files.forEach { driveFile ->
+
+                println("aaaa repo 555 111 ${dbPath.parent}")
+                println("aaaa repo 555 111 111 ${driveFile.name}")
+                withContext(Dispatchers.IO) {
+
+                    println("aaaa repo 555 222")
+                    try {
+                        val filePath = dbPath.parent?.plus("/${driveFile.name}") ?: throw IllegalStateException("Invalid dbPath parent")
+                        FileOutputStream(filePath).use { outputStream ->
+                            println("aaaa repo 555 222 111")
+
+                            // Get the file from Drive
+                            val file = drive.files().get(driveFile.id)
+                            println("aaaa repo 555 222 222 ${file?.toString() ?: "File is null"}")
+
+                            if (file == null) {
+                                throw IllegalStateException("Drive file is null")
+                            }
+
+                            // Download the file
+                            file.executeMediaAndDownloadTo(outputStream)
+                            println("aaaa repo 555 222 Download completed")
+                        }
+                    } catch (e: IOException) {
+                        println("aaaa repo 555 222 333 IOException: ${e.message}")
+                        e.printStackTrace()
+                    } catch (e: Exception) {
+                        println("aaaa repo 555 222 333 General Exception: ${e.message}")
+                        e.printStackTrace()
+                    }
+                    println("aaaa repo 555 333")
+                }
+
+            }*/
         } catch (e: IOException) {
             throw (e)
         }
@@ -115,6 +178,38 @@ class BackupRepositoryImpl @Inject constructor(
         return withContext(Dispatchers.IO) {
             drive.files().list().setSpaces("drive").setQ("'$parentId' in parents").execute()
         }
+    }
+
+    private suspend fun uploadFileWithRetry(
+        drive: Drive,
+        fileId: String?,
+        fileName: String,
+        parentId: String,
+        maxRetries: Int = 3
+    ): Result<Unit> {
+        var attempt = 0
+        while (attempt < maxRetries) {
+            try {
+                return withContext(Dispatchers.IO) {
+                    val localFile = File(dbPath.parent, fileName)
+                    if (!localFile.exists() || localFile.length() == 0L) {
+                        throw IllegalStateException("Local file is missing or empty: $fileName")
+                    }
+
+                    createOrUpdateBackupFile(drive, fileId, fileName, parentId)
+                    Result.success(Unit)
+                }
+            } catch (e: IOException) {
+                attempt++
+                if (attempt == maxRetries) {
+                    return Result.failure(e)
+                }
+                delay(1000 * attempt.toLong()) // Exponential backoff: 1s, 2s, 3s
+            } catch (e: Exception) {
+                return Result.failure(e)
+            }
+        }
+        return Result.failure(IllegalStateException("Unexpected retry loop exit"))
     }
 
     private fun createOrUpdateBackupFile(
@@ -152,6 +247,47 @@ class BackupRepositoryImpl @Inject constructor(
         } else {
             return fileList.files.first()
         }
+    }
+
+    private suspend fun downloadFileWithRetry(
+        drive: Drive,
+        driveFile: com.google.api.services.drive.model.File,
+        dbPath: File,
+        maxRetries: Int
+    ): Result<Unit> {
+        var attempt = 0
+        while (attempt < maxRetries) {
+            try {
+                return withContext(Dispatchers.IO) {
+                    val fileMetadata = drive.files().get(driveFile.id)
+                        .setFields("id, name, size, mimeType")
+                        .execute()
+
+                    if (fileMetadata.size == 0 || fileMetadata.mimeType.contains("folder")) {
+                        throw IllegalStateException("File is empty or a folder: ${driveFile.id}")
+                    }
+
+                    val filePath = dbPath.parent?.plus("/${driveFile.name}")
+                        ?: throw IllegalStateException("Invalid dbPath parent")
+
+                    FileOutputStream(filePath).use { outputStream ->
+                        val file = drive.files().get(driveFile.id)
+                            ?: throw IllegalStateException("Drive file is null")
+                        file.executeMediaAndDownloadTo(outputStream)
+                    }
+                    Result.success(Unit)
+                }
+            } catch (e: IOException) {
+                attempt++
+                if (attempt == maxRetries) {
+                    return Result.failure(e)
+                }
+                delay(1000 * attempt.toLong()) // Exponential backoff: 1s, 2s, 3s
+            } catch (e: Exception) {
+                return Result.failure(e)
+            }
+        }
+        return Result.failure(IllegalStateException("Unexpected retry loop exit"))
     }
 }
 
