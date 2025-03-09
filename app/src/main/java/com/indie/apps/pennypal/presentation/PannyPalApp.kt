@@ -296,12 +296,17 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
                                     ?.savedStateHandle
                                     ?.set(Util.SAVE_STATE_CATEGORY_EDIT_SUCCESS, true)
                             } else {
+
                                 navController.previousBackStackEntry
                                     ?.savedStateHandle
                                     ?.set(Util.SAVE_STATE_CATEGORY_ADD_SUCCESS, true)
 
                             }
                             if (category != null) {
+                                navController.previousBackStackEntry
+                                    ?.savedStateHandle
+                                    ?.set(Util.SAVE_STATE_CATEGORY, Gson().toJson(category))
+
                                 navController.previousBackStackEntry
                                     ?.savedStateHandle
                                     ?.set(Util.SAVE_STATE_CATEGORY_ADD_EDIT_ID, category.id)
@@ -422,7 +427,9 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
                         selectedId = currentId ?: 0L,
                         type = type ?: -1,
                         onAddCategory = {
-                            navController.navigate(DialogNav.ADD_EDIT_CATEGORY.route)
+                            navController.navigate(DialogNav.ADD_EDIT_CATEGORY.route){
+                                navController.popBackStack()
+                            }
                         },
                         addCategoryId = addEditId ?: -1
                     )

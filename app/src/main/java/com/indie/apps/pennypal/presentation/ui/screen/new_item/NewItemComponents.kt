@@ -186,12 +186,24 @@ fun NewEntryFieldItemSection(
             modifier = Modifier.fillMaxWidth(),
             maxLines = 2
         ) {
+            val maxCategoryItems = 5
+            val isFirstItemAdded = category != null && categories.firstOrNull { it.id == category.id } == null
+            val availableCategorySlots = if (isFirstItemAdded) maxCategoryItems - 1 else maxCategoryItems
 
-            categories.onEach {
+            if (isFirstItemAdded) {
                 FlowRowItem(
-                    isSelected = category?.id == it.id,
-                    text = it.name,
-                    onClick = { onEvent(NewEntryEvent.CategorySelect(it)) })
+                    isSelected = true,
+                    text = category!!.name, // Safe due to null check above
+                    onClick = { onEvent(NewEntryEvent.CategorySelect(category)) }
+                )
+            }
+
+            categories.take(availableCategorySlots).forEach { categoryItem ->
+                FlowRowItem(
+                    isSelected = category?.id == categoryItem.id,
+                    text = categoryItem.name,
+                    onClick = { onEvent(NewEntryEvent.CategorySelect(categoryItem)) }
+                )
             }
 
             FlowRowItem(
