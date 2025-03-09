@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -13,6 +12,11 @@ import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -35,6 +39,7 @@ fun CustomDatePickerDialog(
     modifier: Modifier = Modifier
 ) {
     val state = rememberDatePickerState(currentTimeInMilli + Util.TIME_ZONE_OFFSET_IN_MILLI)
+    var isInitialLoad by remember { mutableStateOf(true) } // Track if it's the first composition
 
     Dialog(
         properties = DialogProperties(usePlatformDefaultWidth = false),
@@ -56,6 +61,30 @@ fun CustomDatePickerDialog(
                     colors = colors
                 )
 
+                // Observe date selection and trigger callback only on user change
+                LaunchedEffect(state.selectedDateMillis) {
+                    if (state.selectedDateMillis != null) {
+                        if (isInitialLoad) {
+                            isInitialLoad = false // Skip the initial load
+                        } else {
+                            val selectedCalendar = Calendar.getInstance().apply {
+                                timeInMillis = state.selectedDateMillis!!
+                            }
+                            val calendar = Calendar.getInstance().apply {
+                                timeInMillis = currentTimeInMilli
+                                set(Calendar.YEAR, selectedCalendar.get(Calendar.YEAR))
+                                set(Calendar.MONTH, selectedCalendar.get(Calendar.MONTH))
+                                set(
+                                    Calendar.DAY_OF_MONTH,
+                                    selectedCalendar.get(Calendar.DAY_OF_MONTH)
+                                )
+                            }
+                            onDateSelected(calendar)
+                            onDismiss() // Close dialog after user selection
+                        }
+                    }
+                }
+
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -67,7 +96,7 @@ fun CustomDatePickerDialog(
                         ),
                     horizontalArrangement = Arrangement.End
                 ) {
-                    PrimaryButton(
+                    /*PrimaryButton(
                         modifier = Modifier.width(80.dp),
                         onClick = {
                             if (state.selectedDateMillis != null) {
@@ -94,7 +123,7 @@ fun CustomDatePickerDialog(
                         )
                     }
 
-                    Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.padding)))
+                    Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.padding)))*/
 
                     PrimaryButton(
                         modifier = Modifier.width(80.dp),

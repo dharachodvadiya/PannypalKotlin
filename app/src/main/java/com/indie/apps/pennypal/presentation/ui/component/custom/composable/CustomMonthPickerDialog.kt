@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -23,8 +22,10 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -64,7 +65,7 @@ fun CustomMonthPickerDialog(
     var year by remember {
         mutableIntStateOf(currentYear)
     }
-
+    var isInitialLoad by remember { mutableStateOf(true) } // Track if it's the first composition
     /*val interactionSource = remember {
         MutableInteractionSource()
     }*/
@@ -169,12 +170,22 @@ fun CustomMonthPickerDialog(
                     }
                 }
 
+                // Automatically select and dismiss when month changes
+                LaunchedEffect(monthIndex) {
+                    if (isInitialLoad) {
+                        isInitialLoad = false // Skip initial load
+                    } else {
+                        onDateSelected(year, monthIndex)
+                        onDismiss() // Close dialog after selection
+                    }
+                }
+
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
                 ) {
-                    PrimaryButton(
+                    /*PrimaryButton(
                         modifier = Modifier.width(80.dp),
                         onClick = {
                             onDateSelected(year, monthIndex)
@@ -186,7 +197,7 @@ fun CustomMonthPickerDialog(
                         )
                     }
 
-                    Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.padding)))
+                    Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.padding)))*/
 
                     PrimaryButton(
                         modifier = Modifier.width(80.dp),

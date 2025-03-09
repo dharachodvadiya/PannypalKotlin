@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -23,8 +22,10 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -58,6 +59,8 @@ fun CustomYearPickerDialog(
     var currentPage by remember {
         mutableIntStateOf((selectedYear - initYear) / yearPerPage + 1)
     }
+
+    var isInitialLoad by remember { mutableStateOf(true) } // Track if it's the first composition
 
 
     val startYear = initYear + (yearPerPage * (currentPage - 1))
@@ -124,24 +127,34 @@ fun CustomYearPickerDialog(
                         selectedYear = it
                     }
                 )
+
+                // Automatically select and dismiss when year changes
+                LaunchedEffect(selectedYear) {
+                    if (isInitialLoad) {
+                        isInitialLoad = false // Skip initial load
+                    } else {
+                        onDateSelected(selectedYear)
+                        onDismiss() // Close dialog after selection
+                    }
+                }
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
                 ) {
-                    PrimaryButton(
-                        modifier = Modifier.width(80.dp),
-                        onClick = {
-                            onDateSelected(selectedYear)
-                        }) {
-                        CustomText(
-                            stringResource(R.string.select),
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
+                    /* PrimaryButton(
+                         modifier = Modifier.width(80.dp),
+                         onClick = {
+                             onDateSelected(selectedYear)
+                         }) {
+                         CustomText(
+                             stringResource(R.string.select),
+                             maxLines = 1,
+                             overflow = TextOverflow.Ellipsis
+                         )
+                     }
 
-                    Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.padding)))
+                     Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.padding)))*/
 
                     PrimaryButton(
                         modifier = Modifier.width(80.dp),
