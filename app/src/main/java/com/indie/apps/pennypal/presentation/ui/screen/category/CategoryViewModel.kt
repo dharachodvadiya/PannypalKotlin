@@ -76,13 +76,13 @@ class CategoryViewModel @Inject constructor(
         if (searchTextState.value.text.trim().isNotEmpty()) {
             //searchTextState.value.text = ""
             updateSearchText("")
-            searchData()
         }
     }
 
     fun addCategorySuccess() {
         //clearSelection()
         clearSearch()
+        searchData()
         scrollIndex.value = 0
         scrollOffset.value = 0
 
@@ -102,6 +102,7 @@ class CategoryViewModel @Inject constructor(
     fun editCategorySuccess() {
         //clearSelection()
         //clearSearch()
+        searchData()
 
         editAnimRun.value = true
 
@@ -115,6 +116,7 @@ class CategoryViewModel @Inject constructor(
 
         //clearSelection()
         clearSearch()
+        searchData()
         scrollIndex.value = 0
         scrollOffset.value = 0
 
@@ -136,11 +138,6 @@ class CategoryViewModel @Inject constructor(
      }*/
 
     fun onAddClick(onSuccess: () -> Unit) {
-        onSuccess()
-    }
-
-    fun onNavigationUp(onSuccess: () -> Unit) {
-        //clearSelection()
         onSuccess()
     }
 
@@ -225,5 +222,13 @@ class CategoryViewModel @Inject constructor(
     fun updateSearchText(text: String) = searchTextState.value.updateText(text)
 
     // fun getIsSelected() = selectedList.size != 0
+
+    fun onBackClick(onSuccess: () -> Unit) {
+        if (searchTextState.value.text.trim().isNotEmpty()) {
+            clearSearch()
+            searchData()
+        } else
+            onSuccess()
+    }
 
 }

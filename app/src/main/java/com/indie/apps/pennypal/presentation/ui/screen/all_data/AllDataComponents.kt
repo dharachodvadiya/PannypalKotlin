@@ -47,6 +47,7 @@ import java.text.SimpleDateFormat
 @Composable
 fun AllDataTopBar(
     title: String = "",
+    isSelected: Boolean = false,
     isDeletable: Boolean = false,
     onAddClick: () -> Unit,
     onDeleteClick: () -> Unit,
@@ -59,7 +60,7 @@ fun AllDataTopBar(
         isBackEnable = true,
         onNavigationUp = onNavigationUp,
         title = title,
-        contentAlignment = if (isDeletable) Alignment.CenterStart else Alignment.Center,
+        contentAlignment = if (isSelected) Alignment.CenterStart else Alignment.Center,
         /*content = {
             if (!isDeletable) {
                 SearchView(
@@ -87,16 +88,18 @@ fun AllDataTopBar(
         },*/
         trailingContent = {
 
-            if (isDeletable) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_delete_top),
-                    contentDescription = "Delete",
-                    tint = MyAppTheme.colors.black,
-                    modifier = Modifier
-                        .roundedCornerBackground(MyAppTheme.colors.transparent)
-                        .size(25.dp)
-                        .clickableWithNoRipple { onDeleteClick() }
-                )
+            if (isSelected) {
+                if (isDeletable) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_delete_top),
+                        contentDescription = "Delete",
+                        tint = MyAppTheme.colors.black,
+                        modifier = Modifier
+                            .roundedCornerBackground(MyAppTheme.colors.transparent)
+                            .size(25.dp)
+                            .clickableWithNoRipple { onDeleteClick() }
+                    )
+                }
             } else {
                 PrimaryButton(
                     bgColor = MyAppTheme.colors.white,
@@ -161,7 +164,9 @@ fun TransactionItem(
         content = {
             Column {
                 CustomText(
-                    text = if(item.details?.trim()?.isNotEmpty() == true) item.details else item.categoryName,
+                    text = if (item.details?.trim()
+                            ?.isNotEmpty() == true
+                    ) item.details else item.categoryName,
                     style = MyAppTheme.typography.Semibold52_5,
                     color = MyAppTheme.colors.black,
                     maxLines = 1,

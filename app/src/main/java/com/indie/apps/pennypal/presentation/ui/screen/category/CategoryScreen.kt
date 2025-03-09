@@ -94,10 +94,7 @@ fun CategoryScreen(
     val deleteAnimRun by viewModel.deleteAnimRun.collectAsStateWithLifecycle()
 
     BackHandler {
-        /*if (viewModel.getIsSelected())
-            viewModel.onNavigationUp { }
-        else*/
-        onNavigationUp()
+        viewModel.onBackClick { onNavigationUp() }
     }
 
     var merchantId by remember {
@@ -134,10 +131,7 @@ fun CategoryScreen(
             title = stringResource(R.string.category),
             onAddClick = { viewModel.onAddClick { onAddClick() } },
             onNavigationUp = {
-                /* if (viewModel.getIsSelected())
-                     viewModel.onNavigationUp { }
-                 else*/
-                onNavigationUp()
+                viewModel.onBackClick { onNavigationUp() }
             })
     }) { topBarPadding ->
 
@@ -150,6 +144,30 @@ fun CategoryScreen(
                 .padding(horizontal = dimensionResource(id = R.dimen.padding))
         )
         {
+            SearchView(
+                textState = searchTextState,
+                onTextChange = {
+                    viewModel.updateSearchText(it)
+                    job?.cancel()
+                    job = MainScope().launch {
+                        delay(Util.SEARCH_NEWS_TIME_DELAY)
+                        viewModel.searchData()
+                    }
+                },
+                trailingIcon = Icons.Default.Search,
+                bgColor = MyAppTheme.colors.lightBlue2,
+                modifier = Modifier
+                    .height(dimensionResource(R.dimen.top_bar_profile)),
+                paddingValues = PaddingValues(
+                    top = 0.dp,
+                    bottom = 0.dp,
+                    start = dimensionResource(id = R.dimen.padding),
+                    end = 0.dp
+                )
+            )
+
+            Spacer(Modifier.height(dimensionResource((R.dimen.padding))))
+
 
             if (pagingState.isRefresh && (lazyPagingData.itemCount == 0 || isAddSuccess)) {
                 LoadingWithProgress(
@@ -165,29 +183,6 @@ fun CategoryScreen(
                 )
             } else {
 
-                SearchView(
-                    textState = searchTextState,
-                    onTextChange = {
-                        viewModel.updateSearchText(it)
-                        job?.cancel()
-                        job = MainScope().launch {
-                            delay(Util.SEARCH_NEWS_TIME_DELAY)
-                            viewModel.searchData()
-                        }
-                    },
-                    trailingIcon = Icons.Default.Search,
-                    bgColor = MyAppTheme.colors.lightBlue2,
-                    modifier = Modifier
-                        .height(dimensionResource(R.dimen.top_bar_profile)),
-                    paddingValues = PaddingValues(
-                        top = 0.dp,
-                        bottom = 0.dp,
-                        start = dimensionResource(id = R.dimen.padding),
-                        end = 0.dp
-                    )
-                )
-
-                Spacer(Modifier.height(dimensionResource((R.dimen.padding))))
 
                 val scrollState: LazyListState = rememberLazyListState(
                     scrollIndex,

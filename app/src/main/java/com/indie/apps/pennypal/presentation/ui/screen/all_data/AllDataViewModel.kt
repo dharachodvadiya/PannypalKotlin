@@ -75,13 +75,13 @@ class AllDataViewModel @Inject constructor(
         if (searchTextState.value.text.trim().isNotEmpty()) {
             //searchTextState.value.text = ""
             updateSearchText("")
-            searchData()
         }
     }
 
     fun addDataSuccess() {
         clearSelection()
         clearSearch()
+        searchData()
         scrollIndex.value = 0
         scrollOffset.value = 0
 
@@ -101,6 +101,7 @@ class AllDataViewModel @Inject constructor(
     fun editDataSuccess() {
         clearSelection()
         //clearSearch()
+        searchData()
 
         editAnimRun.value = true
 
@@ -115,11 +116,6 @@ class AllDataViewModel @Inject constructor(
     }
 
     fun onAddClick(onSuccess: () -> Unit) {
-        onSuccess()
-    }
-
-    fun onNavigationUp(onSuccess: () -> Unit) {
-        clearSelection()
         onSuccess()
     }
 
@@ -157,7 +153,7 @@ class AllDataViewModel @Inject constructor(
     }
 
     fun onItemClick(id: Long, callBack: (Long) -> Unit) {
-        if (!isDeletable.value) {
+        if (!getIsSelected()) {
             callBack(id)
         } else {
             setSelectItem(id)
@@ -178,8 +174,10 @@ class AllDataViewModel @Inject constructor(
     }
 
     private fun clearSelection() {
-        selectedList.clear()
-        changeUpdateState()
+        if (selectedList.size > 0) {
+            selectedList.clear()
+            changeUpdateState()
+        }
     }
 
     private fun changeUpdateState() {
@@ -192,6 +190,19 @@ class AllDataViewModel @Inject constructor(
         this.scrollOffset.value = scrollOffset
     }
 
-    fun updateSearchText(text : String) = searchTextState.value.updateText(text)
+    fun updateSearchText(text: String) = searchTextState.value.updateText(text)
+
+    fun getIsSelected() = selectedList.size != 0
+
+    fun onBackClick(onSuccess: () -> Unit) {
+        if (getIsSelected()) {
+            clearSelection()
+            searchData()
+        } else if (searchTextState.value.text.trim().isNotEmpty()) {
+            clearSearch()
+            searchData()
+        } else
+            onSuccess()
+    }
 
 }

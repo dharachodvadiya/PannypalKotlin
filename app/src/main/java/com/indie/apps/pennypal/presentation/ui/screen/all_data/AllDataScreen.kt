@@ -1,6 +1,7 @@
 package com.indie.apps.pennypal.presentation.ui.screen.all_data
 
 import android.annotation.SuppressLint
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
@@ -128,6 +129,13 @@ fun AllDataScreen(
         isEditMerchantSuccessState = isEditSuccess
     }*/
 
+    BackHandler {
+        allDataViewModel.onBackClick {
+            onNavigationUp()
+        }
+    }
+
+
     var openAlertDialog by remember { mutableStateOf(false) }
 
     var job: Job? = null
@@ -137,14 +145,12 @@ fun AllDataScreen(
                 id = R.string.selected_text
             ) else stringResource(R.string.transactions),
             textState = searchTextState,
+            isSelected = allDataViewModel.getIsSelected(),
             isDeletable = isDeletable,
             onAddClick = { allDataViewModel.onAddClick { onAddClick() } },
             onDeleteClick = { allDataViewModel.onDeleteClick { openAlertDialog = true } },
             onNavigationUp = {
-                allDataViewModel.onNavigationUp {
-                    if (!isDeletable)
-                        onNavigationUp()
-                }
+                allDataViewModel.onBackClick { onNavigationUp() }
             },
             onSearchTextChange = {
                 allDataViewModel.updateSearchText(it)
@@ -166,6 +172,29 @@ fun AllDataScreen(
         )
 
         {
+            SearchView(
+                textState = searchTextState,
+                onTextChange = {
+                    allDataViewModel.updateSearchText(it)
+                    job?.cancel()
+                    job = MainScope().launch {
+                        delay(Util.SEARCH_NEWS_TIME_DELAY)
+                        allDataViewModel.searchData()
+                    }
+                },
+                trailingIcon = Icons.Default.Search,
+                bgColor = MyAppTheme.colors.lightBlue2,
+                modifier = Modifier
+                    .height(dimensionResource(R.dimen.top_bar_profile)),
+                paddingValues = PaddingValues(
+                    top = 0.dp,
+                    bottom = 0.dp,
+                    start = dimensionResource(id = R.dimen.padding),
+                    end = 0.dp
+                )
+            )
+            Spacer(Modifier.height(dimensionResource((R.dimen.padding))))
+
             if (pagingState.isRefresh && (lazyPagingData.itemCount == 0 || isAddSuccess)) {
                 LoadingWithProgress(
                     modifier = Modifier
@@ -179,28 +208,6 @@ fun AllDataScreen(
                 )
             } else {
 
-                SearchView(
-                    textState = searchTextState,
-                    onTextChange = {
-                        allDataViewModel.updateSearchText(it)
-                        job?.cancel()
-                        job = MainScope().launch {
-                            delay(Util.SEARCH_NEWS_TIME_DELAY)
-                            allDataViewModel.searchData()
-                        }
-                    },
-                    trailingIcon = Icons.Default.Search,
-                    bgColor = MyAppTheme.colors.lightBlue2,
-                    modifier = Modifier
-                        .height(dimensionResource(R.dimen.top_bar_profile)),
-                    paddingValues = PaddingValues(
-                        top = 0.dp,
-                        bottom = 0.dp,
-                        start = dimensionResource(id = R.dimen.padding),
-                        end = 0.dp
-                    )
-                )
-                Spacer(Modifier.height(dimensionResource((R.dimen.padding))))
 
                 val scrollState: LazyListState = rememberLazyListState(
                     scrollIndex,

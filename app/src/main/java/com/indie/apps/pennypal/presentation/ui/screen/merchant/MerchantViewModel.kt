@@ -77,13 +77,13 @@ class MerchantViewModel @Inject constructor(
         if (searchTextState.value.text.trim().isNotEmpty()) {
             //searchTextState.value.text = ""
             updateSearchText("")
-            searchData()
         }
     }
 
     fun addMerchantSuccess() {
         clearSelection()
         clearSearch()
+        searchData()
         scrollIndex.value = 0
         scrollOffset.value = 0
 
@@ -102,6 +102,7 @@ class MerchantViewModel @Inject constructor(
 
     fun editMerchantSuccess() {
         clearSelection()
+        searchData()
         //clearSearch()
 
         editAnimRun.value = true
@@ -116,6 +117,7 @@ class MerchantViewModel @Inject constructor(
 
         clearSelection()
         clearSearch()
+        searchData()
         scrollIndex.value = 0
         scrollOffset.value = 0
 
@@ -137,11 +139,6 @@ class MerchantViewModel @Inject constructor(
     }
 
     fun onAddClick(onSuccess: () -> Unit) {
-        onSuccess()
-    }
-
-    fun onNavigationUp(onSuccess: () -> Unit) {
-        clearSelection()
         onSuccess()
     }
 
@@ -200,8 +197,10 @@ class MerchantViewModel @Inject constructor(
     }
 
     private fun clearSelection() {
-        selectedList.clear()
-        changeUpdateState()
+        if (selectedList.size > 0) {
+            selectedList.clear()
+            changeUpdateState()
+        }
     }
 
     private fun changeUpdateState() {
@@ -226,5 +225,16 @@ class MerchantViewModel @Inject constructor(
     fun updateSearchText(text: String) = searchTextState.value.updateText(text)
 
     fun getIsSelected() = selectedList.size != 0
+
+    fun onBackClick(onSuccess: () -> Unit) {
+        if (getIsSelected()) {
+            clearSelection()
+            searchData()
+        } else if (searchTextState.value.text.trim().isNotEmpty()) {
+            clearSearch()
+            searchData()
+        } else
+            onSuccess()
+    }
 
 }

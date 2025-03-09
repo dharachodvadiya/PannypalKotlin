@@ -103,10 +103,9 @@ fun MerchantScreen(
     }
 
     BackHandler {
-        if (merchantViewModel.getIsSelected())
-            merchantViewModel.onNavigationUp { }
-        else
+        merchantViewModel.onBackClick {
             onNavigationUp()
+        }
     }
 
     LaunchedEffect(editAddId) {
@@ -147,10 +146,9 @@ fun MerchantScreen(
             onEditClick = { merchantViewModel.onEditClick { onEditClick(it) } },
             onDeleteClick = { merchantViewModel.onDeleteClick { openAlertDialog = true } },
             onNavigationUp = {
-                if (merchantViewModel.getIsSelected())
-                    merchantViewModel.onNavigationUp { }
-                else
+                merchantViewModel.onBackClick {
                     onNavigationUp()
+                }
             },
             onSearchTextChange = {
                 merchantViewModel.updateSearchText(it)
@@ -169,7 +167,31 @@ fun MerchantScreen(
                 //.padding(bottomPadding)
                 .padding(top = topBarPadding.calculateTopPadding())
                 .padding(horizontal = dimensionResource(id = R.dimen.padding))
-        ){
+        ) {
+            SearchView(
+                textState = searchTextState,
+                onTextChange = {
+                    merchantViewModel.updateSearchText(it)
+                    job?.cancel()
+                    job = MainScope().launch {
+                        delay(Util.SEARCH_NEWS_TIME_DELAY)
+                        merchantViewModel.searchData()
+                    }
+                },
+                trailingIcon = Icons.Default.Search,
+                bgColor = MyAppTheme.colors.lightBlue2,
+                modifier = Modifier
+                    .height(dimensionResource(R.dimen.top_bar_profile)),
+                paddingValues = PaddingValues(
+                    top = 0.dp,
+                    bottom = 0.dp,
+                    start = dimensionResource(id = R.dimen.padding),
+                    end = 0.dp
+                )
+            )
+
+            Spacer(Modifier.height(dimensionResource((R.dimen.padding))))
+
             if (pagingState.isRefresh && (lazyPagingData.itemCount == 0 || isAddSuccess)) {
                 LoadingWithProgress(
                     modifier = Modifier
@@ -184,29 +206,6 @@ fun MerchantScreen(
                 )
             } else {
 
-                SearchView(
-                    textState = searchTextState,
-                    onTextChange = {
-                        merchantViewModel.updateSearchText(it)
-                        job?.cancel()
-                        job = MainScope().launch {
-                            delay(Util.SEARCH_NEWS_TIME_DELAY)
-                            merchantViewModel.searchData()
-                        }
-                    },
-                    trailingIcon = Icons.Default.Search,
-                    bgColor = MyAppTheme.colors.lightBlue2,
-                    modifier = Modifier
-                        .height(dimensionResource(R.dimen.top_bar_profile)),
-                    paddingValues = PaddingValues(
-                        top = 0.dp,
-                        bottom = 0.dp,
-                        start = dimensionResource(id = R.dimen.padding),
-                        end = 0.dp
-                    )
-                )
-
-                Spacer(Modifier.height(dimensionResource((R.dimen.padding))))
 
                 val scrollState: LazyListState = rememberLazyListState(
                     scrollIndex,
