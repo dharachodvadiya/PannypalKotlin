@@ -126,9 +126,10 @@ class OverViewViewModel @Inject constructor(
     }
 
     fun editDataSuccess() {
-        editAnimRun.value = true
-
         viewModelScope.launch {
+            delay(10L)
+            editAnimRun.value = true
+
             delay(Util.LIST_ITEM_ANIM_DELAY)
             editAnimRun.value = false
         }
