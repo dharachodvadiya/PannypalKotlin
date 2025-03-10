@@ -2,8 +2,8 @@ package com.indie.apps.pennypal.presentation.ui.dialog.country_picker
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.indie.apps.cpp.data.repository.CountryRepository
 import com.indie.apps.cpp.data.model.Country
+import com.indie.apps.cpp.data.repository.CountryRepository
 import com.indie.apps.pennypal.domain.usecase.UpdateUserCurrencyDataUseCase
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.util.Resource
@@ -50,7 +50,6 @@ class CountryPickerViewModel @Inject constructor(
         viewModelScope.launch {
             updateUserCurrencyDataUseCase
                 .updateData(
-                    currency = countryRepository.getCurrencyCodeFromCountryCode(countryCode),
                     currencyCountryCode =  countryCode)
                 .collect {
                     when (it) {

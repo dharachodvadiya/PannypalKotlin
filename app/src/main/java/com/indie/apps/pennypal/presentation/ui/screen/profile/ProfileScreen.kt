@@ -40,6 +40,7 @@ fun ProfileScreen(
     val userUpdateToast = stringResource(id = R.string.user_update_success_message)
 
     val userData by profileViewModel.currUserData.collectAsStateWithLifecycle()
+    val currency by profileViewModel.currency.collectAsStateWithLifecycle()
     val currentMonthTotal by profileViewModel.currentMonthTotal.collectAsStateWithLifecycle()
 
     if (userData == null) {
@@ -50,7 +51,7 @@ fun ProfileScreen(
             ProfileScreenData(
                 onNavigationUp = onNavigationUp,
                 user = it,
-                symbol = profileViewModel.getSymbolFromCurrencyCode(it.currency),
+                symbol = currency,
                 isSaveEnable = profileViewModel.getIsSavable(),
                 onCurrencyChangeClick = onCurrencyChangeClick,
                 onSaveClick = {

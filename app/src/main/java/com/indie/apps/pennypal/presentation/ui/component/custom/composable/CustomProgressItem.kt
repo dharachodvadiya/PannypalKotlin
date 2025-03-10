@@ -34,6 +34,7 @@ fun CustomProgressItem(
     name: String,
     totalAmount: Double,
     spentAmount: Double,
+    currency: String,
     onClick: () -> Unit = {},
     isClickable: Boolean = true,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
@@ -60,7 +61,7 @@ fun CustomProgressItem(
                     Spacer(modifier = Modifier.weight(1f))
 
                     CustomText(
-                        text = Util.getFormattedStringWithSymbol(remainAmount),
+                        text = Util.getFormattedStringWithSymbol(remainAmount, currency),
                         style = MyAppTheme.typography.Regular46,
                         color = if (remainAmount < 0) MyAppTheme.colors.redBg else MyAppTheme.colors.black,
                         overflow = TextOverflow.Ellipsis,
@@ -75,7 +76,8 @@ fun CustomProgressItem(
                     CustomText(
                         text = "${stringResource(R.string.budget)} : ${
                             Util.getFormattedStringWithSymbol(
-                                totalAmount
+                                totalAmount,
+                                currency
                             )
                         }",
                         style = MyAppTheme.typography.Medium40,
@@ -112,17 +114,17 @@ fun CustomProgressItem(
                     progress = progress,
                     color = if (remainAmount < 0) MyAppTheme.colors.redBg else MyAppTheme.colors.lightBlue1
                 )
-               /* // Display progress bar
-                LinearProgressIndicator(
-                    progress = { progress },
-                    gapSize = (-5).dp,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(5.dp))
-                        .height(10.dp),
-                    color = if (remainAmount < 0) MyAppTheme.colors.redBg else MyAppTheme.colors.lightBlue1,
-                    trackColor = MyAppTheme.colors.gray1.copy(0.2f),
-                )*/
+                /* // Display progress bar
+                 LinearProgressIndicator(
+                     progress = { progress },
+                     gapSize = (-5).dp,
+                     modifier = Modifier
+                         .fillMaxWidth()
+                         .clip(RoundedCornerShape(5.dp))
+                         .height(10.dp),
+                     color = if (remainAmount < 0) MyAppTheme.colors.redBg else MyAppTheme.colors.lightBlue1,
+                     trackColor = MyAppTheme.colors.gray1.copy(0.2f),
+                 )*/
                 if (remainAmount < 0) {
 
                     Spacer(modifier = Modifier.height(5.dp))
@@ -139,8 +141,7 @@ fun CustomProgressItem(
 
         },
         trailingContent = {
-            if(isClickable)
-            {
+            if (isClickable) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                     contentDescription = "edit",
@@ -162,6 +163,7 @@ fun CustomProgressItemWithDate(
     date: String,
     totalAmount: Double,
     spentAmount: Double,
+    currency: String,
     onClick: () -> Unit = {},
     isClickable: Boolean = true,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
@@ -197,7 +199,7 @@ fun CustomProgressItemWithDate(
                     Spacer(modifier = Modifier.weight(1f))
 
                     CustomText(
-                        text = Util.getFormattedStringWithSymbol(remainAmount),
+                        text = Util.getFormattedStringWithSymbol(remainAmount, currency),
                         style = MyAppTheme.typography.Regular46,
                         color = if (remainAmount < 0) MyAppTheme.colors.redBg else MyAppTheme.colors.black,
                         overflow = TextOverflow.Ellipsis,
@@ -212,7 +214,8 @@ fun CustomProgressItemWithDate(
                     CustomText(
                         text = "${stringResource(R.string.budget)} : ${
                             Util.getFormattedStringWithSymbol(
-                                totalAmount
+                                totalAmount,
+                                currency
                             )
                         }",
                         style = MyAppTheme.typography.Medium40,
@@ -277,8 +280,7 @@ fun CustomProgressItemWithDate(
 
         },
         trailingContent = {
-            if(isClickable)
-            {
+            if (isClickable) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                     contentDescription = "edit",
@@ -296,12 +298,11 @@ fun CustomProgressItemWithDate(
 
 @Composable
 fun CustomLinearProgressIndicator(
-    progress : Float,
-    color : Color,
-    height : Dp = 10.dp,
+    progress: Float,
+    color: Color,
+    height: Dp = 10.dp,
     cornerRadius: Dp = 5.dp
-)
-{
+) {
     // Display progress bar
     LinearProgressIndicator(
         progress = { progress },
@@ -323,7 +324,8 @@ private fun CustomProgressItemPreview() {
             name = "fsdf",
             totalAmount = 100.0,
             spentAmount = 30.0,
-            onClick = {}
+            onClick = {},
+            currency = "$"
         )
     }
 }
@@ -337,7 +339,8 @@ private fun CustomProgressItemDatePreview() {
             totalAmount = 100.0,
             spentAmount = 30.0,
             onClick = {},
-            date = "25 january 2024"
+            date = "25 january 2024",
+            currency = "$"
         )
     }
 }

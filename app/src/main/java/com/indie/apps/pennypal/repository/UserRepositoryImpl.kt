@@ -1,23 +1,28 @@
 package com.indie.apps.pennypal.repository
 
+import com.indie.apps.cpp.data.repository.CountryRepository
 import com.indie.apps.pennypal.data.database.dao.UserDao
 import com.indie.apps.pennypal.data.database.entity.User
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
     private val userDao: UserDao,
+    private val countryRepository: CountryRepository,
     private val dispatcher: CoroutineDispatcher
 ) : UserRepository {
 
     override fun getUser() = userDao.getUser().flowOn(dispatcher)
+    override fun getCurrency() = userDao.getCurrencyCountryCode()
+        .map { countryRepository.getCurrencySymbolFromCountryCode(it) }.flowOn(dispatcher)
 
     override fun getUserWithPaymentName() = userDao.getUserWithPaymentName().flowOn(dispatcher)
     override suspend fun updatePayment(paymentId: Long) = userDao.updatePayment(paymentId)
 
-    override suspend fun updateCurrency(currency: String, currencyCountryCode: String) =
-        userDao.updateCurrency(currency, currencyCountryCode)
+    override suspend fun updateCurrency(currencyCountryCode: String) =
+        userDao.updateCurrency(currencyCountryCode)
 
     override suspend fun updateName(name: String) =
         userDao.updateName(name)

@@ -65,6 +65,7 @@ fun BudgetFilterScreen(
     val pagingState by viewModel.pagingState.collectAsStateWithLifecycle()
     pagingState.update(lazyPagingData)
     val addBudgetAnimRun by viewModel.addBudgetAnimRun.collectAsStateWithLifecycle()
+    val currency by viewModel.currency.collectAsStateWithLifecycle()
 
     val currentPeriod by viewModel.currentPeriod.collectAsStateWithLifecycle()
 
@@ -222,7 +223,8 @@ fun BudgetFilterScreen(
                                     onClick = {
                                         onBudgetEditClick(item.id)
                                     },
-                                    modifier = modifierAdd
+                                    modifier = modifierAdd,
+                                    currency = currency
                                 )
                             }
                         }

@@ -114,6 +114,7 @@ fun BudgetTopBar(
 fun BudgetGroupItem(
     title: Int,
     budgetList: List<BudgetWithSpentAndCategoryIdList>,
+    currency: String,
     onBudgetItemClick: (Long) -> Unit,
     noDataTitleId: Int,
     noDataDetailId: Int,
@@ -161,6 +162,7 @@ fun BudgetGroupItem(
                 name = item.title,
                 totalAmount = item.budgetAmount,
                 spentAmount = item.spentAmount,
+                currency = currency,
                 onClick = {
                     onBudgetItemClick(item.id)
                 }
@@ -240,6 +242,7 @@ fun BudgetExpandableGroupHeader(
 fun BudgetExpandableGroupItem(
     title: Int,
     lazyPagingData: LazyPagingItems<BudgetWithSpentAndCategoryIdList>,
+    currency: String,
     onBudgetItemClick: (Long) -> Unit,
     onExpandClick: () -> Unit,
     isExpand: Boolean,
@@ -311,6 +314,7 @@ fun BudgetExpandableGroupItem(
                             totalAmount = item.budgetAmount,
                             spentAmount = item.spentAmount,
                             date = timeString,
+                            currency = currency,
                             onClick = {
                                 onBudgetItemClick(item.id)
                             }
@@ -350,6 +354,7 @@ fun MonthYearSelection(
 @Composable
 fun BudgetList(
     budgetState: List<BudgetWithSpentAndCategoryIdList>,
+    currency: String,
     onBudgetEditClick: (Long) -> Unit
 ) {
     if (budgetState.isEmpty()) {
@@ -369,6 +374,7 @@ fun BudgetList(
                     totalAmount = item.budgetAmount,
                     spentAmount = item.spentAmount,
                     onClick = { onBudgetEditClick(item.id) },
+                    currency = currency,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -383,6 +389,7 @@ fun LazyListScope.expandableBudgetGroup(
     onExpandClick: () -> Unit,
     items: List<BudgetWithSpentAndCategoryIdList>? = null,
     pagingItems: LazyPagingItems<BudgetWithSpentAndCategoryIdList>? = null,
+    currency: String,
     onBudgetEditClick: (Long) -> Unit
 ) {
     item {
@@ -403,6 +410,7 @@ fun LazyListScope.expandableBudgetGroup(
                 ) { item ->
                     BudgetItemContent(
                         item,
+                        currency,
                         onBudgetEditClick,
                         items.indexOf(item) == items.size - 1
                     )
@@ -417,6 +425,7 @@ fun LazyListScope.expandableBudgetGroup(
                     pagingItems[index]?.let { item ->
                         BudgetItemContent(
                             item,
+                            currency,
                             onBudgetEditClick,
                             index == pagingItems.itemCount - 1
                         )
@@ -432,6 +441,7 @@ fun LazyListScope.expandableBudgetGroup(
 @Composable
 fun BudgetItemContent(
     item: BudgetWithSpentAndCategoryIdList,
+    currency: String,
     onBudgetEditClick: (Long) -> Unit,
     isLastItem: Boolean
 ) {
@@ -446,6 +456,7 @@ fun BudgetItemContent(
         spentAmount = item.spentAmount,
         date = timeString,
         onClick = { onBudgetEditClick(item.id) },
+        currency = currency,
         modifier = if (isLastItem) Modifier.roundedCornerLowerBackground(MyAppTheme.colors.itemBg)
         else Modifier.background(MyAppTheme.colors.itemBg)
     )

@@ -126,7 +126,8 @@ class OnBoardingViewModel @Inject constructor(
     private fun getCurrencyText(): String {
         val currencyCode =
             countryRepository.getCurrencyCodeFromCountryCode(currencyCountryCode.value)
-        val currencySymbol = countryRepository.getSymbolFromCurrencyCode(currencyCode)
+        val currencySymbol =
+            countryRepository.getCurrencySymbolFromCountryCode(currencyCountryCode.value)
         return "$currencyCode ($currencySymbol)"
     }
 
@@ -163,7 +164,6 @@ class OnBoardingViewModel @Inject constructor(
         viewModelScope.launch {
             updateUserCurrencyDataUseCase
                 .updateData(
-                    currency = countryRepository.getCurrencyCodeFromCountryCode(currencyCountryCode.value),
                     currencyCountryCode = currencyCountryCode.value
                 )
                 .collect {

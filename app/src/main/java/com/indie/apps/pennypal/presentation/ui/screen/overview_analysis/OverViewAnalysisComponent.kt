@@ -170,6 +170,7 @@ fun AnalysisMonthYearSelection(
 fun AnalysisBalance(
     receiveAmount: Double,
     spentAmount: Double,
+    currency: String,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     val remainAmount by remember { derivedStateOf { receiveAmount - spentAmount } }
@@ -192,7 +193,7 @@ fun AnalysisBalance(
                 color = MyAppTheme.colors.gray2
             )
             AutoSizeText(
-                text = Util.getFormattedStringWithSymbol(remainAmount),
+                text = Util.getFormattedStringWithSymbol(remainAmount, currency),
                 style = MyAppTheme.typography.Regular66_5,
                 color = MyAppTheme.colors.black,
                 maxLines = 1
@@ -205,7 +206,7 @@ fun AnalysisBalance(
             modifier = Modifier.fillMaxWidth(),
         ) {
             AnalysisBalanceItem(
-                amount = Util.getFormattedStringWithSymbol(receiveAmount),
+                amount = Util.getFormattedStringWithSymbol(receiveAmount, currency),
                 title = R.string.received,
                 horizontalAlignment = Alignment.Start,
                 imageVector = Icons.Default.SouthWest,
@@ -217,7 +218,7 @@ fun AnalysisBalance(
                     .padding(horizontal = dimensionResource(id = R.dimen.item_inner_padding))
             )
             AnalysisBalanceItem(
-                amount = Util.getFormattedStringWithSymbol(spentAmount),
+                amount = Util.getFormattedStringWithSymbol(spentAmount, currency),
                 title = R.string.spent,
                 horizontalAlignment = Alignment.End,
                 imageVector = Icons.Default.NorthEast,
@@ -270,6 +271,7 @@ fun AnalysisBalanceItem(
 @Composable
 fun OverViewAnalysisCategoryChart(
     categoryList: List<CategoryAmount>,
+    currency: String,
     modifier: Modifier = Modifier
 ) {
     val chartData = categoryList.map { item ->
@@ -304,7 +306,8 @@ fun OverViewAnalysisCategoryChart(
             categoryList.forEach { item ->
                 CategoryListItem(
                     item = item,
-                    itemBgColor = MyAppTheme.colors.transparent
+                    itemBgColor = MyAppTheme.colors.transparent,
+                    currency = currency
                 )
             }
         }
@@ -316,6 +319,7 @@ fun OverViewAnalysisCategoryChart(
 @Composable
 private fun CategoryListItem(
     item: CategoryAmount,
+    currency: String,
     itemBgColor: Color,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier.fillMaxWidth()
 ) {
@@ -348,7 +352,7 @@ private fun CategoryListItem(
         },
         trailingContent = {
             CustomText(
-                text = Util.getFormattedStringWithSymbol(item.amount),
+                text = Util.getFormattedStringWithSymbol(item.amount, currency),
                 style = MyAppTheme.typography.Regular51,
                 color = MyAppTheme.colors.black,
                 overflow = TextOverflow.Ellipsis,
@@ -371,6 +375,7 @@ private fun BudgetListItemPreview() {
         AnalysisBalance(
             receiveAmount = 100.0,
             spentAmount = 20.0,
+            currency = "$"
         )
     }
 }

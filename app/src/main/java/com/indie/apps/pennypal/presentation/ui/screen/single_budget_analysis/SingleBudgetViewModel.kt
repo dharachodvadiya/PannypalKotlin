@@ -9,10 +9,13 @@ import com.indie.apps.pennypal.data.module.category.CategoryAmount
 import com.indie.apps.pennypal.domain.usecase.DeleteSingleBudgetDataUseCase
 import com.indie.apps.pennypal.domain.usecase.GetCategoryWiseSpentAmountForPeriodUseCase
 import com.indie.apps.pennypal.repository.BudgetRepository
+import com.indie.apps.pennypal.repository.UserRepository
 import com.indie.apps.pennypal.util.Resource
 import com.indie.apps.pennypal.util.Util
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import javax.inject.Inject
@@ -22,9 +25,12 @@ class SingleBudgetViewModel @Inject constructor(
     private val budgetRepository: BudgetRepository,
     private val getCategoryWiseSpentAmountForPeriodUseCase: GetCategoryWiseSpentAmountForPeriodUseCase,
     private val deleteSingleBudgetDataUseCase: DeleteSingleBudgetDataUseCase,
+    userRepository: UserRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
+    val currency = userRepository.getCurrency()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), "US")
     private val budgetId =
         savedStateHandle.get<String>(Util.PARAM_BUDGET_ID)?.toLong() ?: 0
     var budgetData = MutableStateFlow<BudgetWithCategory?>(null)

@@ -8,6 +8,7 @@ import com.indie.apps.pennypal.data.database.enum.toShowDataPeriod
 import com.indie.apps.pennypal.domain.usecase.GetCategoryWiseExpenseUseCase
 import com.indie.apps.pennypal.domain.usecase.GetTotalUseCase
 import com.indie.apps.pennypal.repository.PreferenceRepository
+import com.indie.apps.pennypal.repository.UserRepository
 import com.indie.apps.pennypal.util.Resource
 import com.indie.apps.pennypal.util.ShowDataPeriod
 import com.indie.apps.pennypal.util.Util
@@ -30,7 +31,10 @@ class OverViewAnalysisViewModel @Inject constructor(
     getCategoryWiseExpenseUseCase: GetCategoryWiseExpenseUseCase,
     getTotalUseCase: GetTotalUseCase,
     preferenceRepository: PreferenceRepository,
+    userRepository: UserRepository
 ) : ViewModel() {
+    val currency = userRepository.getCurrency()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), "US")
     private val periodIndex = preferenceRepository.getInt(Util.PREF_BALANCE_VIEW, 1)
 
     val currentMonthInMilli = MutableStateFlow(Calendar.getInstance().timeInMillis)

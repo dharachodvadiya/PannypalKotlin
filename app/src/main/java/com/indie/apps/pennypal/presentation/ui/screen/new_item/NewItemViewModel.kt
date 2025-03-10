@@ -24,6 +24,8 @@ import com.indie.apps.pennypal.util.Util
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import javax.inject.Inject
@@ -39,6 +41,9 @@ class NewItemViewModel @Inject constructor(
     private val categoryRepository: CategoryRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
+    val currency = userRepository.getCurrency()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), "US")
 
     val merchantEditId =
         savedStateHandle.get<String>(Util.PARAM_EDIT_MERCHANT_DATA_ID)?.toLongOrNull() ?: 0

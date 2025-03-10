@@ -73,6 +73,7 @@ fun AddEditBudgetScreen(
         addBudgetViewModel.setSelectPeriodType(selectedPeriodType)
     }
 
+    val currency by addBudgetViewModel.currency.collectAsStateWithLifecycle()
     val currentPeriod by addBudgetViewModel.currentPeriod.collectAsStateWithLifecycle()
     val currentMonthInMilli by addBudgetViewModel.currentMonthInMilli.collectAsStateWithLifecycle()
     val currentYearInMilli by addBudgetViewModel.currentYearInMilli.collectAsStateWithLifecycle()
@@ -209,6 +210,7 @@ fun AddEditBudgetScreen(
                         onBudgetTitleTextChange = addBudgetViewModel::updateBudgetTitleText,
                         focusRequesterAmount = focusRequesterAmount,
                         focusRequesterTitle = focusRequesterTitle,
+                        currency = currency
                     )
 
                     Spacer(modifier = Modifier.weight(1f))

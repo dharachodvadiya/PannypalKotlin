@@ -129,6 +129,7 @@ fun AllDataTopBar(
 @Composable
 fun TransactionItem(
     item: MerchantDataWithAllData,
+    currency: String,
     onLongClick: () -> Unit = {},
     onClick: () -> Unit,
     isSelected: Boolean = false,
@@ -214,7 +215,7 @@ fun TransactionItem(
                 }
 
                 CustomText(
-                    text = Util.getFormattedStringWithSymbol(amount),
+                    text = Util.getFormattedStringWithSymbol(amount, currency),
                     style = MyAppTheme.typography.Regular51,
                     color = amountColor,
                     overflow = TextOverflow.Ellipsis,

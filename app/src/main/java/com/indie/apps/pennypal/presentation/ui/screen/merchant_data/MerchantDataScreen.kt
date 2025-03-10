@@ -64,6 +64,7 @@ fun MerchantDataScreen(
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
 
+    val currency by merchantDataViewModel.currency.collectAsStateWithLifecycle()
     val merchant by merchantDataViewModel.merchantState.collectAsStateWithLifecycle()
     val selectedList = merchantDataViewModel.selectedList
     val scrollIndex by merchantDataViewModel.scrollIndex.collectAsStateWithLifecycle()
@@ -253,7 +254,8 @@ fun MerchantDataScreen(
                                         onClick = { merchantDataViewModel.onItemClick(data.id) },
                                         onLongClick = { merchantDataViewModel.onItemLongClick(data.id) },
                                         itemBgColor = itemAnimateColor.value,
-                                        modifier = modifierAdd
+                                        modifier = modifierAdd,
+                                        currency = currency
                                     )
                                 } else {
                                     MerchantDataExpenseAmount(
@@ -262,7 +264,8 @@ fun MerchantDataScreen(
                                         onClick = { merchantDataViewModel.onItemClick(data.id) },
                                         onLongClick = { merchantDataViewModel.onItemLongClick(data.id) },
                                         itemBgColor = itemAnimateColor.value,
-                                        modifier = modifierAdd
+                                        modifier = modifierAdd,
+                                        currency = currency
                                     )
                                 }
                             }

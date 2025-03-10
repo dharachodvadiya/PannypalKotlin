@@ -15,11 +15,14 @@ import com.indie.apps.pennypal.presentation.ui.component.UiText
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.repository.BudgetRepository
 import com.indie.apps.pennypal.repository.CategoryRepository
+import com.indie.apps.pennypal.repository.UserRepository
 import com.indie.apps.pennypal.util.ErrorMessage
 import com.indie.apps.pennypal.util.Resource
 import com.indie.apps.pennypal.util.Util
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import javax.inject.Inject
@@ -30,8 +33,12 @@ class AddBudgetViewModel @Inject constructor(
     private val addBudgetUseCase: AddBudgetUseCase,
     private val updateBudgetUseCase: UpdateBudgetUseCase,
     private val budgetRepository: BudgetRepository,
+    userRepository: UserRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
+    val currency = userRepository.getCurrency()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), "US")
 
     val budgetEditId =
         savedStateHandle.get<String>(Util.PARAM_BUDGET_ID)?.toLongOrNull() ?: -1L

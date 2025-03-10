@@ -57,17 +57,17 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun budgetDao(): BudgetDao
     abstract fun budgetCategoryDao(): BudgetCategoryDao
 
-   /* fun migrateDatabaseIfNeeded(context: Context, countryRepository: CountryRepository) {
+    /* fun migrateDatabaseIfNeeded(context: Context, countryRepository: CountryRepository) {
 
-        val currentDbVersion = getCurrentDatabaseVersion(context)
-        val requiredDbVersion = Util.DB_VERSION // The current version of the database schema
+         val currentDbVersion = getCurrentDatabaseVersion(context)
+         val requiredDbVersion = Util.DB_VERSION // The current version of the database schema
 
-        if (currentDbVersion < requiredDbVersion) {
-            val db = buildDatabase(context, countryRepository)
-            // Triggering a migration if necessary (e.g., after restoring an old version of the DB)
-            db.openHelper.writableDatabase // Accessing the database triggers migration if required
-        }
-    }*/
+         if (currentDbVersion < requiredDbVersion) {
+             val db = buildDatabase(context, countryRepository)
+             // Triggering a migration if necessary (e.g., after restoring an old version of the DB)
+             db.openHelper.writableDatabase // Accessing the database triggers migration if required
+         }
+     }*/
 
     companion object {
         @Volatile
@@ -89,13 +89,17 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
-        private fun buildDatabase(context: Context, countryRepository: CountryRepository): AppDatabase {
+        private fun buildDatabase(
+            context: Context,
+            countryRepository: CountryRepository
+        ): AppDatabase {
             val builder = getDbBuilder(context)
             return builder
                 .addMigrations(Migration1to2(countryRepository))
                 .addMigrations(Migration2to3())
                 .addMigrations(Migration3to4())
                 .addMigrations(Migration4to5())
+                .addMigrations(Migration5to6())
                 .addCallback(Callback(countryRepository))
                 .build()
         }
@@ -121,32 +125,32 @@ abstract class AppDatabase : RoomDatabase() {
                 scope.launch {
                     INSTANCE?.let { database ->
                         // Pre-populate the database on first creation
-                        populateDatabase(database)
+                        populateDatabase(database, countryRepository)
                     }
                 }
             }
 
             @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-            suspend fun populateDatabase(db: AppDatabase) {
+            suspend fun populateDatabase(db: AppDatabase, countryRepository: CountryRepository) {
                 populatePaymentModeDb(db)
                 populatePaymentDb(db)
-                populateUserDb(db)
+                populateUserDb(db, countryRepository)
                 populateCategoryDb(db)
 
             }
 
-            private suspend fun populateUserDb(db: AppDatabase) {
+            private suspend fun populateUserDb(
+                db: AppDatabase,
+                countryRepository: CountryRepository
+            ) {
                 val user =
                     User(
                         name = "Me",
-                        currency = countryRepository.getCurrencyCodeFromCountryCode(
-                            countryRepository.getDefaultCountryCode(),
-                        ),
                         currencyCountryCode = countryRepository.getDefaultCountryCode()
                     )
                 val userDao = db.userDao()
 
-                UserRepositoryImpl(userDao, Dispatchers.IO).insert(user)
+                UserRepositoryImpl(userDao, countryRepository, Dispatchers.IO).insert(user)
             }
 
             private suspend fun populatePaymentDb(db: AppDatabase) {

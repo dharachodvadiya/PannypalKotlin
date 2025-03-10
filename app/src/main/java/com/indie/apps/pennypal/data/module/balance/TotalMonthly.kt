@@ -4,7 +4,6 @@ data class TotalMonthly(
     val month: String,
     val totalIncome: Double,
     val totalExpense: Double,
-    val currency: String,
 )
 
-fun TotalMonthly.toTotalWithCurrency() = TotalWithCurrency(totalIncome, totalExpense, currency)
+fun TotalMonthly.toTotalWithCurrency() = Total(totalIncome, totalExpense)

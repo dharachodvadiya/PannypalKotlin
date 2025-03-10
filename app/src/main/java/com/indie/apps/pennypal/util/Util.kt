@@ -13,9 +13,9 @@ object Util {
     var isSubscribed = false
 
     const val DB_NAME = "pennypal_money_db"
-    const val DB_VERSION = 5
+    const val DB_VERSION = 6
 
-    var currentCurrencySymbol = "$"
+    //var currentCurrencySymbol = "$"
     const val SEARCH_NEWS_TIME_DELAY = 500L
 
     const val LIST_ITEM_ANIM_DELAY = 700L
@@ -82,7 +82,7 @@ object Util {
 
     fun getFormattedStringWithSymbol(
         value: Double?,
-        symbol: String = currentCurrencySymbol
+        symbol: String
     ): String {
         val format = DecimalFormat("##,##,##0.##")
         return "$symbol " + format.format(value)
@@ -127,27 +127,6 @@ object Util {
             )
         }
     }
-
-    /*fun getDateFromMillis(
-        timeInMillis: Long,
-        @SuppressLint("SimpleDateFormat") formatter: SimpleDateFormat = SimpleDateFormat("dd-MM-yyyy")
-    ): String {
-
-        val calendar: Calendar = Calendar.getInstance()
-        calendar.timeInMillis = timeInMillis
-        return formatter.format(calendar.time)
-    }
-
-    fun getTodayDate(@SuppressLint("SimpleDateFormat") formatter: SimpleDateFormat = SimpleDateFormat("dd-MM-yyyy")): String {
-        val calendar: Calendar = Calendar.getInstance()
-        return formatter.format(calendar.time)
-    }
-
-    fun getYesterdayDate(@SuppressLint("SimpleDateFormat") formatter: SimpleDateFormat = SimpleDateFormat("dd-MM-yyyy")): String {
-        val calendar: Calendar = Calendar.getInstance()
-        calendar.add(Calendar.DATE, -1)
-        return formatter.format(calendar.time)
-    }*/
 
     fun Float.pxToDp(context: Context): Float =
         (this / (context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT))

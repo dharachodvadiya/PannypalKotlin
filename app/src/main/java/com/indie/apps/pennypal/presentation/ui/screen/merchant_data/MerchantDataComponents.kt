@@ -245,6 +245,7 @@ fun MerchantDataBottomBar(
 fun MerchantDataIncomeAmount(
     isSelected: Boolean = false,
     data: MerchantDataWithPaymentName,
+    currency: String,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     itemBgColor: Color,
@@ -275,7 +276,8 @@ fun MerchantDataIncomeAmount(
             contentAlignment = Alignment.Start,
             colorStroke = MyAppTheme.colors.greenBg,
             itemBgColor = itemBgColor,
-            paymentName = data.paymentName
+            paymentName = data.paymentName,
+            currency = currency
         )
 
     }
@@ -286,6 +288,7 @@ fun MerchantDataIncomeAmount(
 fun MerchantDataExpenseAmount(
     isSelected: Boolean = false,
     data: MerchantDataWithPaymentName,
+    currency: String,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     itemBgColor: Color,
@@ -316,7 +319,8 @@ fun MerchantDataExpenseAmount(
             contentAlignment = Alignment.End,
             colorStroke = MyAppTheme.colors.redBg,
             itemBgColor = itemBgColor,
-            paymentName = data.paymentName
+            paymentName = data.paymentName,
+            currency = currency
         )
 
     }
@@ -368,6 +372,7 @@ fun MerchantDataDateItem(
 @Composable
 private fun MerchantDataAmountItem(
     amount: Double,
+    currency: String,
     description: String? = null,
     paymentName: String,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
@@ -440,7 +445,7 @@ private fun MerchantDataAmountItem(
         horizontalAlignment = contentAlignment
     ) {
         AutoSizeText(
-            text = Util.getFormattedStringWithSymbol(amount),
+            text = Util.getFormattedStringWithSymbol(amount, currency),
             style = MyAppTheme.typography.Regular51,
             color = MyAppTheme.colors.black,
             maxLines = 2,
@@ -500,6 +505,7 @@ private fun MerchantDataBottomButton(
 private fun MerchantDataBottomTotal(
     totalIncome: Double = 0.0,
     totalExpense: Double = 0.0,
+    currency: String,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
 
@@ -522,22 +528,29 @@ private fun MerchantDataBottomTotal(
         MerchantDataTotalIncomeExpense(
             amount = totalIncome,
             modifier = Modifier.weight(1f),
+            currency = currency,
             strokeColor = MyAppTheme.colors.greenBg
         )
         Spacer(modifier = Modifier.width(7.dp))
         MerchantDataTotalIncomeExpense(
             amount = totalExpense,
             modifier = Modifier.weight(1f),
+            currency = currency,
             strokeColor = MyAppTheme.colors.redBg
         )
         Spacer(modifier = Modifier.width(7.dp))
-        MerchantDataTotal(amount = totalIncome - totalExpense, modifier = Modifier.weight(1f))
+        MerchantDataTotal(
+            amount = totalIncome - totalExpense,
+            currency = currency,
+            modifier = Modifier.weight(1f)
+        )
     }
 }
 
 @Composable
 private fun MerchantDataTotalIncomeExpense(
     amount: Double = 0.0,
+    currency: String,
     strokeColor: Color,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
@@ -557,7 +570,7 @@ private fun MerchantDataTotalIncomeExpense(
         contentAlignment = Alignment.Center
     ) {
         AutoSizeText(
-            text = Util.getFormattedStringWithSymbol(amount),
+            text = Util.getFormattedStringWithSymbol(amount, currency),
             style = MyAppTheme.typography.Semibold50,
             color = MyAppTheme.colors.black,
             maxLines = 1,
@@ -569,6 +582,7 @@ private fun MerchantDataTotalIncomeExpense(
 @Composable
 private fun MerchantDataTotal(
     amount: Double = 0.0,
+    currency: String,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     Column(
@@ -577,7 +591,7 @@ private fun MerchantDataTotal(
         horizontalAlignment = Alignment.End
     ) {
         AutoSizeText(
-            text = Util.getFormattedStringWithSymbol(amount),
+            text = Util.getFormattedStringWithSymbol(amount, currency),
             style = MyAppTheme.typography.Semibold52_5,
             color = MyAppTheme.colors.black,
             maxLines = 1

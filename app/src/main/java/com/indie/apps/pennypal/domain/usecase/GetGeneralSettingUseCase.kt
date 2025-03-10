@@ -1,6 +1,5 @@
 package com.indie.apps.pennypal.domain.usecase
 
-import android.content.Context
 import com.indie.apps.cpp.data.repository.CountryRepository
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.module.MoreItem
@@ -11,7 +10,6 @@ import com.indie.apps.pennypal.repository.UserRepository
 import com.indie.apps.pennypal.util.SettingOption
 import com.indie.apps.pennypal.util.ShowDataPeriod
 import com.indie.apps.pennypal.util.Util
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -47,13 +45,17 @@ class GetGeneralSettingUseCase @Inject constructor(
                     MoreItem(
                         title = R.string.currency_and_format,
                         subTitle = UiText.DynamicString(
-                            "${userWithPaymentName.currency} (${
-                                countryRepository.getSymbolFromCurrencyCode(
-                                    userWithPaymentName.currency
+                            "${
+                                countryRepository.getCurrencyCodeFromCountryCode(
+                                    userWithPaymentName.currencyCountryCode
+                                )
+                            } (${
+                                countryRepository.getCurrencySymbolFromCountryCode(
+                                    userWithPaymentName.currencyCountryCode
                                 )
                             })"
                         ),
-                        id = countryRepository.getCountryCodeFromCurrencyCode(userWithPaymentName.currency),
+                        id = userWithPaymentName.currencyCountryCode,
                         option = SettingOption.CURRENCY_CHANGE
                     ),
                     MoreItem(

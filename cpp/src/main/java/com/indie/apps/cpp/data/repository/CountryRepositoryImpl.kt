@@ -8,11 +8,18 @@ import com.indie.apps.cpp.data.utils.getNumberHint
 class CountryRepositoryImpl(private val countryDb: CountryDb) : CountryRepository {
     override fun getFlagsFromCountryCode(countryCode: String) = getFlags(countryCode.lowercase())
 
-    override fun getNumberHintCountryCode(countryCode: String) = getNumberHint(countryCode.lowercase())
+    override fun getNumberHintCountryCode(countryCode: String) =
+        getNumberHint(countryCode.lowercase())
 
     override fun getSymbolFromCurrencyCode(currencyCode: String): String {
         return countryDb.countryData.first {
             it.currencyCode.lowercase() == currencyCode.lowercase()
+        }.currencySymbol
+    }
+
+    override fun getCurrencySymbolFromCountryCode(countryCode: String): String {
+        return countryDb.countryData.first {
+            it.countryCode.lowercase() == countryCode.lowercase()
         }.currencySymbol
     }
 

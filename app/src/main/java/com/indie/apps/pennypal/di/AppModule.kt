@@ -65,9 +65,10 @@ object AppModule {
     @Provides
     fun provideUserRepository(
         database: AppDatabase,
+        countryRepository: CountryRepository,
         @IoDispatcher dispatcher: CoroutineDispatcher
     ): UserRepository {
-        return UserRepositoryImpl(database.userDao(), dispatcher)
+        return UserRepositoryImpl(database.userDao(), countryRepository, dispatcher)
     }
 
     @Provides

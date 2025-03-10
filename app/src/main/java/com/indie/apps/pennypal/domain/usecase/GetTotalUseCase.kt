@@ -1,6 +1,6 @@
 package com.indie.apps.pennypal.domain.usecase
 
-import com.indie.apps.pennypal.data.module.balance.TotalWithCurrency
+import com.indie.apps.pennypal.data.module.balance.Total
 import com.indie.apps.pennypal.data.module.balance.toTotalWithCurrency
 import com.indie.apps.pennypal.di.IoDispatcher
 import com.indie.apps.pennypal.repository.MerchantDataRepository
@@ -26,7 +26,7 @@ class GetTotalUseCase @Inject constructor(
         year: Int,
         month: Int,
         dataPeriod: ShowDataPeriod
-    ): Flow<TotalWithCurrency?> {
+    ): Flow<Total?> {
 
         /* val balanceViewValue = ShowDataPeriod.fromIndex(
              preferenceRepository.getInt(
@@ -64,7 +64,7 @@ class GetTotalUseCase @Inject constructor(
         year: Int,
         month: Int,
         dataPeriod: ShowDataPeriod
-    ): Flow<Resource<TotalWithCurrency?>> {
+    ): Flow<Resource<Total?>> {
         return flow {
 
             try {

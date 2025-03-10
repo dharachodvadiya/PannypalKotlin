@@ -51,7 +51,7 @@ import com.indie.apps.pennypal.data.module.ChartData
 import com.indie.apps.pennypal.data.module.MerchantDataWithAllData
 import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
 import com.indie.apps.pennypal.data.module.TabItemInfo
-import com.indie.apps.pennypal.data.module.balance.TotalWithCurrency
+import com.indie.apps.pennypal.data.module.balance.Total
 import com.indie.apps.pennypal.data.module.budget.BudgetWithSpentAndCategoryIdList
 import com.indie.apps.pennypal.data.module.category.CategoryAmount
 import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
@@ -411,8 +411,8 @@ fun OverviewListItem(
 @Composable
 fun OverviewData(
     currentPeriod: ShowDataPeriod?,
-    data: TotalWithCurrency?,
-    symbol: String,
+    data: Total?,
+    currency: String,
     recentTransaction: List<MerchantDataWithAllData>,
     categoryList: List<CategoryAmount>,
     recentMerchant: List<MerchantNameAndDetails>,
@@ -445,7 +445,7 @@ fun OverviewData(
     OverviewBalanceView(
         currentPeriod = currentPeriod,
         data = data,
-        symbol = symbol,
+        currency = currency,
     )
 
     OverviewTransactionData(
@@ -456,7 +456,8 @@ fun OverviewData(
         isAddMerchantDataSuccess = isAddMerchantDataSuccess,
         isEditMerchantDataSuccess = isEditMerchantDataSuccess,
         merchantDataId = merchantDataId,
-        onAnimStop = onAnimStop
+        onAnimStop = onAnimStop,
+        currency = currency
     )
 
     OverviewMerchantData(
@@ -483,15 +484,16 @@ fun OverviewData(
         selectBudgetPeriod = selectBudgetPeriod,
         onSelectBudgetPeriod = onSelectBudgetPeriod,
         onSetBudgetClick = onSetBudgetClick,
-        isSelectionEnable = isSelectionEnable
+        isSelectionEnable = isSelectionEnable,
+        currency = currency
     )
 }
 
 @Composable
 fun OverviewBalanceView(
     currentPeriod: ShowDataPeriod?,
-    data: TotalWithCurrency?,
-    symbol: String,
+    data: Total?,
+    currency: String,
     modifier: Modifier = Modifier,
 ) {
 
@@ -541,7 +543,7 @@ fun OverviewBalanceView(
                             color = MyAppTheme.colors.gray1
                         )
                         AutoSizeText(
-                            text = Util.getFormattedStringWithSymbol(balance, symbol),
+                            text = Util.getFormattedStringWithSymbol(balance, currency),
                             style = MyAppTheme.typography.Regular66_5,
                             color = MyAppTheme.colors.black,
                             maxLines = 1
@@ -554,7 +556,7 @@ fun OverviewBalanceView(
                         modifier = Modifier.fillMaxWidth(),
                     ) {
                         OverviewBalanceItem(
-                            amount = Util.getFormattedStringWithSymbol(data?.totalIncome ?: 0.0),
+                            amount = Util.getFormattedStringWithSymbol(data?.totalIncome ?: 0.0, currency),
                             title = R.string.received,
                             horizontalAlignment = Alignment.Start,
                             imageVector = Icons.Default.SouthWest,
@@ -565,7 +567,7 @@ fun OverviewBalanceView(
                                 .padding(horizontal = dimensionResource(id = R.dimen.item_inner_padding))
                         )
                         OverviewBalanceItem(
-                            amount = Util.getFormattedStringWithSymbol(data?.totalExpense ?: 0.0),
+                            amount = Util.getFormattedStringWithSymbol(data?.totalExpense ?: 0.0, currency),
                             title = R.string.spent,
                             horizontalAlignment = Alignment.End,
                             imageVector = Icons.Default.NorthEast,
@@ -585,6 +587,7 @@ fun OverviewBalanceView(
 fun OverviewTransactionData(
     currentPeriod: ShowDataPeriod?,
     recentTransaction: List<MerchantDataWithAllData>,
+    currency: String,
     onSeeAllTransactionClick: () -> Unit,
     onTransactionClick: (Long) -> Unit,
     isAddMerchantDataSuccess: Boolean = false,
@@ -654,7 +657,8 @@ fun OverviewTransactionData(
                         },
                         onLongClick = { },
                         itemBgColor = itemAnimateColor.value,
-                        modifier = modifierAdd
+                        modifier = modifierAdd,
+                        currency = currency
                     )
                 }
             } else {
@@ -814,6 +818,7 @@ fun OverviewAnalysisData(
 @Composable
 fun OverviewBudgetData(
     budgetWithSpentAndCategoryIdList: BudgetWithSpentAndCategoryIdList?,
+    currency: String,
     onExploreBudgetClick: () -> Unit,
     selectBudgetPeriod: PeriodType,
     onSelectBudgetPeriod: (PeriodType) -> Unit,
@@ -854,7 +859,8 @@ fun OverviewBudgetData(
                 SingleBudgetOverAllAnalysis(
                     totalBudgetAmount = budgetWithSpentAndCategoryIdList.budgetAmount,
                     spentAmount = budgetWithSpentAndCategoryIdList.spentAmount,
-                    timeString = timeString
+                    timeString = timeString,
+                    currency = currency
                 )
 
                 if (!isSelectionEnable) {

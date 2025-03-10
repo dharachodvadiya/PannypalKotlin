@@ -76,6 +76,7 @@ fun NewItemScreen(
         }
     }
 
+    val currency by newItemViewModel.currency.collectAsStateWithLifecycle()
     val currentTimeInMilli by newItemViewModel.currentTimeInMilli.collectAsStateWithLifecycle()
     val uiState by newItemViewModel.uiState.collectAsStateWithLifecycle()
     val enableButton by newItemViewModel.enableButton.collectAsStateWithLifecycle()
@@ -184,6 +185,7 @@ fun NewItemScreen(
                         categories = categories,
                         focusRequesterAmount = focusRequesterAmount,
                         focusRequesterDescription = focusRequesterDescription,
+                        currency = currency,
                         onEvent = { event ->
                             when (event) {
                                 is NewEntryEvent.AmountChange -> {

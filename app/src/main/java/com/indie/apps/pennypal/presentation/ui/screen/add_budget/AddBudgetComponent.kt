@@ -1,7 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.screen.add_budget
 
 import android.annotation.SuppressLint
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -120,8 +119,9 @@ fun AddBudgetFieldItem(
     onAmountTextChange: (String) -> Unit,
     budgetTitle: TextFieldState,
     onBudgetTitleTextChange: (String) -> Unit,
-    focusRequesterAmount : FocusRequester,
-    focusRequesterTitle : FocusRequester,
+    focusRequesterAmount: FocusRequester,
+    focusRequesterTitle: FocusRequester,
+    currency: String,
 ) {
     Column(
         modifier = modifier.background(MyAppTheme.colors.transparent),
@@ -152,7 +152,7 @@ fun AddBudgetFieldItem(
                     contentAlignment = Alignment.Center
                 ) {
                     CustomText(
-                        text = Util.currentCurrencySymbol,
+                        text = currency,
                         color = MyAppTheme.colors.gray1,
                         style = MyAppTheme.typography.Regular66_5
                     )
@@ -211,7 +211,8 @@ fun AddBudgetFieldItem(
             isExpanded = isExpanded,
             onClick = onCategoryExpandChange,
             onAmountChange = onCategoryAmountChange,
-            errorText = categoryBudgetErrorText
+            errorText = categoryBudgetErrorText,
+            currency = currency
         )
         TextFieldError(
             textError = if (!isExpanded) categoryBudgetErrorText else ""
@@ -314,6 +315,7 @@ fun AddBudgetCategoryListItem(
     isExpanded: Boolean,
     totalAmount: Double,
     remainingAmount: Double,
+    currency: String,
     onClick: (Boolean) -> Unit,
     onAmountChange: (Long, String) -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
@@ -375,7 +377,7 @@ fun AddBudgetCategoryListItem(
                         color = MyAppTheme.colors.gray1
                     )
                     CustomText(
-                        text = Util.getFormattedStringWithSymbol(totalAmount),
+                        text = Util.getFormattedStringWithSymbol(totalAmount, currency),
                         style = MyAppTheme.typography.Medium54,
                         color = MyAppTheme.colors.black
                     )
@@ -391,7 +393,7 @@ fun AddBudgetCategoryListItem(
                         color = MyAppTheme.colors.gray1
                     )
                     CustomText(
-                        text = Util.getFormattedStringWithSymbol(remainingAmount),
+                        text = Util.getFormattedStringWithSymbol(remainingAmount, currency),
                         style = MyAppTheme.typography.Medium54,
                         color = if (remainingAmount < 0) MyAppTheme.colors.redText else MyAppTheme.colors.black,
                     )

@@ -92,6 +92,7 @@ fun SingleBudgetOverAllAnalysis(
     totalBudgetAmount: Double,
     spentAmount: Double,
     timeString: String,
+    currency: String,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     val remainAmount = totalBudgetAmount - spentAmount
@@ -120,7 +121,8 @@ fun SingleBudgetOverAllAnalysis(
                 CustomText(
                     text = "${stringResource(R.string.budget)} : ${
                         Util.getFormattedStringWithSymbol(
-                            totalBudgetAmount
+                            totalBudgetAmount,
+                            currency
                         )
                     }",
                     style = MyAppTheme.typography.Medium40,
@@ -137,7 +139,7 @@ fun SingleBudgetOverAllAnalysis(
                     color = MyAppTheme.colors.gray2,
                 )
                 CustomText(
-                    text = Util.getFormattedStringWithSymbol(spentAmount),
+                    text = Util.getFormattedStringWithSymbol(spentAmount, currency),
                     style = MyAppTheme.typography.Regular57,
                     color = MyAppTheme.colors.black,
                     overflow = TextOverflow.Ellipsis,
@@ -152,7 +154,7 @@ fun SingleBudgetOverAllAnalysis(
                     color = MyAppTheme.colors.gray2,
                 )
                 CustomText(
-                    text = Util.getFormattedStringWithSymbol(remainAmount),
+                    text = Util.getFormattedStringWithSymbol(remainAmount, currency),
                     style = MyAppTheme.typography.Regular57,
                     color = if (remainAmount < 0) MyAppTheme.colors.redBg else MyAppTheme.colors.black,
                     overflow = TextOverflow.Ellipsis,
@@ -218,6 +220,7 @@ fun SingleBudgetOverAllAnalysis(
 fun BudgetedCategoryAnalysis(
     categoryLimitList: List<CategoryAmount>,
     categorySpentList: List<CategoryAmount>,
+    currency: String,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     val count = categoryLimitList.count { it.amount > 0 }
@@ -244,7 +247,8 @@ fun BudgetedCategoryAnalysis(
                         totalAmount = item.amount,
                         spentAmount = categorySpentList.firstOrNull { it.id == item.id }?.amount
                             ?: 0.0,
-                        isClickable = false
+                        isClickable = false,
+                        currency = currency
                     )
                 }
 
@@ -258,6 +262,7 @@ fun BudgetedCategoryAnalysis(
 fun IncludedCategoryAnalysis(
     categoryLimitList: List<CategoryAmount>,
     categorySpentList: List<CategoryAmount>,
+    currency: String,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
 
@@ -290,7 +295,8 @@ fun IncludedCategoryAnalysis(
                 CategorySpentListItem(
                     totalAmount = sortedList.firstOrNull()?.amount ?: 0.0,
                     item = item,
-                    itemBgColor = MyAppTheme.colors.transparent
+                    itemBgColor = MyAppTheme.colors.transparent,
+                    currency = currency
                 )
             }
         }
@@ -301,6 +307,7 @@ fun IncludedCategoryAnalysis(
 private fun CategorySpentListItem(
     totalAmount: Double,
     item: CategoryAmount,
+    currency: String,
     itemBgColor: Color,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier.fillMaxWidth()
 ) {
@@ -369,7 +376,7 @@ private fun CategorySpentListItem(
         },
         trailingContent = {
             CustomText(
-                text = Util.getFormattedStringWithSymbol(item.amount),
+                text = Util.getFormattedStringWithSymbol(item.amount, currency),
                 style = MyAppTheme.typography.Regular51,
                 color = MyAppTheme.colors.black,
                 overflow = TextOverflow.Ellipsis,
@@ -391,7 +398,8 @@ private fun BudgetListItemPreview() {
         SingleBudgetOverAllAnalysis(
             totalBudgetAmount = 100.0,
             spentAmount = 20.0,
-            timeString = "November 2024"
+            timeString = "November 2024",
+            currency = "$"
         )
     }
 }

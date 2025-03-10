@@ -46,7 +46,6 @@ import com.indie.apps.pennypal.presentation.ui.component.custom.composable.FlowR
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
-import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.util.getCategoryColorById
 import com.indie.apps.pennypal.util.getCategoryIconById
 import com.indie.apps.pennypal.util.getDateFromMillis
@@ -120,6 +119,7 @@ fun NewEntryFieldItemSection(
     categories: List<Category>,
     focusRequesterAmount: FocusRequester,
     focusRequesterDescription: FocusRequester,
+    currency: String,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
 ) {
     Column(
@@ -145,7 +145,7 @@ fun NewEntryFieldItemSection(
                     contentAlignment = Alignment.Center
                 ) {
                     CustomText(
-                        text = Util.currentCurrencySymbol,
+                        text = currency,
                         color = MyAppTheme.colors.black,
                         style = MyAppTheme.typography.Regular66_5
                     )
@@ -187,8 +187,10 @@ fun NewEntryFieldItemSection(
             maxLines = 2
         ) {
             val maxCategoryItems = 5
-            val isFirstItemAdded = category != null && categories.firstOrNull { it.id == category.id } == null
-            val availableCategorySlots = if (isFirstItemAdded) maxCategoryItems - 1 else maxCategoryItems
+            val isFirstItemAdded =
+                category != null && categories.firstOrNull { it.id == category.id } == null
+            val availableCategorySlots =
+                if (isFirstItemAdded) maxCategoryItems - 1 else maxCategoryItems
 
             if (isFirstItemAdded) {
                 FlowRowItem(

@@ -301,8 +301,7 @@ interface MerchantDataDao : BaseDao<MerchantData> {
     SELECT 
         strftime('%Y-%m', (m.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') AS month,
         IFNULL(SUM(CASE WHEN m.type >= 0 THEN m.amount ELSE 0 END), 0) AS totalIncome,
-        IFNULL(SUM(CASE WHEN m.type < 0 THEN m.amount ELSE 0 END), 0) AS totalExpense,
-        u.currency
+        IFNULL(SUM(CASE WHEN m.type < 0 THEN m.amount ELSE 0 END), 0) AS totalExpense
     FROM 
         merchant_data m
     JOIN 
@@ -328,8 +327,7 @@ interface MerchantDataDao : BaseDao<MerchantData> {
     SELECT 
         strftime('%Y-%m', (m.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') AS month,
         IFNULL(SUM(CASE WHEN m.type >= 0 THEN m.amount ELSE 0 END), 0) AS totalIncome,
-        IFNULL(SUM(CASE WHEN m.type < 0 THEN m.amount ELSE 0 END), 0) AS totalExpense,
-        u.currency
+        IFNULL(SUM(CASE WHEN m.type < 0 THEN m.amount ELSE 0 END), 0) AS totalExpense
     FROM 
         merchant_data m
     JOIN 
@@ -354,8 +352,7 @@ interface MerchantDataDao : BaseDao<MerchantData> {
     SELECT 
         strftime('%Y', (m.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') AS year,
         IFNULL(SUM(CASE WHEN m.type >= 0 THEN m.amount ELSE 0 END), 0) AS totalIncome,
-        IFNULL(SUM(CASE WHEN m.type < 0 THEN m.amount ELSE 0 END), 0) AS totalExpense,
-        u.currency
+        IFNULL(SUM(CASE WHEN m.type < 0 THEN m.amount ELSE 0 END), 0) AS totalExpense
     FROM 
         merchant_data m
     JOIN 
@@ -379,8 +376,7 @@ interface MerchantDataDao : BaseDao<MerchantData> {
     SELECT 
         strftime('%Y', (m.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') AS year,
         IFNULL(SUM(CASE WHEN m.type >= 0 THEN m.amount ELSE 0 END), 0) AS totalIncome,
-        IFNULL(SUM(CASE WHEN m.type < 0 THEN m.amount ELSE 0 END), 0) AS totalExpense,
-        u.currency
+        IFNULL(SUM(CASE WHEN m.type < 0 THEN m.amount ELSE 0 END), 0) AS totalExpense
     FROM 
         merchant_data m
     JOIN 
@@ -403,8 +399,7 @@ interface MerchantDataDao : BaseDao<MerchantData> {
         """
         SELECT
             IFNULL(SUM(CASE WHEN m.type >= 0 THEN m.amount ELSE 0 END), 0) AS totalIncome,
-            IFNULL(SUM(CASE WHEN m.type < 0 THEN m.amount ELSE 0 END), 0) AS totalExpense,
-            u.currency
+            IFNULL(SUM(CASE WHEN m.type < 0 THEN m.amount ELSE 0 END), 0) AS totalExpense
         FROM 
             merchant_data m
         JOIN 
@@ -418,8 +413,7 @@ interface MerchantDataDao : BaseDao<MerchantData> {
         """
         SELECT
             IFNULL(SUM(CASE WHEN m.type >= 0 THEN m.amount ELSE 0 END), 0) AS totalIncome,
-            IFNULL(SUM(CASE WHEN m.type < 0 THEN m.amount ELSE 0 END), 0) AS totalExpense,
-            u.currency
+            IFNULL(SUM(CASE WHEN m.type < 0 THEN m.amount ELSE 0 END), 0) AS totalExpense
         FROM 
             merchant_data m
         JOIN 

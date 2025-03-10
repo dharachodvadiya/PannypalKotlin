@@ -1,7 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.screen.overview
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,15 +26,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.google.android.play.core.review.ReviewManagerFactory
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.database.enum.PeriodType
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.DoubleBackExitApp
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
-import com.indie.apps.pennypal.util.Util
-import com.indie.apps.pennypal.util.launchInAppReview
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
@@ -60,11 +56,12 @@ fun OverViewStartScreen(
 
     val localContext = LocalContext.current
 
-  /*  val reviewManager = remember {
-        ReviewManagerFactory.create(localContext)
-    }*/
+    /*  val reviewManager = remember {
+          ReviewManagerFactory.create(localContext)
+      }*/
 
     val currentPeriod by overViewViewModel.currentPeriod.collectAsStateWithLifecycle()
+    val currency by overViewViewModel.currency.collectAsStateWithLifecycle()
     val isSubscribed by overViewViewModel.isSubscribed.collectAsStateWithLifecycle()
     val userData by overViewViewModel.userData.collectAsStateWithLifecycle()
     val currentTotal by overViewViewModel.currentTotal.collectAsStateWithLifecycle()
@@ -79,11 +76,11 @@ fun OverViewStartScreen(
     var currentBudgetPeriod by remember {
         mutableStateOf(PeriodType.MONTH)
     }
-
-    if (userData != null) {
-        Util.currentCurrencySymbol =
-            overViewViewModel.getSymbolFromCurrencyCode(userData!!.currency)
-    }
+    /*
+        if (userData != null) {
+            Util.currentCurrencySymbol =
+                overViewViewModel.getSymbolFromCountryCode(userData!!.currency)
+        }*/
     LaunchedEffect(addMerchantId) {
         if (addMerchantId != -1L) {
             overViewViewModel.addMerchantSuccess()
@@ -97,11 +94,11 @@ fun OverViewStartScreen(
         if (isAddMerchantDataSuccess) {
             addEditDataId = addEditMerchantDataId
             overViewViewModel.addMerchantDataSuccess()
-/*
-            launchInAppReview(
-                activity = localContext as Activity,
-                reviewManager = reviewManager
-            )*/
+            /*
+                        launchInAppReview(
+                            activity = localContext as Activity,
+                            reviewManager = reviewManager
+                        )*/
         }
         if (isEditSuccess) {
             addEditDataId = addEditMerchantDataId
@@ -155,7 +152,7 @@ fun OverViewStartScreen(
             OverviewData(
                 currentPeriod = currentPeriod,
                 data = currentTotal,
-                symbol = overViewViewModel.getSymbolFromCurrencyCode(userData?.currency ?: "USD"),
+                currency = currency,
                 categoryList = currentMonthCategory,
                 recentTransaction = recentTransaction,
                 recentMerchant = recentMerchant,

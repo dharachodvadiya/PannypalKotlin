@@ -11,6 +11,7 @@ import com.indie.apps.pennypal.domain.usecase.DeleteMultipleMerchantDataUseCase
 import com.indie.apps.pennypal.domain.usecase.GetMerchantDataWithPaymentNameListFromMerchantIdUseCase
 import com.indie.apps.pennypal.presentation.ui.state.PagingState
 import com.indie.apps.pennypal.repository.MerchantRepository
+import com.indie.apps.pennypal.repository.UserRepository
 import com.indie.apps.pennypal.util.Resource
 import com.indie.apps.pennypal.util.Util
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,9 +32,12 @@ class MerchantDataViewModel @Inject constructor(
     //getMerchantDataListFromMerchantId: GetMerchantDataListFromMerchantIdUseCase,
     getMerchantDataWithPaymentNameListFromMerchantIdUseCase: GetMerchantDataWithPaymentNameListFromMerchantIdUseCase,
     private val deleteMultipleMerchantDataUseCase: DeleteMultipleMerchantDataUseCase,
+    userRepository: UserRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
+    val currency = userRepository.getCurrency()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), "US")
     private val merchantId = savedStateHandle.get<String>(Util.PARAM_MERCHANT_ID)?.toLong() ?: 0
 
     var scrollIndex = MutableStateFlow(0)

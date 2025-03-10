@@ -33,6 +33,9 @@ class ProfileViewModel @Inject constructor(
 
     //private val _uiState = MutableStateFlow<Resource<User>>(Resource.Loading())
     // val uiState = _uiState.asStateFlow()
+    val currency = userRepository.getCurrency()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), "US")
+
     private val calendar: Calendar = Calendar.getInstance()
 
     val currentMonthTotal = getTotalUseCase.loadDataAsFlow(
@@ -85,7 +88,6 @@ class ProfileViewModel @Inject constructor(
     fun setCountryCode(countryCode: String?) {
         countryCode?.let {
             currUserData.value = currUserData.value?.copy(
-                currency = countryRepository.getCurrencyCodeFromCountryCode(it),
                 currencyCountryCode = it
             )
         }
@@ -93,7 +95,7 @@ class ProfileViewModel @Inject constructor(
 
     fun getIsSavable(): Boolean {
         if (userData != null) {
-            return userData!!.currency.lowercase() != currUserData.value?.currency?.lowercase()
+            return userData!!.currencyCountryCode.lowercase() != currUserData.value?.currencyCountryCode?.lowercase()
         }
         return false
     }
@@ -117,9 +119,9 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    fun getSymbolFromCurrencyCode(currencyCode: String): String {
+    /*fun getSymbolFromCurrencyCode(currencyCode: String): String {
         return countryRepository.getSymbolFromCurrencyCode(currencyCode)
-    }
+    }*/
 
 
 }

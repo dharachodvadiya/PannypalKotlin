@@ -3,7 +3,6 @@ package com.indie.apps.pennypal.presentation.ui.screen.overview
 import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.indie.apps.cpp.data.repository.CountryRepository
 import com.indie.apps.pennypal.domain.usecase.GetCategoryWiseExpenseUseCase
 import com.indie.apps.pennypal.domain.usecase.GetTotalUseCase
 import com.indie.apps.pennypal.domain.usecase.SearchMerchantDataWithAllDataListUseCase
@@ -33,8 +32,10 @@ class OverViewViewModel @Inject constructor(
     preferenceRepository: PreferenceRepository,
     budgetRepository: BudgetRepository,
     private val billingRepository: BillingRepository,
-    private val countryRepository: CountryRepository
 ) : ViewModel() {
+
+    val currency = userRepository.getCurrency()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), "US")
 
     private val calendar: Calendar = Calendar.getInstance()
     private val periodIndex = preferenceRepository.getInt(Util.PREF_BALANCE_VIEW, 1)
@@ -140,7 +141,7 @@ class OverViewViewModel @Inject constructor(
         this.isSubscribed.value = isSubscribed
     }
 
-    fun getSymbolFromCurrencyCode(currencyCode: String): String {
+    /*fun getSymbolFromCurrencyCode(currencyCode: String): String {
         return countryRepository.getSymbolFromCurrencyCode(currencyCode)
-    }
+    }*/
 }

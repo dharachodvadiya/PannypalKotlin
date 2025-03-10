@@ -10,6 +10,7 @@ import com.indie.apps.pennypal.domain.usecase.DeleteMultipleMerchantDataUseCase
 import com.indie.apps.pennypal.domain.usecase.SearchMerchantDataWithAllDataListUseCase
 import com.indie.apps.pennypal.presentation.ui.state.PagingState
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
+import com.indie.apps.pennypal.repository.UserRepository
 import com.indie.apps.pennypal.util.Resource
 import com.indie.apps.pennypal.util.Util
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,16 +18,22 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class AllDataViewModel @Inject constructor(
     searchMerchantDataWithAllDataListUseCase: SearchMerchantDataWithAllDataListUseCase,
-    private val deleteMultipleMerchantDataUseCase: DeleteMultipleMerchantDataUseCase
+    private val deleteMultipleMerchantDataUseCase: DeleteMultipleMerchantDataUseCase,
+    userRepository: UserRepository,
 ) : ViewModel() {
+
+    val currency = userRepository.getCurrency()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), "US")
 
     var scrollIndex = MutableStateFlow(0)
     var scrollOffset = MutableStateFlow(0)

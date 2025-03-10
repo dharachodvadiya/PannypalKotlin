@@ -9,7 +9,7 @@ import com.indie.apps.pennypal.domain.usecase.GetBudgetsAndSpentWithCategoryIdLi
 import com.indie.apps.pennypal.domain.usecase.GetPastBudgetsAndSpentWithCategoryIdListFromPeriodType
 import com.indie.apps.pennypal.domain.usecase.GetUpComingBudgetsAndSpentWithCategoryIdListFromPeriodType
 import com.indie.apps.pennypal.presentation.ui.state.PagingState
-import com.indie.apps.pennypal.repository.BudgetRepository
+import com.indie.apps.pennypal.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -28,8 +28,11 @@ class BudgetViewModel @Inject constructor(
     getBudgetsAndSpentWithCategoryIdListUseCase: GetBudgetsAndSpentWithCategoryIdListUseCase,
     getPastBudgetsAndSpentWithCategoryIdListFromPeriodType: GetPastBudgetsAndSpentWithCategoryIdListFromPeriodType,
     getUpComingBudgetsAndSpentWithCategoryIdListFromPeriodType: GetUpComingBudgetsAndSpentWithCategoryIdListFromPeriodType,
-    budgetRepository: BudgetRepository,
+    userRepository: UserRepository,
 ) : ViewModel() {
+
+    val currency = userRepository.getCurrency()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), "US")
 
     private val calendar: Calendar = Calendar.getInstance()
     val currentPeriod = MutableStateFlow(PeriodType.MONTH)
