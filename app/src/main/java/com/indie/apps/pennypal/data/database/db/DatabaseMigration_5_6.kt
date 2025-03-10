@@ -3,7 +3,7 @@ package com.indie.apps.pennypal.data.database.db
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
-class Migration5to6 : Migration(4, 5) {
+class Migration5to6 : Migration(5, 6) {
     override fun migrate(db: SupportSQLiteDatabase) {
         updateUserTable(db)
     }

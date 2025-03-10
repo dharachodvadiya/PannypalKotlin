@@ -33,7 +33,7 @@ data class User(
     //@ColumnInfo(name = "expense_amt")
     //val expenseAmount: Double = 0.0,
 
-    val currency: String,
+    //val currency: String,
 
     @ColumnInfo(name = "country_code")
     val currencyCountryCode: String,
