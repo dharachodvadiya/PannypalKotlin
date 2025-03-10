@@ -24,8 +24,8 @@ class Migration5to6 : Migration(5, 6) {
 
         database.execSQL(
             """
-            INSERT INTO `user_new` (`id`, `name`, `email`, `last_sync_date_milli`, `payment_id`)
-            SELECT `id`, `name`, `email`, `last_sync_date_milli`, `payment_id` FROM `user`
+            INSERT INTO `user_new` (`id`, `name`, `email`, `last_sync_date_milli`, `payment_id`, `country_code`)
+            SELECT `id`, `name`, `email`, `last_sync_date_milli`, `payment_id` , `country_code` FROM `user`
             """
         )
         // Drop the old table
