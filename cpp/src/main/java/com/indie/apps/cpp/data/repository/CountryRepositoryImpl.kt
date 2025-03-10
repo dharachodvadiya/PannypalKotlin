@@ -65,29 +65,19 @@ class CountryRepositoryImpl(private val countryDb: CountryDb) : CountryRepositor
         }
     }
 
-    override fun searchCountryForDialCode(searchString: String): List<Country> {
-        val countryList = ArrayList<Country>()
-        countryDb.countryData.forEach {
-            if (it.name.lowercase().contains(searchString.lowercase()) ||
-                it.dialCode.contains(searchString.lowercase())
-            ) {
-                countryList.add(it)
-            }
-        }
-        return countryList
-    }
+    override fun searchCountry(searchString: String): List<Country> {
+        val query = searchString.lowercase()
+        return countryDb.countryData.filter { country ->
+            with(country) {
+                name.contains(query, ignoreCase = true) ||
+                        dialCode.contains(query, ignoreCase = true) ||
+                        countryCode.contains(query, ignoreCase = true) ||
+                        currencyCode.contains(query, ignoreCase = true) ||
+                        currencyName.contains(query, ignoreCase = true) ||
+                        currencySymbol.contains(query, ignoreCase = true)
 
-    override fun searchCountryForCurrency(searchString: String): List<Country> {
-        val countryList = ArrayList<Country>()
-        countryDb.countryData.forEach {
-            if (it.currencyCode.lowercase().contains(searchString.lowercase()) ||
-                it.currencyName.lowercase().contains(searchString.lowercase()) ||
-                it.name.lowercase().contains(searchString.lowercase())
-            ) {
-                countryList.add(it)
             }
         }
-        return countryList
     }
 
 }

@@ -1,21 +1,18 @@
 package com.indie.apps.pennypal.presentation.ui.dialog.select_payment
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.database.entity.Payment
 import com.indie.apps.pennypal.data.module.toPayment
-import com.indie.apps.pennypal.presentation.ui.component.BottomSaveButton
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.MyAppDialog
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 
@@ -46,16 +43,19 @@ fun DialogSelectPayment(
                 currentId = currentId,
                 paymentList = paymentState,
                 onSelectPayment = {
-                    if(!isSavable) {
+                    if (!isSavable) {
                         onSelect(it.toPayment())
-                    }else{
+                    } else {
                         currentId = it.id
+                        selectPaymentViewModel.saveDefaultPayment(currentId) {
+                            onSaveSuccess()
+                        }
                     }
                 }
             )
         },
         bottomContent = {
-            if(isSavable){
+            /*if(isSavable){
                 BottomSaveButton(
                     onClick = {
                         selectPaymentViewModel.saveDefaultPayment(currentId){
@@ -64,7 +64,7 @@ fun DialogSelectPayment(
                     },
                     modifier = Modifier.padding(dimensionResource(id = R.dimen.padding))
                 )
-            }
+            }*/
         },
         modifier = modifier,
         isFixHeight = true

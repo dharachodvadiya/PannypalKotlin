@@ -28,29 +28,23 @@ class CountryPickerViewModel @Inject constructor(
     }
 
 
-    fun searchData(isCurrency : Boolean)
-    {
-        if(isCurrency){
-            val data = countryRepository.searchCountryForCurrency(searchTextState.value.text)
-            //if (data.isNotEmpty())
-                uiState.value = data
-        }else {
-            val data = countryRepository.searchCountryForDialCode(searchTextState.value.text)
-            //if (data.isNotEmpty())
-                uiState.value = data
-        }
+    fun searchData(isCurrency: Boolean) {
+
+        val data = countryRepository.searchCountry(searchTextState.value.text)
+        //if (data.isNotEmpty())
+        uiState.value = data
     }
 
-    fun getFlagIdFromCountryCode(countryCode: String) : Int{
+    fun getFlagIdFromCountryCode(countryCode: String): Int {
         return countryRepository.getFlagsFromCountryCode(countryCode)
     }
 
-    fun saveDefaultCurrency(countryCode: String, onSuccess : ()-> Unit )
-    {
+    fun saveDefaultCurrency(countryCode: String, onSuccess: () -> Unit) {
         viewModelScope.launch {
             updateUserCurrencyDataUseCase
                 .updateData(
-                    currencyCountryCode =  countryCode)
+                    currencyCountryCode = countryCode
+                )
                 .collect {
                     when (it) {
                         is Resource.Loading -> {}
@@ -65,5 +59,5 @@ class CountryPickerViewModel @Inject constructor(
         }
     }
 
-    fun updateSearchText(text : String) = searchTextState.value.updateText(text)
+    fun updateSearchText(text: String) = searchTextState.value.updateText(text)
 }
