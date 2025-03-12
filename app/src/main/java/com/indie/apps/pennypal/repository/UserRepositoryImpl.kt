@@ -20,6 +20,8 @@ class UserRepositoryImpl @Inject constructor(
     override fun getCurrency() = userDao.getCurrencyCountryCode()
         .map { countryRepository.getCurrencySymbolFromCountryCode(it) }.flowOn(dispatcher)
 
+    override fun getCurrencyCountryCode() = userDao.getCurrencyCountryCode().flowOn(dispatcher)
+
     override fun getUserWithPaymentName() = userDao.getUserWithPaymentName().flowOn(dispatcher)
     override suspend fun updatePayment(paymentId: Long) = userDao.updatePayment(paymentId)
 
@@ -44,7 +46,7 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun updateWithDefaultPayment() = userDao.updateWithDefaultPayment()
 
-    override suspend fun insert(obj: User) : Long {
+    override suspend fun insert(obj: User): Long {
         val insertId = userDao.insert(obj)
         if (insertId > 0)
             baseCurrencyRepository.insert(BaseCurrency(currencyCountryCode = obj.currencyCountryCode))

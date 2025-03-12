@@ -47,6 +47,7 @@ import com.indie.apps.pennypal.util.Resource
 @Composable
 fun NewItemScreen(
     newItemViewModel: NewItemViewModel = hiltViewModel(),
+    onCurrencyChange: (String) -> Unit,
     onMerchantSelect: () -> Unit,
     onPaymentSelect: (Long?) -> Unit,
     onCategorySelect: (Long?, Int) -> Unit,
@@ -56,8 +57,13 @@ fun NewItemScreen(
     merchantData: MerchantNameAndDetails? = null,
     paymentData: Payment? = null,
     categoryData: Category? = null,
+    currencyCountryCode: String? = null,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
+    LaunchedEffect(Unit) {
+        newItemViewModel.setInitialData()
+    }
+
     LaunchedEffect(merchantData) {
         if (merchantData != null) {
             newItemViewModel.setMerchantData(merchantData)
@@ -73,6 +79,14 @@ fun NewItemScreen(
     LaunchedEffect(categoryData) {
         if (categoryData != null) {
             newItemViewModel.setCategory(categoryData)
+        }
+    }
+
+    println("aaaa $currencyCountryCode")
+
+    LaunchedEffect(currencyCountryCode) {
+        if (currencyCountryCode != null) {
+            newItemViewModel.setCurrencyCountryCode(currencyCountryCode)
         }
     }
 
@@ -232,6 +246,8 @@ fun NewItemScreen(
                                 NewEntryEvent.TimeSelect -> {
                                     openDialog = DialogType.Time
                                 }
+
+                                NewEntryEvent.CurrencyChange -> onCurrencyChange(newItemViewModel.getCurrentCurrencyCountryCode())
                             }
                         }
                     )
@@ -315,6 +331,7 @@ fun NewItemScreen(
 private fun NewItemScreenPreview() {
     PennyPalTheme(darkTheme = true) {
         NewItemScreen(
+            onCurrencyChange = {},
             onPaymentSelect = {},
             onNavigationUp = {},
             onMerchantSelect = {},

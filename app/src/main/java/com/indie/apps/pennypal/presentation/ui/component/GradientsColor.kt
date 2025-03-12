@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.component
 
+import android.annotation.SuppressLint
 import android.graphics.BlurMaskFilter
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -20,12 +21,14 @@ fun linearGradientsBrush(colors: List<Color>): Brush {
     )
 }
 
-fun backgroundGradientsBrush(colors: List<Color>): Brush {
-    return Brush.linearGradient(
+fun backgroundGradientsBrush(colors: List<Color>): Color {
+    /*return Brush.linearGradient(
         colors,
         start = Offset(200f, 300f),
         end = Offset(800f, 600f)
-    )
+    )*/
+
+    return colors[1]
 }
 
 fun verticalGradientsBrush(colors: List<Color>): Brush {
@@ -34,6 +37,7 @@ fun verticalGradientsBrush(colors: List<Color>): Brush {
     )
 }
 
+@SuppressLint("SuspiciousModifierThen")
 fun Modifier.shadow(
     color: Color = Color.Black,
     offsetX: Dp = 0.dp,

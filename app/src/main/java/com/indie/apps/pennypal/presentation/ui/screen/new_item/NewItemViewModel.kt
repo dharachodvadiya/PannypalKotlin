@@ -3,6 +3,7 @@ package com.indie.apps.pennypal.presentation.ui.screen.new_item
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.indie.apps.cpp.data.repository.CountryRepository
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.database.entity.Category
 import com.indie.apps.pennypal.data.database.entity.MerchantData
@@ -25,6 +26,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Calendar
@@ -39,11 +41,20 @@ class NewItemViewModel @Inject constructor(
     private val merchantRepository: MerchantRepository,
     private val getPaymentFromIdUseCase: GetPaymentFromIdUseCase,
     private val categoryRepository: CategoryRepository,
+    private val countryRepository: CountryRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    val currency = userRepository.getCurrency()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), "US")
+    /* val currency = userRepository.getCurrency()
+         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), "$")*/
+
+    private val currencyCountryCode = MutableStateFlow("US")
+
+
+    val currency = currencyCountryCode.map {
+        countryRepository.getCurrencySymbolFromCountryCode(currencyCountryCode.value)
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), "$")
+
 
     val merchantEditId =
         savedStateHandle.get<String>(Util.PARAM_EDIT_MERCHANT_DATA_ID)?.toLongOrNull() ?: 0
@@ -75,6 +86,10 @@ class NewItemViewModel @Inject constructor(
     val categories = MutableStateFlow<List<Category>>(emptyList())
 
     init {
+
+    }
+
+    fun setInitialData() {
         if (merchantEditId == 0L) {
             loadUserData()
             loadCategoryData(1L)
@@ -184,6 +199,10 @@ class NewItemViewModel @Inject constructor(
         merchant.value = data
     }
 
+    fun setCurrencyCountryCode(data: String) {
+        currencyCountryCode.value = data
+    }
+
     fun setPaymentData(data: Payment) {
         paymentError.value = UiText.StringResource(R.string.empty)
         payment.value = data
@@ -291,9 +310,13 @@ class NewItemViewModel @Inject constructor(
     fun updateAmountText(text: String) = amount.value.updateText(text)
     fun updateDescText(text: String) = description.value.updateText(text)
 
-    fun fetchLastUsedCategories() {
+    private fun fetchLastUsedCategories() {
         viewModelScope.launch {
             categories.value = categoryRepository.getRecentUsedCategoryList(5)
         }
+    }
+
+    fun getCurrentCurrencyCountryCode(): String {
+        return countryRepository.getCountryCodeFromCurrencyCode(currency.value)
     }
 }

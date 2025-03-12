@@ -120,6 +120,8 @@ internal fun NavGraphBuilder.navigateToEditItemScreen(
             Gson().fromJson(gsonStringMerchant, MerchantNameAndDetails::class.java)
         } else null
 
+        val countryCode = savedStateHandle.get<String>(Util.SAVE_STATE_COUNTRY_CODE)
+
         val gsonStringPayment = savedStateHandle.get<String>(Util.SAVE_STATE_PAYMENT)
 
         val payment: Payment? = if (gsonStringPayment != null) {
@@ -164,6 +166,23 @@ internal fun NavGraphBuilder.navigateToEditItemScreen(
                     Util.SAVE_STATE_CATEGORY_TYPE, categoryType
                 )
             },
+            onCurrencyChange = { countryCode ->
+                navController.navigate(DialogNav.COUNTRY_PICKER.route)
+
+                navController.currentBackStackEntry?.savedStateHandle?.set(
+                    Util.SAVE_STATE_SELECT_COUNTRY_CODE,
+                    countryCode
+                )
+
+                navController.currentBackStackEntry?.savedStateHandle?.set(
+                    Util.SAVE_STATE_SHOW_CURRENCY,
+                    true
+                )
+                navController.currentBackStackEntry?.savedStateHandle?.set(
+                    Util.SAVE_STATE_SAVABLE_DIALOG, false
+                )
+            },
+            currencyCountryCode = countryCode,
             merchantData = merchant,
             paymentData = payment,
             categoryData = category,

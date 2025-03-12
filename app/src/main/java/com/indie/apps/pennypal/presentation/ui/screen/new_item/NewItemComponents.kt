@@ -40,9 +40,11 @@ import com.indie.apps.pennypal.data.module.TabItemInfo
 import com.indie.apps.pennypal.presentation.ui.component.DialogSelectableItem
 import com.indie.apps.pennypal.presentation.ui.component.DialogTextFieldItem
 import com.indie.apps.pennypal.presentation.ui.component.clickableWithNoRipple
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.AutoSizeText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomTab
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.FlowRowItem
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
@@ -57,6 +59,7 @@ sealed interface NewEntryEvent {
     data object MerchantSelect : NewEntryEvent
     data object PaymentSelect : NewEntryEvent
     data class CategorySelect(val category: Category) : NewEntryEvent
+    data object CurrencyChange : NewEntryEvent
     data object MoreCategories : NewEntryEvent
     data object DateSelect : NewEntryEvent
     data object TimeSelect : NewEntryEvent
@@ -140,11 +143,14 @@ fun NewEntryFieldItemSection(
         DialogTextFieldItem(
             textState = amount,
             leadingIcon = {
-                Box(
-                    modifier = Modifier.size(24.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CustomText(
+
+                PrimaryButton(
+                    modifier = Modifier.width(40.dp).height(50.dp),
+                    bgColor = MyAppTheme.colors.itemBg,
+                    onClick = {
+                    onEvent(NewEntryEvent.CurrencyChange)
+                }) {
+                    AutoSizeText(
                         text = currency,
                         color = MyAppTheme.colors.black,
                         style = MyAppTheme.typography.Regular66_5

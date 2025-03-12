@@ -61,7 +61,7 @@ fun DialogCountryPicker(
                 searchState = searchTextState,
                 isShowCurrency = isShowCurrency,
                 countriesList = countryData,
-                isSelectable = isSavable,
+                isSelectable = true,
                 currentCountry = currentCountryCode,
                 onTextChange = {
                     viewModel.updateSearchText(it)

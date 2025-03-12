@@ -10,6 +10,8 @@ interface UserRepository : BaseRepository<User> {
 
     fun getCurrency(): Flow<String>
 
+    fun getCurrencyCountryCode(): Flow<String>
+
     fun getUserWithPaymentName(): Flow<UserWithPaymentName>
 
     suspend fun updatePayment(paymentId: Long): Int
