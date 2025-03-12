@@ -116,6 +116,8 @@ class BackupRepositoryImpl @Inject constructor(
                 }
             }
 
+            AppDatabase.resetDatabaseInstance(context, countryRepository)
+
             /*fileList.files.forEach { driveFile ->
 
                 println("aaaa repo 555 111 ${dbPath.parent}")

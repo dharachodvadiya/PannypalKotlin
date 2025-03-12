@@ -89,9 +89,12 @@ abstract class AppDatabase : RoomDatabase() {
 
         fun resetDatabaseInstance(context: Context, countryRepository: CountryRepository) {
             synchronized(this) {
-                INSTANCE?.close() // Close the current instance before replacing it
+                /*INSTANCE?.close() // Close the current instance before replacing it
                 INSTANCE = buildDatabase(context, countryRepository)
-                INSTANCE?.openHelper?.writableDatabase
+                INSTANCE?.openHelper?.writableDatabase*/
+
+                val db = buildDatabase(context, countryRepository)
+                db.openHelper.writableDatabase
             }
         }
 
