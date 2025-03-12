@@ -38,7 +38,7 @@ class AddBudgetViewModel @Inject constructor(
 ) : ViewModel() {
 
     val currency = userRepository.getCurrency()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), "US")
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), "$")
 
     val budgetEditId =
         savedStateHandle.get<String>(Util.PARAM_BUDGET_ID)?.toLongOrNull() ?: -1L

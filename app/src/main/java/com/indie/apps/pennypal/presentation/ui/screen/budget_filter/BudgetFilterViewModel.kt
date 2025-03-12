@@ -30,7 +30,7 @@ class BudgetFilterViewModel @Inject constructor(
     userRepository: UserRepository,
 ) : ViewModel() {
     val currency = userRepository.getCurrency()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), "US")
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), "$")
     private val calendar: Calendar = Calendar.getInstance()
     val currentPeriod = MutableStateFlow(PeriodType.MONTH.id)
     private val currentFilter = MutableStateFlow(BudgetMenu.PAST.id)

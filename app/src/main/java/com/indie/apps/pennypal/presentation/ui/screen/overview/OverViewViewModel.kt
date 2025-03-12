@@ -35,7 +35,7 @@ class OverViewViewModel @Inject constructor(
 ) : ViewModel() {
 
     val currency = userRepository.getCurrency()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), "US")
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), "$")
 
     private val calendar: Calendar = Calendar.getInstance()
     private val periodIndex = preferenceRepository.getInt(Util.PREF_BALANCE_VIEW, 1)

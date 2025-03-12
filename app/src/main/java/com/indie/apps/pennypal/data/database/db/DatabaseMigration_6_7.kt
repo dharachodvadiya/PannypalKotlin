@@ -5,7 +5,6 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 
 class Migration6to7 : Migration(6, 7) {
     override fun migrate(db: SupportSQLiteDatabase) {
-        println("aaaa migration 6 to 7")
         createBaseCurrencyTable(db)
         updateMerchantDataTable(db)
     }

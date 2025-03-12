@@ -37,7 +37,7 @@ class MerchantDataViewModel @Inject constructor(
 ) : ViewModel() {
 
     val currency = userRepository.getCurrency()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), "US")
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), "$")
     private val merchantId = savedStateHandle.get<String>(Util.PARAM_MERCHANT_ID)?.toLong() ?: 0
 
     var scrollIndex = MutableStateFlow(0)

@@ -33,7 +33,7 @@ class AllDataViewModel @Inject constructor(
 ) : ViewModel() {
 
     val currency = userRepository.getCurrency()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), "US")
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), "$")
 
     var scrollIndex = MutableStateFlow(0)
     var scrollOffset = MutableStateFlow(0)

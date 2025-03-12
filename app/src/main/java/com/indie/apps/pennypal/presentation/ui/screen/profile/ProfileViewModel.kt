@@ -34,7 +34,7 @@ class ProfileViewModel @Inject constructor(
     //private val _uiState = MutableStateFlow<Resource<User>>(Resource.Loading())
     // val uiState = _uiState.asStateFlow()
     val currency = userRepository.getCurrency()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), "US")
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), "$")
 
     private val calendar: Calendar = Calendar.getInstance()
 

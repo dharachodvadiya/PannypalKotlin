@@ -30,7 +30,7 @@ class SingleBudgetViewModel @Inject constructor(
 ) : ViewModel() {
 
     val currency = userRepository.getCurrency()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), "US")
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), "$")
     private val budgetId =
         savedStateHandle.get<String>(Util.PARAM_BUDGET_ID)?.toLong() ?: 0
     var budgetData = MutableStateFlow<BudgetWithCategory?>(null)
