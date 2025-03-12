@@ -26,12 +26,19 @@ import androidx.room.PrimaryKey
             parentColumns = ["id"],
             childColumns = ["category_id"],
             onDelete = ForeignKey.NO_ACTION
-        )
+        ),
+        ForeignKey(
+            entity = BaseCurrency::class,
+            parentColumns = ["id"],
+            childColumns = ["base_currency_id"],
+            onDelete = ForeignKey.NO_ACTION
+        ),
     ],
     indices = [
         Index(value = ["merchant_id"]),
         Index(value = ["payment_id"]),
-        Index(value = ["category_id"])
+        Index(value = ["category_id"]),
+        Index(value = ["base_currency_id"])
     ]
 )
 data class MerchantData(
@@ -52,7 +59,16 @@ data class MerchantData(
 
     val details: String? = null,
 
-    val amount: Double,
+    val amount: Double, //amount in base currency / converted amount
+
+    @ColumnInfo(name = "base_currency_id")
+    val baseCurrencyId: Long,
+
+    @ColumnInfo(name = "original_amount") // amount which user entered
+    val originalAmount: Double,
+
+    @ColumnInfo(name = "currency_country_code")
+    val currencyCountryCode: String?,
 
     val type: Int, // -1 for expense, 1 for income
 

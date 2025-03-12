@@ -7,6 +7,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.indie.apps.cpp.data.repository.CountryRepository
+import com.indie.apps.pennypal.data.database.dao.BaseCurrencyDao
 import com.indie.apps.pennypal.data.database.dao.BudgetCategoryDao
 import com.indie.apps.pennypal.data.database.dao.BudgetDao
 import com.indie.apps.pennypal.data.database.dao.CategoryDao
@@ -15,6 +16,7 @@ import com.indie.apps.pennypal.data.database.dao.MerchantDataDao
 import com.indie.apps.pennypal.data.database.dao.PaymentDao
 import com.indie.apps.pennypal.data.database.dao.PaymentModeDao
 import com.indie.apps.pennypal.data.database.dao.UserDao
+import com.indie.apps.pennypal.data.database.entity.BaseCurrency
 import com.indie.apps.pennypal.data.database.entity.Budget
 import com.indie.apps.pennypal.data.database.entity.BudgetCategory
 import com.indie.apps.pennypal.data.database.entity.Category
@@ -23,6 +25,7 @@ import com.indie.apps.pennypal.data.database.entity.MerchantData
 import com.indie.apps.pennypal.data.database.entity.Payment
 import com.indie.apps.pennypal.data.database.entity.PaymentMode
 import com.indie.apps.pennypal.data.database.entity.User
+import com.indie.apps.pennypal.repository.BaseCurrencyRepositoryImpl
 import com.indie.apps.pennypal.repository.CategoryRepositoryImpl
 import com.indie.apps.pennypal.repository.PaymentModeRepositoryImpl
 import com.indie.apps.pennypal.repository.PaymentRepositoryImpl
@@ -30,6 +33,7 @@ import com.indie.apps.pennypal.repository.UserRepositoryImpl
 import com.indie.apps.pennypal.util.Util
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 @Database(
@@ -41,7 +45,8 @@ import kotlinx.coroutines.launch
         PaymentMode::class,
         Category::class,
         Budget::class,
-        BudgetCategory::class
+        BudgetCategory::class,
+        BaseCurrency::class
     ],
     version = Util.DB_VERSION,
     exportSchema = false
@@ -56,6 +61,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
     abstract fun budgetDao(): BudgetDao
     abstract fun budgetCategoryDao(): BudgetCategoryDao
+    abstract fun baseCurrencyDao(): BaseCurrencyDao
 
     /* fun migrateDatabaseIfNeeded(context: Context, countryRepository: CountryRepository) {
 
@@ -100,6 +106,7 @@ abstract class AppDatabase : RoomDatabase() {
                 .addMigrations(Migration3to4())
                 .addMigrations(Migration4to5())
                 .addMigrations(Migration5to6())
+                .addMigrations(Migration6to7())
                 .addCallback(Callback(countryRepository))
                 .build()
         }
@@ -136,6 +143,7 @@ abstract class AppDatabase : RoomDatabase() {
                 populatePaymentDb(db)
                 populateUserDb(db, countryRepository)
                 populateCategoryDb(db)
+                populateBaseCurrencyDb(db)//always call after user table create
 
             }
 
@@ -151,6 +159,21 @@ abstract class AppDatabase : RoomDatabase() {
                 val userDao = db.userDao()
 
                 UserRepositoryImpl(userDao, countryRepository, Dispatchers.IO).insert(user)
+            }
+
+            private suspend fun populateBaseCurrencyDb(
+                db: AppDatabase
+            ) {
+                val userDao = db.userDao()
+                val baseCurrency =
+                    BaseCurrency(
+                        currencyCountryCode = userDao.getUser().first().currencyCountryCode
+                    )
+
+                BaseCurrencyRepositoryImpl(
+                    baseCurrencyDao = db.baseCurrencyDao(),
+                    Dispatchers.IO
+                ).insert(baseCurrency)
             }
 
             private suspend fun populatePaymentDb(db: AppDatabase) {

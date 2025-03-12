@@ -232,7 +232,10 @@ class NewItemViewModel @Inject constructor(
                         amount = amount,
                         details = description.value.text.trim(),
                         dateInMilli = currentTimeInMilli.value,
-                        type = if (received.value) 1 else -1
+                        type = if (received.value) 1 else -1,
+                        baseCurrencyId = 0,
+                        currencyCountryCode = null,
+                        originalAmount = 0.0
                     )
 
                     viewModelScope.launch {

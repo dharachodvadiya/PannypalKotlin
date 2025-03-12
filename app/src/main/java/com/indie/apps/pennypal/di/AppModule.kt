@@ -14,6 +14,8 @@ import com.indie.apps.pennypal.repository.AuthRepository
 import com.indie.apps.pennypal.repository.AuthRepositoryImpl
 import com.indie.apps.pennypal.repository.BackupRepository
 import com.indie.apps.pennypal.repository.BackupRepositoryImpl
+import com.indie.apps.pennypal.repository.BaseCurrencyRepository
+import com.indie.apps.pennypal.repository.BaseCurrencyRepositoryImpl
 import com.indie.apps.pennypal.repository.BillingRepository
 import com.indie.apps.pennypal.repository.BillingRepositoryImpl
 import com.indie.apps.pennypal.repository.BudgetRepository
@@ -173,4 +175,17 @@ object AppModule {
     ): BackupRepository {
         return BackupRepositoryImpl(context, authRepository, countryRepository, appDatabase)
     }
+
+
+    @Provides
+    fun provideBaseCurrencyRepository(
+        database: AppDatabase,
+        @IoDispatcher dispatcher: CoroutineDispatcher
+    ): BaseCurrencyRepository {
+        return BaseCurrencyRepositoryImpl(
+            database.baseCurrencyDao(),
+            dispatcher
+        )
+    }
+
 }
