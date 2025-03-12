@@ -68,7 +68,7 @@ data class MerchantData(
     val originalAmount: Double,
 
     @ColumnInfo(name = "currency_country_code")
-    val currencyCountryCode: String?,
+    val currencyCountryCode: String,
 
     val type: Int, // -1 for expense, 1 for income
 

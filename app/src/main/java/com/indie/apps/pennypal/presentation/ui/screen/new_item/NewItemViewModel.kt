@@ -106,6 +106,7 @@ class NewItemViewModel @Inject constructor(
             userRepository.getUser()
                 .collect {
                     loadPaymentData(it.paymentId)
+                    setCurrencyCountryCode(it.currencyCountryCode)
                     uiState.value = Resource.Success(Unit)
                 }
         }
@@ -138,6 +139,8 @@ class NewItemViewModel @Inject constructor(
 
                                 loadPaymentData(editMerchantData!!.paymentId)
                                 loadCategoryData(editMerchantData!!.categoryId)
+
+                                setCurrencyCountryCode(editMerchantData!!.currencyCountryCode)
 
                                 var merchantJob: Job? = null
                                 merchantJob = launch {
@@ -253,8 +256,8 @@ class NewItemViewModel @Inject constructor(
                         dateInMilli = currentTimeInMilli.value,
                         type = if (received.value) 1 else -1,
                         baseCurrencyId = 0,
-                        currencyCountryCode = null,
-                        originalAmount = 0.0
+                        currencyCountryCode = currencyCountryCode.value,
+                        originalAmount = amount
                     )
 
                     viewModelScope.launch {
@@ -280,7 +283,9 @@ class NewItemViewModel @Inject constructor(
                         amount = amount,
                         details = description.value.text.trim(),
                         dateInMilli = currentTimeInMilli.value,
-                        type = if (received.value) 1 else -1
+                        type = if (received.value) 1 else -1,
+                        currencyCountryCode = currencyCountryCode.value,
+                        originalAmount = amount
                     )
 
                     viewModelScope.launch {

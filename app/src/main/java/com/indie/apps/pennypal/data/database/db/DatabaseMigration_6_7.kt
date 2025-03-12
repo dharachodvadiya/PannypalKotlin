@@ -64,7 +64,7 @@ class Migration6to7 : Migration(6, 7) {
             `amount` REAL NOT NULL, 
             `base_currency_id` INTEGER NOT NULL, 
             `original_amount` REAL NOT NULL,
-             `currency_country_code` TEXT, 
+             `currency_country_code` TEXT NOT NULL, 
              `type` INTEGER NOT NULL, 
              FOREIGN KEY(`merchant_id`) REFERENCES `merchant`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , 
              FOREIGN KEY(`payment_id`) REFERENCES `payment_type`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , 
@@ -80,7 +80,7 @@ class Migration6to7 : Migration(6, 7) {
     INSERT INTO merchant_data_new 
     (id, merchant_id, category_id, payment_id, date_milli, details, amount, base_currency_id, original_amount, currency_country_code, type)
     SELECT 
-    id, merchant_id, category_id, payment_id, date_milli, details, amount, (SELECT id FROM base_currency LIMIT 1), amount, NULL, type FROM merchant_data;
+    id, merchant_id, category_id, payment_id, date_milli, details, amount, (SELECT id FROM base_currency LIMIT 1), amount, (SELECT country_code FROM user LIMIT 1), type FROM merchant_data;
 """.trimIndent()
         )
 
