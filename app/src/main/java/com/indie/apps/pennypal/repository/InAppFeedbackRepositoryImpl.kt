@@ -10,16 +10,13 @@ class InAppFeedbackRepositoryImpl @Inject constructor(
         count.value++
         if (count.value == 3) {
             count.value = 0
-
-            println("aaaa true")
             return true
         }
-        println("aaaa false")
         return false
     }
 
     override fun addEventToShowDialog() {
-       // count.value++
+        // count.value++
     }
 }
 

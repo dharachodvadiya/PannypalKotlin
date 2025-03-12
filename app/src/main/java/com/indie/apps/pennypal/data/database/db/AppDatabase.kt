@@ -143,7 +143,7 @@ abstract class AppDatabase : RoomDatabase() {
                 populatePaymentDb(db)
                 populateUserDb(db, countryRepository)
                 populateCategoryDb(db)
-                populateBaseCurrencyDb(db)//always call after user table create
+                //populateBaseCurrencyDb(db)//always call after user table create
 
             }
 
@@ -158,7 +158,14 @@ abstract class AppDatabase : RoomDatabase() {
                     )
                 val userDao = db.userDao()
 
-                UserRepositoryImpl(userDao, countryRepository, Dispatchers.IO).insert(user)
+                val baseCurrencyRepository =
+                    BaseCurrencyRepositoryImpl(db.baseCurrencyDao(), Dispatchers.IO)
+                UserRepositoryImpl(
+                    userDao,
+                    countryRepository,
+                    baseCurrencyRepository,
+                    Dispatchers.IO
+                ).insert(user)
             }
 
             private suspend fun populateBaseCurrencyDb(

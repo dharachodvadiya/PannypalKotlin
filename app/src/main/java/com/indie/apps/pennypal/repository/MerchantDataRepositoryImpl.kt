@@ -3,11 +3,14 @@ package com.indie.apps.pennypal.repository
 import com.indie.apps.pennypal.data.database.dao.MerchantDataDao
 import com.indie.apps.pennypal.data.database.entity.MerchantData
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 class MerchantDataRepositoryImpl @Inject constructor(
     private val merchantDataDao: MerchantDataDao,
+    private val baseCurrencyRepository: BaseCurrencyRepository,
+    private val userRepository: UserRepository,
     private val dispatcher: CoroutineDispatcher
 ) :
     MerchantDataRepository {
@@ -68,7 +71,10 @@ class MerchantDataRepositoryImpl @Inject constructor(
         searchQuery: String, timeZoneOffsetInMilli: Int
     ) = merchantDataDao.searchMerchantDataWithMerchantNameList(searchQuery.trim(), timeZoneOffsetInMilli)
 
-    override suspend fun insert(obj: MerchantData) = merchantDataDao.insert(obj)
+    override suspend fun insert(obj: MerchantData): Long {
+        val baseCurrencyId = baseCurrencyRepository.getBaseCurrencyFromCode(userRepository.getUser().first().currencyCountryCode).id
+        return merchantDataDao.insert(obj.copy(baseCurrencyId = baseCurrencyId))
+    }
 
     override suspend fun update(obj: MerchantData) = merchantDataDao.update(obj)
 

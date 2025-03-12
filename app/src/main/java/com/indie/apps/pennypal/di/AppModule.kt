@@ -68,9 +68,15 @@ object AppModule {
     fun provideUserRepository(
         database: AppDatabase,
         countryRepository: CountryRepository,
+        baseCurrencyRepository: BaseCurrencyRepository,
         @IoDispatcher dispatcher: CoroutineDispatcher
     ): UserRepository {
-        return UserRepositoryImpl(database.userDao(), countryRepository, dispatcher)
+        return UserRepositoryImpl(
+            database.userDao(),
+            countryRepository,
+            baseCurrencyRepository,
+            dispatcher
+        )
     }
 
     @Provides
@@ -100,9 +106,16 @@ object AppModule {
     @Provides
     fun provideMerchantDataRepository(
         database: AppDatabase,
+        baseCurrencyRepository: BaseCurrencyRepository,
+        userRepository: UserRepository,
         @IoDispatcher dispatcher: CoroutineDispatcher
     ): MerchantDataRepository {
-        return MerchantDataRepositoryImpl(database.merchantDataDao(), dispatcher)
+        return MerchantDataRepositoryImpl(
+            database.merchantDataDao(),
+            baseCurrencyRepository,
+            userRepository,
+            dispatcher
+        )
     }
 
     @Provides

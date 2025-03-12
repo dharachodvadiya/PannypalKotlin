@@ -104,9 +104,6 @@ class BackupRepositoryImpl @Inject constructor(
             }
 
             fileList.files.forEachIndexed { index, driveFile ->
-                println("aaaa repo 555 111 ${dbPath.parent}")
-                println("aaaa repo 555 111 111 ${driveFile.name}")
-
                 // Sequential download with retry logic
                 val downloadResult = downloadFileWithRetry(drive, driveFile, dbPath, maxRetries = 3)
                 downloadResult.onFailure { e ->
