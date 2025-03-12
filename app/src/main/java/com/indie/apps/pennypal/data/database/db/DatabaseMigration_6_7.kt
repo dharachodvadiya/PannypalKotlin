@@ -7,6 +7,7 @@ class Migration6to7 : Migration(6, 7) {
     override fun migrate(db: SupportSQLiteDatabase) {
         createBaseCurrencyTable(db)
         updateMerchantDataTable(db)
+        createExchangeRateTable(db)
     }
 
     private fun createBaseCurrencyTable(database: SupportSQLiteDatabase) {
@@ -93,6 +94,11 @@ class Migration6to7 : Migration(6, 7) {
         database.execSQL("CREATE INDEX IF NOT EXISTS `index_merchant_data_category_id` ON `merchant_data` (`category_id`)")
         database.execSQL("CREATE INDEX IF NOT EXISTS `index_merchant_data_base_currency_id` ON `merchant_data` (`base_currency_id`)")
 
+
+    }
+
+    private fun createExchangeRateTable(database: SupportSQLiteDatabase) {
+        database.execSQL("CREATE TABLE IF NOT EXISTS `exchange_rates` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `from_currency` TEXT NOT NULL, `to_currency` TEXT NOT NULL, `rate` REAL NOT NULL, `last_updated` INTEGER NOT NULL)")
 
     }
 

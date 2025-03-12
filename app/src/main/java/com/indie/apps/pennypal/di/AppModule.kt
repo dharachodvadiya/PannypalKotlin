@@ -10,6 +10,7 @@ import com.indie.apps.cpp.data.repository.CountryRepository
 import com.indie.apps.cpp.data.repository.CountryRepositoryImpl
 import com.indie.apps.pennypal.data.database.db.AppDatabase
 import com.indie.apps.pennypal.data.preference.PreferenceManager
+import com.indie.apps.pennypal.data.service.ExchangeRateApiService
 import com.indie.apps.pennypal.repository.AuthRepository
 import com.indie.apps.pennypal.repository.AuthRepositoryImpl
 import com.indie.apps.pennypal.repository.BackupRepository
@@ -22,6 +23,8 @@ import com.indie.apps.pennypal.repository.BudgetRepository
 import com.indie.apps.pennypal.repository.BudgetRepositoryImpl
 import com.indie.apps.pennypal.repository.CategoryRepository
 import com.indie.apps.pennypal.repository.CategoryRepositoryImpl
+import com.indie.apps.pennypal.repository.ExchangeRateRepository
+import com.indie.apps.pennypal.repository.ExchangeRateRepositoryImpl
 import com.indie.apps.pennypal.repository.MerchantDataRepository
 import com.indie.apps.pennypal.repository.MerchantDataRepositoryImpl
 import com.indie.apps.pennypal.repository.MerchantRepository
@@ -41,11 +44,28 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
+    @Provides
+    @Singleton
+    fun provideRetrofit(): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl("https://v6.exchangerate-api.com")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideExchangeRateApiService(retrofit: Retrofit): ExchangeRateApiService {
+        return retrofit.create(ExchangeRateApiService::class.java)
+    }
 
     @Singleton
     @Provides
@@ -199,6 +219,14 @@ object AppModule {
             database.baseCurrencyDao(),
             dispatcher
         )
+    }
+
+    @Provides
+    fun provideExchangeRateRepository(
+        apiService: ExchangeRateApiService,
+        database: AppDatabase
+    ): ExchangeRateRepository {
+        return ExchangeRateRepositoryImpl(apiService, database.exchangeRateDao())
     }
 
 }

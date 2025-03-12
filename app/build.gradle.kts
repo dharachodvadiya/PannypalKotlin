@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -30,8 +32,15 @@ android {
     }
 
     buildTypes {
+        val properties = Properties()
+        properties.load(project.rootProject.file("local.properties").inputStream())
         debug {
             manifestPlaceholders["crashlyticsCollectionEnabled"] = false
+            buildConfigField(
+                "String",
+                "EXCHANGE_RATE_API_KEY",
+                properties.getProperty("EXCHANGE_RATE_API_KEY")
+            )
             /*isMinifyEnabled = true
             //isShrinkResources = true
             proguardFiles(
@@ -47,6 +56,11 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            buildConfigField(
+                "String",
+                "EXCHANGE_RATE_API_KEY",
+                properties.getProperty("EXCHANGE_RATE_API_KEY")
+            )
         }
     }
     compileOptions {
@@ -58,6 +72,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -186,6 +201,11 @@ dependencies {
 
     implementation("com.google.android.play:review:2.0.2")
     implementation("com.google.android.play:review-ktx:2.0.2")
+
+    //retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.6.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.6.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.5.0")
 
 }
 /*

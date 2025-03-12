@@ -11,6 +11,7 @@ import com.indie.apps.pennypal.data.database.dao.BaseCurrencyDao
 import com.indie.apps.pennypal.data.database.dao.BudgetCategoryDao
 import com.indie.apps.pennypal.data.database.dao.BudgetDao
 import com.indie.apps.pennypal.data.database.dao.CategoryDao
+import com.indie.apps.pennypal.data.database.dao.ExchangeRateDao
 import com.indie.apps.pennypal.data.database.dao.MerchantDao
 import com.indie.apps.pennypal.data.database.dao.MerchantDataDao
 import com.indie.apps.pennypal.data.database.dao.PaymentDao
@@ -20,6 +21,7 @@ import com.indie.apps.pennypal.data.database.entity.BaseCurrency
 import com.indie.apps.pennypal.data.database.entity.Budget
 import com.indie.apps.pennypal.data.database.entity.BudgetCategory
 import com.indie.apps.pennypal.data.database.entity.Category
+import com.indie.apps.pennypal.data.database.entity.ExchangeRate
 import com.indie.apps.pennypal.data.database.entity.Merchant
 import com.indie.apps.pennypal.data.database.entity.MerchantData
 import com.indie.apps.pennypal.data.database.entity.Payment
@@ -46,7 +48,8 @@ import kotlinx.coroutines.launch
         Category::class,
         Budget::class,
         BudgetCategory::class,
-        BaseCurrency::class
+        BaseCurrency::class,
+        ExchangeRate::class
     ],
     version = Util.DB_VERSION,
     exportSchema = false
@@ -62,6 +65,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun budgetDao(): BudgetDao
     abstract fun budgetCategoryDao(): BudgetCategoryDao
     abstract fun baseCurrencyDao(): BaseCurrencyDao
+    abstract fun exchangeRateDao(): ExchangeRateDao
 
     /* fun migrateDatabaseIfNeeded(context: Context, countryRepository: CountryRepository) {
 
