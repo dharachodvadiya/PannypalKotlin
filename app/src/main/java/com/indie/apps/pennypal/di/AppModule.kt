@@ -204,9 +204,10 @@ object AppModule {
         @ApplicationContext context: Context,
         authRepository: AuthRepository,
         countryRepository: CountryRepository,
-        appDatabase: AppDatabase
+        appDatabase: AppDatabase,
+        @IoDispatcher dispatcher: CoroutineDispatcher
     ): BackupRepository {
-        return BackupRepositoryImpl(context, authRepository, countryRepository, appDatabase)
+        return BackupRepositoryImpl(context, authRepository, countryRepository, appDatabase, dispatcher)
     }
 
 
@@ -225,9 +226,10 @@ object AppModule {
     fun provideExchangeRateRepository(
         apiService: ExchangeRateApiService,
         countryRepository: CountryRepository,
-        database: AppDatabase
+        database: AppDatabase,
+        @IoDispatcher dispatcher: CoroutineDispatcher
     ): ExchangeRateRepository {
-        return ExchangeRateRepositoryImpl(apiService, database.exchangeRateDao(), countryRepository)
+        return ExchangeRateRepositoryImpl(apiService, database.exchangeRateDao(), countryRepository, dispatcher)
     }
 
 }

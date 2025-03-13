@@ -30,7 +30,7 @@ class AuthViewModel @Inject constructor(
     val processingState = MutableStateFlow(AuthProcess.NONE)
 
     fun isBackupAvailable(callBack: (Boolean) -> Unit) {
-        viewModelScope.launch((Dispatchers.IO)) {
+        viewModelScope.launch{
             val isAvailable = backupRepository.isBackupAvailable()
             withContext(Dispatchers.Main) {
                 callBack(isAvailable)
@@ -41,7 +41,7 @@ class AuthViewModel @Inject constructor(
     fun onEvent(
         mainEvent: SyncEvent,
     ) {
-        viewModelScope.launch((Dispatchers.IO)) {
+        viewModelScope.launch {
             when (mainEvent) {
                 SyncEvent.SignInGoogle -> handleSignInGoogle()
 
@@ -64,11 +64,10 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    private suspend fun handleSignInGoogle(isChangeAccount : Boolean = false) {
+    private suspend fun handleSignInGoogle(isChangeAccount: Boolean = false) {
         if (!isInProcess) {
 
-            if(isChangeAccount && authRepository.isSignedIn())
-            {
+            if (isChangeAccount && authRepository.isSignedIn()) {
                 authRepository.signOut()
             }
             if (!authRepository.isSignedIn()) {

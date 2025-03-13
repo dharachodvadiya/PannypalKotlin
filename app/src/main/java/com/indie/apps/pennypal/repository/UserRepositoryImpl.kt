@@ -7,6 +7,7 @@ import com.indie.apps.pennypal.data.database.entity.User
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
@@ -23,36 +24,43 @@ class UserRepositoryImpl @Inject constructor(
     override fun getCurrencyCountryCode() = userDao.getCurrencyCountryCode().flowOn(dispatcher)
 
     override fun getUserWithPaymentName() = userDao.getUserWithPaymentName().flowOn(dispatcher)
-    override suspend fun updatePayment(paymentId: Long) = userDao.updatePayment(paymentId)
+    override suspend fun updatePayment(paymentId: Long) = withContext(dispatcher) {
+        userDao.updatePayment(
+            paymentId
+        )
+    }
 
-    override suspend fun updateCurrency(currencyCountryCode: String): Int {
+    override suspend fun updateCurrency(currencyCountryCode: String) = withContext(dispatcher) {
         val updateCount = userDao.updateCurrency(currencyCountryCode)
 
         if (updateCount > 0)
             baseCurrencyRepository.insert(BaseCurrency(currencyCountryCode = currencyCountryCode))
-        return updateCount
+        updateCount
 
     }
 
 
-    override suspend fun updateName(name: String) =
+    override suspend fun updateName(name: String) = withContext(dispatcher) {
         userDao.updateName(name)
+    }
 
-    override suspend fun updateLastSyncTime(lastSyncDateInMilli: Long) =
+    override suspend fun updateLastSyncTime(lastSyncDateInMilli: Long) = withContext(dispatcher) {
         userDao.updateLastSyncTime(lastSyncDateInMilli)
+    }
 
     /* override suspend fun updateAmount(incomeAmt: Double, expenseAmt: Double) =
          userDao.updateAmount(incomeAmt, expenseAmt)*/
 
-    override suspend fun updateWithDefaultPayment() = userDao.updateWithDefaultPayment()
+    override suspend fun updateWithDefaultPayment() =
+        withContext(dispatcher) { userDao.updateWithDefaultPayment() }
 
-    override suspend fun insert(obj: User): Long {
+    override suspend fun insert(obj: User) = withContext(dispatcher) {
         val insertId = userDao.insert(obj)
         if (insertId > 0)
             baseCurrencyRepository.insert(BaseCurrency(currencyCountryCode = obj.currencyCountryCode))
 
-        return insertId
+        insertId
     }
 
-    override suspend fun update(obj: User) = userDao.update(obj)
+    override suspend fun update(obj: User) = withContext(dispatcher) { userDao.update(obj) }
 }

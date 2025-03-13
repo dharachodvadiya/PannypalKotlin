@@ -5,6 +5,8 @@ import com.indie.apps.pennypal.BuildConfig
 import com.indie.apps.pennypal.data.database.dao.ExchangeRateDao
 import com.indie.apps.pennypal.data.database.entity.ExchangeRate
 import com.indie.apps.pennypal.data.service.ExchangeRateApiService
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 import java.util.Calendar
 import javax.inject.Inject
 
@@ -12,54 +14,54 @@ import javax.inject.Inject
 class ExchangeRateRepositoryImpl @Inject constructor(
     private val apiService: ExchangeRateApiService,
     private val exchangeRateDao: ExchangeRateDao,
-    private val countryRepository: CountryRepository
+    private val countryRepository: CountryRepository,
+    private val dispatcher: CoroutineDispatcher
 ) : ExchangeRateRepository {
 
     private val apiKey = BuildConfig.EXCHANGE_RATE_API_KEY
 
-    override suspend fun getConversionRate(fromCurrencyCountry: String, toCurrencyCountry: String): Double {
-        if (fromCurrencyCountry == toCurrencyCountry)
-            return 1.0;
+    override suspend fun getConversionRate(fromCurrencyCountry: String, toCurrencyCountry: String) =
+        withContext(dispatcher) {
+            if (fromCurrencyCountry == toCurrencyCountry)
+                return@withContext 1.0;
 
+            val fromCurrency = countryRepository.getCurrencyCodeFromCountryCode(fromCurrencyCountry)
+            val toCurrency = countryRepository.getCurrencyCodeFromCountryCode(toCurrencyCountry)
 
+            val exchangeRateFromDb = exchangeRateDao.getCurrencyFromFromCurrency(fromCurrency)
+            val isLoadNeed = if (exchangeRateFromDb?.toCurrency != toCurrency) true else false
+            val lastUpdate = exchangeRateDao.getLastUpdateTime() ?: 0L
+            val now = System.currentTimeMillis()
 
-        val fromCurrency = countryRepository.getCurrencyCodeFromCountryCode(fromCurrencyCountry)
-        val toCurrency = countryRepository.getCurrencyCodeFromCountryCode(toCurrencyCountry)
+            // Check if last update is from a different day
+            if (!isSameDay(lastUpdate, now) || isLoadNeed) {
+                // Fetch from API and cache
+                val response = apiService.getLatestRates(apiKey, toCurrency)
 
-        val exchangeRateFromDb = exchangeRateDao.getCurrencyFromFromCurrency(fromCurrency)
-        val isLoadNeed = if (exchangeRateFromDb?.toCurrency != toCurrency) true else false
-        val lastUpdate = exchangeRateDao.getLastUpdateTime() ?: 0L
-        val now = System.currentTimeMillis()
+                if (response.isSuccessful) {
 
-        // Check if last update is from a different day
-        if (!isSameDay(lastUpdate, now) || isLoadNeed) {
-            // Fetch from API and cache
-            val response = apiService.getLatestRates(apiKey, toCurrency)
+                    exchangeRateDao.deleteAll()
+                    val rates = response.body()?.conversion_rates ?: emptyMap()
+                    val baseCurrency = response.body()?.base_code ?: toCurrency
 
-            if (response.isSuccessful) {
-
-                exchangeRateDao.deleteAll()
-                val rates = response.body()?.conversion_rates ?: emptyMap()
-                val baseCurrency = response.body()?.base_code ?: toCurrency
-
-                rates.forEach { (currency, rate) ->
-                    exchangeRateDao.insert(
-                        ExchangeRate(
-                            fromCurrency = currency,
-                            toCurrency = baseCurrency,
-                            rate = rate,
-                            lastUpdated = now
+                    rates.forEach { (currency, rate) ->
+                        exchangeRateDao.insert(
+                            ExchangeRate(
+                                fromCurrency = currency,
+                                toCurrency = baseCurrency,
+                                rate = rate,
+                                lastUpdated = now
+                            )
                         )
-                    )
+                    }
                 }
             }
+
+            val rate = exchangeRateDao.getRate(fromCurrency, toCurrency)
+
+            // Get cached rate
+            rate?.rate ?: 1.0
         }
-
-        val rate = exchangeRateDao.getRate(fromCurrency, toCurrency)
-
-        // Get cached rate
-        return rate?.rate ?: 1.0
-    }
 
     override fun getAmountFromRate(
         amount: Double,

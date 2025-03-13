@@ -8,6 +8,7 @@ import com.indie.apps.pennypal.data.paging.BasePagingSource
 import com.indie.apps.pennypal.util.Util
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class MerchantRepositoryImpl @Inject constructor(
@@ -16,31 +17,20 @@ class MerchantRepositoryImpl @Inject constructor(
 ) :
     MerchantRepository {
 
-    override suspend fun deleteMerchantWithId(id: Long) = merchantDao.softDeleteMerchantWithId(id)
+    override suspend fun deleteMerchantWithId(id: Long) = withContext(dispatcher) {
+        merchantDao.softDeleteMerchantWithId(
+            id
+        )
+    }
 
-    override suspend fun deleteMerchantWithIdList(idList: List<Long>) =
+    override suspend fun deleteMerchantWithIdList(idList: List<Long>) = withContext(dispatcher) {
         merchantDao.softDeleteMerchantWithIdList(idList)
+    }
 
     override fun getMerchantList() =
         merchantDao.getMerchantList()
 
     override fun getMerchantFromId(id: Long) = merchantDao.getMerchantFromId(id).flowOn(dispatcher)
-
-    /* override suspend fun getTotalIncomeAndeExpenseFromIds(ids: List<Long>) =
-         merchantDao.getTotalIncomeAndeExpenseFromIds(ids)*/
-
-    /* override suspend fun updateAmountWithDate(
-         id: Long,
-         incomeAmt: Double,
-         expenseAmt: Double
-     ) = merchantDao.updateAmountWithDate(id, incomeAmt, expenseAmt)*/
-
-    /*override suspend fun addAmountWithDate(
-        id: Long,
-        incomeAmt: Double,
-        expenseAmt: Double,
-        dateInMilli: Long
-    ) = merchantDao.addAmountWithDate(id, incomeAmt, expenseAmt, dateInMilli)*/
 
     override fun searchMerchantNameAndDetailList(
         searchQuery: String
@@ -63,8 +53,8 @@ class MerchantRepositoryImpl @Inject constructor(
         searchQuery: String
     ) = merchantDao.searchMerchantList(searchQuery.trim())
 
-    override suspend fun insert(obj: Merchant): Long {
-        return try {
+    override suspend fun insert(obj: Merchant) = withContext(dispatcher) {
+        try {
             merchantDao.insert(obj)
         } catch (e: Exception) {
             val merchant = merchantDao.getSoftDeletedMerchantFromName(obj.name)
@@ -79,5 +69,5 @@ class MerchantRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun update(obj: Merchant) = merchantDao.update(obj)
+    override suspend fun update(obj: Merchant) = withContext(dispatcher) { merchantDao.update(obj) }
 }

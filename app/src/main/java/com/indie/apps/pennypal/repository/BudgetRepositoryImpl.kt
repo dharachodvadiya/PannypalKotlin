@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 import java.util.Calendar
 import javax.inject.Inject
 
@@ -28,10 +29,10 @@ class BudgetRepositoryImpl @Inject constructor(
     private val merchantDataDao: MerchantDataDao,
     private val dispatcher: CoroutineDispatcher
 ) : BudgetRepository {
-    override suspend fun deleteBudget(id: Long): Int {
+    override suspend fun deleteBudget(id: Long) = withContext(dispatcher) {
         val count = budgetDao.deleteBudgetFromId(id)
         budgetCategoryDao.deleteBudgetCategoryFromBudgetId(id)
-        return count
+        count
     }
 
     override fun getBudgetWithCategoryFromId(budgetId: Long) =
@@ -66,10 +67,10 @@ class BudgetRepositoryImpl @Inject constructor(
         )
     }
 
-    override suspend fun insert(obj: BudgetWithCategory): Long {
+    override suspend fun insert(obj: BudgetWithCategory) = withContext(dispatcher) {
         val id = budgetDao.insert(obj.toBudget())
         budgetCategoryDao.insertBudgetCategoryList(obj.copy(id = id).toBudgetCategoryList())
-        return id
+        id
     }
 
     override suspend fun insertBudgetWithPeriodValidation(
@@ -77,7 +78,7 @@ class BudgetRepositoryImpl @Inject constructor(
         timeZoneOffsetInMilli: Int,
         year: Int,
         month: Int
-    ): Long {
+    ) = withContext(dispatcher) {
         val count = when (obj.periodType) {
             PeriodType.MONTH.id -> {
                 val res = budgetDao.getBudgetDataFromMonth(
@@ -98,7 +99,7 @@ class BudgetRepositoryImpl @Inject constructor(
 
             else -> 0
         }
-        return if (count == 0) insert(obj) else -1
+        if (count == 0) insert(obj) else -1
 
     }
 
@@ -107,7 +108,7 @@ class BudgetRepositoryImpl @Inject constructor(
         timeZoneOffsetInMilli: Int,
         year: Int,
         month: Int
-    ): Int {
+    ) = withContext(dispatcher) {
         val budgetList = when (obj.periodType) {
             PeriodType.MONTH.id -> {
                 budgetDao.getBudgetDataFromMonth(
@@ -127,7 +128,7 @@ class BudgetRepositoryImpl @Inject constructor(
 
             else -> emptyList()
         }
-        return if (budgetList.isNotEmpty() && budgetList.firstOrNull()?.id == obj.id) {
+        if (budgetList.isNotEmpty() && budgetList.firstOrNull()?.id == obj.id) {
             update(obj)
         } else if (budgetList.isEmpty()) {
             update(obj)
@@ -430,11 +431,11 @@ class BudgetRepositoryImpl @Inject constructor(
         }
     }.flowOn(dispatcher)
 
-    override suspend fun update(obj: BudgetWithCategory): Int {
+    override suspend fun update(obj: BudgetWithCategory) = withContext(dispatcher) {
         val updateCount = budgetDao.update(obj.toBudget())
         budgetCategoryDao.deleteBudgetCategoryFromBudgetId(obj.id)
         budgetCategoryDao.insertBudgetCategoryList(obj.toBudgetCategoryList())
-        return updateCount
+        updateCount
     }
 
 

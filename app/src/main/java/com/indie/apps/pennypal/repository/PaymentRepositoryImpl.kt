@@ -4,6 +4,7 @@ import com.indie.apps.pennypal.data.database.dao.PaymentDao
 import com.indie.apps.pennypal.data.database.entity.Payment
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class PaymentRepositoryImpl @Inject constructor(
@@ -12,25 +13,28 @@ class PaymentRepositoryImpl @Inject constructor(
 ) :
     PaymentRepository {
 
-    override suspend fun deleteCustomPayment(paymentId: Long) =
+    override suspend fun deleteCustomPayment(paymentId: Long) = withContext(dispatcher) {
         paymentDao.softDeleteCustomPayment(paymentId)
+    }
 
-    override suspend fun getPaymentFromId(paymentId: Long) =
+    override suspend fun getPaymentFromId(paymentId: Long) = withContext(dispatcher) {
         paymentDao.getPaymentFromId(paymentId)
+    }
 
     override fun getPaymentList() = paymentDao.getPaymentList().flowOn(dispatcher)
 
     override fun getPaymentListWithMode() = paymentDao.getPaymentListWithMode().flowOn(dispatcher)
 
-    override suspend fun insertPaymentList(payments: List<Payment>) =
+    override suspend fun insertPaymentList(payments: List<Payment>) = withContext(dispatcher) {
         paymentDao.insertPaymentList(payments)
+    }
 
     override fun searchPaymentList(
         searchQuery: String,
     ) = paymentDao.searchPaymentList(searchQuery.trim())
 
-    override suspend fun insert(obj: Payment): Long {
-        return try {
+    override suspend fun insert(obj: Payment) = withContext(dispatcher) {
+        try {
             paymentDao.insert(obj)
         } catch (e: Exception) {
             val payments = paymentDao.getSoftDeletedPaymentFromName(obj.name)
@@ -45,5 +49,5 @@ class PaymentRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun update(obj: Payment) = paymentDao.update(obj)
+    override suspend fun update(obj: Payment) = withContext(dispatcher) { paymentDao.update(obj) }
 }

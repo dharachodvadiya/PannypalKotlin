@@ -8,6 +8,7 @@ import com.indie.apps.cpp.data.repository.CountryRepository
 import com.indie.apps.pennypal.data.database.db.AppDatabase
 import com.indie.apps.pennypal.util.Util
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
@@ -23,13 +24,14 @@ class BackupRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context,
     private val authRepository: AuthRepository,
     private val countryRepository: CountryRepository,
-    private val appDatabase: AppDatabase
+    private val appDatabase: AppDatabase,
+    private val dispatcher: CoroutineDispatcher
 ) : BackupRepository {
 
 
     private val dbPath = context.getDatabasePath(Util.DB_NAME)
 
-    override suspend fun backup() {
+    override suspend fun backup() = withContext(dispatcher) {
 
         try {
             val drive = authRepository.getGoogleDrive()
@@ -43,23 +45,6 @@ class BackupRepositoryImpl @Inject constructor(
                 "${Util.DB_NAME}-shm",
                 "${Util.DB_NAME}-wal"
             )
-
-            /*if (fileList.files.isEmpty()) {
-                createOrUpdateBackupFile(drive, null, Util.DB_NAME, parentFile.id)
-                createOrUpdateBackupFile(drive, null, "${Util.DB_NAME}-shm", parentFile.id)
-                createOrUpdateBackupFile(drive, null, "${Util.DB_NAME}-wal", parentFile.id)
-
-
-            } else {
-                fileList.files.onEach { driveFile ->
-                    createOrUpdateBackupFile(
-                        drive,
-                        driveFile.id,
-                        driveFile.name,
-                        parentFile.name
-                    )
-                }
-            }*/
 
             if (fileList.files.isEmpty()) {
                 // Create new backup files
@@ -91,7 +76,7 @@ class BackupRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun restore() {
+    override suspend fun restore() = withContext(dispatcher) {
         try {
             val drive = authRepository.getGoogleDrive()
                 ?: throw (IllegalStateException("Google Drive service not available"))
@@ -117,66 +102,28 @@ class BackupRepositoryImpl @Inject constructor(
             }
 
             AppDatabase.resetDatabaseInstance(context, countryRepository)
-
-            /*fileList.files.forEach { driveFile ->
-
-                println("aaaa repo 555 111 ${dbPath.parent}")
-                println("aaaa repo 555 111 111 ${driveFile.name}")
-                withContext(Dispatchers.IO) {
-
-                    println("aaaa repo 555 222")
-                    try {
-                        val filePath = dbPath.parent?.plus("/${driveFile.name}") ?: throw IllegalStateException("Invalid dbPath parent")
-                        FileOutputStream(filePath).use { outputStream ->
-                            println("aaaa repo 555 222 111")
-
-                            // Get the file from Drive
-                            val file = drive.files().get(driveFile.id)
-                            println("aaaa repo 555 222 222 ${file?.toString() ?: "File is null"}")
-
-                            if (file == null) {
-                                throw IllegalStateException("Drive file is null")
-                            }
-
-                            // Download the file
-                            file.executeMediaAndDownloadTo(outputStream)
-                            println("aaaa repo 555 222 Download completed")
-                        }
-                    } catch (e: IOException) {
-                        println("aaaa repo 555 222 333 IOException: ${e.message}")
-                        e.printStackTrace()
-                    } catch (e: Exception) {
-                        println("aaaa repo 555 222 333 General Exception: ${e.message}")
-                        e.printStackTrace()
-                    }
-                    println("aaaa repo 555 333")
-                }
-
-            }*/
         } catch (e: IOException) {
             throw (e)
         }
     }
 
-    override suspend fun isBackupAvailable(): Boolean {
+    override suspend fun isBackupAvailable() = withContext(dispatcher) {
         try {
             val drive = authRepository.getGoogleDrive()
             if (drive != null) {
 
                 val parentFile = getOrCreateBackupFolder(drive)
                 val fileList = getAllBackupFiles(drive, parentFile.id)
-                return fileList.files.isNotEmpty()
+                fileList.files.isNotEmpty()
             }
-            return false
+            false
         } catch (e: IOException) {
-            return false
+            false
         }
     }
 
-    private suspend fun getAllBackupFiles(drive: Drive, parentId: String): FileList {
-        return withContext(Dispatchers.IO) {
-            drive.files().list().setSpaces("drive").setQ("'$parentId' in parents").execute()
-        }
+    private fun getAllBackupFiles(drive: Drive, parentId: String): FileList {
+        return drive.files().list().setSpaces("drive").setQ("'$parentId' in parents").execute()
     }
 
     private suspend fun uploadFileWithRetry(
