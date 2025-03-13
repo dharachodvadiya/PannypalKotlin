@@ -70,6 +70,9 @@ data class MerchantData(
     @ColumnInfo(name = "currency_country_code")
     val currencyCountryCode: String,
 
+    @ColumnInfo(name = "currency_symbol")
+    val currencySymbol: String,
+
     val type: Int, // -1 for expense, 1 for income
 
 

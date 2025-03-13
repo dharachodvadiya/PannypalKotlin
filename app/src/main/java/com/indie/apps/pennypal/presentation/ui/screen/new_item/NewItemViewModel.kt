@@ -297,7 +297,8 @@ class NewItemViewModel @Inject constructor(
                             type = if (received.value) 1 else -1,
                             baseCurrencyId = 0,
                             currencyCountryCode = currencyCountryCode.value,
-                            originalAmount = amount
+                            originalAmount = amount,
+                            currencySymbol = currencySymbol.value
                         )
 
                         addMerchantDataUseCase.addData(merchantData).collect {
@@ -327,7 +328,8 @@ class NewItemViewModel @Inject constructor(
                             dateInMilli = currentTimeInMilli.value,
                             type = if (received.value) 1 else -1,
                             currencyCountryCode = currencyCountryCode.value,
-                            originalAmount = amount
+                            originalAmount = amount,
+                            currencySymbol = currencySymbol.value
                         )
 
                         updateMerchantDataUseCase.updateData(
