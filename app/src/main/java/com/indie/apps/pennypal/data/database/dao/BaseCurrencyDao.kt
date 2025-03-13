@@ -13,5 +13,9 @@ interface BaseCurrencyDao : BaseDao<BaseCurrency> {
 
     @Transaction
     @Query("SELECT * FROM base_currency where currency_country_code = :countryCode")
-    fun getBaseCurrencyFromCode(countryCode: String): BaseCurrency
+    suspend fun getBaseCurrencyFromCode(countryCode: String): BaseCurrency
+
+    @Transaction
+    @Query("SELECT * FROM base_currency where id = :id")
+    suspend fun getBaseCurrencyFromCode(id: Long): BaseCurrency
 }

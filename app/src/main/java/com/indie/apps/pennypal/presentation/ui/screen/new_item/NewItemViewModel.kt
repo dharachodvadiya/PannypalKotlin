@@ -16,7 +16,9 @@ import com.indie.apps.pennypal.domain.usecase.GetPaymentFromIdUseCase
 import com.indie.apps.pennypal.domain.usecase.UpdateMerchantDataUseCase
 import com.indie.apps.pennypal.presentation.ui.component.UiText
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
+import com.indie.apps.pennypal.repository.BaseCurrencyRepository
 import com.indie.apps.pennypal.repository.CategoryRepository
+import com.indie.apps.pennypal.repository.ExchangeRateRepository
 import com.indie.apps.pennypal.repository.MerchantRepository
 import com.indie.apps.pennypal.repository.UserRepository
 import com.indie.apps.pennypal.util.ErrorMessage
@@ -26,6 +28,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -42,7 +45,9 @@ class NewItemViewModel @Inject constructor(
     private val getPaymentFromIdUseCase: GetPaymentFromIdUseCase,
     private val categoryRepository: CategoryRepository,
     private val countryRepository: CountryRepository,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
+    private val exchangeRateRepository: ExchangeRateRepository,
+    private val baseCurrencyRepository: BaseCurrencyRepository
 ) : ViewModel() {
 
     /* val currency = userRepository.getCurrency()
@@ -132,7 +137,7 @@ class NewItemViewModel @Inject constructor(
                                 editMerchantData = it.data
                                 received.value =
                                     editMerchantData!!.type == 1
-                                updateAmountText(Util.getFormattedString(editMerchantData!!.amount))
+                                updateAmountText(Util.getFormattedString(editMerchantData!!.originalAmount))
                                 updateDescText(editMerchantData!!.details.toString())
 
                                 setDateAndTime(editMerchantData!!.dateInMilli)
@@ -247,20 +252,34 @@ class NewItemViewModel @Inject constructor(
                 val amount = amount.value.text.toDouble()
 
                 if (merchantEditId == 0L) {
-                    val merchantData = MerchantData(
-                        merchantId = merchant.value?.id,
-                        paymentId = payment.value!!.id,
-                        categoryId = category.value!!.id,
-                        amount = amount,
-                        details = description.value.text.trim(),
-                        dateInMilli = currentTimeInMilli.value,
-                        type = if (received.value) 1 else -1,
-                        baseCurrencyId = 0,
-                        currencyCountryCode = currencyCountryCode.value,
-                        originalAmount = amount
-                    )
 
                     viewModelScope.launch {
+
+                        val toCurrency = countryRepository.getCurrencyCodeFromCountryCode(
+                            userRepository.getCurrencyCountryCode().first()
+                        )
+                        val fromCurrency =
+                            countryRepository.getCurrencyCodeFromCountryCode(currencyCountryCode.value)
+
+                        val finalAmount = exchangeRateRepository.getConvertedAmount(
+                            amount,
+                            fromCurrency,
+                            toCurrency
+                        )
+
+                        val merchantData = MerchantData(
+                            merchantId = merchant.value?.id,
+                            paymentId = payment.value!!.id,
+                            categoryId = category.value!!.id,
+                            amount = finalAmount,
+                            details = description.value.text.trim(),
+                            dateInMilli = currentTimeInMilli.value,
+                            type = if (received.value) 1 else -1,
+                            baseCurrencyId = 0,
+                            currencyCountryCode = currencyCountryCode.value,
+                            originalAmount = amount
+                        )
+
                         addMerchantDataUseCase.addData(merchantData).collect {
                             when (it) {
                                 is Resource.Loading -> {}
@@ -276,19 +295,36 @@ class NewItemViewModel @Inject constructor(
                         }
                     }
                 } else {
-                    val merchantData = editMerchantData!!.copy(
-                        merchantId = merchant.value?.id,
-                        paymentId = payment.value!!.id,
-                        categoryId = category.value!!.id,
-                        amount = amount,
-                        details = description.value.text.trim(),
-                        dateInMilli = currentTimeInMilli.value,
-                        type = if (received.value) 1 else -1,
-                        currencyCountryCode = currencyCountryCode.value,
-                        originalAmount = amount
-                    )
+
 
                     viewModelScope.launch {
+
+                        val fromCurrency =
+                            countryRepository.getCurrencyCodeFromCountryCode(currencyCountryCode.value)
+                        val baseCurrencyCountry =
+                            baseCurrencyRepository.getBaseCurrencyFromId(editMerchantData!!.baseCurrencyId).currencyCountryCode
+                        val toCurrency =
+                            countryRepository.getCurrencyCodeFromCountryCode(baseCurrencyCountry)
+                        // val toCurrency = countryRepository.getCurrencyCodeFromCountryCode(userRepository.getCurrencyCountryCode().first())
+
+                        val finalAmount = exchangeRateRepository.getConvertedAmount(
+                            amount,
+                            fromCurrency,
+                            toCurrency
+                        )
+
+                        val merchantData = editMerchantData!!.copy(
+                            merchantId = merchant.value?.id,
+                            paymentId = payment.value!!.id,
+                            categoryId = category.value!!.id,
+                            amount = finalAmount,
+                            details = description.value.text.trim(),
+                            dateInMilli = currentTimeInMilli.value,
+                            type = if (received.value) 1 else -1,
+                            currencyCountryCode = currencyCountryCode.value,
+                            originalAmount = amount
+                        )
+
                         updateMerchantDataUseCase.updateData(
                             merchantDataNew = merchantData
                         ).collect {

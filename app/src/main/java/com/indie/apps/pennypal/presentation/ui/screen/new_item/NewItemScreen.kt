@@ -82,8 +82,6 @@ fun NewItemScreen(
         }
     }
 
-    println("aaaa $currencyCountryCode")
-
     LaunchedEffect(currencyCountryCode) {
         if (currencyCountryCode != null) {
             newItemViewModel.setCurrencyCountryCode(currencyCountryCode)

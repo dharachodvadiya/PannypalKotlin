@@ -17,4 +17,10 @@ interface ExchangeRateDao {
 
     @Query("SELECT MAX(last_updated) FROM exchange_rates")
     suspend fun getLastUpdateTime(): Long?
+
+    @Query("SELECT * FROM exchange_rates WHERE from_currency = :fromCurrency")
+    suspend fun getCurrencyFromFromCurrency(fromCurrency: String): ExchangeRate?
+
+    @Query("DELETE FROM exchange_rates")
+    suspend fun deleteAll()
 }

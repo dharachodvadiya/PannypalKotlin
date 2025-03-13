@@ -9,8 +9,11 @@ class BaseCurrencyRepositoryImpl @Inject constructor(
     private val baseCurrencyDao: BaseCurrencyDao,
     private val dispatcher: CoroutineDispatcher
 ) : BaseCurrencyRepository {
-    override fun getBaseCurrencyFromCode(countryCode: String) =
+    override suspend fun getBaseCurrencyFromCode(countryCode: String) =
         baseCurrencyDao.getBaseCurrencyFromCode(countryCode)
+
+    override suspend fun getBaseCurrencyFromId(id: Long) =
+        baseCurrencyDao.getBaseCurrencyFromCode(id)
 
     override suspend fun insert(obj: BaseCurrency) =
         baseCurrencyDao.insertOrIgnoreQuery(obj.currencyCountryCode)

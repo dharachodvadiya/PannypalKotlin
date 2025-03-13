@@ -69,14 +69,23 @@ class MerchantDataRepositoryImpl @Inject constructor(
 
     override fun searchMerchantDataWithMerchantNameList(
         searchQuery: String, timeZoneOffsetInMilli: Int
-    ) = merchantDataDao.searchMerchantDataWithMerchantNameList(searchQuery.trim(), timeZoneOffsetInMilli)
+    ) = merchantDataDao.searchMerchantDataWithMerchantNameList(
+        searchQuery.trim(),
+        timeZoneOffsetInMilli
+    )
 
     override suspend fun insert(obj: MerchantData): Long {
-        val baseCurrencyId = baseCurrencyRepository.getBaseCurrencyFromCode(userRepository.getUser().first().currencyCountryCode).id
+        val baseCurrencyId = baseCurrencyRepository.getBaseCurrencyFromCode(
+            userRepository.getUser().first().currencyCountryCode
+        ).id
         return merchantDataDao.insert(obj.copy(baseCurrencyId = baseCurrencyId))
     }
 
-    override suspend fun update(obj: MerchantData) = merchantDataDao.update(obj)
+    override suspend fun update(obj: MerchantData): Int {
+        //val baseCurrencyId = baseCurrencyRepository.getBaseCurrencyFromCode(userRepository.getUser().first().currencyCountryCode).id
+        //return merchantDataDao.update(obj.copy(baseCurrencyId = baseCurrencyId))
+        return merchantDataDao.update(obj)
+    }
 
     override fun getMerchantDataWithNameWithDayTotal(timeZoneOffsetInMilli: Int) =
         merchantDataDao.getCombinedDataWithLimit(timeZoneOffsetInMilli)

@@ -10,26 +10,36 @@ import javax.inject.Inject
 
 class ExchangeRateRepositoryImpl @Inject constructor(
     private val apiService: ExchangeRateApiService,
-    private val exchangeRateDao: ExchangeRateDao
+    private val exchangeRateDao: ExchangeRateDao,
 ) : ExchangeRateRepository {
 
     private val apiKey = BuildConfig.EXCHANGE_RATE_API_KEY
 
     override suspend fun getConversionRate(fromCurrency: String, toCurrency: String): Double {
+        if (fromCurrency == toCurrency)
+            return 1.0;
+
+        val exchangeRateFromDb = exchangeRateDao.getCurrencyFromFromCurrency(fromCurrency)
+        val isLoadNeed = if (exchangeRateFromDb?.toCurrency != toCurrency) true else false
         val lastUpdate = exchangeRateDao.getLastUpdateTime() ?: 0L
         val now = System.currentTimeMillis()
 
         // Check if last update is from a different day
-        if (!isSameDay(lastUpdate, now)) {
+        if (!isSameDay(lastUpdate, now) || isLoadNeed) {
             // Fetch from API and cache
             val response = apiService.getLatestRates(apiKey, toCurrency)
+
             if (response.isSuccessful) {
+
+                exchangeRateDao.deleteAll()
                 val rates = response.body()?.conversion_rates ?: emptyMap()
+                val baseCurrency = response.body()?.base_code ?: toCurrency
+
                 rates.forEach { (currency, rate) ->
                     exchangeRateDao.insert(
                         ExchangeRate(
-                            fromCurrency = fromCurrency,
-                            toCurrency = currency,
+                            fromCurrency = currency,
+                            toCurrency = baseCurrency,
                             rate = rate,
                             lastUpdated = now
                         )
@@ -38,8 +48,20 @@ class ExchangeRateRepositoryImpl @Inject constructor(
             }
         }
 
+        val rate = exchangeRateDao.getRate(fromCurrency, toCurrency)
+
         // Get cached rate
-        return exchangeRateDao.getRate(fromCurrency, toCurrency)?.rate ?: 1.0
+        return rate?.rate ?: 1.0
+    }
+
+    override suspend fun getConvertedAmount(
+        amount: Double,
+        fromCurrency: String,
+        toCurrency: String
+    ): Double {
+        val rate = getConversionRate(fromCurrency, toCurrency)
+
+        return amount / rate
     }
 
     private fun isSameDay(time1: Long, time2: Long): Boolean {
