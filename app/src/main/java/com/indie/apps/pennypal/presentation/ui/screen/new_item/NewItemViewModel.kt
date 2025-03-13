@@ -21,6 +21,7 @@ import com.indie.apps.pennypal.repository.CategoryRepository
 import com.indie.apps.pennypal.repository.ExchangeRateRepository
 import com.indie.apps.pennypal.repository.MerchantRepository
 import com.indie.apps.pennypal.repository.UserRepository
+import com.indie.apps.pennypal.util.AppError
 import com.indie.apps.pennypal.util.ErrorMessage
 import com.indie.apps.pennypal.util.Resource
 import com.indie.apps.pennypal.util.Util
@@ -378,19 +379,31 @@ class NewItemViewModel @Inject constructor(
     }
 
     fun getCurrentCurrencyCountryCode(): String {
-        return countryRepository.getCountryCodeFromCurrencyCode(currencySymbol.value)
+        return currencyCountryCode.value
     }
 
-    private fun loadRateAndFinalAmount() {
+    fun loadRateAndFinalAmount() {
         viewModelScope.launch {
             rateState.value = Resource.Loading()
-            val rate =
+            val response =
                 exchangeRateRepository.getConversionRate(
                     currencyCountryCode.value,
                     baseCurrencyCountry.value
                 )
-            updateRateText(rate.toString())
-            rateState.value = Resource.Success(Unit)
+
+            rateState.value = when (response) {
+                is Resource.Error -> Resource.Error(
+                    response.message ?: AppError.UnknownError.message
+                )
+
+                is Resource.Loading -> Resource.Loading()
+                is Resource.Success -> {
+                    updateRateText(response.data.toString())
+                    Resource.Success(Unit)
+                }
+            }
+
+
         }
     }
 

@@ -19,10 +19,13 @@ import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.NorthEast
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.SouthWest
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -47,6 +50,7 @@ import com.indie.apps.pennypal.presentation.ui.component.custom.composable.FlowR
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.MyAppTextField
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
+import com.indie.apps.pennypal.presentation.ui.component.showToast
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.util.Resource
@@ -66,6 +70,7 @@ sealed interface NewEntryEvent {
     data object MoreCategories : NewEntryEvent
     data object DateSelect : NewEntryEvent
     data object TimeSelect : NewEntryEvent
+    data object RetryRateFetch : NewEntryEvent
     data class AmountChange(val value: String) : NewEntryEvent
     data class RateChange(val value: String) : NewEntryEvent
     data class DescriptionChange(val value: String) : NewEntryEvent
@@ -287,6 +292,9 @@ fun NewEntryFieldItemSection(
 
         if (!isSameCurrency) {
 
+            val isReadOnly = remember { mutableStateOf(false) }
+            val context = LocalContext.current
+
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.item_padding))
@@ -326,7 +334,7 @@ fun NewEntryFieldItemSection(
                     modifier = Modifier
                         .height(25.dp)
                         .width(100.dp),
-                    readOnly = (rateState is Resource.Loading),
+                    readOnly = isReadOnly.value,
                     bgColor = MyAppTheme.colors.brand.copy(alpha = 0.5f),
                     maxLines = 1,
                     textModifier = Modifier.padding(horizontal = dimensionResource(R.dimen.item_padding))
@@ -334,16 +342,28 @@ fun NewEntryFieldItemSection(
 
                 when (rateState) {
                     is Resource.Error -> {
+                        context.showToast(rateState.message ?: "")
+                        isReadOnly.value = false
+                        Icon(
+                            imageVector = Icons.Default.Refresh, // Retry icon
+                            contentDescription = "Retry",
+                            tint = MyAppTheme.colors.redBg,
+                            modifier = Modifier
+                                .size(20.dp)
+                                .clickableWithNoRipple { onEvent(NewEntryEvent.RetryRateFetch) }
+                                .padding(2.dp)
+                        )
                     }
 
                     is Resource.Loading -> {
+                        isReadOnly.value = true
                         CircularProgressIndicator(
                             modifier = Modifier.size(20.dp)
                         )
                     }
 
                     is Resource.Success -> {
-
+                        isReadOnly.value = false
                     }
                 }
             }

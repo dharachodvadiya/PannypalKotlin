@@ -259,6 +259,8 @@ fun NewItemScreen(
                                 is NewEntryEvent.RateChange -> {
                                     newItemViewModel.updateRateText(event.value)
                                 }
+
+                                NewEntryEvent.RetryRateFetch -> newItemViewModel.loadRateAndFinalAmount()
                             }
                         }
                     )

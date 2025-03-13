@@ -6,9 +6,12 @@ import com.indie.apps.pennypal.presentation.ui.component.UiText
 import java.io.IOException
 
 sealed class AppError(val message: String) {
-    data object NetworkError : AppError("Network Failure")
+    data object NetworkError : AppError("Network Not Connected")
     data object DatabaseError : AppError("Database Error")
     data object ConversionError : AppError("Conversion Error")
+    data object ServerError : AppError("Server error")
+    data object ParsingError : AppError("Failed to parse response")
+    data object UnknownError : AppError("Unknown error")
     // Add more error types as needed
 }
 
