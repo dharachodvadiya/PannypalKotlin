@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.repository
 
+import com.indie.apps.cpp.data.repository.CountryRepository
 import com.indie.apps.pennypal.BuildConfig
 import com.indie.apps.pennypal.data.database.dao.ExchangeRateDao
 import com.indie.apps.pennypal.data.database.entity.ExchangeRate
@@ -11,13 +12,19 @@ import javax.inject.Inject
 class ExchangeRateRepositoryImpl @Inject constructor(
     private val apiService: ExchangeRateApiService,
     private val exchangeRateDao: ExchangeRateDao,
+    private val countryRepository: CountryRepository
 ) : ExchangeRateRepository {
 
     private val apiKey = BuildConfig.EXCHANGE_RATE_API_KEY
 
-    override suspend fun getConversionRate(fromCurrency: String, toCurrency: String): Double {
-        if (fromCurrency == toCurrency)
+    override suspend fun getConversionRate(fromCurrencyCountry: String, toCurrencyCountry: String): Double {
+        if (fromCurrencyCountry == toCurrencyCountry)
             return 1.0;
+
+
+
+        val fromCurrency = countryRepository.getCurrencyCodeFromCountryCode(fromCurrencyCountry)
+        val toCurrency = countryRepository.getCurrencyCodeFromCountryCode(toCurrencyCountry)
 
         val exchangeRateFromDb = exchangeRateDao.getCurrencyFromFromCurrency(fromCurrency)
         val isLoadNeed = if (exchangeRateFromDb?.toCurrency != toCurrency) true else false
@@ -54,13 +61,10 @@ class ExchangeRateRepositoryImpl @Inject constructor(
         return rate?.rate ?: 1.0
     }
 
-    override suspend fun getConvertedAmount(
+    override fun getAmountFromRate(
         amount: Double,
-        fromCurrency: String,
-        toCurrency: String
+        rate: Double
     ): Double {
-        val rate = getConversionRate(fromCurrency, toCurrency)
-
         return amount / rate
     }
 

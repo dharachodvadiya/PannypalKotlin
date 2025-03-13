@@ -224,9 +224,10 @@ object AppModule {
     @Provides
     fun provideExchangeRateRepository(
         apiService: ExchangeRateApiService,
+        countryRepository: CountryRepository,
         database: AppDatabase
     ): ExchangeRateRepository {
-        return ExchangeRateRepositoryImpl(apiService, database.exchangeRateDao())
+        return ExchangeRateRepositoryImpl(apiService, database.exchangeRateDao(), countryRepository)
     }
 
 }

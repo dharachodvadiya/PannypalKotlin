@@ -3,7 +3,6 @@ package com.indie.apps.pennypal.presentation.ui.screen.new_item
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -21,6 +20,7 @@ import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.NorthEast
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.SouthWest
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -44,10 +44,13 @@ import com.indie.apps.pennypal.presentation.ui.component.custom.composable.AutoS
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomTab
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.FlowRowItem
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.MyAppTextField
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
+import com.indie.apps.pennypal.util.Resource
+import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.util.getCategoryColorById
 import com.indie.apps.pennypal.util.getCategoryIconById
 import com.indie.apps.pennypal.util.getDateFromMillis
@@ -64,6 +67,7 @@ sealed interface NewEntryEvent {
     data object DateSelect : NewEntryEvent
     data object TimeSelect : NewEntryEvent
     data class AmountChange(val value: String) : NewEntryEvent
+    data class RateChange(val value: String) : NewEntryEvent
     data class DescriptionChange(val value: String) : NewEntryEvent
 }
 
@@ -119,10 +123,15 @@ fun NewEntryFieldItemSection(
     currentTimeInMilli: Long,
     amount: TextFieldState = TextFieldState(),
     description: TextFieldState = TextFieldState(),
+    rate: TextFieldState = TextFieldState(),
+    finalAmount: Double,
     categories: List<Category>,
     focusRequesterAmount: FocusRequester,
     focusRequesterDescription: FocusRequester,
     currency: String,
+    baseCurrency: String,
+    isSameCurrency: Boolean,
+    rateState: Resource<Unit>,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
 ) {
     Column(
@@ -145,11 +154,13 @@ fun NewEntryFieldItemSection(
             leadingIcon = {
 
                 PrimaryButton(
-                    modifier = Modifier.width(40.dp).height(50.dp),
+                    modifier = Modifier
+                        .width(40.dp)
+                        .height(50.dp),
                     bgColor = MyAppTheme.colors.itemBg,
                     onClick = {
-                    onEvent(NewEntryEvent.CurrencyChange)
-                }) {
+                        onEvent(NewEntryEvent.CurrencyChange)
+                    }) {
                     AutoSizeText(
                         text = currency,
                         color = MyAppTheme.colors.black,
@@ -272,6 +283,71 @@ fun NewEntryFieldItemSection(
                 )
             },
         )
+        Spacer(Modifier.height(10.dp))
+
+        if (!isSameCurrency) {
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.item_padding))
+            ) {
+                CustomText(
+                    text = stringResource(R.string.final_amount) + " : ",
+                    style = MyAppTheme.typography.Medium40,
+                    color = MyAppTheme.colors.gray1,
+                    modifier = Modifier.width(105.dp)
+                )
+                CustomText(
+                    text = Util.getFormattedStringWithSymbol(finalAmount, baseCurrency),
+                    style = MyAppTheme.typography.Medium46,
+                    color = MyAppTheme.colors.black
+                )
+            }
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.item_padding))
+            ) {
+                CustomText(
+                    text = stringResource(R.string.rate) + " : ",
+                    style = MyAppTheme.typography.Medium40,
+                    color = MyAppTheme.colors.gray1,
+                    modifier = Modifier.width(100.dp)
+                )
+                MyAppTextField(
+                    value = rate.text,
+                    onValueChange = {
+                        onEvent(NewEntryEvent.RateChange(it))
+                    },
+                    placeHolder = "1.0",
+                    textStyle = MyAppTheme.typography.Medium46,
+                    keyboardType = KeyboardType.Number,
+                    placeHolderTextStyle = MyAppTheme.typography.Medium46,
+                    modifier = Modifier
+                        .height(25.dp)
+                        .width(100.dp),
+                    readOnly = (rateState is Resource.Loading),
+                    bgColor = MyAppTheme.colors.brand.copy(alpha = 0.5f),
+                    maxLines = 1,
+                    textModifier = Modifier.padding(horizontal = dimensionResource(R.dimen.item_padding))
+                )
+
+                when (rateState) {
+                    is Resource.Error -> {
+                    }
+
+                    is Resource.Loading -> {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
+
+                    is Resource.Success -> {
+
+                    }
+                }
+            }
+        }
     }
 }
 

@@ -88,9 +88,13 @@ fun NewItemScreen(
         }
     }
 
-    val currency by newItemViewModel.currency.collectAsStateWithLifecycle()
+    val isSameCurrency by newItemViewModel.isSameCurrency.collectAsStateWithLifecycle()
+    val currency by newItemViewModel.currencySymbol.collectAsStateWithLifecycle()
+    val finalAmount by newItemViewModel.finalAmount.collectAsStateWithLifecycle()
+    val baseCurrencySymbol by newItemViewModel.baseCurrencySymbol.collectAsStateWithLifecycle()
     val currentTimeInMilli by newItemViewModel.currentTimeInMilli.collectAsStateWithLifecycle()
     val uiState by newItemViewModel.uiState.collectAsStateWithLifecycle()
+    val rateState by newItemViewModel.rateState.collectAsStateWithLifecycle()
     val enableButton by newItemViewModel.enableButton.collectAsStateWithLifecycle()
     val received by newItemViewModel.received.collectAsStateWithLifecycle()
     val merchant by newItemViewModel.merchant.collectAsStateWithLifecycle()
@@ -98,6 +102,7 @@ fun NewItemScreen(
     val category by newItemViewModel.category.collectAsStateWithLifecycle()
     val amount by newItemViewModel.amount.collectAsStateWithLifecycle()
     val description by newItemViewModel.description.collectAsStateWithLifecycle()
+    val rate by newItemViewModel.rate.collectAsStateWithLifecycle()
     val merchantError by newItemViewModel.merchantError.collectAsStateWithLifecycle()
     val paymentError by newItemViewModel.paymentError.collectAsStateWithLifecycle()
     val categoryError by newItemViewModel.categoryError.collectAsStateWithLifecycle()
@@ -198,6 +203,11 @@ fun NewItemScreen(
                         focusRequesterAmount = focusRequesterAmount,
                         focusRequesterDescription = focusRequesterDescription,
                         currency = currency,
+                        rate = rate,
+                        finalAmount = finalAmount,
+                        baseCurrency = baseCurrencySymbol,
+                        isSameCurrency = isSameCurrency,
+                        rateState = rateState,
                         onEvent = { event ->
                             when (event) {
                                 is NewEntryEvent.AmountChange -> {
@@ -246,6 +256,9 @@ fun NewItemScreen(
                                 }
 
                                 NewEntryEvent.CurrencyChange -> onCurrencyChange(newItemViewModel.getCurrentCurrencyCountryCode())
+                                is NewEntryEvent.RateChange -> {
+                                    newItemViewModel.updateRateText(event.value)
+                                }
                             }
                         }
                     )
