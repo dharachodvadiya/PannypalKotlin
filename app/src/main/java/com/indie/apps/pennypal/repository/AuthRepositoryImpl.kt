@@ -24,6 +24,7 @@ import com.google.firebase.auth.auth
 import com.indie.apps.pennypal.data.module.UserInfoResult
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.tasks.await
+import java.io.IOException
 import javax.inject.Inject
 
 
@@ -58,72 +59,92 @@ class AuthRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             null
         }
-
     }
 
-    override suspend fun signOut() {
+    override suspend fun signOut(): Boolean {
         // oneTap.signOut().await()
-        firebaseAuth.signOut()
+        //firebaseAuth.signOut()
+        return try {
+            firebaseAuth.signOut()
+            true
+        } catch (e: Exception) {
+            false
+        }
     }
 
     override suspend fun isSignedIn(): Boolean {
-        return firebaseAuth.currentUser != null
+        return try {
+            return firebaseAuth.currentUser != null
+        } catch (e: Exception) {
+            false
+        }
     }
 
     override suspend fun getUserInfo(): UserInfoResult? {
         val currentUser = firebaseAuth.currentUser
         return if (currentUser != null) {
-            UserInfoResult(
-                email = currentUser.email!!
-            )
+            UserInfoResult(email = currentUser.email!!)
         } else {
             null
         }
     }
 
     override suspend fun getSignInResult(credential: Credential): UserInfoResult? {
-        when (credential) {
-            is CustomCredential -> {
-                if (credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
-                    try {
+        return try {
+            when (credential) {
+                is CustomCredential -> {
+                    if (credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
                         val googleIdTokenCredential = GoogleIdTokenCredential
                             .createFrom(credential.data)
                         val googleIdToken = googleIdTokenCredential.idToken
                         val googleCredential = GoogleAuthProvider.getCredential(googleIdToken, null)
                         val authResult = firebaseAuth.signInWithCredential(googleCredential).await()
-                        return UserInfoResult(authResult.user!!.email!!)
+                        //return UserInfoResult(authResult.user!!.email!!)
 
-                    } catch (e: GoogleIdTokenParsingException) {
-                        //println("aaa Received an invalid google id token response $e")
-                        return null
+                        val user =
+                            authResult.user ?: return null
+                        UserInfoResult(user.email!!)
+                    } else {
+                        null
                     }
-                } /*else {
-                    println("aaa Unexpected type of credential ... ${credential.type}")
-                }*/
-            }
-/*
-            else -> {
-                println("aaa Unexpected type of credential... ${credential.type}")
-            }*/
-        }
-        return null
-    }
+                }
 
-    override suspend fun getGoogleDrive(): Drive? {
-        val currentUser = firebaseAuth.currentUser
-        return if (currentUser != null) {
-            credential.selectedAccount = currentUser.email?.let { Account(it, "google.com") }
-            Drive.Builder(
-                NetHttpTransport(), GsonFactory.getDefaultInstance(),
-                credential
-            ).build()
-        } else {
+                else -> null
+            }
+        } catch (e: GoogleIdTokenParsingException) {
+            null
+        } catch (e: IOException) {
+            null
+        } catch (e: Exception) {
             null
         }
     }
 
-    override suspend fun authorizeGoogleDrive(): AuthorizationResult {
-        return authorize.authorize(authorizationRequest).await()
+    override suspend fun getGoogleDrive(): Drive? {
+        return try {
+            val currentUser = firebaseAuth.currentUser
+            if (currentUser != null) {
+                credential.selectedAccount = currentUser.email?.let { Account(it, "google.com") }
+                Drive.Builder(
+                    NetHttpTransport(), GsonFactory.getDefaultInstance(),
+                    credential
+                ).build()
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    override suspend fun authorizeGoogleDrive(): AuthorizationResult? {
+        return try {
+            authorize.authorize(authorizationRequest).await()
+        } catch (e: IOException) {
+            null
+        } catch (e: Exception) {
+            null
+        }
     }
 
     override suspend fun authorizeGoogleDriveResult(intent: Intent): AuthorizationResult? {

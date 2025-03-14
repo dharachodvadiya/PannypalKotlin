@@ -30,7 +30,7 @@ class AuthViewModel @Inject constructor(
     val processingState = MutableStateFlow(AuthProcess.NONE)
 
     fun isBackupAvailable(callBack: (Boolean) -> Unit) {
-        viewModelScope.launch{
+        viewModelScope.launch {
             val isAvailable = backupRepository.isBackupAvailable()
             withContext(Dispatchers.Main) {
                 callBack(isAvailable)
@@ -95,7 +95,7 @@ class AuthViewModel @Inject constructor(
             val getResult = authRepository.getSignInResult(credential)
             if (getResult != null) {
                 val authorizeGoogleDrive = authRepository.authorizeGoogleDrive()
-                if (authorizeGoogleDrive.hasResolution()) {
+                if (authorizeGoogleDrive?.hasResolution() == true) {
                     syncEffect.emit(
                         SyncEffect.Authorize(authorizeGoogleDrive.pendingIntent!!.intentSender)
                     )

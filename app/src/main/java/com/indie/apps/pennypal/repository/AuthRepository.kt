@@ -9,7 +9,7 @@ import com.indie.apps.pennypal.data.module.UserInfoResult
 
 interface AuthRepository {
     suspend fun signInGoogle(): GetCredentialRequest?
-    suspend fun signOut()
+    suspend fun signOut(): Boolean
     suspend fun isSignedIn(): Boolean
     suspend fun getUserInfo(): UserInfoResult?
 
@@ -17,7 +17,7 @@ interface AuthRepository {
 
     suspend fun getGoogleDrive(): Drive?
 
-    suspend fun authorizeGoogleDrive(): AuthorizationResult
+    suspend fun authorizeGoogleDrive(): AuthorizationResult?
     suspend fun authorizeGoogleDriveResult(intent: Intent): AuthorizationResult?
 }
 
