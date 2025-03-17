@@ -8,7 +8,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialResponse
-import com.indie.apps.pennypal.data.module.UserInfoResult
+import com.indie.apps.pennypal.data.module.user.UserInfoResult
 import com.indie.apps.pennypal.util.SyncCallBackEvent
 import com.indie.apps.pennypal.util.SyncEffect
 import com.indie.apps.pennypal.util.SyncEvent

@@ -3,10 +3,10 @@ package com.indie.apps.pennypal.repository
 import androidx.paging.PagingSource
 import com.indie.apps.pennypal.data.database.entity.MerchantData
 import com.indie.apps.pennypal.data.module.IncomeAndExpense
-import com.indie.apps.pennypal.data.module.MerchantDataWithAllData
-import com.indie.apps.pennypal.data.module.MerchantDataWithName
-import com.indie.apps.pennypal.data.module.MerchantDataWithNameWithDayTotal
-import com.indie.apps.pennypal.data.module.MerchantDataWithPaymentName
+import com.indie.apps.pennypal.data.module.merchant_data.MerchantDataWithAllData
+import com.indie.apps.pennypal.data.module.merchant_data.MerchantDataWithName
+import com.indie.apps.pennypal.data.module.merchant_data.MerchantDataWithNameWithDayTotal
+import com.indie.apps.pennypal.data.module.merchant_data.MerchantDataWithPaymentName
 import com.indie.apps.pennypal.data.module.balance.TotalAllTime
 import com.indie.apps.pennypal.data.module.balance.TotalMonthly
 import com.indie.apps.pennypal.data.module.balance.TotalYearly

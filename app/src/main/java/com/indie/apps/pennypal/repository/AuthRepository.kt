@@ -5,7 +5,7 @@ import androidx.credentials.Credential
 import androidx.credentials.GetCredentialRequest
 import com.google.android.gms.auth.api.identity.AuthorizationResult
 import com.google.api.services.drive.Drive
-import com.indie.apps.pennypal.data.module.UserInfoResult
+import com.indie.apps.pennypal.data.module.user.UserInfoResult
 
 interface AuthRepository {
     suspend fun signInGoogle(): GetCredentialRequest?

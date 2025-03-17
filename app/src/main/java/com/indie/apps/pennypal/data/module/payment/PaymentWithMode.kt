@@ -1,4 +1,4 @@
-package com.indie.apps.pennypal.data.module
+package com.indie.apps.pennypal.data.module.payment
 
 import com.indie.apps.pennypal.data.database.entity.Payment
 

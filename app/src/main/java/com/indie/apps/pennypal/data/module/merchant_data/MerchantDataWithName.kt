@@ -1,4 +1,4 @@
-package com.indie.apps.pennypal.data.module
+package com.indie.apps.pennypal.data.module.merchant_data
 
 class MerchantDataWithName(
     val id: Long,

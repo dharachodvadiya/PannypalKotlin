@@ -21,7 +21,7 @@ import com.google.api.services.drive.DriveScopes
 import com.google.firebase.Firebase
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
-import com.indie.apps.pennypal.data.module.UserInfoResult
+import com.indie.apps.pennypal.data.module.user.UserInfoResult
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.tasks.await
 import java.io.IOException

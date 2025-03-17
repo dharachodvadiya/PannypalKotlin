@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.indie.apps.pennypal.data.module.MerchantDataWithAllData
+import com.indie.apps.pennypal.data.module.merchant_data.MerchantDataWithAllData
 import com.indie.apps.pennypal.domain.usecase.DeleteMultipleMerchantDataUseCase
 import com.indie.apps.pennypal.domain.usecase.SearchMerchantDataWithAllDataListUseCase
 import com.indie.apps.pennypal.presentation.ui.state.PagingState

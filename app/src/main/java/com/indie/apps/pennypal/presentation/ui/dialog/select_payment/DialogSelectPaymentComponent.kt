@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.data.module.PaymentWithMode
+import com.indie.apps.pennypal.data.module.payment.PaymentWithMode
 import com.indie.apps.pennypal.presentation.ui.component.AccountTypeItem
 
 @Composable

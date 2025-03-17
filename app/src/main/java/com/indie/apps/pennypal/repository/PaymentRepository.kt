@@ -2,7 +2,7 @@ package com.indie.apps.pennypal.repository
 
 import androidx.paging.PagingSource
 import com.indie.apps.pennypal.data.database.entity.Payment
-import com.indie.apps.pennypal.data.module.PaymentWithMode
+import com.indie.apps.pennypal.data.module.payment.PaymentWithMode
 import kotlinx.coroutines.flow.Flow
 
 interface PaymentRepository : BaseRepository<Payment> {

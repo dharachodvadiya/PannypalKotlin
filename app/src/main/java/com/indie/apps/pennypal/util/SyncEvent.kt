@@ -4,7 +4,7 @@ import android.content.Intent
 import android.content.IntentSender
 import androidx.credentials.Credential
 import androidx.credentials.GetCredentialRequest
-import com.indie.apps.pennypal.data.module.UserInfoResult
+import com.indie.apps.pennypal.data.module.user.UserInfoResult
 
 sealed class SyncEffect {
     data class SignIn(val getCredentialRequest: GetCredentialRequest) : SyncEffect()

@@ -48,7 +48,7 @@ import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.database.entity.User
 import com.indie.apps.pennypal.data.database.enum.PeriodType
 import com.indie.apps.pennypal.data.module.ChartData
-import com.indie.apps.pennypal.data.module.MerchantDataWithAllData
+import com.indie.apps.pennypal.data.module.merchant_data.MerchantDataWithAllData
 import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
 import com.indie.apps.pennypal.data.module.TabItemInfo
 import com.indie.apps.pennypal.data.module.balance.Total

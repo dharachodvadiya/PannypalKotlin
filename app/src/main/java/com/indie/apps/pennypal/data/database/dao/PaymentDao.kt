@@ -6,7 +6,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import com.indie.apps.pennypal.data.database.entity.Payment
-import com.indie.apps.pennypal.data.module.PaymentWithMode
+import com.indie.apps.pennypal.data.module.payment.PaymentWithMode
 import kotlinx.coroutines.flow.Flow
 
 @Dao

@@ -3,7 +3,7 @@ package com.indie.apps.pennypal.domain.usecase
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.indie.apps.pennypal.data.module.MerchantDataWithPaymentName
+import com.indie.apps.pennypal.data.module.merchant_data.MerchantDataWithPaymentName
 import com.indie.apps.pennypal.di.IoDispatcher
 import com.indie.apps.pennypal.repository.MerchantDataRepository
 import com.indie.apps.pennypal.util.Util

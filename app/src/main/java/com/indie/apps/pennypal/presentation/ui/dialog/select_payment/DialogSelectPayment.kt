@@ -12,7 +12,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.database.entity.Payment
-import com.indie.apps.pennypal.data.module.toPayment
+import com.indie.apps.pennypal.data.module.payment.toPayment
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.MyAppDialog
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 
