@@ -151,17 +151,20 @@ class NewItemViewModel @Inject constructor(
                             loadPaymentData(editMerchantData!!.paymentId)
                             loadCategoryData(editMerchantData!!.categoryId)
 
+                            val baseCurrCountryCode = baseCurrencyRepository.getBaseCurrencyFromId(editMerchantData!!.baseCurrencyId)?.currencyCountryCode
+
+
                             setBaseCurrencyCountryCode(
-                                baseCurrencyRepository.getBaseCurrencyFromId(
-                                    editMerchantData!!.baseCurrencyId
-                                ).currencyCountryCode
+                                baseCurrCountryCode?: "US"
                             )
 
                             val amount = editMerchantData!!.originalAmount
                             val finalAmount = editMerchantData!!.amount
 
+                            val originalCurrCountryCode = baseCurrencyRepository.getBaseCurrencyFromId(editMerchantData!!.originalCurrencyId)?.currencyCountryCode
+
                             setCurrencyCountryCode(
-                                data = editMerchantData!!.currencyCountryCode,
+                                data = originalCurrCountryCode ?: "US",
                                 rate = (amount / finalAmount)
                             )
 
@@ -297,9 +300,8 @@ class NewItemViewModel @Inject constructor(
                             dateInMilli = currentTimeInMilli.value,
                             type = if (received.value) 1 else -1,
                             baseCurrencyId = 0,
-                            currencyCountryCode = currencyCountryCode.value,
-                            originalAmount = amount,
-                            currencySymbol = currencySymbol.value
+                            originalCurrencyId = 0,
+                            originalAmount = amount
                         )
 
                         addMerchantDataUseCase.addData(merchantData).collect {
@@ -328,9 +330,8 @@ class NewItemViewModel @Inject constructor(
                             details = description.value.text.trim(),
                             dateInMilli = currentTimeInMilli.value,
                             type = if (received.value) 1 else -1,
-                            currencyCountryCode = currencyCountryCode.value,
+                            originalCurrencyId = 0,
                             originalAmount = amount,
-                            currencySymbol = currencySymbol.value
                         )
 
                         updateMerchantDataUseCase.updateData(

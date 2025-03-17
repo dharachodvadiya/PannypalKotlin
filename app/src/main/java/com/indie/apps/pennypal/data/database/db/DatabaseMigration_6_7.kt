@@ -68,14 +68,14 @@ class Migration6to7(private val countryRepository: CountryRepository) : Migratio
             `details` TEXT, 
             `amount` REAL NOT NULL, 
             `base_currency_id` INTEGER NOT NULL, 
+            `original_currency_id` INTEGER NOT NULL, 
             `original_amount` REAL NOT NULL,
-             `currency_country_code` TEXT NOT NULL, 
-             `currency_symbol` TEXT NOT NULL, 
              `type` INTEGER NOT NULL, 
              FOREIGN KEY(`merchant_id`) REFERENCES `merchant`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , 
              FOREIGN KEY(`payment_id`) REFERENCES `payment_type`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , 
              FOREIGN KEY(`category_id`) REFERENCES `category`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , 
-             FOREIGN KEY(`base_currency_id`) REFERENCES `base_currency`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION 
+             FOREIGN KEY(`base_currency_id`) REFERENCES `base_currency`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION ,
+             FOREIGN KEY(`original_currency_id`) REFERENCES `base_currency`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION 
              )
              """.trimIndent()
         )
@@ -93,11 +93,11 @@ class Migration6to7(private val countryRepository: CountryRepository) : Migratio
             """
             INSERT INTO merchant_data_new (
                 id, merchant_id, category_id, payment_id, date_milli, details, amount, 
-                base_currency_id, original_amount, currency_country_code, currency_symbol, type
+                base_currency_id, original_amount, original_currency_id, type
             )
             SELECT 
                 id, merchant_id, category_id, payment_id, date_milli, details, amount, 
-                $baseCurrencyId, amount, '$countryCode', '$symbol', type 
+                $baseCurrencyId, amount, $baseCurrencyId, type 
             FROM merchant_data
         """.trimIndent()
         )
@@ -110,6 +110,7 @@ class Migration6to7(private val countryRepository: CountryRepository) : Migratio
         database.execSQL("CREATE INDEX IF NOT EXISTS `index_merchant_data_payment_id` ON `merchant_data` (`payment_id`)")
         database.execSQL("CREATE INDEX IF NOT EXISTS `index_merchant_data_category_id` ON `merchant_data` (`category_id`)")
         database.execSQL("CREATE INDEX IF NOT EXISTS `index_merchant_data_base_currency_id` ON `merchant_data` (`base_currency_id`)")
+        database.execSQL("CREATE INDEX IF NOT EXISTS `index_merchant_data_original_currency_id` ON `merchant_data` (`original_currency_id`)")
 
 
     }
