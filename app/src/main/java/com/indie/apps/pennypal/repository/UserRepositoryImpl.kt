@@ -33,8 +33,15 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun updateCurrency(currencyCountryCode: String) = withContext(dispatcher) {
         val updateCount = userDao.updateCurrency(currencyCountryCode)
 
-        if (updateCount > 0)
-            baseCurrencyRepository.insert(BaseCurrency(currencyCountryCode = currencyCountryCode))
+        if (updateCount > 0) {
+            val symbol = countryRepository.getCurrencySymbolFromCountryCode(currencyCountryCode)
+            baseCurrencyRepository.insert(
+                BaseCurrency(
+                    currencyCountryCode = currencyCountryCode,
+                    currencySymbol = symbol
+                )
+            )
+        }
         updateCount
 
     }
@@ -56,8 +63,16 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun insert(obj: User) = withContext(dispatcher) {
         val insertId = userDao.insert(obj)
-        if (insertId > 0)
-            baseCurrencyRepository.insert(BaseCurrency(currencyCountryCode = obj.currencyCountryCode))
+        if (insertId > 0) {
+            val code = obj.currencyCountryCode
+            val symbol = countryRepository.getCurrencySymbolFromCountryCode(code)
+            baseCurrencyRepository.insert(
+                BaseCurrency(
+                    currencyCountryCode = code,
+                    currencySymbol = symbol
+                )
+            )
+        }
 
         insertId
     }

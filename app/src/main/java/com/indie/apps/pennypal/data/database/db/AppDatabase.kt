@@ -35,7 +35,6 @@ import com.indie.apps.pennypal.repository.UserRepositoryImpl
 import com.indie.apps.pennypal.util.Util
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 @Database(
@@ -175,20 +174,20 @@ abstract class AppDatabase : RoomDatabase() {
                 ).insert(user)
             }
 
-            private suspend fun populateBaseCurrencyDb(
-                db: AppDatabase
-            ) {
-                val userDao = db.userDao()
-                val baseCurrency =
-                    BaseCurrency(
-                        currencyCountryCode = userDao.getUser().first().currencyCountryCode
-                    )
+            /* private suspend fun populateBaseCurrencyDb(
+                 db: AppDatabase
+             ) {
+                 val userDao = db.userDao()
+                 val baseCurrency =
+                     BaseCurrency(
+                         currencyCountryCode = userDao.getUser().first().currencyCountryCode
+                     )
 
-                BaseCurrencyRepositoryImpl(
-                    baseCurrencyDao = db.baseCurrencyDao(),
-                    Dispatchers.IO
-                ).insert(baseCurrency)
-            }
+                 BaseCurrencyRepositoryImpl(
+                     baseCurrencyDao = db.baseCurrencyDao(),
+                     Dispatchers.IO
+                 ).insert(baseCurrency)
+             }*/
 
             private suspend fun populatePaymentDb(db: AppDatabase) {
                 val paymentDao = db.paymentDao()

@@ -89,9 +89,9 @@ fun NewItemScreen(
     }
 
     val isSameCurrency by newItemViewModel.isSameCurrency.collectAsStateWithLifecycle()
-    val currency by newItemViewModel.currencySymbol.collectAsStateWithLifecycle()
+    val originalCurrencyInfo by newItemViewModel.originalCurrencyInfo.collectAsStateWithLifecycle()
     val finalAmount by newItemViewModel.finalAmount.collectAsStateWithLifecycle()
-    val baseCurrencySymbol by newItemViewModel.baseCurrencySymbol.collectAsStateWithLifecycle()
+    val baseCurrencyInfo by newItemViewModel.baseCurrencyInfo.collectAsStateWithLifecycle()
     val currentTimeInMilli by newItemViewModel.currentTimeInMilli.collectAsStateWithLifecycle()
     val uiState by newItemViewModel.uiState.collectAsStateWithLifecycle()
     val rateState by newItemViewModel.rateState.collectAsStateWithLifecycle()
@@ -202,10 +202,10 @@ fun NewItemScreen(
                         categories = categories,
                         focusRequesterAmount = focusRequesterAmount,
                         focusRequesterDescription = focusRequesterDescription,
-                        currency = currency,
+                        currency = originalCurrencyInfo?.currencySymbol ?: "$",
                         rate = rate,
                         finalAmount = finalAmount,
-                        baseCurrency = baseCurrencySymbol,
+                        baseCurrency = baseCurrencyInfo?.currencySymbol ?: "$",
                         isSameCurrency = isSameCurrency,
                         rateState = rateState,
                         onEvent = { event ->
@@ -255,7 +255,7 @@ fun NewItemScreen(
                                     openDialog = DialogType.Time
                                 }
 
-                                NewEntryEvent.CurrencyChange -> onCurrencyChange(newItemViewModel.getCurrentCurrencyCountryCode())
+                                NewEntryEvent.CurrencyChange -> onCurrencyChange(originalCurrencyInfo?.currencyCountryCode ?: "US")
                                 is NewEntryEvent.RateChange -> {
                                     newItemViewModel.updateRateText(event.value)
                                 }

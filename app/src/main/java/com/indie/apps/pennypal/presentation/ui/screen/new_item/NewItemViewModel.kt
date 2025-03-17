@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.indie.apps.cpp.data.repository.CountryRepository
 import com.indie.apps.pennypal.R
+import com.indie.apps.pennypal.data.database.entity.BaseCurrency
 import com.indie.apps.pennypal.data.database.entity.Category
 import com.indie.apps.pennypal.data.database.entity.MerchantData
 import com.indie.apps.pennypal.data.database.entity.Payment
@@ -28,9 +29,6 @@ import com.indie.apps.pennypal.util.Util
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import javax.inject.Inject
@@ -53,15 +51,18 @@ class NewItemViewModel @Inject constructor(
     /* val currency = userRepository.getCurrency()
          .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), "$")*/
 
-    private val currencyCountryCode = MutableStateFlow("US")
+    /* private val currencyCountryCode = MutableStateFlow("US")
 
 
-    val currencySymbol = currencyCountryCode.map {
-        countryRepository.getCurrencySymbolFromCountryCode(currencyCountryCode.value)
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), "$")
+     val currencySymbol = currencyCountryCode.map {
+         countryRepository.getCurrencySymbolFromCountryCode(currencyCountryCode.value)
+     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), "$")*/
 
-    private val baseCurrencyCountry = MutableStateFlow<String>("US")
-    val baseCurrencySymbol = MutableStateFlow<String>("$")
+    //private val baseCurrencyCountry = MutableStateFlow<String>("US")
+    //val baseCurrencySymbol = MutableStateFlow<String>("$")
+
+    val baseCurrencyInfo = MutableStateFlow<BaseCurrency?>(null)
+    val originalCurrencyInfo = MutableStateFlow<BaseCurrency?>(null)
 
     val isSameCurrency = MutableStateFlow(true)
 
@@ -121,8 +122,10 @@ class NewItemViewModel @Inject constructor(
                 .collect {
                     loadPaymentData(it.paymentId)
 
-                    setBaseCurrencyCountryCode(it.currencyCountryCode)
-                    setCurrencyCountryCode(it.currencyCountryCode)
+                    val baseCurrencyInfo =
+                        baseCurrencyRepository.getBaseCurrencyFromCode(it.currencyCountryCode)
+                    setBaseCurrencyInfo(baseCurrencyInfo)
+                    setOriginalCurrencyInfo(baseCurrencyInfo)
                     uiState.value = Resource.Success(Unit)
 
                 }
@@ -151,20 +154,21 @@ class NewItemViewModel @Inject constructor(
                             loadPaymentData(editMerchantData!!.paymentId)
                             loadCategoryData(editMerchantData!!.categoryId)
 
-                            val baseCurrCountryCode = baseCurrencyRepository.getBaseCurrencyFromId(editMerchantData!!.baseCurrencyId)?.currencyCountryCode
+                            val baseCurrencyInfo =
+                                baseCurrencyRepository.getBaseCurrencyFromId(editMerchantData!!.baseCurrencyId)
 
-
-                            setBaseCurrencyCountryCode(
-                                baseCurrCountryCode?: "US"
+                            setBaseCurrencyInfo(
+                                baseCurrencyInfo
                             )
 
                             val amount = editMerchantData!!.originalAmount
                             val finalAmount = editMerchantData!!.amount
 
-                            val originalCurrCountryCode = baseCurrencyRepository.getBaseCurrencyFromId(editMerchantData!!.originalCurrencyId)?.currencyCountryCode
+                            val originalCurrencyInfo =
+                                baseCurrencyRepository.getBaseCurrencyFromId(editMerchantData!!.originalCurrencyId)
 
-                            setCurrencyCountryCode(
-                                data = originalCurrCountryCode ?: "US",
+                            setOriginalCurrencyInfo(
+                                data = originalCurrencyInfo,
                                 rate = (amount / finalAmount)
                             )
 
@@ -227,8 +231,9 @@ class NewItemViewModel @Inject constructor(
         merchant.value = data
     }
 
-    fun setCurrencyCountryCode(data: String, rate: Double? = null) {
-        currencyCountryCode.value = data
+    private fun setOriginalCurrencyInfo(data: BaseCurrency?, rate: Double? = null) {
+        //currencyCountryCode.value = data
+        originalCurrencyInfo.value = data
         if (rate == null)
             loadRateAndFinalAmount()
         else {
@@ -236,14 +241,22 @@ class NewItemViewModel @Inject constructor(
             rateState.value = Resource.Success(Unit);
         }
 
-        isSameCurrency.value = currencyCountryCode.value == baseCurrencyCountry.value
+        isSameCurrency.value =
+            originalCurrencyInfo.value?.currencyCountryCode == baseCurrencyInfo.value?.currencyCountryCode
 
     }
 
-    private fun setBaseCurrencyCountryCode(data: String) {
-        baseCurrencyCountry.value = data
-        baseCurrencySymbol.value =
-            countryRepository.getCurrencySymbolFromCountryCode(baseCurrencyCountry.value)
+    fun setCurrencyCountryCode(data: String) {
+        val symbol = countryRepository.getCurrencySymbolFromCountryCode(data)
+        setOriginalCurrencyInfo(BaseCurrency(currencyCountryCode = data, currencySymbol = symbol))
+    }
+
+    private fun setBaseCurrencyInfo(data: BaseCurrency?) {
+        /* baseCurrencyCountry.value = data
+         baseCurrencySymbol.value =
+             countryRepository.getCurrencySymbolFromCountryCode(baseCurrencyCountry.value)*/
+
+        baseCurrencyInfo.value = data
     }
 
     fun setPaymentData(data: Payment) {
@@ -270,91 +283,114 @@ class NewItemViewModel @Inject constructor(
 
 
     fun addOrEditMerchantData(onSuccess: (Boolean, Long, Long?) -> Unit) {
-        if (enableButton.value) {
-            enableButton.value = false
-            /* if (merchant.value == null) {
-                 merchantError.value = ErrorMessage.SELECT_MERCHANT
-                 enableButton.value = true
-             } else */if (category.value == null) {
-                categoryError.value = ErrorMessage.SELECT_CATEGORY
-                enableButton.value = true
-            } else if (amount.value.text.trim().isEmpty()) {
-                amount.value.setError(ErrorMessage.AMOUNT_EMPTY)
-                enableButton.value = true
-            } else if (payment.value == null) {
-                paymentError.value = ErrorMessage.SELECT_PAYMENT
-                enableButton.value = true
-            } else {
-                val amount = amount.value.text.toDouble()
+        if (!enableButton.value) return
 
-                if (merchantEditId == 0L) {
+        if (!isValidField()) return
 
-                    viewModelScope.launch {
+        enableButton.value = false
 
-                        val merchantData = MerchantData(
-                            merchantId = merchant.value?.id,
-                            paymentId = payment.value!!.id,
-                            categoryId = category.value!!.id,
-                            amount = finalAmount.value,
-                            details = description.value.text.trim(),
-                            dateInMilli = currentTimeInMilli.value,
-                            type = if (received.value) 1 else -1,
-                            baseCurrencyId = 0,
-                            originalCurrencyId = 0,
-                            originalAmount = amount
-                        )
+        viewModelScope.launch {
+            val merchantData = createMerchant()
 
-                        addMerchantDataUseCase.addData(merchantData).collect {
-                            when (it) {
-                                is Resource.Loading -> {}
-                                is Resource.Success -> {
-                                    enableButton.value = true
-                                    onSuccess(false, it.data ?: -1, merchantData.merchantId)
-                                }
 
-                                is Resource.Error -> {
-                                    enableButton.value = true
-                                }
-                            }
+            if (merchantEditId == 0L) {
+                addMerchantDataUseCase.addData(merchantData).collect {
+                    when (it) {
+                        is Resource.Loading -> {}
+                        is Resource.Success -> {
+                            enableButton.value = true
+                            onSuccess(false, it.data ?: -1, merchantData.merchantId)
+                        }
+
+                        is Resource.Error -> {
+                            enableButton.value = true
                         }
                     }
-                } else {
+                }
+            } else {
+                updateMerchantDataUseCase.updateData(
+                    merchantDataNew = merchantData
+                ).collect {
+                    when (it) {
+                        is Resource.Loading -> {}
+                        is Resource.Success -> {
+                            enableButton.value = true
+                            onSuccess(true, merchantData.id, merchantData.merchantId)
+                        }
 
-                    viewModelScope.launch {
-
-                        val merchantData = editMerchantData!!.copy(
-                            merchantId = merchant.value?.id,
-                            paymentId = payment.value!!.id,
-                            categoryId = category.value!!.id,
-                            amount = finalAmount.value,
-                            details = description.value.text.trim(),
-                            dateInMilli = currentTimeInMilli.value,
-                            type = if (received.value) 1 else -1,
-                            originalCurrencyId = 0,
-                            originalAmount = amount,
-                        )
-
-                        updateMerchantDataUseCase.updateData(
-                            merchantDataNew = merchantData
-                        ).collect {
-                            when (it) {
-                                is Resource.Loading -> {}
-                                is Resource.Success -> {
-                                    enableButton.value = true
-                                    onSuccess(true, merchantData.id, merchantData.merchantId)
-                                }
-
-                                is Resource.Error -> {
-                                    enableButton.value = true
-                                }
-                            }
+                        is Resource.Error -> {
+                            enableButton.value = true
                         }
                     }
                 }
             }
         }
+    }
+
+    private fun isValidField(): Boolean {
+        return when {
+            category.value == null -> {
+                categoryError.value = ErrorMessage.SELECT_CATEGORY
+                false
+            }
+
+            amount.value.text.trim().isEmpty() -> {
+                amount.value.setError(ErrorMessage.AMOUNT_EMPTY)
+                false
+            }
+
+            payment.value == null -> {
+                paymentError.value = ErrorMessage.SELECT_PAYMENT
+                false
+            }
+
+            else -> {
+                true
+            }
+        }
+
+    }
+
+    private suspend fun createMerchant(): MerchantData {
 
 
+        val baseCurrency =
+            if (originalCurrencyInfo.value?.id != 0L) originalCurrencyInfo.value else {
+                baseCurrencyRepository.getBaseCurrencyFromCode(
+                    originalCurrencyInfo.value?.currencyCountryCode ?: "US"
+                )
+            }
+        val originalCurrencyId = baseCurrency?.id
+            ?: (originalCurrencyInfo.value?.let { baseCurrencyRepository.insert(it) } ?: -1)
+        val baseCurrencyId = baseCurrencyInfo.value?.id ?: 0
+
+        val amount = amount.value.text.toDouble()
+        return if (merchantEditId == 0L) {
+            MerchantData(
+                merchantId = merchant.value?.id,
+                paymentId = payment.value!!.id,
+                categoryId = category.value!!.id,
+                amount = finalAmount.value,
+                details = description.value.text.trim(),
+                dateInMilli = currentTimeInMilli.value,
+                type = if (received.value) 1 else -1,
+                baseCurrencyId = baseCurrencyId,
+                originalCurrencyId = originalCurrencyId,
+                originalAmount = amount
+            )
+        } else {
+            editMerchantData!!.copy(
+                merchantId = merchant.value?.id,
+                paymentId = payment.value!!.id,
+                categoryId = category.value!!.id,
+                amount = finalAmount.value,
+                details = description.value.text.trim(),
+                dateInMilli = currentTimeInMilli.value,
+                type = if (received.value) 1 else -1,
+                originalCurrencyId = originalCurrencyId,
+                originalAmount = amount,
+            )
+        }
     }
 
     fun updateAmountText(text: String) {
@@ -379,17 +415,13 @@ class NewItemViewModel @Inject constructor(
         }
     }
 
-    fun getCurrentCurrencyCountryCode(): String {
-        return currencyCountryCode.value
-    }
-
     fun loadRateAndFinalAmount() {
         viewModelScope.launch {
             rateState.value = Resource.Loading()
             val response =
                 exchangeRateRepository.getConversionRate(
-                    currencyCountryCode.value,
-                    baseCurrencyCountry.value
+                    originalCurrencyInfo.value?.currencyCountryCode ?: "US",
+                    baseCurrencyInfo.value?.currencyCountryCode ?: "US"
                 )
 
             rateState.value = when (response) {

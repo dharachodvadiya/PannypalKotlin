@@ -16,7 +16,8 @@ class Migration6to7(private val countryRepository: CountryRepository) : Migratio
             """
             CREATE TABLE IF NOT EXISTS `base_currency` (
             `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
-            `currency_country_code` TEXT NOT NULL
+            `currency_country_code` TEXT NOT NULL,
+            `currency_symbol` TEXT NOT NULL
             )
             """.trimIndent()
         )
@@ -27,12 +28,20 @@ class Migration6to7(private val countryRepository: CountryRepository) : Migratio
             """.trimIndent()
         )
 
+        val countryCode =
+            database.query("SELECT country_code FROM user LIMIT 1")
+                .use { cursor ->
+                    if (cursor.moveToFirst()) cursor.getString(0) else "US" // Default to "US"
+                }
+        val symbol = countryRepository.getCurrencySymbolFromCountryCode(countryCode)
+
 
         database.execSQL(
             """
-            INSERT INTO base_currency (currency_country_code)
-            SELECT COALESCE((SELECT country_code FROM user LIMIT 1), 'US')
-        """.trimIndent()
+    INSERT INTO base_currency (currency_country_code, currency_symbol) 
+    VALUES (?, ?)
+    """.trimIndent(),
+            arrayOf(countryCode, symbol) // Pass parameters safely
         )
     }
 

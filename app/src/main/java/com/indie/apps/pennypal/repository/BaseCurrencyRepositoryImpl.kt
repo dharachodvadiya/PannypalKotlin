@@ -16,9 +16,10 @@ class BaseCurrencyRepositoryImpl @Inject constructor(
     override suspend fun getBaseCurrencyFromId(id: Long) =
         withContext(dispatcher) { baseCurrencyDao.getBaseCurrencyFromCode(id) }
 
-    override suspend fun insert(obj: BaseCurrency) =
-        withContext(dispatcher) { baseCurrencyDao.insertOrIgnoreQuery(obj.currencyCountryCode) }
+    override suspend fun insert(data: BaseCurrency) =
+        withContext(dispatcher) {
+            val id = baseCurrencyDao.insertOrIgnoreQuery(data)
+            id
+        }
 
-    override suspend fun update(obj: BaseCurrency) =
-        withContext(dispatcher) { baseCurrencyDao.update(obj) }
 }

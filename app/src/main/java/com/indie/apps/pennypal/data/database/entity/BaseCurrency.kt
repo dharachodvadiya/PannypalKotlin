@@ -13,7 +13,10 @@ data class BaseCurrency(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
 
-    @ColumnInfo(name = "currency_country_code")
+    @ColumnInfo(name = "currency_country_code", collate = ColumnInfo.NOCASE)
     val currencyCountryCode: String,
 
-)
+    @ColumnInfo(name = "currency_symbol")
+    val currencySymbol: String,
+
+    )

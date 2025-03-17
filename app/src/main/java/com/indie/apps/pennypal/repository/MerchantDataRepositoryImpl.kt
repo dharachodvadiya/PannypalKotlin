@@ -3,7 +3,6 @@ package com.indie.apps.pennypal.repository
 import com.indie.apps.pennypal.data.database.dao.MerchantDataDao
 import com.indie.apps.pennypal.data.database.entity.MerchantData
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -90,10 +89,7 @@ class MerchantDataRepositoryImpl @Inject constructor(
     )
 
     override suspend fun insert(obj: MerchantData) = withContext(dispatcher) {
-        val baseCurrencyId = baseCurrencyRepository.getBaseCurrencyFromCode(
-            userRepository.getUser().first().currencyCountryCode
-        ).id
-        merchantDataDao.insert(obj.copy(baseCurrencyId = baseCurrencyId))
+        merchantDataDao.insert(obj)
     }
 
     override suspend fun update(obj: MerchantData) = withContext(dispatcher) {
