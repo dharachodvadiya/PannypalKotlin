@@ -74,11 +74,16 @@ interface MerchantDataDao : BaseDao<MerchantData> {
                 md.date_milli as dateInMilli,
                 md.details, 
                 md.amount, 
+                md.original_amount as originalAmount,
+                bc.currency_symbol as baseAmountSymbol,
+                oc.currency_symbol as originalAmountSymbol,
                 md.type
         FROM merchant_data md
         LEFT JOIN merchant m ON md.merchant_id = m.id
         INNER JOIN category c ON md.category_id = c.id
         INNER JOIN payment_type p ON md.payment_id = p.id
+        INNER JOIN base_currency bc  ON md.base_currency_id = bc.id
+        INNER JOIN base_currency oc  ON md.original_currency_id = oc.id
         WHERE m.name LIKE  '%' || :searchQuery || '%' OR 
                 md.details LIKE  '%' || :searchQuery || '%' OR
                 c.name LIKE  '%' || :searchQuery || '%' OR
@@ -104,11 +109,16 @@ interface MerchantDataDao : BaseDao<MerchantData> {
                 md.date_milli as dateInMilli,
                 md.details, 
                 md.amount, 
+                md.original_amount as originalAmount,
+                bc.currency_symbol as baseAmountSymbol,
+                oc.currency_symbol as originalAmountSymbol,
                 md.type
         FROM merchant_data md
         LEFT JOIN merchant m ON md.merchant_id = m.id
         INNER JOIN category c ON md.category_id = c.id
         INNER JOIN payment_type p ON md.payment_id = p.id
+         INNER JOIN base_currency bc  ON md.base_currency_id = bc.id
+        INNER JOIN base_currency oc  ON md.original_currency_id = oc.id
         ORDER BY md.date_milli DESC LIMIT 3
     """
     )
@@ -130,11 +140,16 @@ interface MerchantDataDao : BaseDao<MerchantData> {
                 md.date_milli as dateInMilli,
                 md.details, 
                 md.amount, 
+                md.original_amount as originalAmount,
+                bc.currency_symbol as baseAmountSymbol,
+                oc.currency_symbol as originalAmountSymbol,
                 md.type
         FROM merchant_data md
         LEFT JOIN merchant m ON md.merchant_id = m.id
         INNER JOIN category c ON md.category_id = c.id
         INNER JOIN payment_type p ON md.payment_id = p.id
+         INNER JOIN base_currency bc  ON md.base_currency_id = bc.id
+        INNER JOIN base_currency oc  ON md.original_currency_id = oc.id
         WHERE strftime('%m', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = printf('%02d', :monthPlusOne)
         ORDER BY md.date_milli DESC LIMIT 3
     """
@@ -160,11 +175,16 @@ interface MerchantDataDao : BaseDao<MerchantData> {
                 md.date_milli as dateInMilli,
                 md.details, 
                 md.amount, 
+                md.original_amount as originalAmount,
+                bc.currency_symbol as baseAmountSymbol,
+                oc.currency_symbol as originalAmountSymbol,
                 md.type
         FROM merchant_data md
         LEFT JOIN merchant m ON md.merchant_id = m.id
         INNER JOIN category c ON md.category_id = c.id
         INNER JOIN payment_type p ON md.payment_id = p.id
+         INNER JOIN base_currency bc  ON md.base_currency_id = bc.id
+        INNER JOIN base_currency oc  ON md.original_currency_id = oc.id
         WHERE  strftime('%Y', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = :year
         ORDER BY md.date_milli DESC LIMIT 3
     """

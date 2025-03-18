@@ -78,7 +78,7 @@ fun AllDataScreen(
     val pagingState by allDataViewModel.pagingState.collectAsStateWithLifecycle()
     pagingState.update(lazyPagingData)
 
-    val currency by allDataViewModel.currency.collectAsStateWithLifecycle()
+    //val currency by allDataViewModel.currency.collectAsStateWithLifecycle()
     val searchTextState by allDataViewModel.searchTextState.collectAsStateWithLifecycle()
     val isDeletable by allDataViewModel.isDeletable.collectAsStateWithLifecycle()
     val scrollOffset by allDataViewModel.scrollOffset.collectAsStateWithLifecycle()
@@ -326,7 +326,7 @@ fun AllDataScreen(
                                     onLongClick = { allDataViewModel.onItemLongClick(data.id) },
                                     modifier = modifierAdd,
                                     itemBgColor = itemAnimateColor.value,
-                                    currency = currency
+                                   // currency = currency
                                 )
                             }
 

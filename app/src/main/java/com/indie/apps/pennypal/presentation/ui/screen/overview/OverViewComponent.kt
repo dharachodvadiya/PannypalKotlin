@@ -457,7 +457,7 @@ fun OverviewData(
         isEditMerchantDataSuccess = isEditMerchantDataSuccess,
         merchantDataId = merchantDataId,
         onAnimStop = onAnimStop,
-        currency = currency
+        //currency = currency
     )
 
     OverviewMerchantData(
@@ -587,7 +587,7 @@ fun OverviewBalanceView(
 fun OverviewTransactionData(
     currentPeriod: ShowDataPeriod?,
     recentTransaction: List<MerchantDataWithAllData>,
-    currency: String,
+    //currency: String,
     onSeeAllTransactionClick: () -> Unit,
     onTransactionClick: (Long) -> Unit,
     isAddMerchantDataSuccess: Boolean = false,
@@ -658,7 +658,7 @@ fun OverviewTransactionData(
                         onLongClick = { },
                         itemBgColor = itemAnimateColor.value,
                         modifier = modifierAdd,
-                        currency = currency
+                        //currency = currency
                     )
                 }
             } else {

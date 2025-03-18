@@ -29,12 +29,12 @@ import javax.inject.Inject
 class AllDataViewModel @Inject constructor(
     searchMerchantDataWithAllDataListUseCase: SearchMerchantDataWithAllDataListUseCase,
     private val deleteMultipleMerchantDataUseCase: DeleteMultipleMerchantDataUseCase,
-    userRepository: UserRepository,
+   // userRepository: UserRepository,
 ) : ViewModel() {
 
-    val currency = userRepository.getCurrency()
+   /* val currency = userRepository.getCurrency()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), "$")
-
+*/
     var scrollIndex = MutableStateFlow(0)
     var scrollOffset = MutableStateFlow(0)
 

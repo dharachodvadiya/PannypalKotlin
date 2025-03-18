@@ -13,5 +13,8 @@ class MerchantDataWithAllData(
     val dateInMilli: Long,
     val details: String? = null,
     val amount: Double,
+    val baseAmountSymbol: String,
+    val originalAmount : Double,
+    val originalAmountSymbol : String,
     val type: Int,
 )
