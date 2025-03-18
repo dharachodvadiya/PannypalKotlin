@@ -48,12 +48,12 @@ import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.database.entity.User
 import com.indie.apps.pennypal.data.database.enum.PeriodType
 import com.indie.apps.pennypal.data.module.ChartData
-import com.indie.apps.pennypal.data.module.merchant_data.MerchantDataWithAllData
 import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
 import com.indie.apps.pennypal.data.module.TabItemInfo
 import com.indie.apps.pennypal.data.module.balance.Total
 import com.indie.apps.pennypal.data.module.budget.BudgetWithSpentAndCategoryIdList
 import com.indie.apps.pennypal.data.module.category.CategoryAmount
+import com.indie.apps.pennypal.data.module.merchant_data.MerchantDataWithAllData
 import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
 import com.indie.apps.pennypal.presentation.ui.component.UserProfileRect
 import com.indie.apps.pennypal.presentation.ui.component.chart.PieChart
@@ -64,7 +64,6 @@ import com.indie.apps.pennypal.presentation.ui.component.custom.composable.Custo
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImageWithText
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.TopBar
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.screen.all_data.TransactionItem
 import com.indie.apps.pennypal.presentation.ui.screen.single_budget_analysis.SingleBudgetOverAllAnalysis
@@ -79,248 +78,6 @@ import com.indie.apps.pennypal.util.getFirstCharacterUppercase
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import kotlin.enums.EnumEntries
-
-@Composable
-fun OverviewTopBar(
-    //onSearchTextChange: (String) -> Unit,
-    onProfileClick: () -> Unit, modifier: Modifier = Modifier
-) {/*var isSearch by remember { mutableStateOf(false) }
-
-    TopBar(
-        isBackEnable = isSearch,
-        onBackClick = { isSearch = false },
-        leadingContent = { if (!isSearch) OverviewTopBarProfile(onClick = onProfileClick) },
-        content = {
-            if (isSearch)
-                SearchView(
-                    onTextChange = onSearchTextChange
-                )
-        },
-        trailingContent = {
-            if (!isSearch) {
-                IconButton(onClick = {
-                    isSearch = true
-                }) {
-                    Icon(
-                        Icons.Default.Search,
-                        contentDescription = "Profile",
-                        tint = MyAppTheme.colors.black
-                    )
-                }
-            }
-        },
-        modifier = modifier
-    )*/
-
-    TopBar(
-        isBackEnable = false, leadingContent = {
-            OverviewTopBarProfile(onClick = onProfileClick,
-                user = null,
-                isSubscribed = false,
-                onSubscriptionChanged = {})
-        }, modifier = modifier
-    )
-}
-
-/*@SuppressLint("CoroutineCreationDuringComposition")
-@Composable
-fun OverviewList(
-    dataWithDayList: LazyPagingItems<MerchantDataWithNameWithDayTotal>,
-    modifier: Modifier = Modifier,
-    isLoadMore: Boolean = false,
-    isAddMerchantDataSuccess: Boolean = false,
-    merchantDataId: Long = 1L,
-    onAnimStop: () -> Unit,
-    bottomPadding: PaddingValues
-) {
-    val scope = rememberCoroutineScope()
-    if (dataWithDayList.itemCount == 0) {
-        NoDataMessage(
-            title = stringResource(id = R.string.no_transactions_yet),
-            details = stringResource(id = R.string.latest_transactions_appear_here),
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(bottomPadding)
-        )
-    } else {
-        LazyColumn(
-            modifier = modifier.padding(horizontal = dimensionResource(id = R.dimen.padding)),
-            //verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.item_padding)),
-            contentPadding = bottomPadding
-        ) {
-
-            *//*var totalListIndex = 0
-            items(
-                count = dataList.itemCount,
-                key = dataList.itemKey { item -> item.id },
-                contentType = dataList.itemContentType { "MerchantDataWithName" }
-            ) { index ->
-                val data = dataList[index]
-                if (data != null) {
-                    var isDateShow = false
-
-                    if (totalListIndex < dailyTotalList.itemCount) {
-                        if (index == 0 || (data.day == dailyTotalList[totalListIndex]?.day &&
-                                    (dataList[index - 1]?.day
-                                        ?: "") != dailyTotalList[totalListIndex]?.day)
-                        )
-                            isDateShow = true
-                    }
-
-                    val itemAnimateScale = remember {
-                        Animatable(0f)
-                    }
-
-                    val modifierAdd: Modifier =
-                        if (merchantDataId == data.id && isAddMerchantDataSuccess) {
-                            scope.launch {
-                                itemAnimateScale.animateTo(
-                                    targetValue = 1f,
-                                    animationSpec = tween(50)
-                                )
-                            }
-                            if (itemAnimateScale.value == 1f) {
-                                onAnimStop()
-                            }
-                            Modifier.scale(itemAnimateScale.value)
-                        } else {
-                            Modifier
-                        }
-
-                    Column() {
-                        if (isDateShow) {
-                            if (index != 0)
-                                Spacer(modifier = Modifier.height(13.dp))
-                            dailyTotalList[totalListIndex]?.let { OverviewListDateItem(it) }
-                            totalListIndex++
-                        }
-                        OverviewListItem(
-                            item = data,
-                            modifier = modifierAdd
-                        )
-                    }
-
-
-                    if (isLoadMore && index == dataList.itemCount) {
-                        Box(
-                            contentAlignment = Alignment.Center,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                        ) {
-                            CircularProgressIndicator()
-                        }
-                    }
-                }
-            }*//*
-
-            items(count = dataWithDayList.itemCount,
-                contentType = dataWithDayList.itemContentType { "Any" }) { index ->
-                val data = dataWithDayList[index]
-                if (data != null) {
-
-                    val itemAnimateScale = remember {
-                        Animatable(0f)
-                    }
-
-                    val modifierAdd: Modifier =
-                        if (merchantDataId == data.id && isAddMerchantDataSuccess) {
-                            scope.launch {
-                                itemAnimateScale.animateTo(
-                                    targetValue = 1f, animationSpec = tween(Util.ADD_ITEM_ANIM_TIME)
-                                )
-                            }
-                            if (itemAnimateScale.value == 1f) {
-                                onAnimStop()
-                            }
-                            Modifier.scale(itemAnimateScale.value)
-                        } else {
-                            Modifier
-                        }
-
-                    if (data.id == null) {
-                        if (index != 0) Spacer(modifier = Modifier.height(13.dp))
-                        OverviewListDateItem(data.toMerchantDataDailyTotal())
-                    } else {
-                        OverviewListItem(
-                            item = data.toMerchantDataWithName(), modifier = modifierAdd
-                        )
-                    }*//*when (data) {
-                        is MerchantDataDailyTotal -> OverviewListDateItem(data)
-
-                        is MerchantDataWithName -> {
-
-                            val itemAnimateScale = remember {
-                                Animatable(0f)
-                            }
-
-                            val modifierAdd: Modifier =
-                                if (merchantDataId == data.id && isAddMerchantDataSuccess) {
-                                    scope.launch {
-                                        itemAnimateScale.animateTo(
-                                            targetValue = 1f,
-                                            animationSpec = tween(50)
-                                        )
-                                    }
-                                    if (itemAnimateScale.value == 1f) {
-                                        onAnimStop()
-                                    }
-                                    Modifier.scale(itemAnimateScale.value)
-                                } else {
-                                    Modifier
-                                }
-
-                            OverviewListItem(
-                                item = data,
-                                modifier = modifierAdd
-                            )
-                        }
-                    }*//*
-
-                    if (isLoadMore && index == dataWithDayList.itemCount) {
-                        Box(
-                            contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth()
-                        ) {
-                            CircularProgressIndicator()
-                        }
-                    }
-                }
-
-
-            }
-
-
-        }
-    }
-}
-
-@Composable
-fun OverviewListDateItem(
-    item: DailyTotal,
-    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier.fillMaxWidth()
-) {
-    val dayString = when (item.day) {
-        Util.getTodayDate() -> stringResource(id = R.string.today)
-        Util.getYesterdayDate() -> stringResource(id = R.string.yesterday)
-        else -> item.day
-    }
-    val amount = item.totalIncome - item.totalExpense
-    val totalTextColor = if (amount >= 0) MyAppTheme.colors.greenText else MyAppTheme.colors.redText
-    Column(modifier = modifier) {
-        CustomText(
-            text = dayString,
-            style = MyAppTheme.typography.Semibold40,
-            color = MyAppTheme.colors.gray1
-        )
-        AutoSizeText(
-            text = Util.getFormattedStringWithSymbol(amount),
-            style = MyAppTheme.typography.Regular46,
-            color = totalTextColor,
-            maxLines = 1,
-            modifier = Modifier.padding(vertical = 5.dp)
-        )
-    }
-
-}*/
 
 @Composable
 fun OverviewBalanceItem(
@@ -359,54 +116,6 @@ fun OverviewBalanceItem(
         )
     }
 }
-
-/*@Composable
-fun OverviewListItem(
-    item: MerchantDataWithName,
-    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier.fillMaxWidth()
-) {
-    val imageVector = if (item.type < 0) Icons.Default.NorthEast else Icons.Default.SouthWest
-    val bgColor = if (item.type < 0) MyAppTheme.colors.redBg else MyAppTheme.colors.greenBg
-
-    ListItem(isClickable = false, leadingIcon = {
-        RoundImage(
-            imageVector = imageVector,
-            tint = MyAppTheme.colors.black,
-            backGround = bgColor,
-            contentDescription = "amount"
-        )
-    }, content = {
-        Column {
-            CustomText(
-                text = item.merchantName,
-                style = MyAppTheme.typography.Semibold52_5,
-                color = MyAppTheme.colors.black,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-            if (!item.details.isNullOrEmpty()) {
-                CustomText(
-                    text = item.details,
-                    style = MyAppTheme.typography.Medium33,
-                    color = MyAppTheme.colors.gray1,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
-        }
-    }, trailingContent = {
-        CustomText(
-            text = Util.getFormattedStringWithSymbol(if (item.type > 0) item.amount else item.amount * -1),
-            style = MyAppTheme.typography.Regular51,
-            color = MyAppTheme.colors.black,
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.fillMaxWidth(0.5f),
-            textAlign = TextAlign.Right,
-            maxLines = 1
-        )
-    }, isSetDivider = false, modifier = modifier.padding(vertical = 5.dp)
-    )
-}*/
 
 @Composable
 fun OverviewData(
@@ -543,7 +252,12 @@ fun OverviewBalanceView(
                             color = MyAppTheme.colors.gray1
                         )
                         AutoSizeText(
-                            text = Util.getFormattedStringWithSymbol(balance, currency),
+                            text = data?.let {
+                                Util.getFormattedStringWithSymbol(
+                                    balance,
+                                    currency
+                                )
+                            } ?: "",
                             style = MyAppTheme.typography.Regular66_5,
                             color = MyAppTheme.colors.black,
                             maxLines = 1
@@ -556,7 +270,12 @@ fun OverviewBalanceView(
                         modifier = Modifier.fillMaxWidth(),
                     ) {
                         OverviewBalanceItem(
-                            amount = Util.getFormattedStringWithSymbol(data?.totalIncome ?: 0.0, currency),
+                            amount = data?.let {
+                                Util.getFormattedStringWithSymbol(
+                                    it.totalIncome,
+                                    currency
+                                )
+                            } ?: "",
                             title = R.string.received,
                             horizontalAlignment = Alignment.Start,
                             imageVector = Icons.Default.SouthWest,
@@ -567,7 +286,12 @@ fun OverviewBalanceView(
                                 .padding(horizontal = dimensionResource(id = R.dimen.item_inner_padding))
                         )
                         OverviewBalanceItem(
-                            amount = Util.getFormattedStringWithSymbol(data?.totalExpense ?: 0.0, currency),
+                            amount = data?.let {
+                                Util.getFormattedStringWithSymbol(
+                                    data.totalExpense,
+                                    currency
+                                )
+                            } ?: "",
                             title = R.string.spent,
                             horizontalAlignment = Alignment.End,
                             imageVector = Icons.Default.NorthEast,
@@ -1090,35 +814,7 @@ fun OverviewTopBarProfile(
     onClick: () -> Unit,
     onSubscriptionChanged: (Boolean) -> Unit,
     modifier: Modifier = Modifier
-) {/*Surface(
-        onClick = onClick,
-        modifier = modifier
-            .semantics { role = Role.Button },
-        shape = RoundedCornerShape(dimensionResource(R.dimen.round_corner)),
-        contentColor = MyAppTheme.colors.gray1
-    ) {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = modifier
-                .size(dimensionResource(R.dimen.top_bar_profile))
-                .roundedCornerBackground(MyAppTheme.colors.white, BorderStroke(width = 1.dp, MyAppTheme.colors.gray1))
-                *//*.border(
-                    border = BorderStroke(
-                        width = 1.dp,
-                        MyAppTheme.colors.gray1
-                    ),
-                    shape = RoundedCornerShape(dimensionResource(R.dimen.round_corner))
-                )
-                .background(MyAppTheme.colors.white)*//*
-        ) {
-            Icon(
-                Icons.Filled.Person,
-                contentDescription = "Profile"
-            )
-        }
-
-    }*/
-
+) {
 
     Row(
         verticalAlignment = Alignment.CenterVertically, modifier = modifier
@@ -1164,32 +860,7 @@ fun OverviewTopBarProfile(
          }*/
 
     }
-}/*
-@Composable
-fun OverviewAppFloatingButton(
-    onClick: () -> Unit, modifier: Modifier = Modifier
-) {
-    PrimaryButton(
-        //bgBrush = linearGradientsBrush(MyAppTheme.colors.gradientBlue),
-        bgColor = MyAppTheme.colors.buttonBg, onClick = onClick, modifier = modifier
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = "New Entry",
-                tint = MyAppTheme.colors.gray1
-            )
-            Spacer(modifier = Modifier.width(5.dp))
-            Text(
-                text = stringResource(R.string.new_entry),
-                style = MyAppTheme.typography.Medium45_29,
-                color = MyAppTheme.colors.gray1
-            )
-        }
-    }
-}*/
+}
 
 @Composable
 fun OverviewBudgetSelectionButton(

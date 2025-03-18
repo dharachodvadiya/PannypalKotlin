@@ -8,7 +8,7 @@ import androidx.room.Transaction
 import com.indie.apps.pennypal.data.database.entity.BaseCurrency
 
 @Dao
-interface BaseCurrencyDao{
+interface BaseCurrencyDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertOrIgnoreQuery(data: BaseCurrency): Long
@@ -19,5 +19,5 @@ interface BaseCurrencyDao{
 
     @Transaction
     @Query("SELECT * FROM base_currency where id = :id")
-    suspend fun getBaseCurrencyFromCode(id: Long): BaseCurrency?
+    suspend fun getBaseCurrencyFromId(id: Long): BaseCurrency?
 }

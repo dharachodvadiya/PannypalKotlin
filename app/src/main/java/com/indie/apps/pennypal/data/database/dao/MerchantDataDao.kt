@@ -6,17 +6,15 @@ import androidx.room.Query
 import androidx.room.Transaction
 import com.indie.apps.pennypal.data.database.entity.MerchantData
 import com.indie.apps.pennypal.data.module.IncomeAndExpense
-import com.indie.apps.pennypal.data.module.merchant_data.MerchantDataWithAllData
-import com.indie.apps.pennypal.data.module.merchant_data.MerchantDataWithName
-import com.indie.apps.pennypal.data.module.merchant_data.MerchantDataWithNameWithDayTotal
-import com.indie.apps.pennypal.data.module.merchant_data.MerchantDataWithPaymentName
-import com.indie.apps.pennypal.data.module.balance.TotalAllTime
-import com.indie.apps.pennypal.data.module.balance.TotalMonthly
-import com.indie.apps.pennypal.data.module.balance.TotalYearly
+import com.indie.apps.pennypal.data.module.balance.Total
 import com.indie.apps.pennypal.data.module.category.CategoryAllTime
 import com.indie.apps.pennypal.data.module.category.CategoryAmount
 import com.indie.apps.pennypal.data.module.category.CategoryMonthly
 import com.indie.apps.pennypal.data.module.category.CategoryYearly
+import com.indie.apps.pennypal.data.module.merchant_data.MerchantDataWithAllData
+import com.indie.apps.pennypal.data.module.merchant_data.MerchantDataWithName
+import com.indie.apps.pennypal.data.module.merchant_data.MerchantDataWithNameWithDayTotal
+import com.indie.apps.pennypal.data.module.merchant_data.MerchantDataWithPaymentName
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -315,132 +313,135 @@ interface MerchantDataDao : BaseDao<MerchantData> {
         timeZoneOffsetInMilli: Int
     ): PagingSource<Int, MerchantDataWithNameWithDayTotal>
 
-
     @Query(
         """
     SELECT 
-        strftime('%Y-%m', (m.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') AS month,
-        IFNULL(SUM(CASE WHEN m.type >= 0 THEN m.amount ELSE 0 END), 0) AS totalIncome,
-        IFNULL(SUM(CASE WHEN m.type < 0 THEN m.amount ELSE 0 END), 0) AS totalExpense
+            IFNULL(SUM(CASE WHEN m.type >= 0 THEN m.amount ELSE 0 END), 0) AS totalIncome,
+            IFNULL(SUM(CASE WHEN m.type < 0 THEN m.amount ELSE 0 END), 0) AS totalExpense,
+            bc.currency_symbol AS baseCurrencySymbol,
+            bc.currency_country_code AS baseCurrencyCountryCode
     FROM 
         merchant_data m
-    JOIN 
-        user u ON u.id = 1
+    INNER JOIN 
+            base_currency bc ON m.base_currency_id = bc.id
     WHERE 
         strftime('%Y', (m.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = :year
         AND strftime('%m', (m.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = printf('%02d', :monthPlusOne)
     GROUP BY 
-        month
-    ORDER BY 
-        month DESC
+        m.base_currency_id, bc.currency_symbol
     """
     )
     fun getTotalFromMonthAsFlow(
         timeZoneOffsetInMilli: Int,
         year: String,
         monthPlusOne: String
-    ): Flow<TotalMonthly>
+    ): Flow<List<Total>>
 
     @Transaction
     @Query(
         """
     SELECT 
-        strftime('%Y-%m', (m.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') AS month,
-        IFNULL(SUM(CASE WHEN m.type >= 0 THEN m.amount ELSE 0 END), 0) AS totalIncome,
-        IFNULL(SUM(CASE WHEN m.type < 0 THEN m.amount ELSE 0 END), 0) AS totalExpense
+            IFNULL(SUM(CASE WHEN m.type >= 0 THEN m.amount ELSE 0 END), 0) AS totalIncome,
+            IFNULL(SUM(CASE WHEN m.type < 0 THEN m.amount ELSE 0 END), 0) AS totalExpense,
+            bc.currency_symbol AS baseCurrencySymbol,
+             bc.currency_country_code AS baseCurrencyCountryCode
     FROM 
         merchant_data m
-    JOIN 
-        user u ON u.id = 1
+    INNER JOIN 
+            base_currency bc ON m.base_currency_id = bc.id
     WHERE 
         strftime('%Y', (m.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = :year
         AND strftime('%m', (m.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = printf('%02d', :monthPlusOne)
     GROUP BY 
-        month
-    ORDER BY 
-        month DESC
+        m.base_currency_id, bc.currency_symbol
     """
     )
     suspend fun getTotalFromMonth(
         timeZoneOffsetInMilli: Int,
         year: String,
         monthPlusOne: String
-    ): TotalMonthly
+    ): List<Total>
 
     @Query(
         """
     SELECT 
-        strftime('%Y', (m.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') AS year,
         IFNULL(SUM(CASE WHEN m.type >= 0 THEN m.amount ELSE 0 END), 0) AS totalIncome,
-        IFNULL(SUM(CASE WHEN m.type < 0 THEN m.amount ELSE 0 END), 0) AS totalExpense
+        IFNULL(SUM(CASE WHEN m.type < 0 THEN m.amount ELSE 0 END), 0) AS totalExpense,
+        bc.currency_symbol AS baseCurrencySymbol,
+        bc.currency_country_code AS baseCurrencyCountryCode
     FROM 
         merchant_data m
-    JOIN 
-        user u ON u.id = 1
+    INNER JOIN 
+            base_currency bc ON m.base_currency_id = bc.id
     WHERE 
         strftime('%Y', (m.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = :year
     GROUP BY 
-        year
-    ORDER BY 
-        year DESC
+        m.base_currency_id, bc.currency_symbol
     """
     )
     fun getTotalFromYearAsFlow(
         timeZoneOffsetInMilli: Int,
         year: String
-    ): Flow<TotalYearly>
+    ): Flow<List<Total>>
 
     @Transaction
     @Query(
         """
     SELECT 
-        strftime('%Y', (m.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') AS year,
         IFNULL(SUM(CASE WHEN m.type >= 0 THEN m.amount ELSE 0 END), 0) AS totalIncome,
-        IFNULL(SUM(CASE WHEN m.type < 0 THEN m.amount ELSE 0 END), 0) AS totalExpense
+        IFNULL(SUM(CASE WHEN m.type < 0 THEN m.amount ELSE 0 END), 0) AS totalExpense,
+        bc.currency_symbol AS baseCurrencySymbol,
+        bc.currency_country_code AS baseCurrencyCountryCode
     FROM 
         merchant_data m
-    JOIN 
-        user u ON u.id = 1
+    INNER JOIN 
+            base_currency bc ON m.base_currency_id = bc.id
     WHERE 
         strftime('%Y', (m.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = :year
     GROUP BY 
-        year
-    ORDER BY 
-        year DESC
+        m.base_currency_id, bc.currency_symbol
     """
     )
     suspend fun getTotalFromYear(
         timeZoneOffsetInMilli: Int,
         year: String
-    ): TotalYearly
+    ): List<Total>
 
 
     @Query(
         """
         SELECT
             IFNULL(SUM(CASE WHEN m.type >= 0 THEN m.amount ELSE 0 END), 0) AS totalIncome,
-            IFNULL(SUM(CASE WHEN m.type < 0 THEN m.amount ELSE 0 END), 0) AS totalExpense
+            IFNULL(SUM(CASE WHEN m.type < 0 THEN m.amount ELSE 0 END), 0) AS totalExpense,
+            bc.currency_symbol AS baseCurrencySymbol,
+            bc.currency_country_code AS baseCurrencyCountryCode
         FROM 
             merchant_data m
-        JOIN 
-            user u ON u.id = 1
+       INNER JOIN 
+            base_currency bc ON m.base_currency_id = bc.id
+        GROUP BY 
+            m.base_currency_id, bc.currency_symbol
     """
     )
-    fun getTotalAsFlow(): Flow<TotalAllTime>
+    fun getTotalAsFlow(): Flow<List<Total>>
 
     @Transaction
     @Query(
         """
         SELECT
             IFNULL(SUM(CASE WHEN m.type >= 0 THEN m.amount ELSE 0 END), 0) AS totalIncome,
-            IFNULL(SUM(CASE WHEN m.type < 0 THEN m.amount ELSE 0 END), 0) AS totalExpense
+            IFNULL(SUM(CASE WHEN m.type < 0 THEN m.amount ELSE 0 END), 0) AS totalExpense,
+            bc.currency_symbol AS baseCurrencySymbol,
+            bc.currency_country_code AS baseCurrencyCountryCode
         FROM 
             merchant_data m
-        JOIN 
-            user u ON u.id = 1
+       INNER JOIN 
+            base_currency bc ON m.base_currency_id = bc.id
+        GROUP BY 
+            m.base_currency_id, bc.currency_symbol
     """
     )
-    suspend fun getTotal(): TotalAllTime
+    suspend fun getTotal(): List<Total>
 
     @Query(
         """
