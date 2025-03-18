@@ -22,6 +22,7 @@ class ExchangeRateRepositoryImpl @Inject constructor(
     private val apiService: ExchangeRateApiService,
     private val exchangeRateDao: ExchangeRateDao,
     private val countryRepository: CountryRepository,
+    private val networkRepository: NetworkRepository,
     private val dispatcher: CoroutineDispatcher
 ) : ExchangeRateRepository {
 
@@ -45,6 +46,10 @@ class ExchangeRateRepositoryImpl @Inject constructor(
 
                 // Check if last update is from a different day
                 if (!isSameDay(lastUpdate, now) || isLoadNeed) {
+
+                    if (!networkRepository.isNetworkAvailable())
+                        return@withContext Resource.Error(AppError.NetworkError.message)
+
                     // Fetch from API and cache
                     val response = apiService.getLatestRates(apiKey, toCurrency)
 
@@ -71,7 +76,7 @@ class ExchangeRateRepositoryImpl @Inject constructor(
 
                 // Get cached rate
                 Resource.Success(rate?.rate ?: 1.0)
-            }catch (e: IOException) {
+            } catch (e: IOException) {
                 Resource.Error(AppError.NetworkError.message)
             } catch (e: HttpException) {
                 Resource.Error(AppError.ServerError.message)
