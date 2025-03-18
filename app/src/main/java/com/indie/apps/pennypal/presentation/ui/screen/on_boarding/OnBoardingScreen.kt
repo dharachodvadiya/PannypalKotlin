@@ -92,11 +92,17 @@ fun OnBoardingScreen(
         onClick = {
             if (viewModel.isLoginClick(it)) {
                 authViewModel.onEvent(
-                    mainEvent = SyncEvent.SignInGoogle
+                    mainEvent = SyncEvent.SignInGoogle,
+                    onFail = { message ->
+                        context.showToast(message)
+                    }
                 )
             } else if (viewModel.isRestoreClick(it)) {
                 authViewModel.onEvent(
-                    mainEvent = SyncEvent.Restore
+                    mainEvent = SyncEvent.Restore,
+                    onFail = { message ->
+                        context.showToast(message)
+                    }
                 )
             } else {
                 viewModel.onContinueClick(it, onBoardingComplete = {

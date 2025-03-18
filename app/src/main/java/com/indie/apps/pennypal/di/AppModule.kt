@@ -11,6 +11,7 @@ import com.indie.apps.cpp.data.repository.CountryRepositoryImpl
 import com.indie.apps.pennypal.data.database.db.AppDatabase
 import com.indie.apps.pennypal.data.preference.PreferenceManager
 import com.indie.apps.pennypal.data.service.ExchangeRateApiService
+import com.indie.apps.pennypal.data.service.NetworkMonitor
 import com.indie.apps.pennypal.repository.AuthRepository
 import com.indie.apps.pennypal.repository.AuthRepositoryImpl
 import com.indie.apps.pennypal.repository.BackupRepository
@@ -29,6 +30,8 @@ import com.indie.apps.pennypal.repository.MerchantDataRepository
 import com.indie.apps.pennypal.repository.MerchantDataRepositoryImpl
 import com.indie.apps.pennypal.repository.MerchantRepository
 import com.indie.apps.pennypal.repository.MerchantRepositoryImpl
+import com.indie.apps.pennypal.repository.NetworkRepository
+import com.indie.apps.pennypal.repository.NetworkRepositoryImpl
 import com.indie.apps.pennypal.repository.PaymentModeRepository
 import com.indie.apps.pennypal.repository.PaymentModeRepositoryImpl
 import com.indie.apps.pennypal.repository.PaymentRepository
@@ -83,6 +86,12 @@ object AppModule {
     @Provides
     fun providePreference(@ApplicationContext context: Context): PreferenceManager =
         PreferenceManager.getInstance(context)
+
+    @Provides
+    @Singleton
+    fun provideNetworkMonitor(@ApplicationContext context: Context): NetworkMonitor {
+        return NetworkMonitor(context)
+    }
 
     @Provides
     fun provideUserRepository(
@@ -207,7 +216,13 @@ object AppModule {
         appDatabase: AppDatabase,
         @IoDispatcher dispatcher: CoroutineDispatcher
     ): BackupRepository {
-        return BackupRepositoryImpl(context, authRepository, countryRepository, appDatabase, dispatcher)
+        return BackupRepositoryImpl(
+            context,
+            authRepository,
+            countryRepository,
+            appDatabase,
+            dispatcher
+        )
     }
 
 
@@ -226,10 +241,28 @@ object AppModule {
     fun provideExchangeRateRepository(
         apiService: ExchangeRateApiService,
         countryRepository: CountryRepository,
+        networkRepository: NetworkRepository,
         database: AppDatabase,
         @IoDispatcher dispatcher: CoroutineDispatcher
     ): ExchangeRateRepository {
-        return ExchangeRateRepositoryImpl(apiService, database.exchangeRateDao(), countryRepository, dispatcher)
+        return ExchangeRateRepositoryImpl(
+            apiService,
+            database.exchangeRateDao(),
+            countryRepository,
+            networkRepository,
+            dispatcher
+        )
+    }
+
+    @Provides
+    fun provideNetworkRepository(
+        networkMonitor: NetworkMonitor,
+        @IoDispatcher dispatcher: CoroutineDispatcher
+    ): NetworkRepository {
+        return NetworkRepositoryImpl(
+            networkMonitor,
+            dispatcher
+        )
     }
 
 }

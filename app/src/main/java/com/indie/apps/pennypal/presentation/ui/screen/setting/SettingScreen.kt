@@ -110,18 +110,30 @@ fun SettingScreen(
 
                 SettingEffect.Backup -> authViewModel.onEvent(
                     mainEvent = SyncEvent.Backup,
+                    onFail = {
+                        context.showToast(it)
+                    }
                 )
 
                 SettingEffect.GoogleSignIn -> authViewModel.onEvent(
                     mainEvent = SyncEvent.SignInGoogle,
+                    onFail = {
+                        context.showToast(it)
+                    }
                 )
 
                 SettingEffect.Restore -> authViewModel.onEvent(
                     mainEvent = SyncEvent.Restore,
+                    onFail = {
+                        context.showToast(it)
+                    }
                 )
 
                 SettingEffect.GoogleSignInOrChange -> authViewModel.onEvent(
                     mainEvent = SyncEvent.SignInGoogleOrChange,
+                    onFail = {
+                        context.showToast(it)
+                    }
                 )
             }
         }
@@ -141,11 +153,17 @@ fun SettingScreen(
             settingViewModel.updateSyncTime()
             authViewModel.onEvent(
                 mainEvent = SyncEvent.Backup,
+                onFail = {
+                    context.showToast(it)
+                }
             )
         },
         onProfileClick = {
             authViewModel.onEvent(
                 mainEvent = SyncEvent.SignInGoogle,
+                onFail = {
+                    context.showToast(it)
+                }
             )
         },
         bottomPadding = bottomPadding,

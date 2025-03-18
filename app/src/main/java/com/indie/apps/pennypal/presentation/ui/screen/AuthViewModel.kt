@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.indie.apps.pennypal.repository.AuthRepository
 import com.indie.apps.pennypal.repository.BackupRepository
+import com.indie.apps.pennypal.repository.NetworkRepository
+import com.indie.apps.pennypal.util.AppError
 import com.indie.apps.pennypal.util.AuthProcess
 import com.indie.apps.pennypal.util.SyncCallBackEvent
 import com.indie.apps.pennypal.util.SyncEffect
@@ -21,7 +23,8 @@ import javax.inject.Inject
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     private val authRepository: AuthRepository,
-    private val backupRepository: BackupRepository
+    private val backupRepository: BackupRepository,
+    private val networkRepository: NetworkRepository,
 ) : ViewModel() {
 
     private var isInProcess = false
@@ -40,10 +43,17 @@ class AuthViewModel @Inject constructor(
 
     fun onEvent(
         mainEvent: SyncEvent,
+        onFail: (String) -> Unit = {}
     ) {
         viewModelScope.launch {
             when (mainEvent) {
-                SyncEvent.SignInGoogle -> handleSignInGoogle()
+                SyncEvent.SignInGoogle -> {
+                    if (!networkRepository.isNetworkAvailable()) {
+                        onFail(AppError.NetworkError.message)
+                        return@launch
+                    }
+                    handleSignInGoogle()
+                }
 
                 is SyncEvent.OnSignInResult -> handleSignInResult(
                     mainEvent.credential,
@@ -54,12 +64,30 @@ class AuthViewModel @Inject constructor(
 
                 SyncEvent.SignOut -> authRepository.signOut()
 
-                SyncEvent.Backup -> handleBackup()
+                SyncEvent.Backup -> {
+                    if (!networkRepository.isNetworkAvailable()) {
+                        onFail(AppError.NetworkError.message)
+                        return@launch
+                    }
+                    handleBackup()
+                }
 
-                is SyncEvent.Restore -> handleRestore()
+                is SyncEvent.Restore -> {
+                    if (!networkRepository.isNetworkAvailable()) {
+                        onFail(AppError.NetworkError.message)
+                        return@launch
+                    }
+                    handleRestore()
+                }
 
                 SyncEvent.GetFiles -> {}
-                SyncEvent.SignInGoogleOrChange -> handleSignInGoogle(true)
+                SyncEvent.SignInGoogleOrChange -> {
+                    if (!networkRepository.isNetworkAvailable()) {
+                        onFail(AppError.NetworkError.message)
+                        return@launch
+                    }
+                    handleSignInGoogle(true)
+                }
             }
         }
     }
