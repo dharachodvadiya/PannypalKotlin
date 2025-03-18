@@ -66,7 +66,7 @@ class CountryRepositoryImpl(private val countryDb: CountryDb) : CountryRepositor
     }
 
     override fun searchCountry(searchString: String): List<Country> {
-        val query = searchString.lowercase()
+        val query = searchString.lowercase().trim()
         return countryDb.countryData.filter { country ->
             with(country) {
                 name.contains(query, ignoreCase = true) ||
