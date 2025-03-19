@@ -318,7 +318,7 @@ interface MerchantDataDao : BaseDao<MerchantData> {
         strftime('%Y', (m.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = :year
         AND strftime('%m', (m.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = printf('%02d', :monthPlusOne)
     GROUP BY 
-        m.base_currency_id, bc.currency_symbol
+        m.base_currency_id
     """
     )
     fun getTotalFromMonthAsFlow(
@@ -343,7 +343,7 @@ interface MerchantDataDao : BaseDao<MerchantData> {
         strftime('%Y', (m.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = :year
         AND strftime('%m', (m.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = printf('%02d', :monthPlusOne)
     GROUP BY 
-        m.base_currency_id, bc.currency_symbol
+        m.base_currency_id
     """
     )
     suspend fun getTotalFromMonth(
@@ -366,7 +366,7 @@ interface MerchantDataDao : BaseDao<MerchantData> {
     WHERE 
         strftime('%Y', (m.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = :year
     GROUP BY 
-        m.base_currency_id, bc.currency_symbol
+        m.base_currency_id
     """
     )
     fun getTotalFromYearAsFlow(
@@ -389,7 +389,7 @@ interface MerchantDataDao : BaseDao<MerchantData> {
     WHERE 
         strftime('%Y', (m.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = :year
     GROUP BY 
-        m.base_currency_id, bc.currency_symbol
+        m.base_currency_id
     """
     )
     suspend fun getTotalFromYear(
@@ -410,7 +410,7 @@ interface MerchantDataDao : BaseDao<MerchantData> {
        INNER JOIN 
             base_currency bc ON m.base_currency_id = bc.id
         GROUP BY 
-            m.base_currency_id, bc.currency_symbol
+            m.base_currency_id
     """
     )
     fun getTotalAsFlow(): Flow<List<Total>>
@@ -428,7 +428,7 @@ interface MerchantDataDao : BaseDao<MerchantData> {
        INNER JOIN 
             base_currency bc ON m.base_currency_id = bc.id
         GROUP BY 
-            m.base_currency_id, bc.currency_symbol
+            m.base_currency_id
     """
     )
     suspend fun getTotal(): List<Total>
