@@ -1,7 +1,6 @@
 package com.indie.apps.pennypal.domain.usecase
 
 import com.indie.apps.pennypal.data.module.category.CategoryAmount
-import com.indie.apps.pennypal.data.module.category.toCategoryAmount
 import com.indie.apps.pennypal.di.IoDispatcher
 import com.indie.apps.pennypal.repository.MerchantDataRepository
 import com.indie.apps.pennypal.repository.PreferenceRepository
@@ -13,7 +12,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class GetCategoryWiseExpenseUseCase @Inject constructor(
@@ -40,7 +38,6 @@ class GetCategoryWiseExpenseUseCase @Inject constructor(
                                 year = year,
                                 month = month
                             )
-                            .map { item -> item.toCategoryAmount() }
 
                     ShowDataPeriod.THIS_YEAR ->
                         merchantDataRepository
@@ -48,12 +45,10 @@ class GetCategoryWiseExpenseUseCase @Inject constructor(
                                 Util.TIME_ZONE_OFFSET_IN_MILLI,
                                 year
                             )
-                            .map { item -> item.toCategoryAmount() }
 
                     ShowDataPeriod.ALL_TIME ->
                         merchantDataRepository
                             .getCategoryWiseExpense()
-                            .map { item -> item.toCategoryAmount() }
 
                 }
 
@@ -85,7 +80,6 @@ class GetCategoryWiseExpenseUseCase @Inject constructor(
                         year = year,
                         month = month
                     )
-                    .map { it.map { item -> item.toCategoryAmount() } }
 
             ShowDataPeriod.THIS_YEAR ->
                 merchantDataRepository
@@ -93,12 +87,10 @@ class GetCategoryWiseExpenseUseCase @Inject constructor(
                         Util.TIME_ZONE_OFFSET_IN_MILLI,
                         year
                     )
-                    .map { it.map { item -> item.toCategoryAmount() } }
 
             ShowDataPeriod.ALL_TIME ->
                 merchantDataRepository
                     .getCategoryWiseExpenseAsFlow()
-                    .map { it.map { item -> item.toCategoryAmount() } }
 
         }
     }

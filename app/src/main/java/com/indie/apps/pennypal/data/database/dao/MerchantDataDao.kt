@@ -5,15 +5,10 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import com.indie.apps.pennypal.data.database.entity.MerchantData
-import com.indie.apps.pennypal.data.module.IncomeAndExpense
 import com.indie.apps.pennypal.data.module.balance.Total
-import com.indie.apps.pennypal.data.module.category.CategoryAllTime
 import com.indie.apps.pennypal.data.module.category.CategoryAmount
-import com.indie.apps.pennypal.data.module.category.CategoryMonthly
-import com.indie.apps.pennypal.data.module.category.CategoryYearly
 import com.indie.apps.pennypal.data.module.merchant_data.MerchantDataWithAllData
 import com.indie.apps.pennypal.data.module.merchant_data.MerchantDataWithName
-import com.indie.apps.pennypal.data.module.merchant_data.MerchantDataWithNameWithDayTotal
 import com.indie.apps.pennypal.data.module.merchant_data.MerchantDataWithPaymentName
 import kotlinx.coroutines.flow.Flow
 
@@ -229,84 +224,84 @@ interface MerchantDataDao : BaseDao<MerchantData> {
         timeZoneOffsetInMilli: Int
     ): PagingSource<Int, MerchantDataWithName>
 
-  /*  @Transaction
-    @Query(
-        """
-        SELECT
-            SUM(CASE WHEN type >= 0 THEN amount ELSE 0 END) as totalIncome,
-            SUM(CASE WHEN type < 0 THEN amount ELSE 0 END) as totalExpense
-        FROM merchant_data
-        WHERE ID IN (:ids)
-    """
-    )
-    suspend fun getTotalIncomeAndeExpenseFromIds(ids: List<Long>): IncomeAndExpense*/
+    /*  @Transaction
+      @Query(
+          """
+          SELECT
+              SUM(CASE WHEN type >= 0 THEN amount ELSE 0 END) as totalIncome,
+              SUM(CASE WHEN type < 0 THEN amount ELSE 0 END) as totalExpense
+          FROM merchant_data
+          WHERE ID IN (:ids)
+      """
+      )
+      suspend fun getTotalIncomeAndeExpenseFromIds(ids: List<Long>): IncomeAndExpense*/
 
-  /*  @Query(
-        """
-        WITH DailyTotals AS (
-            SELECT 
-                strftime('%d-%m-%Y', (date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') as day,
-                SUM(CASE WHEN type >= 0 THEN amount ELSE 0 END) as totalIncome,
-                SUM(CASE WHEN type < 0 THEN amount ELSE 0 END) as totalExpense,
-                NULL as id,          -- Placeholder for DailyTotals
-                NULL as merchantId,          -- Placeholder for DailyTotals
-                MAX(date_milli) as dateInMilli,          -- Placeholder for DailyTotals
-                NULL as amount,      -- Placeholder for DailyTotals
-                NULL as details,     -- Placeholder for DailyTotals
-                NULL as type,     -- Placeholder for DailyTotals
-                NULL as merchantName -- Placeholder for DailyTotals
-            FROM 
-                merchant_data
-            GROUP BY day
-        ),
-        Records AS (
-            SELECT 
-                md.id as id, 
-                md.merchant_id as merchantId, 
-                md.date_milli as dateInMilli, 
-                strftime('%d-%m-%Y', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') as day,
-                md.details, 
-                md.amount, 
-                md.type,
-                m.name as merchantName,
-                NULL as totalIncome,  -- Placeholder for Records
-                NULL as totalExpense  -- Placeholder for Records
-            FROM 
-                merchant_data md
-            LEFT JOIN 
-                merchant m ON md.merchant_id = m.id
-        )
-        SELECT 
-            id,
-            merchantId,
-            dateInMilli,
-            day,
-            details,
-            amount,
-            type,
-            merchantName,
-            totalIncome,
-            totalExpense
-        FROM DailyTotals
-        UNION ALL
-        SELECT 
-            id,
-            merchantId,
-            dateInMilli,
-            day,
-            details,
-            amount,
-            type,
-            merchantName,
-            totalIncome,
-            totalExpense
-        FROM Records
-        ORDER BY dateInMilli DESC
-        """
-    )
-    fun getCombinedDataWithLimit(
-        timeZoneOffsetInMilli: Int
-    ): PagingSource<Int, MerchantDataWithNameWithDayTotal>*/
+    /*  @Query(
+          """
+          WITH DailyTotals AS (
+              SELECT
+                  strftime('%d-%m-%Y', (date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') as day,
+                  SUM(CASE WHEN type >= 0 THEN amount ELSE 0 END) as totalIncome,
+                  SUM(CASE WHEN type < 0 THEN amount ELSE 0 END) as totalExpense,
+                  NULL as id,          -- Placeholder for DailyTotals
+                  NULL as merchantId,          -- Placeholder for DailyTotals
+                  MAX(date_milli) as dateInMilli,          -- Placeholder for DailyTotals
+                  NULL as amount,      -- Placeholder for DailyTotals
+                  NULL as details,     -- Placeholder for DailyTotals
+                  NULL as type,     -- Placeholder for DailyTotals
+                  NULL as merchantName -- Placeholder for DailyTotals
+              FROM
+                  merchant_data
+              GROUP BY day
+          ),
+          Records AS (
+              SELECT
+                  md.id as id,
+                  md.merchant_id as merchantId,
+                  md.date_milli as dateInMilli,
+                  strftime('%d-%m-%Y', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') as day,
+                  md.details,
+                  md.amount,
+                  md.type,
+                  m.name as merchantName,
+                  NULL as totalIncome,  -- Placeholder for Records
+                  NULL as totalExpense  -- Placeholder for Records
+              FROM
+                  merchant_data md
+              LEFT JOIN
+                  merchant m ON md.merchant_id = m.id
+          )
+          SELECT
+              id,
+              merchantId,
+              dateInMilli,
+              day,
+              details,
+              amount,
+              type,
+              merchantName,
+              totalIncome,
+              totalExpense
+          FROM DailyTotals
+          UNION ALL
+          SELECT
+              id,
+              merchantId,
+              dateInMilli,
+              day,
+              details,
+              amount,
+              type,
+              merchantName,
+              totalIncome,
+              totalExpense
+          FROM Records
+          ORDER BY dateInMilli DESC
+          """
+      )
+      fun getCombinedDataWithLimit(
+          timeZoneOffsetInMilli: Int
+      ): PagingSource<Int, MerchantDataWithNameWithDayTotal>*/
 
     @Query(
         """
@@ -442,7 +437,6 @@ interface MerchantDataDao : BaseDao<MerchantData> {
         """
         SELECT 
             c.id AS id,
-            strftime('%Y-%m', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') as month,
             c.name AS name,
             c.type As type,
             c.icon_id As iconId,
@@ -457,7 +451,7 @@ interface MerchantDataDao : BaseDao<MerchantData> {
             AND strftime('%m', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = printf('%02d', :monthPlusOne)
             AND c.type != 1
         GROUP BY 
-            month, c.name
+            c.name
         ORDER BY 
             amount DESC
     """
@@ -467,14 +461,13 @@ interface MerchantDataDao : BaseDao<MerchantData> {
         timeZoneOffsetInMilli: Int,
         year: String,
         monthPlusOne: String
-    ): Flow<List<CategoryMonthly>>
+    ): Flow<List<CategoryAmount>>
 
     @Transaction
     @Query(
         """
         SELECT 
             c.id AS id,
-            strftime('%Y-%m', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') as month,
             c.name AS name,
             c.type As type,
             c.icon_id As iconId,
@@ -489,7 +482,7 @@ interface MerchantDataDao : BaseDao<MerchantData> {
             AND strftime('%m', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = printf('%02d', :monthPlusOne)
             AND c.type != 1
         GROUP BY 
-            month, c.name
+            c.name
         ORDER BY 
             amount DESC
     """
@@ -499,13 +492,12 @@ interface MerchantDataDao : BaseDao<MerchantData> {
         timeZoneOffsetInMilli: Int,
         year: String,
         monthPlusOne: String
-    ): List<CategoryMonthly>
+    ): List<CategoryAmount>
 
     @Query(
         """
         SELECT 
             c.id AS id,
-            strftime('%Y', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') AS year,
             c.name AS name,
             c.type As type,
             c.icon_id As iconId,
@@ -519,7 +511,7 @@ interface MerchantDataDao : BaseDao<MerchantData> {
             strftime('%Y', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = :year
             AND c.type != 1
         GROUP BY 
-            year, c.name
+            c.name
         ORDER BY 
             amount DESC
     """
@@ -528,14 +520,13 @@ interface MerchantDataDao : BaseDao<MerchantData> {
     fun getCategoryWiseExpenseFromYearAsFlow(
         timeZoneOffsetInMilli: Int,
         year: String
-    ): Flow<List<CategoryYearly>>
+    ): Flow<List<CategoryAmount>>
 
     @Transaction
     @Query(
         """
         SELECT 
             c.id AS id,
-            strftime('%Y', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') AS year,
             c.name AS name,
             c.type As type,
             c.icon_id As iconId,
@@ -549,7 +540,7 @@ interface MerchantDataDao : BaseDao<MerchantData> {
             strftime('%Y', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = :year
             AND c.type != 1
         GROUP BY 
-            year, c.name
+            c.name
         ORDER BY 
             amount DESC
     """
@@ -558,7 +549,7 @@ interface MerchantDataDao : BaseDao<MerchantData> {
     suspend fun getCategoryWiseExpenseFromYear(
         timeZoneOffsetInMilli: Int,
         year: String
-    ): List<CategoryYearly>
+    ): List<CategoryAmount>
 
     @Query(
         """
@@ -582,7 +573,7 @@ interface MerchantDataDao : BaseDao<MerchantData> {
     """
     )
 
-    fun getCategoryWiseExpenseAsFlow(): Flow<List<CategoryAllTime>>
+    fun getCategoryWiseExpenseAsFlow(): Flow<List<CategoryAmount>>
 
     @Transaction
     @Query(
@@ -607,7 +598,7 @@ interface MerchantDataDao : BaseDao<MerchantData> {
     """
     )
 
-    suspend fun getCategoryWiseExpense(): List<CategoryAllTime>
+    suspend fun getCategoryWiseExpense(): List<CategoryAmount>
 
     @Query(
         """
