@@ -20,11 +20,6 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface MerchantDataDao : BaseDao<MerchantData> {
 
-    //insert data -> update merchant income-expense
-    //update data -> update merchant income-expense
-    //delete data -> update merchant income-expense
-    //get data
-
     @Transaction
     @Query("UPDATE merchant_data SET payment_id = :newPaymentId WHERE payment_id = :oldPaymentId")
     suspend fun updateMerchantDataPaymentId(oldPaymentId: Long, newPaymentId: Long): Int
@@ -234,7 +229,7 @@ interface MerchantDataDao : BaseDao<MerchantData> {
         timeZoneOffsetInMilli: Int
     ): PagingSource<Int, MerchantDataWithName>
 
-    @Transaction
+  /*  @Transaction
     @Query(
         """
         SELECT
@@ -244,9 +239,9 @@ interface MerchantDataDao : BaseDao<MerchantData> {
         WHERE ID IN (:ids)
     """
     )
-    suspend fun getTotalIncomeAndeExpenseFromIds(ids: List<Long>): IncomeAndExpense
+    suspend fun getTotalIncomeAndeExpenseFromIds(ids: List<Long>): IncomeAndExpense*/
 
-    @Query(
+  /*  @Query(
         """
         WITH DailyTotals AS (
             SELECT 
@@ -311,7 +306,7 @@ interface MerchantDataDao : BaseDao<MerchantData> {
     )
     fun getCombinedDataWithLimit(
         timeZoneOffsetInMilli: Int
-    ): PagingSource<Int, MerchantDataWithNameWithDayTotal>
+    ): PagingSource<Int, MerchantDataWithNameWithDayTotal>*/
 
     @Query(
         """

@@ -37,10 +37,10 @@ class MerchantDataRepositoryImpl @Inject constructor(
         merchantDataDao.deleteMerchantDataWithMerchantId(id)
     }
 
-    override suspend fun getTotalIncomeAndeExpenseFromIds(ids: List<Long>) =
+   /* override suspend fun getTotalIncomeAndeExpenseFromIds(ids: List<Long>) =
         withContext(dispatcher) {
             merchantDataDao.getTotalIncomeAndeExpenseFromIds(ids)
-        }
+        }*/
 
     override suspend fun getMerchantDataFromId(id: Long) = withContext(dispatcher) {
         merchantDataDao.getMerchantDataFromId(
@@ -93,13 +93,11 @@ class MerchantDataRepositoryImpl @Inject constructor(
     }
 
     override suspend fun update(obj: MerchantData) = withContext(dispatcher) {
-        //val baseCurrencyId = baseCurrencyRepository.getBaseCurrencyFromCode(userRepository.getUser().first().currencyCountryCode).id
-        //return merchantDataDao.update(obj.copy(baseCurrencyId = baseCurrencyId))
         merchantDataDao.update(obj)
     }
 
-    override fun getMerchantDataWithNameWithDayTotal(timeZoneOffsetInMilli: Int) =
-        merchantDataDao.getCombinedDataWithLimit(timeZoneOffsetInMilli)
+   /* override fun getMerchantDataWithNameWithDayTotal(timeZoneOffsetInMilli: Int) =
+        merchantDataDao.getCombinedDataWithLimit(timeZoneOffsetInMilli)*/
 
     override fun getTotalFromMonthAsFlow(
         timeZoneOffsetInMilli: Int,

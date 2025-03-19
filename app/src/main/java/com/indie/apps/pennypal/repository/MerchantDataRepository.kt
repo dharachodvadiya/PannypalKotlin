@@ -25,7 +25,7 @@ interface MerchantDataRepository : BaseRepository<MerchantData> {
 
     suspend fun deleteMerchantDataWithMerchantId(id: Long): Int
 
-    suspend fun getTotalIncomeAndeExpenseFromIds(ids: List<Long>): IncomeAndExpense
+    //suspend fun getTotalIncomeAndeExpenseFromIds(ids: List<Long>): IncomeAndExpense
 
     suspend fun getMerchantDataFromId(id: Long): MerchantData
 
@@ -56,7 +56,7 @@ interface MerchantDataRepository : BaseRepository<MerchantData> {
         timeZoneOffsetInMilli: Int
     ): PagingSource<Int, MerchantDataWithName>
 
-    fun getMerchantDataWithNameWithDayTotal(timeZoneOffsetInMilli: Int): PagingSource<Int, MerchantDataWithNameWithDayTotal>
+   // fun getMerchantDataWithNameWithDayTotal(timeZoneOffsetInMilli: Int): PagingSource<Int, MerchantDataWithNameWithDayTotal>
 
     fun getTotalFromMonthAsFlow(
         timeZoneOffsetInMilli: Int,
