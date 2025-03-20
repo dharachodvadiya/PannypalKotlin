@@ -2,6 +2,7 @@ package com.indie.apps.pennypal.repository
 
 import androidx.paging.PagingSource
 import com.indie.apps.pennypal.data.database.entity.MerchantData
+import com.indie.apps.pennypal.data.module.Amount
 import com.indie.apps.pennypal.data.module.balance.Total
 import com.indie.apps.pennypal.data.module.category.CategoryAmount
 import com.indie.apps.pennypal.data.module.merchant_data.MerchantDataWithAllData
@@ -106,20 +107,20 @@ interface MerchantDataRepository : BaseRepository<MerchantData> {
         year: Int,
         month: Int,
         categoryIds: List<Long>
-    ): Double
+    ): Amount
 
     suspend fun getTotalAmountForYearAndCategory(
         timeZoneOffsetInMilli: Int,
         year: Int,
         categoryIds: List<Long>
-    ): Double
+    ): Amount
 
     suspend fun getTotalAmountForBetweenDatesAndCategory(
         timeZoneOffsetInMilli: Int,
         startTime: Long,
         endTime: Long,
         categoryIds: List<Long>
-    ): Double
+    ): Amount
 
     fun getCategoryWiseTotalAmountForMonth(
         timeZoneOffsetInMilli: Int,

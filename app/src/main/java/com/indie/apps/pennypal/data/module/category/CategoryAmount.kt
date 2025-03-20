@@ -16,3 +16,14 @@ data class CategoryAmount(
 fun CategoryAmount.toCurrencyCountry(toCode: String) =
     CurrencyCountry(baseCurrencyCountryCode, toCode)
 
+fun List<CategoryAmount>.mergeAndSortByAmount(): List<CategoryAmount> {
+    return this.groupBy { it.name }
+        .map { (name, items) ->
+            val firstItem = items.first() // Take first item to retain other fields
+            val totalAmount = items.sumOf { it.amount } // Sum all amounts for same name
+
+            firstItem.copy(amount = totalAmount) // Create new object with summed amount
+        }
+        .sortedByDescending { it.amount } // Sort in descending order of amount
+}
+

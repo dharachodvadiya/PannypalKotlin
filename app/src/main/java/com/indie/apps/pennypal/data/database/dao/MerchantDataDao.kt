@@ -5,6 +5,7 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import com.indie.apps.pennypal.data.database.entity.MerchantData
+import com.indie.apps.pennypal.data.module.Amount
 import com.indie.apps.pennypal.data.module.balance.Total
 import com.indie.apps.pennypal.data.module.category.CategoryAmount
 import com.indie.apps.pennypal.data.module.merchant_data.MerchantDataWithAllData
@@ -626,13 +627,21 @@ interface MerchantDataDao : BaseDao<MerchantData> {
 
     @Query(
         """
-        SELECT IFNULL(SUM(amount), 0.0) 
-        FROM merchant_data
+        SELECT 
+            IFNULL(SUM(md.amount), 0.0) as amount,
+            bc.currency_symbol AS baseCurrencySymbol,
+            bc.currency_country_code AS baseCurrencyCountryCode
+        FROM 
+            merchant_data md
+        INNER JOIN 
+            base_currency bc ON md.base_currency_id = bc.id
         WHERE
-            strftime('%Y', ((date_milli + :timeZoneOffsetInMilli) / 1000), 'unixepoch') = :year
-            AND strftime('%m', ((date_milli + :timeZoneOffsetInMilli) / 1000), 'unixepoch') = printf('%02d', :monthPlusOne)
-            AND category_id IN (:categoryIds)
-            AND type = -1
+            strftime('%Y', ((md.date_milli + :timeZoneOffsetInMilli) / 1000), 'unixepoch') = :year
+            AND strftime('%m', ((md.date_milli + :timeZoneOffsetInMilli) / 1000), 'unixepoch') = printf('%02d', :monthPlusOne)
+            AND md.category_id IN (:categoryIds)
+            AND md.type = -1
+        GROUP BY 
+            md.base_currency_id
     """
     )
     suspend fun getTotalAmountForMonthAndCategory(
@@ -640,39 +649,55 @@ interface MerchantDataDao : BaseDao<MerchantData> {
         year: String,
         monthPlusOne: String,
         categoryIds: List<Long>
-    ): Double
+    ): List<Amount>
 
     @Query(
         """
-        SELECT IFNULL(SUM(amount), 0.0) 
-        FROM merchant_data
+        SELECT 
+            IFNULL(SUM(md.amount), 0.0) as amount,
+            bc.currency_symbol AS baseCurrencySymbol,
+            bc.currency_country_code AS baseCurrencyCountryCode
+        FROM 
+            merchant_data md
+        INNER JOIN 
+            base_currency bc ON md.base_currency_id = bc.id
         WHERE
-            strftime('%Y', ((date_milli + :timeZoneOffsetInMilli) / 1000), 'unixepoch') = :year
-            AND category_id IN (:categoryIds)
-            AND type = -1
+            strftime('%Y', ((md.date_milli + :timeZoneOffsetInMilli) / 1000), 'unixepoch') = :year
+            AND md.category_id IN (:categoryIds)
+            AND md.type = -1
+        GROUP BY 
+            md.base_currency_id
     """
     )
     suspend fun getTotalAmountForYearAndCategory(
         timeZoneOffsetInMilli: Int,
         year: String,
         categoryIds: List<Long>
-    ): Double
+    ): List<Amount>
 
     @Query(
         """
-        SELECT IFNULL(SUM(amount), 0.0) 
-        FROM merchant_data
+         SELECT 
+            IFNULL(SUM(md.amount), 0.0) as amount,
+            bc.currency_symbol AS baseCurrencySymbol,
+            bc.currency_country_code AS baseCurrencyCountryCode
+        FROM 
+            merchant_data md
+        INNER JOIN 
+            base_currency bc ON md.base_currency_id = bc.id
         WHERE
-            date_milli BETWEEN :startTime AND :endTime
-            AND category_id IN (:categoryIds)
-            AND type = -1
+            md.date_milli BETWEEN :startTime AND :endTime
+            AND md.category_id IN (:categoryIds)
+            AND md.type = -1
+        GROUP BY 
+            md.base_currency_id
     """
     )
     suspend fun getTotalAmountForBetweenDatesAndCategory(
         startTime: Long,
         endTime: Long,
         categoryIds: List<Long>
-    ): Double
+    ): List<Amount>
 
     @Query(
         """

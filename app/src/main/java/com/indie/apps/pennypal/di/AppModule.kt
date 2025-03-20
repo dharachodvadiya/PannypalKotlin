@@ -191,12 +191,13 @@ object AppModule {
     @Provides
     fun provideBudgetRepository(
         database: AppDatabase,
+        merchantDataRepository: MerchantDataRepository,
         @IoDispatcher dispatcher: CoroutineDispatcher
     ): BudgetRepository {
         return BudgetRepositoryImpl(
             database.budgetDao(),
             database.budgetCategoryDao(),
-            database.merchantDataDao(),
+            merchantDataRepository,
             dispatcher
         )
     }
