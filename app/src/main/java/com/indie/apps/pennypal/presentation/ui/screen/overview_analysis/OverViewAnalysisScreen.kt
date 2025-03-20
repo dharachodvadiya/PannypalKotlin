@@ -42,7 +42,7 @@ fun OverViewAnalysisScreen(
     onNavigationUp: () -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
-    val currency by viewModel.currency.collectAsStateWithLifecycle()
+    //val currency by viewModel.currency.collectAsStateWithLifecycle()
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
     val currentPeriod by remember { viewModel.currentPeriod }.collectAsStateWithLifecycle()
     val currentYearInMilli by remember { viewModel.currentYearInMilli }.collectAsStateWithLifecycle()
@@ -139,12 +139,12 @@ fun OverViewAnalysisScreen(
                             AnalysisBalance(
                                 spentAmount = currentTotal.data?.totalExpense ?: 0.0,
                                 receiveAmount = currentTotal.data?.totalIncome ?: 0.0,
-                                currency = currency
+                                currency = currentTotal.data?.baseCurrencySymbol ?: ""
                             )
 
                             OverViewAnalysisCategoryChart(
                                 categoryList = dataList,
-                                currency = currency
+                                //currency = currency
                             )
                         }
                     }

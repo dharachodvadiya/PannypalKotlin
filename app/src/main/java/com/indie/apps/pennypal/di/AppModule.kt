@@ -135,13 +135,13 @@ object AppModule {
     @Provides
     fun provideMerchantDataRepository(
         database: AppDatabase,
-        baseCurrencyRepository: BaseCurrencyRepository,
+        exchangeRateRepository: ExchangeRateRepository,
         userRepository: UserRepository,
         @IoDispatcher dispatcher: CoroutineDispatcher
     ): MerchantDataRepository {
         return MerchantDataRepositoryImpl(
             database.merchantDataDao(),
-            baseCurrencyRepository,
+            exchangeRateRepository,
             userRepository,
             dispatcher
         )

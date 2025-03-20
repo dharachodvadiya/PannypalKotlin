@@ -8,10 +8,14 @@ import com.indie.apps.cpp.data.repository.CountryRepository
 import com.indie.apps.pennypal.BuildConfig
 import com.indie.apps.pennypal.data.database.dao.ExchangeRateDao
 import com.indie.apps.pennypal.data.database.entity.ExchangeRate
+import com.indie.apps.pennypal.data.module.CurrencyCountry
 import com.indie.apps.pennypal.data.service.ExchangeRateApiService
 import com.indie.apps.pennypal.util.AppError
 import com.indie.apps.pennypal.util.Resource
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
 import java.io.IOException
 import java.util.Calendar
@@ -86,6 +90,26 @@ class ExchangeRateRepositoryImpl @Inject constructor(
                 Resource.Error(AppError.UnknownError.message)
             }
         }
+
+    @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
+    override suspend fun getConversionRateFromList(
+        list: List<CurrencyCountry>
+    ) = coroutineScope {
+        val deferredRates = list.map { item ->
+            async {
+                val rateResult = getConversionRate(
+                    fromCurrencyCountry = item.fromCurrencyCountryCode,
+                    toCurrencyCountry = item.toCurrencyCountryCode
+                )
+                when (rateResult) {
+                    is Resource.Success -> rateResult.data!!
+                    else -> 1.0 // Fallback for failure
+                }
+            }
+        }
+
+        deferredRates.awaitAll()
+    }
 
     override fun getAmountFromRate(
         amount: Double,

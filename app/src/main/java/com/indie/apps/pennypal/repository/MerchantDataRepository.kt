@@ -57,21 +57,21 @@ interface MerchantDataRepository : BaseRepository<MerchantData> {
         timeZoneOffsetInMilli: Int,
         year: Int,
         month: Int
-    ): Flow<List<Total>>
+    ): Flow<Total>
 
     suspend fun getTotalFromMonth(
         timeZoneOffsetInMilli: Int,
         year: Int,
         month: Int
-    ): List<Total>
+    ): Total
 
-    fun getTotalFromYearAsFlow(timeZoneOffsetInMilli: Int, year: Int): Flow<List<Total>>
+    fun getTotalFromYearAsFlow(timeZoneOffsetInMilli: Int, year: Int): Flow<Total>
 
-    suspend fun getTotalFromYear(timeZoneOffsetInMilli: Int, year: Int): List<Total>
+    suspend fun getTotalFromYear(timeZoneOffsetInMilli: Int, year: Int): Total
 
-    fun getTotalAsFlow(): Flow<List<Total>>
+    fun getTotalAsFlow(): Flow<Total>
 
-    suspend fun getTotal(): List<Total>
+    suspend fun getTotal(): Total
 
     fun getCategoryWiseExpenseFromMonthAsFlow(
         timeZoneOffsetInMilli: Int,

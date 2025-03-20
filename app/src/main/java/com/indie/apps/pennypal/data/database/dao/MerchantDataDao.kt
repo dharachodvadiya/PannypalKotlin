@@ -441,17 +441,21 @@ interface MerchantDataDao : BaseDao<MerchantData> {
             c.type As type,
             c.icon_id As iconId,
             c.icon_color_id As iconColorId,
+            bc.currency_symbol AS baseCurrencySymbol,
+            bc.currency_country_code AS baseCurrencyCountryCode,
             SUM(CASE WHEN md.type = -1 THEN md.amount ELSE 0 END) AS amount
         FROM 
             merchant_data md
         JOIN 
             category c ON md.category_id = c.id
+        INNER JOIN 
+            base_currency bc ON md.base_currency_id = bc.id
         WHERE 
              strftime('%Y', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = :year
             AND strftime('%m', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = printf('%02d', :monthPlusOne)
             AND c.type != 1
         GROUP BY 
-            c.name
+            c.name, md.base_currency_id
         ORDER BY 
             amount DESC
     """
@@ -472,17 +476,21 @@ interface MerchantDataDao : BaseDao<MerchantData> {
             c.type As type,
             c.icon_id As iconId,
             c.icon_color_id As iconColorId,
+            bc.currency_symbol AS baseCurrencySymbol,
+            bc.currency_country_code AS baseCurrencyCountryCode,
             SUM(CASE WHEN md.type = -1 THEN md.amount ELSE 0 END) AS amount
         FROM 
             merchant_data md
         JOIN 
             category c ON md.category_id = c.id
+        INNER JOIN 
+            base_currency bc ON md.base_currency_id = bc.id
         WHERE 
              strftime('%Y', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = :year
             AND strftime('%m', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = printf('%02d', :monthPlusOne)
             AND c.type != 1
         GROUP BY 
-            c.name
+            c.name, md.base_currency_id
         ORDER BY 
             amount DESC
     """
@@ -502,16 +510,20 @@ interface MerchantDataDao : BaseDao<MerchantData> {
             c.type As type,
             c.icon_id As iconId,
             c.icon_color_id As iconColorId,
+            bc.currency_symbol AS baseCurrencySymbol,
+            bc.currency_country_code AS baseCurrencyCountryCode,
             SUM(CASE WHEN md.type = -1 THEN md.amount ELSE 0 END) AS amount
         FROM 
             merchant_data md
         JOIN 
             category c ON md.category_id = c.id
+        INNER JOIN 
+            base_currency bc ON md.base_currency_id = bc.id
         WHERE 
             strftime('%Y', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = :year
             AND c.type != 1
         GROUP BY 
-            c.name
+            c.name, md.base_currency_id
         ORDER BY 
             amount DESC
     """
@@ -531,16 +543,20 @@ interface MerchantDataDao : BaseDao<MerchantData> {
             c.type As type,
             c.icon_id As iconId,
             c.icon_color_id As iconColorId,
+            bc.currency_symbol AS baseCurrencySymbol,
+            bc.currency_country_code AS baseCurrencyCountryCode,
             SUM(CASE WHEN md.type = -1 THEN md.amount ELSE 0 END) AS amount
         FROM 
             merchant_data md
         JOIN 
             category c ON md.category_id = c.id
+        INNER JOIN 
+            base_currency bc ON md.base_currency_id = bc.id
         WHERE 
             strftime('%Y', (md.date_milli + :timeZoneOffsetInMilli) / 1000, 'unixepoch') = :year
             AND c.type != 1
         GROUP BY 
-            c.name
+            c.name, md.base_currency_id
         ORDER BY 
             amount DESC
     """
@@ -559,15 +575,19 @@ interface MerchantDataDao : BaseDao<MerchantData> {
             c.type As type,
             c.icon_id As iconId,
             c.icon_color_id As iconColorId,
+            bc.currency_symbol AS baseCurrencySymbol,
+            bc.currency_country_code AS baseCurrencyCountryCode,
             SUM(CASE WHEN md.type = -1 THEN md.amount ELSE 0 END) AS amount
         FROM 
             merchant_data md
         JOIN 
             category c ON md.category_id = c.id
+        INNER JOIN 
+            base_currency bc ON md.base_currency_id = bc.id
         WHERE 
             c.type != 1
         GROUP BY 
-            c.name
+            c.name, md.base_currency_id
         ORDER BY 
             amount DESC
     """
@@ -584,15 +604,19 @@ interface MerchantDataDao : BaseDao<MerchantData> {
             c.type As type,
             c.icon_id As iconId,
             c.icon_color_id As iconColorId,
+            bc.currency_symbol AS baseCurrencySymbol,
+            bc.currency_country_code AS baseCurrencyCountryCode,
             SUM(CASE WHEN md.type = -1 THEN md.amount ELSE 0 END) AS amount
         FROM 
             merchant_data md
         JOIN 
             category c ON md.category_id = c.id
+        INNER JOIN 
+            base_currency bc ON md.base_currency_id = bc.id
         WHERE 
             c.type != 1
         GROUP BY 
-            c.name
+            c.name, md.base_currency_id
         ORDER BY 
             amount DESC
     """
@@ -658,18 +682,22 @@ interface MerchantDataDao : BaseDao<MerchantData> {
             c.icon_id As iconId,
             c.icon_color_id As iconColorId,
             c.type,
+            bc.currency_symbol AS baseCurrencySymbol,
+            bc.currency_country_code AS baseCurrencyCountryCode,
             SUM(md.amount) AS amount
         FROM 
             merchant_data md
         JOIN 
             category c ON md.category_id = c.id
+        INNER JOIN 
+            base_currency bc ON md.base_currency_id = bc.id
         WHERE
             strftime('%Y', ((md.date_milli + :timeZoneOffsetInMilli) / 1000), 'unixepoch') = :year
             AND strftime('%m', ((md.date_milli + :timeZoneOffsetInMilli) / 1000), 'unixepoch') = printf('%02d', :monthPlusOne)
             AND md.category_id IN (:categoryIds)
             AND md.type = -1
         GROUP BY 
-            c.id, c.name, c.type
+            c.id, c.type, md.base_currency_id
     """
     )
     fun getCategoryWiseTotalAmountForMonth(
@@ -687,17 +715,21 @@ interface MerchantDataDao : BaseDao<MerchantData> {
             c.type,
             c.icon_id As iconId,
             c.icon_color_id As iconColorId,
+            bc.currency_symbol AS baseCurrencySymbol,
+            bc.currency_country_code AS baseCurrencyCountryCode,
             SUM(md.amount) AS amount
         FROM 
             merchant_data md
         JOIN 
             category c ON md.category_id = c.id
+        INNER JOIN 
+            base_currency bc ON md.base_currency_id = bc.id
         WHERE
             strftime('%Y', ((md.date_milli + :timeZoneOffsetInMilli) / 1000), 'unixepoch') = :year
             AND md.category_id IN (:categoryIds)
             AND md.type = -1
         GROUP BY 
-            c.id, c.name, c.type
+            c.id, c.type, md.base_currency_id
     """
     )
     fun getCategoryWiseTotalAmountForYear(
@@ -714,17 +746,21 @@ interface MerchantDataDao : BaseDao<MerchantData> {
             c.type,
             c.icon_id As iconId,
             c.icon_color_id As iconColorId,
+            bc.currency_symbol AS baseCurrencySymbol,
+            bc.currency_country_code AS baseCurrencyCountryCode,
             SUM(md.amount) AS amount
         FROM 
             merchant_data md
         JOIN 
             category c ON md.category_id = c.id
+        INNER JOIN 
+            base_currency bc ON md.base_currency_id = bc.id
         WHERE
             md.date_milli BETWEEN :startTime AND :endTime
             AND md.category_id IN (:categoryIds)
             AND md.type = -1
         GROUP BY 
-            c.id, c.name, c.type
+            c.id, c.type, md.base_currency_id
     """
     )
     fun getCategoryWiseTotalAmountForBetweenDates(

@@ -1,23 +1,19 @@
 package com.indie.apps.pennypal.domain.usecase
 
 import com.indie.apps.pennypal.data.module.category.CategoryAmount
-import com.indie.apps.pennypal.di.IoDispatcher
 import com.indie.apps.pennypal.repository.MerchantDataRepository
 import com.indie.apps.pennypal.repository.PreferenceRepository
 import com.indie.apps.pennypal.util.Resource
 import com.indie.apps.pennypal.util.ShowDataPeriod
 import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.util.handleException
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 class GetCategoryWiseExpenseUseCase @Inject constructor(
     private val merchantDataRepository: MerchantDataRepository,
-    private val preferenceRepository: PreferenceRepository,
-    @IoDispatcher private val dispatcher: CoroutineDispatcher
+    private val preferenceRepository: PreferenceRepository
 ) {
 
     fun loadData(
@@ -56,7 +52,7 @@ class GetCategoryWiseExpenseUseCase @Inject constructor(
             } catch (e: Throwable) {
                 emit(Resource.Error(handleException(e).message + ": ${e.message}"))
             }
-        }.flowOn(dispatcher)
+        }
     }
 
     fun loadDataAsFlow(

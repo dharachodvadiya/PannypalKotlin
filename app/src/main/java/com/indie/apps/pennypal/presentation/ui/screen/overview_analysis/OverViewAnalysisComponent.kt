@@ -271,7 +271,7 @@ fun AnalysisBalanceItem(
 @Composable
 fun OverViewAnalysisCategoryChart(
     categoryList: List<CategoryAmount>,
-    currency: String,
+    //currency: String,
     modifier: Modifier = Modifier
 ) {
     val chartData = categoryList.map { item ->
@@ -307,7 +307,7 @@ fun OverViewAnalysisCategoryChart(
                 CategoryListItem(
                     item = item,
                     itemBgColor = MyAppTheme.colors.transparent,
-                    currency = currency
+                    currency = item.baseCurrencySymbol
                 )
             }
         }
