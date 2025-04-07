@@ -37,13 +37,12 @@ fun <T> Flow<T>.mapBudgetsWithSpent(
                 @Suppress("UNCHECKED_CAST")
                 val pagingData = value as PagingData<BudgetWithSpentAndCategoryIdList>
                 val updatedPagingData = pagingData.map { budget ->
-                    val budgetWithSpent = budget
                     val spentAmount = calculateSpentAmount(
                         timeZoneOffsetInMilli,
                         merchantDataRepository,
-                        budgetWithSpent
+                        budget
                     )
-                    budgetWithSpent.copy(spentAmount = spentAmount.amount)
+                    budget.copy(spentAmount = spentAmount.amount)
                 }
                 @Suppress("UNCHECKED_CAST")
                 emit(updatedPagingData as T)

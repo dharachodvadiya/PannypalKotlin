@@ -143,7 +143,7 @@ fun TransactionItem(
             )
         )
     val iconBgColor = if (isSelected) MyAppTheme.colors.brand else MyAppTheme.colors.lightBlue2
-    val amount = if (item.type > 0) item.amount else item.amount * -1
+    //val amount = if (item.type > 0) item.amount else item.amount * -1
     val amountColor = if (item.type >= 0) MyAppTheme.colors.greenText else MyAppTheme.colors.redText
 
     ListItem(

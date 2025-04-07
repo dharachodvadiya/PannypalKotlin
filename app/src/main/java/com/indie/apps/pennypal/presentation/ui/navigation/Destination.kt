@@ -25,7 +25,7 @@ enum class ScreenNav(val route: String) {
     SEE_ALL_DATA("overview/see_all_data"),
 
     //NEW_ITEM("overview/new_item"),
-    PROFILE("overview/profile"),
+   // PROFILE("overview/profile"),
     CATEGORY_START("category/start"),
     MERCHANT_START("merchant/start"),
     MERCHANT_DATA("merchant/merchant_data/{${Util.PARAM_MERCHANT_ID}}"),

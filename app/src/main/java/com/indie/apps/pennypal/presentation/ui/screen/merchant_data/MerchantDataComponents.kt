@@ -245,7 +245,6 @@ fun MerchantDataBottomBar(
 fun MerchantDataIncomeAmount(
     isSelected: Boolean = false,
     data: MerchantDataWithPaymentName,
-    currency: String,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     itemBgColor: Color,
@@ -271,13 +270,13 @@ fun MerchantDataIncomeAmount(
     ) {
 
         MerchantDataAmountItem(
-            amount = data.amount,
+            amount = data.originalAmount,
             description = data.details,
             contentAlignment = Alignment.Start,
             colorStroke = MyAppTheme.colors.greenBg,
             itemBgColor = itemBgColor,
             paymentName = data.paymentName,
-            currency = currency
+            currency = data.originalAmountSymbol
         )
 
     }
@@ -288,7 +287,6 @@ fun MerchantDataIncomeAmount(
 fun MerchantDataExpenseAmount(
     isSelected: Boolean = false,
     data: MerchantDataWithPaymentName,
-    currency: String,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     itemBgColor: Color,
@@ -314,13 +312,13 @@ fun MerchantDataExpenseAmount(
     ) {
 
         MerchantDataAmountItem(
-            amount = data.amount * -1,
+            amount = data.originalAmount * -1,
             description = data.details,
             contentAlignment = Alignment.End,
             colorStroke = MyAppTheme.colors.redBg,
             itemBgColor = itemBgColor,
             paymentName = data.paymentName,
-            currency = currency
+            currency = data.originalAmountSymbol
         )
 
     }

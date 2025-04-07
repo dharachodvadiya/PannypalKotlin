@@ -154,7 +154,6 @@ fun OverviewData(
     OverviewBalanceView(
         currentPeriod = currentPeriod,
         data = data,
-        currency = currency,
     )
 
     OverviewTransactionData(
@@ -202,7 +201,6 @@ fun OverviewData(
 fun OverviewBalanceView(
     currentPeriod: ShowDataPeriod?,
     data: Total?,
-    currency: String,
     modifier: Modifier = Modifier,
 ) {
 
@@ -255,7 +253,7 @@ fun OverviewBalanceView(
                             text = data?.let {
                                 Util.getFormattedStringWithSymbol(
                                     balance,
-                                    currency
+                                    it.baseCurrencySymbol
                                 )
                             } ?: "",
                             style = MyAppTheme.typography.Regular66_5,
@@ -273,7 +271,7 @@ fun OverviewBalanceView(
                             amount = data?.let {
                                 Util.getFormattedStringWithSymbol(
                                     it.totalIncome,
-                                    currency
+                                    it.baseCurrencySymbol
                                 )
                             } ?: "",
                             title = R.string.received,
@@ -289,7 +287,7 @@ fun OverviewBalanceView(
                             amount = data?.let {
                                 Util.getFormattedStringWithSymbol(
                                     data.totalExpense,
-                                    currency
+                                    it.baseCurrencySymbol
                                 )
                             } ?: "",
                             title = R.string.spent,

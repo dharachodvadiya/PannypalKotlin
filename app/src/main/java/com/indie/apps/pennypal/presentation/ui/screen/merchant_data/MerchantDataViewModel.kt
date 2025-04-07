@@ -32,12 +32,12 @@ class MerchantDataViewModel @Inject constructor(
     //getMerchantDataListFromMerchantId: GetMerchantDataListFromMerchantIdUseCase,
     getMerchantDataWithPaymentNameListFromMerchantIdUseCase: GetMerchantDataWithPaymentNameListFromMerchantIdUseCase,
     private val deleteMultipleMerchantDataUseCase: DeleteMultipleMerchantDataUseCase,
-    userRepository: UserRepository,
+   // userRepository: UserRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    val currency = userRepository.getCurrency()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), "$")
+    /*val currency = userRepository.getCurrency()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), "$")*/
     private val merchantId = savedStateHandle.get<String>(Util.PARAM_MERCHANT_ID)?.toLong() ?: 0
 
     var scrollIndex = MutableStateFlow(0)

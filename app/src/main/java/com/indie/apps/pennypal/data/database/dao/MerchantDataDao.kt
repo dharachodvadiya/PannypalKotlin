@@ -193,9 +193,12 @@ interface MerchantDataDao : BaseDao<MerchantData> {
                 md.details, 
                 md.amount, 
                 md.type,
+                md.original_amount as originalAmount,
+                oc.currency_symbol as originalAmountSymbol,
                 p.name as paymentName
         FROM merchant_data md
         INNER JOIN payment_type p ON md.payment_id = p.id
+        INNER JOIN base_currency oc  ON md.original_currency_id = oc.id
         where md.merchant_id = :merchantId
         ORDER BY md.date_milli DESC
     """
