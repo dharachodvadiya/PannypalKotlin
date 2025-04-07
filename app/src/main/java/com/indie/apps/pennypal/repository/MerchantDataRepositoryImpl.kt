@@ -2,15 +2,10 @@ package com.indie.apps.pennypal.repository
 
 import com.indie.apps.pennypal.data.database.dao.MerchantDataDao
 import com.indie.apps.pennypal.data.database.entity.MerchantData
-import com.indie.apps.pennypal.data.module.Amount
-import com.indie.apps.pennypal.data.module.balance.Total
+import com.indie.apps.pennypal.data.module._interface.ConvertibleAmount
 import com.indie.apps.pennypal.data.module.balance.mergeByAmount
-import com.indie.apps.pennypal.data.module.balance.toCurrencyCountry
-import com.indie.apps.pennypal.data.module.category.CategoryAmount
 import com.indie.apps.pennypal.data.module.category.mergeAndSortByAmount
-import com.indie.apps.pennypal.data.module.category.toCurrencyCountry
 import com.indie.apps.pennypal.data.module.mergeByAmount
-import com.indie.apps.pennypal.data.module.toCurrencyCountry
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.emitAll
@@ -127,7 +122,7 @@ class MerchantDataRepositoryImpl @Inject constructor(
             year = year.toString()
         ).map { list ->
 
-            convertAmount2(
+            convertAmount(
                 list = list,
                 exchangeRateRepository = exchangeRateRepository,
                 baseCurrencySymbol = baseCurrencySymbol,
@@ -151,7 +146,7 @@ class MerchantDataRepositoryImpl @Inject constructor(
         val baseCurrCode = userRepository.getCurrencyCountryCode().first()
         val baseCurrencySymbol = userRepository.getCurrency().first()
 
-        convertAmount2(
+        convertAmount(
             list = totalList,
             baseCurrCode = baseCurrCode,
             exchangeRateRepository = exchangeRateRepository,
@@ -169,7 +164,7 @@ class MerchantDataRepositoryImpl @Inject constructor(
             .getTotalFromYearAsFlow(timeZoneOffsetInMilli, year.toString())
             .map { list ->
 
-                convertAmount2(
+                convertAmount(
                     list = list,
                     baseCurrencySymbol = baseCurrencySymbol,
                     exchangeRateRepository = exchangeRateRepository,
@@ -187,7 +182,7 @@ class MerchantDataRepositoryImpl @Inject constructor(
             val baseCurrCode = userRepository.getCurrencyCountryCode().first()
             val baseCurrencySymbol = userRepository.getCurrency().first()
 
-            convertAmount2(
+            convertAmount(
                 list = totalList,
                 baseCurrCode = baseCurrCode,
                 exchangeRateRepository = exchangeRateRepository,
@@ -204,7 +199,7 @@ class MerchantDataRepositoryImpl @Inject constructor(
                 .getTotalAsFlow()
                 .map { list ->
 
-                    convertAmount2(
+                    convertAmount(
                         list = list,
                         baseCurrencySymbol = baseCurrencySymbol,
                         exchangeRateRepository = exchangeRateRepository,
@@ -220,7 +215,7 @@ class MerchantDataRepositoryImpl @Inject constructor(
 
         val baseCurrCode = userRepository.getCurrencyCountryCode().first()
         val baseCurrencySymbol = userRepository.getCurrency().first()
-        convertAmount2(
+        convertAmount(
             list = totalList,
             baseCurrCode = baseCurrCode,
             exchangeRateRepository = exchangeRateRepository,
@@ -355,7 +350,7 @@ class MerchantDataRepositoryImpl @Inject constructor(
         val baseCurrCode = userRepository.getCurrencyCountryCode().first()
         val baseCurrencySymbol = userRepository.getCurrency().first()
 
-        convertAmount1(
+        convertAmount(
             list = dataList,
             exchangeRateRepository = exchangeRateRepository,
             baseCurrCode = baseCurrCode,
@@ -372,7 +367,7 @@ class MerchantDataRepositoryImpl @Inject constructor(
         val baseCurrCode = userRepository.getCurrencyCountryCode().first()
         val baseCurrencySymbol = userRepository.getCurrency().first()
 
-        convertAmount1(
+        convertAmount(
             list = dataList,
             exchangeRateRepository = exchangeRateRepository,
             baseCurrCode = baseCurrCode,
@@ -391,7 +386,7 @@ class MerchantDataRepositoryImpl @Inject constructor(
         val baseCurrCode = userRepository.getCurrencyCountryCode().first()
         val baseCurrencySymbol = userRepository.getCurrency().first()
 
-        convertAmount1(
+        convertAmount(
             list = dataList,
             exchangeRateRepository = exchangeRateRepository,
             baseCurrCode = baseCurrCode,
@@ -455,87 +450,24 @@ class MerchantDataRepositoryImpl @Inject constructor(
         emitAll(dataList)
     }.flowOn(dispatcher)
 
-    private suspend fun convertAmount(
-        list: List<CategoryAmount>,
+    private suspend fun <T : ConvertibleAmount> convertAmount(
+        list: List<T>,
         exchangeRateRepository: ExchangeRateRepository,
         baseCurrCode: String,
         baseCurrencySymbol: String
-    ): List<CategoryAmount> = coroutineScope {
+    ): List<T> = coroutineScope {
         val rates = exchangeRateRepository.getConversionRateFromList(list.map {
             it.toCurrencyCountry(baseCurrCode)
         })
 
         list.mapIndexed { index, item ->
             val rate = rates[index]
-            val amount = exchangeRateRepository.getAmountFromRate(
-                amount = item.amount,
-                rate = rate
-            )
-
-            item.copy(
-                amount = amount,
-                baseCurrencySymbol = baseCurrencySymbol,
-                baseCurrencyCountryCode = baseCurrCode
-            )
-        }
-    }
-
-    private suspend fun convertAmount2(
-        list: List<Total>,
-        exchangeRateRepository: ExchangeRateRepository,
-        baseCurrCode: String,
-        baseCurrencySymbol: String
-    ): List<Total> = coroutineScope {
-
-        val rates = exchangeRateRepository.getConversionRateFromList(list.map {
-            it.toCurrencyCountry(baseCurrCode)
-        })
-
-        list.mapIndexed { index, item ->
-            val rate = rates[index]
-            val income = exchangeRateRepository.getAmountFromRate(
-                amount = item.totalIncome,
-                rate = rate
-            )
-
-            val expense = exchangeRateRepository.getAmountFromRate(
-                amount = item.totalExpense,
-                rate = rate
-            )
-
-            item.copy(
-                totalIncome = income,
-                totalExpense = expense,
-                baseCurrencySymbol = baseCurrencySymbol,
-                baseCurrencyCountryCode = baseCurrCode
-            )
-        }
-    }
-
-
-    private suspend fun convertAmount1(
-        list: List<Amount>,
-        exchangeRateRepository: ExchangeRateRepository,
-        baseCurrCode: String,
-        baseCurrencySymbol: String
-    ): List<Amount> = coroutineScope {
-        val rates = exchangeRateRepository.getConversionRateFromList(list.map {
-            it.toCurrencyCountry(baseCurrCode)
-        })
-
-        list.mapIndexed { index, item ->
-            val rate = rates[index]
-            val amount = exchangeRateRepository.getAmountFromRate(
-                amount = item.amount,
-                rate = rate
-            )
-
-            item.copy(
-                amount = amount,
-                baseCurrencySymbol = baseCurrencySymbol,
-                baseCurrencyCountryCode = baseCurrCode
-            )
+            val convertedAmounts = item.getAmounts().map { amount ->
+                exchangeRateRepository.getAmountFromRate(amount, rate)
+            }
+            item.withConvertedAmounts(convertedAmounts, baseCurrCode, baseCurrencySymbol) as T
         }
     }
 
 }
+

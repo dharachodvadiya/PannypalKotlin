@@ -1,6 +1,7 @@
 package com.indie.apps.pennypal.data.module.category
 
 import com.indie.apps.pennypal.data.module.CurrencyCountry
+import com.indie.apps.pennypal.data.module._interface.ConvertibleAmount
 
 data class CategoryAmount(
     val id: Long = 0,
@@ -9,12 +10,29 @@ data class CategoryAmount(
     val type: Int,
     val iconId: Int,
     val iconColorId: Int,
-    val baseCurrencySymbol: String = "",
-    val baseCurrencyCountryCode: String = ""
-)
+    override val baseCurrencySymbol: String = "",
+    override val baseCurrencyCountryCode: String = ""
+) : ConvertibleAmount {
+    override fun getAmounts(): List<Double> = listOf(amount)
 
-fun CategoryAmount.toCurrencyCountry(toCode: String) =
-    CurrencyCountry(baseCurrencyCountryCode, toCode)
+    override fun withConvertedAmounts(
+        amounts: List<Double>,
+        baseCurrCode: String,
+        baseCurrencySymbol: String
+    ): ConvertibleAmount {
+        return copy(
+            amount = amounts[0],
+            baseCurrencySymbol = baseCurrencySymbol,
+            baseCurrencyCountryCode = baseCurrCode
+        )
+    }
+
+    override fun toCurrencyCountry(toCode: String) =
+        CurrencyCountry(baseCurrencyCountryCode, toCode)
+}
+
+/*fun CategoryAmount.toCurrencyCountry(toCode: String) =
+    CurrencyCountry(baseCurrencyCountryCode, toCode)*/
 
 fun List<CategoryAmount>.mergeAndSortByAmount(): List<CategoryAmount> {
     return this.groupBy { it.name }
