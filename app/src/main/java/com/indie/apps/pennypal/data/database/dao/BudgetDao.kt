@@ -26,6 +26,7 @@ interface BudgetDao : BaseDao<Budget> {
         b.end_date As endDate,
         b.period_type As periodType, 
         oc.currency_symbol as originalAmountSymbol,
+        b.original_currency_id as originalCurrencyId,
         GROUP_CONCAT(bc.category_id) AS categoryIds,
         0.0 As spentAmount
     FROM budget b
@@ -74,6 +75,7 @@ interface BudgetDao : BaseDao<Budget> {
         b.end_date As endDate,
         b.period_type As periodType, 
         oc.currency_symbol as originalAmountSymbol,
+        b.original_currency_id as originalCurrencyId,
         GROUP_CONCAT(bc.category_id) AS categoryIds,
         0.0 As spentAmount
     FROM budget b
@@ -105,6 +107,7 @@ interface BudgetDao : BaseDao<Budget> {
         b.end_date As endDate,
         b.period_type As periodType, 
         oc.currency_symbol as originalAmountSymbol,
+        b.original_currency_id as originalCurrencyId,
         GROUP_CONCAT(bc.category_id) AS categoryIds,
         0.0 As spentAmount
     FROM budget b
@@ -134,6 +137,7 @@ interface BudgetDao : BaseDao<Budget> {
         b.end_date As endDate,
         b.period_type As periodType, 
         oc.currency_symbol as originalAmountSymbol,
+        b.original_currency_id as originalCurrencyId,
         GROUP_CONCAT(bc.category_id) AS categoryIds,
         0.0 As spentAmount
     FROM budget b
@@ -231,6 +235,7 @@ interface BudgetDao : BaseDao<Budget> {
         b.end_date As endDate,
         b.period_type As periodType, 
         oc.currency_symbol as originalAmountSymbol,
+        b.original_currency_id as originalCurrencyId,
         GROUP_CONCAT(bc.category_id) AS categoryIds,
         0.0 As spentAmount
     FROM budget b
@@ -288,6 +293,7 @@ interface BudgetDao : BaseDao<Budget> {
         b.end_date As endDate,
         b.period_type As periodType, 
         oc.currency_symbol as originalAmountSymbol,
+        b.original_currency_id as originalCurrencyId,
         GROUP_CONCAT(bc.category_id) AS categoryIds,
         0.0 As spentAmount
     FROM budget b

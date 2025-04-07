@@ -18,4 +18,6 @@ data class BudgetWithSpentAndCategoryIdList(
     val category: List<Long>,
 
     val originalAmountSymbol: String,
+
+    val originalCurrencyId: Long,
 )

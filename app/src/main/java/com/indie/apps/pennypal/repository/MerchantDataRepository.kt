@@ -106,12 +106,14 @@ interface MerchantDataRepository : BaseRepository<MerchantData> {
         timeZoneOffsetInMilli: Int,
         year: Int,
         month: Int,
+        toCurrencyId: Long,
         categoryIds: List<Long>
     ): Amount
 
     suspend fun getTotalAmountForYearAndCategory(
         timeZoneOffsetInMilli: Int,
         year: Int,
+        toCurrencyId: Long,
         categoryIds: List<Long>
     ): Amount
 
@@ -119,6 +121,7 @@ interface MerchantDataRepository : BaseRepository<MerchantData> {
         timeZoneOffsetInMilli: Int,
         startTime: Long,
         endTime: Long,
+        toCurrencyId: Long,
         categoryIds: List<Long>
     ): Amount
 

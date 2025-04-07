@@ -137,12 +137,14 @@ object AppModule {
         database: AppDatabase,
         exchangeRateRepository: ExchangeRateRepository,
         userRepository: UserRepository,
+        baseCurrencyRepository: BaseCurrencyRepository,
         @IoDispatcher dispatcher: CoroutineDispatcher
     ): MerchantDataRepository {
         return MerchantDataRepositoryImpl(
             database.merchantDataDao(),
             exchangeRateRepository,
             userRepository,
+            baseCurrencyRepository,
             dispatcher
         )
     }

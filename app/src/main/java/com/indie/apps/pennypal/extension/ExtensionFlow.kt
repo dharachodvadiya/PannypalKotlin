@@ -37,13 +37,12 @@ fun <T> Flow<T>.mapBudgetsWithSpent(
                 @Suppress("UNCHECKED_CAST")
                 val pagingData = value as PagingData<BudgetWithSpentAndCategoryIdList>
                 val updatedPagingData = pagingData.map { budget ->
-                    val budgetWithSpent = budget
                     val spentAmount = calculateSpentAmount(
                         timeZoneOffsetInMilli,
                         merchantDataRepository,
-                        budgetWithSpent
+                        budget
                     )
-                    budgetWithSpent.copy(spentAmount = spentAmount.amount)
+                    budget.copy(spentAmount = spentAmount.amount)
                 }
                 @Suppress("UNCHECKED_CAST")
                 emit(updatedPagingData as T)
@@ -68,7 +67,8 @@ private suspend fun calculateSpentAmount(
                 timeZoneOffsetInMilli = timeZoneOffsetInMilli,
                 year = startCal.get(Calendar.YEAR),
                 month = startCal.get(Calendar.MONTH),
-                categoryIds = budget.category
+                categoryIds = budget.category,
+                toCurrencyId = budget.originalCurrencyId
             )
         }
 
@@ -76,7 +76,8 @@ private suspend fun calculateSpentAmount(
             merchantDataRepository.getTotalAmountForYearAndCategory(
                 year = startCal.get(Calendar.YEAR),
                 categoryIds = budget.category,
-                timeZoneOffsetInMilli = timeZoneOffsetInMilli
+                timeZoneOffsetInMilli = timeZoneOffsetInMilli,
+                toCurrencyId = budget.originalCurrencyId
             )
         }
 
@@ -85,7 +86,8 @@ private suspend fun calculateSpentAmount(
                 timeZoneOffsetInMilli = timeZoneOffsetInMilli,
                 startTime = budget.startDate,
                 endTime = budget.endDate ?: 0,
-                categoryIds = budget.category
+                categoryIds = budget.category,
+                toCurrencyId = budget.originalCurrencyId
             )
         }
 
