@@ -16,6 +16,8 @@ data class BudgetWithSpentAndCategoryIds(
     val spentAmount: Double = 0.0,
 
     val categoryIds: String?,
+
+    val originalAmountSymbol: String,
 )
 
 fun BudgetWithSpentAndCategoryIds.toBudgetWithSpentAndCategoryIdList(): BudgetWithSpentAndCategoryIdList {
@@ -27,6 +29,7 @@ fun BudgetWithSpentAndCategoryIds.toBudgetWithSpentAndCategoryIdList(): BudgetWi
         endDate = endDate,
         budgetAmount = budgetAmount,
         spentAmount = spentAmount,
+        originalAmountSymbol = originalAmountSymbol,
         category = categoryIds?.split(",")
             ?.filter { it.isNotBlank() } // Ensure that there are no blank entries
             ?.map { it.toLong() }

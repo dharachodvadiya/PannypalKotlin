@@ -25,10 +25,12 @@ interface BudgetDao : BaseDao<Budget> {
         b.start_date As startDate,
         b.end_date As endDate,
         b.period_type As periodType, 
+        oc.currency_symbol as originalAmountSymbol,
         GROUP_CONCAT(bc.category_id) AS categoryIds,
         0.0 As spentAmount
     FROM budget b
     LEFT JOIN budget_category bc ON b.id = bc.budget_id
+    INNER JOIN base_currency oc  ON b.original_currency_id = oc.id
     WHERE 
         (
             b.period_type = 1
@@ -71,10 +73,12 @@ interface BudgetDao : BaseDao<Budget> {
         b.start_date As startDate,
         b.end_date As endDate,
         b.period_type As periodType, 
+        oc.currency_symbol as originalAmountSymbol,
         GROUP_CONCAT(bc.category_id) AS categoryIds,
         0.0 As spentAmount
     FROM budget b
     LEFT JOIN budget_category bc ON b.id = bc.budget_id
+    INNER JOIN base_currency oc  ON b.original_currency_id = oc.id
     WHERE 
         (
             b.period_type = 1
@@ -100,10 +104,12 @@ interface BudgetDao : BaseDao<Budget> {
         b.start_date As startDate,
         b.end_date As endDate,
         b.period_type As periodType, 
+        oc.currency_symbol as originalAmountSymbol,
         GROUP_CONCAT(bc.category_id) AS categoryIds,
         0.0 As spentAmount
     FROM budget b
     LEFT JOIN budget_category bc ON b.id = bc.budget_id
+    INNER JOIN base_currency oc  ON b.original_currency_id = oc.id
     WHERE
         (
             b.period_type = 2
@@ -127,10 +133,12 @@ interface BudgetDao : BaseDao<Budget> {
         b.start_date As startDate,
         b.end_date As endDate,
         b.period_type As periodType, 
+        oc.currency_symbol as originalAmountSymbol,
         GROUP_CONCAT(bc.category_id) AS categoryIds,
         0.0 As spentAmount
     FROM budget b
     LEFT JOIN budget_category bc ON b.id = bc.budget_id
+    INNER JOIN base_currency oc  ON b.original_currency_id = oc.id
     WHERE
         (
             b.period_type = 3  -- ONE_TIME budget
@@ -163,6 +171,8 @@ interface BudgetDao : BaseDao<Budget> {
             b.start_date As startDate,
             b.end_date As endDate,
             b.created_date As createdDate,
+            b.original_currency_id As originalCurrencyId,
+            oc.currency_symbol as originalAmountSymbol,
             bc.category_id As categoryId,
             bc.amount As categoryAmount,
             c.name AS categoryName,
@@ -172,6 +182,7 @@ interface BudgetDao : BaseDao<Budget> {
         FROM budget b
         LEFT JOIN budget_category bc ON b.id = bc.budget_id
         LEFT JOIN category c ON c.id = bc.category_id
+        INNER JOIN base_currency oc  ON b.original_currency_id = oc.id
         WHERE b.id = :budgetId
     """
     )
@@ -219,10 +230,12 @@ interface BudgetDao : BaseDao<Budget> {
         b.start_date As startDate,
         b.end_date As endDate,
         b.period_type As periodType, 
+        oc.currency_symbol as originalAmountSymbol,
         GROUP_CONCAT(bc.category_id) AS categoryIds,
         0.0 As spentAmount
     FROM budget b
     LEFT JOIN budget_category bc ON b.id = bc.budget_id
+    INNER JOIN base_currency oc  ON b.original_currency_id = oc.id
     WHERE 
         (
             b.period_type = 1
@@ -274,10 +287,12 @@ interface BudgetDao : BaseDao<Budget> {
         b.start_date As startDate,
         b.end_date As endDate,
         b.period_type As periodType, 
+        oc.currency_symbol as originalAmountSymbol,
         GROUP_CONCAT(bc.category_id) AS categoryIds,
         0.0 As spentAmount
     FROM budget b
     LEFT JOIN budget_category bc ON b.id = bc.budget_id
+    INNER JOIN base_currency oc  ON b.original_currency_id = oc.id
     WHERE 
         (
             b.period_type = 1

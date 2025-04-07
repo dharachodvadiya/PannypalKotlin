@@ -3,7 +3,9 @@ package com.indie.apps.pennypal.presentation.ui.screen.add_budget
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.indie.apps.cpp.data.repository.CountryRepository
 import com.indie.apps.pennypal.R
+import com.indie.apps.pennypal.data.database.entity.BaseCurrency
 import com.indie.apps.pennypal.data.database.entity.Category
 import com.indie.apps.pennypal.data.database.entity.toCategoryAmount
 import com.indie.apps.pennypal.data.database.enum.PeriodType
@@ -13,6 +15,7 @@ import com.indie.apps.pennypal.domain.usecase.AddBudgetUseCase
 import com.indie.apps.pennypal.domain.usecase.UpdateBudgetUseCase
 import com.indie.apps.pennypal.presentation.ui.component.UiText
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
+import com.indie.apps.pennypal.repository.BaseCurrencyRepository
 import com.indie.apps.pennypal.repository.BudgetRepository
 import com.indie.apps.pennypal.repository.CategoryRepository
 import com.indie.apps.pennypal.repository.UserRepository
@@ -21,8 +24,6 @@ import com.indie.apps.pennypal.util.Resource
 import com.indie.apps.pennypal.util.Util
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import javax.inject.Inject
@@ -33,12 +34,16 @@ class AddBudgetViewModel @Inject constructor(
     private val addBudgetUseCase: AddBudgetUseCase,
     private val updateBudgetUseCase: UpdateBudgetUseCase,
     private val budgetRepository: BudgetRepository,
-    userRepository: UserRepository,
+    private val baseCurrencyRepository: BaseCurrencyRepository,
+    private val userRepository: UserRepository,
+    private val countryRepository: CountryRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    val currency = userRepository.getCurrency()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), "$")
+    val originalCurrencyInfo = MutableStateFlow<BaseCurrency?>(null)
+
+   /* val currency = userRepository.getCurrency()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), "$")*/
 
     val budgetEditId =
         savedStateHandle.get<String>(Util.PARAM_BUDGET_ID)?.toLongOrNull() ?: -1L
@@ -84,6 +89,7 @@ class AddBudgetViewModel @Inject constructor(
                 categoryList = newCategories
 
                 if (budgetEditId == -1L) {
+                    loadUserData()
                     val calendar = Calendar.getInstance()
 
                     setCurrentMonth(calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR))
@@ -97,6 +103,20 @@ class AddBudgetViewModel @Inject constructor(
                     setEditData()
                 }
             }
+        }
+    }
+
+    private fun loadUserData() {
+        //uiState.value = Resource.Loading()
+        viewModelScope.launch {
+            userRepository.getCurrencyCountryCode()
+                .collect {
+                    val baseCurrencyInfo =
+                        baseCurrencyRepository.getBaseCurrencyFromCode(it)
+                    setOriginalCurrencyInfo(baseCurrencyInfo)
+                    //uiState.value = Resource.Success(Unit)
+
+                }
         }
     }
 
@@ -136,6 +156,15 @@ class AddBudgetViewModel @Inject constructor(
                     updateBudgetTitleText(editBudgetData!!.title)
                     updateAmountText(Util.getFormattedString(editBudgetData!!.amount))
                     updateRemainingAmount()
+
+                    val originalCurrencyInfo =
+                        baseCurrencyRepository.getBaseCurrencyFromId(editBudgetData!!.originalCurrencyId)
+
+                    setOriginalCurrencyInfo(
+                        data = originalCurrencyInfo
+                    )
+
+
                     uiState.value = Resource.Success(Unit)
 
                 }
@@ -257,6 +286,15 @@ class AddBudgetViewModel @Inject constructor(
         updateRemainingAmount()
     }
 
+    private fun setOriginalCurrencyInfo(data: BaseCurrency?) {
+        originalCurrencyInfo.value = data
+    }
+
+    fun setCurrencyCountryCode(data: String) {
+        val symbol = countryRepository.getCurrencySymbolFromCountryCode(data)
+        setOriginalCurrencyInfo(BaseCurrency(currencyCountryCode = data, currencySymbol = symbol))
+    }
+
     private fun updateRemainingAmount() {
         // Calculate the sum of amounts in selectedCategoryList
         val selectedSum = selectedCategoryList.value.sumOf { it.amount }
@@ -298,32 +336,20 @@ class AddBudgetViewModel @Inject constructor(
         } else if (remainingAmount.value < 0) {
             categoryBudgetErrorText.value = ErrorMessage.CATEGORY_LIMIT
         } else {
-            if (budgetEditId == -1L) {
+            viewModelScope.launch {
+
+                val budgetWithCategory = creteBudgetWithCategory()
+
                 val startDate = when (currentPeriod.value) {
                     PeriodType.ONE_TIME.id -> currentFromTimeInMilli.value
                     PeriodType.MONTH.id -> currentMonthInMilli.value
                     PeriodType.YEAR.id -> currentYearInMilli.value
                     else -> 0L
                 }
+                val startCalender = Calendar.getInstance().apply { timeInMillis = startDate }
 
-                val endDate = when (currentPeriod.value) {
-                    PeriodType.ONE_TIME.id -> currentToTimeInMilli.value
-                    else -> null
-                }
+                if(budgetEditId == -1L){
 
-                val budgetWithCategory = BudgetWithCategory(
-                    title = budgetTitle.value.text,
-                    amount = amount.value.text.toDouble(),
-                    periodType = currentPeriod.value,
-                    category = selectedCategoryList.value,
-                    startDate = startDate,
-                    endDate = endDate,
-                    createdDate = Calendar.getInstance().timeInMillis
-                )
-
-
-                viewModelScope.launch {
-                    val startCalender = Calendar.getInstance().apply { timeInMillis = startDate }
                     addBudgetUseCase.addData(
                         budgetWithCategory = budgetWithCategory,
                         month = startCalender.get(Calendar.MONTH),
@@ -340,30 +366,7 @@ class AddBudgetViewModel @Inject constructor(
                             }
                         }
                     }
-                }
-            } else {
-                val startDate = when (currentPeriod.value) {
-                    PeriodType.ONE_TIME.id -> currentFromTimeInMilli.value
-                    PeriodType.MONTH.id -> currentMonthInMilli.value
-                    PeriodType.YEAR.id -> currentYearInMilli.value
-                    else -> 0L
-                }
-
-                val endDate = when (currentPeriod.value) {
-                    PeriodType.ONE_TIME.id -> currentToTimeInMilli.value
-                    else -> null
-                }
-
-                val budgetWithCategory = editBudgetData!!.copy(
-                    title = budgetTitle.value.text,
-                    amount = amount.value.text.toDouble(),
-                    periodType = currentPeriod.value,
-                    category = selectedCategoryList.value,
-                    startDate = startDate,
-                    endDate = endDate
-                )
-                viewModelScope.launch {
-                    val startCalender = Calendar.getInstance().apply { timeInMillis = startDate }
+                }else{
                     updateBudgetUseCase.updateData(
                         budgetWithCategory = budgetWithCategory,
                         month = startCalender.get(Calendar.MONTH),
@@ -383,6 +386,56 @@ class AddBudgetViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private suspend fun creteBudgetWithCategory() : BudgetWithCategory
+    {
+        val baseCurrency =
+            if (originalCurrencyInfo.value?.id != 0L) originalCurrencyInfo.value else {
+                baseCurrencyRepository.getBaseCurrencyFromCode(
+                    originalCurrencyInfo.value?.currencyCountryCode ?: "US"
+                )
+            }
+        val originalCurrencyId = baseCurrency?.id
+            ?: (originalCurrencyInfo.value?.let { baseCurrencyRepository.insert(it) } ?: -1)
+
+        val startDate = when (currentPeriod.value) {
+            PeriodType.ONE_TIME.id -> currentFromTimeInMilli.value
+            PeriodType.MONTH.id -> currentMonthInMilli.value
+            PeriodType.YEAR.id -> currentYearInMilli.value
+            else -> 0L
+        }
+
+        val endDate = when (currentPeriod.value) {
+            PeriodType.ONE_TIME.id -> currentToTimeInMilli.value
+            else -> null
+        }
+
+        return if (budgetEditId == -1L) {
+            BudgetWithCategory(
+                title = budgetTitle.value.text,
+                amount = amount.value.text.toDouble(),
+                periodType = currentPeriod.value,
+                category = selectedCategoryList.value,
+                startDate = startDate,
+                endDate = endDate,
+                createdDate = Calendar.getInstance().timeInMillis,
+                originalCurrencyId = originalCurrencyId,
+                originalAmountSymbol = originalCurrencyInfo.value?.currencySymbol ?: ""
+            )
+        } else {
+            editBudgetData!!.copy(
+                title = budgetTitle.value.text,
+                amount = amount.value.text.toDouble(),
+                periodType = currentPeriod.value,
+                category = selectedCategoryList.value,
+                startDate = startDate,
+                endDate = endDate,
+                originalCurrencyId = originalCurrencyId,
+                originalAmountSymbol = originalCurrencyInfo.value?.currencySymbol ?: ""
+            )
+        }
+
     }
 
     private fun setEntryExistError() {

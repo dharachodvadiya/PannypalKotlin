@@ -19,12 +19,16 @@ data class BudgetWithCategory(
 
     val createdDate: Long,
 
-    val category: List<CategoryAmount>
+    val category: List<CategoryAmount>,
 
-)
+    val originalCurrencyId: Long,
+
+    val originalAmountSymbol: String,
+
+    )
 
 fun BudgetWithCategory.toBudget() =
-    Budget(id, title, amount, periodType, startDate, endDate, createdDate)
+    Budget(id, title, amount, periodType, startDate, endDate, createdDate, originalCurrencyId)
 
 fun BudgetWithCategory.toBudgetCategoryList(): List<BudgetCategory> {
     val list = mutableListOf<BudgetCategory>()

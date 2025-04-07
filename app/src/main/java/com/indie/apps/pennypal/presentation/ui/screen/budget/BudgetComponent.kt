@@ -354,7 +354,7 @@ fun MonthYearSelection(
 @Composable
 fun BudgetList(
     budgetState: List<BudgetWithSpentAndCategoryIdList>,
-    currency: String,
+    //currency: String,
     onBudgetEditClick: (Long) -> Unit
 ) {
     if (budgetState.isEmpty()) {
@@ -374,7 +374,7 @@ fun BudgetList(
                     totalAmount = item.budgetAmount,
                     spentAmount = item.spentAmount,
                     onClick = { onBudgetEditClick(item.id) },
-                    currency = currency,
+                    currency = item.originalAmountSymbol,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -389,7 +389,7 @@ fun LazyListScope.expandableBudgetGroup(
     onExpandClick: () -> Unit,
     items: List<BudgetWithSpentAndCategoryIdList>? = null,
     pagingItems: LazyPagingItems<BudgetWithSpentAndCategoryIdList>? = null,
-    currency: String,
+    //currency: String,
     onBudgetEditClick: (Long) -> Unit
 ) {
     item {
@@ -410,7 +410,6 @@ fun LazyListScope.expandableBudgetGroup(
                 ) { item ->
                     BudgetItemContent(
                         item,
-                        currency,
                         onBudgetEditClick,
                         items.indexOf(item) == items.size - 1
                     )
@@ -425,7 +424,6 @@ fun LazyListScope.expandableBudgetGroup(
                     pagingItems[index]?.let { item ->
                         BudgetItemContent(
                             item,
-                            currency,
                             onBudgetEditClick,
                             index == pagingItems.itemCount - 1
                         )
@@ -441,7 +439,6 @@ fun LazyListScope.expandableBudgetGroup(
 @Composable
 fun BudgetItemContent(
     item: BudgetWithSpentAndCategoryIdList,
-    currency: String,
     onBudgetEditClick: (Long) -> Unit,
     isLastItem: Boolean
 ) {
@@ -456,7 +453,7 @@ fun BudgetItemContent(
         spentAmount = item.spentAmount,
         date = timeString,
         onClick = { onBudgetEditClick(item.id) },
-        currency = currency,
+        currency = item.originalAmountSymbol,
         modifier = if (isLastItem) Modifier.roundedCornerLowerBackground(MyAppTheme.colors.itemBg)
         else Modifier.background(MyAppTheme.colors.itemBg)
     )

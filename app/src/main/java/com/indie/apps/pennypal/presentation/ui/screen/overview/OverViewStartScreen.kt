@@ -61,7 +61,7 @@ fun OverViewStartScreen(
       }*/
 
     val currentPeriod by overViewViewModel.currentPeriod.collectAsStateWithLifecycle()
-    val currency by overViewViewModel.currency.collectAsStateWithLifecycle()
+    // val currency by overViewViewModel.currency.collectAsStateWithLifecycle()
     val isSubscribed by overViewViewModel.isSubscribed.collectAsStateWithLifecycle()
     val userData by overViewViewModel.userData.collectAsStateWithLifecycle()
     val currentTotal by overViewViewModel.currentTotal.collectAsStateWithLifecycle()
@@ -152,7 +152,7 @@ fun OverViewStartScreen(
             OverviewData(
                 currentPeriod = currentPeriod,
                 data = currentTotal,
-                currency = currency,
+                //currency = currency,
                 categoryList = currentMonthCategory,
                 recentTransaction = recentTransaction,
                 recentMerchant = recentMerchant,

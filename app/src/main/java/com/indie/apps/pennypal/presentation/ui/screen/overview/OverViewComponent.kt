@@ -121,7 +121,7 @@ fun OverviewBalanceItem(
 fun OverviewData(
     currentPeriod: ShowDataPeriod?,
     data: Total?,
-    currency: String,
+    //currency: String,
     recentTransaction: List<MerchantDataWithAllData>,
     categoryList: List<CategoryAmount>,
     recentMerchant: List<MerchantNameAndDetails>,
@@ -193,7 +193,7 @@ fun OverviewData(
         onSelectBudgetPeriod = onSelectBudgetPeriod,
         onSetBudgetClick = onSetBudgetClick,
         isSelectionEnable = isSelectionEnable,
-        currency = currency
+        //currency = currency
     )
 }
 
@@ -540,7 +540,7 @@ fun OverviewAnalysisData(
 @Composable
 fun OverviewBudgetData(
     budgetWithSpentAndCategoryIdList: BudgetWithSpentAndCategoryIdList?,
-    currency: String,
+    //currency: String,
     onExploreBudgetClick: () -> Unit,
     selectBudgetPeriod: PeriodType,
     onSelectBudgetPeriod: (PeriodType) -> Unit,
@@ -582,7 +582,7 @@ fun OverviewBudgetData(
                     totalBudgetAmount = budgetWithSpentAndCategoryIdList.budgetAmount,
                     spentAmount = budgetWithSpentAndCategoryIdList.spentAmount,
                     timeString = timeString,
-                    currency = currency
+                    currency = budgetWithSpentAndCategoryIdList.originalAmountSymbol
                 )
 
                 if (!isSelectionEnable) {

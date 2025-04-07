@@ -60,6 +60,8 @@ internal fun NavGraphBuilder.navigateToAddEditBudgetScreen(
         val periodType =
             backStackEntry.savedStateHandle.get<Int>(Util.SAVE_STATE_PERIOD_TYPE)
 
+        val countryCode = backStackEntry.savedStateHandle.get<String>(Util.SAVE_STATE_COUNTRY_CODE)
+
         bottomBarState.value = false
         AddEditBudgetScreen(
             onNavigationUp = { navController.navigateUp() },
@@ -81,7 +83,24 @@ internal fun NavGraphBuilder.navigateToAddEditBudgetScreen(
                 navController.navigate(DialogNav.MULTI_SELECT_CATEGORY.route)
             },
             selectedCategoryIds = categoryIds,
-            selectedPeriodType = periodType ?: 1
+            selectedPeriodType = periodType ?: 1,
+            currencyCountryCode = countryCode,
+            onCurrencyChange = { code ->
+                navController.navigate(DialogNav.COUNTRY_PICKER.route)
+
+                navController.currentBackStackEntry?.savedStateHandle?.set(
+                    Util.SAVE_STATE_SELECT_COUNTRY_CODE,
+                    code
+                )
+
+                navController.currentBackStackEntry?.savedStateHandle?.set(
+                    Util.SAVE_STATE_SHOW_CURRENCY,
+                    true
+                )
+                navController.currentBackStackEntry?.savedStateHandle?.set(
+                    Util.SAVE_STATE_SAVABLE_DIALOG, false
+                )
+            },
         )
     }
 }

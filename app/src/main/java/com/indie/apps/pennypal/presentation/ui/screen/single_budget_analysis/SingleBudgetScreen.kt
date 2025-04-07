@@ -48,7 +48,7 @@ fun SingleBudgetScreen(
 
     var openAlertDialog by remember { mutableStateOf(false) }
 
-    val currency by viewModel.currency.collectAsStateWithLifecycle()
+    // val currency by viewModel.currency.collectAsStateWithLifecycle()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val budgetData by viewModel.budgetData.collectAsStateWithLifecycle()
     val spentCategoryData by viewModel.spentCategoryData.collectAsStateWithLifecycle()
@@ -125,19 +125,19 @@ fun SingleBudgetScreen(
                         totalBudgetAmount = budgetData?.amount ?: 0.0,
                         spentAmount = spentCategoryData.sumOf { it.amount },
                         timeString = timeString,
-                        currency = currency
+                        currency = budgetData?.originalAmountSymbol ?: "$"
                     )
 
                     BudgetedCategoryAnalysis(
                         categoryLimitList = budgetData?.category ?: emptyList(),
                         categorySpentList = spentCategoryData,
-                        currency = currency
+                        currency = budgetData?.originalAmountSymbol ?: "$"
                     )
 
                     IncludedCategoryAnalysis(
                         categoryLimitList = budgetData?.category ?: emptyList(),
                         categorySpentList = spentCategoryData,
-                        currency = currency
+                        currency = budgetData?.originalAmountSymbol ?: "$"
                     )
                 }
             }

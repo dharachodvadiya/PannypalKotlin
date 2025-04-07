@@ -45,7 +45,7 @@ fun BudgetScreen(
 ) {
     val title = stringResource(id = R.string.budget_analysis)
 
-    val currency by budgetViewModel.currency.collectAsStateWithLifecycle()
+    //val currency by budgetViewModel.currency.collectAsStateWithLifecycle()
     val budgetState by budgetViewModel.budgetState.collectAsStateWithLifecycle()
     val currentYearInMilli by remember { budgetViewModel.currentYearInMilli }.collectAsStateWithLifecycle()
     val currentMonthInMilli by remember { budgetViewModel.currentMonthInMilli }.collectAsStateWithLifecycle()
@@ -103,7 +103,7 @@ fun BudgetScreen(
                 }
                 item {
                     Spacer(Modifier.height(20.dp))
-                    BudgetList(budgetState, currency, onBudgetEditClick)
+                    BudgetList(budgetState, onBudgetEditClick)
                 }
             } else {
                 // ONE_TIME Budgets
@@ -116,7 +116,7 @@ fun BudgetScreen(
                         isExpanded = isExpandOneTimeActiveData,
                         onExpandClick = budgetViewModel::onActiveExpandClick,
                         items = budgetState,
-                        currency = currency,
+                        //currency = currency,
                         onBudgetEditClick = onBudgetEditClick
                     )
                 }
@@ -129,7 +129,7 @@ fun BudgetScreen(
                         isExpanded = isExpandOneTimeUpcomingData,
                         onExpandClick = budgetViewModel::onUpcomingExpandClick,
                         pagingItems = pagedDataUpcomingBudget,
-                        currency = currency,
+                        //currency = currency,
                         onBudgetEditClick = onBudgetEditClick
                     )
                 }
@@ -142,7 +142,7 @@ fun BudgetScreen(
                         isExpanded = isExpandOneTimePastData,
                         onExpandClick = budgetViewModel::onPastExpandClick,
                         pagingItems = pagedDataPastBudget,
-                        currency = currency,
+                        //currency = currency,
                         onBudgetEditClick = onBudgetEditClick
                     )
                 }

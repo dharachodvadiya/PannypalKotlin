@@ -15,5 +15,7 @@ data class BudgetWithSpentAndCategoryIdList(
 
     val spentAmount: Double,
 
-    val category: List<Long>
+    val category: List<Long>,
+
+    val originalAmountSymbol: String,
 )

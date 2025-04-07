@@ -43,10 +43,12 @@ import com.indie.apps.pennypal.presentation.ui.component.DialogSelectableItem
 import com.indie.apps.pennypal.presentation.ui.component.DialogTextFieldItem
 import com.indie.apps.pennypal.presentation.ui.component.TextFieldError
 import com.indie.apps.pennypal.presentation.ui.component.clickableWithNoRipple
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.AutoSizeText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomTab
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListItem
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.MyAppTextField
+import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
@@ -100,6 +102,7 @@ fun AddBudgetFieldItem(
     onCategoryExpandChange: (Boolean) -> Unit,
     onCategoryAmountChange: (Long, String) -> Unit,
     onSelectCategory: () -> Unit,
+    onCurrencyChange: () -> Unit,
     selectBudgetPeriod: PeriodType,
     currentYear: String?,
     currentMonth: String?,
@@ -130,11 +133,17 @@ fun AddBudgetFieldItem(
             textState = budgetTitle,
             placeholder = R.string.budget_title_placeholder,
             leadingIcon = {
-                Icon(
-                    imageVector = Icons.Filled.Title,
-                    contentDescription = "title",
-                    tint = MyAppTheme.colors.gray1
-                )
+                Box(
+                    modifier = Modifier.size(40.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Title,
+                        contentDescription = "title",
+                        tint = MyAppTheme.colors.gray1
+                    )
+                }
+
             },
             onTextChange = onBudgetTitleTextChange,
             bgColor = MyAppTheme.colors.transparent,
@@ -147,13 +156,28 @@ fun AddBudgetFieldItem(
             textState = amount,
             placeholder = R.string.amount_placeholder,
             leadingIcon = {
-                Box(
-                    modifier = Modifier.size(24.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CustomText(
+                /* Box(
+                     modifier = Modifier.size(24.dp),
+                     contentAlignment = Alignment.Center
+                 ) {
+                     CustomText(
+                         text = currency,
+                         color = MyAppTheme.colors.gray1,
+                         style = MyAppTheme.typography.Regular66_5
+                     )
+                 }*/
+
+                PrimaryButton(
+                    modifier = Modifier
+                        .width(40.dp)
+                        .height(50.dp),
+                    bgColor = MyAppTheme.colors.itemBg,
+                    onClick = {
+                        onCurrencyChange()
+                    }) {
+                    AutoSizeText(
                         text = currency,
-                        color = MyAppTheme.colors.gray1,
+                        color = MyAppTheme.colors.black,
                         style = MyAppTheme.typography.Regular66_5
                     )
                 }

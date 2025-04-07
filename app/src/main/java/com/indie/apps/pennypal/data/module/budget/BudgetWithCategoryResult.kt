@@ -15,7 +15,9 @@ data class BudgetWithCategoryResult(
     val categoryName: String,
     val categoryType: Int,
     val categoryIconId: Int,
-    val categoryIconColorId: Int
+    val categoryIconColorId: Int,
+    val originalCurrencyId: Long,
+    val originalAmountSymbol: String,
 )
 
 fun List<BudgetWithCategoryResult>.toBudgetWithCategories(): BudgetWithCategory {
@@ -42,7 +44,9 @@ fun List<BudgetWithCategoryResult>.toBudgetWithCategories(): BudgetWithCategory 
             startDate = startDate,
             endDate = endDate,
             createdDate = createdDate,
-            category = categoryList
+            category = categoryList,
+            originalCurrencyId = originalCurrencyId,
+            originalAmountSymbol = originalAmountSymbol
         )
     }
 }

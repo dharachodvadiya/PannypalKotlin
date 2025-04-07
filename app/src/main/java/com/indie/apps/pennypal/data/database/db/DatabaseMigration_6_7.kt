@@ -8,6 +8,7 @@ class Migration6to7(private val countryRepository: CountryRepository) : Migratio
     override fun migrate(db: SupportSQLiteDatabase) {
         createBaseCurrencyTable(db)
         updateMerchantDataTable(db, countryRepository)
+        updateBudgetTable(db)
         createExchangeRateTable(db)
     }
 
@@ -91,12 +92,12 @@ class Migration6to7(private val countryRepository: CountryRepository) : Migratio
         val baseCurrencyId = database.query("SELECT id FROM base_currency LIMIT 1").use { cursor ->
             if (cursor.moveToFirst()) cursor.getLong(0) else 1L // Default to 1 if no data
         }
-        val countryCode =
+        /*val countryCode =
             database.query("SELECT currency_country_code FROM base_currency WHERE id = $baseCurrencyId LIMIT 1")
                 .use { cursor ->
                     if (cursor.moveToFirst()) cursor.getString(0) else "US" // Default to "US"
-                }
-        val symbol = countryRepository.getCurrencySymbolFromCountryCode(countryCode)
+                }*/
+        //val symbol = countryRepository.getCurrencySymbolFromCountryCode(countryCode)
 
         database.execSQL(
             """
@@ -120,6 +121,58 @@ class Migration6to7(private val countryRepository: CountryRepository) : Migratio
         database.execSQL("CREATE INDEX IF NOT EXISTS `index_merchant_data_category_id` ON `merchant_data` (`category_id`)")
         database.execSQL("CREATE INDEX IF NOT EXISTS `index_merchant_data_base_currency_id` ON `merchant_data` (`base_currency_id`)")
         database.execSQL("CREATE INDEX IF NOT EXISTS `index_merchant_data_original_currency_id` ON `merchant_data` (`original_currency_id`)")
+
+
+    }
+
+    private fun updateBudgetTable(
+        database: SupportSQLiteDatabase
+    ) {
+        database.execSQL(
+            """
+            CREATE TABLE budget_temp (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                title TEXT NOT NULL,
+                amount REAL NOT NULL,
+                period_type INTEGER NOT NULL,
+                start_date INTEGER NOT NULL,
+                end_date INTEGER,
+                created_date INTEGER NOT NULL,
+                original_currency_id INTEGER NOT NULL,
+                FOREIGN KEY (original_currency_id) REFERENCES base_currency(id) ON DELETE NO_ACTION
+            )
+        """.trimIndent()
+        )
+
+        val baseCurrencyId = database.query("SELECT id FROM base_currency LIMIT 1").use { cursor ->
+            if (cursor.moveToFirst()) cursor.getLong(0) else 1L // Default to 1 if no data
+        }
+
+        database.execSQL(
+            """
+            INSERT INTO merchant_data_new (
+                id, merchant_id, category_id, payment_id, date_milli, details, amount, 
+                base_currency_id, original_amount, original_currency_id, type
+            )
+            SELECT 
+                id, merchant_id, category_id, payment_id, date_milli, details, amount, 
+                $baseCurrencyId, amount, $baseCurrencyId, type 
+            FROM merchant_data
+        """.trimIndent()
+        )
+
+        database.execSQL(
+            """
+            INSERT INTO budget_temp (id, title, amount, period_type, start_date, end_date, created_date, original_currency_id)
+            SELECT id, title, amount, period_type, start_date, end_date, created_date, $baseCurrencyId
+            FROM budget
+        """.trimIndent()
+        )
+
+        database.execSQL("DROP TABLE budget")
+        database.execSQL("ALTER TABLE budget_temp RENAME TO budget")
+
+        database.execSQL("CREATE INDEX IF NOT EXISTS `index_budget_original_currency_id` ON `merchant_data` (`original_currency_id`)")
 
 
     }

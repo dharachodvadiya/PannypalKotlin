@@ -49,11 +49,13 @@ import java.util.Calendar
 @Composable
 fun AddEditBudgetScreen(
     addBudgetViewModel: AddBudgetViewModel = hiltViewModel(),
+    onCurrencyChange: (String) -> Unit,
     onNavigationUp: () -> Unit,
     onSave: (Boolean, Long, Int) -> Unit,
     selectedCategoryIds: List<Long> = emptyList(),
     onSelectCategory: (List<Long>) -> Unit,
     selectedPeriodType: Int,
+    currencyCountryCode: String? = null,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
 
@@ -73,7 +75,14 @@ fun AddEditBudgetScreen(
         addBudgetViewModel.setSelectPeriodType(selectedPeriodType)
     }
 
-    val currency by addBudgetViewModel.currency.collectAsStateWithLifecycle()
+    LaunchedEffect(currencyCountryCode) {
+        if (currencyCountryCode != null) {
+            addBudgetViewModel.setCurrencyCountryCode(currencyCountryCode)
+        }
+    }
+
+    //val currency by addBudgetViewModel.currency.collectAsStateWithLifecycle()
+    val originalCurrencyInfo by addBudgetViewModel.originalCurrencyInfo.collectAsStateWithLifecycle()
     val currentPeriod by addBudgetViewModel.currentPeriod.collectAsStateWithLifecycle()
     val currentMonthInMilli by addBudgetViewModel.currentMonthInMilli.collectAsStateWithLifecycle()
     val currentYearInMilli by addBudgetViewModel.currentYearInMilli.collectAsStateWithLifecycle()
@@ -210,7 +219,10 @@ fun AddEditBudgetScreen(
                         onBudgetTitleTextChange = addBudgetViewModel::updateBudgetTitleText,
                         focusRequesterAmount = focusRequesterAmount,
                         focusRequesterTitle = focusRequesterTitle,
-                        currency = currency
+                        currency = originalCurrencyInfo?.currencySymbol ?: "$",
+                        onCurrencyChange = {
+                            onCurrencyChange(originalCurrencyInfo?.currencyCountryCode ?: "US")
+                        }
                     )
 
                     Spacer(modifier = Modifier.weight(1f))
@@ -313,7 +325,8 @@ private fun OverViewScreenPreview() {
             onNavigationUp = {},
             onSelectCategory = {},
             onSave = { _, _, _ -> },
-            selectedPeriodType = 1
+            selectedPeriodType = 1,
+            onCurrencyChange = {}
         )
     }
 }
