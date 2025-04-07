@@ -130,18 +130,17 @@ class Migration6to7(private val countryRepository: CountryRepository) : Migratio
     ) {
         database.execSQL(
             """
-            CREATE TABLE budget_temp (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                title TEXT NOT NULL,
-                amount REAL NOT NULL,
-                period_type INTEGER NOT NULL,
-                start_date INTEGER NOT NULL,
-                end_date INTEGER,
-                created_date INTEGER NOT NULL,
-                original_currency_id INTEGER NOT NULL,
-                FOREIGN KEY (original_currency_id) REFERENCES base_currency(id) ON DELETE NO_ACTION
-            )
-        """.trimIndent()
+                CREATE TABLE IF NOT EXISTS `budget_new` (
+                `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
+                `title` TEXT NOT NULL, 
+                `amount` REAL NOT NULL, 
+                `period_type` INTEGER NOT NULL, 
+                `start_date` INTEGER NOT NULL, 
+                `end_date` INTEGER, 
+                `created_date` INTEGER NOT NULL, 
+                `original_currency_id` INTEGER NOT NULL, 
+                FOREIGN KEY(`original_currency_id`) REFERENCES `base_currency`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )
+            """.trimIndent()
         )
 
         val baseCurrencyId = database.query("SELECT id FROM base_currency LIMIT 1").use { cursor ->
@@ -150,29 +149,16 @@ class Migration6to7(private val countryRepository: CountryRepository) : Migratio
 
         database.execSQL(
             """
-            INSERT INTO merchant_data_new (
-                id, merchant_id, category_id, payment_id, date_milli, details, amount, 
-                base_currency_id, original_amount, original_currency_id, type
-            )
-            SELECT 
-                id, merchant_id, category_id, payment_id, date_milli, details, amount, 
-                $baseCurrencyId, amount, $baseCurrencyId, type 
-            FROM merchant_data
-        """.trimIndent()
-        )
-
-        database.execSQL(
-            """
-            INSERT INTO budget_temp (id, title, amount, period_type, start_date, end_date, created_date, original_currency_id)
+            INSERT INTO budget_new (id, title, amount, period_type, start_date, end_date, created_date, original_currency_id)
             SELECT id, title, amount, period_type, start_date, end_date, created_date, $baseCurrencyId
             FROM budget
         """.trimIndent()
         )
 
         database.execSQL("DROP TABLE budget")
-        database.execSQL("ALTER TABLE budget_temp RENAME TO budget")
+        database.execSQL("ALTER TABLE budget_new RENAME TO budget")
 
-        database.execSQL("CREATE INDEX IF NOT EXISTS `index_budget_original_currency_id` ON `merchant_data` (`original_currency_id`)")
+        database.execSQL("CREATE INDEX IF NOT EXISTS `index_budget_original_currency_id` ON `budget` (`original_currency_id`)")
 
 
     }
