@@ -7,7 +7,8 @@ import com.indie.apps.cpp.data.repository.CountryRepository
 class Migration6to7(private val countryRepository: CountryRepository) : Migration(6, 7) {
     override fun migrate(db: SupportSQLiteDatabase) {
         createBaseCurrencyTable(db)
-        updateMerchantDataTable(db, countryRepository)
+        updateUserTable(db)
+        updateMerchantDataTable(db)
         updateBudgetTable(db)
         createExchangeRateTable(db)
     }
@@ -47,26 +48,8 @@ class Migration6to7(private val countryRepository: CountryRepository) : Migratio
     }
 
     private fun updateMerchantDataTable(
-        database: SupportSQLiteDatabase,
-        countryRepository: CountryRepository
+        database: SupportSQLiteDatabase
     ) {
-
-        /*   database.execSQL("""
-               ALTER TABLE merchant_data ADD COLUMN base_currency_id INTEGER NOT NULL DEFAULT 1
-           """.trimIndent())
-           database.execSQL("""
-               UPDATE merchant_data
-               SET base_currency_id = (SELECT id FROM base_currency LIMIT 1)
-           """.trimIndent())
-
-           // Add 'original_amount' column to merchant_data
-           database.execSQL("ALTER TABLE merchant_data ADD COLUMN original_amount REAL NOT NULL DEFAULT 0.0")
-           // Copy 'amount' to 'original_amount' for existing rows
-           database.execSQL("UPDATE merchant_data SET original_amount = amount WHERE original_amount = 0.0")
-
-           // Add 'currency_country_code' column to merchant_data
-           database.execSQL("ALTER TABLE merchant_data ADD COLUMN currency_country_code TEXT")*/
-
         database.execSQL(
             """
             CREATE TABLE IF NOT EXISTS `merchant_data_new` (
@@ -92,12 +75,6 @@ class Migration6to7(private val countryRepository: CountryRepository) : Migratio
         val baseCurrencyId = database.query("SELECT id FROM base_currency LIMIT 1").use { cursor ->
             if (cursor.moveToFirst()) cursor.getLong(0) else 1L // Default to 1 if no data
         }
-        /*val countryCode =
-            database.query("SELECT currency_country_code FROM base_currency WHERE id = $baseCurrencyId LIMIT 1")
-                .use { cursor ->
-                    if (cursor.moveToFirst()) cursor.getString(0) else "US" // Default to "US"
-                }*/
-        //val symbol = countryRepository.getCurrencySymbolFromCountryCode(countryCode)
 
         database.execSQL(
             """
@@ -166,6 +143,40 @@ class Migration6to7(private val countryRepository: CountryRepository) : Migratio
     private fun createExchangeRateTable(database: SupportSQLiteDatabase) {
         database.execSQL("CREATE TABLE IF NOT EXISTS `exchange_rates` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `from_currency` TEXT NOT NULL, `to_currency` TEXT NOT NULL, `rate` REAL NOT NULL, `last_updated` INTEGER NOT NULL)")
 
+    }
+
+    private fun updateUserTable(database: SupportSQLiteDatabase) {
+
+        database.execSQL(
+            """
+            CREATE TABLE IF NOT EXISTS `user_new` (
+            `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
+            `name` TEXT NOT NULL, 
+            `email` TEXT, 
+            `last_sync_date_milli` INTEGER NOT NULL, 
+            `country_code` TEXT NOT NULL, 
+            `currency_id` INTEGER NOT NULL, 
+            `payment_id` INTEGER NOT NULL,
+             FOREIGN KEY(`payment_id`) REFERENCES `payment_type`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )
+             """.trimIndent()
+        )
+
+        val baseCurrencyId = database.query("SELECT id FROM base_currency LIMIT 1").use { cursor ->
+            if (cursor.moveToFirst()) cursor.getLong(0) else 1L // Default to 1 if no data
+        }
+
+        database.execSQL(
+            """
+    INSERT INTO user_new (id, name, email, last_sync_date_milli, payment_id, country_code, currency_id)
+    SELECT id, name, email, last_sync_date_milli, payment_id, country_code, $baseCurrencyId 
+    FROM user
+""".trimIndent()
+        )
+        // Drop the old table
+        database.execSQL("DROP TABLE user")
+
+        // Rename the new table to the old table's name
+        database.execSQL("ALTER TABLE user_new RENAME TO user")
     }
 
 

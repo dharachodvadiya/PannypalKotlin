@@ -18,8 +18,8 @@ class BaseCurrencyRepositoryImpl @Inject constructor(
 
     override suspend fun insert(data: BaseCurrency) =
         withContext(dispatcher) {
-            val id = baseCurrencyDao.insertOrIgnoreQuery(data)
-            id
+            val currInfo = baseCurrencyDao.getBaseCurrencyFromCode(data.currencyCountryCode)
+            currInfo?.id ?: baseCurrencyDao.insertOrIgnoreQuery(data)
         }
 
 }

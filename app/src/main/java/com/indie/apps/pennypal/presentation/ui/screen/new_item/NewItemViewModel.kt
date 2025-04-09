@@ -123,7 +123,7 @@ class NewItemViewModel @Inject constructor(
                     loadPaymentData(it.paymentId)
 
                     val baseCurrencyInfo =
-                        baseCurrencyRepository.getBaseCurrencyFromCode(it.currencyCountryCode)
+                        baseCurrencyRepository.getBaseCurrencyFromId(it.currencyId)
                     setBaseCurrencyInfo(baseCurrencyInfo)
                     setOriginalCurrencyInfo(baseCurrencyInfo)
                     uiState.value = Resource.Success(Unit)

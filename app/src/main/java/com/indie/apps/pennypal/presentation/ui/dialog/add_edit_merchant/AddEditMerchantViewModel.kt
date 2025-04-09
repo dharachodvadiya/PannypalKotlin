@@ -9,6 +9,7 @@ import com.indie.apps.pennypal.data.module.ContactNumberAndCode
 import com.indie.apps.pennypal.domain.usecase.AddMerchantUseCase
 import com.indie.apps.pennypal.domain.usecase.UpdateMerchantUseCase
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
+import com.indie.apps.pennypal.repository.BaseCurrencyRepository
 import com.indie.apps.pennypal.repository.MerchantRepository
 import com.indie.apps.pennypal.repository.UserRepository
 import com.indie.apps.pennypal.util.ErrorMessage
@@ -26,6 +27,7 @@ class AddEditMerchantViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val merchantRepository: MerchantRepository,
     private val countryRepository: CountryRepository,
+    private val currencyRepository: BaseCurrencyRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -49,8 +51,12 @@ class AddEditMerchantViewModel @Inject constructor(
                 userRepository
                     .getUser().collect() {
                         if (countryDialCode.value == null) {
+                            val currencyInfo =
+                                currencyRepository.getBaseCurrencyFromId(it.currencyId)
                             countryDialCode.value =
-                                getDialCodeFromCountryCode(it.currencyCountryCode)
+                                getDialCodeFromCountryCode(
+                                    currencyInfo?.currencyCountryCode ?: "US"
+                                )
                         }
                     }
             }

@@ -160,7 +160,8 @@ abstract class AppDatabase : RoomDatabase() {
                 val user =
                     User(
                         name = "Me",
-                        currencyCountryCode = countryRepository.getDefaultCountryCode()
+                        currencyCountryCode = countryRepository.getDefaultCountryCode(),
+                        currencyId = -1L
                     )
                 val userDao = db.userDao()
 

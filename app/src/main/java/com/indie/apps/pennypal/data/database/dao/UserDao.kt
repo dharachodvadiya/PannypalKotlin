@@ -47,8 +47,8 @@ interface UserDao : BaseDao<User> {
     suspend fun updatePayment(paymentId: Long): Int
 
     @Transaction
-    @Query("UPDATE user SET country_code = :countryCode WHERE ID = 1")
-    suspend fun updateCurrency( countryCode: String): Int
+    @Query("UPDATE user SET country_code = :countryCode, currency_id = :currencyId WHERE ID = 1")
+    suspend fun updateCurrency(countryCode: String, currencyId: Long): Int
 
     @Transaction
     @Query("UPDATE user SET name = :name WHERE ID = 1")

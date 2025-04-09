@@ -31,19 +31,18 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updateCurrency(currencyCountryCode: String) = withContext(dispatcher) {
-        val updateCount = userDao.updateCurrency(currencyCountryCode)
-
-        if (updateCount > 0) {
-            val symbol = countryRepository.getCurrencySymbolFromCountryCode(currencyCountryCode)
-            baseCurrencyRepository.insert(
-                BaseCurrency(
-                    currencyCountryCode = currencyCountryCode,
-                    currencySymbol = symbol
-                )
+        val symbol = countryRepository.getCurrencySymbolFromCountryCode(currencyCountryCode)
+        val currId = baseCurrencyRepository.insert(
+            BaseCurrency(
+                currencyCountryCode = currencyCountryCode,
+                currencySymbol = symbol
             )
+        )
+        if (currId > 0) {
+            userDao.updateCurrency(currencyCountryCode, currId)
+        } else {
+            0
         }
-        updateCount
-
     }
 
 
@@ -62,19 +61,21 @@ class UserRepositoryImpl @Inject constructor(
         withContext(dispatcher) { userDao.updateWithDefaultPayment() }
 
     override suspend fun insert(obj: User) = withContext(dispatcher) {
-        val insertId = userDao.insert(obj)
-        if (insertId > 0) {
-            val code = obj.currencyCountryCode
-            val symbol = countryRepository.getCurrencySymbolFromCountryCode(code)
-            baseCurrencyRepository.insert(
-                BaseCurrency(
-                    currencyCountryCode = code,
-                    currencySymbol = symbol
-                )
+
+        val code = countryRepository.getDefaultCountryCode()
+        val symbol = countryRepository.getCurrencySymbolFromCountryCode(code)
+        val currencyId = baseCurrencyRepository.insert(
+            BaseCurrency(
+                currencyCountryCode = code,
+                currencySymbol = symbol
             )
+        )
+
+        if (currencyId > 0) {
+            userDao.insert(obj.copy(currencyId = currencyId))
         }
 
-        insertId
+        -1L
     }
 
     override suspend fun update(obj: User) = withContext(dispatcher) { userDao.update(obj) }

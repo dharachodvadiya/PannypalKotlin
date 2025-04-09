@@ -38,6 +38,9 @@ data class User(
     @ColumnInfo(name = "country_code")
     val currencyCountryCode: String,
 
+    @ColumnInfo(name = "currency_id")
+    val currencyId: Long,
+
     @ColumnInfo(name = "payment_id")
     val paymentId: Long = 1L,
 )

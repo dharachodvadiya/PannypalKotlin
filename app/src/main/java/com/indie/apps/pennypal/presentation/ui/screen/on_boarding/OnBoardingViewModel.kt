@@ -11,6 +11,7 @@ import com.indie.apps.pennypal.domain.usecase.UpdateUserNameUseCase
 import com.indie.apps.pennypal.presentation.ui.component.UiText
 import com.indie.apps.pennypal.presentation.ui.navigation.OnBoardingPage
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
+import com.indie.apps.pennypal.repository.BaseCurrencyRepository
 import com.indie.apps.pennypal.repository.PreferenceRepository
 import com.indie.apps.pennypal.repository.UserRepository
 import com.indie.apps.pennypal.util.AppLanguage
@@ -32,13 +33,17 @@ class OnBoardingViewModel @Inject constructor(
     private val countryRepository: CountryRepository,
     private val updateUserNameUseCase: UpdateUserNameUseCase,
     private val updateUserCurrencyDataUseCase: UpdateUserCurrencyDataUseCase,
-    private val preferenceRepository: PreferenceRepository
+    private val preferenceRepository: PreferenceRepository,
+    private val currencyRepository: BaseCurrencyRepository
 ) : ViewModel() {
 
     private val userData = userRepository.getUser()
         .onEach { user ->
             if (user != null) {
-                if (currencyCountryCode.value.isEmpty()) setCountryCode(user.currencyCountryCode)
+                if (currencyCountryCode.value.isEmpty()) {
+                    val currInfo = currencyRepository.getBaseCurrencyFromId(user.currencyId)
+                    setCountryCode(currInfo?.currencyCountryCode ?: "US")
+                }
                 updateNameText(user.name)
             }
         }
