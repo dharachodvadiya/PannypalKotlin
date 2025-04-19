@@ -21,6 +21,8 @@ class UserRepositoryImpl @Inject constructor(
     override fun getCurrency() = userDao.getCurrencyCountryCode()
         .map { countryRepository.getCurrencySymbolFromCountryCode(it) }.flowOn(dispatcher)
 
+    override fun getCurrencyId() = userDao.getCurrencyCountryId().flowOn(dispatcher)
+
     override fun getCurrencyCountryCode() = userDao.getCurrencyCountryCode().flowOn(dispatcher)
 
     override fun getUserWithPaymentName() = userDao.getUserWithPaymentName().flowOn(dispatcher)

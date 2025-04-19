@@ -58,7 +58,8 @@ class SingleBudgetViewModel @Inject constructor(
                 getCategoryWiseSpentAmountForPeriodUseCase.loadCategoryWiseTotalAmountForMonth(
                     year = startCal.get(Calendar.YEAR),
                     month = startCal.get(Calendar.MONTH),
-                    categoryIds = budget.category.map { it.id }
+                    categoryIds = budget.category.map { it.id },
+                    toCurrencyId = budget.originalCurrencyId
                 ).collect {
                     spentCategoryData.value = it
                     uiState.value = Resource.Success(Unit)
@@ -69,7 +70,9 @@ class SingleBudgetViewModel @Inject constructor(
                 val startCal: Calendar =
                     Calendar.getInstance().apply { timeInMillis = budget.startDate }
                 getCategoryWiseSpentAmountForPeriodUseCase.loadCategoryWiseTotalAmountForYear(
-                    year = startCal.get(Calendar.YEAR), categoryIds = budget.category.map { it.id }
+                    year = startCal.get(Calendar.YEAR),
+                    categoryIds = budget.category.map { it.id },
+                    toCurrencyId = budget.originalCurrencyId
                 ).collect {
                     spentCategoryData.value = it
                     uiState.value = Resource.Success(Unit)
@@ -79,7 +82,8 @@ class SingleBudgetViewModel @Inject constructor(
             PeriodType.ONE_TIME.id -> getCategoryWiseSpentAmountForPeriodUseCase.loadCategoryWiseTotalAmountForBetweenDates(
                 startTime = budget.startDate,
                 endTime = budget.endDate ?: 0,
-                categoryIds = budget.category.map { it.id }
+                categoryIds = budget.category.map { it.id },
+                toCurrencyId = budget.originalCurrencyId
             ).collect {
                 spentCategoryData.value = it
                 uiState.value = Resource.Success(Unit)

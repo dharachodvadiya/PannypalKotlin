@@ -14,9 +14,11 @@ import com.indie.apps.pennypal.repository.UserRepository
 import com.indie.apps.pennypal.util.ShowDataPeriod
 import com.indie.apps.pennypal.util.Util
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Calendar
@@ -46,12 +48,18 @@ class OverViewViewModel @Inject constructor(
     val userData = userRepository.getUser()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), null)
 
-    val currentTotal = getTotalUseCase.loadDataAsFlow(
-        year = calendar.get(Calendar.YEAR),
-        month = calendar.get(Calendar.MONTH),
-        currentPeriod.value ?: ShowDataPeriod.THIS_MONTH
-    )
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), null)
+    // Current total, dependent on userData
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val currentTotal = userData
+        .flatMapLatest { user ->
+            val currencyId = user?.currencyId ?: 1L // Default to 1 if null
+            getTotalUseCase.loadDataAsFlow(
+                year = calendar.get(Calendar.YEAR),
+                month = calendar.get(Calendar.MONTH),
+                dataPeriod = currentPeriod.value ?: ShowDataPeriod.THIS_MONTH,
+                toCurrencyId = currencyId
+            )
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), null)
 
     var addDataAnimRun = MutableStateFlow(false)
         private set
@@ -79,13 +87,18 @@ class OverViewViewModel @Inject constructor(
         .getLast3Data()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
 
-    val monthlyCategoryExpense = getCategoryWiseExpenseUseCase
-        .loadDataAsFlow(
-            year = calendar.get(Calendar.YEAR),
-            month = calendar.get(Calendar.MONTH),
-            currentPeriod.value ?: ShowDataPeriod.THIS_MONTH
-        )
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val monthlyCategoryExpense = userData
+        .flatMapLatest { user ->
+            val currencyId = user?.currencyId ?: 1L // Default to 1 if null
+            getCategoryWiseExpenseUseCase
+                .loadDataAsFlow(
+                    year = calendar.get(Calendar.YEAR),
+                    month = calendar.get(Calendar.MONTH),
+                    currentPeriod.value ?: ShowDataPeriod.THIS_MONTH,
+                    toCurrencyId = currencyId
+                )
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
 
 
     val budgetState = budgetRepository.getBudgetsAndSpentWithCategoryIdListFromMonth(

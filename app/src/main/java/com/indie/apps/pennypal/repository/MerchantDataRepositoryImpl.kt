@@ -5,11 +5,14 @@ import com.indie.apps.pennypal.data.database.entity.BaseCurrency
 import com.indie.apps.pennypal.data.database.entity.MerchantData
 import com.indie.apps.pennypal.data.module.Amount
 import com.indie.apps.pennypal.data.module._interface.ConvertibleAmount
+import com.indie.apps.pennypal.data.module.balance.Total
 import com.indie.apps.pennypal.data.module.balance.mergeByAmount
+import com.indie.apps.pennypal.data.module.category.CategoryAmount
 import com.indie.apps.pennypal.data.module.category.mergeAndSortByAmount
 import com.indie.apps.pennypal.data.module.mergeByAmount
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
@@ -114,10 +117,14 @@ class MerchantDataRepositoryImpl @Inject constructor(
     override fun getTotalFromMonthAsFlow(
         timeZoneOffsetInMilli: Int,
         year: Int,
-        month: Int
-    ) = flow {
-        val baseCurrCode = userRepository.getCurrencyCountryCode().first()
-        val baseCurrencySymbol = userRepository.getCurrency().first()
+        month: Int,
+        toCurrencyId: Long
+    ): Flow<Total> = flow {
+        val baseCurrency = baseCurrencyRepository.getBaseCurrencyFromId(toCurrencyId)
+            ?: BaseCurrency(
+                currencySymbol = userRepository.getCurrency().first(),
+                currencyCountryCode = userRepository.getCurrencyCountryCode().first()
+            )
 
         val balanceFlow = merchantDataDao.getTotalFromMonthAsFlow(
             timeZoneOffsetInMilli,
@@ -128,9 +135,9 @@ class MerchantDataRepositoryImpl @Inject constructor(
             convertAmount(
                 list = list,
                 exchangeRateRepository = exchangeRateRepository,
-                baseCurrencySymbol = baseCurrencySymbol,
-                baseCurrCode = baseCurrCode
-            ).mergeByAmount(baseCurrCode, baseCurrencySymbol)
+                baseCurrencySymbol = baseCurrency.currencySymbol,
+                baseCurrCode = baseCurrency.currencyCountryCode
+            ).mergeByAmount(baseCurrency.currencyCountryCode, baseCurrency.currencySymbol)
         }
         emitAll(balanceFlow)
     }.flowOn(dispatcher)
@@ -138,30 +145,39 @@ class MerchantDataRepositoryImpl @Inject constructor(
     override suspend fun getTotalFromMonth(
         timeZoneOffsetInMilli: Int,
         year: Int,
-        month: Int
-    ) = withContext(dispatcher) {
+        month: Int,
+        toCurrencyId: Long
+    ): Total = withContext(dispatcher) {
         val totalList = merchantDataDao.getTotalFromMonth(
             timeZoneOffsetInMilli,
             monthPlusOne = (month + 1).toString(),
             year = year.toString()
         )
 
-        val baseCurrCode = userRepository.getCurrencyCountryCode().first()
-        val baseCurrencySymbol = userRepository.getCurrency().first()
+        val baseCurrency = baseCurrencyRepository.getBaseCurrencyFromId(toCurrencyId)
+            ?: BaseCurrency(
+                currencySymbol = userRepository.getCurrency().first(),
+                currencyCountryCode = userRepository.getCurrencyCountryCode().first()
+            )
 
         convertAmount(
             list = totalList,
-            baseCurrCode = baseCurrCode,
+            baseCurrCode = baseCurrency.currencyCountryCode,
             exchangeRateRepository = exchangeRateRepository,
-            baseCurrencySymbol = baseCurrencySymbol
-        ).mergeByAmount(baseCurrCode, baseCurrencySymbol)
+            baseCurrencySymbol = baseCurrency.currencySymbol
+        ).mergeByAmount(baseCurrency.currencyCountryCode, baseCurrency.currencySymbol)
     }
 
     override fun getTotalFromYearAsFlow(
-        timeZoneOffsetInMilli: Int, year: Int
-    ) = flow {
-        val baseCurrCode = userRepository.getCurrencyCountryCode().first()
-        val baseCurrencySymbol = userRepository.getCurrency().first()
+        timeZoneOffsetInMilli: Int,
+        year: Int,
+        toCurrencyId: Long
+    ): Flow<Total> = flow {
+        val baseCurrency = baseCurrencyRepository.getBaseCurrencyFromId(toCurrencyId)
+            ?: BaseCurrency(
+                currencySymbol = userRepository.getCurrency().first(),
+                currencyCountryCode = userRepository.getCurrencyCountryCode().first()
+            )
 
         val balanceFlow = merchantDataDao
             .getTotalFromYearAsFlow(timeZoneOffsetInMilli, year.toString())
@@ -169,34 +185,44 @@ class MerchantDataRepositoryImpl @Inject constructor(
 
                 convertAmount(
                     list = list,
-                    baseCurrencySymbol = baseCurrencySymbol,
+                    baseCurrencySymbol = baseCurrency.currencySymbol,
                     exchangeRateRepository = exchangeRateRepository,
-                    baseCurrCode = baseCurrCode
-                ).mergeByAmount(baseCurrCode, baseCurrencySymbol)
+                    baseCurrCode = baseCurrency.currencyCountryCode
+                ).mergeByAmount(baseCurrency.currencyCountryCode, baseCurrency.currencySymbol)
             }
         emitAll(balanceFlow)
     }
         .flowOn(dispatcher)
 
-    override suspend fun getTotalFromYear(timeZoneOffsetInMilli: Int, year: Int) =
+    override suspend fun getTotalFromYear(
+        timeZoneOffsetInMilli: Int,
+        year: Int,
+        toCurrencyId: Long
+    ): Total =
         withContext(dispatcher) {
             val totalList = merchantDataDao.getTotalFromYear(timeZoneOffsetInMilli, year.toString())
 
-            val baseCurrCode = userRepository.getCurrencyCountryCode().first()
-            val baseCurrencySymbol = userRepository.getCurrency().first()
+            val baseCurrency = baseCurrencyRepository.getBaseCurrencyFromId(toCurrencyId)
+                ?: BaseCurrency(
+                    currencySymbol = userRepository.getCurrency().first(),
+                    currencyCountryCode = userRepository.getCurrencyCountryCode().first()
+                )
 
             convertAmount(
                 list = totalList,
-                baseCurrCode = baseCurrCode,
+                baseCurrCode = baseCurrency.currencyCountryCode,
                 exchangeRateRepository = exchangeRateRepository,
-                baseCurrencySymbol = baseCurrencySymbol
-            ).mergeByAmount(baseCurrCode, baseCurrencySymbol)
+                baseCurrencySymbol = baseCurrency.currencySymbol
+            ).mergeByAmount(baseCurrency.currencyCountryCode, baseCurrency.currencySymbol)
         }
 
-    override fun getTotalAsFlow() =
+    override fun getTotalAsFlow(toCurrencyId: Long): Flow<Total> =
         flow {
-            val baseCurrCode = userRepository.getCurrencyCountryCode().first()
-            val baseCurrencySymbol = userRepository.getCurrency().first()
+            val baseCurrency = baseCurrencyRepository.getBaseCurrencyFromId(toCurrencyId)
+                ?: BaseCurrency(
+                    currencySymbol = userRepository.getCurrency().first(),
+                    currencyCountryCode = userRepository.getCurrencyCountryCode().first()
+                )
 
             val balanceFlow = merchantDataDao
                 .getTotalAsFlow()
@@ -204,45 +230,52 @@ class MerchantDataRepositoryImpl @Inject constructor(
 
                     convertAmount(
                         list = list,
-                        baseCurrencySymbol = baseCurrencySymbol,
+                        baseCurrencySymbol = baseCurrency.currencySymbol,
                         exchangeRateRepository = exchangeRateRepository,
-                        baseCurrCode = baseCurrCode
-                    ).mergeByAmount(baseCurrCode, baseCurrencySymbol)
+                        baseCurrCode = baseCurrency.currencyCountryCode
+                    ).mergeByAmount(baseCurrency.currencyCountryCode, baseCurrency.currencySymbol)
                 }
             emitAll(balanceFlow)
         }
             .flowOn(dispatcher)
 
-    override suspend fun getTotal() = withContext(dispatcher) {
+    override suspend fun getTotal(toCurrencyId: Long): Total = withContext(dispatcher) {
         val totalList = merchantDataDao.getTotal()
 
-        val baseCurrCode = userRepository.getCurrencyCountryCode().first()
-        val baseCurrencySymbol = userRepository.getCurrency().first()
+        val baseCurrency = baseCurrencyRepository.getBaseCurrencyFromId(toCurrencyId)
+            ?: BaseCurrency(
+                currencySymbol = userRepository.getCurrency().first(),
+                currencyCountryCode = userRepository.getCurrencyCountryCode().first()
+            )
         convertAmount(
             list = totalList,
-            baseCurrCode = baseCurrCode,
+            baseCurrCode = baseCurrency.currencyCountryCode,
             exchangeRateRepository = exchangeRateRepository,
-            baseCurrencySymbol = baseCurrencySymbol
-        ).mergeByAmount(baseCurrCode, baseCurrencySymbol)
+            baseCurrencySymbol = baseCurrency.currencySymbol
+        ).mergeByAmount(baseCurrency.currencyCountryCode, baseCurrency.currencySymbol)
     }
 
     override fun getCategoryWiseExpenseFromMonthAsFlow(
         timeZoneOffsetInMilli: Int,
         year: Int,
         month: Int,
-    ) = flow {
+        toCurrencyId: Long
+    ): Flow<List<CategoryAmount>> = flow {
         val dataList = merchantDataDao.getCategoryWiseExpenseFromMonthAsFlow(
             timeZoneOffsetInMilli = timeZoneOffsetInMilli,
             year = year.toString(),
             monthPlusOne = (month + 1).toString()
         ).map {
-            val baseCurrCode = userRepository.getCurrencyCountryCode().first()
-            val baseCurrencySymbol = userRepository.getCurrency().first()
+            val baseCurrency = baseCurrencyRepository.getBaseCurrencyFromId(toCurrencyId)
+                ?: BaseCurrency(
+                    currencySymbol = userRepository.getCurrency().first(),
+                    currencyCountryCode = userRepository.getCurrencyCountryCode().first()
+                )
             convertAmount(
                 list = it,
                 exchangeRateRepository = exchangeRateRepository,
-                baseCurrCode = baseCurrCode,
-                baseCurrencySymbol = baseCurrencySymbol
+                baseCurrCode = baseCurrency.currencyCountryCode,
+                baseCurrencySymbol = baseCurrency.currencySymbol
             ).mergeAndSortByAmount()
         }
         emitAll(dataList)
@@ -252,68 +285,84 @@ class MerchantDataRepositoryImpl @Inject constructor(
     override suspend fun getCategoryWiseExpenseFromMonth(
         timeZoneOffsetInMilli: Int,
         year: Int,
-        month: Int
-    ) = withContext(dispatcher) {
+        month: Int,
+        toCurrencyId: Long
+    ): List<CategoryAmount> = withContext(dispatcher) {
         val dataList = merchantDataDao.getCategoryWiseExpenseFromMonth(
             timeZoneOffsetInMilli = timeZoneOffsetInMilli,
             year = year.toString(),
             monthPlusOne = (month + 1).toString()
         )
 
-        val baseCurrCode = userRepository.getCurrencyCountryCode().first()
-        val baseCurrencySymbol = userRepository.getCurrency().first()
+        val baseCurrency = baseCurrencyRepository.getBaseCurrencyFromId(toCurrencyId)
+            ?: BaseCurrency(
+                currencySymbol = userRepository.getCurrency().first(),
+                currencyCountryCode = userRepository.getCurrencyCountryCode().first()
+            )
 
         convertAmount(
             list = dataList,
             exchangeRateRepository = exchangeRateRepository,
-            baseCurrCode = baseCurrCode,
-            baseCurrencySymbol = baseCurrencySymbol
+            baseCurrCode = baseCurrency.currencyCountryCode,
+            baseCurrencySymbol = baseCurrency.currencySymbol
         ).mergeAndSortByAmount()
     }
 
-    override fun getCategoryWiseExpenseAsFlow() =
+    override fun getCategoryWiseExpenseAsFlow(toCurrencyId: Long): Flow<List<CategoryAmount>> =
         flow {
             val dataList = merchantDataDao.getCategoryWiseExpenseAsFlow()
                 .map {
-                    val baseCurrCode = userRepository.getCurrencyCountryCode().first()
-                    val baseCurrencySymbol = userRepository.getCurrency().first()
+                    val baseCurrency = baseCurrencyRepository.getBaseCurrencyFromId(toCurrencyId)
+                        ?: BaseCurrency(
+                            currencySymbol = userRepository.getCurrency().first(),
+                            currencyCountryCode = userRepository.getCurrencyCountryCode().first()
+                        )
                     convertAmount(
                         list = it,
                         exchangeRateRepository = exchangeRateRepository,
-                        baseCurrCode = baseCurrCode,
-                        baseCurrencySymbol = baseCurrencySymbol
+                        baseCurrCode = baseCurrency.currencyCountryCode,
+                        baseCurrencySymbol = baseCurrency.currencySymbol
                     ).mergeAndSortByAmount()
                 }
             emitAll(dataList)
         }.flowOn(dispatcher)
 
-    override suspend fun getCategoryWiseExpense() = withContext(dispatcher) {
-        val dataList = merchantDataDao.getCategoryWiseExpense()
+    override suspend fun getCategoryWiseExpense(toCurrencyId: Long): List<CategoryAmount> =
+        withContext(dispatcher) {
+            val dataList = merchantDataDao.getCategoryWiseExpense()
 
-        val baseCurrCode = userRepository.getCurrencyCountryCode().first()
-        val baseCurrencySymbol = userRepository.getCurrency().first()
+            val baseCurrency = baseCurrencyRepository.getBaseCurrencyFromId(toCurrencyId)
+                ?: BaseCurrency(
+                    currencySymbol = userRepository.getCurrency().first(),
+                    currencyCountryCode = userRepository.getCurrencyCountryCode().first()
+                )
 
-        convertAmount(
-            list = dataList,
-            exchangeRateRepository = exchangeRateRepository,
-            baseCurrCode = baseCurrCode,
-            baseCurrencySymbol = baseCurrencySymbol
-        ).mergeAndSortByAmount()
-    }
+            convertAmount(
+                list = dataList,
+                exchangeRateRepository = exchangeRateRepository,
+                baseCurrCode = baseCurrency.currencyCountryCode,
+                baseCurrencySymbol = baseCurrency.currencySymbol
+            ).mergeAndSortByAmount()
+        }
 
     override fun getCategoryWiseExpenseFromYearAsFlow(
-        timeZoneOffsetInMilli: Int, year: Int
-    ) = flow {
+        timeZoneOffsetInMilli: Int,
+        year: Int,
+        toCurrencyId: Long
+    ): Flow<List<CategoryAmount>> = flow {
         val dataList = merchantDataDao
             .getCategoryWiseExpenseFromYearAsFlow(timeZoneOffsetInMilli, year.toString())
             .map {
-                val baseCurrCode = userRepository.getCurrencyCountryCode().first()
-                val baseCurrencySymbol = userRepository.getCurrency().first()
+                val baseCurrency = baseCurrencyRepository.getBaseCurrencyFromId(toCurrencyId)
+                    ?: BaseCurrency(
+                        currencySymbol = userRepository.getCurrency().first(),
+                        currencyCountryCode = userRepository.getCurrencyCountryCode().first()
+                    )
                 convertAmount(
                     list = it,
                     exchangeRateRepository = exchangeRateRepository,
-                    baseCurrCode = baseCurrCode,
-                    baseCurrencySymbol = baseCurrencySymbol
+                    baseCurrCode = baseCurrency.currencyCountryCode,
+                    baseCurrencySymbol = baseCurrency.currencySymbol
                 ).mergeAndSortByAmount()
             }
         emitAll(dataList)
@@ -322,21 +371,25 @@ class MerchantDataRepositoryImpl @Inject constructor(
 
     override suspend fun getCategoryWiseExpenseFromYear(
         timeZoneOffsetInMilli: Int,
-        year: Int
-    ) = withContext(dispatcher) {
+        year: Int,
+        toCurrencyId: Long
+    ): List<CategoryAmount> = withContext(dispatcher) {
         val dataList = merchantDataDao.getCategoryWiseExpenseFromYear(
             timeZoneOffsetInMilli,
             year.toString()
         )
 
-        val baseCurrCode = userRepository.getCurrencyCountryCode().first()
-        val baseCurrencySymbol = userRepository.getCurrency().first()
+        val baseCurrency = baseCurrencyRepository.getBaseCurrencyFromId(toCurrencyId)
+            ?: BaseCurrency(
+                currencySymbol = userRepository.getCurrency().first(),
+                currencyCountryCode = userRepository.getCurrencyCountryCode().first()
+            )
 
         convertAmount(
             list = dataList,
             exchangeRateRepository = exchangeRateRepository,
-            baseCurrCode = baseCurrCode,
-            baseCurrencySymbol = baseCurrencySymbol
+            baseCurrCode = baseCurrency.currencyCountryCode,
+            baseCurrencySymbol = baseCurrency.currencySymbol
         ).mergeAndSortByAmount()
     }
 
@@ -427,46 +480,66 @@ class MerchantDataRepositoryImpl @Inject constructor(
     }
 
     override fun getCategoryWiseTotalAmountForMonth(
-        timeZoneOffsetInMilli: Int, year: Int, month: Int, categoryIds: List<Long>
-    ) = flow {
-        val baseCurrCode = userRepository.getCurrencyCountryCode().first()
-        val baseCurrencySymbol = userRepository.getCurrency().first()
+        timeZoneOffsetInMilli: Int,
+        year: Int,
+        month: Int,
+        categoryIds: List<Long>,
+        toCurrencyId: Long
+    ): Flow<List<CategoryAmount>> = flow {
+        val baseCurrency = baseCurrencyRepository.getBaseCurrencyFromId(toCurrencyId)
+            ?: BaseCurrency(
+                currencySymbol = userRepository.getCurrency().first(),
+                currencyCountryCode = userRepository.getCurrencyCountryCode().first()
+            )
         val dataList = merchantDataDao.getCategoryWiseTotalAmountForMonth(
             timeZoneOffsetInMilli, year.toString(), (month + 1).toString(), categoryIds
         ).map {
             convertAmount(
                 list = it,
                 exchangeRateRepository = exchangeRateRepository,
-                baseCurrCode = baseCurrCode,
-                baseCurrencySymbol = baseCurrencySymbol
+                baseCurrCode = baseCurrency.currencyCountryCode,
+                baseCurrencySymbol = baseCurrency.currencySymbol
             ).mergeAndSortByAmount()
         }
         emitAll(dataList)
     }.flowOn(dispatcher)
 
     override fun getCategoryWiseTotalAmountForYear(
-        timeZoneOffsetInMilli: Int, year: Int, categoryIds: List<Long>
-    ) = flow {
-        val baseCurrCode = userRepository.getCurrencyCountryCode().first()
-        val baseCurrencySymbol = userRepository.getCurrency().first()
+        timeZoneOffsetInMilli: Int,
+        year: Int,
+        categoryIds: List<Long>,
+        toCurrencyId: Long
+    ): Flow<List<CategoryAmount>> = flow {
+        val baseCurrency = baseCurrencyRepository.getBaseCurrencyFromId(toCurrencyId)
+            ?: BaseCurrency(
+                currencySymbol = userRepository.getCurrency().first(),
+                currencyCountryCode = userRepository.getCurrencyCountryCode().first()
+            )
         val dataList = merchantDataDao.getCategoryWiseTotalAmountForYear(
             timeZoneOffsetInMilli, year.toString(), categoryIds
         ).map {
             convertAmount(
                 list = it,
                 exchangeRateRepository = exchangeRateRepository,
-                baseCurrCode = baseCurrCode,
-                baseCurrencySymbol = baseCurrencySymbol
+                baseCurrCode = baseCurrency.currencyCountryCode,
+                baseCurrencySymbol = baseCurrency.currencySymbol
             ).mergeAndSortByAmount()
         }
         emitAll(dataList)
     }.flowOn(dispatcher)
 
     override fun getCategoryWiseTotalAmountForBetweenDates(
-        timeZoneOffsetInMilli: Int, startTime: Long, endTime: Long, categoryIds: List<Long>
-    ) = flow {
-        val baseCurrCode = userRepository.getCurrencyCountryCode().first()
-        val baseCurrencySymbol = userRepository.getCurrency().first()
+        timeZoneOffsetInMilli: Int,
+        startTime: Long,
+        endTime: Long,
+        categoryIds: List<Long>,
+        toCurrencyId: Long
+    ): Flow<List<CategoryAmount>> = flow {
+        val baseCurrency = baseCurrencyRepository.getBaseCurrencyFromId(toCurrencyId)
+            ?: BaseCurrency(
+                currencySymbol = userRepository.getCurrency().first(),
+                currencyCountryCode = userRepository.getCurrencyCountryCode().first()
+            )
         val dataList = merchantDataDao.getCategoryWiseTotalAmountForBetweenDates(
             startTime,
             endTime,
@@ -475,8 +548,8 @@ class MerchantDataRepositoryImpl @Inject constructor(
             convertAmount(
                 list = it,
                 exchangeRateRepository = exchangeRateRepository,
-                baseCurrCode = baseCurrCode,
-                baseCurrencySymbol = baseCurrencySymbol
+                baseCurrCode = baseCurrency.currencyCountryCode,
+                baseCurrencySymbol = baseCurrency.currencySymbol
             ).mergeAndSortByAmount()
         }
         emitAll(dataList)

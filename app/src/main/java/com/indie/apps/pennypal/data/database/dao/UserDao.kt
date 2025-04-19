@@ -42,6 +42,15 @@ interface UserDao : BaseDao<User> {
     )
     fun getCurrencyCountryCode(): Flow<String>
 
+    @Query(
+        """
+        SELECT u.currency_id
+        FROM user u
+        WHERE u.id = 1
+    """
+    )
+    fun getCurrencyCountryId(): Flow<Long>
+
     @Transaction
     @Query("UPDATE user SET payment_id = :paymentId WHERE ID = 1")
     suspend fun updatePayment(paymentId: Long): Int

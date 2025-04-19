@@ -11,35 +11,38 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class GetTotalUseCase @Inject constructor(
-    private val merchantDataRepository: MerchantDataRepository
+    private val merchantDataRepository: MerchantDataRepository,
 ) {
 
     fun loadDataAsFlow(
         year: Int,
         month: Int,
-        dataPeriod: ShowDataPeriod
+        dataPeriod: ShowDataPeriod,
+        toCurrencyId: Long,
     ) = when (dataPeriod) {
         ShowDataPeriod.THIS_MONTH ->
             merchantDataRepository
                 .getTotalFromMonthAsFlow(
                     Util.TIME_ZONE_OFFSET_IN_MILLI,
                     year = year,
-                    month = month
+                    month = month,
+                    toCurrencyId = toCurrencyId
                 )
 
         ShowDataPeriod.THIS_YEAR ->
             merchantDataRepository
-                .getTotalFromYearAsFlow(Util.TIME_ZONE_OFFSET_IN_MILLI, year)
+                .getTotalFromYearAsFlow(Util.TIME_ZONE_OFFSET_IN_MILLI, year, toCurrencyId)
 
         ShowDataPeriod.ALL_TIME ->
             merchantDataRepository
-                .getTotalAsFlow()
+                .getTotalAsFlow(toCurrencyId)
     }
 
     fun loadData(
         year: Int,
         month: Int,
-        dataPeriod: ShowDataPeriod
+        dataPeriod: ShowDataPeriod,
+        toCurrencyId: Long,
     ): Flow<Resource<Total>> {
         return flow {
 
@@ -52,16 +55,17 @@ class GetTotalUseCase @Inject constructor(
                             .getTotalFromMonth(
                                 Util.TIME_ZONE_OFFSET_IN_MILLI,
                                 year = year,
-                                month = month
+                                month = month,
+                                toCurrencyId = toCurrencyId
                             )
 
                     ShowDataPeriod.THIS_YEAR ->
                         merchantDataRepository
-                            .getTotalFromYear(Util.TIME_ZONE_OFFSET_IN_MILLI, year)
+                            .getTotalFromYear(Util.TIME_ZONE_OFFSET_IN_MILLI, year, toCurrencyId)
 
                     ShowDataPeriod.ALL_TIME ->
                         merchantDataRepository
-                            .getTotal()
+                            .getTotal(toCurrencyId)
                 }
 
                 emit(Resource.Success(totalList))

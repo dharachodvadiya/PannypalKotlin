@@ -71,6 +71,20 @@ fun CustomTimePickerDialog(
                     horizontalArrangement = Arrangement.End
                 ) {
                     //Spacer(modifier = Modifier.weight(1f))
+
+                    PrimaryButton(
+                        modifier = Modifier.width(80.dp),
+                        onClick = onDismiss
+                    ) {
+                        CustomText(
+                            stringResource(R.string.dismiss),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.padding)))
+
                     PrimaryButton(
                         modifier = Modifier.width(80.dp),
                         onClick = {
@@ -87,18 +101,6 @@ fun CustomTimePickerDialog(
                         )
                     }
 
-                    Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.padding)))
-
-                    PrimaryButton(
-                        modifier = Modifier.width(80.dp),
-                        onClick = onDismiss
-                    ) {
-                        CustomText(
-                            stringResource(R.string.dismiss),
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
                 }
             }
         }

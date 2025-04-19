@@ -2,7 +2,6 @@ package com.indie.apps.pennypal.domain.usecase
 
 import com.indie.apps.pennypal.data.module.category.CategoryAmount
 import com.indie.apps.pennypal.repository.MerchantDataRepository
-import com.indie.apps.pennypal.repository.PreferenceRepository
 import com.indie.apps.pennypal.util.Resource
 import com.indie.apps.pennypal.util.ShowDataPeriod
 import com.indie.apps.pennypal.util.Util
@@ -13,13 +12,13 @@ import javax.inject.Inject
 
 class GetCategoryWiseExpenseUseCase @Inject constructor(
     private val merchantDataRepository: MerchantDataRepository,
-    private val preferenceRepository: PreferenceRepository
 ) {
 
     fun loadData(
         year: Int,
         month: Int,
-        dataPeriod: ShowDataPeriod
+        dataPeriod: ShowDataPeriod,
+        toCurrencyId: Long,
     ): Flow<Resource<List<CategoryAmount>>> {
         return flow {
 
@@ -32,19 +31,23 @@ class GetCategoryWiseExpenseUseCase @Inject constructor(
                             .getCategoryWiseExpenseFromMonth(
                                 Util.TIME_ZONE_OFFSET_IN_MILLI,
                                 year = year,
-                                month = month
+                                month = month,
+                                toCurrencyId = toCurrencyId
                             )
 
                     ShowDataPeriod.THIS_YEAR ->
                         merchantDataRepository
                             .getCategoryWiseExpenseFromYear(
                                 Util.TIME_ZONE_OFFSET_IN_MILLI,
-                                year
+                                year,
+                                toCurrencyId
                             )
 
                     ShowDataPeriod.ALL_TIME ->
                         merchantDataRepository
-                            .getCategoryWiseExpense()
+                            .getCategoryWiseExpense(
+                                toCurrencyId
+                            )
 
                 }
 
@@ -58,7 +61,8 @@ class GetCategoryWiseExpenseUseCase @Inject constructor(
     fun loadDataAsFlow(
         year: Int,
         month: Int,
-        dataPeriod: ShowDataPeriod
+        dataPeriod: ShowDataPeriod,
+        toCurrencyId: Long,
     ): Flow<List<CategoryAmount>> {
 
         /*val balanceViewValue = ShowDataPeriod.fromIndex(
@@ -74,19 +78,21 @@ class GetCategoryWiseExpenseUseCase @Inject constructor(
                     .getCategoryWiseExpenseFromMonthAsFlow(
                         Util.TIME_ZONE_OFFSET_IN_MILLI,
                         year = year,
-                        month = month
+                        month = month,
+                        toCurrencyId = toCurrencyId
                     )
 
             ShowDataPeriod.THIS_YEAR ->
                 merchantDataRepository
                     .getCategoryWiseExpenseFromYearAsFlow(
                         Util.TIME_ZONE_OFFSET_IN_MILLI,
-                        year
+                        year,
+                        toCurrencyId
                     )
 
             ShowDataPeriod.ALL_TIME ->
                 merchantDataRepository
-                    .getCategoryWiseExpenseAsFlow()
+                    .getCategoryWiseExpenseAsFlow(toCurrencyId)
 
         }
     }

@@ -8,6 +8,7 @@ import com.indie.apps.pennypal.data.database.enum.toShowDataPeriod
 import com.indie.apps.pennypal.domain.usecase.GetCategoryWiseExpenseUseCase
 import com.indie.apps.pennypal.domain.usecase.GetTotalUseCase
 import com.indie.apps.pennypal.repository.PreferenceRepository
+import com.indie.apps.pennypal.repository.UserRepository
 import com.indie.apps.pennypal.util.Resource
 import com.indie.apps.pennypal.util.ShowDataPeriod
 import com.indie.apps.pennypal.util.Util
@@ -30,10 +31,10 @@ class OverViewAnalysisViewModel @Inject constructor(
     getCategoryWiseExpenseUseCase: GetCategoryWiseExpenseUseCase,
     getTotalUseCase: GetTotalUseCase,
     preferenceRepository: PreferenceRepository,
-   // userRepository: UserRepository
+    userRepository: UserRepository
 ) : ViewModel() {
-   /* val currency = userRepository.getCurrency()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), "$")*/
+    /* val currency = userRepository.getCurrency()
+         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), "$")*/
     private val periodIndex = preferenceRepository.getInt(Util.PREF_BALANCE_VIEW, 1)
 
     val currentMonthInMilli = MutableStateFlow(Calendar.getInstance().timeInMillis)
@@ -45,19 +46,36 @@ class OverViewAnalysisViewModel @Inject constructor(
 
     private val trigger = MutableSharedFlow<Unit>(replay = 1)
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val currentTotal = trigger
-        .flatMapLatest {
-            val calendar = getCurrentCalendar()
-            getTotalUseCase.loadData(
-                year = calendar.get(java.util.Calendar.YEAR),
-                month = calendar.get(java.util.Calendar.MONTH),
-                currentPeriod.value.toShowDataPeriod()
-            )
-        }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), Resource.Loading())
+    private val userData = userRepository.getUser()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), null)
+
+    /* @OptIn(ExperimentalCoroutinesApi::class)
+     val currentTotal = trigger
+         .flatMapLatest {
+             val calendar = getCurrentCalendar()
+             getTotalUseCase.loadData(
+                 year = calendar.get(java.util.Calendar.YEAR),
+                 month = calendar.get(java.util.Calendar.MONTH),
+                 currentPeriod.value.toShowDataPeriod()
+             )
+         }
+         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), Resource.Loading())*/
 
     @OptIn(ExperimentalCoroutinesApi::class)
+    val currentTotal = combine(trigger, userData, currentPeriod) { _, user, period ->
+        val calendar = getCurrentCalendar()
+        val currencyId = user?.currencyId ?: 1L
+        getTotalUseCase.loadData(
+            year = calendar.get(Calendar.YEAR),
+            month = calendar.get(Calendar.MONTH),
+            dataPeriod = period.toShowDataPeriod(),
+            toCurrencyId = currencyId
+        )
+    }
+        .flatMapLatest { it }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), Resource.Loading())
+
+    /*@OptIn(ExperimentalCoroutinesApi::class)
     val categoryExpense = trigger
         .flatMapLatest {
             val calendar = getCurrentCalendar()
@@ -68,6 +86,20 @@ class OverViewAnalysisViewModel @Inject constructor(
                     currentPeriod.value.toShowDataPeriod()
                 )
         }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), Resource.Loading())*/
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val categoryExpense = combine(trigger, userData, currentPeriod) { _, user, period ->
+        val calendar = getCurrentCalendar()
+        val currencyId = user?.currencyId ?: 1L // Default to 1 if null
+        getCategoryWiseExpenseUseCase.loadData(
+            year = calendar.get(Calendar.YEAR),
+            month = calendar.get(Calendar.MONTH),
+            dataPeriod = period.toShowDataPeriod(),
+            toCurrencyId = currencyId
+        )
+    }
+        .flatMapLatest { it } // Flatten Flow<Flow<Resource<List<CategoryExpense>>>> to Flow<Resource<List<CategoryExpense>>>
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), Resource.Loading())
 
     // ✅ Combined loading state
