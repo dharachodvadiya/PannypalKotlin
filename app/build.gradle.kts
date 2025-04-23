@@ -41,12 +41,12 @@ android {
                 "EXCHANGE_RATE_API_KEY",
                 properties.getProperty("EXCHANGE_RATE_API_KEY")
             )
-            isMinifyEnabled = true
+           /* isMinifyEnabled = true
             //isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
-            )
+            )*/
         }
         release {
             manifestPlaceholders["crashlyticsCollectionEnabled"] = true

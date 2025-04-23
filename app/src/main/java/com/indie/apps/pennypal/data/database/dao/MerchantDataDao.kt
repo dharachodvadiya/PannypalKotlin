@@ -460,6 +460,8 @@ interface MerchantDataDao : BaseDao<MerchantData> {
             AND c.type != 1
         GROUP BY 
             c.name, md.base_currency_id
+        HAVING
+            SUM(CASE WHEN md.type = -1 THEN md.amount ELSE 0 END) > 0
         ORDER BY 
             amount DESC
     """
@@ -495,6 +497,8 @@ interface MerchantDataDao : BaseDao<MerchantData> {
             AND c.type != 1
         GROUP BY 
             c.name, md.base_currency_id
+        HAVING
+            SUM(CASE WHEN md.type = -1 THEN md.amount ELSE 0 END) > 0
         ORDER BY 
             amount DESC
     """
@@ -528,6 +532,8 @@ interface MerchantDataDao : BaseDao<MerchantData> {
             AND c.type != 1
         GROUP BY 
             c.name, md.base_currency_id
+        HAVING
+            SUM(CASE WHEN md.type = -1 THEN md.amount ELSE 0 END) > 0
         ORDER BY 
             amount DESC
     """
@@ -561,6 +567,8 @@ interface MerchantDataDao : BaseDao<MerchantData> {
             AND c.type != 1
         GROUP BY 
             c.name, md.base_currency_id
+        HAVING
+            SUM(CASE WHEN md.type = -1 THEN md.amount ELSE 0 END) > 0
         ORDER BY 
             amount DESC
     """
@@ -592,6 +600,8 @@ interface MerchantDataDao : BaseDao<MerchantData> {
             c.type != 1
         GROUP BY 
             c.name, md.base_currency_id
+        HAVING
+            SUM(CASE WHEN md.type = -1 THEN md.amount ELSE 0 END) > 0
         ORDER BY 
             amount DESC
     """
@@ -621,6 +631,8 @@ interface MerchantDataDao : BaseDao<MerchantData> {
             c.type != 1
         GROUP BY 
             c.name, md.base_currency_id
+        HAVING
+            SUM(CASE WHEN md.type = -1 THEN md.amount ELSE 0 END) > 0
         ORDER BY 
             amount DESC
     """
