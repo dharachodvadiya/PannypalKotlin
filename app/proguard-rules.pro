@@ -113,3 +113,77 @@
 -dontwarn java.awt.Desktop
 
 ##---------------End: proguard configuration for Gson  ----------
+
+-keep @androidx.annotation.Keep public class *
+
+#-----------------------------------------------------
+
+##---------------Begin: proguard configuration for Retrofit, OkHttp, and Gson  ----------
+
+# Retrofit 2.6.0: Preserve classes, interfaces, and HTTP-annotated methods
+-keep class retrofit2.** { *; }
+-keep interface retrofit2.** { *; }
+-dontwarn retrofit2.**
+-dontnote retrofit2.Platform
+-dontnote retrofit2.Platform$IOS$MainThreadExecutor
+-dontwarn retrofit2.Platform$Java8
+-keepclasseswithmembers class * {
+    @retrofit2.http.* <methods>;
+}
+-keepclassmembers,allowshrinking,allowobfuscation interface * {
+    @retrofit2.http.* <methods>;
+}
+-if interface * { @retrofit2.http.* <methods>; }
+-keep,allowobfuscation interface <1>
+-if interface * { @retrofit2.http.* <methods>; }
+-keep,allowobfuscation interface * extends <1>
+-if interface * { @retrofit2.http.* public *** *(...); }
+-keep,allowoptimization,allowshrinking,allowobfuscation class <3>
+-keep,allowobfuscation,allowshrinking class retrofit2.Response
+-keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation
+
+# OkHttp 4.5.0 (including Logging Interceptor): Preserve classes
+-keep class okhttp3.** { *; }
+-keep interface okhttp3.** { *; }
+-dontwarn okhttp3.**
+-dontnote okhttp3.**
+-keep class okio.** { *; }
+-dontwarn okio.**
+-keep class okhttp3.logging.** { *; }
+-dontwarn okhttp3.logging.**
+
+# Gson (via Retrofit Converter 2.6.0): Preserve classes, annotations, and type information
+-keep class com.google.gson.** { *; }
+-keep class com.squareup.retrofit2.converter.gson.** { *; }
+-keepattributes *Annotation*,Signature,InnerClasses,EnclosingMethod
+-keepattributes RuntimeVisibleAnnotations,RuntimeVisibleParameterAnnotations,AnnotationDefault
+-keep class * implements com.google.gson.TypeAdapter
+-keep class * implements com.google.gson.TypeAdapterFactory
+-keep class * implements com.google.gson.JsonSerializer
+-keep class * implements com.google.gson.JsonDeserializer
+-keepclassmembers,allowobfuscation class * {
+    @com.google.gson.annotations.SerializedName <fields>;
+}
+
+# Preserve your API model and service classes
+-keep class com.indie.apps.pennypal.data.service.** { *; }
+-keep interface com.indie.apps.pennypal.data.service.** { *; }
+-keepclassmembers class com.indie.apps.pennypal.data.service.** { *; }
+
+# Preserve enums for Gson serialization
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+
+# Suppress warnings for dependencies
+-dontwarn sun.misc.**
+-dontwarn java.lang.invoke.**
+-dontwarn javax.annotation.**
+-dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+-dontwarn kotlin.**
+-dontwarn kotlinx.**
+-dontwarn retrofit2.KotlinExtensions
+-dontwarn retrofit2.KotlinExtensions$*
+
+##---------------End: proguard configuration for Retrofit, OkHttp, and Gson  ----------

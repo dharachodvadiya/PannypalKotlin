@@ -1,5 +1,7 @@
 package com.indie.apps.pennypal.data.service
 
+import androidx.annotation.Keep
+import com.google.gson.annotations.SerializedName
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -12,14 +14,15 @@ interface ExchangeRateApiService {
     ): Response<ExchangeRateResponse>
 }
 
+@Keep
 data class ExchangeRateResponse(
-    val result: String,
-    val documentation: String,
-    val terms_of_use: String,
-    val time_last_update_unix: Long,
-    val time_last_update_utc: String,
-    val time_next_update_unix: Long,
-    val time_next_update_utc: String,
-    val base_code: String,
-    val conversion_rates: Map<String, Double>
+    @SerializedName("result") val result: String,
+    @SerializedName("documentation")val documentation: String,
+    @SerializedName("terms_of_use")val terms_of_use: String,
+    @SerializedName("time_last_update_unix")val time_last_update_unix: Long,
+    @SerializedName("time_last_update_utc")val time_last_update_utc: String,
+    @SerializedName("time_next_update_unix")val time_next_update_unix: Long,
+    @SerializedName("time_next_update_utc")val time_next_update_utc: String,
+    @SerializedName("base_code")val base_code: String,
+    @SerializedName("conversion_rates")val conversion_rates: Map<String, Double>
 )
