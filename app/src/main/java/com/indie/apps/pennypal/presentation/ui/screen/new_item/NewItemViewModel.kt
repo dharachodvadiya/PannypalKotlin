@@ -109,10 +109,10 @@ class NewItemViewModel @Inject constructor(
             loadUserData()
             loadCategoryData(1L)
             setDateAndTime(Calendar.getInstance().timeInMillis)
+            fetchLastUsedCategories(if (received.value) 1 else -1)
         } else
             setEditData()
 
-        fetchLastUsedCategories()
     }
 
     private fun loadUserData() {
@@ -183,7 +183,7 @@ class NewItemViewModel @Inject constructor(
                                 }
                             }
 
-
+                            fetchLastUsedCategories(if (received.value) 1 else -1)
 
                             uiState.value = Resource.Success(Unit)
                         } else {
@@ -220,6 +220,8 @@ class NewItemViewModel @Inject constructor(
             setCategory(categoryIncome)
         else
             setCategory(categoryExpense)
+
+        fetchLastUsedCategories(if (received.value) 1 else -1)
     }
 
     fun setDateAndTime(currentDateAndTime: Long) {
@@ -409,9 +411,9 @@ class NewItemViewModel @Inject constructor(
         finalAmount.value = amt
     }
 
-    private fun fetchLastUsedCategories() {
+    private fun fetchLastUsedCategories(type: Int) {
         viewModelScope.launch {
-            categories.value = categoryRepository.getRecentUsedCategoryList(5)
+            categories.value = categoryRepository.getRecentUsedCategoryList(5, type)
         }
     }
 

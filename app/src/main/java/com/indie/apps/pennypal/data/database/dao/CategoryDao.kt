@@ -37,7 +37,7 @@ interface CategoryDao : BaseDao<Category> {
         SELECT c.*
         FROM category c
         JOIN merchant_data m ON c.id = m.category_id
-        WHERE c.soft_delete = 0
+        WHERE c.soft_delete = 0 AND (c.type == :type OR c.type = 0)
         GROUP BY c.id
         ORDER BY MAX(m.date_milli) DESC
         LIMIT (:limit -1)
@@ -45,7 +45,7 @@ interface CategoryDao : BaseDao<Category> {
     
     additional_categories AS (
         SELECT * FROM category
-        WHERE id NOT IN (SELECT id FROM recent_categories)
+        WHERE id NOT IN (SELECT id FROM recent_categories) AND (type == :type OR type = 0)
         AND soft_delete = 0
         ORDER BY id ASC
         LIMIT (:limit - (SELECT COUNT(*) FROM recent_categories))
@@ -56,7 +56,7 @@ interface CategoryDao : BaseDao<Category> {
     SELECT * FROM additional_categories
 """
     )
-    suspend fun getRecentUsedCategoryList(limit: Int): List<Category>
+    suspend fun getRecentUsedCategoryList(limit: Int, type: Int): List<Category>
 
     @Transaction
     @Query("SELECT * FROM category where (type = :type OR type = 0) AND name LIKE  '%' || :searchQuery || '%'  AND soft_delete = 0 ORDER BY id DESC")
