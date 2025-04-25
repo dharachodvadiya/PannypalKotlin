@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -157,6 +158,7 @@ fun AddEditBudgetScreen(
                         .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
                         .padding(innerPadding)
                         .padding(horizontal = dimensionResource(id = R.dimen.padding))
+                        .imePadding()
                         .verticalScroll(scrollState),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(20.dp)

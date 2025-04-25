@@ -2,7 +2,6 @@ package com.indie.apps.pennypal.presentation.ui.dialog.search_merchant
 
 import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -60,10 +59,10 @@ fun DialogSearchMerchant(
 
     val focusRequesterSearch = remember { FocusRequester() }
 
-    LaunchedEffect(Unit) {
-        focusRequesterSearch.requestFocus()
-    }
-
+    /* LaunchedEffect(Unit) {
+         focusRequesterSearch.requestFocus()
+     }
+ */
     MyAppDialog(
         isBackEnable = true,
         title = R.string.select_merchant,

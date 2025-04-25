@@ -72,9 +72,9 @@ fun DialogAddMerchant(
     val focusRequesterPhoneNumber = remember { FocusRequester() }
     val focusRequesterDescription = remember { FocusRequester() }
 
-    LaunchedEffect(Unit) {
-        focusRequesterName.requestFocus()
-    }
+    /*  LaunchedEffect(Unit) {
+          focusRequesterName.requestFocus()
+      }*/
 
     MyAppDialog(
         title = if (!addMerchantViewModel.getIsEditable()) R.string.add_merchant else R.string.edit_merchant,

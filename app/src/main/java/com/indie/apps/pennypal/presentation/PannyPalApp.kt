@@ -155,7 +155,7 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
 
                 dialog(
                     route = DialogNav.SELECT_MERCHANT.route,
-                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
+                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false)
                 ) {
                     DialogSearchMerchant(
                         onNavigationUp = {
@@ -178,7 +178,7 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
                 }
                 dialog(
                     route = DialogNav.ADD_EDIT_MERCHANT.route,
-                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
+                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false)
                 ) { backStackEntry ->
                     val savedStateHandle = backStackEntry.savedStateHandle
                     // get data passed back from B
@@ -239,7 +239,8 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
                 }
                 dialog(
                     route = DialogNav.ADD_EDIT_PAYMENT.route,
-                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
+                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false),
+
                 ) { backStackEntry ->
 
                     DialogAddPayment(
@@ -269,7 +270,7 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
                 }
                 dialog(
                     route = DialogNav.ADD_EDIT_CATEGORY.route,
-                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
+                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false)
                 ) { backStackEntry ->
 
                     val type =
@@ -319,7 +320,7 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
                 }
                 dialog(
                     route = DialogNav.COUNTRY_PICKER.route,
-                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
+                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false)
                 ) { backStackEntry ->
 
                     val isShowCurrency: Boolean? = backStackEntry
@@ -356,7 +357,7 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
                 }
                 dialog(
                     route = DialogNav.CONTACT_PICKER.route,
-                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
+                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false)
                 ) {
                     DialogContactPicker(
                         onNavigationUp = { navController.navigateUp() },
@@ -372,7 +373,7 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
                 }
                 dialog(
                     route = DialogNav.SELECT_PAYMENT.route,
-                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
+                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false)
                 ) { backStackEntry ->
 
                     val currentId =
@@ -402,7 +403,7 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
                 }
                 dialog(
                     route = DialogNav.SELECT_CATEGORY.route,
-                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
+                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false)
                 ) { backStackEntry ->
 
                     val currentId =
@@ -437,7 +438,7 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
                 }
                 dialog(
                     route = DialogNav.SELECT_BALANCE_VIEW.route,
-                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
+                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false)
                 ) {
                     DialogSelectBalanceView(
                         onSelect = { navController.popBackStack() },
@@ -447,7 +448,7 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
 
                 dialog(
                     route = DialogNav.SELECT_LANGUAGE.route,
-                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
+                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false)
                 ) {
                     DialogLanguage(
                         onSelect = { navController.popBackStack() },
@@ -457,7 +458,7 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
 
                 dialog(
                     route = DialogNav.MULTI_SELECT_CATEGORY.route,
-                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
+                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false)
                 ) {
 
                     val gsonStringCategoryIds =

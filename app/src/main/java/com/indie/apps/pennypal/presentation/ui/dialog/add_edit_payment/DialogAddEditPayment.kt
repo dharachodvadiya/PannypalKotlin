@@ -3,7 +3,6 @@ package com.indie.apps.pennypal.presentation.ui.dialog.add_edit_payment
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -59,9 +58,10 @@ fun DialogAddPayment(
 
     val focusRequesterName = remember { FocusRequester() }
 
-    LaunchedEffect(Unit) {
-        focusRequesterName.requestFocus()
-    }
+    /*
+        LaunchedEffect(Unit) {
+            focusRequesterName.requestFocus()
+        }*/
 
     MyAppDialog(
         title = if (!addPaymentViewModel.getIsEditable()) R.string.add_payment else R.string.edit_payment,

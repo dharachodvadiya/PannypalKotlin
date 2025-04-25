@@ -2,7 +2,6 @@ package com.indie.apps.pennypal.presentation.ui.dialog.country_picker
 
 import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,9 +46,9 @@ fun DialogCountryPicker(
     val focusManager = LocalFocusManager.current
     val focusRequesterSearch = remember { FocusRequester() }
 
-    LaunchedEffect(Unit) {
+    /*LaunchedEffect(Unit) {
         focusRequesterSearch.requestFocus()
-    }
+    }*/
 
     MyAppDialog(
         isBackEnable = true,

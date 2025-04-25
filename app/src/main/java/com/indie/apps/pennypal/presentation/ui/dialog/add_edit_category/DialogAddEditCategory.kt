@@ -51,9 +51,9 @@ fun DialogAddEditCategory(
     val focusManager = LocalFocusManager.current
     val focusRequesterCategoryName = remember { FocusRequester() }
 
-    LaunchedEffect(Unit) {
+    /*LaunchedEffect(Unit) {
         focusRequesterCategoryName.requestFocus()
-    }
+    }*/
 
     MyAppDialog(
         title = if (!viewModel.getIsEditable()) R.string.add_category else R.string.edit_category,
