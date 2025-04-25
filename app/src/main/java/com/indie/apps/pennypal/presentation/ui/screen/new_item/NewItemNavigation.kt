@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.screen.new_item
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.MutableState
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -103,7 +104,8 @@ import com.indie.apps.pennypal.util.Util
 
 internal fun NavGraphBuilder.navigateToEditItemScreen(
     navController: NavHostController,
-    bottomBarState: MutableState<Boolean>
+    bottomBarState: MutableState<Boolean>,
+    innerPadding: PaddingValues
 ) {
     composable(route = ScreenNav.ADD_EDIT_MERCHANT_DATA.route) { backStackEntry ->
         bottomBarState.value = false

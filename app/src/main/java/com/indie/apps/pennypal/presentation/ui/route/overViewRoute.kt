@@ -26,23 +26,5 @@ fun NavGraphBuilder.overViewRoute(
         startDestination = ScreenNav.OVERVIEW.route, route = BottomNavItem.OVERVIEW.route
     ) {
         navigateToOverViewStartScreen(navController, bottomBarState, innerPadding)
-
-        navigateToEditItemScreen(navController, bottomBarState)
-
-        navigateToAllDataScreen(navController, bottomBarState)
-
-
-
-        navigateToBudgetScreen(navController, bottomBarState)
-
-        navigateToSingleBudgetScreen(navController, bottomBarState)
-
-        //navigateToAddBudgetScreen(navController, bottomBarState)
-
-        navigateToAddEditBudgetScreen(navController, bottomBarState)
-
-        navigateToBudgetFilterScreen(navController, bottomBarState)
-
-
     }
 }

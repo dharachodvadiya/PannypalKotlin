@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.screen.budget_filter
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.navigation.NavGraphBuilder
@@ -10,7 +11,8 @@ import com.indie.apps.pennypal.util.Util
 
 internal fun NavGraphBuilder.navigateToBudgetFilterScreen(
     navController: NavHostController,
-    bottomBarState: MutableState<Boolean>
+    bottomBarState: MutableState<Boolean>,
+    innerPadding: PaddingValues
 ) {
     composable(route = ScreenNav.BUDGET_FILTER.route) { backStackEntry ->
         bottomBarState.value = false

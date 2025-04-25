@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.screen.merchant_profile
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.MutableState
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -8,7 +9,8 @@ import com.indie.apps.pennypal.presentation.ui.navigation.ScreenNav
 
 internal fun NavGraphBuilder.navigateToMerchantProfileScreen(
     navController: NavHostController,
-    bottomBarState: MutableState<Boolean>
+    bottomBarState: MutableState<Boolean>,
+    innerPadding: PaddingValues
 ) {
     composable(route = ScreenNav.MERCHANT_PROFILE.route) {
         bottomBarState.value = false

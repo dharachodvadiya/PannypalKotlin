@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -31,7 +32,6 @@ import com.indie.apps.pennypal.presentation.ui.component.custom.composable.Custo
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomYearPickerDialog
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
-import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.util.Resource
 import java.util.Calendar
 
@@ -40,6 +40,7 @@ import java.util.Calendar
 fun OverViewAnalysisScreen(
     viewModel: OverViewAnalysisViewModel = hiltViewModel(),
     onNavigationUp: () -> Unit,
+    bottomPadding: PaddingValues,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     //val currency by viewModel.currency.collectAsStateWithLifecycle()
@@ -132,7 +133,8 @@ fun OverViewAnalysisScreen(
                         Column(
                             modifier = modifier
                                 .fillMaxSize()
-                                .verticalScroll(scrollState),
+                                .verticalScroll(scrollState)
+                                .padding(bottom = bottomPadding.calculateBottomPadding()),
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.spacedBy(20.dp)
                         ) {
@@ -188,9 +190,9 @@ fun OverViewAnalysisScreen(
 @Preview
 @Composable
 private fun OverViewScreenPreview() {
-    PennyPalTheme(darkTheme = true) {
-        OverViewAnalysisScreen(
-            onNavigationUp = {},
-        )
-    }
+    /* PennyPalTheme(darkTheme = true) {
+         OverViewAnalysisScreen(
+             onNavigationUp = {},
+         )
+     }*/
 }

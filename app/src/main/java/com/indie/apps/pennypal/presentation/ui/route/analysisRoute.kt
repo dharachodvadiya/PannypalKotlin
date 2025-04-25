@@ -18,6 +18,6 @@ fun NavGraphBuilder.analysisRoute(
         startDestination = ScreenNav.ANALYSIS.route,
         route = BottomNavItem.ANALYSIS.route
     ) {
-        navigateToOverViewAnalysisScreen(navController, bottomBarState)
+        navigateToOverViewAnalysisScreen(navController, bottomBarState, innerPadding)
     }
 }

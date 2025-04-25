@@ -11,7 +11,6 @@ import com.indie.apps.pennypal.presentation.ui.screen.category.navigateToCategor
 import com.indie.apps.pennypal.presentation.ui.screen.merchant.navigateToMerchantScreen
 import com.indie.apps.pennypal.presentation.ui.screen.merchant_data.navigateToMerchantDataScreen
 import com.indie.apps.pennypal.presentation.ui.screen.merchant_profile.navigateToMerchantProfileScreen
-import com.indie.apps.pennypal.presentation.ui.screen.new_item.navigateToEditItemScreen
 import com.indie.apps.pennypal.presentation.ui.screen.setting.navigateToSettingScreen
 
 fun NavGraphBuilder.settingRoute(
@@ -24,13 +23,6 @@ fun NavGraphBuilder.settingRoute(
         route = BottomNavItem.SETTING.route
     ) {
         navigateToSettingScreen(navController, bottomBarState, innerPadding)
-
-        navigateToCategoryScreen(navController, bottomBarState, innerPadding)
-
-        navigateToMerchantScreen(navController, bottomBarState, innerPadding)
-        navigateToMerchantDataScreen(navController, bottomBarState)
-        navigateToMerchantProfileScreen(navController, bottomBarState)
-        navigateToEditItemScreen(navController, bottomBarState)
     }
 }
 

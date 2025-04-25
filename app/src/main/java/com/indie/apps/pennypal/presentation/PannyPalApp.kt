@@ -46,6 +46,7 @@ import com.indie.apps.pennypal.presentation.ui.navigation.BottomNavItem
 import com.indie.apps.pennypal.presentation.ui.navigation.DialogNav
 import com.indie.apps.pennypal.presentation.ui.navigation.ScreenNav
 import com.indie.apps.pennypal.presentation.ui.route.analysisRoute
+import com.indie.apps.pennypal.presentation.ui.route.otherRoute
 import com.indie.apps.pennypal.presentation.ui.route.overViewRoute
 import com.indie.apps.pennypal.presentation.ui.route.paymentRoute
 import com.indie.apps.pennypal.presentation.ui.route.settingRoute
@@ -124,6 +125,7 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
                 // merchantRoute(navController, bottomBarState, innerPadding)
                 paymentRoute(navController, bottomBarState, innerPadding)
                 settingRoute(navController, bottomBarState, innerPadding)
+                otherRoute(navController, bottomBarState, innerPadding)
 
                 composable(route = ScreenNav.BOARDING.route) { backStackEntry ->
                     bottomBarState.value = false
