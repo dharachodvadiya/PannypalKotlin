@@ -6,7 +6,6 @@ import androidx.compose.runtime.MutableState
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
-import com.indie.apps.pennypal.presentation.ui.navigation.BottomNavItem
 import com.indie.apps.pennypal.presentation.ui.navigation.DialogNav
 import com.indie.apps.pennypal.presentation.ui.navigation.ScreenNav
 import com.indie.apps.pennypal.util.Util
@@ -16,7 +15,7 @@ internal fun NavGraphBuilder.navigateToOverViewStartScreen(
     bottomBarState: MutableState<Boolean>,
     innerPadding: PaddingValues
 ) {
-    composable(route = ScreenNav.OVERVIEW_START.route) { backStackEntry ->
+    composable(route = ScreenNav.OVERVIEW.route) { backStackEntry ->
 
         val merchantDataId: Long? =
             backStackEntry.savedStateHandle.get<Long>(Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_ID)
@@ -52,10 +51,10 @@ internal fun NavGraphBuilder.navigateToOverViewStartScreen(
                 navController.navigate(ScreenNav.SEE_ALL_DATA.route)
             },
             onSeeAllMerchantClick = {
-                navController.navigate(BottomNavItem.MERCHANTS.route)
+                navController.navigate(ScreenNav.MERCHANT.route)
             },
             onExploreAnalysisClick = {
-                navController.navigate(ScreenNav.OVERVIEW_ANALYSIS.route)
+                navController.navigate(ScreenNav.ANALYSIS.route)
             },
             onTransactionClick = {
                 navController.navigate(

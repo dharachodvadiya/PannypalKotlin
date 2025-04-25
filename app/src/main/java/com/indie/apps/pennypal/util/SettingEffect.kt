@@ -14,6 +14,10 @@ sealed class SettingEffect {
     data object Restore : SettingEffect()
     data object GoogleSignIn : SettingEffect()
     data object GoogleSignInOrChange : SettingEffect()
+    data object OnTransactions : SettingEffect()
+    data object OnMerchants : SettingEffect()
+    data object OnCategories : SettingEffect()
+    data object OnBudgets : SettingEffect()
 
 }
 
@@ -30,4 +34,8 @@ enum class SettingOption {
     RESTORE,
     GOOGLE_SIGN_IN,
     GOOGLE_SIGN_IN_OR_CHANGE,
+    TRANSACTION,
+    MERCHANT,
+    CATEGORY,
+    BUDGET
 }

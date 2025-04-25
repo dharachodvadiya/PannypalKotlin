@@ -42,6 +42,15 @@ class SettingViewModel @Inject constructor(
         .map { it.copy(email = getCurrentEmail()) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), null)
 
+    val screenList = MutableStateFlow(
+        listOf(
+            MoreItem(R.string.transactions, SettingOption.TRANSACTION, R.drawable.ic_list),
+            MoreItem(R.string.merchants, SettingOption.MERCHANT, R.drawable.ic_person_fill),
+            MoreItem(R.string.category, SettingOption.CATEGORY, R.drawable.ic_category_fill),
+            MoreItem(R.string.budget, SettingOption.BUDGET, R.drawable.ic_budget),
+        )
+    )
+
     var generalList = getGeneralSettingUseCase.loadData()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
 
@@ -76,7 +85,8 @@ class SettingViewModel @Inject constructor(
         )
     ) { _, list ->
         val updatedList = list.toMutableList()
-        updatedList[2] = updatedList[2].copy(subTitle = getCurrentEmail()?.let { UiText.DynamicString(it) })
+        updatedList[2] =
+            updatedList[2].copy(subTitle = getCurrentEmail()?.let { UiText.DynamicString(it) })
         updatedList
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
 
@@ -100,6 +110,10 @@ class SettingViewModel @Inject constructor(
                     SettingOption.GOOGLE_SIGN_IN -> SettingEffect.GoogleSignIn
                     SettingOption.LANGUAGE_CHANGE -> SettingEffect.OnLanguageChange
                     SettingOption.GOOGLE_SIGN_IN_OR_CHANGE -> SettingEffect.GoogleSignInOrChange
+                    SettingOption.TRANSACTION -> SettingEffect.OnTransactions
+                    SettingOption.MERCHANT -> SettingEffect.OnMerchants
+                    SettingOption.CATEGORY -> SettingEffect.OnCategories
+                    SettingOption.BUDGET -> SettingEffect.OnBudgets
                 }
             )
         }
@@ -125,7 +139,8 @@ class SettingViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getCurrentEmail() = if (authRepository.isSignedIn()) authRepository.getUserInfo()?.email else null
+    private suspend fun getCurrentEmail() =
+        if (authRepository.isSignedIn()) authRepository.getUserInfo()?.email else null
 
     private fun getLanguageList(): List<MoreItem> {
         val language = AppLanguage.fromIndex(
@@ -134,7 +149,8 @@ class SettingViewModel @Inject constructor(
             )
         )?.title
         return listOf(
-            MoreItem(R.string.current_language,
+            MoreItem(
+                R.string.current_language,
                 SettingOption.LANGUAGE_CHANGE,
                 subTitle = language?.let {
                     UiText.StringResource(it)

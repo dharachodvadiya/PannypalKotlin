@@ -15,7 +15,7 @@ internal fun NavGraphBuilder.navigateToSettingScreen(
     bottomBarState: MutableState<Boolean>,
     innerPadding: PaddingValues
 ) {
-    composable(route = ScreenNav.SETTING_START.route) {
+    composable(route = ScreenNav.SETTING.route) {
         bottomBarState.value = true
         SettingScreen(
             onDefaultPaymentChange = { currentId ->
@@ -56,6 +56,19 @@ internal fun NavGraphBuilder.navigateToSettingScreen(
                 navController.navigate(BottomNavItem.OVERVIEW.route) {
                     launchSingleTop = true
                 }
-            })
+            },
+            onTransaction = {
+                navController.navigate(ScreenNav.SEE_ALL_DATA.route)
+            },
+            onMerchants = {
+                navController.navigate(ScreenNav.MERCHANT.route)
+            },
+            onCategories = {
+                navController.navigate(ScreenNav.CATEGORY.route)
+            },
+            onBudget = {
+                navController.navigate(ScreenNav.BUDGET.route)
+            },
+        )
     }
 }

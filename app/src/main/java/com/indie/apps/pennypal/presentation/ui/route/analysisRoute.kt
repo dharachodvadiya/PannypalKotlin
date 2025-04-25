@@ -7,17 +7,17 @@ import androidx.navigation.NavHostController
 import androidx.navigation.navigation
 import com.indie.apps.pennypal.presentation.ui.navigation.BottomNavItem
 import com.indie.apps.pennypal.presentation.ui.navigation.ScreenNav
-import com.indie.apps.pennypal.presentation.ui.screen.payment.navigateToPaymentScreen
+import com.indie.apps.pennypal.presentation.ui.screen.overview_analysis.navigateToOverViewAnalysisScreen
 
-fun NavGraphBuilder.paymentRoute(
+fun NavGraphBuilder.analysisRoute(
     navController: NavHostController,
     bottomBarState: MutableState<Boolean>,
     innerPadding: PaddingValues
 ) {
     navigation(
-        startDestination = ScreenNav.PAYMENT.route,
-        route = BottomNavItem.ACCOUNTS.route
+        startDestination = ScreenNav.ANALYSIS.route,
+        route = BottomNavItem.ANALYSIS.route
     ) {
-        navigateToPaymentScreen(navController, bottomBarState, innerPadding)
+        navigateToOverViewAnalysisScreen(navController, bottomBarState)
     }
 }

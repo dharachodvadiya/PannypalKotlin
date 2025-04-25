@@ -13,7 +13,6 @@ import com.indie.apps.pennypal.presentation.ui.screen.budget.navigateToBudgetScr
 import com.indie.apps.pennypal.presentation.ui.screen.budget_filter.navigateToBudgetFilterScreen
 import com.indie.apps.pennypal.presentation.ui.screen.new_item.navigateToEditItemScreen
 import com.indie.apps.pennypal.presentation.ui.screen.overview.navigateToOverViewStartScreen
-import com.indie.apps.pennypal.presentation.ui.screen.overview_analysis.navigateToOverViewAnalysisScreen
 import com.indie.apps.pennypal.presentation.ui.screen.single_budget_analysis.navigateToSingleBudgetScreen
 
 
@@ -24,7 +23,7 @@ fun NavGraphBuilder.overViewRoute(
 ) {
 
     navigation(
-        startDestination = ScreenNav.OVERVIEW_START.route, route = BottomNavItem.OVERVIEW.route
+        startDestination = ScreenNav.OVERVIEW.route, route = BottomNavItem.OVERVIEW.route
     ) {
         navigateToOverViewStartScreen(navController, bottomBarState, innerPadding)
 
@@ -32,7 +31,7 @@ fun NavGraphBuilder.overViewRoute(
 
         navigateToAllDataScreen(navController, bottomBarState)
 
-        navigateToOverViewAnalysisScreen(navController, bottomBarState)
+
 
         navigateToBudgetScreen(navController, bottomBarState)
 

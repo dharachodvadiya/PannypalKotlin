@@ -21,25 +21,28 @@ enum class DialogNav(val route: String) {
 
 enum class ScreenNav(val route: String) {
     BOARDING("boarding"),
-    OVERVIEW_START("overview/start"),
-    SEE_ALL_DATA("overview/see_all_data"),
+    OVERVIEW("overview/start"),
+    PAYMENT("accounts/start"),
+    SETTING("setting/start"),
+    ANALYSIS("analysis/start"),
+
+    SEE_ALL_DATA("see_all_data"),
 
     //NEW_ITEM("overview/new_item"),
-   // PROFILE("overview/profile"),
-    CATEGORY_START("category/start"),
-    MERCHANT_START("merchant/start"),
+    // PROFILE("overview/profile"),
+    CATEGORY("category"),
+
+    MERCHANT("merchant"),
     MERCHANT_DATA("merchant/merchant_data/{${Util.PARAM_MERCHANT_ID}}"),
     MERCHANT_PROFILE("merchant/merchant_profile/{${Util.PARAM_MERCHANT_ID}}"),
     ADD_EDIT_MERCHANT_DATA("merchant/edit_merchant_data/{${Util.PARAM_EDIT_MERCHANT_DATA_ID}}"),
-    PAYMENT_START("accounts/start"),
-    SETTING_START("setting/start"),
-    OVERVIEW_ANALYSIS("overview/analysis"),
+
     BUDGET("budget"),
-    BUDGET_FILTER("budget_filter"),
-    SINGLE_BUDGET_ANALYSIS("budget/{${Util.PARAM_BUDGET_ID}}"),
+    BUDGET_FILTER("budget/budget_filter"),
+    SINGLE_BUDGET_ANALYSIS("budget/analysis/{${Util.PARAM_BUDGET_ID}}"),
 
     //ADD_BUDGET("add_budget"),
-    ADD_EDIT_BUDGET("add_edit_budget_data/{${Util.PARAM_BUDGET_ID}}"),
+    ADD_EDIT_BUDGET("budget/add_edit_budget_data/{${Util.PARAM_BUDGET_ID}}"),
 }
 
 enum class BottomNavItem(
@@ -49,8 +52,10 @@ enum class BottomNavItem(
     val route: String
 ) {
     OVERVIEW(R.string.overview, R.drawable.ic_overview_fill, R.drawable.ic_overview, "overview"),
-    CATEGORY(R.string.category, R.drawable.ic_category_fill, R.drawable.ic_category, "category"),
-    MERCHANTS(R.string.merchants, R.drawable.ic_person_fill, R.drawable.ic_person, "merchant"),
+    ANALYSIS(R.string.analysis, R.drawable.ic_analysis_filled, R.drawable.ic_analysis, "analysis"),
+
+    //CATEGORY(R.string.category, R.drawable.ic_category_fill, R.drawable.ic_category, "category"),
+    //MERCHANTS(R.string.merchants, R.drawable.ic_person_fill, R.drawable.ic_person, "merchant"),
     ACCOUNTS(R.string.accounts, R.drawable.ic_bank_fill, R.drawable.ic_bank, "accounts"),
     SETTING(R.string.setting, R.drawable.ic_setting_fill, R.drawable.ic_setting, "setting"),
 }

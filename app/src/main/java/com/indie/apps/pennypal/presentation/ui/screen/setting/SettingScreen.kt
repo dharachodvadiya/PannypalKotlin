@@ -18,7 +18,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.indie.apps.pennypal.R
@@ -43,10 +42,15 @@ fun SettingScreen(
     onDefaultPaymentChange: (Long) -> Unit,
     onBalanceViewChange: () -> Unit,
     onLanguageChange: () -> Unit,
+    onTransaction: () -> Unit,
+    onMerchants: () -> Unit,
+    onCategories: () -> Unit,
+    onBudget: () -> Unit,
     onNavigationUp: () -> Unit,
     bottomPadding: PaddingValues,
 ) {
 
+    val screenList by settingViewModel.screenList.collectAsStateWithLifecycle()
     val generalList by settingViewModel.generalList.collectAsStateWithLifecycle()
     val languageList by settingViewModel.languageList.collectAsStateWithLifecycle()
     val moreList by settingViewModel.moreList.collectAsStateWithLifecycle()
@@ -73,7 +77,8 @@ fun SettingScreen(
         onNavigationUp()
     }
 
-    SignInLauncher(authViewModel,
+    SignInLauncher(
+        authViewModel,
         onLoginSuccess = {
             settingViewModel.refreshState()
             context.showToast(loginSuccessMessage)
@@ -135,12 +140,18 @@ fun SettingScreen(
                         context.showToast(it)
                     }
                 )
+
+                SettingEffect.OnBudgets -> onBudget()
+                SettingEffect.OnCategories -> onCategories()
+                SettingEffect.OnMerchants -> onMerchants()
+                SettingEffect.OnTransactions -> onTransaction()
             }
         }
     }
 
     SettingScreenData(
         generalList = generalList,
+        screenList = screenList,
         languageList = languageList,
         moreList = moreList,
         backupRestoreList = backupRestoreList,
@@ -173,6 +184,7 @@ fun SettingScreen(
 
 @Composable
 fun SettingScreenData(
+    screenList: List<MoreItem>,
     generalList: List<MoreItem>,
     languageList: List<MoreItem>,
     moreList: List<MoreItem>,
@@ -204,6 +216,12 @@ fun SettingScreenData(
                 user = user,
                 onClick = onProfileClick,
                 onBackup = onBackup
+            )
+
+            SettingItemList(
+                dataList = screenList,
+                onSelect = onSelect,
+                arrowIconEnable = false
             )
 
             SettingTypeItem(
@@ -243,13 +261,13 @@ fun SettingScreenData(
 @Composable
 private fun SettingScreenPreview() {
     PennyPalTheme(darkTheme = true) {
-        SettingScreen(
+        /*SettingScreen(
             onDefaultPaymentChange = {},
             onCurrencyChange = {},
             onBalanceViewChange = {},
             bottomPadding = PaddingValues(0.dp),
             onLanguageChange = {},
             onNavigationUp = {}
-        )
+        )*/
     }
 }

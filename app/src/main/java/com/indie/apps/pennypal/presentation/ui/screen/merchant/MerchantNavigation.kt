@@ -6,7 +6,6 @@ import androidx.compose.runtime.MutableState
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
-import com.indie.apps.pennypal.presentation.ui.navigation.BottomNavItem
 import com.indie.apps.pennypal.presentation.ui.navigation.DialogNav
 import com.indie.apps.pennypal.presentation.ui.navigation.ScreenNav
 import com.indie.apps.pennypal.util.Util
@@ -16,7 +15,7 @@ internal fun NavGraphBuilder.navigateToMerchantScreen(
     bottomBarState: MutableState<Boolean>,
     innerPadding: PaddingValues
 ) {
-    composable(route = ScreenNav.MERCHANT_START.route) { backStackEntry ->
+    composable(route = ScreenNav.MERCHANT.route) { backStackEntry ->
 
         val savedStateHandle = backStackEntry.savedStateHandle
         // get data passed back from B
@@ -41,7 +40,7 @@ internal fun NavGraphBuilder.navigateToMerchantScreen(
             savedStateHandle.remove<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_ADD_SUCCESS)
         }
 
-        bottomBarState.value = true
+        bottomBarState.value = false
 
         MerchantScreen(
             isAddSuccess = isAddSuccess ?: false,
@@ -67,10 +66,10 @@ internal fun NavGraphBuilder.navigateToMerchantScreen(
             isAddMerchantDataSuccess = false,
             merchantId = -1,
             onNavigationUp = {
-                //navController.navigateUp()
-                navController.navigate(BottomNavItem.OVERVIEW.route) {
-                    launchSingleTop = true
-                }
+                navController.navigateUp()
+                /* navController.navigate(BottomNavItem.OVERVIEW.route) {
+                     launchSingleTop = true
+                 }*/
             }
         )
 

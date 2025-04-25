@@ -16,7 +16,7 @@ internal fun NavGraphBuilder.navigateToPaymentScreen(
     bottomBarState: MutableState<Boolean>,
     innerPadding: PaddingValues
 ) {
-    composable(route = ScreenNav.PAYMENT_START.route) { backStackEntry ->
+    composable(route = ScreenNav.PAYMENT.route) { backStackEntry ->
         bottomBarState.value = true
 
         val savedStateHandle = backStackEntry.savedStateHandle

@@ -45,8 +45,7 @@ import com.indie.apps.pennypal.presentation.ui.dialog.select_payment.DialogSelec
 import com.indie.apps.pennypal.presentation.ui.navigation.BottomNavItem
 import com.indie.apps.pennypal.presentation.ui.navigation.DialogNav
 import com.indie.apps.pennypal.presentation.ui.navigation.ScreenNav
-import com.indie.apps.pennypal.presentation.ui.route.categoryRoute
-import com.indie.apps.pennypal.presentation.ui.route.merchantRoute
+import com.indie.apps.pennypal.presentation.ui.route.analysisRoute
 import com.indie.apps.pennypal.presentation.ui.route.overViewRoute
 import com.indie.apps.pennypal.presentation.ui.route.paymentRoute
 import com.indie.apps.pennypal.presentation.ui.route.settingRoute
@@ -74,7 +73,7 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
 
         Scaffold(
             floatingActionButton = {
-                if (navController.currentDestination?.route == ScreenNav.OVERVIEW_START.route) {
+                if (navController.currentDestination?.route == ScreenNav.OVERVIEW.route) {
                     Box(
                         contentAlignment = Alignment.Center,
                         modifier = Modifier
@@ -98,7 +97,7 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
                         if (newScreen.route != currentScreen.route) {
                             navController.navigate(newScreen.route) {
                                 launchSingleTop = true
-                               // restoreState = true
+                                // restoreState = true
                                 //popUpTo(ScreenNav.OVERVIEW_START.route)
                             }
                         }
@@ -120,8 +119,9 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
             ) {
 
                 overViewRoute(navController, bottomBarState, innerPadding)
-                categoryRoute(navController, bottomBarState, innerPadding)
-                merchantRoute(navController, bottomBarState, innerPadding)
+                analysisRoute(navController, bottomBarState, innerPadding)
+                //categoryRoute(navController, bottomBarState, innerPadding)
+                // merchantRoute(navController, bottomBarState, innerPadding)
                 paymentRoute(navController, bottomBarState, innerPadding)
                 settingRoute(navController, bottomBarState, innerPadding)
 
@@ -134,7 +134,7 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
                     OnBoardingScreen(
                         onBoardingComplete = {
                             bottomBarState.value = true
-                            navController.navigate(ScreenNav.OVERVIEW_START.route) {
+                            navController.navigate(ScreenNav.OVERVIEW.route) {
                                 navController.popBackStack()
                             }
                         },
@@ -155,7 +155,10 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
 
                 dialog(
                     route = DialogNav.SELECT_MERCHANT.route,
-                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false)
+                    dialogProperties = DialogProperties(
+                        usePlatformDefaultWidth = false,
+                        decorFitsSystemWindows = false
+                    )
                 ) {
                     DialogSearchMerchant(
                         onNavigationUp = {
@@ -178,7 +181,10 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
                 }
                 dialog(
                     route = DialogNav.ADD_EDIT_MERCHANT.route,
-                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false)
+                    dialogProperties = DialogProperties(
+                        usePlatformDefaultWidth = false,
+                        decorFitsSystemWindows = false
+                    )
                 ) { backStackEntry ->
                     val savedStateHandle = backStackEntry.savedStateHandle
                     // get data passed back from B
@@ -239,9 +245,12 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
                 }
                 dialog(
                     route = DialogNav.ADD_EDIT_PAYMENT.route,
-                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false),
+                    dialogProperties = DialogProperties(
+                        usePlatformDefaultWidth = false,
+                        decorFitsSystemWindows = false
+                    ),
 
-                ) { backStackEntry ->
+                    ) { backStackEntry ->
 
                     DialogAddPayment(
                         onNavigationUp = { navController.navigateUp() },
@@ -270,7 +279,10 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
                 }
                 dialog(
                     route = DialogNav.ADD_EDIT_CATEGORY.route,
-                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false)
+                    dialogProperties = DialogProperties(
+                        usePlatformDefaultWidth = false,
+                        decorFitsSystemWindows = false
+                    )
                 ) { backStackEntry ->
 
                     val type =
@@ -320,7 +332,10 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
                 }
                 dialog(
                     route = DialogNav.COUNTRY_PICKER.route,
-                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false)
+                    dialogProperties = DialogProperties(
+                        usePlatformDefaultWidth = false,
+                        decorFitsSystemWindows = false
+                    )
                 ) { backStackEntry ->
 
                     val isShowCurrency: Boolean? = backStackEntry
@@ -357,7 +372,10 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
                 }
                 dialog(
                     route = DialogNav.CONTACT_PICKER.route,
-                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false)
+                    dialogProperties = DialogProperties(
+                        usePlatformDefaultWidth = false,
+                        decorFitsSystemWindows = false
+                    )
                 ) {
                     DialogContactPicker(
                         onNavigationUp = { navController.navigateUp() },
@@ -373,7 +391,10 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
                 }
                 dialog(
                     route = DialogNav.SELECT_PAYMENT.route,
-                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false)
+                    dialogProperties = DialogProperties(
+                        usePlatformDefaultWidth = false,
+                        decorFitsSystemWindows = false
+                    )
                 ) { backStackEntry ->
 
                     val currentId =
@@ -403,7 +424,10 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
                 }
                 dialog(
                     route = DialogNav.SELECT_CATEGORY.route,
-                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false)
+                    dialogProperties = DialogProperties(
+                        usePlatformDefaultWidth = false,
+                        decorFitsSystemWindows = false
+                    )
                 ) { backStackEntry ->
 
                     val currentId =
@@ -428,7 +452,7 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
                         selectedId = currentId ?: 0L,
                         type = type ?: -1,
                         onAddCategory = {
-                            navController.navigate(DialogNav.ADD_EDIT_CATEGORY.route){
+                            navController.navigate(DialogNav.ADD_EDIT_CATEGORY.route) {
                                 navController.popBackStack()
                             }
                         },
@@ -438,7 +462,10 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
                 }
                 dialog(
                     route = DialogNav.SELECT_BALANCE_VIEW.route,
-                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false)
+                    dialogProperties = DialogProperties(
+                        usePlatformDefaultWidth = false,
+                        decorFitsSystemWindows = false
+                    )
                 ) {
                     DialogSelectBalanceView(
                         onSelect = { navController.popBackStack() },
@@ -448,7 +475,10 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
 
                 dialog(
                     route = DialogNav.SELECT_LANGUAGE.route,
-                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false)
+                    dialogProperties = DialogProperties(
+                        usePlatformDefaultWidth = false,
+                        decorFitsSystemWindows = false
+                    )
                 ) {
                     DialogLanguage(
                         onSelect = { navController.popBackStack() },
@@ -458,7 +488,10 @@ fun PennyPalApp(preferenceRepository: PreferenceRepository) {
 
                 dialog(
                     route = DialogNav.MULTI_SELECT_CATEGORY.route,
-                    dialogProperties = DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false)
+                    dialogProperties = DialogProperties(
+                        usePlatformDefaultWidth = false,
+                        decorFitsSystemWindows = false
+                    )
                 ) {
 
                     val gsonStringCategoryIds =

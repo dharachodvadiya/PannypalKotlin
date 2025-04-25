@@ -10,8 +10,8 @@ internal fun NavGraphBuilder.navigateToOverViewAnalysisScreen(
     navController: NavHostController,
     bottomBarState: MutableState<Boolean>
 ) {
-    composable(route = ScreenNav.OVERVIEW_ANALYSIS.route) {
-        bottomBarState.value = false
+    composable(route = ScreenNav.ANALYSIS.route) {
+        bottomBarState.value = true
         OverViewAnalysisScreen(
             onNavigationUp = { navController.navigateUp() }
         )
