@@ -2,11 +2,14 @@ package com.indie.apps.pennypal.presentation.ui.dialog.country_picker
 
 import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -41,6 +44,13 @@ fun DialogCountryPicker(
 
     var job: Job? = null
 
+    val focusManager = LocalFocusManager.current
+    val focusRequesterSearch = remember { FocusRequester() }
+
+    LaunchedEffect(Unit) {
+        focusRequesterSearch.requestFocus()
+    }
+
     MyAppDialog(
         isBackEnable = true,
         title = R.string.select_country,
@@ -63,6 +73,7 @@ fun DialogCountryPicker(
                 countriesList = countryData,
                 isSelectable = true,
                 currentCountry = currentCountryCode,
+                focusRequesterSearch = focusRequesterSearch,
                 onTextChange = {
                     viewModel.updateSearchText(it)
                     job?.cancel()

@@ -206,6 +206,7 @@ fun BottomSaveButton(
 fun DialogSearchView(
     searchState: TextFieldState,
     onTextChange: (String) -> Unit,
+    focusRequesterSearch: FocusRequester? = null,
     trailingContent: @Composable (() -> Unit)? = null,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
@@ -227,7 +228,8 @@ fun DialogSearchView(
                 start = dimensionResource(id = R.dimen.padding),
                 end = 0.dp
             ),
-            onTextChange = onTextChange
+            onTextChange = onTextChange,
+            focusRequesterSearch = focusRequesterSearch
         )
         Spacer(modifier = Modifier.width(5.dp))
         if (trailingContent != null) {
@@ -374,10 +376,11 @@ fun DialogSelectableItem(
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.item_content_padding)))
             }
 
-            Row(modifier = Modifier
-                .roundedCornerBackground(MyAppTheme.colors.itemBg)
-                .clickableWithNoRipple { onClick() }
-                .padding(dimensionResource(id = R.dimen.padding)),
+            Row(
+                modifier = Modifier
+                    .roundedCornerBackground(MyAppTheme.colors.itemBg)
+                    .clickableWithNoRipple { onClick() }
+                    .padding(dimensionResource(id = R.dimen.padding)),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically) {
 
@@ -586,7 +589,8 @@ fun AccountItem(
         if (isEditable && !isPreAdded) {
             Spacer(modifier = Modifier.weight(1f))
 
-            Icon(imageVector = Icons.Default.Edit,
+            Icon(
+                imageVector = Icons.Default.Edit,
                 contentDescription = "edit",
                 modifier = Modifier
                     .roundedCornerBackground(MyAppTheme.colors.transparent)
@@ -594,7 +598,8 @@ fun AccountItem(
 
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.item_padding)))
 
-            Icon(imageVector = Icons.Default.Delete,
+            Icon(
+                imageVector = Icons.Default.Delete,
                 contentDescription = "delete",
                 modifier = Modifier
                     .roundedCornerBackground(MyAppTheme.colors.transparent)
@@ -709,7 +714,8 @@ private fun UserProfileRectPreview() {
 @Composable
 private fun DialogTextFieldItemPreview() {
     PennyPalTheme(darkTheme = true) {
-        DialogTextFieldItem(leadingIcon = {},
+        DialogTextFieldItem(
+            leadingIcon = {},
             placeholder = R.string.amount_placeholder,
             onTextChange = {})
     }

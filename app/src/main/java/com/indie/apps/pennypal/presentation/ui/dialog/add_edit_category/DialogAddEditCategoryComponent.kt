@@ -14,6 +14,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
@@ -46,6 +47,7 @@ fun AddEditCategoryDialogField(
     onSelectCategoryIconColor: (Int) -> Unit,
     textCategory: TextFieldState,
     onCategoryNameTextChange: (String) -> Unit,
+    focusRequesterName: FocusRequester,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -73,7 +75,8 @@ fun AddEditCategoryDialogField(
         Row(
             modifier = modifier, horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            CustomTab(tabList = tabItems,
+            CustomTab(
+                tabList = tabItems,
                 selectedIndex = list.indexOf(selectCategoryType),
                 onTabSelected = {
                     onSelectCategoryType(list[it])
@@ -100,6 +103,7 @@ fun AddEditCategoryDialogField(
                 )
             },
             placeholder = R.string.add_category_placeholder,
+            focusRequester = focusRequesterName,
             onTextChange = onCategoryNameTextChange
         )
 

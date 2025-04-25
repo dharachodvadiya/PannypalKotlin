@@ -17,6 +17,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -52,7 +53,8 @@ fun SearchDialogField(
     textState: TextFieldState,
     dataList: LazyPagingItems<MerchantNameAndDetails>,
     isRefresh: Boolean = false,
-    isLoadMore: Boolean = false
+    isLoadMore: Boolean = false,
+    focusRequesterSearch: FocusRequester,
 ) {
     Column {
 
@@ -65,6 +67,7 @@ fun SearchDialogField(
         DialogSearchView(
             searchState = textState,
             onTextChange = onTextChange,
+            focusRequesterSearch = focusRequesterSearch,
             trailingContent = {
                 PrimaryButton(
                     bgColor = MyAppTheme.colors.white,

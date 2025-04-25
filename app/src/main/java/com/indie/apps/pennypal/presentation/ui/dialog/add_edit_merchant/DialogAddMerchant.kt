@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -66,7 +68,16 @@ fun DialogAddMerchant(
     val merchantSaveToast = stringResource(id = R.string.merchant_save_success_toast)
     val merchantEditToast = stringResource(id = R.string.merchant_edit_success_message)
 
-    MyAppDialog(title = if (!addMerchantViewModel.getIsEditable()) R.string.add_merchant else R.string.edit_merchant,
+    val focusRequesterName = remember { FocusRequester() }
+    val focusRequesterPhoneNumber = remember { FocusRequester() }
+    val focusRequesterDescription = remember { FocusRequester() }
+
+    LaunchedEffect(Unit) {
+        focusRequesterName.requestFocus()
+    }
+
+    MyAppDialog(
+        title = if (!addMerchantViewModel.getIsEditable()) R.string.add_merchant else R.string.edit_merchant,
         onNavigationUp = {
             if (enableButton) onNavigationUp()
         },
@@ -99,7 +110,10 @@ fun DialogAddMerchant(
                 countryCode = countryCode ?: "",
                 onDescTextChange = addMerchantViewModel::updateDescText,
                 onNameTextChange = addMerchantViewModel::updateNameText,
-                onPhoneNoTextChange = addMerchantViewModel::updatePhoneNoText
+                onPhoneNoTextChange = addMerchantViewModel::updatePhoneNoText,
+                focusRequesterName = focusRequesterName,
+                focusRequesterPhoneNumber = focusRequesterPhoneNumber,
+                focusRequesterDescription = focusRequesterDescription
             )
         }, bottomContent = {
             BottomSaveButton(

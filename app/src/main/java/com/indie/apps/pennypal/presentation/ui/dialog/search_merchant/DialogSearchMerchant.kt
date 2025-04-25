@@ -2,8 +2,11 @@ package com.indie.apps.pennypal.presentation.ui.dialog.search_merchant
 
 import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -54,6 +57,13 @@ fun DialogSearchMerchant(
                 ),
         exit = slideOutVertically { fullHeight -> (fullHeight + fullHeight / 2) } + fadeOut()
     ) {*/
+
+    val focusRequesterSearch = remember { FocusRequester() }
+
+    LaunchedEffect(Unit) {
+        focusRequesterSearch.requestFocus()
+    }
+
     MyAppDialog(
         isBackEnable = true,
         title = R.string.select_merchant,
@@ -94,7 +104,8 @@ fun DialogSearchMerchant(
                 },
                 dataList = lazyPagingData,
                 isRefresh = pagingState.isRefresh,
-                isLoadMore = pagingState.isLoadMore
+                isLoadMore = pagingState.isLoadMore,
+                focusRequesterSearch = focusRequesterSearch
             )
         },
         modifier = modifier,

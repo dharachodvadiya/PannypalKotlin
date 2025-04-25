@@ -3,8 +3,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -45,6 +48,13 @@ fun DialogAddEditCategory(
     val categorySaveToast = stringResource(id = R.string.category_save_success_toast)
     val categoryEditToast = stringResource(id = R.string.category_edit_success_toast)
 
+    val focusManager = LocalFocusManager.current
+    val focusRequesterCategoryName = remember { FocusRequester() }
+
+    LaunchedEffect(Unit) {
+        focusRequesterCategoryName.requestFocus()
+    }
+
     MyAppDialog(
         title = if (!viewModel.getIsEditable()) R.string.add_category else R.string.edit_category,
         onNavigationUp = {
@@ -65,7 +75,8 @@ fun DialogAddEditCategory(
                 onSelectCategoryIcon = viewModel::onCategoryIconChange,
                 onSelectCategoryIconColor = viewModel::onCategoryIconColorChange,
                 selectedIcon = selectedCategoryIcon,
-                selectedIconColor = selectedCategoryIconColor
+                selectedIconColor = selectedCategoryIconColor,
+                focusRequesterName = focusRequesterCategoryName
             )
         },
         bottomContent = {

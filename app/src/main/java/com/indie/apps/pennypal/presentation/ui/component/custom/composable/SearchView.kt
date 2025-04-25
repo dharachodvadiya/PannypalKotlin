@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
@@ -26,6 +27,7 @@ fun SearchView(
     trailingIcon: ImageVector? = null,
     textState: TextFieldState = TextFieldState(),
     onTextChange: (String) -> Unit,
+    focusRequesterSearch: FocusRequester? = null,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
     bgColor: Color = MyAppTheme.colors.white,
     paddingValues: PaddingValues = PaddingValues(0.dp)
@@ -82,7 +84,8 @@ fun SearchView(
             bgColor = MyAppTheme.colors.transparent,
             textStyle = MyAppTheme.typography.Medium46,
             paddingValues = paddingValues,
-            placeHolderColor = MyAppTheme.colors.gray1
+            placeHolderColor = MyAppTheme.colors.gray1,
+            focusRequester = focusRequesterSearch
         )
 
 

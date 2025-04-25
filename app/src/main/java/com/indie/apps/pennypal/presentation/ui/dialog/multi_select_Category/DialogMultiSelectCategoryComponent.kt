@@ -40,6 +40,7 @@ fun MultiSelectCategoryDialogField(
     onSelectAllCategory: (Boolean) -> Unit,
     searchTextState: TextFieldState,
     onTextChange: (String) -> Unit,
+
     modifier: Modifier = Modifier
 ) {
     Column(

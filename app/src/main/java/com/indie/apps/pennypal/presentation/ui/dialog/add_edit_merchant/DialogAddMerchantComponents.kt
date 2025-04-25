@@ -16,6 +16,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -43,6 +44,9 @@ fun AddMerchantDialogField(
     onCpp: () -> Unit,
     onContactBook: () -> Unit,
     countryCode: String = "+00",
+    focusRequesterName: FocusRequester,
+    focusRequesterPhoneNumber: FocusRequester,
+    focusRequesterDescription: FocusRequester,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     Column(
@@ -76,7 +80,9 @@ fun AddMerchantDialogField(
                     )
                 }
             },
-            onTextChange = onNameTextChange
+            onTextChange = onNameTextChange,
+            focusRequester = focusRequesterName,
+            nextFocusRequester = focusRequesterPhoneNumber
         )
         DialogTextFieldItem(
             textState = phoneNoState, leadingIcon = {
@@ -105,7 +111,9 @@ fun AddMerchantDialogField(
 
             },
             keyboardType = KeyboardType.Number,
-            onTextChange = onPhoneNoTextChange
+            onTextChange = onPhoneNoTextChange,
+            focusRequester = focusRequesterPhoneNumber,
+            nextFocusRequester = focusRequesterDescription
         )
         DialogTextFieldItem(
             textState = descState, leadingIcon = {
@@ -116,7 +124,8 @@ fun AddMerchantDialogField(
                 )
             },
             placeholder = R.string.description_placeholder,
-            onTextChange = onDescTextChange
+            onTextChange = onDescTextChange,
+            focusRequester = focusRequesterDescription
         )
     }
 }
@@ -125,15 +134,15 @@ fun AddMerchantDialogField(
 @Composable
 private fun AddMerchantDialogFieldPreview() {
     PennyPalTheme(darkTheme = true) {
-        AddMerchantDialogField(
-            nameState = TextFieldState(),
-            phoneNoState = TextFieldState(),
-            descState = TextFieldState(),
-            onCpp = {},
-            onContactBook = {},
-            onDescTextChange = {},
-            onPhoneNoTextChange = {},
-            onNameTextChange = {}
-        )
+        /* AddMerchantDialogField(
+             nameState = TextFieldState(),
+             phoneNoState = TextFieldState(),
+             descState = TextFieldState(),
+             onCpp = {},
+             onContactBook = {},
+             onDescTextChange = {},
+             onPhoneNoTextChange = {},
+             onNameTextChange = {}
+         )*/
     }
 }

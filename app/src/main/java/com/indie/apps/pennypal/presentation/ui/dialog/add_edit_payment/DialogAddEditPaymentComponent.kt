@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.Payment
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.res.dimensionResource
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.database.entity.PaymentMode
@@ -27,6 +28,7 @@ fun AddPaymentDialogField(
     paymentModeList: List<PaymentMode>,
     textPaymentState: TextFieldState,
     onPaymentTypeTextChange: (String) -> Unit,
+    focusRequesterName: FocusRequester,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -44,7 +46,8 @@ fun AddPaymentDialogField(
                 )
             },
             placeholder = R.string.add_payment_type_placeholder,
-            onTextChange = onPaymentTypeTextChange
+            onTextChange = onPaymentTypeTextChange,
+            focusRequester = focusRequesterName
         )
 
         FlowRow {

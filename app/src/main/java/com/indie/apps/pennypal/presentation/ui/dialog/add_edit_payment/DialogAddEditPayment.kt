@@ -3,8 +3,11 @@ package com.indie.apps.pennypal.presentation.ui.dialog.add_edit_payment
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -54,6 +57,12 @@ fun DialogAddPayment(
     val paymentSaveToast = stringResource(id = R.string.payment_save_success_toast)
     val paymentEditToast = stringResource(id = R.string.payment_edit_success_toast)
 
+    val focusRequesterName = remember { FocusRequester() }
+
+    LaunchedEffect(Unit) {
+        focusRequesterName.requestFocus()
+    }
+
     MyAppDialog(
         title = if (!addPaymentViewModel.getIsEditable()) R.string.add_payment else R.string.edit_payment,
         onNavigationUp = {
@@ -66,6 +75,7 @@ fun DialogAddPayment(
                 paymentModeList = paymentModeList,
                 currentModId = selectedModeId,
                 onModeChange = addPaymentViewModel::onModeChange,
+                focusRequesterName = focusRequesterName,
                 onPaymentTypeTextChange = addPaymentViewModel::updatePaymentTypeText
             )
         },
