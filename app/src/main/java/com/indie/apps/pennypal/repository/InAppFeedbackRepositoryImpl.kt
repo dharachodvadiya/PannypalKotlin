@@ -8,7 +8,7 @@ class InAppFeedbackRepositoryImpl @Inject constructor(
     private val count = MutableStateFlow(0)
     override fun isShowDialog(): Boolean {
         count.value++
-        if (count.value == 3) {
+        if (count.value == 5) {
             count.value = 0
             return true
         }

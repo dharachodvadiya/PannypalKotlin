@@ -11,12 +11,14 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,6 +32,7 @@ import com.indie.apps.pennypal.presentation.ui.component.TopBarWithTitle
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomMonthPickerDialog
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomYearPickerDialog
+import com.indie.apps.pennypal.presentation.ui.screen.InAppFeedbackViewModel
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.util.Resource
@@ -39,6 +42,7 @@ import java.util.Calendar
 @Composable
 fun OverViewAnalysisScreen(
     viewModel: OverViewAnalysisViewModel = hiltViewModel(),
+    inAppFeedbackViewModel: InAppFeedbackViewModel = hiltViewModel(),
     onNavigationUp: () -> Unit,
     bottomPadding: PaddingValues,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
@@ -53,6 +57,8 @@ fun OverViewAnalysisScreen(
     var openYearDialog by remember { mutableStateOf(false) }
     var openMonthDialog by remember { mutableStateOf(false) }
     val title = stringResource(id = R.string.analysis)
+
+    val localContext = LocalContext.current
 
     Scaffold(
         topBar = {
@@ -129,6 +135,10 @@ fun OverViewAnalysisScreen(
                             iconSize = 70.dp
                         )
                     } else {
+
+                        LaunchedEffect(Unit) {
+                            inAppFeedbackViewModel.triggerReview(localContext, true)
+                        }
 
                         Column(
                             modifier = modifier

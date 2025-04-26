@@ -52,6 +52,7 @@ import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.SearchView
 import com.indie.apps.pennypal.presentation.ui.component.showToast
+import com.indie.apps.pennypal.presentation.ui.screen.InAppFeedbackViewModel
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
@@ -65,6 +66,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun MerchantScreen(
     merchantViewModel: MerchantViewModel = hiltViewModel(),
+    inAppFeedbackViewModel: InAppFeedbackViewModel = hiltViewModel(),
     onNavigationUp: () -> Unit,
     onMerchantClick: (Long) -> Unit,
     onAddClick: () -> Unit,
@@ -112,6 +114,7 @@ fun MerchantScreen(
         if (isAddSuccess) {
             addMerchantId = editAddId
             merchantViewModel.addMerchantSuccess()
+            inAppFeedbackViewModel.triggerReview(context)
         }
         if (isEditSuccess) {
             editMerchantId = editAddId
@@ -231,7 +234,8 @@ fun MerchantScreen(
                     //verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.item_inner_padding)),
                     contentPadding = PaddingValues(bottom = bottomPadding.calculateBottomPadding())
                 ) {
-                    items(count = lazyPagingData.itemCount,
+                    items(
+                        count = lazyPagingData.itemCount,
                         key = lazyPagingData.itemKey { item -> item.id }
                     ) { index ->
                         val itemAnimateScale = remember {

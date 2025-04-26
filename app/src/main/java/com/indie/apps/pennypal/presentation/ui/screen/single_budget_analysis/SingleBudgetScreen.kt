@@ -28,6 +28,7 @@ import com.indie.apps.pennypal.data.database.enum.PeriodType
 import com.indie.apps.pennypal.presentation.ui.component.ConfirmationDialog
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.showToast
+import com.indie.apps.pennypal.presentation.ui.screen.InAppFeedbackViewModel
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
@@ -39,12 +40,14 @@ import java.text.SimpleDateFormat
 @Composable
 fun SingleBudgetScreen(
     viewModel: SingleBudgetViewModel = hiltViewModel(),
+    inAppFeedbackViewModel: InAppFeedbackViewModel = hiltViewModel(),
     onNavigationUp: () -> Unit,
     onDeleteSuccess: (Long) -> Unit,
     onEditClick: (Long) -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     val title = stringResource(id = R.string.budget_analysis)
+    val context = LocalContext.current
 
     var openAlertDialog by remember { mutableStateOf(false) }
 
@@ -76,6 +79,10 @@ fun SingleBudgetScreen(
                     )
                 }
             ) { innerPadding ->
+
+                LaunchedEffect(Unit) {
+                    inAppFeedbackViewModel.triggerReview(context, true)
+                }
 
                 val scrollState = rememberScrollState()
 
@@ -147,7 +154,6 @@ fun SingleBudgetScreen(
             LoadingWithProgress()
         }
     }
-    val context = LocalContext.current
     val budgetDeleteToast = stringResource(id = R.string.budget_delete_success_toast)
     if (openAlertDialog) {
         ConfirmationDialog(

@@ -1,6 +1,8 @@
 package com.indie.apps.pennypal.di
 
 import android.content.Context
+import com.google.android.play.core.review.ReviewManager
+import com.google.android.play.core.review.ReviewManagerFactory
 import com.indie.apps.contacts.data.provider.ContactsProvider
 import com.indie.apps.contacts.data.provider.impl.ContactsProviderImpl
 import com.indie.apps.contacts.data.repo.ContactsRepository
@@ -26,6 +28,8 @@ import com.indie.apps.pennypal.repository.CategoryRepository
 import com.indie.apps.pennypal.repository.CategoryRepositoryImpl
 import com.indie.apps.pennypal.repository.ExchangeRateRepository
 import com.indie.apps.pennypal.repository.ExchangeRateRepositoryImpl
+import com.indie.apps.pennypal.repository.InAppFeedbackRepository
+import com.indie.apps.pennypal.repository.InAppFeedbackRepositoryImpl
 import com.indie.apps.pennypal.repository.MerchantDataRepository
 import com.indie.apps.pennypal.repository.MerchantDataRepositoryImpl
 import com.indie.apps.pennypal.repository.MerchantRepository
@@ -266,6 +270,18 @@ object AppModule {
             networkMonitor,
             dispatcher
         )
+    }
+
+    @Singleton
+    @Provides
+    fun provideInAppFeedbackRepository(): InAppFeedbackRepository {
+        return InAppFeedbackRepositoryImpl()
+    }
+
+    @Provides
+    @Singleton
+    fun provideReviewManager(@ApplicationContext context: Context): ReviewManager {
+        return ReviewManagerFactory.create(context)
     }
 
 }

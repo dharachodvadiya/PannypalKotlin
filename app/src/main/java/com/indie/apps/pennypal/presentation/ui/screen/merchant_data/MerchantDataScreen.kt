@@ -43,6 +43,7 @@ import com.indie.apps.pennypal.presentation.ui.component.ConfirmationDialog
 import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.showToast
+import com.indie.apps.pennypal.presentation.ui.screen.InAppFeedbackViewModel
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
@@ -54,6 +55,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun MerchantDataScreen(
     merchantDataViewModel: MerchantDataViewModel = hiltViewModel(),
+    inAppFeedbackViewModel: InAppFeedbackViewModel = hiltViewModel(),
     onProfileClick: (Long) -> Unit,
     onNavigationUp: () -> Unit,
     onEditClick: (Long) -> Unit,
@@ -64,7 +66,8 @@ fun MerchantDataScreen(
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
 
-   // val currency by merchantDataViewModel.currency.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    // val currency by merchantDataViewModel.currency.collectAsStateWithLifecycle()
     val merchant by merchantDataViewModel.merchantState.collectAsStateWithLifecycle()
     val selectedList = merchantDataViewModel.selectedList
     val scrollIndex by merchantDataViewModel.scrollIndex.collectAsStateWithLifecycle()
@@ -93,6 +96,7 @@ fun MerchantDataScreen(
         if (isAddSuccess) {
             addEditMerchantDataId = merchantDataId
             merchantDataViewModel.addMerchantDataSuccess()
+            inAppFeedbackViewModel.triggerReview(context)
         }
     }
 
@@ -164,7 +168,8 @@ fun MerchantDataScreen(
                     modifier = Modifier
                         .weight(1f)
                 ) {
-                    items(count = lazyPagingData.itemCount,
+                    items(
+                        count = lazyPagingData.itemCount,
                         key = lazyPagingData.itemKey { item -> item.id }
                     ) { index ->
 

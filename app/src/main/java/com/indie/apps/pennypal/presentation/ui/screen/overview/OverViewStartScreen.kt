@@ -30,6 +30,7 @@ import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.database.enum.PeriodType
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.DoubleBackExitApp
+import com.indie.apps.pennypal.presentation.ui.screen.InAppFeedbackViewModel
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 
@@ -37,6 +38,7 @@ import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 @Composable
 fun OverViewStartScreen(
     overViewViewModel: OverViewViewModel = hiltViewModel(),
+    inAppFeedbackViewModel: InAppFeedbackViewModel = hiltViewModel(),
     onMerchantClick: (Long) -> Unit,
     onSeeAllTransactionClick: () -> Unit,
     onSeeAllMerchantClick: () -> Unit,
@@ -55,10 +57,6 @@ fun OverViewStartScreen(
 
 
     val localContext = LocalContext.current
-
-    /*  val reviewManager = remember {
-          ReviewManagerFactory.create(localContext)
-      }*/
 
     val currentPeriod by overViewViewModel.currentPeriod.collectAsStateWithLifecycle()
     // val currency by overViewViewModel.currency.collectAsStateWithLifecycle()
@@ -84,6 +82,8 @@ fun OverViewStartScreen(
     LaunchedEffect(addMerchantId) {
         if (addMerchantId != -1L) {
             overViewViewModel.addMerchantSuccess()
+
+            inAppFeedbackViewModel.triggerReview(localContext)
         }
     }
 
@@ -94,11 +94,8 @@ fun OverViewStartScreen(
         if (isAddMerchantDataSuccess) {
             addEditDataId = addEditMerchantDataId
             overViewViewModel.addMerchantDataSuccess()
-            /*
-                        launchInAppReview(
-                            activity = localContext as Activity,
-                            reviewManager = reviewManager
-                        )*/
+
+            inAppFeedbackViewModel.triggerReview(localContext)
         }
         if (isEditSuccess) {
             addEditDataId = addEditMerchantDataId
