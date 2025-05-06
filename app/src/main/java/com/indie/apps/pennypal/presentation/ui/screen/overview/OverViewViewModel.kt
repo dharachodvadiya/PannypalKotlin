@@ -169,14 +169,12 @@ class OverViewViewModel @Inject constructor(
     }
 
     fun onDeleteTransactionFromEditScreenClick(id: Long, onSuccess: () -> Unit) {
-        println("aaaaa call delete")
         merchantDataAnimId.value = id
         deleteAnimRun.value = true
         viewModelScope.launch {
             deleteMultipleMerchantDataUseCase
                 .deleteData(id)
                 .collect {
-                    println("aaaa ${it.toString()}")
                     when (it) {
                         is Resource.Loading -> {}
                         is Resource.Success -> {

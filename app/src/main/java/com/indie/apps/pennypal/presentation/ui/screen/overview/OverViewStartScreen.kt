@@ -90,7 +90,6 @@ fun OverViewStartScreen(
         }
     }
     LaunchedEffect(addEditMerchantDataId) {
-        println("aaaa call $isDeleteSuccess")
         if (isAddMerchantDataSuccess) {
             //addEditDataId = addEditMerchantDataId
             overViewViewModel.addMerchantDataSuccess(addEditMerchantDataId)

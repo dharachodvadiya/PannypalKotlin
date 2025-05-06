@@ -51,6 +51,7 @@ class MerchantDataViewModel @Inject constructor(
     var editDataAnimRun = MutableStateFlow(false)
     var addDataAnimRun = MutableStateFlow(false)
     var deleteAnimRun = MutableStateFlow(false)
+    var merchantDataAnimId = MutableStateFlow(-1L)
     private lateinit var previousData: PagingData<MerchantDataWithPaymentName>
 
     val merchantState = merchantRepository.getMerchantFromId(merchantId)
@@ -85,27 +86,31 @@ class MerchantDataViewModel @Inject constructor(
         }
     }
 
-    fun editMerchantDataSuccess() {
+    fun editMerchantDataSuccess(id: Long) {
         editDataAnimRun.value = true
-
+        merchantDataAnimId.value = id
         viewModelScope.launch {
             delay(Util.LIST_ITEM_ANIM_DELAY)
             editDataAnimRun.value = false
+            merchantDataAnimId.value = -1L
         }
     }
 
-    fun addMerchantDataSuccess() {
+    fun addMerchantDataSuccess(id: Long) {
         addDataAnimRun.value = true
-
+        merchantDataAnimId.value = id
         viewModelScope.launch {
             delay(Util.LIST_ITEM_ANIM_DELAY)
             addMerchantSuccessAnimStop()
+
         }
     }
 
     fun addMerchantSuccessAnimStop() {
-        if (addDataAnimRun.value)
+        if (addDataAnimRun.value) {
             addDataAnimRun.value = false
+            merchantDataAnimId.value = -1L
+        }
     }
 
     fun setScrollVal(scrollIndex: Int, scrollOffset: Int) {
@@ -165,6 +170,31 @@ class MerchantDataViewModel @Inject constructor(
                             onSuccess()
                             delay(Util.LIST_ITEM_ANIM_DELAY)
                             onDeleteAnimStop()
+                        }
+
+                        is Resource.Error -> {
+                        }
+                    }
+                }
+        }
+
+    }
+
+    fun onDeleteFromEditScreenClick(id: Long, onSuccess: () -> Unit) {
+        merchantDataAnimId.value = id
+        deleteAnimRun.value = true
+        viewModelScope.launch {
+            deleteMultipleMerchantDataUseCase
+                .deleteData(id)
+                .collect {
+
+                    when (it) {
+                        is Resource.Loading -> {}
+                        is Resource.Success -> {
+                            onSuccess()
+                            delay(Util.LIST_ITEM_ANIM_DELAY)
+                            onDeleteAnimStop()
+
                         }
 
                         is Resource.Error -> {

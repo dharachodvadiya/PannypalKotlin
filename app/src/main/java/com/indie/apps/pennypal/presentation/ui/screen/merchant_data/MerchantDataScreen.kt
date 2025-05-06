@@ -20,7 +20,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -62,11 +61,13 @@ fun MerchantDataScreen(
     onAddClick: (MerchantNameAndDetails) -> Unit,
     isEditSuccess: Boolean = false,
     isAddSuccess: Boolean = false,
+    isDeleteSuccess: Boolean = false,
     merchantDataId: Long = -1L,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
 
     val context = LocalContext.current
+    val merchantDeleteToast = stringResource(id = R.string.data_delete_success_message)
     // val currency by merchantDataViewModel.currency.collectAsStateWithLifecycle()
     val merchant by merchantDataViewModel.merchantState.collectAsStateWithLifecycle()
     val selectedList = merchantDataViewModel.selectedList
@@ -77,6 +78,7 @@ fun MerchantDataScreen(
     val addDataAnimRun by merchantDataViewModel.addDataAnimRun.collectAsStateWithLifecycle()
     val editDataAnimRun by merchantDataViewModel.editDataAnimRun.collectAsStateWithLifecycle()
     val deleteAnimRun by merchantDataViewModel.deleteAnimRun.collectAsStateWithLifecycle()
+    val merchantDataAnimId by merchantDataViewModel.merchantDataAnimId.collectAsStateWithLifecycle()
 
     val lazyPagingData = merchantDataViewModel.pagedData.collectAsLazyPagingItems()
     val pagingState by merchantDataViewModel.pagingState.collectAsStateWithLifecycle()
@@ -84,20 +86,23 @@ fun MerchantDataScreen(
 
     var openAlertDialog by remember { mutableStateOf(false) }
 
-    var addEditMerchantDataId by remember {
+  /*  var addEditMerchantDataId by remember {
         mutableLongStateOf(-1L)
-    }
+    }*/
 
     LaunchedEffect(merchantDataId) {
         if (isEditSuccess) {
-            addEditMerchantDataId = merchantDataId
-            merchantDataViewModel.editMerchantDataSuccess()
-        }
-        if (isAddSuccess) {
-            addEditMerchantDataId = merchantDataId
-            merchantDataViewModel.addMerchantDataSuccess()
+            //addEditMerchantDataId = merchantDataId
+            merchantDataViewModel.editMerchantDataSuccess(merchantDataId)
+        }else if (isAddSuccess) {
+            //addEditMerchantDataId = merchantDataId
+            merchantDataViewModel.addMerchantDataSuccess(merchantDataId)
             inAppFeedbackViewModel.triggerReview(context)
+        }else if (isDeleteSuccess){
+            merchantDataViewModel.onDeleteFromEditScreenClick(merchantDataId){
+            context.showToast(merchantDeleteToast)
         }
+    }
     }
 
     Scaffold(
@@ -188,7 +193,7 @@ fun MerchantDataScreen(
                         if (data != null) {
 
                             val modifierAdd: Modifier =
-                                if (addEditMerchantDataId == data.id && addDataAnimRun) {
+                                if (merchantDataAnimId == data.id && addDataAnimRun) {
                                     scope.launch {
                                         itemAnimateScale.animateTo(
                                             targetValue = 1f,
@@ -199,7 +204,7 @@ fun MerchantDataScreen(
                                         merchantDataViewModel.addMerchantSuccessAnimStop()
                                     }
                                     Modifier.scale(itemAnimateScale.value)
-                                } else if (addEditMerchantDataId == data.id && editDataAnimRun) {
+                                } else if (merchantDataAnimId == data.id && editDataAnimRun) {
                                     scope.launch {
                                         itemAnimateColor.animateTo(
                                             targetValue = targetAnimColor,
@@ -233,8 +238,8 @@ fun MerchantDataScreen(
                                 mutableStateOf(true)
                             }
 
-                            if (deleteAnimRun &&
-                                selectedList.contains(data.id)
+                            if ((deleteAnimRun &&
+                                        selectedList.contains(data.id) || deleteAnimRun && merchantDataAnimId == data.id)
                             ) {
                                 visible = false
                             }

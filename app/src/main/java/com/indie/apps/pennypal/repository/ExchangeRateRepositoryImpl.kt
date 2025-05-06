@@ -87,7 +87,6 @@ class ExchangeRateRepositoryImpl @Inject constructor(
             } catch (e: JsonParseException) {
                 Resource.Error(AppError.ParsingError.message)
             } catch (e: Exception) {
-                println("aaaa ${e.message}")
                 Resource.Error(AppError.UnknownError.message)
             }
         }
