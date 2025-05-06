@@ -318,12 +318,14 @@ fun OverviewTransactionData(
     onAnimStop: () -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
-    val str = when (currentPeriod) {
-        ShowDataPeriod.THIS_MONTH -> stringResource(id = R.string.recent_transaction_of_this_month)
-        ShowDataPeriod.THIS_YEAR -> stringResource(id = R.string.recent_transaction_of_this_year)
-        ShowDataPeriod.ALL_TIME -> stringResource(id = R.string.recent_transaction)
-        null -> stringResource(id = R.string.recent_transaction)
-    }
+    /* val str = when (currentPeriod) {
+         ShowDataPeriod.THIS_MONTH -> stringResource(id = R.string.recent_transaction_of_this_month)
+         ShowDataPeriod.THIS_YEAR -> stringResource(id = R.string.recent_transaction_of_this_year)
+         ShowDataPeriod.ALL_TIME -> stringResource(id = R.string.recent_transaction)
+         null -> stringResource(id = R.string.recent_transaction)
+     }*/
+
+    val str = stringResource(id = R.string.recent_transaction)
     OverviewItem(
         title = str,
         onSeeAllClick = onSeeAllTransactionClick,
@@ -455,7 +457,8 @@ fun OverviewMerchantData(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = modifier.padding(5.dp)
                 ) {
-                    RoundImage(imageVector = Icons.Default.Add,
+                    RoundImage(
+                        imageVector = Icons.Default.Add,
                         imageVectorSize = 30.dp,
                         tint = MyAppTheme.colors.gray2,
                         backGround = MyAppTheme.colors.bottomBg,
@@ -504,10 +507,11 @@ fun OverviewAnalysisData(
                 )
             }
 
-            Row(modifier = Modifier.clickableWithNoRipple(
-                // interactionSource = MutableInteractionSource(),
-                // indication = null
-            ) { onExploreAnalysisClick() }) {
+            Row(
+                modifier = Modifier.clickableWithNoRipple(
+                    // interactionSource = MutableInteractionSource(),
+                    // indication = null
+                ) { onExploreAnalysisClick() }) {
                 PieChart(
                     data = chartData, modifier = Modifier.align(Alignment.CenterVertically)
                 )
@@ -548,7 +552,8 @@ fun OverviewBudgetData(
     isSelectionEnable: Boolean,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
-    OverviewItem(title = stringResource(id = R.string.your_budget),
+    OverviewItem(
+        title = stringResource(id = R.string.your_budget),
         trailingText = R.string.explore,
         onSeeAllClick = onExploreBudgetClick,
         content = {
@@ -910,7 +915,8 @@ fun OverviewBudgetSelectionButton(
 @Composable
 private fun TopBarProfilePreview() {
     PennyPalTheme(darkTheme = true) {
-        OverviewTopBarProfile(onClick = { },
+        OverviewTopBarProfile(
+            onClick = { },
             user = null,
             isSubscribed = false,
             onSubscriptionChanged = {})

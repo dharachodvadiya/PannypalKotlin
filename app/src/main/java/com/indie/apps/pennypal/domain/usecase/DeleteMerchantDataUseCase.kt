@@ -10,12 +10,12 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
-class DeleteMultipleMerchantDataUseCase @Inject constructor(
+class DeleteMerchantDataUseCase @Inject constructor(
     private val merchantDataRepository: MerchantDataRepository,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) {
 
-    fun deleteData(ids: List<Long>): Flow<Resource<Int>> {
+    fun deleteDataList(ids: List<Long>): Flow<Resource<Int>> {
         return flow {
 
             try {
@@ -36,6 +36,36 @@ class DeleteMultipleMerchantDataUseCase @Inject constructor(
 
                 } else {
                     emit(Resource.Error("Fail to delete Multiple Merchant Data"))
+                }
+
+
+            } catch (e: Throwable) {
+                emit(Resource.Error(handleException(e).message + ": ${e.message}"))
+            }
+        }.flowOn(dispatcher)
+    }
+
+    fun deleteData(ids: Long): Flow<Resource<Int>> {
+        return flow {
+
+            try {
+                emit(Resource.Loading())
+                //val incomeAndExpense = merchantDataRepository.getTotalIncomeAndeExpenseFromIds(ids)
+                val merchantDataDeleteCount =
+                    merchantDataRepository.deleteMerchantDataWithId(ids)
+
+                if (merchantDataDeleteCount == 1) {
+
+                    /*handleReflectedTableOperation(
+                        merchantId,
+                        merchantDataDeleteCount,
+                        incomeAndExpense.totalIncome,
+                        incomeAndExpense.totalExpense
+                    )*/
+                    emit(Resource.Success(merchantDataDeleteCount))
+
+                } else {
+                    emit(Resource.Error("Fail to delete Merchant Data"))
                 }
 
 

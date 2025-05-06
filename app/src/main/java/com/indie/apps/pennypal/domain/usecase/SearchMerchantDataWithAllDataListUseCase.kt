@@ -7,7 +7,6 @@ import com.indie.apps.pennypal.data.module.merchant_data.MerchantDataWithAllData
 import com.indie.apps.pennypal.di.IoDispatcher
 import com.indie.apps.pennypal.repository.MerchantDataRepository
 import com.indie.apps.pennypal.repository.PreferenceRepository
-import com.indie.apps.pennypal.util.ShowDataPeriod
 import com.indie.apps.pennypal.util.Util
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -38,7 +37,7 @@ class SearchMerchantDataWithAllDataListUseCase @Inject constructor(
         month: Int
     ): Flow<List<MerchantDataWithAllData>> {
 
-        val balanceViewValue = ShowDataPeriod.fromIndex(
+        /*val balanceViewValue = ShowDataPeriod.fromIndex(
             preferenceRepository.getInt(
                 Util.PREF_BALANCE_VIEW,
                 1
@@ -64,7 +63,8 @@ class SearchMerchantDataWithAllDataListUseCase @Inject constructor(
             null ->
                 merchantDataRepository.getRecentMerchantsDataWithAllDataList()
 
-        }
+        }*/
+        return merchantDataRepository.getRecentMerchantsDataWithAllDataList()
     }
 
 }

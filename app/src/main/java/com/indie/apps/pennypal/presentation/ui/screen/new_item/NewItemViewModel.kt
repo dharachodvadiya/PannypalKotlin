@@ -12,6 +12,7 @@ import com.indie.apps.pennypal.data.database.entity.Payment
 import com.indie.apps.pennypal.data.database.entity.toMerchantNameAndDetails
 import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
 import com.indie.apps.pennypal.domain.usecase.AddMerchantDataUseCase
+import com.indie.apps.pennypal.domain.usecase.DeleteMerchantDataUseCase
 import com.indie.apps.pennypal.domain.usecase.GetMerchantDataFromIdUseCase
 import com.indie.apps.pennypal.domain.usecase.GetPaymentFromIdUseCase
 import com.indie.apps.pennypal.domain.usecase.UpdateMerchantDataUseCase
@@ -45,7 +46,8 @@ class NewItemViewModel @Inject constructor(
     private val countryRepository: CountryRepository,
     savedStateHandle: SavedStateHandle,
     private val exchangeRateRepository: ExchangeRateRepository,
-    private val baseCurrencyRepository: BaseCurrencyRepository
+    private val baseCurrencyRepository: BaseCurrencyRepository,
+    private val deleteMerchantDataUseCase: DeleteMerchantDataUseCase,
 ) : ViewModel() {
 
     /* val currency = userRepository.getCurrency()
@@ -450,6 +452,25 @@ class NewItemViewModel @Inject constructor(
 
         val amount = exchangeRateRepository.getAmountFromRate(originalAmount, rate)
         updateFinalAmount(amount)
+    }
+
+    fun onDeleteDialogClick(onSuccess: () -> Unit) {
+        viewModelScope.launch {
+            deleteMerchantDataUseCase
+                .deleteData(merchantEditId)
+                .collect {
+                    when (it) {
+                        is Resource.Loading -> {}
+                        is Resource.Success -> {
+                            onSuccess()
+                        }
+
+                        is Resource.Error -> {
+                        }
+                    }
+                }
+        }
+
     }
 
 }

@@ -285,7 +285,7 @@ fun IncludedCategoryAnalysis(
             if (spentItem != null) {
                 categoryList.add(spentItem)
             } else {
-                categoryList.add(item)
+                categoryList.add(item.copy(amount = 0.0))
             }
         }
 

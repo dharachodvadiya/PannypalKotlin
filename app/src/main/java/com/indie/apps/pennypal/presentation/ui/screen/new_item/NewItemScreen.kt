@@ -17,7 +17,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
@@ -34,7 +33,6 @@ import com.indie.apps.pennypal.data.database.enum.DialogType
 import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
 import com.indie.apps.pennypal.presentation.ui.component.BottomSaveButton
 import com.indie.apps.pennypal.presentation.ui.component.ConfirmationDialog
-import com.indie.apps.pennypal.presentation.ui.component.TopBarWithTitle
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomDatePickerDialog
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomTimePickerDialog
@@ -52,6 +50,7 @@ fun NewItemScreen(
     onPaymentSelect: (Long?) -> Unit,
     onCategorySelect: (Long?, Int) -> Unit,
     onNavigationUp: () -> Unit,
+    onDeleteSuccess: () -> Unit,
     isMerchantLock: Boolean,
     onSaveSuccess: (Boolean, Long, Long?) -> Unit,
     merchantData: MerchantNameAndDetails? = null,
@@ -118,6 +117,7 @@ fun NewItemScreen(
     val merchantChangeToastMessage = stringResource(R.string.can_not_change_merchant)
     val merchantDataEditToast = stringResource(id = R.string.merchant_data_edit_success_message)
     val merchantDataSaveToast = stringResource(id = R.string.merchant_data_save_success_message)
+    val merchantDataDeleteToast = stringResource(id = R.string.merchant_data_delete_success_message)
 
     BackHandler {
         if (newItemViewModel.isEditData()) {
@@ -140,8 +140,12 @@ fun NewItemScreen(
                 stringResource(id = R.string.edit_merchant_data)
 
             Scaffold(topBar = {
-                TopBarWithTitle(
+                NewItemTopBar(
                     title = title,
+                    isShowDelete = newItemViewModel.isEditData(),
+                    onDeleteClick = {
+                        openDialog = DialogType.Delete
+                    },
                     onNavigationUp = {
                         if (enableButton) {
                             if (newItemViewModel.isEditData()) {
@@ -150,7 +154,7 @@ fun NewItemScreen(
                                 onNavigationUp()
                             }
                         }
-                    }, contentAlignment = Alignment.Center
+                    }
                 )
             }) { padding ->
 
@@ -255,7 +259,10 @@ fun NewItemScreen(
                                     openDialog = DialogType.Time
                                 }
 
-                                NewEntryEvent.CurrencyChange -> onCurrencyChange(originalCurrencyInfo?.currencyCountryCode ?: "US")
+                                NewEntryEvent.CurrencyChange -> onCurrencyChange(
+                                    originalCurrencyInfo?.currencyCountryCode ?: "US"
+                                )
+
                                 is NewEntryEvent.RateChange -> {
                                     newItemViewModel.updateRateText(event.value)
                                 }
@@ -332,6 +339,21 @@ fun NewItemScreen(
                 )
             }
 
+            DialogType.Delete -> {
+                ConfirmationDialog(
+                    dialogTitle = R.string.delete_dialog_title,
+                    dialogText = R.string.delete_item_dialog_text,
+                    onConfirmation = {
+                        newItemViewModel.onDeleteDialogClick {
+                            openDialog = null
+                            context.showToast(merchantDataDeleteToast)
+                            onDeleteSuccess()
+                        }
+                    },
+                    onDismissRequest = { openDialog = null }
+                )
+            }
+
             else -> {}
         }
     }
@@ -350,7 +372,8 @@ private fun NewItemScreenPreview() {
             onMerchantSelect = {},
             onCategorySelect = { _, _ -> },
             onSaveSuccess = { _, _, _ -> },
-            isMerchantLock = false
+            isMerchantLock = false,
+            onDeleteSuccess = {}
         )
     }
 }

@@ -208,6 +208,9 @@ internal fun NavGraphBuilder.navigateToEditItemScreen(
                     Util.SAVE_STATE_MERCHANT_DATA_ADD_SUCCESS, !isEdit
                 )
                 navController.popBackStack()
+            },
+            onDeleteSuccess = {
+                navController.popBackStack()
             })
     }
 }

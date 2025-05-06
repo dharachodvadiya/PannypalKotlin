@@ -7,11 +7,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.indie.apps.pennypal.data.module.merchant_data.MerchantDataWithPaymentName
-import com.indie.apps.pennypal.domain.usecase.DeleteMultipleMerchantDataUseCase
+import com.indie.apps.pennypal.domain.usecase.DeleteMerchantDataUseCase
 import com.indie.apps.pennypal.domain.usecase.GetMerchantDataWithPaymentNameListFromMerchantIdUseCase
 import com.indie.apps.pennypal.presentation.ui.state.PagingState
 import com.indie.apps.pennypal.repository.MerchantRepository
-import com.indie.apps.pennypal.repository.UserRepository
 import com.indie.apps.pennypal.util.Resource
 import com.indie.apps.pennypal.util.Util
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,8 +30,8 @@ class MerchantDataViewModel @Inject constructor(
     merchantRepository: MerchantRepository,
     //getMerchantDataListFromMerchantId: GetMerchantDataListFromMerchantIdUseCase,
     getMerchantDataWithPaymentNameListFromMerchantIdUseCase: GetMerchantDataWithPaymentNameListFromMerchantIdUseCase,
-    private val deleteMultipleMerchantDataUseCase: DeleteMultipleMerchantDataUseCase,
-   // userRepository: UserRepository,
+    private val deleteMultipleMerchantDataUseCase: DeleteMerchantDataUseCase,
+    // userRepository: UserRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -158,7 +157,7 @@ class MerchantDataViewModel @Inject constructor(
         deleteAnimRun.value = true
         viewModelScope.launch {
             deleteMultipleMerchantDataUseCase
-                .deleteData(selectedList)
+                .deleteDataList(selectedList)
                 .collect {
                     when (it) {
                         is Resource.Loading -> {}

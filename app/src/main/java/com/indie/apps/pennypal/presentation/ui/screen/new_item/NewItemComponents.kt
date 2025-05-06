@@ -42,6 +42,7 @@ import com.indie.apps.pennypal.data.database.entity.Category
 import com.indie.apps.pennypal.data.module.TabItemInfo
 import com.indie.apps.pennypal.presentation.ui.component.DialogSelectableItem
 import com.indie.apps.pennypal.presentation.ui.component.DialogTextFieldItem
+import com.indie.apps.pennypal.presentation.ui.component.TopBarWithTitle
 import com.indie.apps.pennypal.presentation.ui.component.clickableWithNoRipple
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.AutoSizeText
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomTab
@@ -74,6 +75,38 @@ sealed interface NewEntryEvent {
     data class AmountChange(val value: String) : NewEntryEvent
     data class RateChange(val value: String) : NewEntryEvent
     data class DescriptionChange(val value: String) : NewEntryEvent
+}
+
+@Composable
+fun NewItemTopBar(
+    title: String = "",
+    onNavigationUp: () -> Unit,
+    onDeleteClick: () -> Unit,
+    isShowDelete: Boolean = false,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
+) {
+    TopBarWithTitle(
+        title = title, onNavigationUp = {
+            onNavigationUp()
+        }, contentAlignment = Alignment.Center,
+        trailingContent = {
+
+            if (isShowDelete) {
+                Row {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_delete_top),
+                        contentDescription = "Delete",
+                        tint = MyAppTheme.colors.black,
+                        modifier = Modifier
+                            .roundedCornerBackground(MyAppTheme.colors.transparent)
+                            .size(25.dp)
+                            .clickableWithNoRipple { onDeleteClick() }
+                    )
+                }
+            }
+
+        }, modifier = modifier
+    )
 }
 
 @Composable
