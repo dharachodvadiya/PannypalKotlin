@@ -42,8 +42,8 @@ class AddBudgetViewModel @Inject constructor(
 
     val originalCurrencyInfo = MutableStateFlow<BaseCurrency?>(null)
 
-   /* val currency = userRepository.getCurrency()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), "$")*/
+    /* val currency = userRepository.getCurrency()
+         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), "$")*/
 
     val budgetEditId =
         savedStateHandle.get<String>(Util.PARAM_BUDGET_ID)?.toLongOrNull() ?: -1L
@@ -311,7 +311,7 @@ class AddBudgetViewModel @Inject constructor(
         }
     }
 
-    fun saveData(onSuccess: (Boolean, Long) -> Unit) {
+    fun saveData(onSuccess: (Boolean, Long, Int, Int) -> Unit) {
         clearAllError()
         if (budgetTitle.value.text.trim().isEmpty()) {
             budgetTitle.value.setError(ErrorMessage.BUDGET_TITLE_EMPTY)
@@ -348,17 +348,20 @@ class AddBudgetViewModel @Inject constructor(
                 }
                 val startCalender = Calendar.getInstance().apply { timeInMillis = startDate }
 
-                if(budgetEditId == -1L){
+                val month = startCalender.get(Calendar.MONTH)
+                val year = startCalender.get(Calendar.YEAR)
+
+                if (budgetEditId == -1L) {
 
                     addBudgetUseCase.addData(
                         budgetWithCategory = budgetWithCategory,
-                        month = startCalender.get(Calendar.MONTH),
-                        year = startCalender.get(Calendar.YEAR)
+                        month = month,
+                        year = year
                     ).collect {
                         when (it) {
                             is Resource.Loading -> {}
                             is Resource.Success -> {
-                                onSuccess(false, it.data ?: -1)
+                                onSuccess(false, it.data ?: -1, month, year)
                             }
 
                             is Resource.Error -> {
@@ -366,7 +369,7 @@ class AddBudgetViewModel @Inject constructor(
                             }
                         }
                     }
-                }else{
+                } else {
                     updateBudgetUseCase.updateData(
                         budgetWithCategory = budgetWithCategory,
                         month = startCalender.get(Calendar.MONTH),
@@ -375,7 +378,7 @@ class AddBudgetViewModel @Inject constructor(
                         when (it) {
                             is Resource.Loading -> {}
                             is Resource.Success -> {
-                                onSuccess(true, editBudgetData!!.id)
+                                onSuccess(true, editBudgetData!!.id, month, year)
                             }
 
                             is Resource.Error -> {
@@ -388,8 +391,7 @@ class AddBudgetViewModel @Inject constructor(
         }
     }
 
-    private suspend fun creteBudgetWithCategory() : BudgetWithCategory
-    {
+    private suspend fun creteBudgetWithCategory(): BudgetWithCategory {
         val baseCurrency =
             if (originalCurrencyInfo.value?.id != 0L) originalCurrencyInfo.value else {
                 baseCurrencyRepository.getBaseCurrencyFromCode(

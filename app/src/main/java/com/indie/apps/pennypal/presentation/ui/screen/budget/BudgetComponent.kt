@@ -1,6 +1,12 @@
 package com.indie.apps.pennypal.presentation.ui.screen.budget
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -21,8 +27,16 @@ import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.TransformOrigin
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -45,7 +59,9 @@ import com.indie.apps.pennypal.presentation.ui.component.roundedCornerLowerBackg
 import com.indie.apps.pennypal.presentation.ui.component.roundedCornerUpperBackground
 import com.indie.apps.pennypal.presentation.ui.screen.overview_analysis.AnalysisMonthYearSelection
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
+import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.util.getDateFromMillis
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 
 @Composable
@@ -355,6 +371,10 @@ fun MonthYearSelection(
 fun BudgetList(
     budgetState: List<BudgetWithSpentAndCategoryIdList>,
     //currency: String,
+    addAnimRun: Boolean = false,
+    deleteAnimRun: Boolean = false,
+    budgetAnimId: Long = -1L,
+    addDataSuccessAnimStop: () -> Unit,
     onBudgetEditClick: (Long) -> Unit
 ) {
     if (budgetState.isEmpty()) {
@@ -367,16 +387,50 @@ fun BudgetList(
                 .fillMaxWidth()
         )
     } else {
+        val scope = rememberCoroutineScope()
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             budgetState.forEach { item ->
-                CustomProgressItem(
-                    name = item.title,
-                    totalAmount = item.budgetAmount,
-                    spentAmount = item.spentAmount,
-                    onClick = { onBudgetEditClick(item.id) },
-                    currency = item.originalAmountSymbol,
-                    modifier = Modifier.fillMaxWidth()
-                )
+
+                val itemAnimateScale = remember {
+                    Animatable(0f)
+                }
+
+                val modifierAdd: Modifier =
+                    if (budgetAnimId == item.id && addAnimRun) {
+                        scope.launch {
+                            itemAnimateScale.animateTo(
+                                targetValue = 1f,
+                                animationSpec = tween(Util.ADD_ITEM_ANIM_TIME)
+                            )
+                        }
+                        if (itemAnimateScale.value == 1f) {
+                            addDataSuccessAnimStop()
+                        }
+                        Modifier.scale(itemAnimateScale.value)
+                    } else Modifier
+
+
+                var visible by remember {
+                    mutableStateOf(true)
+                }
+
+                if (deleteAnimRun && budgetAnimId == item.id) {
+                    visible = false
+                }
+
+                AnimatedVisibility(
+                    visible = visible,
+                    exit = slideOutVertically() + shrinkVertically() + fadeOut()
+                ) {
+                    CustomProgressItem(
+                        name = item.title,
+                        totalAmount = item.budgetAmount,
+                        spentAmount = item.spentAmount,
+                        onClick = { onBudgetEditClick(item.id) },
+                        currency = item.originalAmountSymbol,
+                        modifier = modifierAdd.fillMaxWidth()
+                    )
+                }
             }
         }
     }
@@ -390,6 +444,10 @@ fun LazyListScope.expandableBudgetGroup(
     items: List<BudgetWithSpentAndCategoryIdList>? = null,
     pagingItems: LazyPagingItems<BudgetWithSpentAndCategoryIdList>? = null,
     //currency: String,
+    addAnimRun: Boolean = false,
+    deleteAnimRun: Boolean = false,
+    budgetAnimId: Long = -1L,
+    addDataSuccessAnimStop: () -> Unit,
     onBudgetEditClick: (Long) -> Unit
 ) {
     item {
@@ -408,10 +466,20 @@ fun LazyListScope.expandableBudgetGroup(
                     items = items,
                     key = { it.id }
                 ) { item ->
-                    BudgetItemContent(
-                        item,
-                        onBudgetEditClick,
-                        items.indexOf(item) == items.size - 1
+                    /* BudgetItemContent(
+                         item,
+                         onBudgetEditClick,
+                         items.indexOf(item) == items.size - 1
+                     )*/
+
+                    AnimItem(
+                        addAnimRun = addAnimRun,
+                        deleteAnimRun = deleteAnimRun,
+                        budgetAnimId = budgetAnimId,
+                        addDataSuccessAnimStop = addDataSuccessAnimStop,
+                        item = item,
+                        onBudgetEditClick = onBudgetEditClick,
+                        isLastItem = items.indexOf(item) == items.size - 1
                     )
                 }
             }
@@ -422,15 +490,83 @@ fun LazyListScope.expandableBudgetGroup(
                     key = pagingItems.itemKey { it.id }
                 ) { index ->
                     pagingItems[index]?.let { item ->
-                        BudgetItemContent(
-                            item,
-                            onBudgetEditClick,
-                            index == pagingItems.itemCount - 1
+                        /*  BudgetItemContent(
+                              item,
+                              onBudgetEditClick,
+                              index == pagingItems.itemCount - 1
+                          )*/
+
+                        AnimItem(
+                            addAnimRun = addAnimRun,
+                            deleteAnimRun = deleteAnimRun,
+                            budgetAnimId = budgetAnimId,
+                            addDataSuccessAnimStop = addDataSuccessAnimStop,
+                            item = item,
+                            onBudgetEditClick = onBudgetEditClick,
+                            isLastItem = index == pagingItems.itemCount - 1
                         )
                     }
                 }
             }
         }
+    }
+}
+
+@SuppressLint("CoroutineCreationDuringComposition")
+@Composable
+private fun AnimItem(
+    item: BudgetWithSpentAndCategoryIdList,
+    addAnimRun: Boolean = false,
+    deleteAnimRun: Boolean = false,
+    budgetAnimId: Long = -1L,
+    addDataSuccessAnimStop: () -> Unit,
+    onBudgetEditClick: (Long) -> Unit,
+    isLastItem: Boolean
+) {
+
+    val scope = rememberCoroutineScope()
+
+    val itemAnimateScale = remember {
+        Animatable(0f)
+    }
+
+    val modifierAdd: Modifier =
+        if (budgetAnimId == item.id && addAnimRun) {
+            scope.launch {
+                itemAnimateScale.animateTo(
+                    targetValue = 1f,
+                    animationSpec = tween(Util.ADD_ITEM_ANIM_TIME)
+                )
+            }
+            if (itemAnimateScale.value == 1f) {
+                addDataSuccessAnimStop()
+            }
+            Modifier.graphicsLayer {
+                scaleX = 1f
+                scaleY = itemAnimateScale.value
+                transformOrigin = TransformOrigin(0.5f, 0f) // Center horizontally, top vertically
+            }
+        } else Modifier
+
+
+    var visible by remember {
+        mutableStateOf(true)
+    }
+
+    if (deleteAnimRun && budgetAnimId == item.id) {
+        visible = false
+    }
+
+    AnimatedVisibility(
+        visible = visible,
+        exit = slideOutVertically() + shrinkVertically() + fadeOut()
+    ) {
+        BudgetItemContent(
+            item,
+            onBudgetEditClick,
+            isLastItem,
+            modifierAdd
+        )
     }
 }
 
@@ -440,7 +576,8 @@ fun LazyListScope.expandableBudgetGroup(
 fun BudgetItemContent(
     item: BudgetWithSpentAndCategoryIdList,
     onBudgetEditClick: (Long) -> Unit,
-    isLastItem: Boolean
+    isLastItem: Boolean,
+    modifier: Modifier,
 ) {
     val dateFormat = SimpleDateFormat("dd MMM yyyy")
     val timeString = item.let { tmpBudgetData ->
@@ -454,7 +591,7 @@ fun BudgetItemContent(
         date = timeString,
         onClick = { onBudgetEditClick(item.id) },
         currency = item.originalAmountSymbol,
-        modifier = if (isLastItem) Modifier.roundedCornerLowerBackground(MyAppTheme.colors.itemBg)
-        else Modifier.background(MyAppTheme.colors.itemBg)
+        modifier = if (isLastItem) modifier.roundedCornerLowerBackground(MyAppTheme.colors.itemBg)
+        else modifier.background(MyAppTheme.colors.itemBg)
     )
 }

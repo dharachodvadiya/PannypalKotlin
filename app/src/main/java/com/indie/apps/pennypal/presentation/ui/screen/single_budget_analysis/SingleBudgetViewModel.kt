@@ -94,7 +94,9 @@ class SingleBudgetViewModel @Inject constructor(
     }
 
     fun onDeleteDialogClick(onSuccess: (Long) -> Unit) {
-        viewModelScope.launch {
+
+        onSuccess(budgetId)
+        /*viewModelScope.launch {
             deleteSingleBudgetDataUseCase
                 .deleteBudgetFromId(budgetId)
                 .collect {
@@ -108,7 +110,7 @@ class SingleBudgetViewModel @Inject constructor(
                         }
                     }
                 }
-        }
+        }*/
 
     }
 

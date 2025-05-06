@@ -162,7 +162,7 @@ fun SingleBudgetScreen(
             onConfirmation = {
                 viewModel.onDeleteDialogClick {
                     openAlertDialog = false
-                    context.showToast(budgetDeleteToast)
+                   // context.showToast(budgetDeleteToast)
                     onDeleteSuccess(it)
                 }
             },

@@ -52,7 +52,7 @@ fun AddEditBudgetScreen(
     addBudgetViewModel: AddBudgetViewModel = hiltViewModel(),
     onCurrencyChange: (String) -> Unit,
     onNavigationUp: () -> Unit,
-    onSave: (Boolean, Long, Int) -> Unit,
+    onSave: (Boolean, Long, Int, Int, Int) -> Unit,
     selectedCategoryIds: List<Long> = emptyList(),
     onSelectCategory: (List<Long>) -> Unit,
     selectedPeriodType: Int,
@@ -231,8 +231,8 @@ fun AddEditBudgetScreen(
 
                     BottomSaveButton(
                         onClick = {
-                            addBudgetViewModel.saveData { isEdit, id ->
-                                onSave(isEdit, id, currentPeriod)
+                            addBudgetViewModel.saveData { isEdit, id, month, year ->
+                                onSave(isEdit, id, currentPeriod, month, year)
                                 if (isEdit) {
                                     context.showToast(budgetEditToast)
                                 } else {
@@ -326,7 +326,7 @@ private fun OverViewScreenPreview() {
         AddEditBudgetScreen(
             onNavigationUp = {},
             onSelectCategory = {},
-            onSave = { _, _, _ -> },
+            onSave = { _, _, _, _, _ -> },
             selectedPeriodType = 1,
             onCurrencyChange = {}
         )

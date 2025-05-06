@@ -9,12 +9,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,6 +30,8 @@ import com.indie.apps.pennypal.data.database.enum.PeriodType
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomMonthPickerDialog
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomYearPickerDialog
+import com.indie.apps.pennypal.presentation.ui.component.showToast
+import com.indie.apps.pennypal.presentation.ui.screen.InAppFeedbackViewModel
 import com.indie.apps.pennypal.presentation.ui.screen.add_budget.AddBudgetTopSelectionButton
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
@@ -37,10 +41,17 @@ import java.util.Calendar
 @Composable
 fun BudgetScreen(
     budgetViewModel: BudgetViewModel = hiltViewModel(),
+    inAppFeedbackViewModel: InAppFeedbackViewModel = hiltViewModel(),
     onNavigationUp: () -> Unit,
     onAddClick: (Int) -> Unit,
     onBudgetEditClick: (Long) -> Unit,
     onBudgetMenuClick: (Int) -> Unit,
+    isAddSuccess: Boolean = false,
+    isDeleteSuccess: Boolean = false,
+    budgetId: Long = -1L,
+    currentYear: Int = -1,
+    currentMonth: Int = -1,
+    periodType: Int?,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     val title = stringResource(id = R.string.budget_analysis)
@@ -57,10 +68,36 @@ fun BudgetScreen(
     val pagedDataUpcomingBudget = budgetViewModel.pagedDataUpcomingBudget.collectAsLazyPagingItems()
     val pagedDataPastBudget = budgetViewModel.pagedDataPastBudget.collectAsLazyPagingItems()
 
+    val deleteAnimRun by budgetViewModel.deleteAnimRun.collectAsStateWithLifecycle()
+    val addAnimRun by budgetViewModel.addAnimRun.collectAsStateWithLifecycle()
+    val budgetAnimId by budgetViewModel.budgetAnimId.collectAsStateWithLifecycle()
+
     var openDialog by remember { mutableStateOf<DialogType?>(null) }
 
     val currentPeriod by budgetViewModel.currentPeriod.collectAsStateWithLifecycle()
 
+    val context = LocalContext.current
+    val budgetDeleteToast = stringResource(id = R.string.budget_delete_success_toast)
+
+    LaunchedEffect(budgetId) {
+        if (isAddSuccess) {
+            //addMerchantId = editAddId
+            budgetViewModel.addBudgetSuccess(budgetId)
+            inAppFeedbackViewModel.triggerReview(context)
+        } else if (isDeleteSuccess) {
+            budgetViewModel.onDeleteFromEditScreenClick(budgetId) {
+                context.showToast(budgetDeleteToast)
+            }
+        }
+    }
+
+
+    LaunchedEffect(periodType) {
+        if (periodType != null) {
+            PeriodType.fromId(periodType)
+                ?.let { budgetViewModel.setCurrentPeriodWithTime(it, currentMonth, currentYear) }
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -103,7 +140,15 @@ fun BudgetScreen(
                 }
                 item {
                     Spacer(Modifier.height(20.dp))
-                    BudgetList(budgetState, onBudgetEditClick)
+                    BudgetList(
+                        budgetState = budgetState,
+                        onBudgetEditClick = onBudgetEditClick,
+                        addAnimRun = addAnimRun,
+                        deleteAnimRun = deleteAnimRun,
+                        budgetAnimId = budgetAnimId,
+                        addDataSuccessAnimStop = {
+                            budgetViewModel.addBudgetSuccessAnimStop()
+                        })
                 }
             } else {
                 // ONE_TIME Budgets
@@ -117,7 +162,13 @@ fun BudgetScreen(
                         onExpandClick = budgetViewModel::onActiveExpandClick,
                         items = budgetState,
                         //currency = currency,
-                        onBudgetEditClick = onBudgetEditClick
+                        onBudgetEditClick = onBudgetEditClick,
+                        addAnimRun = addAnimRun,
+                        deleteAnimRun = deleteAnimRun,
+                        budgetAnimId = budgetAnimId,
+                        addDataSuccessAnimStop = {
+                            budgetViewModel.addBudgetSuccessAnimStop()
+                        }
                     )
                 }
                 if (pagedDataUpcomingBudget.itemCount > 0) {
@@ -130,7 +181,13 @@ fun BudgetScreen(
                         onExpandClick = budgetViewModel::onUpcomingExpandClick,
                         pagingItems = pagedDataUpcomingBudget,
                         //currency = currency,
-                        onBudgetEditClick = onBudgetEditClick
+                        onBudgetEditClick = onBudgetEditClick,
+                        addAnimRun = addAnimRun,
+                        deleteAnimRun = deleteAnimRun,
+                        budgetAnimId = budgetAnimId,
+                        addDataSuccessAnimStop = {
+                            budgetViewModel.addBudgetSuccessAnimStop()
+                        }
                     )
                 }
                 if (pagedDataPastBudget.itemCount > 0) {
@@ -143,7 +200,13 @@ fun BudgetScreen(
                         onExpandClick = budgetViewModel::onPastExpandClick,
                         pagingItems = pagedDataPastBudget,
                         //currency = currency,
-                        onBudgetEditClick = onBudgetEditClick
+                        onBudgetEditClick = onBudgetEditClick,
+                        addAnimRun = addAnimRun,
+                        deleteAnimRun = deleteAnimRun,
+                        budgetAnimId = budgetAnimId,
+                        addDataSuccessAnimStop = {
+                            budgetViewModel.addBudgetSuccessAnimStop()
+                        }
                     )
                 }
             }
@@ -189,7 +252,8 @@ private fun OverViewScreenPreview() {
             onNavigationUp = {},
             onAddClick = {},
             onBudgetEditClick = {},
-            onBudgetMenuClick = {}
+            onBudgetMenuClick = {},
+            periodType = null
         )
     }
 }

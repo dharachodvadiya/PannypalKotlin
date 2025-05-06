@@ -2,19 +2,24 @@ package com.indie.apps.pennypal.presentation.ui.screen.budget
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.indie.apps.pennypal.data.database.enum.PeriodType
 import com.indie.apps.pennypal.data.module.budget.BudgetWithSpentAndCategoryIdList
+import com.indie.apps.pennypal.domain.usecase.DeleteSingleBudgetDataUseCase
 import com.indie.apps.pennypal.domain.usecase.GetBudgetsAndSpentWithCategoryIdListUseCase
 import com.indie.apps.pennypal.domain.usecase.GetPastBudgetsAndSpentWithCategoryIdListFromPeriodType
 import com.indie.apps.pennypal.domain.usecase.GetUpComingBudgetsAndSpentWithCategoryIdListFromPeriodType
-import com.indie.apps.pennypal.presentation.ui.state.PagingState
+import com.indie.apps.pennypal.util.Resource
+import com.indie.apps.pennypal.util.Util
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -27,6 +32,7 @@ class BudgetViewModel @Inject constructor(
     getBudgetsAndSpentWithCategoryIdListUseCase: GetBudgetsAndSpentWithCategoryIdListUseCase,
     getPastBudgetsAndSpentWithCategoryIdListFromPeriodType: GetPastBudgetsAndSpentWithCategoryIdListFromPeriodType,
     getUpComingBudgetsAndSpentWithCategoryIdListFromPeriodType: GetUpComingBudgetsAndSpentWithCategoryIdListFromPeriodType,
+    private val deleteSingleBudgetDataUseCase: DeleteSingleBudgetDataUseCase,
     //userRepository: UserRepository,
 ) : ViewModel() {
 
@@ -42,7 +48,14 @@ class BudgetViewModel @Inject constructor(
     val isExpandOneTimeUpcomingData = MutableStateFlow(false)
     val isExpandOneTimeActiveData = MutableStateFlow(true)
 
+
+    var deleteAnimRun = MutableStateFlow(false)
+    var addAnimRun = MutableStateFlow(false)
+
+    val budgetAnimId = MutableStateFlow(-1L)
+
     private val triggerPastBudget = MutableSharedFlow<Unit>(replay = 1)
+    private var previousDataPastBudget: PagingData<BudgetWithSpentAndCategoryIdList>? = null
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val pagedDataPastBudget = triggerPastBudget
@@ -54,10 +67,16 @@ class BudgetViewModel @Inject constructor(
             )
 
         }
+        .map { item ->
+
+            if (!deleteAnimRun.value || previousDataPastBudget == null) {
+                previousDataPastBudget = item
+            }
+            previousDataPastBudget!!
+        }
         .cachedIn(viewModelScope)
 
-    val pagingStatePastBudget = MutableStateFlow(PagingState<BudgetWithSpentAndCategoryIdList>())
-
+    private var previousDataUpComingBudget: PagingData<BudgetWithSpentAndCategoryIdList>? = null
     private val triggerUpComingBudget = MutableSharedFlow<Unit>(replay = 1)
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -70,23 +89,18 @@ class BudgetViewModel @Inject constructor(
             )
 
         }
+        .map { item ->
+
+            if (!deleteAnimRun.value || previousDataUpComingBudget == null) {
+                previousDataUpComingBudget = item
+            }
+            previousDataUpComingBudget!!
+        }
         .cachedIn(viewModelScope)
 
-    val pagingStateUpcomingBudget =
-        MutableStateFlow(PagingState<BudgetWithSpentAndCategoryIdList>())
 
-    //val monthlyBudgets = MutableStateFlow<List<BudgetWithSpentAndCategoryIdList>>(emptyList())
-    /*val monthlyBudgets = MutableStateFlow<List<BudgetWithSpentAndCategoryIdList>>(emptyList())
-    val yearlyBudgets = MutableStateFlow<List<BudgetWithSpentAndCategoryIdList>>(emptyList())
-    val oneTimeBudgets = MutableStateFlow<List<BudgetWithSpentAndCategoryIdList>>(emptyList())*/
-
-    /* private val budgetState = budgetRepository.getBudgetsAndSpentWithCategoryIdListFromMonth(
-         year = calendar.get(Calendar.YEAR),
-         month = calendar.get(Calendar.MONTH),
-         timeZoneOffsetInMilli = Util.TIME_ZONE_OFFSET_IN_MILLI
-     ).stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
- */
     private val trigger = MutableSharedFlow<Unit>(replay = 1)
+    private var previousDataBudget: List<BudgetWithSpentAndCategoryIdList> = emptyList()
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val budgetState = trigger
@@ -98,36 +112,19 @@ class BudgetViewModel @Inject constructor(
                 dataPeriod = currentPeriod.value
             )
         }
+        .map { item ->
+
+            if (!deleteAnimRun.value) {
+                previousDataBudget = item
+            }
+            previousDataBudget
+        }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
 
     init {
         // setCurrentPeriod(PeriodType.MONTH)
         loadData()
     }
-
-    /*private fun loadBudgetData() {
-        viewModelScope.launch {
-            budgetState.collect { budgets ->
-                val monthList = mutableListOf<BudgetWithSpentAndCategoryIdList>()
-                val yearList = mutableListOf<BudgetWithSpentAndCategoryIdList>()
-                val oneTimeList = mutableListOf<BudgetWithSpentAndCategoryIdList>()
-
-                // Separate based on period_type
-                budgets.forEach { budget ->
-                    when (budget.periodType) {
-                        PeriodType.MONTH.id -> monthList.add(budget) // Period type 1 = Monthly
-                        PeriodType.YEAR.id -> yearList.add(budget)  // Period type 2 = Yearly
-                        PeriodType.ONE_TIME.id -> oneTimeList.add(budget) // Period type 3 = One-time
-                    }
-                }
-
-                monthlyBudgets.value = monthList
-                yearlyBudgets.value = yearList
-                oneTimeBudgets.value = oneTimeList
-
-            }
-        }
-    }*/
 
     fun loadData() {
         viewModelScope.launch {
@@ -140,13 +137,13 @@ class BudgetViewModel @Inject constructor(
         }
     }
 
-    fun loadOneTimePastData() {
+    private fun loadOneTimePastData() {
         viewModelScope.launch {
             triggerPastBudget.tryEmit(Unit)
         }
     }
 
-    fun loadOneTimeUpcomingData() {
+    private fun loadOneTimeUpcomingData() {
         viewModelScope.launch {
             triggerUpComingBudget.tryEmit(Unit)
         }
@@ -157,6 +154,18 @@ class BudgetViewModel @Inject constructor(
         if (currentPeriod.value == period) return
         currentPeriod.value = period
         loadData()
+    }
+
+    fun setCurrentPeriodWithTime(period: PeriodType, month: Int, year: Int) {
+        currentPeriod.value = period
+        when (currentPeriod.value) {
+            PeriodType.MONTH -> setCurrentMonth(month, year)
+            PeriodType.YEAR -> setCurrentYear(year)
+            else -> {
+                if (currentPeriod.value != period)
+                    loadData()
+            }
+        }
     }
 
     private fun updateTime(amount: Int) {
@@ -243,6 +252,57 @@ class BudgetViewModel @Inject constructor(
                 else -> Calendar.getInstance().timeInMillis
             }
         }
+    }
+
+    fun addBudgetSuccess(id: Long) {
+
+
+        budgetAnimId.value = id
+        addAnimRun.value = true
+
+        viewModelScope.launch {
+            delay(Util.LIST_ITEM_ANIM_DELAY)
+            addBudgetSuccessAnimStop()
+            budgetAnimId.value = -1L
+        }
+    }
+
+    fun addBudgetSuccessAnimStop() {
+        if (addAnimRun.value)
+            addAnimRun.value = false
+    }
+
+    fun onDeleteFromEditScreenClick(id: Long, onSuccess: () -> Unit) {
+        budgetAnimId.value = id
+        deleteAnimRun.value = true
+        viewModelScope.launch {
+            deleteSingleBudgetDataUseCase
+                .deleteBudgetFromId(id)
+                .collect {
+                    when (it) {
+                        is Resource.Loading -> {}
+                        is Resource.Success -> {
+                            onSuccess()
+                            delay(Util.LIST_ITEM_ANIM_DELAY)
+                            onDeleteAnimStop()
+                        }
+
+                        is Resource.Error -> {
+                        }
+
+                    }
+                }
+        }
+
+    }
+
+    fun onDeleteAnimStop() {
+        if (deleteAnimRun.value) {
+            budgetAnimId.value = -1L
+            deleteAnimRun.value = false
+            loadData()
+        }
+
     }
 
 }

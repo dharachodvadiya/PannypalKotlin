@@ -1,6 +1,7 @@
 package com.indie.apps.pennypal.presentation.ui.screen.budget
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -13,7 +14,33 @@ internal fun NavGraphBuilder.navigateToBudgetScreen(
     bottomBarState: MutableState<Boolean>,
     innerPadding: PaddingValues
 ) {
-    composable(route = ScreenNav.BUDGET.route) {
+    composable(route = ScreenNav.BUDGET.route) { backStackEntry ->
+
+        val budgetId: Long? =
+            backStackEntry.savedStateHandle.get<Long>(Util.SAVE_STATE_BUDGET_ID)
+
+        val periodType =
+            backStackEntry.savedStateHandle.get<Int>(Util.SAVE_STATE_PERIOD_TYPE)
+
+        val isAddBudgetSuccess: Boolean? =
+            backStackEntry.savedStateHandle.get<Boolean>(Util.SAVE_STATE_BUDGET_ADD_SUCCESS)
+
+        val month: Int? =
+            backStackEntry.savedStateHandle.get<Int>(Util.SAVE_STATE_BUDGET_MONTH)
+
+        val year: Int? =
+            backStackEntry.savedStateHandle.get<Int>(Util.SAVE_STATE_BUDGET_YEAR)
+
+        val isDeleteBudgetSuccess: Boolean? =
+            backStackEntry.savedStateHandle.get<Boolean>(Util.SAVE_STATE_BUDGET_DELETE_SUCCESS)
+
+        LaunchedEffect(budgetId) {
+            backStackEntry.savedStateHandle.remove<Long>(Util.SAVE_STATE_BUDGET_ID)
+            backStackEntry.savedStateHandle.remove<Int>(Util.SAVE_STATE_PERIOD_TYPE)
+            backStackEntry.savedStateHandle.remove<Boolean>(Util.SAVE_STATE_BUDGET_ADD_SUCCESS)
+            backStackEntry.savedStateHandle.remove<Boolean>(Util.SAVE_STATE_BUDGET_DELETE_SUCCESS)
+        }
+
         bottomBarState.value = false
         BudgetScreen(
             onNavigationUp = { navController.navigateUp() },
@@ -46,6 +73,12 @@ internal fun NavGraphBuilder.navigateToBudgetScreen(
                     it
                 )
             },
+            budgetId = budgetId ?: -1L,
+            isAddSuccess = isAddBudgetSuccess ?: false,
+            isDeleteSuccess = isDeleteBudgetSuccess ?: false,
+            periodType = periodType,
+            currentMonth = month ?: -1,
+            currentYear = year ?: -1
         )
     }
 }

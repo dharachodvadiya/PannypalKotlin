@@ -24,8 +24,19 @@ internal fun NavGraphBuilder.navigateToSingleBudgetScreen(
                     )
                 )
             },
-            onDeleteSuccess = {
+            onDeleteSuccess = { id ->
+
                 navController.navigateUp()
+                navController.currentBackStackEntry?.savedStateHandle?.set(
+                    Util.SAVE_STATE_BUDGET_ID,
+                    id
+                )
+
+                navController.currentBackStackEntry?.savedStateHandle?.set(
+                    Util.SAVE_STATE_BUDGET_DELETE_SUCCESS,
+                    true
+                )
+
             }
         )
     }
