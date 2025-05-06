@@ -58,6 +58,7 @@ object Util {
     const val SAVE_STATE_MERCHANT_ADD_EDIT_ID = "merchant_add_edit_id"
     const val SAVE_STATE_MERCHANT_DATA_ADD_SUCCESS = "merchant_data_add_success"
     const val SAVE_STATE_MERCHANT_DATA_EDIT_SUCCESS = "merchant_data_edit_success"
+    const val SAVE_STATE_MERCHANT_DATA_DELETE_SUCCESS = "merchant_data_delete_success"
 
     const val SAVE_STATE_MERCHANT_LOCK = "merchant_lock"
 

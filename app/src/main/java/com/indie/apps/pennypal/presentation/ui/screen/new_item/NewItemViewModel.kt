@@ -454,7 +454,7 @@ class NewItemViewModel @Inject constructor(
         updateFinalAmount(amount)
     }
 
-    fun onDeleteDialogClick(onSuccess: () -> Unit) {
+    fun onDeleteDialogClick(onSuccess: (Long) -> Unit) {
         viewModelScope.launch {
             deleteMerchantDataUseCase
                 .deleteData(merchantEditId)
@@ -462,7 +462,7 @@ class NewItemViewModel @Inject constructor(
                     when (it) {
                         is Resource.Loading -> {}
                         is Resource.Success -> {
-                            onSuccess()
+                            onSuccess(merchantEditId)
                         }
 
                         is Resource.Error -> {

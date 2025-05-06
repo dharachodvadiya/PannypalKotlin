@@ -22,6 +22,9 @@ internal fun NavGraphBuilder.navigateToAllDataScreen(
         val isEditMerchantDataSuccess: Boolean? =
             backStackEntry.savedStateHandle.get<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_EDIT_SUCCESS)
 
+        val isDeleteMerchantDataSuccess: Boolean? =
+            backStackEntry.savedStateHandle.get<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_DELETE_SUCCESS)
+
         val isAddMerchantDataSuccess: Boolean? =
             backStackEntry.savedStateHandle.get<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_ADD_SUCCESS)
 
@@ -30,6 +33,7 @@ internal fun NavGraphBuilder.navigateToAllDataScreen(
             backStackEntry.savedStateHandle.remove<Long>(Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_ID)
             backStackEntry.savedStateHandle.remove<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_EDIT_SUCCESS)
             backStackEntry.savedStateHandle.remove<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_ADD_SUCCESS)
+            backStackEntry.savedStateHandle.remove<Boolean>(Util.SAVE_STATE_MERCHANT_DATA_DELETE_SUCCESS)
         }
 
         bottomBarState.value = false
@@ -50,6 +54,7 @@ internal fun NavGraphBuilder.navigateToAllDataScreen(
             editAddId = merchantDataId ?: -1,
             isEditSuccess = isEditMerchantDataSuccess ?: false,
             isAddSuccess = isAddMerchantDataSuccess ?: false,
+            isDeleteSuccess = isDeleteMerchantDataSuccess ?: false
         )
 
 

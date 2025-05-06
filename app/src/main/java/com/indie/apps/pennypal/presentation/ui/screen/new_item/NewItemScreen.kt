@@ -50,7 +50,7 @@ fun NewItemScreen(
     onPaymentSelect: (Long?) -> Unit,
     onCategorySelect: (Long?, Int) -> Unit,
     onNavigationUp: () -> Unit,
-    onDeleteSuccess: () -> Unit,
+    onDeleteSuccess: (Long) -> Unit,
     isMerchantLock: Boolean,
     onSaveSuccess: (Boolean, Long, Long?) -> Unit,
     merchantData: MerchantNameAndDetails? = null,
@@ -344,10 +344,10 @@ fun NewItemScreen(
                     dialogTitle = R.string.delete_dialog_title,
                     dialogText = R.string.delete_item_dialog_text,
                     onConfirmation = {
-                        newItemViewModel.onDeleteDialogClick {
-                            openDialog = null
+                        newItemViewModel.onDeleteDialogClick { id ->
+                        openDialog = null
                             context.showToast(merchantDataDeleteToast)
-                            onDeleteSuccess()
+                            onDeleteSuccess(id)
                         }
                     },
                     onDismissRequest = { openDialog = null }

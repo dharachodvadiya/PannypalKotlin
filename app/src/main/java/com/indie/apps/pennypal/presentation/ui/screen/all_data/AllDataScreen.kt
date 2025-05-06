@@ -28,7 +28,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -71,6 +70,7 @@ fun AllDataScreen(
     onNavigationUp: () -> Unit,
     isEditSuccess: Boolean = false,
     isAddSuccess: Boolean = false,
+    isDeleteSuccess: Boolean = false,
     editAddId: Long = -1L,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
@@ -90,48 +90,17 @@ fun AllDataScreen(
     val addAnimRun by allDataViewModel.addAnimRun.collectAsStateWithLifecycle()
     val editAnimRun by allDataViewModel.editAnimRun.collectAsStateWithLifecycle()
     val deleteAnimRun by allDataViewModel.deleteAnimRun.collectAsStateWithLifecycle()
-
-    /* var isAddMerchantSuccessState by remember {
-         mutableStateOf(false)
-     }*/
-
-    var addMerchantId by remember {
-        mutableLongStateOf(-1L)
-    }
-    var editMerchantId by remember {
-        mutableLongStateOf(-1L)
-    }
-
-    /* if (isAddMerchantSuccessState != isAddSuccess) {
-         if (isAddSuccess) {
-             addMerchantId = editAddId
-             allDataViewModel.addDataSuccess()
-         }
-         isAddMerchantSuccessState = isAddSuccess
-     }*/
+    val merchantAnimId by allDataViewModel.merchantAnimId.collectAsStateWithLifecycle()
 
     LaunchedEffect(editAddId) {
         if (isAddSuccess) {
-            addMerchantId = editAddId
-            allDataViewModel.addDataSuccess()
+            //addMerchantId = editAddId
+            allDataViewModel.addDataSuccess(editAddId)
             inAppFeedbackViewModel.triggerReview(context)
-        }
-        if (isEditSuccess) {
-            editMerchantId = editAddId
-            allDataViewModel.editDataSuccess()
+        }else if (isEditSuccess) {
+            allDataViewModel.editDataSuccess(editAddId)
         }
     }
-    /* var isEditMerchantSuccessState by remember {
-         mutableStateOf(false)
-     }*/
-
-    /*if (isEditMerchantSuccessState != isEditSuccess) {
-        if (isEditSuccess) {
-            editMerchantId = editAddId
-            allDataViewModel.editDataSuccess()
-        }
-        isEditMerchantSuccessState = isEditSuccess
-    }*/
 
     BackHandler {
         allDataViewModel.onBackClick {
@@ -260,7 +229,7 @@ fun AllDataScreen(
                         if (data != null) {
 
                             val modifierAdd: Modifier =
-                                if (addMerchantId == data.id && addAnimRun) {
+                                if (merchantAnimId == data.id && addAnimRun) {
                                     scope.launch {
                                         itemAnimateScale.animateTo(
                                             targetValue = 1f,
@@ -284,7 +253,7 @@ fun AllDataScreen(
                                     merchantViewModel.onDeleteAnimStop()
                                 }
                                 Modifier.scale(itemAnimateScaleDown.value)
-                            }*/ else if ((editMerchantId == data.id && editAnimRun)
+                            }*/ else if ((merchantAnimId == data.id && editAnimRun)
                                 ) {
                                     scope.launch {
                                         itemAnimateColor.animateTo(
@@ -305,8 +274,8 @@ fun AllDataScreen(
                                 mutableStateOf(true)
                             }
 
-                            if (deleteAnimRun &&
-                                selectedList.contains(data.id)
+                            if ((deleteAnimRun &&
+                                selectedList.contains(data.id) || deleteAnimRun && merchantAnimId == data.id)
                             ) {
                                 visible = false
                             }

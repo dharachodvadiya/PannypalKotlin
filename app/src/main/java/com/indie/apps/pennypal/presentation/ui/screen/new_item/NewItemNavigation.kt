@@ -209,7 +209,15 @@ internal fun NavGraphBuilder.navigateToEditItemScreen(
                 )
                 navController.popBackStack()
             },
-            onDeleteSuccess = {
+            onDeleteSuccess = { merchantDataId ->
+
+                navController.previousBackStackEntry?.savedStateHandle?.set(
+                    Util.SAVE_STATE_MERCHANT_DATA_ADD_EDIT_ID, merchantDataId
+                )
+
+                navController.previousBackStackEntry?.savedStateHandle?.set(
+                    Util.SAVE_STATE_MERCHANT_DATA_DELETE_SUCCESS, true
+                )
                 navController.popBackStack()
             })
     }

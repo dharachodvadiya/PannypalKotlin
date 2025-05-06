@@ -46,7 +46,10 @@ class AllDataViewModel @Inject constructor(
     var deleteAnimRun = MutableStateFlow(false)
     var addAnimRun = MutableStateFlow(false)
     var editAnimRun = MutableStateFlow(false)
-    private lateinit var previousData: PagingData<MerchantDataWithAllData>
+
+    val merchantAnimId = MutableStateFlow(-1L)
+
+    private var previousData: PagingData<MerchantDataWithAllData>? = null
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val pagedData = trigger
@@ -55,10 +58,10 @@ class AllDataViewModel @Inject constructor(
         }
         .map { item ->
 
-            if (!deleteAnimRun.value) {
+            if (!deleteAnimRun.value || previousData == null) {
                 previousData = item
             }
-            previousData
+            previousData!!
         }
         .cachedIn(viewModelScope)
     val pagingState = MutableStateFlow(PagingState<MerchantDataWithAllData>())
@@ -82,18 +85,20 @@ class AllDataViewModel @Inject constructor(
         }
     }
 
-    fun addDataSuccess() {
+    fun addDataSuccess(id: Long) {
         clearSelection()
         clearSearch()
         searchData()
         scrollIndex.value = 0
         scrollOffset.value = 0
 
+        merchantAnimId.value = id
         addAnimRun.value = true
 
         viewModelScope.launch {
             delay(Util.LIST_ITEM_ANIM_DELAY)
             addDataSuccessAnimStop()
+            merchantAnimId.value = -1L
         }
     }
 
@@ -102,16 +107,28 @@ class AllDataViewModel @Inject constructor(
             addAnimRun.value = false
     }
 
-    fun editDataSuccess() {
+    fun editDataSuccess(id: Long) {
         clearSelection()
         //clearSearch()
         searchData()
 
+        merchantAnimId.value = id
         editAnimRun.value = true
 
         viewModelScope.launch {
             delay(Util.LIST_ITEM_ANIM_DELAY)
             editAnimRun.value = false
+            merchantAnimId.value = -1L
+        }
+    }
+
+    fun deleteDataSuccess(id: Long) {
+        merchantAnimId.value = id
+        deleteAnimRun.value = true
+
+        viewModelScope.launch {
+            delay(Util.LIST_ITEM_ANIM_DELAY)
+           onDeleteAnimStop()
         }
     }
 
@@ -149,6 +166,7 @@ class AllDataViewModel @Inject constructor(
 
     private fun onDeleteAnimStop() {
         if (deleteAnimRun.value) {
+            merchantAnimId.value = -1L
             deleteAnimRun.value = false
             clearSelection()
             searchData()
