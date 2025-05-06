@@ -3,6 +3,7 @@ package com.indie.apps.pennypal.presentation.ui.screen.overview
 import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.indie.apps.pennypal.domain.usecase.DeleteMerchantDataUseCase
 import com.indie.apps.pennypal.domain.usecase.GetCategoryWiseExpenseUseCase
 import com.indie.apps.pennypal.domain.usecase.GetTotalUseCase
 import com.indie.apps.pennypal.domain.usecase.SearchMerchantDataWithAllDataListUseCase
@@ -11,6 +12,7 @@ import com.indie.apps.pennypal.repository.BillingRepository
 import com.indie.apps.pennypal.repository.BudgetRepository
 import com.indie.apps.pennypal.repository.PreferenceRepository
 import com.indie.apps.pennypal.repository.UserRepository
+import com.indie.apps.pennypal.util.Resource
 import com.indie.apps.pennypal.util.ShowDataPeriod
 import com.indie.apps.pennypal.util.Util
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,6 +35,7 @@ class OverViewViewModel @Inject constructor(
     getCategoryWiseExpenseUseCase: GetCategoryWiseExpenseUseCase,
     preferenceRepository: PreferenceRepository,
     budgetRepository: BudgetRepository,
+    private val deleteMultipleMerchantDataUseCase: DeleteMerchantDataUseCase,
     private val billingRepository: BillingRepository,
 ) : ViewModel() {
 
@@ -63,11 +66,14 @@ class OverViewViewModel @Inject constructor(
 
     var addDataAnimRun = MutableStateFlow(false)
         private set
+    var editAnimRun = MutableStateFlow(false)
+
+    val merchantDataAnimId = MutableStateFlow(-1L)
 
     var addMerchantAnimRun = MutableStateFlow(false)
         private set
 
-    var editAnimRun = MutableStateFlow(false)
+
 
     /*val pagedMerchantDataWithDay: Flow<PagingData<MerchantDataWithNameWithDayTotal>> =
         getMerchantDataListWithMerchantNameAndDayTotalUseCase
@@ -110,9 +116,13 @@ class OverViewViewModel @Inject constructor(
 
     val isSubscribed = MutableStateFlow(billingRepository.getSubscription())
 
+    //for delete transaction animation
+    var deleteAnimRun = MutableStateFlow(false)
+
 
     @SuppressLint("SuspiciousIndentation")
-    fun addMerchantDataSuccess() {
+    fun addMerchantDataSuccess(id : Long) {
+        merchantDataAnimId.value = id
         addDataAnimRun.value = true
         viewModelScope.launch {
             delay(Util.LIST_ITEM_ANIM_DELAY)
@@ -121,8 +131,10 @@ class OverViewViewModel @Inject constructor(
     }
 
     fun addMerchantDataSuccessAnimStop() {
-        if (addDataAnimRun.value)
+        if (addDataAnimRun.value) {
             addDataAnimRun.value = false
+            merchantDataAnimId.value = -1L
+        }
     }
 
     @SuppressLint("SuspiciousIndentation")
@@ -139,19 +151,55 @@ class OverViewViewModel @Inject constructor(
             addMerchantAnimRun.value = false
     }
 
-    fun editDataSuccess() {
+    fun editDataSuccess(id: Long) {
         viewModelScope.launch {
             delay(10L)
+            merchantDataAnimId.value = id
             editAnimRun.value = true
 
             delay(Util.LIST_ITEM_ANIM_DELAY)
             editAnimRun.value = false
+            merchantDataAnimId.value = -1L
         }
     }
 
     fun onSubscriptionChanged(isSubscribed: Boolean) {
         billingRepository.setSubscription(isSubscribed)
         this.isSubscribed.value = isSubscribed
+    }
+
+    fun onDeleteTransactionFromEditScreenClick(id: Long, onSuccess: () -> Unit) {
+        println("aaaaa call delete")
+        merchantDataAnimId.value = id
+        deleteAnimRun.value = true
+        viewModelScope.launch {
+            deleteMultipleMerchantDataUseCase
+                .deleteData(id)
+                .collect {
+                    println("aaaa ${it.toString()}")
+                    when (it) {
+                        is Resource.Loading -> {}
+                        is Resource.Success -> {
+                            onSuccess()
+                            delay(Util.LIST_ITEM_ANIM_DELAY)
+                            onDeleteAnimStop()
+
+                        }
+
+                        is Resource.Error -> {
+                        }
+                    }
+                }
+        }
+
+    }
+
+    private fun onDeleteAnimStop() {
+        if (deleteAnimRun.value) {
+            merchantDataAnimId.value = -1L
+            deleteAnimRun.value = false
+        }
+
     }
 
     /*fun getSymbolFromCurrencyCode(currencyCode: String): String {

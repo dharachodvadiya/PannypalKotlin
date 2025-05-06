@@ -28,8 +28,11 @@ import androidx.compose.material.icons.filled.SouthWest
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -137,6 +140,7 @@ fun OverviewData(
     onMerchantClick: (Long) -> Unit,
     isAddMerchantDataSuccess: Boolean = false,
     isEditMerchantDataSuccess: Boolean = false,
+    isDeleteMerchantDataSuccess: Boolean = false,
     isAddMerchantSuccess: Boolean = false,
     isSelectionEnable: Boolean,
     merchantDataId: Long = -1L,
@@ -163,6 +167,7 @@ fun OverviewData(
         onSeeAllTransactionClick = onSeeAllTransactionClick,
         isAddMerchantDataSuccess = isAddMerchantDataSuccess,
         isEditMerchantDataSuccess = isEditMerchantDataSuccess,
+        isDeleteMerchantDataSuccess = isDeleteMerchantDataSuccess,
         merchantDataId = merchantDataId,
         onAnimStop = onAnimStop,
         //currency = currency
@@ -314,6 +319,7 @@ fun OverviewTransactionData(
     onTransactionClick: (Long) -> Unit,
     isAddMerchantDataSuccess: Boolean = false,
     isEditMerchantDataSuccess: Boolean = false,
+    isDeleteMerchantDataSuccess: Boolean = false,
     merchantDataId: Long = -1L,
     onAnimStop: () -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier

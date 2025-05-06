@@ -15,13 +15,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -30,6 +30,7 @@ import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.database.enum.PeriodType
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.DoubleBackExitApp
+import com.indie.apps.pennypal.presentation.ui.component.showToast
 import com.indie.apps.pennypal.presentation.ui.screen.InAppFeedbackViewModel
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
@@ -50,6 +51,7 @@ fun OverViewStartScreen(
     addMerchantId: Long,
     onAddMerchant: () -> Unit,
     isAddMerchantDataSuccess: Boolean = false,
+    isDeleteSuccess: Boolean = false,
     isEditSuccess: Boolean = false,
     bottomPadding: PaddingValues,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
@@ -65,7 +67,9 @@ fun OverViewStartScreen(
     val currentTotal by overViewViewModel.currentTotal.collectAsStateWithLifecycle()
     val addDataAnimRun by overViewViewModel.addDataAnimRun.collectAsStateWithLifecycle()
     val editAnimRun by overViewViewModel.editAnimRun.collectAsStateWithLifecycle()
+    val deleteAnimRun by overViewViewModel.deleteAnimRun.collectAsStateWithLifecycle()
     val addMerchantAnimRun by overViewViewModel.addMerchantAnimRun.collectAsStateWithLifecycle()
+    val merchantDataAnimId by overViewViewModel.merchantDataAnimId.collectAsStateWithLifecycle()
 
     val recentTransaction by overViewViewModel.recentTransaction.collectAsStateWithLifecycle()
     val recentMerchant by overViewViewModel.recentMerchant.collectAsStateWithLifecycle()
@@ -74,11 +78,10 @@ fun OverViewStartScreen(
     var currentBudgetPeriod by remember {
         mutableStateOf(PeriodType.MONTH)
     }
-    /*
-        if (userData != null) {
-            Util.currentCurrencySymbol =
-                overViewViewModel.getSymbolFromCountryCode(userData!!.currency)
-        }*/
+
+    val context = LocalContext.current
+    val merchantDeleteToast = stringResource(id = R.string.data_delete_success_message)
+
     LaunchedEffect(addMerchantId) {
         if (addMerchantId != -1L) {
             overViewViewModel.addMerchantSuccess()
@@ -86,21 +89,22 @@ fun OverViewStartScreen(
             inAppFeedbackViewModel.triggerReview(localContext)
         }
     }
-
-    var addEditDataId by remember {
-        mutableLongStateOf(-1L)
-    }
     LaunchedEffect(addEditMerchantDataId) {
+        println("aaaa call $isDeleteSuccess")
         if (isAddMerchantDataSuccess) {
-            addEditDataId = addEditMerchantDataId
-            overViewViewModel.addMerchantDataSuccess()
+            //addEditDataId = addEditMerchantDataId
+            overViewViewModel.addMerchantDataSuccess(addEditMerchantDataId)
 
             inAppFeedbackViewModel.triggerReview(localContext)
+        }else if (isEditSuccess) {
+            //addEditDataId = addEditMerchantDataId
+            overViewViewModel.editDataSuccess(addEditMerchantDataId)
+        }else if (isDeleteSuccess){
+            overViewViewModel.onDeleteTransactionFromEditScreenClick(addEditMerchantDataId){
+                context.showToast(merchantDeleteToast)
+            }
         }
-        if (isEditSuccess) {
-            addEditDataId = addEditMerchantDataId
-            overViewViewModel.editDataSuccess()
-        }
+
     }
 
     DoubleBackExitApp()
@@ -157,9 +161,10 @@ fun OverViewStartScreen(
                 onSeeAllMerchantClick = onSeeAllMerchantClick,
                 onExploreAnalysisClick = onExploreAnalysisClick,
                 onExploreBudgetClick = onExploreBudgetClick,
-                merchantDataId = addEditDataId,
+                merchantDataId = merchantDataAnimId,
                 isAddMerchantDataSuccess = addDataAnimRun,
                 isEditMerchantDataSuccess = editAnimRun,
+                isDeleteMerchantDataSuccess = deleteAnimRun,
                 onTransactionClick = onTransactionClick,
                 onAnimStop = {
                     overViewViewModel.addMerchantDataSuccessAnimStop()
