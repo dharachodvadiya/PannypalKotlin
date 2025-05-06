@@ -122,16 +122,6 @@ class AllDataViewModel @Inject constructor(
         }
     }
 
-    fun deleteDataSuccess(id: Long) {
-        merchantAnimId.value = id
-        deleteAnimRun.value = true
-
-        viewModelScope.launch {
-            delay(Util.LIST_ITEM_ANIM_DELAY)
-           onDeleteAnimStop()
-        }
-    }
-
     fun onDeleteClick(onSuccess: () -> Unit) {
         onSuccess()
     }
@@ -151,6 +141,30 @@ class AllDataViewModel @Inject constructor(
                         is Resource.Success -> {
                             onSuccess()
 
+                            delay(Util.LIST_ITEM_ANIM_DELAY)
+                            onDeleteAnimStop()
+
+                        }
+
+                        is Resource.Error -> {
+                        }
+                    }
+                }
+        }
+
+    }
+
+    fun onDeleteFromEditScreenClick(id: Long, onSuccess: () -> Unit) {
+        merchantAnimId.value = id
+        deleteAnimRun.value = true
+        viewModelScope.launch {
+            deleteMultipleMerchantDataUseCase
+                .deleteData(id)
+                .collect {
+                    when (it) {
+                        is Resource.Loading -> {}
+                        is Resource.Success -> {
+                            onSuccess()
                             delay(Util.LIST_ITEM_ANIM_DELAY)
                             onDeleteAnimStop()
 

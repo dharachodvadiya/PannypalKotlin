@@ -344,11 +344,14 @@ fun NewItemScreen(
                     dialogTitle = R.string.delete_dialog_title,
                     dialogText = R.string.delete_item_dialog_text,
                     onConfirmation = {
-                        newItemViewModel.onDeleteDialogClick { id ->
                         openDialog = null
-                            context.showToast(merchantDataDeleteToast)
-                            onDeleteSuccess(id)
-                        }
+                        //context.showToast(merchantDataDeleteToast)
+                        onDeleteSuccess(newItemViewModel.merchantEditId)
+                        /* newItemViewModel.onDeleteDialogClick { id ->
+                         openDialog = null
+                             context.showToast(merchantDataDeleteToast)
+                             onDeleteSuccess(id)
+                         }*/
                     },
                     onDismissRequest = { openDialog = null }
                 )

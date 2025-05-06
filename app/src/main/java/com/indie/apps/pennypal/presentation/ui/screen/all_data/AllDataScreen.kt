@@ -99,6 +99,10 @@ fun AllDataScreen(
             inAppFeedbackViewModel.triggerReview(context)
         }else if (isEditSuccess) {
             allDataViewModel.editDataSuccess(editAddId)
+        }else if (isDeleteSuccess){
+            allDataViewModel.onDeleteFromEditScreenClick(editAddId){
+                context.showToast(merchantDeleteToast)
+            }
         }
     }
 
