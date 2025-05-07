@@ -40,6 +40,7 @@ import com.indie.apps.pennypal.presentation.ui.component.extension.showToast
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
+import com.indie.apps.pennypal.util.app_enum.DialogType
 import com.indie.apps.pennypal.util.app_enum.PeriodType
 import com.indie.apps.pennypal.util.app_enum.Resource
 import com.indie.apps.pennypal.util.internanal.method.getDateFromMillis
@@ -61,10 +62,6 @@ fun AddEditBudgetScreen(
 ) {
 
     val uiState by addBudgetViewModel.uiState.collectAsStateWithLifecycle()
-    var openFromDateDialog by remember { mutableStateOf(false) }
-    var openToDateDialog by remember { mutableStateOf(false) }
-    var openYearDialog by remember { mutableStateOf(false) }
-    var openMonthDialog by remember { mutableStateOf(false) }
 
     var isCategoryExpanded by remember { mutableStateOf(false) }
 
@@ -105,14 +102,14 @@ fun AddEditBudgetScreen(
     val budgetAddToast = stringResource(id = R.string.budget_add_success_toast)
     val periodEditToast = stringResource(id = R.string.period_not_edit_toast)
 
-    var openDiscardDialog by remember { mutableStateOf(false) }
+    var openDialog by remember { mutableStateOf<DialogType?>(null) }
 
     val focusRequesterTitle = remember { FocusRequester() }
     val focusRequesterAmount = remember { FocusRequester() }
 
     BackHandler {
         if (addBudgetViewModel.isEditData()) {
-            openDiscardDialog = true
+            openDialog = DialogType.Discard
         } else {
             onNavigationUp()
         }
@@ -141,7 +138,7 @@ fun AddEditBudgetScreen(
                         title = title,
                         onNavigationUp = {
                             if (addBudgetViewModel.isEditData()) {
-                                openDiscardDialog = true
+                                openDialog = DialogType.Discard
                             } else {
                                 onNavigationUp()
                             }
@@ -183,22 +180,22 @@ fun AddEditBudgetScreen(
                         selectBudgetPeriod = PeriodType.entries.firstOrNull() { it.id == currentPeriod }
                             ?: PeriodType.MONTH,
                         onSelectFromDate = {
-                            openFromDateDialog = true
+                            openDialog = DialogType.FromDate
                         },
                         onSelectMonth = {
                             if (!addBudgetViewModel.isEditData())
-                                openMonthDialog = true
+                                openDialog = DialogType.Month
                             else
                                 context.showToast(periodEditToast)
                         },
                         onSelectYear = {
                             if (!addBudgetViewModel.isEditData())
-                                openYearDialog = true
+                                openDialog = DialogType.Year
                             else
                                 context.showToast(periodEditToast)
                         },
                         onSelectToDate = {
-                            openToDateDialog = true
+                            openDialog = DialogType.ToDate
                         },
                         amount = amount,
                         categoryList = selectedCategoryList,
@@ -251,70 +248,84 @@ fun AddEditBudgetScreen(
         }
     }
 
-    if (openFromDateDialog) {
-        CustomDatePickerDialog(
-            currentTimeInMilli = if (currentFromTimeInMilli == 0L) Calendar.getInstance().timeInMillis else currentFromTimeInMilli,
-            onDateSelected = {
-                openFromDateDialog = false
-                addBudgetViewModel.setCurrentFromTime(it.timeInMillis)
-            },
-            onDismiss = {
-                openFromDateDialog = false
+    openDialog?.let { dialog ->
+        when (dialog) {
+            DialogType.Discard -> {
+                ConfirmationDialog(
+                    dialogTitle = R.string.discard_dialog_title,
+                    dialogText = R.string.discard_dialog_text,
+                    onConfirmation = {
+                        openDialog = null
+                        onNavigationUp()
+                    },
+                    onDismissRequest = {
+                        openDialog = null
+                    },
+                    positiveText = R.string.discard,
+                    negativeText = R.string.cancel
+                )
             }
-        )
-    } else if (openToDateDialog) {
-        CustomDatePickerDialog(
-            currentTimeInMilli = if (currentToTimeInMilli == 0L) Calendar.getInstance().timeInMillis else currentToTimeInMilli,
-            onDateSelected = {
-                openToDateDialog = false
-                addBudgetViewModel.setCurrentToTime(it.timeInMillis)
-            },
-            onDismiss = {
-                openToDateDialog = false
-            }
-        )
-    } else if (openMonthDialog) {
-        CustomMonthPickerDialog(
-            currentYear = Calendar.getInstance().apply { timeInMillis = currentMonthInMilli }
-                .get(Calendar.YEAR),
-            currentMonth = Calendar.getInstance().apply { timeInMillis = currentMonthInMilli }
-                .get(Calendar.MONTH),
-            onDismiss = {
-                openMonthDialog = false
-            },
-            onDateSelected = { year, month ->
-                openMonthDialog = false
-                addBudgetViewModel.setCurrentMonth(year = year, month = month)
-            }
-        )
-    } else if (openYearDialog) {
-        CustomYearPickerDialog(
-            currentYear = Calendar.getInstance().apply { timeInMillis = currentYearInMilli }
-                .get(Calendar.YEAR),
-            onDismiss = {
-                openYearDialog = false
-            },
-            onDateSelected = {
-                openYearDialog = false
-                addBudgetViewModel.setCurrentYear(it)
-            }
-        )
-    }
 
-    if (openDiscardDialog) {
-        ConfirmationDialog(
-            dialogTitle = R.string.discard_dialog_title,
-            dialogText = R.string.discard_dialog_text,
-            onConfirmation = {
-                openDiscardDialog = false
-                onNavigationUp()
-            },
-            onDismissRequest = {
-                openDiscardDialog = false
-            },
-            positiveText = R.string.discard,
-            negativeText = R.string.cancel
-        )
+            DialogType.FromDate -> {
+                CustomDatePickerDialog(
+                    currentTimeInMilli = if (currentFromTimeInMilli == 0L) Calendar.getInstance().timeInMillis else currentFromTimeInMilli,
+                    onDateSelected = {
+                        openDialog = null
+                        addBudgetViewModel.setCurrentFromTime(it.timeInMillis)
+                    },
+                    onDismiss = {
+                        openDialog = null
+                    }
+                )
+            }
+
+            DialogType.ToDate -> {
+                CustomDatePickerDialog(
+                    currentTimeInMilli = if (currentToTimeInMilli == 0L) Calendar.getInstance().timeInMillis else currentToTimeInMilli,
+                    onDateSelected = {
+                        openDialog = null
+                        addBudgetViewModel.setCurrentToTime(it.timeInMillis)
+                    },
+                    onDismiss = {
+                        openDialog = null
+                    }
+                )
+            }
+
+            DialogType.Month -> {
+                CustomMonthPickerDialog(
+                    currentYear = Calendar.getInstance()
+                        .apply { timeInMillis = currentMonthInMilli }
+                        .get(Calendar.YEAR),
+                    currentMonth = Calendar.getInstance()
+                        .apply { timeInMillis = currentMonthInMilli }
+                        .get(Calendar.MONTH),
+                    onDismiss = {
+                        openDialog = null
+                    },
+                    onDateSelected = { year, month ->
+                        addBudgetViewModel.setCurrentMonth(year = year, month = month)
+                        openDialog = null
+                    }
+                )
+            }
+
+            DialogType.Year -> {
+                CustomYearPickerDialog(
+                    currentYear = Calendar.getInstance().apply { timeInMillis = currentYearInMilli }
+                        .get(Calendar.YEAR),
+                    onDismiss = {
+                        openDialog = null
+                    },
+                    onDateSelected = {
+                        openDialog = null
+                        addBudgetViewModel.setCurrentYear(it)
+                    }
+                )
+            }
+
+            else -> {}
+        }
     }
 
 }

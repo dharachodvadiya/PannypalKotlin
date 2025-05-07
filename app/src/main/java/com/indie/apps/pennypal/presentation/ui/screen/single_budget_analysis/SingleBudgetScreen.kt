@@ -30,6 +30,7 @@ import com.indie.apps.pennypal.presentation.ui.screen.InAppFeedbackViewModel
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
+import com.indie.apps.pennypal.util.app_enum.DialogType
 import com.indie.apps.pennypal.util.app_enum.PeriodType
 import com.indie.apps.pennypal.util.app_enum.Resource
 import com.indie.apps.pennypal.util.internanal.method.getDateFromMillis
@@ -48,7 +49,7 @@ fun SingleBudgetScreen(
     val title = stringResource(id = R.string.budget_analysis)
     val context = LocalContext.current
 
-    var openAlertDialog by remember { mutableStateOf(false) }
+    var openDialog by remember { mutableStateOf<DialogType?>(null) }
 
     // val currency by viewModel.currency.collectAsStateWithLifecycle()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -70,7 +71,7 @@ fun SingleBudgetScreen(
                         title = title,
                         onNavigationUp = onNavigationUp,
                         onDeleteClick = {
-                            openAlertDialog = true
+                            openDialog = DialogType.Delete
                         },
                         onEditClick = {
                             budgetData?.let { onEditClick(it.id) }
@@ -153,20 +154,25 @@ fun SingleBudgetScreen(
             LoadingWithProgress()
         }
     }
-    val budgetDeleteToast = stringResource(id = R.string.budget_delete_success_toast)
-    if (openAlertDialog) {
-        ConfirmationDialog(
-            dialogTitle = R.string.delete_dialog_title,
-            dialogText = R.string.delete_item_dialog_text,
-            onConfirmation = {
-                viewModel.onDeleteDialogClick {
-                    openAlertDialog = false
-                    // context.showToast(budgetDeleteToast)
-                    onDeleteSuccess(it)
-                }
-            },
-            onDismissRequest = { openAlertDialog = false }
-        )
+    openDialog?.let { dialog ->
+        when (dialog) {
+            DialogType.Delete -> {
+                ConfirmationDialog(
+                    dialogTitle = R.string.delete_dialog_title,
+                    dialogText = R.string.delete_item_dialog_text,
+                    onConfirmation = {
+                        viewModel.onDeleteDialogClick {
+                            openDialog = null
+                            // context.showToast(budgetDeleteToast)
+                            onDeleteSuccess(it)
+                        }
+                    },
+                    onDismissRequest = { openDialog = null }
+                )
+            }
+
+            else -> {}
+        }
     }
 
 }

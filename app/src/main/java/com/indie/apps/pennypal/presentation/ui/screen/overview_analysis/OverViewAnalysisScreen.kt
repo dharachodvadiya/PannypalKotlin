@@ -35,6 +35,7 @@ import com.indie.apps.pennypal.presentation.ui.screen.InAppFeedbackViewModel
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.util.app_enum.AnalysisPeriod
+import com.indie.apps.pennypal.util.app_enum.DialogType
 import com.indie.apps.pennypal.util.app_enum.Resource
 import java.util.Calendar
 
@@ -54,8 +55,7 @@ fun OverViewAnalysisScreen(
     val currentMonthInMilli by remember { viewModel.currentMonthInMilli }.collectAsStateWithLifecycle()
     val categoryExpense by remember { viewModel.categoryExpense }.collectAsStateWithLifecycle()
     val currentTotal by remember { viewModel.currentTotal }.collectAsStateWithLifecycle()
-    var openYearDialog by remember { mutableStateOf(false) }
-    var openMonthDialog by remember { mutableStateOf(false) }
+    var openDialog by remember { mutableStateOf<DialogType?>(null) }
     val title = stringResource(id = R.string.analysis)
 
     val localContext = LocalContext.current
@@ -102,8 +102,8 @@ fun OverViewAnalysisScreen(
                     if (isLoading)
                         return@AnalysisMonthYearSelection
                     when (currentPeriod) {
-                        AnalysisPeriod.MONTH -> openMonthDialog = true
-                        AnalysisPeriod.YEAR -> openYearDialog = true
+                        AnalysisPeriod.MONTH -> openDialog = DialogType.Month
+                        AnalysisPeriod.YEAR -> openDialog = DialogType.Year
                     }
                 }
             )
@@ -167,32 +167,42 @@ fun OverViewAnalysisScreen(
         }
     }
 
-    if (openMonthDialog) {
-        CustomMonthPickerDialog(
-            currentYear = Calendar.getInstance().apply { timeInMillis = currentMonthInMilli }
-                .get(Calendar.YEAR),
-            currentMonth = Calendar.getInstance().apply { timeInMillis = currentMonthInMilli }
-                .get(Calendar.MONTH),
-            onDismiss = {
-                openMonthDialog = false
-            },
-            onDateSelected = { year, month ->
-                openMonthDialog = false
-                viewModel.setCurrentMonth(year = year, month = month)
+    openDialog?.let { dialog ->
+        when (dialog) {
+            DialogType.Month -> {
+                CustomMonthPickerDialog(
+                    currentYear = Calendar.getInstance()
+                        .apply { timeInMillis = currentMonthInMilli }
+                        .get(Calendar.YEAR),
+                    currentMonth = Calendar.getInstance()
+                        .apply { timeInMillis = currentMonthInMilli }
+                        .get(Calendar.MONTH),
+                    onDismiss = {
+                        openDialog = null
+                    },
+                    onDateSelected = { year, month ->
+                        openDialog = null
+                        viewModel.setCurrentMonth(year = year, month = month)
+                    }
+                )
             }
-        )
-    } else if (openYearDialog) {
-        CustomYearPickerDialog(
-            currentYear = Calendar.getInstance().apply { timeInMillis = currentYearInMilli }
-                .get(Calendar.YEAR),
-            onDismiss = {
-                openYearDialog = false
-            },
-            onDateSelected = {
-                openYearDialog = false
-                viewModel.setCurrentYear(it)
+
+            DialogType.Year -> {
+                CustomYearPickerDialog(
+                    currentYear = Calendar.getInstance().apply { timeInMillis = currentYearInMilli }
+                        .get(Calendar.YEAR),
+                    onDismiss = {
+                        openDialog = null
+                    },
+                    onDateSelected = {
+                        openDialog = null
+                        viewModel.setCurrentYear(it)
+                    }
+                )
             }
-        )
+
+            else -> {}
+        }
     }
 
 }

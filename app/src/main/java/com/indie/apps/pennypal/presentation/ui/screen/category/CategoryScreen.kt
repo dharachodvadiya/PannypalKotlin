@@ -56,6 +56,7 @@ import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.util.app_enum.AnimationType
+import com.indie.apps.pennypal.util.app_enum.DialogType
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
@@ -109,7 +110,7 @@ fun CategoryScreen(
          }
      }
  */
-    var openAlertDialog by remember { mutableStateOf(false) }
+    var openDialog by remember { mutableStateOf<DialogType?>(null) }
     var deleteId by remember { mutableLongStateOf(-1L) }
 
     var job: Job? = null
@@ -259,7 +260,7 @@ fun CategoryScreen(
                                     },
                                     onDeleteClick = {
                                         deleteId = data.id
-                                        openAlertDialog = true
+                                        openDialog = DialogType.Delete
                                     },
                                     onLongClick = { },
                                     modifier = modifierAnim,
@@ -282,23 +283,28 @@ fun CategoryScreen(
                 }
             }
 
-
-            if (openAlertDialog) {
-                ConfirmationDialog(
-                    dialogTitle = R.string.delete_dialog_title,
-                    dialogText = R.string.delete_item_dialog_text,
-                    onConfirmation = {
-                        viewModel.onDeleteDialogClick(deleteId) {
-                            deleteId = -1
-                            openAlertDialog = false
-                            context.showToast(categoryDeleteToast)
-                        }
-                    },
-                    onDismissRequest = {
-                        deleteId = -1
-                        openAlertDialog = false
+            openDialog?.let { dialog ->
+                when (dialog) {
+                    DialogType.Delete -> {
+                        ConfirmationDialog(
+                            dialogTitle = R.string.delete_dialog_title,
+                            dialogText = R.string.delete_item_dialog_text,
+                            onConfirmation = {
+                                viewModel.onDeleteDialogClick(deleteId) {
+                                    deleteId = -1
+                                    openDialog = null
+                                    context.showToast(categoryDeleteToast)
+                                }
+                            },
+                            onDismissRequest = {
+                                deleteId = -1
+                                openDialog = null
+                            }
+                        )
                     }
-                )
+
+                    else -> {}
+                }
             }
         }
 

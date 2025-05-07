@@ -40,6 +40,7 @@ import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.back
 import com.indie.apps.pennypal.presentation.ui.component.extension.showToast
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
+import com.indie.apps.pennypal.util.app_enum.DialogType
 
 @Composable
 fun PaymentScreen(
@@ -58,7 +59,7 @@ fun PaymentScreen(
 
     val context = LocalContext.current
     val paymentDeleteToast = stringResource(id = R.string.payment_delete_success_message)
-    var openDeleteDialog by remember { mutableStateOf(false) }
+    var openDialog by remember { mutableStateOf<DialogType?>(null) }
     var deletePaymentId by remember { mutableLongStateOf(0) }
     val currentAnim by paymentViewModel.currentAnim.collectAsStateWithLifecycle()
     val paymentAnimId by paymentViewModel.paymentAnimId.collectAsStateWithLifecycle()
@@ -154,7 +155,7 @@ fun PaymentScreen(
                         },
                         onDeleteClick = {
                             deletePaymentId = it.id
-                            openDeleteDialog = true
+                            openDialog = DialogType.Delete
                         },
                         paymentAnimId = paymentAnimId,
                         currentAnim = currentAnim,
@@ -173,7 +174,7 @@ fun PaymentScreen(
                         },
                         onDeleteClick = {
                             deletePaymentId = it.id
-                            openDeleteDialog = true
+                            openDialog = DialogType.Delete
                         },
                         paymentAnimId = paymentAnimId,
                         currentAnim = currentAnim,
@@ -182,22 +183,28 @@ fun PaymentScreen(
             }
         }
 
-        if (openDeleteDialog) {
-            ConfirmationDialog(
-                dialogTitle = R.string.delete_dialog_title,
-                dialogText = R.string.delete_payment_dialog_text,
-                onConfirmation = {
-                    paymentViewModel.onDeleteDialogClick(deletePaymentId) {
-                        openDeleteDialog = false
-                        deletePaymentId = 0
-                        context.showToast(paymentDeleteToast)
-                    }
-                },
-                onDismissRequest = {
-                    openDeleteDialog = false
-                    deletePaymentId = 0
+        openDialog?.let { dialog ->
+            when (dialog) {
+                DialogType.Delete -> {
+                    ConfirmationDialog(
+                        dialogTitle = R.string.delete_dialog_title,
+                        dialogText = R.string.delete_payment_dialog_text,
+                        onConfirmation = {
+                            paymentViewModel.onDeleteDialogClick(deletePaymentId) {
+                                openDialog = null
+                                deletePaymentId = 0
+                                context.showToast(paymentDeleteToast)
+                            }
+                        },
+                        onDismissRequest = {
+                            openDialog = null
+                            deletePaymentId = 0
+                        }
+                    )
                 }
-            )
+
+                else -> {}
+            }
         }
     }
 }

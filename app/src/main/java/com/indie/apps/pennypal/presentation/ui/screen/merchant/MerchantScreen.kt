@@ -57,6 +57,7 @@ import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.util.app_enum.AnimationType
+import com.indie.apps.pennypal.util.app_enum.DialogType
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
@@ -122,7 +123,7 @@ fun MerchantScreen(
         }
     }*/
 
-    var openAlertDialog by remember { mutableStateOf(false) }
+    var openDialog by remember { mutableStateOf<DialogType?>(null) }
 
     var job: Job? = null
     Scaffold(topBar = {
@@ -136,7 +137,7 @@ fun MerchantScreen(
             isDeletable = isDeletable,
             onAddClick = { merchantViewModel.onAddClick { onAddClick() } },
             onEditClick = { merchantViewModel.onEditClick { onEditClick(it) } },
-            onDeleteClick = { merchantViewModel.onDeleteClick { openAlertDialog = true } },
+            onDeleteClick = { merchantViewModel.onDeleteClick { openDialog = DialogType.Delete } },
             onNavigationUp = {
                 merchantViewModel.onBackClick {
                     onNavigationUp()
@@ -301,19 +302,24 @@ fun MerchantScreen(
                 }
             }
 
+            openDialog?.let { dialog ->
+                when (dialog) {
+                    DialogType.Delete -> {
+                        ConfirmationDialog(
+                            dialogTitle = R.string.delete_dialog_title,
+                            dialogText = R.string.delete_item_dialog_text,
+                            onConfirmation = {
+                                merchantViewModel.onDeleteDialogClick {
+                                    openDialog = null
+                                    context.showToast(merchantDeleteToast)
+                                }
+                            },
+                            onDismissRequest = { openDialog = null }
+                        )
+                    }
 
-            if (openAlertDialog) {
-                ConfirmationDialog(
-                    dialogTitle = R.string.delete_dialog_title,
-                    dialogText = R.string.delete_item_dialog_text,
-                    onConfirmation = {
-                        merchantViewModel.onDeleteDialogClick {
-                            openAlertDialog = false
-                            context.showToast(merchantDeleteToast)
-                        }
-                    },
-                    onDismissRequest = { openAlertDialog = false }
-                )
+                    else -> {}
+                }
             }
         }
 

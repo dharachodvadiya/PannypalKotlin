@@ -48,6 +48,7 @@ import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgres
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.util.app_enum.AnimationType
+import com.indie.apps.pennypal.util.app_enum.DialogType
 import com.indie.apps.pennypal.util.internanal.method.getDateFromMillis
 
 @SuppressLint("CoroutineCreationDuringComposition")
@@ -82,7 +83,7 @@ fun MerchantDataScreen(
     val pagingState by merchantDataViewModel.pagingState.collectAsStateWithLifecycle()
     pagingState.update(lazyPagingData)
 
-    var openAlertDialog by remember { mutableStateOf(false) }
+    var openDialog by remember { mutableStateOf<DialogType?>(null) }
 
     /*  var addEditMerchantDataId by remember {
           mutableLongStateOf(-1L)
@@ -283,7 +284,7 @@ fun MerchantDataScreen(
                 isEditable = isEditable,
                 isDeletable = isDeletable,
                 onEditClick = { merchantDataViewModel.onEditClick(onSuccess = onEditClick) },
-                onDeleteClick = { openAlertDialog = true },
+                onDeleteClick = { openDialog = DialogType.Delete },
                 onAddClick = { merchant?.let { onAddClick(it.toMerchantNameAndDetails()) } }
             )
 
@@ -292,18 +293,24 @@ fun MerchantDataScreen(
         val merchantDataDeleteToast =
             stringResource(id = R.string.merchant_data_delete_success_message)
 
-        if (openAlertDialog) {
-            ConfirmationDialog(
-                dialogTitle = R.string.delete_dialog_title,
-                dialogText = R.string.delete_item_dialog_text,
-                onConfirmation = {
-                    merchantDataViewModel.onDeleteDialogClick {
-                        openAlertDialog = false
-                        context.showToast(merchantDataDeleteToast)
-                    }
-                },
-                onDismissRequest = { openAlertDialog = false }
-            )
+        openDialog?.let { dialog ->
+            when (dialog) {
+                DialogType.Delete -> {
+                    ConfirmationDialog(
+                        dialogTitle = R.string.delete_dialog_title,
+                        dialogText = R.string.delete_item_dialog_text,
+                        onConfirmation = {
+                            merchantDataViewModel.onDeleteDialogClick {
+                                openDialog = null
+                                context.showToast(merchantDataDeleteToast)
+                            }
+                        },
+                        onDismissRequest = { openDialog = null }
+                    )
+                }
+
+                else -> {}
+            }
         }
     }
 }
