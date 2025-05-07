@@ -5,7 +5,6 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideOutVertically
@@ -35,7 +34,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -49,12 +47,15 @@ import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.presentation.ui.component.composable.common.NoDataMessage
 import com.indie.apps.pennypal.presentation.ui.component.composable.custom.ConfirmationDialog
 import com.indie.apps.pennypal.presentation.ui.component.composable.custom.SearchView
+import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.addAnim
 import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.backgroundGradientsBrush
+import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.editAnim
 import com.indie.apps.pennypal.presentation.ui.component.extension.showToast
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.util.Util
+import com.indie.apps.pennypal.util.app_enum.AnimationType
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
@@ -82,46 +83,32 @@ fun CategoryScreen(
     pagingState.update(lazyPagingData)
 
     val searchTextState by viewModel.searchTextState.collectAsStateWithLifecycle()
-    // val isEditable by viewModel.isEditable.collectAsStateWithLifecycle()
-    // val isDeletable by viewModel.isDeletable.collectAsStateWithLifecycle()
     val scrollOffset by viewModel.scrollOffset.collectAsStateWithLifecycle()
     val scrollIndex by viewModel.scrollIndex.collectAsStateWithLifecycle()
-    //  val selectedList = viewModel.selectedList
 
-    val addAnimRun by viewModel.addAnimRun.collectAsStateWithLifecycle()
-    val addDataAnimRun by viewModel.addDataAnimRun.collectAsStateWithLifecycle()
-    val editAnimRun by viewModel.editAnimRun.collectAsStateWithLifecycle()
-    val deleteAnimRun by viewModel.deleteAnimRun.collectAsStateWithLifecycle()
+    val currentAnim by viewModel.currentAnim.collectAsStateWithLifecycle()
+    val currentAnimId by viewModel.currentAnimId.collectAsStateWithLifecycle()
+
 
     BackHandler {
         viewModel.onBackClick { onNavigationUp() }
     }
 
-    var merchantId by remember {
-        mutableLongStateOf(-1L)
-    }
-
     LaunchedEffect(merchantEditAddId) {
-        merchantId = merchantEditAddId
         if (isAddSuccess) {
-            viewModel.addCategorySuccess()
+            viewModel.addCategorySuccess(merchantEditAddId)
         }
         if (isEditSuccess) {
-            viewModel.editCategorySuccess()
+            viewModel.editCategorySuccess(merchantEditAddId)
         }
     }
 
-    var addMerchantDataId by remember {
-        mutableLongStateOf(-1L)
-    }
-
-    LaunchedEffect(merchantDataMerchantId) {
-        if (isAddMerchantDataSuccess) {
-            addMerchantDataId = merchantDataMerchantId
-            viewModel.addMerchantDataSuccess()
-        }
-    }
-
+    /* LaunchedEffect(merchantDataMerchantId) {
+         if (isAddMerchantDataSuccess) {
+             viewModel.addMerchantDataSuccess()
+         }
+     }
+ */
     var openAlertDialog by remember { mutableStateOf(false) }
     var deleteId by remember { mutableLongStateOf(-1L) }
 
@@ -230,54 +217,29 @@ fun CategoryScreen(
                         val data = lazyPagingData[index]
                         if (data != null) {
 
-                            val modifierAdd: Modifier =
-                                if (merchantId == data.id && addAnimRun) {
-                                    scope.launch {
-                                        itemAnimateScale.animateTo(
-                                            targetValue = 1f,
-                                            animationSpec = tween(Util.ADD_ITEM_ANIM_TIME)
+                            val modifierAnim = if (currentAnimId == data.id) {
+                                when (currentAnim) {
+                                    AnimationType.ADD -> Modifier.addAnim(scope) {
+                                        viewModel.onAnimationComplete(
+                                            AnimationType.ADD
                                         )
                                     }
-                                    if (itemAnimateScale.value == 1f) {
-                                        viewModel.addCategorySuccessAnimStop()
-                                    }
-                                    Modifier.scale(itemAnimateScale.value)
-                                }/* else if (deleteAnimRun &&
-                                selectedList.contains(data.id)
-                            ) {
-                                scope.launch {
-                                    itemAnimateScaleDown.animateTo(
-                                        targetValue = 0.0f,
-                                        animationSpec = tween(50)
-                                    )
+
+                                    AnimationType.EDIT -> Modifier.editAnim(
+                                        scope,
+                                        itemAnimateColor
+                                    ) { viewModel.onAnimationComplete(AnimationType.EDIT) }
+
+                                    else -> Modifier
                                 }
-                                if (itemAnimateScaleDown.value < 0.02) {
-                                    merchantViewModel.onDeleteAnimStop()
-                                }
-                                Modifier.scale(itemAnimateScaleDown.value)
-                            }*/ else if ((merchantId == data.id && editAnimRun) ||
-                                    (addMerchantDataId == data.id && addDataAnimRun)
-                                ) {
-                                    scope.launch {
-                                        itemAnimateColor.animateTo(
-                                            targetValue = targetAnimColor,
-                                            animationSpec = tween(Util.EDIT_ITEM_ANIM_TIME)
-                                        )
-                                        itemAnimateColor.animateTo(
-                                            targetValue = baseColor,
-                                            animationSpec = tween(Util.EDIT_ITEM_ANIM_TIME)
-                                        )
-                                    }
-                                    Modifier
-                                } else {
-                                    Modifier
-                                }
+                            } else Modifier
+
 
                             var visible by remember {
                                 mutableStateOf(true)
                             }
 
-                            if (deleteAnimRun &&
+                            if (currentAnim == AnimationType.DELETE &&
                                 deleteId == data.id
                             ) {
                                 visible = false
@@ -300,7 +262,7 @@ fun CategoryScreen(
                                         openAlertDialog = true
                                     },
                                     onLongClick = { },
-                                    modifier = modifierAdd,
+                                    modifier = modifierAnim,
                                     itemBgColor = itemAnimateColor.value
                                 )
                             }
