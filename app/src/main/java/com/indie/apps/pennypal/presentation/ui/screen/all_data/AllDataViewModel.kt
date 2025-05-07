@@ -41,7 +41,6 @@ class AllDataViewModel @Inject constructor(
     var isDeletable = MutableStateFlow(false)
 
     val currentAnim = MutableStateFlow(AnimationType.NONE)
-
     val merchantAnimId = MutableStateFlow(-1L)
 
     private var previousData: PagingData<MerchantDataWithAllData>? = null

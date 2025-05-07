@@ -3,7 +3,6 @@ package com.indie.apps.pennypal.presentation.ui.component.composable.common
 import android.annotation.SuppressLint
 import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,20 +14,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.module.payment.PaymentWithMode
+import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.editAnim
 import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.screen.payment.AccountHeadingItem
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
-import com.indie.apps.pennypal.util.Util
+import com.indie.apps.pennypal.util.app_enum.AnimationType
 import com.indie.apps.pennypal.util.internanal.method.getPaymentModeIcon
-import kotlinx.coroutines.launch
 
 
 @Composable
 fun AccountTypeItem(
     @StringRes titleId: Int,
     selectPaymentId: Long,
-    editAnimPaymentId: Long = 0L,
-    editAnimRun: Boolean = false,
+    paymentAnimId: Long = 0L,
+    currentAnim: AnimationType = AnimationType.NONE,
     isSelectable: Boolean,
     isEditable: Boolean,
     dataList: List<PaymentWithMode>,
@@ -62,21 +61,35 @@ fun AccountTypeItem(
                 val itemAnimateColor = remember {
                     androidx.compose.animation.Animatable(baseColor)
                 }
-                val modifierColor = if (editAnimPaymentId == item.id && editAnimRun) {
+                /*  val modifierColor = if (editAnimPaymentId == item.id) {
 
-                    scope.launch {
-                        itemAnimateColor.animateTo(
-                            targetValue = targetAnimColor,
-                            animationSpec = tween(Util.EDIT_ITEM_ANIM_TIME)
-                        )
-                        itemAnimateColor.animateTo(
-                            targetValue = baseColor, animationSpec = tween(Util.EDIT_ITEM_ANIM_TIME)
-                        )
+                      scope.launch {
+                          itemAnimateColor.animateTo(
+                              targetValue = targetAnimColor,
+                              animationSpec = tween(Util.EDIT_ITEM_ANIM_TIME)
+                          )
+                          itemAnimateColor.animateTo(
+                              targetValue = baseColor, animationSpec = tween(Util.EDIT_ITEM_ANIM_TIME)
+                          )
+                      }
+                      modifier.background(itemAnimateColor.value)
+                  } else {
+                      Modifier
+                  }*/
+
+                val modifierAnim = if (paymentAnimId == item.id) {
+                    when (currentAnim) {
+                        AnimationType.EDIT -> {
+                            Modifier.editAnim(
+                                scope,
+                                itemAnimateColor
+                            )
+                            modifier.background(itemAnimateColor.value)
+                        }
+
+                        else -> Modifier
                     }
-                    modifier.background(itemAnimateColor.value)
-                } else {
-                    Modifier
-                }
+                } else Modifier
 
                 AccountItem(
                     isSelected = item.id == selectPaymentId,
@@ -85,7 +98,7 @@ fun AccountTypeItem(
                     name = item.name,
                     symbolId = getPaymentModeIcon(item.name),
                     onSelect = { onSelect(item) },
-                    modifier = modifierColor,
+                    modifier = modifierAnim,
                     onDeleteClick = { onDeleteClick(item) },
                     onEditClick = { onEditClick(item.id) },
                     isPreAdded = item.preAdded == 1

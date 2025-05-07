@@ -6,6 +6,7 @@ import com.indie.apps.pennypal.domain.usecase.DeletePaymentUseCase
 import com.indie.apps.pennypal.repository.PaymentRepository
 import com.indie.apps.pennypal.repository.UserRepository
 import com.indie.apps.pennypal.util.Util
+import com.indie.apps.pennypal.util.app_enum.AnimationType
 import com.indie.apps.pennypal.util.app_enum.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -28,15 +29,20 @@ class PaymentViewModel @Inject constructor(
     val paymentWithModeState = paymentRepository.getPaymentListWithMode()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
 
-    var editAnimRun = MutableStateFlow(false)
+    // var editAnimRun = MutableStateFlow(false)
+
+    val currentAnim = MutableStateFlow(AnimationType.NONE)
+    val paymentAnimId = MutableStateFlow(-1L)
 
 
-    fun editPaymentSuccess() {
-        editAnimRun.value = true
+    fun editPaymentSuccess(id: Long) {
+        paymentAnimId.value = id
+        currentAnim.value = AnimationType.EDIT
 
         viewModelScope.launch {
             delay(Util.LIST_ITEM_ANIM_DELAY)
-            editAnimRun.value = false
+            currentAnim.value = AnimationType.NONE
+            paymentAnimId.value = -1
         }
     }
 

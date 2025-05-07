@@ -60,11 +60,8 @@ fun PaymentScreen(
     val paymentDeleteToast = stringResource(id = R.string.payment_delete_success_message)
     var openDeleteDialog by remember { mutableStateOf(false) }
     var deletePaymentId by remember { mutableLongStateOf(0) }
-    val editAnimRun by paymentViewModel.editAnimRun.collectAsStateWithLifecycle()
-
-    var editedPaymentId by remember {
-        mutableLongStateOf(-1L)
-    }
+    val currentAnim by paymentViewModel.currentAnim.collectAsStateWithLifecycle()
+    val paymentAnimId by paymentViewModel.paymentAnimId.collectAsStateWithLifecycle()
 
     BackHandler {
         onNavigationUp()
@@ -72,8 +69,7 @@ fun PaymentScreen(
 
     LaunchedEffect(paymentId) {
         if (isEditSuccess) {
-            editedPaymentId = paymentId
-            paymentViewModel.editPaymentSuccess()
+            paymentViewModel.editPaymentSuccess(paymentId)
         }
     }
 
@@ -160,8 +156,8 @@ fun PaymentScreen(
                             deletePaymentId = it.id
                             openDeleteDialog = true
                         },
-                        editAnimPaymentId = editedPaymentId,
-                        editAnimRun = editAnimRun,
+                        paymentAnimId = paymentAnimId,
+                        currentAnim = currentAnim,
                     )
                 }
 
@@ -179,8 +175,8 @@ fun PaymentScreen(
                             deletePaymentId = it.id
                             openDeleteDialog = true
                         },
-                        editAnimPaymentId = editedPaymentId,
-                        editAnimRun = editAnimRun,
+                        paymentAnimId = paymentAnimId,
+                        currentAnim = currentAnim,
                     )
                 }
             }
