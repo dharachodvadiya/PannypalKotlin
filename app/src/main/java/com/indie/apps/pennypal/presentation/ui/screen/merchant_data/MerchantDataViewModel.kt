@@ -12,6 +12,7 @@ import com.indie.apps.pennypal.domain.usecase.GetMerchantDataWithPaymentNameList
 import com.indie.apps.pennypal.presentation.ui.state.PagingState
 import com.indie.apps.pennypal.repository.MerchantRepository
 import com.indie.apps.pennypal.util.Util
+import com.indie.apps.pennypal.util.app_enum.AnimationType
 import com.indie.apps.pennypal.util.app_enum.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -28,15 +29,11 @@ import javax.inject.Inject
 @HiltViewModel
 class MerchantDataViewModel @Inject constructor(
     merchantRepository: MerchantRepository,
-    //getMerchantDataListFromMerchantId: GetMerchantDataListFromMerchantIdUseCase,
     getMerchantDataWithPaymentNameListFromMerchantIdUseCase: GetMerchantDataWithPaymentNameListFromMerchantIdUseCase,
     private val deleteMultipleMerchantDataUseCase: DeleteMerchantDataUseCase,
-    // userRepository: UserRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    /*val currency = userRepository.getCurrency()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), "$")*/
     private val merchantId = savedStateHandle.get<String>(Util.PARAM_MERCHANT_ID)?.toLong() ?: 0
 
     var scrollIndex = MutableStateFlow(0)
@@ -48,10 +45,8 @@ class MerchantDataViewModel @Inject constructor(
     var isEditable = MutableStateFlow(false)
     var isDeletable = MutableStateFlow(false)
 
-    var editDataAnimRun = MutableStateFlow(false)
-    var addDataAnimRun = MutableStateFlow(false)
-    var deleteAnimRun = MutableStateFlow(false)
-    var merchantDataAnimId = MutableStateFlow(-1L)
+    val currentAnim = MutableStateFlow(AnimationType.NONE)
+    val currentAnimId = MutableStateFlow(-1L)
     private lateinit var previousData: PagingData<MerchantDataWithPaymentName>
 
     val merchantState = merchantRepository.getMerchantFromId(merchantId)
@@ -66,7 +61,7 @@ class MerchantDataViewModel @Inject constructor(
         }
         .map { item ->
 
-            if (!deleteAnimRun.value) {
+            if (currentAnim.value != AnimationType.DELETE) {
                 previousData = item
             }
             previousData
@@ -86,32 +81,6 @@ class MerchantDataViewModel @Inject constructor(
         }
     }
 
-    fun editMerchantDataSuccess(id: Long) {
-        editDataAnimRun.value = true
-        merchantDataAnimId.value = id
-        viewModelScope.launch {
-            delay(Util.LIST_ITEM_ANIM_DELAY)
-            editDataAnimRun.value = false
-            merchantDataAnimId.value = -1L
-        }
-    }
-
-    fun addMerchantDataSuccess(id: Long) {
-        addDataAnimRun.value = true
-        merchantDataAnimId.value = id
-        viewModelScope.launch {
-            delay(Util.LIST_ITEM_ANIM_DELAY)
-            addMerchantSuccessAnimStop()
-
-        }
-    }
-
-    fun addMerchantSuccessAnimStop() {
-        if (addDataAnimRun.value) {
-            addDataAnimRun.value = false
-            merchantDataAnimId.value = -1L
-        }
-    }
 
     fun setScrollVal(scrollIndex: Int, scrollOffset: Int) {
         this.scrollIndex.value = scrollIndex
@@ -158,8 +127,17 @@ class MerchantDataViewModel @Inject constructor(
         }
     }
 
+
+    fun onEditClick(onSuccess: (Long) -> Unit) {
+        if (selectedList.size > 0) {
+            onSuccess(selectedList[0])
+            clearSelection()
+        }
+
+    }
+
     fun onDeleteDialogClick(onSuccess: () -> Unit) {
-        deleteAnimRun.value = true
+        currentAnim.value = AnimationType.DELETE
         viewModelScope.launch {
             deleteMultipleMerchantDataUseCase
                 .deleteDataList(selectedList)
@@ -169,7 +147,7 @@ class MerchantDataViewModel @Inject constructor(
                         is Resource.Success -> {
                             onSuccess()
                             delay(Util.LIST_ITEM_ANIM_DELAY)
-                            onDeleteAnimStop()
+                            onAnimationComplete(AnimationType.DELETE)
                         }
 
                         is Resource.Error -> {
@@ -181,8 +159,8 @@ class MerchantDataViewModel @Inject constructor(
     }
 
     fun onDeleteFromEditScreenClick(id: Long, onSuccess: () -> Unit) {
-        merchantDataAnimId.value = id
-        deleteAnimRun.value = true
+        currentAnim.value = AnimationType.DELETE
+        currentAnimId.value = id
         viewModelScope.launch {
             deleteMultipleMerchantDataUseCase
                 .deleteData(id)
@@ -193,7 +171,7 @@ class MerchantDataViewModel @Inject constructor(
                         is Resource.Success -> {
                             onSuccess()
                             delay(Util.LIST_ITEM_ANIM_DELAY)
-                            onDeleteAnimStop()
+                            onAnimationComplete(AnimationType.DELETE)
 
                         }
 
@@ -205,20 +183,36 @@ class MerchantDataViewModel @Inject constructor(
 
     }
 
-    private fun onDeleteAnimStop() {
-        if (deleteAnimRun.value) {
-            deleteAnimRun.value = false
-            clearSelection()
-            loadData()
+    fun editMerchantDataSuccess(id: Long) {
+        currentAnim.value = AnimationType.EDIT
+        currentAnimId.value = id
+        viewModelScope.launch {
+            delay(Util.LIST_ITEM_ANIM_DELAY)
+            onAnimationComplete(AnimationType.EDIT)
         }
-
     }
 
-    fun onEditClick(onSuccess: (Long) -> Unit) {
-        if (selectedList.size > 0) {
-            onSuccess(selectedList[0])
-            clearSelection()
-        }
+    fun addMerchantDataSuccess(id: Long) {
+        currentAnim.value = AnimationType.ADD
+        currentAnimId.value = id
+        viewModelScope.launch {
+            delay(Util.LIST_ITEM_ANIM_DELAY)
+            onAnimationComplete(AnimationType.ADD)
 
+        }
+    }
+
+    fun onAnimationComplete(animationType: AnimationType) {
+        currentAnim.value = AnimationType.NONE
+        currentAnimId.value = -1L
+
+        when (animationType) {
+            AnimationType.DELETE -> {
+                clearSelection()
+                loadData()
+            }
+
+            else -> {}
+        }
     }
 }

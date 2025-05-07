@@ -11,6 +11,7 @@ import com.indie.apps.pennypal.domain.usecase.SearchMerchantListUseCase
 import com.indie.apps.pennypal.presentation.ui.state.PagingState
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.util.Util
+import com.indie.apps.pennypal.util.app_enum.AnimationType
 import com.indie.apps.pennypal.util.app_enum.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -40,10 +41,8 @@ class MerchantViewModel @Inject constructor(
     var isEditable = MutableStateFlow(false)
     var isDeletable = MutableStateFlow(false)
 
-    var deleteAnimRun = MutableStateFlow(false)
-    var addAnimRun = MutableStateFlow(false)
-    var addDataAnimRun = MutableStateFlow(false)
-    var editAnimRun = MutableStateFlow(false)
+    val currentAnim = MutableStateFlow(AnimationType.NONE)
+    val currentAnimId = MutableStateFlow(-1L)
     private lateinit var previousData: PagingData<Merchant>
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -53,7 +52,7 @@ class MerchantViewModel @Inject constructor(
         }
         .map { item ->
 
-            if (!deleteAnimRun.value) {
+            if (currentAnim.value != AnimationType.DELETE) {
                 previousData = item
             }
             previousData
@@ -80,54 +79,6 @@ class MerchantViewModel @Inject constructor(
         }
     }
 
-    fun addMerchantSuccess() {
-        clearSelection()
-        clearSearch()
-        searchData()
-        scrollIndex.value = 0
-        scrollOffset.value = 0
-
-        addAnimRun.value = true
-
-        viewModelScope.launch {
-            delay(Util.LIST_ITEM_ANIM_DELAY)
-            addMerchantSuccessAnimStop()
-        }
-    }
-
-    fun addMerchantSuccessAnimStop() {
-        if (addAnimRun.value)
-            addAnimRun.value = false
-    }
-
-    fun editMerchantSuccess() {
-        clearSelection()
-        searchData()
-        //clearSearch()
-
-        editAnimRun.value = true
-
-        viewModelScope.launch {
-            delay(Util.LIST_ITEM_ANIM_DELAY)
-            editAnimRun.value = false
-        }
-    }
-
-    fun addMerchantDataSuccess() {
-
-        clearSelection()
-        clearSearch()
-        searchData()
-        scrollIndex.value = 0
-        scrollOffset.value = 0
-
-        addDataAnimRun.value = true
-
-        viewModelScope.launch {
-            delay(Util.LIST_ITEM_ANIM_DELAY)
-            addDataAnimRun.value = false
-        }
-    }
 
     fun onEditClick(onSuccess: (Long) -> Unit) {
         val id = selectedList[0]
@@ -140,39 +91,6 @@ class MerchantViewModel @Inject constructor(
 
     fun onAddClick(onSuccess: () -> Unit) {
         onSuccess()
-    }
-
-    fun onDeleteDialogClick(onSuccess: () -> Unit) {
-        deleteAnimRun.value = true
-        viewModelScope.launch {
-            deleteMultipleMerchantUseCase
-                .deleteData(selectedList)
-                .collect {
-                    when (it) {
-                        is Resource.Loading -> {}
-                        is Resource.Success -> {
-                            onSuccess()
-
-                            delay(Util.LIST_ITEM_ANIM_DELAY)
-                            onDeleteAnimStop()
-
-                        }
-
-                        is Resource.Error -> {
-                        }
-                    }
-                }
-        }
-
-    }
-
-    private fun onDeleteAnimStop() {
-        if (deleteAnimRun.value) {
-            deleteAnimRun.value = false
-            clearSelection()
-            searchData()
-        }
-
     }
 
     fun onItemClick(id: Long, callBack: (Long) -> Unit) {
@@ -235,6 +153,91 @@ class MerchantViewModel @Inject constructor(
             searchData()
         } else
             onSuccess()
+    }
+
+    fun onDeleteDialogClick(onSuccess: () -> Unit) {
+        currentAnim.value = AnimationType.DELETE
+        viewModelScope.launch {
+            deleteMultipleMerchantUseCase
+                .deleteData(selectedList)
+                .collect {
+                    when (it) {
+                        is Resource.Loading -> {}
+                        is Resource.Success -> {
+                            onSuccess()
+
+                            delay(Util.LIST_ITEM_ANIM_DELAY)
+                            onAnimationComplete(AnimationType.DELETE)
+
+                        }
+
+                        is Resource.Error -> {
+                        }
+                    }
+                }
+        }
+
+    }
+
+    fun addMerchantSuccess(id: Long) {
+        clearSelection()
+        clearSearch()
+        searchData()
+        scrollIndex.value = 0
+        scrollOffset.value = 0
+
+        currentAnim.value = AnimationType.ADD
+        currentAnimId.value = id
+
+        viewModelScope.launch {
+            delay(Util.LIST_ITEM_ANIM_DELAY)
+            onAnimationComplete(AnimationType.ADD)
+        }
+    }
+
+    fun editMerchantSuccess(id: Long) {
+        clearSelection()
+        searchData()
+        //clearSearch()
+
+        currentAnim.value = AnimationType.EDIT
+        currentAnimId.value = id
+
+        viewModelScope.launch {
+            delay(Util.LIST_ITEM_ANIM_DELAY)
+            onAnimationComplete(AnimationType.EDIT)
+        }
+    }
+
+    fun addMerchantDataSuccess(id: Long) {
+
+        clearSelection()
+        clearSearch()
+        searchData()
+        scrollIndex.value = 0
+        scrollOffset.value = 0
+
+        currentAnim.value = AnimationType.EDIT
+        currentAnimId.value = id
+
+        viewModelScope.launch {
+            delay(Util.LIST_ITEM_ANIM_DELAY)
+            onAnimationComplete(AnimationType.EDIT)
+        }
+    }
+
+    fun onAnimationComplete(animationType: AnimationType) {
+        currentAnim.value = AnimationType.NONE
+        currentAnimId.value = -1L
+
+        when (animationType) {
+            AnimationType.DELETE -> {
+                clearSelection()
+                searchData()
+            }
+
+            else -> {}
+        }
     }
 
 }

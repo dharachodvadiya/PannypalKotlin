@@ -66,6 +66,60 @@ fun Modifier.addAnimTopDown(
     }
 }
 
+@SuppressLint("ModifierFactoryUnreferencedReceiver", "CoroutineCreationDuringComposition")
+@Composable
+fun Modifier.addAnimTopDownToLeft(
+    scope: CoroutineScope,
+    onComplete: () -> Unit = {}
+): Modifier {
+
+    val scale = remember {
+        Animatable(0f)
+    }
+
+    scope.launch {
+        scale.animateTo(
+            targetValue = 1f,
+            animationSpec = tween(Util.ADD_ITEM_ANIM_TIME)
+        )
+    }
+    if (scale.value >= 0.99f) {
+        onComplete()
+    }
+    return Modifier.graphicsLayer {
+        scaleX = scale.value
+        scaleY = scale.value
+        transformOrigin = TransformOrigin(1f, 0f) // Center horizontally, top vertically
+    }
+}
+
+@SuppressLint("ModifierFactoryUnreferencedReceiver", "CoroutineCreationDuringComposition")
+@Composable
+fun Modifier.addAnimTopDownToRight(
+    scope: CoroutineScope,
+    onComplete: () -> Unit = {}
+): Modifier {
+
+    val scale = remember {
+        Animatable(0f)
+    }
+
+    scope.launch {
+        scale.animateTo(
+            targetValue = 1f,
+            animationSpec = tween(Util.ADD_ITEM_ANIM_TIME)
+        )
+    }
+    if (scale.value >= 0.99f) {
+        onComplete()
+    }
+    return Modifier.graphicsLayer {
+        scaleX = scale.value
+        scaleY = scale.value
+        transformOrigin = TransformOrigin(0f, 0f) // Center horizontally, top vertically
+    }
+}
+
 @SuppressLint("CoroutineCreationDuringComposition", "ModifierFactoryUnreferencedReceiver")
 @Composable
 fun Modifier.editAnim(

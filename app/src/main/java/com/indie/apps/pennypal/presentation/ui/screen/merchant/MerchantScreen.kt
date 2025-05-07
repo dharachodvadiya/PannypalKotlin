@@ -4,8 +4,6 @@ import android.annotation.SuppressLint
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideOutVertically
@@ -35,7 +33,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -50,13 +47,16 @@ import com.indie.apps.pennypal.data.database.db_entity.toMerchantNameAndDetails
 import com.indie.apps.pennypal.presentation.ui.component.composable.common.NoDataMessage
 import com.indie.apps.pennypal.presentation.ui.component.composable.custom.ConfirmationDialog
 import com.indie.apps.pennypal.presentation.ui.component.composable.custom.SearchView
+import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.addAnim
 import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.backgroundGradientsBrush
+import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.editAnim
 import com.indie.apps.pennypal.presentation.ui.component.extension.showToast
 import com.indie.apps.pennypal.presentation.ui.screen.InAppFeedbackViewModel
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.util.Util
+import com.indie.apps.pennypal.util.app_enum.AnimationType
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
@@ -92,17 +92,8 @@ fun MerchantScreen(
     val scrollIndex by merchantViewModel.scrollIndex.collectAsStateWithLifecycle()
     val selectedList = merchantViewModel.selectedList
 
-    val addAnimRun by merchantViewModel.addAnimRun.collectAsStateWithLifecycle()
-    val addDataAnimRun by merchantViewModel.addDataAnimRun.collectAsStateWithLifecycle()
-    val editAnimRun by merchantViewModel.editAnimRun.collectAsStateWithLifecycle()
-    val deleteAnimRun by merchantViewModel.deleteAnimRun.collectAsStateWithLifecycle()
-
-    var addMerchantId by remember {
-        mutableLongStateOf(-1L)
-    }
-    var editMerchantId by remember {
-        mutableLongStateOf(-1L)
-    }
+    val currentAnim by merchantViewModel.currentAnim.collectAsStateWithLifecycle()
+    val currentAnimId by merchantViewModel.currentAnimId.collectAsStateWithLifecycle()
 
     BackHandler {
         merchantViewModel.onBackClick {
@@ -112,13 +103,11 @@ fun MerchantScreen(
 
     LaunchedEffect(editAddId) {
         if (isAddSuccess) {
-            addMerchantId = editAddId
-            merchantViewModel.addMerchantSuccess()
+            merchantViewModel.addMerchantSuccess(editAddId)
             inAppFeedbackViewModel.triggerReview(context)
         }
         if (isEditSuccess) {
-            editMerchantId = editAddId
-            merchantViewModel.editMerchantSuccess()
+            merchantViewModel.editMerchantSuccess(editAddId)
         }
     }
 
@@ -126,12 +115,12 @@ fun MerchantScreen(
         mutableLongStateOf(-1L)
     }
 
-    LaunchedEffect(merchantId) {
+    /*LaunchedEffect(merchantId) {
         if (isAddMerchantDataSuccess) {
             addMerchantDataId = merchantId
             merchantViewModel.addMerchantDataSuccess()
         }
-    }
+    }*/
 
     var openAlertDialog by remember { mutableStateOf(false) }
 
@@ -238,16 +227,8 @@ fun MerchantScreen(
                         count = lazyPagingData.itemCount,
                         key = lazyPagingData.itemKey { item -> item.id }
                     ) { index ->
-                        val itemAnimateScale = remember {
-                            Animatable(0f)
-                        }
-
-                        /*val itemAnimateScaleDown = remember {
-                            Animatable(1f)
-                        }*/
 
                         val baseColor = MyAppTheme.colors.itemBg
-                        val targetAnimColor = MyAppTheme.colors.lightBlue1
 
                         val itemAnimateColor = remember {
                             Animatable(baseColor)
@@ -256,54 +237,28 @@ fun MerchantScreen(
                         val data = lazyPagingData[index]
                         if (data != null) {
 
-                            val modifierAdd: Modifier =
-                                if (addMerchantId == data.id && addAnimRun) {
-                                    scope.launch {
-                                        itemAnimateScale.animateTo(
-                                            targetValue = 1f,
-                                            animationSpec = tween(Util.ADD_ITEM_ANIM_TIME)
+                            val modifierAnim = if (currentAnimId == data.id) {
+                                when (currentAnim) {
+                                    AnimationType.ADD -> Modifier.addAnim(scope) {
+                                        merchantViewModel.onAnimationComplete(
+                                            AnimationType.ADD
                                         )
                                     }
-                                    if (itemAnimateScale.value == 1f) {
-                                        merchantViewModel.addMerchantSuccessAnimStop()
-                                    }
-                                    Modifier.scale(itemAnimateScale.value)
-                                }/* else if (deleteAnimRun &&
-                                selectedList.contains(data.id)
-                            ) {
-                                scope.launch {
-                                    itemAnimateScaleDown.animateTo(
-                                        targetValue = 0.0f,
-                                        animationSpec = tween(50)
-                                    )
+
+                                    AnimationType.EDIT -> Modifier.editAnim(
+                                        scope,
+                                        itemAnimateColor
+                                    ) { merchantViewModel.onAnimationComplete(AnimationType.EDIT) }
+
+                                    else -> Modifier
                                 }
-                                if (itemAnimateScaleDown.value < 0.02) {
-                                    merchantViewModel.onDeleteAnimStop()
-                                }
-                                Modifier.scale(itemAnimateScaleDown.value)
-                            }*/ else if ((editMerchantId == data.id && editAnimRun) ||
-                                    (addMerchantDataId == data.id && addDataAnimRun)
-                                ) {
-                                    scope.launch {
-                                        itemAnimateColor.animateTo(
-                                            targetValue = targetAnimColor,
-                                            animationSpec = tween(Util.EDIT_ITEM_ANIM_TIME)
-                                        )
-                                        itemAnimateColor.animateTo(
-                                            targetValue = baseColor,
-                                            animationSpec = tween(Util.EDIT_ITEM_ANIM_TIME)
-                                        )
-                                    }
-                                    Modifier
-                                } else {
-                                    Modifier
-                                }
+                            } else Modifier
 
                             var visible by remember {
                                 mutableStateOf(true)
                             }
 
-                            if (deleteAnimRun &&
+                            if (currentAnim == AnimationType.DELETE &&
                                 selectedList.contains(data.id)
                             ) {
                                 visible = false
@@ -326,7 +281,7 @@ fun MerchantScreen(
                                         }
                                     },
                                     onLongClick = { merchantViewModel.onItemLongClick(data.id) },
-                                    modifier = modifierAdd,
+                                    modifier = modifierAnim,
                                     itemBgColor = itemAnimateColor.value
                                 )
                             }
