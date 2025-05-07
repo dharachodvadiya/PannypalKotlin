@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.module.payment.PaymentWithMode
-import com.indie.apps.pennypal.presentation.ui.component.AccountTypeItem
+import com.indie.apps.pennypal.presentation.ui.component.composable.common.AccountTypeItem
 
 @Composable
 fun SelectPaymentDialogField(
@@ -34,7 +34,7 @@ fun SelectPaymentDialogField(
             item.modeName == "Cash"
         }
 
-        if(bankList.isNotEmpty()){
+        if (bankList.isNotEmpty()) {
 
             AccountTypeItem(
                 titleId = R.string.bank,
@@ -47,10 +47,10 @@ fun SelectPaymentDialogField(
                 }
             )
         }
-        
+
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.item_inner_padding)))
 
-        if(cashList.isNotEmpty()){
+        if (cashList.isNotEmpty()) {
             AccountTypeItem(
                 titleId = R.string.bank,
                 isSelectable = true,
