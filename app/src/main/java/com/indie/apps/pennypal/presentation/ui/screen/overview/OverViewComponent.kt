@@ -28,11 +28,8 @@ import androidx.compose.material.icons.filled.SouthWest
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -145,7 +142,8 @@ fun OverviewData(
     isSelectionEnable: Boolean,
     merchantDataId: Long = -1L,
     merchantId: Long = -1L,
-    onAnimStop: () -> Unit,
+    onAddAnimStop: () -> Unit,
+    onDeleteAnimStop: () -> Unit,
     onMerchantAnimStop: () -> Unit,
     onAddMerchant: () -> Unit
 ) {
@@ -169,7 +167,8 @@ fun OverviewData(
         isEditMerchantDataSuccess = isEditMerchantDataSuccess,
         isDeleteMerchantDataSuccess = isDeleteMerchantDataSuccess,
         merchantDataId = merchantDataId,
-        onAnimStop = onAnimStop,
+        onAddAnimStop = onAddAnimStop,
+        onDeleteAnimStop = onDeleteAnimStop
         //currency = currency
     )
 
@@ -321,7 +320,8 @@ fun OverviewTransactionData(
     isEditMerchantDataSuccess: Boolean = false,
     isDeleteMerchantDataSuccess: Boolean = false,
     merchantDataId: Long = -1L,
-    onAnimStop: () -> Unit,
+    onAddAnimStop: () -> Unit,
+    onDeleteAnimStop: () -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     /* val str = when (currentPeriod) {
@@ -339,10 +339,15 @@ fun OverviewTransactionData(
             val scope = rememberCoroutineScope()
 
             if (recentTransaction.isNotEmpty()) {
+                println("aaaa 111 ${recentTransaction.size}")
                 recentTransaction.forEach { item ->
 
-                    val itemAnimateScale = remember {
+                    val itemAnimateScaleUp = remember {
                         Animatable(0f)
+                    }
+
+                    val itemAnimateScaleDown = remember {
+                        Animatable(1f)
                     }
 
                     val baseColor = MyAppTheme.colors.itemBg
@@ -355,14 +360,14 @@ fun OverviewTransactionData(
                     val modifierAdd: Modifier =
                         if (merchantDataId == item.id && isAddMerchantDataSuccess) {
                             scope.launch {
-                                itemAnimateScale.animateTo(
+                                itemAnimateScaleUp.animateTo(
                                     targetValue = 1f, animationSpec = tween(Util.ADD_ITEM_ANIM_TIME)
                                 )
                             }
-                            if (itemAnimateScale.value == 1f) {
-                                onAnimStop()
+                            if (itemAnimateScaleUp.value == 1f) {
+                                onAddAnimStop()
                             }
-                            Modifier.scale(itemAnimateScale.value)
+                            Modifier.scale(itemAnimateScaleUp.value)
                         } else if ((merchantDataId == item.id && isEditMerchantDataSuccess)) {
                             scope.launch {
                                 itemAnimateColor.animateTo(
@@ -375,6 +380,16 @@ fun OverviewTransactionData(
                                 )
                             }
                             Modifier
+                        } else if (isDeleteMerchantDataSuccess && merchantDataId == item.id) {
+                            scope.launch {
+                                itemAnimateScaleDown.animateTo(
+                                    targetValue = 0f, animationSpec = tween(Util.ADD_ITEM_ANIM_TIME)
+                                )
+                            }
+                            if (itemAnimateScaleDown.value <= 0.02) {
+                                onDeleteAnimStop()
+                            }
+                            Modifier.scale(itemAnimateScaleDown.value)
                         } else {
                             Modifier
                         }

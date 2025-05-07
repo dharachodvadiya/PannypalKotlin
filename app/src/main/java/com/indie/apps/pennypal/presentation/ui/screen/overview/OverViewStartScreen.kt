@@ -95,11 +95,11 @@ fun OverViewStartScreen(
             overViewViewModel.addMerchantDataSuccess(addEditMerchantDataId)
 
             inAppFeedbackViewModel.triggerReview(localContext)
-        }else if (isEditSuccess) {
+        } else if (isEditSuccess) {
             //addEditDataId = addEditMerchantDataId
             overViewViewModel.editDataSuccess(addEditMerchantDataId)
-        }else if (isDeleteSuccess){
-            overViewViewModel.onDeleteTransactionFromEditScreenClick(addEditMerchantDataId){
+        } else if (isDeleteSuccess) {
+            overViewViewModel.onDeleteTransactionFromEditScreenClick(addEditMerchantDataId) {
                 context.showToast(merchantDeleteToast)
             }
         }
@@ -165,8 +165,11 @@ fun OverViewStartScreen(
                 isEditMerchantDataSuccess = editAnimRun,
                 isDeleteMerchantDataSuccess = deleteAnimRun,
                 onTransactionClick = onTransactionClick,
-                onAnimStop = {
+                onAddAnimStop = {
                     overViewViewModel.addMerchantDataSuccessAnimStop()
+                },
+                onDeleteAnimStop = {
+                    overViewViewModel.onDeleteAnimStop()
                 },
                 budgetWithSpentAndCategoryIdList = budgetState.firstOrNull { it.periodType == currentBudgetPeriod.id },
                 selectBudgetPeriod = currentBudgetPeriod,

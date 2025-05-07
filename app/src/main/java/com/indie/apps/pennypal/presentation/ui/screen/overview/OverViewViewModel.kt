@@ -3,6 +3,7 @@ package com.indie.apps.pennypal.presentation.ui.screen.overview
 import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.indie.apps.pennypal.data.module.merchant_data.MerchantDataWithAllData
 import com.indie.apps.pennypal.domain.usecase.DeleteMerchantDataUseCase
 import com.indie.apps.pennypal.domain.usecase.GetCategoryWiseExpenseUseCase
 import com.indie.apps.pennypal.domain.usecase.GetTotalUseCase
@@ -18,9 +19,11 @@ import com.indie.apps.pennypal.util.Util
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Calendar
@@ -73,20 +76,26 @@ class OverViewViewModel @Inject constructor(
     var addMerchantAnimRun = MutableStateFlow(false)
         private set
 
+    private val triggerRecentTransaction = MutableSharedFlow<Unit>(replay = 1)
+    private var previousTransaction: List<MerchantDataWithAllData> = emptyList()
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val recentTransaction = triggerRecentTransaction
+        .flatMapLatest {
+            searchMerchantDataWithAllDataListUseCase
+                .getLast3DataFromPeriod(
+                    year = calendar.get(Calendar.YEAR),
+                    month = calendar.get(Calendar.MONTH),
+                )
+        }
+        .map { item ->
 
-    /*val pagedMerchantDataWithDay: Flow<PagingData<MerchantDataWithNameWithDayTotal>> =
-        getMerchantDataListWithMerchantNameAndDayTotalUseCase
-            .loadData()
-            .cachedIn(viewModelScope)
-    var merchantDataWithDayPagingState =
-        MutableStateFlow(PagingState<MerchantDataWithNameWithDayTotal>())*/
-
-    val recentTransaction = searchMerchantDataWithAllDataListUseCase
-        .getLast3DataFromPeriod(
-            year = calendar.get(Calendar.YEAR),
-            month = calendar.get(Calendar.MONTH),
-        )
+            if (!deleteAnimRun.value) {
+                previousTransaction = item
+            }
+            println("aaaa ${previousTransaction.size} .... ${item.size}")
+            previousTransaction
+        }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
 
     val recentMerchant = searchMerchantNameAndDetailListUseCase
@@ -119,9 +128,19 @@ class OverViewViewModel @Inject constructor(
     //for delete transaction animation
     var deleteAnimRun = MutableStateFlow(false)
 
+    init {
+        loadTransactionData()
+    }
+
+    private fun loadTransactionData() {
+        viewModelScope.launch {
+            triggerRecentTransaction.emit(Unit)
+        }
+    }
+
 
     @SuppressLint("SuspiciousIndentation")
-    fun addMerchantDataSuccess(id : Long) {
+    fun addMerchantDataSuccess(id: Long) {
         merchantDataAnimId.value = id
         addDataAnimRun.value = true
         viewModelScope.launch {
@@ -192,10 +211,11 @@ class OverViewViewModel @Inject constructor(
 
     }
 
-    private fun onDeleteAnimStop() {
+    fun onDeleteAnimStop() {
         if (deleteAnimRun.value) {
             merchantDataAnimId.value = -1L
             deleteAnimRun.value = false
+            loadTransactionData()
         }
 
     }
