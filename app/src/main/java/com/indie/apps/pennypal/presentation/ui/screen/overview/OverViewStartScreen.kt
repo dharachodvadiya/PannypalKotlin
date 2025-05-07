@@ -65,11 +65,10 @@ fun OverViewStartScreen(
     val isSubscribed by overViewViewModel.isSubscribed.collectAsStateWithLifecycle()
     val userData by overViewViewModel.userData.collectAsStateWithLifecycle()
     val currentTotal by overViewViewModel.currentTotal.collectAsStateWithLifecycle()
-    val addDataAnimRun by overViewViewModel.addDataAnimRun.collectAsStateWithLifecycle()
-    val editAnimRun by overViewViewModel.editAnimRun.collectAsStateWithLifecycle()
-    val deleteAnimRun by overViewViewModel.deleteAnimRun.collectAsStateWithLifecycle()
-    val addMerchantAnimRun by overViewViewModel.addMerchantAnimRun.collectAsStateWithLifecycle()
-    val merchantDataAnimId by overViewViewModel.merchantDataAnimId.collectAsStateWithLifecycle()
+    val currentMerchantAnim by overViewViewModel.currentMerchantAnim.collectAsStateWithLifecycle()
+    val currentMerchantAnimId by overViewViewModel.currentMerchantAnimId.collectAsStateWithLifecycle()
+    val currentMerchantDataAnim by overViewViewModel.currentMerchantDataAnim.collectAsStateWithLifecycle()
+    val currentMerchantDataAnimId by overViewViewModel.currentMerchantDataAnimId.collectAsStateWithLifecycle()
 
     val recentTransaction by overViewViewModel.recentTransaction.collectAsStateWithLifecycle()
     val recentMerchant by overViewViewModel.recentMerchant.collectAsStateWithLifecycle()
@@ -84,7 +83,7 @@ fun OverViewStartScreen(
 
     LaunchedEffect(addMerchantId) {
         if (addMerchantId != -1L) {
-            overViewViewModel.addMerchantSuccess()
+            overViewViewModel.addMerchantSuccess(addMerchantId)
 
             inAppFeedbackViewModel.triggerReview(localContext)
         }
@@ -123,13 +122,6 @@ fun OverViewStartScreen(
                 ),
             verticalArrangement = Arrangement.spacedBy(25.dp),
         ) {
-            /* if (currentMonthTotal == null) {
-                 LoadingWithProgress(
-                     modifier = Modifier
-                         .fillMaxWidth()
-                         .weight(1f)
-                 )
-             } else {*/
 
             OverviewTopBarProfile(
                 onClick = {},
@@ -137,17 +129,6 @@ fun OverViewStartScreen(
                 isSubscribed = isSubscribed,
                 onSubscriptionChanged = overViewViewModel::onSubscriptionChanged
             )
-
-            /* OverviewList(
-                 dataWithDayList = dataWithDayLazyPagingItems,
-                 isLoadMore = merchantDataWithDayPagingState.isLoadMore,
-                 bottomPadding = bottomPadding,
-                 merchantDataId = addDataId,
-                 isAddMerchantDataSuccess = addDataAnimRun,
-                 onAnimStop = {
-                     overViewViewModel.addMerchantDataSuccessAnimStop()
-                 }
-             )*/
 
             OverviewData(
                 currentPeriod = currentPeriod,
@@ -160,16 +141,11 @@ fun OverViewStartScreen(
                 onSeeAllMerchantClick = onSeeAllMerchantClick,
                 onExploreAnalysisClick = onExploreAnalysisClick,
                 onExploreBudgetClick = onExploreBudgetClick,
-                merchantDataId = merchantDataAnimId,
-                isAddMerchantDataSuccess = addDataAnimRun,
-                isEditMerchantDataSuccess = editAnimRun,
-                isDeleteMerchantDataSuccess = deleteAnimRun,
                 onTransactionClick = onTransactionClick,
-                onAddAnimStop = {
-                    overViewViewModel.addMerchantDataSuccessAnimStop()
-                },
-                onDeleteAnimStop = {
-                    overViewViewModel.onDeleteAnimStop()
+                merchantDataAnimId = currentMerchantDataAnimId,
+                merchantDataAnimType = currentMerchantDataAnim,
+                onMerchantDataAnimStop = {
+                    overViewViewModel.onMerchantDataAnimationComplete(it)
                 },
                 budgetWithSpentAndCategoryIdList = budgetState.firstOrNull { it.periodType == currentBudgetPeriod.id },
                 selectBudgetPeriod = currentBudgetPeriod,
@@ -181,10 +157,10 @@ fun OverViewStartScreen(
                 },
                 onAddMerchant = onAddMerchant,
                 onMerchantAnimStop = {
-                    overViewViewModel.addMerchantSuccessAnimStop()
+                    overViewViewModel.onMerchantAnimationComplete(it)
                 },
-                isAddMerchantSuccess = addMerchantAnimRun,
-                merchantId = addMerchantId,
+                merchantAnim = currentMerchantAnim,
+                merchantAnimId = currentMerchantAnimId,
                 onSetBudgetClick = onSetBudgetClick,
                 onMerchantClick = onMerchantClick,
                 isSelectionEnable = budgetState.count { it.periodType == PeriodType.MONTH.id || it.periodType == PeriodType.YEAR.id } == 2

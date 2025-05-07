@@ -14,6 +14,7 @@ import com.indie.apps.pennypal.repository.BudgetRepository
 import com.indie.apps.pennypal.repository.PreferenceRepository
 import com.indie.apps.pennypal.repository.UserRepository
 import com.indie.apps.pennypal.util.Util
+import com.indie.apps.pennypal.util.app_enum.AnimationType
 import com.indie.apps.pennypal.util.app_enum.Resource
 import com.indie.apps.pennypal.util.app_enum.ShowDataPeriod
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -42,14 +43,9 @@ class OverViewViewModel @Inject constructor(
     private val billingRepository: BillingRepository,
 ) : ViewModel() {
 
-    /* val currency = userRepository.getCurrency()
-         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), "$")*/
-
     private val calendar: Calendar = Calendar.getInstance()
     private val periodIndex = preferenceRepository.getInt(Util.PREF_BALANCE_VIEW, 1)
     val currentPeriod = MutableStateFlow(ShowDataPeriod.fromIndex(periodIndex))
-
-    //val searchTextState by mutableStateOf(TextFieldState())
 
     val userData = userRepository.getUser()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), null)
@@ -67,14 +63,11 @@ class OverViewViewModel @Inject constructor(
             )
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), null)
 
-    var addDataAnimRun = MutableStateFlow(false)
-        private set
-    var editAnimRun = MutableStateFlow(false)
+    val currentMerchantDataAnimId = MutableStateFlow(-1L)
+    val currentMerchantDataAnim = MutableStateFlow(AnimationType.NONE)
 
-    val merchantDataAnimId = MutableStateFlow(-1L)
-
-    var addMerchantAnimRun = MutableStateFlow(false)
-        private set
+    val currentMerchantAnim = MutableStateFlow(AnimationType.NONE)
+    val currentMerchantAnimId = MutableStateFlow(-1L)
 
     private val triggerRecentTransaction = MutableSharedFlow<Unit>(replay = 1)
     private var previousTransaction: List<MerchantDataWithAllData> = emptyList()
@@ -90,10 +83,9 @@ class OverViewViewModel @Inject constructor(
         }
         .map { item ->
 
-            if (!deleteAnimRun.value) {
+            if (currentMerchantDataAnim.value != AnimationType.DELETE) {
                 previousTransaction = item
             }
-            println("aaaa ${previousTransaction.size} .... ${item.size}")
             previousTransaction
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
@@ -125,9 +117,6 @@ class OverViewViewModel @Inject constructor(
 
     val isSubscribed = MutableStateFlow(billingRepository.getSubscription())
 
-    //for delete transaction animation
-    var deleteAnimRun = MutableStateFlow(false)
-
     init {
         loadTransactionData()
     }
@@ -138,58 +127,14 @@ class OverViewViewModel @Inject constructor(
         }
     }
 
-
-    @SuppressLint("SuspiciousIndentation")
-    fun addMerchantDataSuccess(id: Long) {
-        merchantDataAnimId.value = id
-        addDataAnimRun.value = true
-        viewModelScope.launch {
-            delay(Util.LIST_ITEM_ANIM_DELAY)
-            addMerchantDataSuccessAnimStop()
-        }
-    }
-
-    fun addMerchantDataSuccessAnimStop() {
-        if (addDataAnimRun.value) {
-            addDataAnimRun.value = false
-            merchantDataAnimId.value = -1L
-        }
-    }
-
-    @SuppressLint("SuspiciousIndentation")
-    fun addMerchantSuccess() {
-        addMerchantAnimRun.value = true
-        viewModelScope.launch {
-            delay(Util.LIST_ITEM_ANIM_DELAY)
-            addMerchantSuccessAnimStop()
-        }
-    }
-
-    fun addMerchantSuccessAnimStop() {
-        if (addMerchantAnimRun.value)
-            addMerchantAnimRun.value = false
-    }
-
-    fun editDataSuccess(id: Long) {
-        viewModelScope.launch {
-            delay(10L)
-            merchantDataAnimId.value = id
-            editAnimRun.value = true
-
-            delay(Util.LIST_ITEM_ANIM_DELAY)
-            editAnimRun.value = false
-            merchantDataAnimId.value = -1L
-        }
-    }
-
     fun onSubscriptionChanged(isSubscribed: Boolean) {
         billingRepository.setSubscription(isSubscribed)
         this.isSubscribed.value = isSubscribed
     }
 
     fun onDeleteTransactionFromEditScreenClick(id: Long, onSuccess: () -> Unit) {
-        merchantDataAnimId.value = id
-        deleteAnimRun.value = true
+        this.currentMerchantDataAnimId.value = id
+        currentMerchantDataAnim.value = AnimationType.DELETE
         viewModelScope.launch {
             deleteMultipleMerchantDataUseCase
                 .deleteData(id)
@@ -199,7 +144,7 @@ class OverViewViewModel @Inject constructor(
                         is Resource.Success -> {
                             onSuccess()
                             delay(Util.LIST_ITEM_ANIM_DELAY)
-                            onDeleteAnimStop()
+                            onMerchantDataAnimationComplete(AnimationType.DELETE)
 
                         }
 
@@ -211,16 +156,56 @@ class OverViewViewModel @Inject constructor(
 
     }
 
-    fun onDeleteAnimStop() {
-        if (deleteAnimRun.value) {
-            merchantDataAnimId.value = -1L
-            deleteAnimRun.value = false
-            loadTransactionData()
+    @SuppressLint("SuspiciousIndentation")
+    fun addMerchantDataSuccess(id: Long) {
+        this.currentMerchantDataAnimId.value = id
+        currentMerchantDataAnim.value = AnimationType.ADD
+        viewModelScope.launch {
+            delay(Util.LIST_ITEM_ANIM_DELAY)
+            onMerchantDataAnimationComplete(AnimationType.ADD)
         }
-
     }
 
-    /*fun getSymbolFromCurrencyCode(currencyCode: String): String {
-        return countryRepository.getSymbolFromCurrencyCode(currencyCode)
-    }*/
+    fun editDataSuccess(id: Long) {
+        currentMerchantDataAnimId.value = id
+        currentMerchantDataAnim.value = AnimationType.EDIT
+        viewModelScope.launch {
+            delay(10L)
+
+
+            delay(Util.LIST_ITEM_ANIM_DELAY)
+            onMerchantDataAnimationComplete(AnimationType.EDIT)
+        }
+    }
+
+    @SuppressLint("SuspiciousIndentation")
+    fun addMerchantSuccess(id: Long) {
+        currentMerchantAnimId.value = id
+        currentMerchantAnim.value = AnimationType.EDIT
+        viewModelScope.launch {
+            delay(Util.LIST_ITEM_ANIM_DELAY)
+            onMerchantAnimationComplete(AnimationType.ADD)
+        }
+    }
+
+
+
+    fun onMerchantDataAnimationComplete(animationType: AnimationType) {
+        currentMerchantDataAnim.value = AnimationType.NONE
+        currentMerchantDataAnimId.value = -1L
+
+        when (animationType) {
+            AnimationType.DELETE -> {
+                loadTransactionData()
+            }
+
+            else -> {}
+        }
+    }
+
+    fun onMerchantAnimationComplete(animationType: AnimationType) {
+        currentMerchantAnim.value = AnimationType.NONE
+        currentMerchantAnimId.value = -1L
+
+    }
 }

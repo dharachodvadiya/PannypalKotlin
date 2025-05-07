@@ -2,8 +2,6 @@ package com.indie.apps.pennypal.presentation.ui.screen.overview
 
 import android.annotation.SuppressLint
 import androidx.annotation.StringRes
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -34,7 +32,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -62,20 +59,23 @@ import com.indie.apps.pennypal.presentation.ui.component.composable.custom.Custo
 import com.indie.apps.pennypal.presentation.ui.component.composable.custom.PrimaryButton
 import com.indie.apps.pennypal.presentation.ui.component.composable.custom.RoundImage
 import com.indie.apps.pennypal.presentation.ui.component.composable.custom.RoundImageWithText
+import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.addAnim
 import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.clickableWithNoRipple
+import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.editAnim
+import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.removeAnim
 import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.screen.all_data.TransactionItem
 import com.indie.apps.pennypal.presentation.ui.screen.single_budget_analysis.SingleBudgetOverAllAnalysis
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.util.Util
+import com.indie.apps.pennypal.util.app_enum.AnimationType
 import com.indie.apps.pennypal.util.app_enum.PeriodType
 import com.indie.apps.pennypal.util.app_enum.ShowDataPeriod
 import com.indie.apps.pennypal.util.internanal.method.getCategoryColorById
 import com.indie.apps.pennypal.util.internanal.method.getColorFromId
 import com.indie.apps.pennypal.util.internanal.method.getDateFromMillis
 import com.indie.apps.pennypal.util.internanal.method.getFirstCharacterUppercase
-import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import kotlin.enums.EnumEntries
 
@@ -135,16 +135,13 @@ fun OverviewData(
     onSetBudgetClick: (Int) -> Unit,
     onTransactionClick: (Long) -> Unit,
     onMerchantClick: (Long) -> Unit,
-    isAddMerchantDataSuccess: Boolean = false,
-    isEditMerchantDataSuccess: Boolean = false,
-    isDeleteMerchantDataSuccess: Boolean = false,
-    isAddMerchantSuccess: Boolean = false,
+    merchantDataAnimType: AnimationType = AnimationType.NONE,
+    merchantAnim: AnimationType = AnimationType.NONE,
     isSelectionEnable: Boolean,
-    merchantDataId: Long = -1L,
-    merchantId: Long = -1L,
-    onAddAnimStop: () -> Unit,
-    onDeleteAnimStop: () -> Unit,
-    onMerchantAnimStop: () -> Unit,
+    merchantDataAnimId: Long = -1L,
+    merchantAnimId: Long = -1L,
+    onMerchantDataAnimStop: (AnimationType) -> Unit,
+    onMerchantAnimStop: (AnimationType) -> Unit,
     onAddMerchant: () -> Unit
 ) {
 
@@ -159,16 +156,12 @@ fun OverviewData(
     )
 
     OverviewTransactionData(
-        currentPeriod = currentPeriod,
         onTransactionClick = onTransactionClick,
         recentTransaction = recentTransaction,
         onSeeAllTransactionClick = onSeeAllTransactionClick,
-        isAddMerchantDataSuccess = isAddMerchantDataSuccess,
-        isEditMerchantDataSuccess = isEditMerchantDataSuccess,
-        isDeleteMerchantDataSuccess = isDeleteMerchantDataSuccess,
-        merchantDataId = merchantDataId,
-        onAddAnimStop = onAddAnimStop,
-        onDeleteAnimStop = onDeleteAnimStop
+        merchantDataAnimType = merchantDataAnimType,
+        merchantDataAnimId = merchantDataAnimId,
+        onAddAnimStop = onMerchantDataAnimStop,
         //currency = currency
     )
 
@@ -176,8 +169,8 @@ fun OverviewData(
         recentMerchant = recentMerchant,
         onSeeAllMerchantClick = onSeeAllMerchantClick,
         onAddMerchant = onAddMerchant,
-        isAddMerchantSuccess = isAddMerchantSuccess,
-        merchantId = merchantId,
+        merchantAnim = merchantAnim,
+        merchantId = merchantAnimId,
         onAnimStop = onMerchantAnimStop,
         onMerchantClick = onMerchantClick
     )
@@ -311,17 +304,12 @@ fun OverviewBalanceView(
 
 @Composable
 fun OverviewTransactionData(
-    currentPeriod: ShowDataPeriod?,
     recentTransaction: List<MerchantDataWithAllData>,
-    //currency: String,
     onSeeAllTransactionClick: () -> Unit,
     onTransactionClick: (Long) -> Unit,
-    isAddMerchantDataSuccess: Boolean = false,
-    isEditMerchantDataSuccess: Boolean = false,
-    isDeleteMerchantDataSuccess: Boolean = false,
-    merchantDataId: Long = -1L,
-    onAddAnimStop: () -> Unit,
-    onDeleteAnimStop: () -> Unit,
+    merchantDataAnimType: AnimationType = AnimationType.NONE,
+    merchantDataAnimId: Long = -1L,
+    onAddAnimStop: (AnimationType) -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     /* val str = when (currentPeriod) {
@@ -342,57 +330,34 @@ fun OverviewTransactionData(
                 println("aaaa 111 ${recentTransaction.size}")
                 recentTransaction.forEach { item ->
 
-                    val itemAnimateScaleUp = remember {
-                        Animatable(0f)
-                    }
-
-                    val itemAnimateScaleDown = remember {
-                        Animatable(1f)
-                    }
-
                     val baseColor = MyAppTheme.colors.itemBg
-                    val targetAnimColor = MyAppTheme.colors.lightBlue1
 
                     val itemAnimateColor = remember {
                         androidx.compose.animation.Animatable(baseColor)
                     }
 
-                    val modifierAdd: Modifier =
-                        if (merchantDataId == item.id && isAddMerchantDataSuccess) {
-                            scope.launch {
-                                itemAnimateScaleUp.animateTo(
-                                    targetValue = 1f, animationSpec = tween(Util.ADD_ITEM_ANIM_TIME)
+                    val modifierAnim = if (merchantDataAnimId == item.id) {
+                        when (merchantDataAnimType) {
+                            AnimationType.ADD -> Modifier.addAnim(scope) {
+                                onAddAnimStop(
+                                    AnimationType.ADD
                                 )
                             }
-                            if (itemAnimateScaleUp.value == 1f) {
-                                onAddAnimStop()
-                            }
-                            Modifier.scale(itemAnimateScaleUp.value)
-                        } else if ((merchantDataId == item.id && isEditMerchantDataSuccess)) {
-                            scope.launch {
-                                itemAnimateColor.animateTo(
-                                    targetValue = targetAnimColor,
-                                    animationSpec = tween(Util.EDIT_ITEM_ANIM_TIME)
-                                )
-                                itemAnimateColor.animateTo(
-                                    targetValue = baseColor,
-                                    animationSpec = tween(Util.EDIT_ITEM_ANIM_TIME)
+
+                            AnimationType.EDIT -> Modifier.editAnim(
+                                scope,
+                                itemAnimateColor
+                            ) { onAddAnimStop(AnimationType.EDIT) }
+
+                            AnimationType.DELETE -> Modifier.removeAnim(scope) {
+                                onAddAnimStop(
+                                    AnimationType.DELETE
                                 )
                             }
-                            Modifier
-                        } else if (isDeleteMerchantDataSuccess && merchantDataId == item.id) {
-                            scope.launch {
-                                itemAnimateScaleDown.animateTo(
-                                    targetValue = 0f, animationSpec = tween(Util.ADD_ITEM_ANIM_TIME)
-                                )
-                            }
-                            if (itemAnimateScaleDown.value <= 0.02) {
-                                onDeleteAnimStop()
-                            }
-                            Modifier.scale(itemAnimateScaleDown.value)
-                        } else {
-                            Modifier
+
+                            else -> Modifier
                         }
+                    } else Modifier
 
                     TransactionItem(
                         item = item,
@@ -402,7 +367,7 @@ fun OverviewTransactionData(
                         },
                         onLongClick = { },
                         itemBgColor = itemAnimateColor.value,
-                        modifier = modifierAdd,
+                        modifier = modifierAnim,
                         //currency = currency
                     )
                 }
@@ -426,9 +391,9 @@ fun OverviewMerchantData(
     recentMerchant: List<MerchantNameAndDetails>,
     onSeeAllMerchantClick: () -> Unit,
     onAddMerchant: () -> Unit,
-    isAddMerchantSuccess: Boolean = false,
+    merchantAnim: AnimationType = AnimationType.NONE,
     merchantId: Long = -1L,
-    onAnimStop: () -> Unit,
+    onAnimStop: (AnimationType) -> Unit,
     onMerchantClick: (Long) -> Unit,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
@@ -444,29 +409,21 @@ fun OverviewMerchantData(
 
                 recentMerchant.forEach { item ->
 
-                    val itemAnimateScale = remember {
-                        Animatable(0f)
-                    }
-                    val modifierAdd: Modifier = if (merchantId == item.id && isAddMerchantSuccess) {
-                        scope.launch {
-
-                            itemAnimateScale.animateTo(
-                                targetValue = 1f, animationSpec = tween(Util.ADD_ITEM_ANIM_TIME)
-                            )
-                            if (itemAnimateScale.value == 1f) {
-                                itemAnimateScale.snapTo(0f)
-                                onAnimStop()
+                    val modifierAnim = if (merchantId == item.id) {
+                        when (merchantAnim) {
+                            AnimationType.ADD -> Modifier.addAnim(scope) {
+                                onAnimStop(
+                                    AnimationType.ADD
+                                )
                             }
-                        }
 
-                        Modifier.scale(itemAnimateScale.value)
-                    } else {
-                        Modifier
-                    }
+                            else -> Modifier
+                        }
+                    } else Modifier
 
                     MerchantItem(
                         item = item,
-                        modifier = modifierAdd,
+                        modifier = modifierAnim,
                         onClick = {
                             onMerchantClick(item.id)
                         }
