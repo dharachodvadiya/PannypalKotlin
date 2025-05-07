@@ -10,6 +10,7 @@ import com.indie.apps.pennypal.domain.usecase.GetBudgetsAndSpentWithCategoryIdLi
 import com.indie.apps.pennypal.domain.usecase.GetPastBudgetsAndSpentWithCategoryIdListFromPeriodType
 import com.indie.apps.pennypal.domain.usecase.GetUpComingBudgetsAndSpentWithCategoryIdListFromPeriodType
 import com.indie.apps.pennypal.util.Util
+import com.indie.apps.pennypal.util.app_enum.AnimationType
 import com.indie.apps.pennypal.util.app_enum.PeriodType
 import com.indie.apps.pennypal.util.app_enum.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -32,12 +33,8 @@ class BudgetViewModel @Inject constructor(
     getBudgetsAndSpentWithCategoryIdListUseCase: GetBudgetsAndSpentWithCategoryIdListUseCase,
     getPastBudgetsAndSpentWithCategoryIdListFromPeriodType: GetPastBudgetsAndSpentWithCategoryIdListFromPeriodType,
     getUpComingBudgetsAndSpentWithCategoryIdListFromPeriodType: GetUpComingBudgetsAndSpentWithCategoryIdListFromPeriodType,
-    private val deleteSingleBudgetDataUseCase: DeleteSingleBudgetDataUseCase,
-    //userRepository: UserRepository,
+    private val deleteSingleBudgetDataUseCase: DeleteSingleBudgetDataUseCase
 ) : ViewModel() {
-
-    /*val currency = userRepository.getCurrency()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), "$")*/
 
     private val calendar: Calendar = Calendar.getInstance()
     val currentPeriod = MutableStateFlow(PeriodType.MONTH)
@@ -48,11 +45,8 @@ class BudgetViewModel @Inject constructor(
     val isExpandOneTimeUpcomingData = MutableStateFlow(false)
     val isExpandOneTimeActiveData = MutableStateFlow(true)
 
-
-    var deleteAnimRun = MutableStateFlow(false)
-    var addAnimRun = MutableStateFlow(false)
-
-    val budgetAnimId = MutableStateFlow(-1L)
+    val currentAnimId = MutableStateFlow(-1L)
+    val currentAnim = MutableStateFlow(AnimationType.NONE)
 
     private val triggerPastBudget = MutableSharedFlow<Unit>(replay = 1)
     private var previousDataPastBudget: PagingData<BudgetWithSpentAndCategoryIdList>? = null
@@ -69,7 +63,7 @@ class BudgetViewModel @Inject constructor(
         }
         .map { item ->
 
-            if (!deleteAnimRun.value || previousDataPastBudget == null) {
+            if (currentAnim.value != AnimationType.DELETE || previousDataPastBudget == null) {
                 previousDataPastBudget = item
             }
             previousDataPastBudget!!
@@ -91,7 +85,7 @@ class BudgetViewModel @Inject constructor(
         }
         .map { item ->
 
-            if (!deleteAnimRun.value || previousDataUpComingBudget == null) {
+            if (currentAnim.value != AnimationType.DELETE || previousDataUpComingBudget == null) {
                 previousDataUpComingBudget = item
             }
             previousDataUpComingBudget!!
@@ -114,7 +108,7 @@ class BudgetViewModel @Inject constructor(
         }
         .map { item ->
 
-            if (!deleteAnimRun.value) {
+            if (currentAnim.value != AnimationType.DELETE) {
                 previousDataBudget = item
             }
             previousDataBudget
@@ -257,24 +251,18 @@ class BudgetViewModel @Inject constructor(
     fun addBudgetSuccess(id: Long) {
 
 
-        budgetAnimId.value = id
-        addAnimRun.value = true
+        currentAnimId.value = id
+        currentAnim.value = AnimationType.ADD
 
         viewModelScope.launch {
             delay(Util.LIST_ITEM_ANIM_DELAY)
-            addBudgetSuccessAnimStop()
-            budgetAnimId.value = -1L
+            onAnimationComplete(AnimationType.ADD)
         }
     }
 
-    fun addBudgetSuccessAnimStop() {
-        if (addAnimRun.value)
-            addAnimRun.value = false
-    }
-
     fun onDeleteFromEditScreenClick(id: Long, onSuccess: () -> Unit) {
-        budgetAnimId.value = id
-        deleteAnimRun.value = true
+        currentAnimId.value = id
+        currentAnim.value = AnimationType.DELETE
         viewModelScope.launch {
             deleteSingleBudgetDataUseCase
                 .deleteBudgetFromId(id)
@@ -284,7 +272,7 @@ class BudgetViewModel @Inject constructor(
                         is Resource.Success -> {
                             onSuccess()
                             delay(Util.LIST_ITEM_ANIM_DELAY)
-                            onDeleteAnimStop()
+                            onAnimationComplete(AnimationType.DELETE)
                         }
 
                         is Resource.Error -> {
@@ -296,13 +284,17 @@ class BudgetViewModel @Inject constructor(
 
     }
 
-    fun onDeleteAnimStop() {
-        if (deleteAnimRun.value) {
-            budgetAnimId.value = -1L
-            deleteAnimRun.value = false
-            loadData()
-        }
+    fun onAnimationComplete(animationType: AnimationType) {
+        currentAnim.value = AnimationType.NONE
+        currentAnimId.value = -1L
 
+        when (animationType) {
+            AnimationType.DELETE -> {
+                loadData()
+            }
+
+            else -> {}
+        }
     }
 
 }

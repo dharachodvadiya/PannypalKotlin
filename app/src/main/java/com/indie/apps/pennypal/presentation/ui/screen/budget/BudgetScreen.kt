@@ -68,9 +68,8 @@ fun BudgetScreen(
     val pagedDataUpcomingBudget = budgetViewModel.pagedDataUpcomingBudget.collectAsLazyPagingItems()
     val pagedDataPastBudget = budgetViewModel.pagedDataPastBudget.collectAsLazyPagingItems()
 
-    val deleteAnimRun by budgetViewModel.deleteAnimRun.collectAsStateWithLifecycle()
-    val addAnimRun by budgetViewModel.addAnimRun.collectAsStateWithLifecycle()
-    val budgetAnimId by budgetViewModel.budgetAnimId.collectAsStateWithLifecycle()
+    val currentAnim by budgetViewModel.currentAnim.collectAsStateWithLifecycle()
+    val budgetAnimId by budgetViewModel.currentAnimId.collectAsStateWithLifecycle()
 
     var openDialog by remember { mutableStateOf<DialogType?>(null) }
 
@@ -143,11 +142,10 @@ fun BudgetScreen(
                     BudgetList(
                         budgetState = budgetState,
                         onBudgetEditClick = onBudgetEditClick,
-                        addAnimRun = addAnimRun,
-                        deleteAnimRun = deleteAnimRun,
+                        currentAnim = currentAnim,
                         budgetAnimId = budgetAnimId,
-                        addDataSuccessAnimStop = {
-                            budgetViewModel.addBudgetSuccessAnimStop()
+                        onAnimComplete = {
+                            budgetViewModel.onAnimationComplete(it)
                         })
                 }
             } else {
@@ -163,11 +161,10 @@ fun BudgetScreen(
                         items = budgetState,
                         //currency = currency,
                         onBudgetEditClick = onBudgetEditClick,
-                        addAnimRun = addAnimRun,
-                        deleteAnimRun = deleteAnimRun,
+                        currentAnim = currentAnim,
                         budgetAnimId = budgetAnimId,
-                        addDataSuccessAnimStop = {
-                            budgetViewModel.addBudgetSuccessAnimStop()
+                        onAnimationComplete = {
+                            budgetViewModel.onAnimationComplete(it)
                         }
                     )
                 }
@@ -182,11 +179,10 @@ fun BudgetScreen(
                         pagingItems = pagedDataUpcomingBudget,
                         //currency = currency,
                         onBudgetEditClick = onBudgetEditClick,
-                        addAnimRun = addAnimRun,
-                        deleteAnimRun = deleteAnimRun,
+                        currentAnim = currentAnim,
                         budgetAnimId = budgetAnimId,
-                        addDataSuccessAnimStop = {
-                            budgetViewModel.addBudgetSuccessAnimStop()
+                        onAnimationComplete = {
+                            budgetViewModel.onAnimationComplete(it)
                         }
                     )
                 }
@@ -201,11 +197,10 @@ fun BudgetScreen(
                         pagingItems = pagedDataPastBudget,
                         //currency = currency,
                         onBudgetEditClick = onBudgetEditClick,
-                        addAnimRun = addAnimRun,
-                        deleteAnimRun = deleteAnimRun,
+                        currentAnim = currentAnim,
                         budgetAnimId = budgetAnimId,
-                        addDataSuccessAnimStop = {
-                            budgetViewModel.addBudgetSuccessAnimStop()
+                        onAnimationComplete = {
+                            budgetViewModel.onAnimationComplete(it)
                         }
                     )
                 }
