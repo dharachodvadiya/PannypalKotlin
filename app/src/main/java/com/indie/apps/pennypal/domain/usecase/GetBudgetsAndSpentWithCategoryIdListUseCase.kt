@@ -1,6 +1,6 @@
 package com.indie.apps.pennypal.domain.usecase
 
-import com.indie.apps.pennypal.data.database.enum.PeriodType
+import com.indie.apps.pennypal.util.enum.PeriodType
 import com.indie.apps.pennypal.repository.BudgetRepository
 import com.indie.apps.pennypal.util.Util
 import javax.inject.Inject

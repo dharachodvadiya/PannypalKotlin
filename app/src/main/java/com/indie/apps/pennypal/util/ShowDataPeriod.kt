@@ -1,7 +1,7 @@
 package com.indie.apps.pennypal.util
 
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.data.database.enum.AnalysisPeriod
+import com.indie.apps.pennypal.util.enum.AnalysisPeriod
 
 enum class ShowDataPeriod(
     val title: Int,

@@ -31,8 +31,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.data.database.enum.BudgetMenu
-import com.indie.apps.pennypal.data.database.enum.PeriodType
+import com.indie.apps.pennypal.util.enum.BudgetMenu
+import com.indie.apps.pennypal.util.enum.PeriodType
 import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomProgressItemWithDate

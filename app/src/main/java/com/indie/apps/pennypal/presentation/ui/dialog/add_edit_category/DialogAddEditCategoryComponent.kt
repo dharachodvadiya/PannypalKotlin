@@ -23,7 +23,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.database.entity.Category
-import com.indie.apps.pennypal.data.database.enum.CategoryType
+import com.indie.apps.pennypal.util.enum.CategoryType
 import com.indie.apps.pennypal.data.module.TabItemInfo
 import com.indie.apps.pennypal.presentation.ui.component.DialogTextFieldItem
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomTab

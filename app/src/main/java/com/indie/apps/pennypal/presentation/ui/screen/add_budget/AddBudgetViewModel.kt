@@ -8,7 +8,7 @@ import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.database.entity.BaseCurrency
 import com.indie.apps.pennypal.data.database.entity.Category
 import com.indie.apps.pennypal.data.database.entity.toCategoryAmount
-import com.indie.apps.pennypal.data.database.enum.PeriodType
+import com.indie.apps.pennypal.util.enum.PeriodType
 import com.indie.apps.pennypal.data.module.budget.BudgetWithCategory
 import com.indie.apps.pennypal.data.module.category.CategoryAmount
 import com.indie.apps.pennypal.domain.usecase.AddBudgetUseCase

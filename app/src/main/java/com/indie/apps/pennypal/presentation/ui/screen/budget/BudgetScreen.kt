@@ -25,8 +25,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.data.database.enum.DialogType
-import com.indie.apps.pennypal.data.database.enum.PeriodType
+import com.indie.apps.pennypal.util.enum.DialogType
+import com.indie.apps.pennypal.util.enum.PeriodType
 import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomMonthPickerDialog
 import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomYearPickerDialog

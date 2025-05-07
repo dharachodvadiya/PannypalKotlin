@@ -3,8 +3,8 @@ package com.indie.apps.pennypal.presentation.ui.screen.overview_analysis
 import android.icu.util.Calendar
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.indie.apps.pennypal.data.database.enum.AnalysisPeriod
-import com.indie.apps.pennypal.data.database.enum.toShowDataPeriod
+import com.indie.apps.pennypal.util.enum.AnalysisPeriod
+import com.indie.apps.pennypal.util.enum.toShowDataPeriod
 import com.indie.apps.pennypal.domain.usecase.GetCategoryWiseExpenseUseCase
 import com.indie.apps.pennypal.domain.usecase.GetTotalUseCase
 import com.indie.apps.pennypal.repository.PreferenceRepository

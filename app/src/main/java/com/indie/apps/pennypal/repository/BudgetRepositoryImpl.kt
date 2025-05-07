@@ -3,7 +3,7 @@ package com.indie.apps.pennypal.repository
 import androidx.paging.PagingSource
 import com.indie.apps.pennypal.data.database.dao.BudgetCategoryDao
 import com.indie.apps.pennypal.data.database.dao.BudgetDao
-import com.indie.apps.pennypal.data.database.enum.PeriodType
+import com.indie.apps.pennypal.util.enum.PeriodType
 import com.indie.apps.pennypal.data.module.budget.BudgetWithCategory
 import com.indie.apps.pennypal.data.module.budget.BudgetWithSpentAndCategoryIds
 import com.indie.apps.pennypal.data.module.budget.toBudget

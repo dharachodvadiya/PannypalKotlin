@@ -2,7 +2,7 @@ package com.indie.apps.pennypal.extension
 
 import androidx.paging.PagingData
 import androidx.paging.map
-import com.indie.apps.pennypal.data.database.enum.PeriodType
+import com.indie.apps.pennypal.util.enum.PeriodType
 import com.indie.apps.pennypal.data.module.Amount
 import com.indie.apps.pennypal.data.module.budget.BudgetWithSpentAndCategoryIdList
 import com.indie.apps.pennypal.repository.MerchantDataRepository

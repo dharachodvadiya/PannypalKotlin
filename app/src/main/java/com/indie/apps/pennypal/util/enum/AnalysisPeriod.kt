@@ -1,4 +1,4 @@
-package com.indie.apps.pennypal.data.database.enum
+package com.indie.apps.pennypal.util.enum
 
 import com.indie.apps.pennypal.util.ShowDataPeriod
 
