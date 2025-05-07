@@ -6,7 +6,7 @@ import com.indie.apps.cpp.data.model.Country
 import com.indie.apps.cpp.data.repository.CountryRepository
 import com.indie.apps.pennypal.domain.usecase.UpdateUserCurrencyDataUseCase
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
-import com.indie.apps.pennypal.util.Resource
+import com.indie.apps.pennypal.util.app_enum.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch

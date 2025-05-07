@@ -97,7 +97,6 @@
 -keep class com.google.auth.oauth2.** { *; }
 -keep class com.google.auth.http.** { *; }
 -keep class com.google.auth.transport.** { *; }
--keep class com.google.auth.Credentials { *; }
 -keep class com.google.auth.oauth2.** { *; }
 
 # Accompanist Pager

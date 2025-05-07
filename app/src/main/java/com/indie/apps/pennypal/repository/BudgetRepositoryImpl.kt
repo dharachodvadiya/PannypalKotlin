@@ -3,14 +3,14 @@ package com.indie.apps.pennypal.repository
 import androidx.paging.PagingSource
 import com.indie.apps.pennypal.data.database.dao.BudgetCategoryDao
 import com.indie.apps.pennypal.data.database.dao.BudgetDao
-import com.indie.apps.pennypal.util.enum.PeriodType
 import com.indie.apps.pennypal.data.module.budget.BudgetWithCategory
 import com.indie.apps.pennypal.data.module.budget.BudgetWithSpentAndCategoryIds
 import com.indie.apps.pennypal.data.module.budget.toBudget
 import com.indie.apps.pennypal.data.module.budget.toBudgetCategoryList
 import com.indie.apps.pennypal.data.module.budget.toBudgetWithCategories
 import com.indie.apps.pennypal.data.module.budget.toBudgetWithSpentAndCategoryIdList
-import com.indie.apps.pennypal.extension.mapBudgetsWithSpent
+import com.indie.apps.pennypal.presentation.ui.component.extension.mapBudgetsWithSpent
+import com.indie.apps.pennypal.util.app_enum.PeriodType
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn

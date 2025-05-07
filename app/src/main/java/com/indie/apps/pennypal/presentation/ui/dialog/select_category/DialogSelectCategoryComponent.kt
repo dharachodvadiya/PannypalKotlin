@@ -28,15 +28,15 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.data.database.entity.Category
-import com.indie.apps.pennypal.presentation.ui.component.clickableWithNoRipple
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
-import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
+import com.indie.apps.pennypal.data.database.db_entity.Category
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.CustomText
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.RoundImage
+import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.clickableWithNoRipple
+import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.util.Util
-import com.indie.apps.pennypal.util.getCategoryColorById
-import com.indie.apps.pennypal.util.getCategoryIconById
+import com.indie.apps.pennypal.util.internanal.method.getCategoryColorById
+import com.indie.apps.pennypal.util.internanal.method.getCategoryIconById
 import kotlinx.coroutines.launch
 
 @SuppressLint("CoroutineCreationDuringComposition")

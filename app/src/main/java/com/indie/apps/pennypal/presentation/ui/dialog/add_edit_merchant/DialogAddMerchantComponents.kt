@@ -23,11 +23,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.presentation.ui.component.DialogTextFieldItem
-import com.indie.apps.pennypal.presentation.ui.component.clickableWithNoRipple
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
-import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
+import com.indie.apps.pennypal.presentation.ui.component.composable.common.DialogTextFieldItem
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.CustomText
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.PrimaryButton
+import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.clickableWithNoRipple
+import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme

@@ -9,10 +9,10 @@ import com.indie.apps.pennypal.presentation.ui.component.UiText
 import com.indie.apps.pennypal.repository.AuthRepository
 import com.indie.apps.pennypal.repository.PreferenceRepository
 import com.indie.apps.pennypal.repository.UserRepository
-import com.indie.apps.pennypal.util.AppLanguage
-import com.indie.apps.pennypal.util.SettingEffect
-import com.indie.apps.pennypal.util.SettingOption
 import com.indie.apps.pennypal.util.Util
+import com.indie.apps.pennypal.util.app_enum.AppLanguage
+import com.indie.apps.pennypal.util.app_enum.SettingEffect
+import com.indie.apps.pennypal.util.app_enum.SettingOption
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow

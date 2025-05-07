@@ -3,7 +3,7 @@ package com.indie.apps.pennypal.presentation.ui.dialog.select_category
 import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.indie.apps.pennypal.data.database.entity.Category
+import com.indie.apps.pennypal.data.database.db_entity.Category
 import com.indie.apps.pennypal.repository.CategoryRepository
 import com.indie.apps.pennypal.util.Util
 import dagger.hilt.android.lifecycle.HiltViewModel

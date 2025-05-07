@@ -4,14 +4,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.indie.apps.pennypal.util.enum.PeriodType
 import com.indie.apps.pennypal.data.module.budget.BudgetWithSpentAndCategoryIdList
 import com.indie.apps.pennypal.domain.usecase.DeleteSingleBudgetDataUseCase
 import com.indie.apps.pennypal.domain.usecase.GetBudgetsAndSpentWithCategoryIdListUseCase
 import com.indie.apps.pennypal.domain.usecase.GetPastBudgetsAndSpentWithCategoryIdListFromPeriodType
 import com.indie.apps.pennypal.domain.usecase.GetUpComingBudgetsAndSpentWithCategoryIdListFromPeriodType
-import com.indie.apps.pennypal.util.Resource
 import com.indie.apps.pennypal.util.Util
+import com.indie.apps.pennypal.util.app_enum.PeriodType
+import com.indie.apps.pennypal.util.app_enum.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay

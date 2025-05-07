@@ -27,13 +27,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.util.enum.PeriodType
-import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.DoubleBackExitApp
-import com.indie.apps.pennypal.presentation.ui.component.showToast
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.DoubleBackExitApp
+import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.backgroundGradientsBrush
+import com.indie.apps.pennypal.presentation.ui.component.extension.showToast
 import com.indie.apps.pennypal.presentation.ui.screen.InAppFeedbackViewModel
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
+import com.indie.apps.pennypal.util.app_enum.PeriodType
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable

@@ -3,14 +3,14 @@ package com.indie.apps.pennypal.presentation.ui.screen.single_budget_analysis
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.indie.apps.pennypal.util.enum.PeriodType
 import com.indie.apps.pennypal.data.module.budget.BudgetWithCategory
 import com.indie.apps.pennypal.data.module.category.CategoryAmount
 import com.indie.apps.pennypal.domain.usecase.DeleteSingleBudgetDataUseCase
 import com.indie.apps.pennypal.domain.usecase.GetCategoryWiseSpentAmountForPeriodUseCase
 import com.indie.apps.pennypal.repository.BudgetRepository
-import com.indie.apps.pennypal.util.Resource
 import com.indie.apps.pennypal.util.Util
+import com.indie.apps.pennypal.util.app_enum.PeriodType
+import com.indie.apps.pennypal.util.app_enum.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch

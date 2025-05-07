@@ -1,7 +1,7 @@
 package com.indie.apps.pennypal.repository
 
 import androidx.paging.PagingSource
-import com.indie.apps.pennypal.data.database.entity.Category
+import com.indie.apps.pennypal.data.database.db_entity.Category
 import kotlinx.coroutines.flow.Flow
 
 interface CategoryRepository : BaseRepository<Category> {

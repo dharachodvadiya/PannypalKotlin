@@ -27,20 +27,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.data.database.entity.Category
-import com.indie.apps.pennypal.data.database.entity.Payment
-import com.indie.apps.pennypal.util.enum.DialogType
+import com.indie.apps.pennypal.data.database.db_entity.Category
+import com.indie.apps.pennypal.data.database.db_entity.Payment
 import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
-import com.indie.apps.pennypal.presentation.ui.component.BottomSaveButton
-import com.indie.apps.pennypal.presentation.ui.component.ConfirmationDialog
-import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomDatePickerDialog
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomTimePickerDialog
-import com.indie.apps.pennypal.presentation.ui.component.showToast
+import com.indie.apps.pennypal.presentation.ui.component.composable.common.BottomSaveButton
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.ConfirmationDialog
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.CustomDatePickerDialog
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.CustomTimePickerDialog
+import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.backgroundGradientsBrush
+import com.indie.apps.pennypal.presentation.ui.component.extension.showToast
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
-import com.indie.apps.pennypal.util.Resource
+import com.indie.apps.pennypal.util.app_enum.DialogType
+import com.indie.apps.pennypal.util.app_enum.Resource
 
 @Composable
 fun NewItemScreen(

@@ -36,26 +36,26 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.util.enum.PeriodType
 import com.indie.apps.pennypal.data.module.TabItemInfo
 import com.indie.apps.pennypal.data.module.category.CategoryAmount
-import com.indie.apps.pennypal.presentation.ui.component.DialogSelectableItem
-import com.indie.apps.pennypal.presentation.ui.component.DialogTextFieldItem
-import com.indie.apps.pennypal.presentation.ui.component.TextFieldError
-import com.indie.apps.pennypal.presentation.ui.component.clickableWithNoRipple
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.AutoSizeText
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomTab
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListItem
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.MyAppTextField
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
-import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
+import com.indie.apps.pennypal.presentation.ui.component.composable.common.DialogSelectableItem
+import com.indie.apps.pennypal.presentation.ui.component.composable.common.DialogTextFieldItem
+import com.indie.apps.pennypal.presentation.ui.component.composable.common.TextFieldError
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.AutoSizeText
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.CustomTab
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.CustomText
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.ListItem
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.MyAppTextField
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.PrimaryButton
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.RoundImage
+import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.clickableWithNoRipple
+import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.util.Util
-import com.indie.apps.pennypal.util.getCategoryColorById
-import com.indie.apps.pennypal.util.getCategoryIconById
+import com.indie.apps.pennypal.util.app_enum.PeriodType
+import com.indie.apps.pennypal.util.internanal.method.getCategoryColorById
+import com.indie.apps.pennypal.util.internanal.method.getCategoryIconById
 import kotlin.enums.EnumEntries
 
 @Composable
@@ -83,7 +83,8 @@ fun AddBudgetTopSelectionButton(
     Row(
         modifier = modifier, horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        CustomTab(tabList = tabItems,
+        CustomTab(
+            tabList = tabItems,
             selectedIndex = list.indexOf(selectBudgetPeriod),
             onTabSelected = {
                 onSelect(list[it])
@@ -270,7 +271,8 @@ fun AddBudgetPeriodFieldItem(
                 onClick = onSelectFromDate,
                 placeholder = R.string.from,
                 leadingContent = {
-                    Icon(imageVector = Icons.Default.CalendarMonth,
+                    Icon(
+                        imageVector = Icons.Default.CalendarMonth,
                         contentDescription = "calender",
                         tint = MyAppTheme.colors.gray1,
                         modifier = Modifier
@@ -291,7 +293,8 @@ fun AddBudgetPeriodFieldItem(
                 text = currentToDate,
                 placeholder = R.string.to,
                 leadingContent = {
-                    Icon(imageVector = Icons.Default.CalendarMonth,
+                    Icon(
+                        imageVector = Icons.Default.CalendarMonth,
                         contentDescription = "calender",
                         tint = MyAppTheme.colors.gray1,
                         modifier = Modifier
@@ -314,7 +317,8 @@ fun AddBudgetPeriodFieldItem(
                 placeholder = if (selectBudgetPeriod == PeriodType.MONTH) R.string.select_month
                 else R.string.select_year,
                 leadingContent = {
-                    Icon(imageVector = Icons.Default.CalendarMonth,
+                    Icon(
+                        imageVector = Icons.Default.CalendarMonth,
                         contentDescription = "calender",
                         tint = MyAppTheme.colors.gray1,
                         modifier = Modifier
@@ -459,7 +463,8 @@ private fun CategoryListItem(
         })
     }
 
-    ListItem(isClickable = false, leadingIcon = {
+    ListItem(
+        isClickable = false, leadingIcon = {
         RoundImage(
             imageVector = imageVector,
             imageVectorSize = 20.dp,

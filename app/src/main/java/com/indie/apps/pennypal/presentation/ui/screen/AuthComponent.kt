@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.screen
 
+import android.annotation.SuppressLint
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -9,10 +10,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialResponse
 import com.indie.apps.pennypal.data.module.user.UserInfoResult
-import com.indie.apps.pennypal.util.SyncCallBackEvent
-import com.indie.apps.pennypal.util.SyncEffect
-import com.indie.apps.pennypal.util.SyncEvent
+import com.indie.apps.pennypal.util.app_enum.SyncCallBackEvent
+import com.indie.apps.pennypal.util.app_enum.SyncEffect
+import com.indie.apps.pennypal.util.app_enum.SyncEvent
 
+@SuppressLint("CredentialManagerMisuse")
 @Composable
 fun SignInLauncher(
     authViewModel: AuthViewModel,

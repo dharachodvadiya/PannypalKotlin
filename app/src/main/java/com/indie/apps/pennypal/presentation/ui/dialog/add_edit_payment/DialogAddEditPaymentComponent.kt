@@ -14,9 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.res.dimensionResource
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.data.database.entity.PaymentMode
-import com.indie.apps.pennypal.presentation.ui.component.DialogTextFieldItem
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.FlowRowItem
+import com.indie.apps.pennypal.data.database.db_entity.PaymentMode
+import com.indie.apps.pennypal.presentation.ui.component.composable.common.DialogTextFieldItem
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.FlowRowItem
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 

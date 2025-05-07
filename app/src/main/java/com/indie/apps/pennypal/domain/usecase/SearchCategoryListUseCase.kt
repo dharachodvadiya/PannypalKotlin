@@ -3,7 +3,7 @@ package com.indie.apps.pennypal.domain.usecase
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.indie.apps.pennypal.data.database.entity.Category
+import com.indie.apps.pennypal.data.database.db_entity.Category
 import com.indie.apps.pennypal.di.IoDispatcher
 import com.indie.apps.pennypal.repository.CategoryRepository
 import com.indie.apps.pennypal.util.Util

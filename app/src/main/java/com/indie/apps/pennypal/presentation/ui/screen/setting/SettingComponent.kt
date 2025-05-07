@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -35,22 +34,23 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.data.database.entity.Category
-import com.indie.apps.pennypal.data.database.entity.User
+import com.indie.apps.pennypal.data.database.db_entity.Category
+import com.indie.apps.pennypal.data.database.db_entity.User
 import com.indie.apps.pennypal.data.module.MoreItem
-import com.indie.apps.pennypal.presentation.ui.component.UserProfileRect
-import com.indie.apps.pennypal.presentation.ui.component.clickableWithNoRipple
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListItem
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
-import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
+import com.indie.apps.pennypal.presentation.ui.component.composable.common.UserProfileRect
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.CustomText
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.ListItem
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.PrimaryButton
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.RoundImage
+import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.clickableWithNoRipple
+import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.screen.payment.AccountHeadingItem
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
-import com.indie.apps.pennypal.util.getCategoryIconById
-import com.indie.apps.pennypal.util.getDateFromMillis
-import com.indie.apps.pennypal.util.getTimeFromMillis
+import com.indie.apps.pennypal.util.internanal.method.getCategoryIconById
+import com.indie.apps.pennypal.util.internanal.method.getDateFromMillis
+import com.indie.apps.pennypal.util.internanal.method.getTimeFromMillis
 import java.text.SimpleDateFormat
 
 
@@ -227,14 +227,14 @@ fun onShareClick(context: Context) {
 }
 
 fun onRateClick(context: Context) {
-    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=${context.packageName}"))
+    val intent = Intent(Intent.ACTION_VIEW, "market://details?id=${context.packageName}".toUri())
     context.startActivity(intent)
 }
 
 fun onPrivacyPolicyClick(context: Context) {
     val intent = Intent(
         Intent.ACTION_VIEW,
-        Uri.parse("https://sites.google.com/view/privacypolicyforpennypal/home")
+        "https://sites.google.com/view/privacypolicyforpennypal/home".toUri()
     )
     context.startActivity(intent)
 }
@@ -242,7 +242,7 @@ fun onPrivacyPolicyClick(context: Context) {
 @SuppressLint("IntentReset")
 fun onContactUsClick(context: Context) {
     val intent = Intent(Intent.ACTION_SENDTO).apply {
-        data = Uri.parse("mailto:videostatus.group@gmail.com")
+        data = "mailto:videostatus.group@gmail.com".toUri()
         putExtra(Intent.EXTRA_SUBJECT, "Penny Pal Contact Us")
         putExtra(Intent.EXTRA_TEXT, "Hello, I have a question about...")
     }

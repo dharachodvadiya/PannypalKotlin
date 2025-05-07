@@ -4,7 +4,7 @@ import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
-import com.indie.apps.pennypal.data.database.entity.Merchant
+import com.indie.apps.pennypal.data.database.db_entity.Merchant
 import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
 import kotlinx.coroutines.flow.Flow
 

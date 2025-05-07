@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.indie.apps.pennypal.domain.usecase.DeletePaymentUseCase
 import com.indie.apps.pennypal.repository.PaymentRepository
 import com.indie.apps.pennypal.repository.UserRepository
-import com.indie.apps.pennypal.util.Resource
 import com.indie.apps.pennypal.util.Util
+import com.indie.apps.pennypal.util.app_enum.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow

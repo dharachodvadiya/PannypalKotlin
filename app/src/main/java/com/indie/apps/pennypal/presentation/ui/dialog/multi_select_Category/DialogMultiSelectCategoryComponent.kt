@@ -21,15 +21,15 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.data.database.entity.Category
-import com.indie.apps.pennypal.presentation.ui.component.DialogSearchView
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListItem
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
+import com.indie.apps.pennypal.data.database.db_entity.Category
+import com.indie.apps.pennypal.presentation.ui.component.composable.common.DialogSearchView
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.CustomText
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.ListItem
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.RoundImage
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
-import com.indie.apps.pennypal.util.getCategoryColorById
-import com.indie.apps.pennypal.util.getCategoryIconById
+import com.indie.apps.pennypal.util.internanal.method.getCategoryColorById
+import com.indie.apps.pennypal.util.internanal.method.getCategoryIconById
 
 @Composable
 fun MultiSelectCategoryDialogField(

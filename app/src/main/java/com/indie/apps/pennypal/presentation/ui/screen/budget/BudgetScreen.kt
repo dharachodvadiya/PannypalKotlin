@@ -25,16 +25,16 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.util.enum.DialogType
-import com.indie.apps.pennypal.util.enum.PeriodType
-import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomMonthPickerDialog
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomYearPickerDialog
-import com.indie.apps.pennypal.presentation.ui.component.showToast
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.CustomMonthPickerDialog
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.CustomYearPickerDialog
+import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.backgroundGradientsBrush
+import com.indie.apps.pennypal.presentation.ui.component.extension.showToast
 import com.indie.apps.pennypal.presentation.ui.screen.InAppFeedbackViewModel
 import com.indie.apps.pennypal.presentation.ui.screen.add_budget.AddBudgetTopSelectionButton
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
+import com.indie.apps.pennypal.util.app_enum.DialogType
+import com.indie.apps.pennypal.util.app_enum.PeriodType
 import java.util.Calendar
 
 @SuppressLint("StateFlowValueCalledInComposition", "SimpleDateFormat")

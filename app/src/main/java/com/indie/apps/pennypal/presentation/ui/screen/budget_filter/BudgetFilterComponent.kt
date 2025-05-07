@@ -12,8 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.presentation.ui.component.TopBarWithTitle
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
+import com.indie.apps.pennypal.presentation.ui.component.composable.common.TopBarWithTitle
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.PrimaryButton
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 
 @Composable

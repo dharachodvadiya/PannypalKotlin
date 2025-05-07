@@ -36,17 +36,17 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.rememberPagerState
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.presentation.ui.component.BottomSaveButton
-import com.indie.apps.pennypal.presentation.ui.component.DialogSelectableItem
-import com.indie.apps.pennypal.presentation.ui.component.DialogTextFieldItem
-import com.indie.apps.pennypal.presentation.ui.component.TextWithRadioButton
-import com.indie.apps.pennypal.presentation.ui.component.clickableWithNoRipple
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
-import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
+import com.indie.apps.pennypal.presentation.ui.component.composable.common.BottomSaveButton
+import com.indie.apps.pennypal.presentation.ui.component.composable.common.DialogSelectableItem
+import com.indie.apps.pennypal.presentation.ui.component.composable.common.DialogTextFieldItem
+import com.indie.apps.pennypal.presentation.ui.component.composable.common.TextWithRadioButton
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.CustomText
+import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.clickableWithNoRipple
+import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
-import com.indie.apps.pennypal.util.AppLanguage
+import com.indie.apps.pennypal.util.app_enum.AppLanguage
 
 @Composable
 fun OnBoardingBeginPage(
@@ -59,7 +59,11 @@ fun OnBoardingBeginPage(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceEvenly
             ) {
-                Image(painter = painterResource(id = R.drawable.intro), contentDescription = "img", modifier = Modifier.fillMaxSize(0.5f))
+                Image(
+                    painter = painterResource(id = R.drawable.intro),
+                    contentDescription = "img",
+                    modifier = Modifier.fillMaxSize(0.5f)
+                )
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
@@ -226,7 +230,8 @@ fun OnBoardingSetCurrencyPage(
                     style = MyAppTheme.typography.Regular57
                 )
 
-                DialogSelectableItem(text = currencyText,
+                DialogSelectableItem(
+                    text = currencyText,
                     onClick = onCurrencySelect,
                     placeholder = R.string.add_payment_type_placeholder,
                     isSelectable = true,
@@ -291,12 +296,13 @@ fun OnBoardingWelcomePage(
         onBackClick = onBackClick,
         buttonIcon = R.drawable.google,
         bottomContent = {
-            Box(modifier = Modifier
-                .fillMaxWidth()
-                .clickableWithNoRipple(
-                    //   interactionSource = MutableInteractionSource(), indication = null
-                ) { onGuestLoginClick() }
-                .padding(dimensionResource(id = R.dimen.padding)),
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickableWithNoRipple(
+                        //   interactionSource = MutableInteractionSource(), indication = null
+                    ) { onGuestLoginClick() }
+                    .padding(dimensionResource(id = R.dimen.padding)),
                 contentAlignment = Alignment.Center) {
                 CustomText(
                     text = stringResource(id = R.string.start_without_login),
@@ -354,14 +360,15 @@ fun OnBoardingRestorePage(
         },
         isBackEnable = false,
         bottomContent = {
-            Box(modifier = Modifier
-                .fillMaxWidth()
-                .clickableWithNoRipple(
-                    //   interactionSource = MutableInteractionSource(), indication = null
-                ) {
-                    onEndClick()
-                }
-                .padding(dimensionResource(id = R.dimen.padding)),
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickableWithNoRipple(
+                        //   interactionSource = MutableInteractionSource(), indication = null
+                    ) {
+                        onEndClick()
+                    }
+                    .padding(dimensionResource(id = R.dimen.padding)),
                 contentAlignment = Alignment.Center) {
                 CustomText(
                     text = "Skip",

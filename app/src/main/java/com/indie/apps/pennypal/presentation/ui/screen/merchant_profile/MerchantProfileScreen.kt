@@ -17,12 +17,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.indie.apps.pennypal.data.database.entity.Merchant
-import com.indie.apps.pennypal.presentation.ui.component.TopBarWithTitle
+import com.indie.apps.pennypal.data.database.db_entity.Merchant
+import com.indie.apps.pennypal.presentation.ui.component.composable.common.TopBarWithTitle
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
-import com.indie.apps.pennypal.util.Resource
+import com.indie.apps.pennypal.util.app_enum.Resource
 
 @Composable
 fun MerchantProfileScreen(

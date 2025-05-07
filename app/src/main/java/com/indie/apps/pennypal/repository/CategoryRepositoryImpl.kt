@@ -1,7 +1,7 @@
 package com.indie.apps.pennypal.repository
 
 import com.indie.apps.pennypal.data.database.dao.CategoryDao
-import com.indie.apps.pennypal.data.database.entity.Category
+import com.indie.apps.pennypal.data.database.db_entity.Category
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext

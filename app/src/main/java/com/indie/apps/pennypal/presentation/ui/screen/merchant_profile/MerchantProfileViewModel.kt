@@ -3,10 +3,10 @@ package com.indie.apps.pennypal.presentation.ui.screen.merchant_profile
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.indie.apps.pennypal.data.database.entity.Merchant
+import com.indie.apps.pennypal.data.database.db_entity.Merchant
 import com.indie.apps.pennypal.repository.MerchantRepository
-import com.indie.apps.pennypal.util.Resource
 import com.indie.apps.pennypal.util.Util
+import com.indie.apps.pennypal.util.app_enum.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

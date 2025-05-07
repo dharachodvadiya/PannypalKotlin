@@ -9,7 +9,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.module.ContactNumberAndCode
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.MyAppDialog
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.MyAppDialog
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.util.Util
 import kotlinx.coroutines.Job
@@ -37,7 +37,7 @@ fun DialogContactPicker(
         content = {
             ContactPickerDialogField(
                 onSelect = {
-                    viewModel.onSelectCountry(it){data->
+                    viewModel.onSelectCountry(it) { data ->
                         onSelect(data)
                     }
                 },

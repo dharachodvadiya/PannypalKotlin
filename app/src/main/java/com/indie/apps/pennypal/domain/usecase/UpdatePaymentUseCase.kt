@@ -1,10 +1,10 @@
 package com.indie.apps.pennypal.domain.usecase
 
-import com.indie.apps.pennypal.data.database.entity.Payment
+import com.indie.apps.pennypal.data.database.db_entity.Payment
 import com.indie.apps.pennypal.di.IoDispatcher
 import com.indie.apps.pennypal.repository.PaymentRepository
-import com.indie.apps.pennypal.util.Resource
-import com.indie.apps.pennypal.util.handleException
+import com.indie.apps.pennypal.util.app_enum.Resource
+import com.indie.apps.pennypal.util.app_enum.handleException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -13,18 +13,19 @@ import javax.inject.Inject
 
 class UpdatePaymentUseCase @Inject constructor(
     private val paymentRepository: PaymentRepository,
-    @IoDispatcher private val dispatcher: CoroutineDispatcher) {
+    @IoDispatcher private val dispatcher: CoroutineDispatcher
+) {
 
-    fun updateData(payment: Payment) : Flow<Resource<Int>>{
-        return flow{
+    fun updateData(payment: Payment): Flow<Resource<Int>> {
+        return flow {
 
             try {
                 emit(Resource.Loading())
                 val count = paymentRepository.update(payment)
 
-                if(count >0){
+                if (count > 0) {
                     emit(Resource.Success(count))
-                }else{
+                } else {
                     emit(Resource.Error("Fail to update Payment"))
                 }
 

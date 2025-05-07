@@ -1,8 +1,8 @@
 package com.indie.apps.pennypal.repository
 
 import com.indie.apps.pennypal.data.database.dao.MerchantDataDao
-import com.indie.apps.pennypal.data.database.entity.BaseCurrency
-import com.indie.apps.pennypal.data.database.entity.MerchantData
+import com.indie.apps.pennypal.data.database.db_entity.BaseCurrency
+import com.indie.apps.pennypal.data.database.db_entity.MerchantData
 import com.indie.apps.pennypal.data.module.Amount
 import com.indie.apps.pennypal.data.module._interface.ConvertibleAmount
 import com.indie.apps.pennypal.data.module.balance.Total

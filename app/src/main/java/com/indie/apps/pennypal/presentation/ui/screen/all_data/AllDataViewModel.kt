@@ -10,8 +10,8 @@ import com.indie.apps.pennypal.domain.usecase.DeleteMerchantDataUseCase
 import com.indie.apps.pennypal.domain.usecase.SearchMerchantDataWithAllDataListUseCase
 import com.indie.apps.pennypal.presentation.ui.state.PagingState
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
-import com.indie.apps.pennypal.util.Resource
 import com.indie.apps.pennypal.util.Util
+import com.indie.apps.pennypal.util.app_enum.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay

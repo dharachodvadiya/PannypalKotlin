@@ -12,7 +12,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.MyAppDialog
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.MyAppDialog
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.util.Util
 import kotlinx.coroutines.Job

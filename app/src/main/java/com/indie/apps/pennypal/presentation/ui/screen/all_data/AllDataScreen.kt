@@ -45,11 +45,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.presentation.ui.component.ConfirmationDialog
-import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
-import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.SearchView
-import com.indie.apps.pennypal.presentation.ui.component.showToast
+import com.indie.apps.pennypal.presentation.ui.component.composable.common.NoDataMessage
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.ConfirmationDialog
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.SearchView
+import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.backgroundGradientsBrush
+import com.indie.apps.pennypal.presentation.ui.component.extension.showToast
 import com.indie.apps.pennypal.presentation.ui.screen.InAppFeedbackViewModel
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
@@ -97,10 +97,10 @@ fun AllDataScreen(
             //addMerchantId = editAddId
             allDataViewModel.addDataSuccess(editAddId)
             inAppFeedbackViewModel.triggerReview(context)
-        }else if (isEditSuccess) {
+        } else if (isEditSuccess) {
             allDataViewModel.editDataSuccess(editAddId)
-        }else if (isDeleteSuccess){
-            allDataViewModel.onDeleteFromEditScreenClick(editAddId){
+        } else if (isDeleteSuccess) {
+            allDataViewModel.onDeleteFromEditScreenClick(editAddId) {
                 context.showToast(merchantDeleteToast)
             }
         }
@@ -279,7 +279,7 @@ fun AllDataScreen(
                             }
 
                             if ((deleteAnimRun &&
-                                selectedList.contains(data.id) || deleteAnimRun && merchantAnimId == data.id)
+                                        selectedList.contains(data.id) || deleteAnimRun && merchantAnimId == data.id)
                             ) {
                                 visible = false
                             }

@@ -1,10 +1,10 @@
 package com.indie.apps.pennypal.domain.usecase
 
-import com.indie.apps.pennypal.data.database.entity.Category
+import com.indie.apps.pennypal.data.database.db_entity.Category
 import com.indie.apps.pennypal.di.IoDispatcher
 import com.indie.apps.pennypal.repository.CategoryRepository
-import com.indie.apps.pennypal.util.Resource
-import com.indie.apps.pennypal.util.handleException
+import com.indie.apps.pennypal.util.app_enum.Resource
+import com.indie.apps.pennypal.util.app_enum.handleException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -13,18 +13,19 @@ import javax.inject.Inject
 
 class UpdateCategoryUseCase @Inject constructor(
     private val categoryRepository: CategoryRepository,
-    @IoDispatcher private val dispatcher: CoroutineDispatcher) {
+    @IoDispatcher private val dispatcher: CoroutineDispatcher
+) {
 
-    fun updateData(category: Category) : Flow<Resource<Int>>{
-        return flow{
+    fun updateData(category: Category): Flow<Resource<Int>> {
+        return flow {
 
             try {
                 emit(Resource.Loading())
                 val count = categoryRepository.update(category)
 
-                if(count >0){
+                if (count > 0) {
                     emit(Resource.Success(count))
-                }else{
+                } else {
                     emit(Resource.Error("Fail to update Category"))
                 }
 

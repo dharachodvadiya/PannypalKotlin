@@ -5,10 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.indie.apps.cpp.data.repository.CountryRepository
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.data.database.entity.BaseCurrency
-import com.indie.apps.pennypal.data.database.entity.Category
-import com.indie.apps.pennypal.data.database.entity.toCategoryAmount
-import com.indie.apps.pennypal.util.enum.PeriodType
+import com.indie.apps.pennypal.data.database.db_entity.BaseCurrency
+import com.indie.apps.pennypal.data.database.db_entity.Category
+import com.indie.apps.pennypal.data.database.db_entity.toCategoryAmount
 import com.indie.apps.pennypal.data.module.budget.BudgetWithCategory
 import com.indie.apps.pennypal.data.module.category.CategoryAmount
 import com.indie.apps.pennypal.domain.usecase.AddBudgetUseCase
@@ -19,9 +18,10 @@ import com.indie.apps.pennypal.repository.BaseCurrencyRepository
 import com.indie.apps.pennypal.repository.BudgetRepository
 import com.indie.apps.pennypal.repository.CategoryRepository
 import com.indie.apps.pennypal.repository.UserRepository
-import com.indie.apps.pennypal.util.ErrorMessage
-import com.indie.apps.pennypal.util.Resource
 import com.indie.apps.pennypal.util.Util
+import com.indie.apps.pennypal.util.app_enum.ErrorMessage
+import com.indie.apps.pennypal.util.app_enum.PeriodType
+import com.indie.apps.pennypal.util.app_enum.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch

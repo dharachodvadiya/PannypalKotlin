@@ -14,10 +14,10 @@ import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.repository.BaseCurrencyRepository
 import com.indie.apps.pennypal.repository.PreferenceRepository
 import com.indie.apps.pennypal.repository.UserRepository
-import com.indie.apps.pennypal.util.AppLanguage
-import com.indie.apps.pennypal.util.ErrorMessage
-import com.indie.apps.pennypal.util.Resource
 import com.indie.apps.pennypal.util.Util
+import com.indie.apps.pennypal.util.app_enum.AppLanguage
+import com.indie.apps.pennypal.util.app_enum.ErrorMessage
+import com.indie.apps.pennypal.util.app_enum.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

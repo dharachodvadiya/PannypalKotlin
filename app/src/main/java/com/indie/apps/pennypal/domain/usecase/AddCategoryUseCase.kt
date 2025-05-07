@@ -1,10 +1,10 @@
 package com.indie.apps.pennypal.domain.usecase
 
-import com.indie.apps.pennypal.data.database.entity.Category
+import com.indie.apps.pennypal.data.database.db_entity.Category
 import com.indie.apps.pennypal.di.IoDispatcher
 import com.indie.apps.pennypal.repository.CategoryRepository
-import com.indie.apps.pennypal.util.Resource
-import com.indie.apps.pennypal.util.handleException
+import com.indie.apps.pennypal.util.app_enum.Resource
+import com.indie.apps.pennypal.util.app_enum.handleException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

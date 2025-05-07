@@ -7,9 +7,9 @@ import com.indie.apps.pennypal.di.IoDispatcher
 import com.indie.apps.pennypal.presentation.ui.component.UiText
 import com.indie.apps.pennypal.repository.PreferenceRepository
 import com.indie.apps.pennypal.repository.UserRepository
-import com.indie.apps.pennypal.util.SettingOption
-import com.indie.apps.pennypal.util.ShowDataPeriod
 import com.indie.apps.pennypal.util.Util
+import com.indie.apps.pennypal.util.app_enum.SettingOption
+import com.indie.apps.pennypal.util.app_enum.ShowDataPeriod
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine

@@ -1,7 +1,7 @@
 package com.indie.apps.pennypal.data.module.budget
 
-import com.indie.apps.pennypal.data.database.entity.Budget
-import com.indie.apps.pennypal.data.database.entity.BudgetCategory
+import com.indie.apps.pennypal.data.database.db_entity.Budget
+import com.indie.apps.pennypal.data.database.db_entity.BudgetCategory
 import com.indie.apps.pennypal.data.module.category.CategoryAmount
 
 data class BudgetWithCategory(

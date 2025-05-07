@@ -7,11 +7,11 @@ import com.google.gson.JsonParseException
 import com.indie.apps.cpp.data.repository.CountryRepository
 import com.indie.apps.pennypal.BuildConfig
 import com.indie.apps.pennypal.data.database.dao.ExchangeRateDao
-import com.indie.apps.pennypal.data.database.entity.ExchangeRate
+import com.indie.apps.pennypal.data.database.db_entity.ExchangeRate
 import com.indie.apps.pennypal.data.module.CurrencyCountry
 import com.indie.apps.pennypal.data.service.ExchangeRateApiService
-import com.indie.apps.pennypal.util.AppError
-import com.indie.apps.pennypal.util.Resource
+import com.indie.apps.pennypal.util.app_enum.AppError
+import com.indie.apps.pennypal.util.app_enum.Resource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll

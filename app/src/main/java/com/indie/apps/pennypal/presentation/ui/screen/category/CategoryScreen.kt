@@ -46,11 +46,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.presentation.ui.component.ConfirmationDialog
-import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
-import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.SearchView
-import com.indie.apps.pennypal.presentation.ui.component.showToast
+import com.indie.apps.pennypal.presentation.ui.component.composable.common.NoDataMessage
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.ConfirmationDialog
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.SearchView
+import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.backgroundGradientsBrush
+import com.indie.apps.pennypal.presentation.ui.component.extension.showToast
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
@@ -123,7 +123,7 @@ fun CategoryScreen(
     }
 
     var openAlertDialog by remember { mutableStateOf(false) }
-    var deleteId by remember { mutableStateOf(-1L) }
+    var deleteId by remember { mutableLongStateOf(-1L) }
 
     var job: Job? = null
     Scaffold(topBar = {
@@ -208,7 +208,8 @@ fun CategoryScreen(
                     //verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.item_inner_padding)),
                     contentPadding = PaddingValues(bottom = bottomPadding.calculateBottomPadding())
                 ) {
-                    items(count = lazyPagingData.itemCount,
+                    items(
+                        count = lazyPagingData.itemCount,
                         key = lazyPagingData.itemKey { item -> item.id }
                     ) { index ->
                         val itemAnimateScale = remember {

@@ -1,8 +1,8 @@
 package com.indie.apps.pennypal.domain.usecase
 
-import com.indie.apps.pennypal.util.enum.PeriodType
 import com.indie.apps.pennypal.repository.BudgetRepository
 import com.indie.apps.pennypal.util.Util
+import com.indie.apps.pennypal.util.app_enum.PeriodType
 import javax.inject.Inject
 
 class GetBudgetsAndSpentWithCategoryIdListUseCase @Inject constructor(

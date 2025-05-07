@@ -10,8 +10,8 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.presentation.ui.component.TextWithRadioButton
-import com.indie.apps.pennypal.util.AppLanguage
+import com.indie.apps.pennypal.presentation.ui.component.composable.common.TextWithRadioButton
+import com.indie.apps.pennypal.util.app_enum.AppLanguage
 
 @Composable
 fun DialogLanguageData(

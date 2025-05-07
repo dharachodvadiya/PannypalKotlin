@@ -3,11 +3,9 @@ package com.indie.apps.pennypal.presentation.ui.screen.merchant
 import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -15,7 +13,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -29,20 +26,18 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
-import com.indie.apps.pennypal.presentation.ui.component.TopBarWithTitle
-import com.indie.apps.pennypal.presentation.ui.component.clickableWithNoRipple
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListItem
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImageWithText
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.SearchView
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.TopBar
-import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
+import com.indie.apps.pennypal.presentation.ui.component.composable.common.TopBarWithTitle
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.CustomText
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.ListItem
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.PrimaryButton
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.RoundImageWithText
+import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.clickableWithNoRipple
+import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
-import com.indie.apps.pennypal.util.getColorFromId
-import com.indie.apps.pennypal.util.getFirstCharacterUppercase
+import com.indie.apps.pennypal.util.internanal.method.getColorFromId
+import com.indie.apps.pennypal.util.internanal.method.getFirstCharacterUppercase
 
 @Composable
 fun MerchantTopBar(
@@ -62,7 +57,7 @@ fun MerchantTopBar(
         isBackEnable = true,
         onNavigationUp = onNavigationUp,
         title = title,
-        contentAlignment = if(isSelected) Alignment.CenterStart else Alignment.Center,
+        contentAlignment = if (isSelected) Alignment.CenterStart else Alignment.Center,
         /*content = {
             if (!isSelected) {
                 SearchView(

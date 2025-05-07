@@ -3,7 +3,7 @@ package com.indie.apps.pennypal.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import com.indie.apps.pennypal.data.database.dao.MerchantDao
-import com.indie.apps.pennypal.data.database.entity.Merchant
+import com.indie.apps.pennypal.data.database.db_entity.Merchant
 import com.indie.apps.pennypal.data.paging.BasePagingSource
 import com.indie.apps.pennypal.util.Util
 import kotlinx.coroutines.CoroutineDispatcher

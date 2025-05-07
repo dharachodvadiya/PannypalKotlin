@@ -21,18 +21,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.data.database.entity.User
+import com.indie.apps.pennypal.data.database.db_entity.User
 import com.indie.apps.pennypal.data.module.MoreItem
-import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomProgressDialog
-import com.indie.apps.pennypal.presentation.ui.component.showToast
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.CustomProgressDialog
+import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.backgroundGradientsBrush
+import com.indie.apps.pennypal.presentation.ui.component.extension.showToast
 import com.indie.apps.pennypal.presentation.ui.screen.AuthViewModel
 import com.indie.apps.pennypal.presentation.ui.screen.SignInLauncher
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
-import com.indie.apps.pennypal.util.AuthProcess
-import com.indie.apps.pennypal.util.SettingEffect
-import com.indie.apps.pennypal.util.SyncEvent
+import com.indie.apps.pennypal.util.app_enum.AuthProcess
+import com.indie.apps.pennypal.util.app_enum.SettingEffect
+import com.indie.apps.pennypal.util.app_enum.SyncEvent
 
 @Composable
 fun SettingScreen(

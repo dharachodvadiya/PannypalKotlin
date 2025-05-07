@@ -3,10 +3,10 @@ package com.indie.apps.pennypal.domain.usecase
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.indie.apps.pennypal.data.database.entity.Merchant
+import com.indie.apps.pennypal.data.database.db_entity.Merchant
 import com.indie.apps.pennypal.di.IoDispatcher
-import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.repository.MerchantRepository
+import com.indie.apps.pennypal.util.Util
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn

@@ -1,7 +1,7 @@
 package com.indie.apps.pennypal.repository
 
 import com.indie.apps.pennypal.data.database.dao.BaseCurrencyDao
-import com.indie.apps.pennypal.data.database.entity.BaseCurrency
+import com.indie.apps.pennypal.data.database.db_entity.BaseCurrency
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import javax.inject.Inject

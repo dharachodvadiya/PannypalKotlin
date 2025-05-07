@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.indie.apps.pennypal.domain.usecase.UpdateUserPaymentDataUseCase
 import com.indie.apps.pennypal.repository.PaymentRepository
-import com.indie.apps.pennypal.util.Resource
+import com.indie.apps.pennypal.util.app_enum.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn

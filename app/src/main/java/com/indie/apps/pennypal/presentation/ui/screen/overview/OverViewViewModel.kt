@@ -13,9 +13,9 @@ import com.indie.apps.pennypal.repository.BillingRepository
 import com.indie.apps.pennypal.repository.BudgetRepository
 import com.indie.apps.pennypal.repository.PreferenceRepository
 import com.indie.apps.pennypal.repository.UserRepository
-import com.indie.apps.pennypal.util.Resource
-import com.indie.apps.pennypal.util.ShowDataPeriod
 import com.indie.apps.pennypal.util.Util
+import com.indie.apps.pennypal.util.app_enum.Resource
+import com.indie.apps.pennypal.util.app_enum.ShowDataPeriod
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay

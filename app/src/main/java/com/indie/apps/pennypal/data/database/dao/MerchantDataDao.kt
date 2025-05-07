@@ -4,7 +4,7 @@ import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
-import com.indie.apps.pennypal.data.database.entity.MerchantData
+import com.indie.apps.pennypal.data.database.db_entity.MerchantData
 import com.indie.apps.pennypal.data.module.Amount
 import com.indie.apps.pennypal.data.module.balance.Total
 import com.indie.apps.pennypal.data.module.category.CategoryAmount

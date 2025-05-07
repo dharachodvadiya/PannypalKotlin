@@ -22,18 +22,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.data.database.entity.Category
-import com.indie.apps.pennypal.util.enum.CategoryType
+import com.indie.apps.pennypal.data.database.db_entity.Category
 import com.indie.apps.pennypal.data.module.TabItemInfo
-import com.indie.apps.pennypal.presentation.ui.component.DialogTextFieldItem
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomTab
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
+import com.indie.apps.pennypal.presentation.ui.component.composable.common.DialogTextFieldItem
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.CustomTab
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.CustomText
 import com.indie.apps.pennypal.presentation.ui.dialog.select_category.CategoryColorItem
 import com.indie.apps.pennypal.presentation.ui.dialog.select_category.CategoryItem
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
-import com.indie.apps.pennypal.util.getCategoryColorById
-import com.indie.apps.pennypal.util.getCategoryIconById
+import com.indie.apps.pennypal.util.app_enum.CategoryType
+import com.indie.apps.pennypal.util.internanal.method.getCategoryColorById
+import com.indie.apps.pennypal.util.internanal.method.getCategoryIconById
 import kotlin.enums.EnumEntries
 
 @Composable

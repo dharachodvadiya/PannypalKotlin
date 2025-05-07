@@ -10,8 +10,8 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.presentation.ui.component.TextWithRadioButton
-import com.indie.apps.pennypal.util.ShowDataPeriod
+import com.indie.apps.pennypal.presentation.ui.component.composable.common.TextWithRadioButton
+import com.indie.apps.pennypal.util.app_enum.ShowDataPeriod
 
 @Composable
 fun DialogSelectBalanceViewData(

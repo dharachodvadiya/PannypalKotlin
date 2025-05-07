@@ -7,7 +7,7 @@ import androidx.paging.map
 import com.indie.apps.pennypal.data.module.budget.BudgetWithSpentAndCategoryIdList
 import com.indie.apps.pennypal.data.module.budget.toBudgetWithSpentAndCategoryIdList
 import com.indie.apps.pennypal.di.IoDispatcher
-import com.indie.apps.pennypal.extension.mapBudgetsWithSpent
+import com.indie.apps.pennypal.presentation.ui.component.extension.mapBudgetsWithSpent
 import com.indie.apps.pennypal.repository.BudgetRepository
 import com.indie.apps.pennypal.repository.MerchantDataRepository
 import com.indie.apps.pennypal.util.Util

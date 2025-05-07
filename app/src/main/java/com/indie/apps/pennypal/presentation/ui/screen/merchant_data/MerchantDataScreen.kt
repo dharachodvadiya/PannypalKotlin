@@ -36,18 +36,18 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.data.database.entity.toMerchantNameAndDetails
+import com.indie.apps.pennypal.data.database.db_entity.toMerchantNameAndDetails
 import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
-import com.indie.apps.pennypal.presentation.ui.component.ConfirmationDialog
-import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
-import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
-import com.indie.apps.pennypal.presentation.ui.component.showToast
+import com.indie.apps.pennypal.presentation.ui.component.composable.common.NoDataMessage
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.ConfirmationDialog
+import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.backgroundGradientsBrush
+import com.indie.apps.pennypal.presentation.ui.component.extension.showToast
 import com.indie.apps.pennypal.presentation.ui.screen.InAppFeedbackViewModel
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.util.Util
-import com.indie.apps.pennypal.util.getDateFromMillis
+import com.indie.apps.pennypal.util.internanal.method.getDateFromMillis
 import kotlinx.coroutines.launch
 
 @SuppressLint("CoroutineCreationDuringComposition")
@@ -86,23 +86,23 @@ fun MerchantDataScreen(
 
     var openAlertDialog by remember { mutableStateOf(false) }
 
-  /*  var addEditMerchantDataId by remember {
-        mutableLongStateOf(-1L)
-    }*/
+    /*  var addEditMerchantDataId by remember {
+          mutableLongStateOf(-1L)
+      }*/
 
     LaunchedEffect(merchantDataId) {
         if (isEditSuccess) {
             //addEditMerchantDataId = merchantDataId
             merchantDataViewModel.editMerchantDataSuccess(merchantDataId)
-        }else if (isAddSuccess) {
+        } else if (isAddSuccess) {
             //addEditMerchantDataId = merchantDataId
             merchantDataViewModel.addMerchantDataSuccess(merchantDataId)
             inAppFeedbackViewModel.triggerReview(context)
-        }else if (isDeleteSuccess){
-            merchantDataViewModel.onDeleteFromEditScreenClick(merchantDataId){
-            context.showToast(merchantDeleteToast)
+        } else if (isDeleteSuccess) {
+            merchantDataViewModel.onDeleteFromEditScreenClick(merchantDataId) {
+                context.showToast(merchantDeleteToast)
+            }
         }
-    }
     }
 
     Scaffold(

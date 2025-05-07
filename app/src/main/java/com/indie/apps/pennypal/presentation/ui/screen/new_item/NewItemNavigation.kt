@@ -6,8 +6,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.google.gson.Gson
-import com.indie.apps.pennypal.data.database.entity.Category
-import com.indie.apps.pennypal.data.database.entity.Payment
+import com.indie.apps.pennypal.data.database.db_entity.Category
+import com.indie.apps.pennypal.data.database.db_entity.Payment
 import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
 import com.indie.apps.pennypal.presentation.ui.navigation.DialogNav
 import com.indie.apps.pennypal.presentation.ui.navigation.ScreenNav

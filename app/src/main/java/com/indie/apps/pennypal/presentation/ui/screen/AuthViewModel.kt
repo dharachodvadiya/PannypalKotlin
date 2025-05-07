@@ -7,11 +7,11 @@ import androidx.lifecycle.viewModelScope
 import com.indie.apps.pennypal.repository.AuthRepository
 import com.indie.apps.pennypal.repository.BackupRepository
 import com.indie.apps.pennypal.repository.NetworkRepository
-import com.indie.apps.pennypal.util.AppError
-import com.indie.apps.pennypal.util.AuthProcess
-import com.indie.apps.pennypal.util.SyncCallBackEvent
-import com.indie.apps.pennypal.util.SyncEffect
-import com.indie.apps.pennypal.util.SyncEvent
+import com.indie.apps.pennypal.util.app_enum.AppError
+import com.indie.apps.pennypal.util.app_enum.AuthProcess
+import com.indie.apps.pennypal.util.app_enum.SyncCallBackEvent
+import com.indie.apps.pennypal.util.app_enum.SyncEffect
+import com.indie.apps.pennypal.util.app_enum.SyncEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow

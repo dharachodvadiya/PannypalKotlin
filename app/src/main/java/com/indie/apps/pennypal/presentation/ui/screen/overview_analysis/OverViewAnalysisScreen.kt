@@ -26,16 +26,16 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.util.enum.AnalysisPeriod
-import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
-import com.indie.apps.pennypal.presentation.ui.component.TopBarWithTitle
-import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomMonthPickerDialog
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomYearPickerDialog
+import com.indie.apps.pennypal.presentation.ui.component.composable.common.NoDataMessage
+import com.indie.apps.pennypal.presentation.ui.component.composable.common.TopBarWithTitle
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.CustomMonthPickerDialog
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.CustomYearPickerDialog
+import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.screen.InAppFeedbackViewModel
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
-import com.indie.apps.pennypal.util.Resource
+import com.indie.apps.pennypal.util.app_enum.AnalysisPeriod
+import com.indie.apps.pennypal.util.app_enum.Resource
 import java.util.Calendar
 
 @SuppressLint("StateFlowValueCalledInComposition")

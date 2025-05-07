@@ -3,8 +3,8 @@ package com.indie.apps.pennypal.presentation.ui.dialog.select_language
 import androidx.lifecycle.ViewModel
 import com.indie.apps.pennypal.presentation.ui.component.UiText
 import com.indie.apps.pennypal.repository.PreferenceRepository
-import com.indie.apps.pennypal.util.AppLanguage
 import com.indie.apps.pennypal.util.Util
+import com.indie.apps.pennypal.util.app_enum.AppLanguage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject

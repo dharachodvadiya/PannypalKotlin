@@ -2,10 +2,10 @@ package com.indie.apps.pennypal.domain.usecase
 
 import com.indie.apps.pennypal.data.module.balance.Total
 import com.indie.apps.pennypal.repository.MerchantDataRepository
-import com.indie.apps.pennypal.util.Resource
-import com.indie.apps.pennypal.util.ShowDataPeriod
 import com.indie.apps.pennypal.util.Util
-import com.indie.apps.pennypal.util.handleException
+import com.indie.apps.pennypal.util.app_enum.Resource
+import com.indie.apps.pennypal.util.app_enum.ShowDataPeriod
+import com.indie.apps.pennypal.util.app_enum.handleException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject

@@ -3,14 +3,14 @@ package com.indie.apps.pennypal.presentation.ui.dialog.add_edit_category
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.indie.apps.pennypal.data.database.entity.Category
+import com.indie.apps.pennypal.data.database.db_entity.Category
 import com.indie.apps.pennypal.domain.usecase.AddCategoryUseCase
 import com.indie.apps.pennypal.domain.usecase.UpdateCategoryUseCase
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.repository.CategoryRepository
-import com.indie.apps.pennypal.util.ErrorMessage
-import com.indie.apps.pennypal.util.Resource
 import com.indie.apps.pennypal.util.Util
+import com.indie.apps.pennypal.util.app_enum.ErrorMessage
+import com.indie.apps.pennypal.util.app_enum.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch

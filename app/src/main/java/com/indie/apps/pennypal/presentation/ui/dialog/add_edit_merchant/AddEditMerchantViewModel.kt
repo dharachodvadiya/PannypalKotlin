@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.indie.apps.cpp.data.repository.CountryRepository
-import com.indie.apps.pennypal.data.database.entity.Merchant
+import com.indie.apps.pennypal.data.database.db_entity.Merchant
 import com.indie.apps.pennypal.data.module.ContactNumberAndCode
 import com.indie.apps.pennypal.domain.usecase.AddMerchantUseCase
 import com.indie.apps.pennypal.domain.usecase.UpdateMerchantUseCase
@@ -12,9 +12,9 @@ import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.repository.BaseCurrencyRepository
 import com.indie.apps.pennypal.repository.MerchantRepository
 import com.indie.apps.pennypal.repository.UserRepository
-import com.indie.apps.pennypal.util.ErrorMessage
-import com.indie.apps.pennypal.util.Resource
 import com.indie.apps.pennypal.util.Util
+import com.indie.apps.pennypal.util.app_enum.ErrorMessage
+import com.indie.apps.pennypal.util.app_enum.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch

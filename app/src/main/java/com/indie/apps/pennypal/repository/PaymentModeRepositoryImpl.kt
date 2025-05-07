@@ -1,7 +1,7 @@
 package com.indie.apps.pennypal.repository
 
 import com.indie.apps.pennypal.data.database.dao.PaymentModeDao
-import com.indie.apps.pennypal.data.database.entity.PaymentMode
+import com.indie.apps.pennypal.data.database.db_entity.PaymentMode
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext

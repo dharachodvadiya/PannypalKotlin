@@ -24,16 +24,15 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.util.enum.PeriodType
-import com.indie.apps.pennypal.presentation.ui.component.ConfirmationDialog
-import com.indie.apps.pennypal.presentation.ui.component.backgroundGradientsBrush
-import com.indie.apps.pennypal.presentation.ui.component.showToast
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.ConfirmationDialog
+import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.screen.InAppFeedbackViewModel
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
-import com.indie.apps.pennypal.util.Resource
-import com.indie.apps.pennypal.util.getDateFromMillis
+import com.indie.apps.pennypal.util.app_enum.PeriodType
+import com.indie.apps.pennypal.util.app_enum.Resource
+import com.indie.apps.pennypal.util.internanal.method.getDateFromMillis
 import java.text.SimpleDateFormat
 
 @SuppressLint("StateFlowValueCalledInComposition", "SimpleDateFormat")
@@ -162,7 +161,7 @@ fun SingleBudgetScreen(
             onConfirmation = {
                 viewModel.onDeleteDialogClick {
                     openAlertDialog = false
-                   // context.showToast(budgetDeleteToast)
+                    // context.showToast(budgetDeleteToast)
                     onDeleteSuccess(it)
                 }
             },

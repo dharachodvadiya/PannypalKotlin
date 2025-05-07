@@ -34,23 +34,23 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.util.enum.AnalysisPeriod
 import com.indie.apps.pennypal.data.module.ChartData
 import com.indie.apps.pennypal.data.module.TabItemInfo
 import com.indie.apps.pennypal.data.module.category.CategoryAmount
-import com.indie.apps.pennypal.presentation.ui.component.chart.PieChart
-import com.indie.apps.pennypal.presentation.ui.component.clickableWithNoRipple
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.AutoSizeText
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomTab
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListItem
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImage
-import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
+import com.indie.apps.pennypal.presentation.ui.component.composable.chart.PieChart
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.AutoSizeText
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.CustomTab
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.CustomText
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.ListItem
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.RoundImage
+import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.clickableWithNoRipple
+import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.util.Util
-import com.indie.apps.pennypal.util.getCategoryColorById
-import com.indie.apps.pennypal.util.getCategoryIconById
+import com.indie.apps.pennypal.util.app_enum.AnalysisPeriod
+import com.indie.apps.pennypal.util.internanal.method.getCategoryColorById
+import com.indie.apps.pennypal.util.internanal.method.getCategoryIconById
 import kotlin.enums.EnumEntries
 
 @Composable
@@ -77,7 +77,8 @@ fun AnalysisTopSelectionButton(
     Row(
         modifier = modifier, horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        CustomTab(tabList = tabItems,
+        CustomTab(
+            tabList = tabItems,
             selectedIndex = list.indexOf(selectedPeriod),
             onTabSelected = {
                 onSelect(list[it])

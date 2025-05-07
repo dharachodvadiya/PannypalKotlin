@@ -27,17 +27,17 @@ import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.module.MerchantNameAndDetails
-import com.indie.apps.pennypal.presentation.ui.component.DialogSearchView
-import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.ListItem
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.RoundImageWithText
+import com.indie.apps.pennypal.presentation.ui.component.composable.common.DialogSearchView
+import com.indie.apps.pennypal.presentation.ui.component.composable.common.NoDataMessage
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.CustomText
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.ListItem
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.PrimaryButton
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.RoundImageWithText
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
-import com.indie.apps.pennypal.util.getColorFromId
-import com.indie.apps.pennypal.util.getFirstCharacterUppercase
+import com.indie.apps.pennypal.util.internanal.method.getColorFromId
+import com.indie.apps.pennypal.util.internanal.method.getFirstCharacterUppercase
 
 /*
 

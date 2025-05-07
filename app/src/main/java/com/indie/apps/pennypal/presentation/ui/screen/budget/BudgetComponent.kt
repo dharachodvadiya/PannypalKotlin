@@ -44,23 +44,23 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.util.enum.DialogType
-import com.indie.apps.pennypal.util.enum.PeriodType
 import com.indie.apps.pennypal.data.module.budget.BudgetWithSpentAndCategoryIdList
-import com.indie.apps.pennypal.presentation.ui.component.NoDataMessage
-import com.indie.apps.pennypal.presentation.ui.component.TopBarWithTitle
-import com.indie.apps.pennypal.presentation.ui.component.clickableWithNoRipple
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomProgressItem
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomProgressItemWithDate
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.CustomText
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.PrimaryButton
-import com.indie.apps.pennypal.presentation.ui.component.roundedCornerBackground
-import com.indie.apps.pennypal.presentation.ui.component.roundedCornerLowerBackground
-import com.indie.apps.pennypal.presentation.ui.component.roundedCornerUpperBackground
+import com.indie.apps.pennypal.presentation.ui.component.composable.common.NoDataMessage
+import com.indie.apps.pennypal.presentation.ui.component.composable.common.TopBarWithTitle
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.CustomProgressItem
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.CustomProgressItemWithDate
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.CustomText
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.PrimaryButton
+import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.clickableWithNoRipple
+import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.roundedCornerBackground
+import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.roundedCornerLowerBackground
+import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.roundedCornerUpperBackground
 import com.indie.apps.pennypal.presentation.ui.screen.overview_analysis.AnalysisMonthYearSelection
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.util.Util
-import com.indie.apps.pennypal.util.getDateFromMillis
+import com.indie.apps.pennypal.util.app_enum.DialogType
+import com.indie.apps.pennypal.util.app_enum.PeriodType
+import com.indie.apps.pennypal.util.internanal.method.getDateFromMillis
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 
@@ -254,6 +254,7 @@ fun BudgetExpandableGroupHeader(
 }
 
 
+@SuppressLint("SimpleDateFormat")
 @Composable
 fun BudgetExpandableGroupItem(
     title: Int,

@@ -2,8 +2,8 @@ package com.indie.apps.pennypal.repository
 
 import com.indie.apps.cpp.data.repository.CountryRepository
 import com.indie.apps.pennypal.data.database.dao.UserDao
-import com.indie.apps.pennypal.data.database.entity.BaseCurrency
-import com.indie.apps.pennypal.data.database.entity.User
+import com.indie.apps.pennypal.data.database.db_entity.BaseCurrency
+import com.indie.apps.pennypal.data.database.db_entity.User
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map

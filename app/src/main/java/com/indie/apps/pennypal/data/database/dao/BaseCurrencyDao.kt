@@ -5,7 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import com.indie.apps.pennypal.data.database.entity.BaseCurrency
+import com.indie.apps.pennypal.data.database.db_entity.BaseCurrency
 
 @Dao
 interface BaseCurrencyDao {

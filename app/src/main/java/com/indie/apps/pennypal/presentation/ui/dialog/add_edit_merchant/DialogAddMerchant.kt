@@ -3,7 +3,6 @@ package com.indie.apps.pennypal.presentation.ui.dialog.add_edit_merchant
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.net.Uri
 import android.provider.Settings
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -16,6 +15,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -23,11 +23,11 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.data.database.entity.Merchant
+import com.indie.apps.pennypal.data.database.db_entity.Merchant
 import com.indie.apps.pennypal.data.module.ContactNumberAndCode
-import com.indie.apps.pennypal.presentation.ui.component.BottomSaveButton
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.MyAppDialog
-import com.indie.apps.pennypal.presentation.ui.component.showToast
+import com.indie.apps.pennypal.presentation.ui.component.composable.common.BottomSaveButton
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.MyAppDialog
+import com.indie.apps.pennypal.presentation.ui.component.extension.showToast
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 
 
@@ -96,7 +96,7 @@ fun DialogAddMerchant(
                             val i = Intent()
                             i.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                             i.addCategory(Intent.CATEGORY_DEFAULT)
-                            i.setData(Uri.parse("package:" + context.packageName))
+                            i.setData(("package:" + context.packageName).toUri())
                             context.startActivity(i)
                         } else {
                             permissionState.launchPermissionRequest()

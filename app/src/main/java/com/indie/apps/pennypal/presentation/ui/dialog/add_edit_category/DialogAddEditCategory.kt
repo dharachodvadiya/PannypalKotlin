@@ -14,14 +14,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.indie.apps.pennypal.R
-import com.indie.apps.pennypal.data.database.entity.Category
-import com.indie.apps.pennypal.util.enum.CategoryType
-import com.indie.apps.pennypal.presentation.ui.component.BottomSaveButton
-import com.indie.apps.pennypal.presentation.ui.component.custom.composable.MyAppDialog
-import com.indie.apps.pennypal.presentation.ui.component.showToast
+import com.indie.apps.pennypal.data.database.db_entity.Category
+import com.indie.apps.pennypal.presentation.ui.component.composable.common.BottomSaveButton
+import com.indie.apps.pennypal.presentation.ui.component.composable.custom.MyAppDialog
+import com.indie.apps.pennypal.presentation.ui.component.extension.showToast
 import com.indie.apps.pennypal.presentation.ui.dialog.add_edit_category.AddEditCategoryDialogField
 import com.indie.apps.pennypal.presentation.ui.dialog.add_edit_category.AddEditCategoryViewModel
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
+import com.indie.apps.pennypal.util.app_enum.CategoryType
 
 @Composable
 fun DialogAddEditCategory(
