@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.indie.apps.pennypal.data.database.db_entity.Category
 import com.indie.apps.pennypal.repository.CategoryRepository
 import com.indie.apps.pennypal.util.Util
+import com.indie.apps.pennypal.util.app_enum.AnimationType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,8 +20,8 @@ class SelectCategoryViewModel @Inject constructor(
 
     val categoryList = MutableStateFlow<List<Category>>(emptyList())
 
-    var addCategoryAnimRun = MutableStateFlow(false)
-        private set
+    val currentAnim = MutableStateFlow(AnimationType.NONE)
+    val currentAnimId = MutableStateFlow(-1L)
 
 
     fun setType(type: Int) {
@@ -33,17 +34,18 @@ class SelectCategoryViewModel @Inject constructor(
     }
 
     @SuppressLint("SuspiciousIndentation")
-    fun addCategorySuccess() {
-        addCategoryAnimRun.value = true
+    fun addCategorySuccess(id: Long) {
+        currentAnim.value = AnimationType.ADD
+        currentAnimId.value = id
         viewModelScope.launch {
             delay(Util.LIST_ITEM_ANIM_DELAY)
-            addCategorySuccessAnimStop()
+            addCategorySuccessAnimStop(AnimationType.ADD)
         }
     }
 
-    fun addCategorySuccessAnimStop() {
-        if (addCategoryAnimRun.value)
-            addCategoryAnimRun.value = false
+    fun addCategorySuccessAnimStop(animationType: AnimationType) {
+        currentAnim.value = AnimationType.NONE
+        currentAnimId.value = -1
     }
 
 

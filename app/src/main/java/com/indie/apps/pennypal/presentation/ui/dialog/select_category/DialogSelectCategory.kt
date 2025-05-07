@@ -35,10 +35,11 @@ fun DialogSelectCategory(
         mutableLongStateOf(selectedId)
     }
 
-    val addCategoryAnimRun by selectCategoryViewModel.addCategoryAnimRun.collectAsStateWithLifecycle()
+    val currentAnim by selectCategoryViewModel.currentAnim.collectAsStateWithLifecycle()
+    val currentAnimId by selectCategoryViewModel.currentAnimId.collectAsStateWithLifecycle()
     LaunchedEffect(addCategoryId) {
         if (addCategoryId != -1L) {
-            selectCategoryViewModel.addCategorySuccess()
+            selectCategoryViewModel.addCategorySuccess(addCategoryId)
         }
     }
 
@@ -58,10 +59,10 @@ fun DialogSelectCategory(
                     onSelect(it)
                 },
                 onAddCategory = onAddCategory,
-                categoryId = addCategoryId,
-                addCategoryAnimRun = addCategoryAnimRun,
-                onAnimStop = {
-                    selectCategoryViewModel.addCategorySuccessAnimStop()
+                categoryAnimId = currentAnimId,
+                currentAnim = currentAnim,
+                onAnimationComplete = {
+                    selectCategoryViewModel.addCategorySuccessAnimStop(it)
                 }
             )
         },

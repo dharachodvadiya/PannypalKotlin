@@ -61,21 +61,6 @@ fun AccountTypeItem(
                 val itemAnimateColor = remember {
                     androidx.compose.animation.Animatable(baseColor)
                 }
-                /*  val modifierColor = if (editAnimPaymentId == item.id) {
-
-                      scope.launch {
-                          itemAnimateColor.animateTo(
-                              targetValue = targetAnimColor,
-                              animationSpec = tween(Util.EDIT_ITEM_ANIM_TIME)
-                          )
-                          itemAnimateColor.animateTo(
-                              targetValue = baseColor, animationSpec = tween(Util.EDIT_ITEM_ANIM_TIME)
-                          )
-                      }
-                      modifier.background(itemAnimateColor.value)
-                  } else {
-                      Modifier
-                  }*/
 
                 val modifierAnim = if (paymentAnimId == item.id) {
                     when (currentAnim) {

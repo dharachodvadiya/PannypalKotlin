@@ -1,8 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.dialog.select_category
 
 import android.annotation.SuppressLint
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -15,11 +13,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Circle
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -31,13 +27,13 @@ import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.database.db_entity.Category
 import com.indie.apps.pennypal.presentation.ui.component.composable.custom.CustomText
 import com.indie.apps.pennypal.presentation.ui.component.composable.custom.RoundImage
+import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.addAnim
 import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.clickableWithNoRipple
 import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
-import com.indie.apps.pennypal.util.Util
+import com.indie.apps.pennypal.util.app_enum.AnimationType
 import com.indie.apps.pennypal.util.internanal.method.getCategoryColorById
 import com.indie.apps.pennypal.util.internanal.method.getCategoryIconById
-import kotlinx.coroutines.launch
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
@@ -46,14 +42,10 @@ fun SelectCategoryDialogField(
     categoryList: List<Category>,
     onSelectCategory: (Category) -> Unit,
     onAddCategory: () -> Unit,
-    categoryId: Long = -1L,
-    onAnimStop: () -> Unit,
-    addCategoryAnimRun: Boolean = false
-
+    categoryAnimId: Long = -1L,
+    onAnimationComplete: (AnimationType) -> Unit,
+    currentAnim: AnimationType = AnimationType.NONE
 ) {
-    val itemAnimateScale = remember {
-        Animatable(0f)
-    }
     val scope = rememberCoroutineScope()
     LazyVerticalGrid(
         columns = GridCells.Fixed(4),
@@ -64,21 +56,17 @@ fun SelectCategoryDialogField(
 
         items(categoryList) { item ->
 
-            val modifierAdd: Modifier = if (categoryId == item.id && addCategoryAnimRun) {
-                scope.launch {
-                    itemAnimateScale.animateTo(
-                        targetValue = 1f, animationSpec = tween(Util.ADD_ITEM_ANIM_TIME)
-                    )
-                    if (itemAnimateScale.value == 1f) {
-                        itemAnimateScale.snapTo(0f)
-                        onAnimStop()
+            val modifierAnim = if (categoryAnimId == item.id) {
+                when (currentAnim) {
+                    AnimationType.ADD -> Modifier.addAnim(scope) {
+                        onAnimationComplete(
+                            AnimationType.ADD
+                        )
                     }
-                }
 
-                Modifier.scale(itemAnimateScale.value)
-            } else {
-                Modifier
-            }
+                    else -> Modifier
+                }
+            } else Modifier
 
 
             CategoryItem(
@@ -87,7 +75,7 @@ fun SelectCategoryDialogField(
                 onClick = {
                     onSelectCategory(item)
                 },
-                modifier = modifierAdd
+                modifier = modifierAnim
             )
         }
         item {
