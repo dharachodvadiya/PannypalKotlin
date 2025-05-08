@@ -1,12 +1,14 @@
 package com.indie.apps.pennypal.presentation.ui.screen.payment
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -29,6 +31,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.indie.apps.pennypal.R
@@ -38,6 +41,7 @@ import com.indie.apps.pennypal.presentation.ui.component.composable.custom.Confi
 import com.indie.apps.pennypal.presentation.ui.component.composable.custom.PrimaryButton
 import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.extension.showToast
+import com.indie.apps.pennypal.presentation.ui.screen.AdViewModel
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.util.app_enum.DialogType
@@ -45,6 +49,7 @@ import com.indie.apps.pennypal.util.app_enum.DialogType
 @Composable
 fun PaymentScreen(
     paymentViewModel: PaymentViewModel = hiltViewModel(),
+    adViewModel: AdViewModel = hiltViewModel(),
     isEditSuccess: Boolean = false,
     onEditPaymentClick: (Long) -> Unit,
     onAddPaymentClick: () -> Unit,
@@ -116,8 +121,30 @@ fun PaymentScreen(
                     top = topBarPadding.calculateTopPadding(),
                     bottom = bottomPadding.calculateBottomPadding()
                 ),
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding))
+            verticalArrangement = Arrangement.spacedBy(5.dp)
         ) {
+
+            val isBannerVisibleFlow = remember { mutableStateOf(false) }
+            val bannerAdViewFlow by remember {
+                mutableStateOf(
+                    adViewModel.loadBannerAd() { adState ->
+                        isBannerVisibleFlow.value = adState.bannerAdView != null
+                    }
+                )
+            }
+
+
+            AnimatedVisibility(
+                visible = isBannerVisibleFlow.value,
+            ) {
+                AndroidView(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg)),
+                    factory = { bannerAdViewFlow }
+                )
+            }
+
             val paymentName = if (paymentWithModeList.isNotEmpty()) {
                 paymentWithModeList.firstOrNull() { item ->
                     item.id == (userData?.paymentId ?: -1L)

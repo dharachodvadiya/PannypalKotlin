@@ -1,9 +1,9 @@
 package com.indie.apps.pennypal.presentation.ui.screen.overview
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -20,7 +20,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
@@ -120,7 +119,7 @@ fun OverViewStartScreen(
 
     Scaffold { topBarPadding ->
 
-        Box(
+        Column(
             modifier = modifier
                 .fillMaxSize()
                 .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
@@ -128,8 +127,29 @@ fun OverViewStartScreen(
                 .padding(
                     top = topBarPadding.calculateTopPadding(),
                     bottom = bottomPadding.calculateBottomPadding()
-                )
+                ),
+            verticalArrangement = Arrangement.spacedBy(5.dp)
         ) {
+            val isBannerVisibleFlow = remember { mutableStateOf(false) }
+            val bannerAdViewFlow by remember {
+                mutableStateOf(
+                    adViewModel.loadBannerAd() { adState ->
+                        isBannerVisibleFlow.value = adState.bannerAdView != null
+                    }
+                )
+            }
+
+
+            AnimatedVisibility(
+                visible = isBannerVisibleFlow.value,
+            ) {
+                AndroidView(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg)),
+                    factory = { bannerAdViewFlow }
+                )
+            }
 
 
             val scrollState = rememberScrollState()
@@ -138,9 +158,9 @@ fun OverViewStartScreen(
                     .fillMaxSize()
                     .verticalScroll(scrollState)
                     //.background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
-                    .padding(dimensionResource(id = R.dimen.padding))
+                    .padding(horizontal = dimensionResource(id = R.dimen.padding))
                     .padding(
-                        top = 50.dp,
+                        // top = 50.dp,
                         bottom = bottomPadding.calculateBottomPadding()
                     ),
                 verticalArrangement = Arrangement.spacedBy(25.dp),
@@ -217,13 +237,6 @@ fun OverViewStartScreen(
                 //}
             }
 
-            AndroidView(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
-                    .align(Alignment.TopCenter),
-                factory = { adViewModel.loadBannerAd() }
-            )
         }
 
 

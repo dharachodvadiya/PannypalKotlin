@@ -2,10 +2,13 @@ package com.indie.apps.pennypal.presentation.ui.screen.new_item
 
 import android.annotation.SuppressLint
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -24,6 +27,8 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.indie.apps.pennypal.R
@@ -168,137 +173,162 @@ fun NewItemScreen(
                 )
             }) { padding ->
 
-
-                LaunchedEffect(Unit) {
-                    if (!newItemViewModel.isEditData())
-                        focusRequesterAmount.requestFocus()
-                }
-
-                //val imeState by rememberImeState {}
-                val scrollState = rememberScrollState()
-
-                /* LaunchedEffect(key1 = haveFocus) {
-                     if (haveFocus) {
-                         scrollState.animateScrollTo(scrollState.maxValue, tween(300))
-                     }
-                 }*/
-
                 Column(
                     modifier = modifier
                         .fillMaxSize()
                         .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
                         .padding(padding)
-                        .padding(horizontal = dimensionResource(id = R.dimen.padding))
+                        //.padding(horizontal = dimensionResource(id = R.dimen.padding))
                         .imePadding()
-                        .verticalScroll(scrollState)
-                    /*.onFocusEvent {
-                       // haveFocus = it.isFocused
-                    }*/
+                    // .verticalScroll(scrollState)
+                    ,
+                    verticalArrangement = Arrangement.spacedBy(5.dp)
                 ) {
-                    NewEntryTopSelectionButton(
-                        received = received,
-                        onReceivedChange = {
-                            newItemViewModel.onReceivedChange(it)
-                        }
-                    )
-                    NewEntryFieldItemSection(
-                        modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.padding)),
-                        currentTimeInMilli = currentTimeInMilli,
-                        merchantName = merchant?.name,
-                        paymentName = payment?.name,
-                        category = category,
-                        amount = amount,
-                        description = description,
-                        merchantError = merchantError.asString(),
-                        paymentError = paymentError.asString(),
-                        categoryError = categoryError.asString(),
-                        isMerchantLock = isMerchantLock,
-                        categories = categories,
-                        focusRequesterAmount = focusRequesterAmount,
-                        focusRequesterDescription = focusRequesterDescription,
-                        currency = originalCurrencyInfo?.currencySymbol ?: "$",
-                        rate = rate,
-                        finalAmount = finalAmount,
-                        baseCurrency = baseCurrencyInfo?.currencySymbol ?: "$",
-                        isSameCurrency = isSameCurrency,
-                        rateState = rateState,
-                        onEvent = { event ->
-                            when (event) {
-                                is NewEntryEvent.AmountChange -> {
-                                    newItemViewModel.updateAmountText(event.value)
-                                }
 
-                                is NewEntryEvent.CategorySelect -> {
-                                    newItemViewModel.setCategory(event.category)
-                                }
+                    val isBannerVisibleFlow = remember { mutableStateOf(false) }
+                    val bannerAdViewFlow by remember {
+                        mutableStateOf(
+                            adViewModel.loadBannerAd() { adState ->
+                                isBannerVisibleFlow.value = adState.bannerAdView != null
+                            }
+                        )
+                    }
 
-                                NewEntryEvent.DateSelect -> {
-                                    openDialog = DialogType.Date
-                                }
 
-                                is NewEntryEvent.DescriptionChange -> {
-                                    newItemViewModel.updateDescText(event.value)
-                                }
+                    AnimatedVisibility(
+                        visible = isBannerVisibleFlow.value,
+                    ) {
+                        AndroidView(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg)),
+                            factory = { bannerAdViewFlow }
+                        )
+                    }
 
-                                NewEntryEvent.MerchantSelect -> {
-                                    if (enableButton) {
-                                        if (isMerchantLock) {
-                                            context.showToast(merchantChangeToastMessage)
-                                        } else {
-                                            focusManager.clearFocus()
-                                            onMerchantSelect()
+
+                    LaunchedEffect(Unit) {
+                        if (!newItemViewModel.isEditData())
+                            focusRequesterAmount.requestFocus()
+                    }
+
+
+                    val scrollState = rememberScrollState()
+
+                    Column(
+                        modifier = modifier
+                            .fillMaxSize()
+                            // .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
+                            // .padding(padding)
+                            .padding(horizontal = dimensionResource(id = R.dimen.padding))
+                            //.imePadding()
+                            .verticalScroll(scrollState)
+                    ) {
+                        NewEntryTopSelectionButton(
+                            received = received,
+                            onReceivedChange = {
+                                newItemViewModel.onReceivedChange(it)
+                            }
+                        )
+                        NewEntryFieldItemSection(
+                            modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.padding)),
+                            currentTimeInMilli = currentTimeInMilli,
+                            merchantName = merchant?.name,
+                            paymentName = payment?.name,
+                            category = category,
+                            amount = amount,
+                            description = description,
+                            merchantError = merchantError.asString(),
+                            paymentError = paymentError.asString(),
+                            categoryError = categoryError.asString(),
+                            isMerchantLock = isMerchantLock,
+                            categories = categories,
+                            focusRequesterAmount = focusRequesterAmount,
+                            focusRequesterDescription = focusRequesterDescription,
+                            currency = originalCurrencyInfo?.currencySymbol ?: "$",
+                            rate = rate,
+                            finalAmount = finalAmount,
+                            baseCurrency = baseCurrencyInfo?.currencySymbol ?: "$",
+                            isSameCurrency = isSameCurrency,
+                            rateState = rateState,
+                            onEvent = { event ->
+                                when (event) {
+                                    is NewEntryEvent.AmountChange -> {
+                                        newItemViewModel.updateAmountText(event.value)
+                                    }
+
+                                    is NewEntryEvent.CategorySelect -> {
+                                        newItemViewModel.setCategory(event.category)
+                                    }
+
+                                    NewEntryEvent.DateSelect -> {
+                                        openDialog = DialogType.Date
+                                    }
+
+                                    is NewEntryEvent.DescriptionChange -> {
+                                        newItemViewModel.updateDescText(event.value)
+                                    }
+
+                                    NewEntryEvent.MerchantSelect -> {
+                                        if (enableButton) {
+                                            if (isMerchantLock) {
+                                                context.showToast(merchantChangeToastMessage)
+                                            } else {
+                                                focusManager.clearFocus()
+                                                onMerchantSelect()
+                                            }
                                         }
                                     }
-                                }
 
-                                NewEntryEvent.MoreCategories -> {
-                                    if (enableButton) {
-                                        focusManager.clearFocus()
-                                        onCategorySelect(category?.id, if (received) 1 else -1)
+                                    NewEntryEvent.MoreCategories -> {
+                                        if (enableButton) {
+                                            focusManager.clearFocus()
+                                            onCategorySelect(category?.id, if (received) 1 else -1)
+                                        }
                                     }
-                                }
 
-                                NewEntryEvent.PaymentSelect -> {
-                                    if (enableButton) {
-                                        focusManager.clearFocus()
-                                        onPaymentSelect(payment?.id)
+                                    NewEntryEvent.PaymentSelect -> {
+                                        if (enableButton) {
+                                            focusManager.clearFocus()
+                                            onPaymentSelect(payment?.id)
+                                        }
                                     }
-                                }
 
-                                NewEntryEvent.TimeSelect -> {
-                                    openDialog = DialogType.Time
-                                }
+                                    NewEntryEvent.TimeSelect -> {
+                                        openDialog = DialogType.Time
+                                    }
 
-                                NewEntryEvent.CurrencyChange -> onCurrencyChange(
-                                    originalCurrencyInfo?.currencyCountryCode ?: "US"
-                                )
+                                    NewEntryEvent.CurrencyChange -> onCurrencyChange(
+                                        originalCurrencyInfo?.currencyCountryCode ?: "US"
+                                    )
 
-                                is NewEntryEvent.RateChange -> {
-                                    newItemViewModel.updateRateText(event.value)
-                                }
+                                    is NewEntryEvent.RateChange -> {
+                                        newItemViewModel.updateRateText(event.value)
+                                    }
 
-                                NewEntryEvent.RetryRateFetch -> newItemViewModel.loadRateAndFinalAmount()
-                            }
-                        }
-                    )
-                    Spacer(modifier = Modifier.weight(1f))
-                    BottomSaveButton(
-                        onClick = {
-                            newItemViewModel.addOrEditMerchantData() { isEdit, id, merchantId ->
-
-                                adViewModel.showInterstitialAd(context as android.app.Activity) {
-                                    onSaveSuccess(isEdit, id, merchantId)
-                                    if (isEdit)
-                                        context.showToast(merchantDataEditToast)
-                                    else
-                                        context.showToast(merchantDataSaveToast)
+                                    NewEntryEvent.RetryRateFetch -> newItemViewModel.loadRateAndFinalAmount()
                                 }
                             }
-                        },
-                        enabled = enableButton,
-                        modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.padding))
-                    )
+                        )
+                        Spacer(modifier = Modifier.weight(1f))
+                        BottomSaveButton(
+                            onClick = {
+                                newItemViewModel.addOrEditMerchantData() { isEdit, id, merchantId ->
 
+                                    adViewModel.showInterstitialAd(context as android.app.Activity) {
+                                        onSaveSuccess(isEdit, id, merchantId)
+                                        if (isEdit)
+                                            context.showToast(merchantDataEditToast)
+                                        else
+                                            context.showToast(merchantDataSaveToast)
+                                    }
+                                }
+                            },
+                            enabled = enableButton,
+                            modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.padding))
+                        )
+
+                    }
                 }
             }
         }

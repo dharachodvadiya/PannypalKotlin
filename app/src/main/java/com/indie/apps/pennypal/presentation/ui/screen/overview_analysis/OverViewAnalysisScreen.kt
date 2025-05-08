@@ -1,11 +1,13 @@
 package com.indie.apps.pennypal.presentation.ui.screen.overview_analysis
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -23,6 +25,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.indie.apps.pennypal.R
@@ -88,8 +91,30 @@ fun OverViewAnalysisScreen(
                 .padding(horizontal = dimensionResource(id = R.dimen.padding)),
             // .verticalScroll(scrollState),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(20.dp)
+            verticalArrangement = Arrangement.spacedBy(5.dp)
         ) {
+
+            val isBannerVisibleFlow = remember { mutableStateOf(false) }
+            val bannerAdViewFlow by remember {
+                mutableStateOf(
+                    adViewModel.loadBannerAd() { adState ->
+                        isBannerVisibleFlow.value = adState.bannerAdView != null
+                    }
+                )
+            }
+
+
+            AnimatedVisibility(
+                visible = isBannerVisibleFlow.value,
+            ) {
+                AndroidView(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg)),
+                    factory = { bannerAdViewFlow }
+                )
+            }
+
             AnalysisTopSelectionButton(
                 list = AnalysisPeriod.entries,
                 selectedPeriod = currentPeriod,

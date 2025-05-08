@@ -1,9 +1,13 @@
 package com.indie.apps.pennypal.presentation.ui.screen.budget
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,6 +25,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -117,120 +122,151 @@ fun BudgetScreen(
         }
     ) { innerPadding ->
 
-        LazyColumn(
+        Column(
             modifier = modifier
                 .fillMaxSize()
                 .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
-                .padding(innerPadding)
-                .padding(horizontal = dimensionResource(id = R.dimen.padding)),
-            //verticalArrangement = Arrangement.spacedBy(20.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(innerPadding),
+            verticalArrangement = Arrangement.spacedBy(5.dp)
         ) {
-            // Budget Period Selection
-            item {
-                AddBudgetTopSelectionButton(
-                    list = PeriodType.entries,
-                    selectBudgetPeriod = PeriodType.entries.first { it.id == currentPeriod.id },
-                    onSelect = { budgetViewModel.setCurrentPeriod(it) }
+            val isBannerVisibleFlow = remember { mutableStateOf(false) }
+            val bannerAdViewFlow by remember {
+                mutableStateOf(
+                    adViewModel.loadBannerAd() { adState ->
+                        isBannerVisibleFlow.value = adState.bannerAdView != null
+                    }
                 )
             }
 
-            // Month/Year Selection and Budgets for MONTH/YEAR
-            if (currentPeriod != PeriodType.ONE_TIME) {
+
+            AnimatedVisibility(
+                visible = isBannerVisibleFlow.value,
+            ) {
+                AndroidView(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg)),
+                    factory = { bannerAdViewFlow }
+                )
+            }
+
+            LazyColumn(
+                modifier = modifier
+                    .fillMaxSize()
+                    //.background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
+                    // .padding(innerPadding)
+                    .padding(horizontal = dimensionResource(id = R.dimen.padding)),
+                //verticalArrangement = Arrangement.spacedBy(20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                // Budget Period Selection
                 item {
-                    Spacer(Modifier.height(20.dp))
-                    MonthYearSelection(
-                        currentPeriod,
-                        currentMonthInMilli,
-                        currentYearInMilli,
-                        budgetViewModel,
-                        onOpenDialog = { openDialog = it })
-                }
-                item {
-                    Spacer(Modifier.height(20.dp))
-                    BudgetList(
-                        budgetState = budgetState,
-                        onBudgetEditClick = { id ->
-                            adViewModel.showInterstitialAd(context as android.app.Activity) {
-                                onBudgetEditClick(id)
-                            }
-                        },
-                        currentAnim = currentAnim,
-                        budgetAnimId = budgetAnimId,
-                        onAnimComplete = {
-                            budgetViewModel.onAnimationComplete(it)
-                        })
-                }
-            } else {
-                // ONE_TIME Budgets
-                if (budgetState.isNotEmpty()) {
-                    item {
-                        Spacer(Modifier.height(20.dp))
-                    }
-                    expandableBudgetGroup(
-                        title = R.string.active_budget,
-                        isExpanded = isExpandOneTimeActiveData,
-                        onExpandClick = budgetViewModel::onActiveExpandClick,
-                        items = budgetState,
-                        //currency = currency,
-                        onBudgetEditClick = { id ->
-                            adViewModel.showInterstitialAd(context as android.app.Activity) {
-                                onBudgetEditClick(id)
-                            }
-                        },
-                        currentAnim = currentAnim,
-                        budgetAnimId = budgetAnimId,
-                        onAnimationComplete = {
-                            budgetViewModel.onAnimationComplete(it)
-                        }
+                    AddBudgetTopSelectionButton(
+                        list = PeriodType.entries,
+                        selectBudgetPeriod = PeriodType.entries.first { it.id == currentPeriod.id },
+                        onSelect = { budgetViewModel.setCurrentPeriod(it) }
                     )
                 }
-                if (pagedDataUpcomingBudget.itemCount > 0) {
+
+                // Month/Year Selection and Budgets for MONTH/YEAR
+                if (currentPeriod != PeriodType.ONE_TIME) {
                     item {
                         Spacer(Modifier.height(20.dp))
+                        MonthYearSelection(
+                            currentPeriod,
+                            currentMonthInMilli,
+                            currentYearInMilli,
+                            budgetViewModel,
+                            onOpenDialog = { openDialog = it })
                     }
-                    expandableBudgetGroup(
-                        title = R.string.upcoming_boudget,
-                        isExpanded = isExpandOneTimeUpcomingData,
-                        onExpandClick = budgetViewModel::onUpcomingExpandClick,
-                        pagingItems = pagedDataUpcomingBudget,
-                        //currency = currency,
-                        onBudgetEditClick = { id ->
-                            adViewModel.showInterstitialAd(context as android.app.Activity) {
-                                onBudgetEditClick(id)
-                            }
-                        },
-                        currentAnim = currentAnim,
-                        budgetAnimId = budgetAnimId,
-                        onAnimationComplete = {
-                            budgetViewModel.onAnimationComplete(it)
-                        }
-                    )
-                }
-                if (pagedDataPastBudget.itemCount > 0) {
                     item {
                         Spacer(Modifier.height(20.dp))
+                        BudgetList(
+                            budgetState = budgetState,
+                            onBudgetEditClick = { id ->
+                                adViewModel.showInterstitialAd(context as android.app.Activity) {
+                                    onBudgetEditClick(id)
+                                }
+                            },
+                            currentAnim = currentAnim,
+                            budgetAnimId = budgetAnimId,
+                            onAnimComplete = {
+                                budgetViewModel.onAnimationComplete(it)
+                            })
                     }
-                    expandableBudgetGroup(
-                        title = R.string.past_boudget,
-                        isExpanded = isExpandOneTimePastData,
-                        onExpandClick = budgetViewModel::onPastExpandClick,
-                        pagingItems = pagedDataPastBudget,
-                        //currency = currency,
-                        onBudgetEditClick = { id ->
-                            adViewModel.showInterstitialAd(context as android.app.Activity) {
-                                onBudgetEditClick(id)
-                            }
-                        },
-                        currentAnim = currentAnim,
-                        budgetAnimId = budgetAnimId,
-                        onAnimationComplete = {
-                            budgetViewModel.onAnimationComplete(it)
+                } else {
+                    // ONE_TIME Budgets
+                    if (budgetState.isNotEmpty()) {
+                        item {
+                            Spacer(Modifier.height(20.dp))
                         }
-                    )
+                        expandableBudgetGroup(
+                            title = R.string.active_budget,
+                            isExpanded = isExpandOneTimeActiveData,
+                            onExpandClick = budgetViewModel::onActiveExpandClick,
+                            items = budgetState,
+                            //currency = currency,
+                            onBudgetEditClick = { id ->
+                                adViewModel.showInterstitialAd(context as android.app.Activity) {
+                                    onBudgetEditClick(id)
+                                }
+                            },
+                            currentAnim = currentAnim,
+                            budgetAnimId = budgetAnimId,
+                            onAnimationComplete = {
+                                budgetViewModel.onAnimationComplete(it)
+                            }
+                        )
+                    }
+                    if (pagedDataUpcomingBudget.itemCount > 0) {
+                        item {
+                            Spacer(Modifier.height(20.dp))
+                        }
+                        expandableBudgetGroup(
+                            title = R.string.upcoming_boudget,
+                            isExpanded = isExpandOneTimeUpcomingData,
+                            onExpandClick = budgetViewModel::onUpcomingExpandClick,
+                            pagingItems = pagedDataUpcomingBudget,
+                            //currency = currency,
+                            onBudgetEditClick = { id ->
+                                adViewModel.showInterstitialAd(context as android.app.Activity) {
+                                    onBudgetEditClick(id)
+                                }
+                            },
+                            currentAnim = currentAnim,
+                            budgetAnimId = budgetAnimId,
+                            onAnimationComplete = {
+                                budgetViewModel.onAnimationComplete(it)
+                            }
+                        )
+                    }
+                    if (pagedDataPastBudget.itemCount > 0) {
+                        item {
+                            Spacer(Modifier.height(20.dp))
+                        }
+                        expandableBudgetGroup(
+                            title = R.string.past_boudget,
+                            isExpanded = isExpandOneTimePastData,
+                            onExpandClick = budgetViewModel::onPastExpandClick,
+                            pagingItems = pagedDataPastBudget,
+                            //currency = currency,
+                            onBudgetEditClick = { id ->
+                                adViewModel.showInterstitialAd(context as android.app.Activity) {
+                                    onBudgetEditClick(id)
+                                }
+                            },
+                            currentAnim = currentAnim,
+                            budgetAnimId = budgetAnimId,
+                            onAnimationComplete = {
+                                budgetViewModel.onAnimationComplete(it)
+                            }
+                        )
+                    }
                 }
             }
         }
+
+
     }
 
     // Dialog Handling

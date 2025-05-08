@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.ads.AdView
 import com.indie.apps.pennypal.repository.InAppAdsRepository
+import com.indie.apps.pennypal.repository.InAppAdsRepositoryImpl.AdState
 import com.indie.apps.pennypal.util.AdConfig.BANNER_AD_UNIT_ID
 import com.indie.apps.pennypal.util.AdConfig.INTERSTITIAL_AD_UNIT_ID
 import com.indie.apps.pennypal.util.AdConfig.NATIVE_AD_UNIT_ID
@@ -17,8 +18,8 @@ class AdViewModel @Inject constructor(
     private val adRepository: InAppAdsRepository
 ) : ViewModel() {
 
-    fun loadBannerAd(): AdView {
-        return adRepository.loadBannerAd(BANNER_AD_UNIT_ID) { }
+    fun loadBannerAd(onStateChange: (AdState) -> Unit = {}): AdView {
+        return adRepository.loadBannerAd(BANNER_AD_UNIT_ID, onStateChange)
     }
 
     fun loadInterstitialAd() {
@@ -27,10 +28,14 @@ class AdViewModel @Inject constructor(
         }
     }
 
-    fun showInterstitialAd(activity: Activity, isReload : Boolean = false, onAdDismissed: () -> Unit) {
+    fun showInterstitialAd(
+        activity: Activity,
+        isReload: Boolean = false,
+        onAdDismissed: () -> Unit
+    ) {
         viewModelScope.launch {
-            adRepository.showInterstitialAd(activity){
-                if(isReload){
+            adRepository.showInterstitialAd(activity) {
+                if (isReload) {
                     loadInterstitialAd()
                 }
                 onAdDismissed()

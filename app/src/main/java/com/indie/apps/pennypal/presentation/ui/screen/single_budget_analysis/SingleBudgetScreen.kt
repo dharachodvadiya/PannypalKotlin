@@ -1,10 +1,12 @@
 package com.indie.apps.pennypal.presentation.ui.screen.single_budget_analysis
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -21,11 +23,13 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.presentation.ui.component.composable.custom.ConfirmationDialog
 import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.backgroundGradientsBrush
+import com.indie.apps.pennypal.presentation.ui.screen.AdViewModel
 import com.indie.apps.pennypal.presentation.ui.screen.InAppFeedbackViewModel
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
@@ -41,6 +45,7 @@ import java.text.SimpleDateFormat
 fun SingleBudgetScreen(
     viewModel: SingleBudgetViewModel = hiltViewModel(),
     inAppFeedbackViewModel: InAppFeedbackViewModel = hiltViewModel(),
+    adViewModel: AdViewModel = hiltViewModel(),
     onNavigationUp: () -> Unit,
     onDeleteSuccess: (Long) -> Unit,
     onEditClick: (Long) -> Unit,
@@ -80,72 +85,104 @@ fun SingleBudgetScreen(
                 }
             ) { innerPadding ->
 
-                LaunchedEffect(Unit) {
-                    inAppFeedbackViewModel.triggerReview(context, true)
-                }
-
-                val scrollState = rememberScrollState()
-
                 Column(
                     modifier = modifier
                         .fillMaxSize()
                         .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
                         .padding(innerPadding)
-                        .padding(horizontal = dimensionResource(id = R.dimen.padding))
-                        .verticalScroll(scrollState),
-                    verticalArrangement = Arrangement.spacedBy(20.dp)
+                    // .padding(horizontal = dimensionResource(id = R.dimen.padding))
+                    ,
+                    verticalArrangement = Arrangement.spacedBy(5.dp)
                 ) {
-                    val dateFormat = SimpleDateFormat("dd MMM yyyy")
-                    val yearFormat = SimpleDateFormat("yyyy")
-                    val monthFormat = SimpleDateFormat("MMMM yyyy")
 
-                    val timeString = budgetData?.let { tmpBudgetData ->
-                        when (tmpBudgetData.periodType) {
-                            PeriodType.MONTH.id -> getDateFromMillis(
-                                tmpBudgetData.startDate,
-                                monthFormat
-                            )
+                    val isBannerVisibleFlow = remember { mutableStateOf(false) }
+                    val bannerAdViewFlow by remember {
+                        mutableStateOf(
+                            adViewModel.loadBannerAd() { adState ->
+                                isBannerVisibleFlow.value = adState.bannerAdView != null
+                            }
+                        )
+                    }
 
-                            PeriodType.YEAR.id -> getDateFromMillis(
-                                tmpBudgetData.startDate,
-                                yearFormat
-                            )
 
-                            PeriodType.ONE_TIME.id -> "${
-                                getDateFromMillis(
+                    AnimatedVisibility(
+                        visible = isBannerVisibleFlow.value,
+                    ) {
+                        AndroidView(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg)),
+                            factory = { bannerAdViewFlow }
+                        )
+                    }
+
+                    LaunchedEffect(Unit) {
+                        inAppFeedbackViewModel.triggerReview(context, true)
+                    }
+
+                    val scrollState = rememberScrollState()
+
+                    Column(
+                        modifier = modifier
+                            .fillMaxSize()
+                            // .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
+                            // .padding(innerPadding)
+                            .padding(horizontal = dimensionResource(id = R.dimen.padding))
+                            .verticalScroll(scrollState),
+                        verticalArrangement = Arrangement.spacedBy(20.dp)
+                    ) {
+                        val dateFormat = SimpleDateFormat("dd MMM yyyy")
+                        val yearFormat = SimpleDateFormat("yyyy")
+                        val monthFormat = SimpleDateFormat("MMMM yyyy")
+
+                        val timeString = budgetData?.let { tmpBudgetData ->
+                            when (tmpBudgetData.periodType) {
+                                PeriodType.MONTH.id -> getDateFromMillis(
                                     tmpBudgetData.startDate,
-                                    dateFormat
+                                    monthFormat
                                 )
-                            } - ${
-                                tmpBudgetData.endDate?.let { date ->
+
+                                PeriodType.YEAR.id -> getDateFromMillis(
+                                    tmpBudgetData.startDate,
+                                    yearFormat
+                                )
+
+                                PeriodType.ONE_TIME.id -> "${
                                     getDateFromMillis(
-                                        date, dateFormat
+                                        tmpBudgetData.startDate,
+                                        dateFormat
                                     )
-                                }
-                            }"
+                                } - ${
+                                    tmpBudgetData.endDate?.let { date ->
+                                        getDateFromMillis(
+                                            date, dateFormat
+                                        )
+                                    }
+                                }"
 
-                            else -> ""
-                        }
-                    } ?: ""
+                                else -> ""
+                            }
+                        } ?: ""
 
-                    SingleBudgetOverAllAnalysis(
-                        totalBudgetAmount = budgetData?.amount ?: 0.0,
-                        spentAmount = spentCategoryData.sumOf { it.amount },
-                        timeString = timeString,
-                        currency = budgetData?.originalAmountSymbol ?: "$"
-                    )
+                        SingleBudgetOverAllAnalysis(
+                            totalBudgetAmount = budgetData?.amount ?: 0.0,
+                            spentAmount = spentCategoryData.sumOf { it.amount },
+                            timeString = timeString,
+                            currency = budgetData?.originalAmountSymbol ?: "$"
+                        )
 
-                    BudgetedCategoryAnalysis(
-                        categoryLimitList = budgetData?.category ?: emptyList(),
-                        categorySpentList = spentCategoryData,
-                        currency = budgetData?.originalAmountSymbol ?: "$"
-                    )
+                        BudgetedCategoryAnalysis(
+                            categoryLimitList = budgetData?.category ?: emptyList(),
+                            categorySpentList = spentCategoryData,
+                            currency = budgetData?.originalAmountSymbol ?: "$"
+                        )
 
-                    IncludedCategoryAnalysis(
-                        categoryLimitList = budgetData?.category ?: emptyList(),
-                        categorySpentList = spentCategoryData,
-                        currency = budgetData?.originalAmountSymbol ?: "$"
-                    )
+                        IncludedCategoryAnalysis(
+                            categoryLimitList = budgetData?.category ?: emptyList(),
+                            categorySpentList = spentCategoryData,
+                            currency = budgetData?.originalAmountSymbol ?: "$"
+                        )
+                    }
                 }
             }
         }

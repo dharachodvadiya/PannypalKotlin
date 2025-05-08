@@ -2,11 +2,13 @@ package com.indie.apps.pennypal.presentation.ui.screen.add_budget
 
 import android.annotation.SuppressLint
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -26,6 +28,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.indie.apps.pennypal.R
@@ -155,102 +158,135 @@ fun AddEditBudgetScreen(
                 }
             ) { innerPadding ->
 
-                val scrollState = rememberScrollState()
-
                 Column(
                     modifier = modifier
                         .fillMaxSize()
                         .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
                         .padding(innerPadding)
-                        .padding(horizontal = dimensionResource(id = R.dimen.padding))
-                        .imePadding()
-                        .verticalScroll(scrollState),
+                        //.padding(horizontal = dimensionResource(id = R.dimen.padding))
+                        .imePadding(),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(20.dp)
+                    verticalArrangement = Arrangement.spacedBy(5.dp)
                 ) {
 
-                    val dateFormat = SimpleDateFormat("dd MMM yyyy")
-                    val yearFormat = SimpleDateFormat("yyyy")
-                    val monthFormat = SimpleDateFormat("MMMM yyyy")
-
-                    if (!addBudgetViewModel.isEditData()) {
-                        AddBudgetTopSelectionButton(
-                            list = PeriodType.entries,
-                            selectBudgetPeriod = PeriodType.entries.firstOrNull { it.id == currentPeriod }
-                                ?: PeriodType.MONTH,
-                            onSelect = addBudgetViewModel::setCurrentPeriod,
+                    val isBannerVisibleFlow = remember { mutableStateOf(false) }
+                    val bannerAdViewFlow by remember {
+                        mutableStateOf(
+                            adViewModel.loadBannerAd() { adState ->
+                                isBannerVisibleFlow.value = adState.bannerAdView != null
+                            }
                         )
                     }
-                    AddBudgetFieldItem(
-                        onSelectCategory = {
-                            onSelectCategory(selectedCategoryList.map { it.id })
-                        },
-                        selectBudgetPeriod = PeriodType.entries.firstOrNull() { it.id == currentPeriod }
-                            ?: PeriodType.MONTH,
-                        onSelectFromDate = {
-                            openDialog = DialogType.FromDate
-                        },
-                        onSelectMonth = {
-                            if (!addBudgetViewModel.isEditData())
-                                openDialog = DialogType.Month
-                            else
-                                context.showToast(periodEditToast)
-                        },
-                        onSelectYear = {
-                            if (!addBudgetViewModel.isEditData())
-                                openDialog = DialogType.Year
-                            else
-                                context.showToast(periodEditToast)
-                        },
-                        onSelectToDate = {
-                            openDialog = DialogType.ToDate
-                        },
-                        amount = amount,
-                        categoryList = selectedCategoryList,
-                        isExpanded = isCategoryExpanded,
-                        onCategoryAmountChange = addBudgetViewModel::setCategoryAmount,
-                        onCategoryExpandChange = { isCategoryExpanded = it },
-                        totalCategoryAmount = amount.text.toDoubleOrNull() ?: 0.0,
-                        remainingCategoryAmount = remainingAmount,
-                        currentMonth = getDateFromMillis(currentMonthInMilli, monthFormat),
-                        currentYear = getDateFromMillis(currentYearInMilli, yearFormat),
-                        currentFromDate = getDateFromMillis(currentFromTimeInMilli, dateFormat),
-                        currentToDate = getDateFromMillis(currentToTimeInMilli, dateFormat),
-                        periodErrorText = periodErrorText.asString(),
-                        periodFromErrorText = periodFromErrorText.asString(),
-                        periodToErrorText = periodToErrorText.asString(),
-                        categoryErrorText = categoryErrorText.asString(),
-                        categoryBudgetErrorText = categoryBudgetErrorText.asString(),
-                        onAmountTextChange = addBudgetViewModel::updateAmountText,
-                        budgetTitle = budgetTitle,
-                        onBudgetTitleTextChange = addBudgetViewModel::updateBudgetTitleText,
-                        focusRequesterAmount = focusRequesterAmount,
-                        focusRequesterTitle = focusRequesterTitle,
-                        currency = originalCurrencyInfo?.currencySymbol ?: "$",
-                        onCurrencyChange = {
-                            onCurrencyChange(originalCurrencyInfo?.currencyCountryCode ?: "US")
+
+
+                    AnimatedVisibility(
+                        visible = isBannerVisibleFlow.value,
+                    ) {
+                        AndroidView(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg)),
+                            factory = { bannerAdViewFlow }
+                        )
+                    }
+
+                    val scrollState = rememberScrollState()
+
+                    Column(
+                        modifier = modifier
+                            .fillMaxSize()
+                            //.background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
+                            //.padding(innerPadding)
+                            .padding(horizontal = dimensionResource(id = R.dimen.padding))
+                            //.imePadding()
+                            .verticalScroll(scrollState),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(20.dp)
+                    ) {
+
+                        val dateFormat = SimpleDateFormat("dd MMM yyyy")
+                        val yearFormat = SimpleDateFormat("yyyy")
+                        val monthFormat = SimpleDateFormat("MMMM yyyy")
+
+                        if (!addBudgetViewModel.isEditData()) {
+                            AddBudgetTopSelectionButton(
+                                list = PeriodType.entries,
+                                selectBudgetPeriod = PeriodType.entries.firstOrNull { it.id == currentPeriod }
+                                    ?: PeriodType.MONTH,
+                                onSelect = addBudgetViewModel::setCurrentPeriod,
+                            )
                         }
-                    )
-
-                    Spacer(modifier = Modifier.weight(1f))
-
-                    BottomSaveButton(
-                        onClick = {
-                            addBudgetViewModel.saveData { isEdit, id, month, year ->
-
-                                adViewModel.showInterstitialAd(context as android.app.Activity) {
-                                    onSave(isEdit, id, currentPeriod, month, year)
-                                    if (isEdit) {
-                                        context.showToast(budgetEditToast)
-                                    } else {
-                                        context.showToast(budgetAddToast)
-                                    }
-                                }
-
+                        AddBudgetFieldItem(
+                            onSelectCategory = {
+                                onSelectCategory(selectedCategoryList.map { it.id })
+                            },
+                            selectBudgetPeriod = PeriodType.entries.firstOrNull() { it.id == currentPeriod }
+                                ?: PeriodType.MONTH,
+                            onSelectFromDate = {
+                                openDialog = DialogType.FromDate
+                            },
+                            onSelectMonth = {
+                                if (!addBudgetViewModel.isEditData())
+                                    openDialog = DialogType.Month
+                                else
+                                    context.showToast(periodEditToast)
+                            },
+                            onSelectYear = {
+                                if (!addBudgetViewModel.isEditData())
+                                    openDialog = DialogType.Year
+                                else
+                                    context.showToast(periodEditToast)
+                            },
+                            onSelectToDate = {
+                                openDialog = DialogType.ToDate
+                            },
+                            amount = amount,
+                            categoryList = selectedCategoryList,
+                            isExpanded = isCategoryExpanded,
+                            onCategoryAmountChange = addBudgetViewModel::setCategoryAmount,
+                            onCategoryExpandChange = { isCategoryExpanded = it },
+                            totalCategoryAmount = amount.text.toDoubleOrNull() ?: 0.0,
+                            remainingCategoryAmount = remainingAmount,
+                            currentMonth = getDateFromMillis(currentMonthInMilli, monthFormat),
+                            currentYear = getDateFromMillis(currentYearInMilli, yearFormat),
+                            currentFromDate = getDateFromMillis(currentFromTimeInMilli, dateFormat),
+                            currentToDate = getDateFromMillis(currentToTimeInMilli, dateFormat),
+                            periodErrorText = periodErrorText.asString(),
+                            periodFromErrorText = periodFromErrorText.asString(),
+                            periodToErrorText = periodToErrorText.asString(),
+                            categoryErrorText = categoryErrorText.asString(),
+                            categoryBudgetErrorText = categoryBudgetErrorText.asString(),
+                            onAmountTextChange = addBudgetViewModel::updateAmountText,
+                            budgetTitle = budgetTitle,
+                            onBudgetTitleTextChange = addBudgetViewModel::updateBudgetTitleText,
+                            focusRequesterAmount = focusRequesterAmount,
+                            focusRequesterTitle = focusRequesterTitle,
+                            currency = originalCurrencyInfo?.currencySymbol ?: "$",
+                            onCurrencyChange = {
+                                onCurrencyChange(originalCurrencyInfo?.currencyCountryCode ?: "US")
                             }
-                        },
-                        modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.padding))
-                    )
+                        )
+
+                        Spacer(modifier = Modifier.weight(1f))
+
+                        BottomSaveButton(
+                            onClick = {
+                                addBudgetViewModel.saveData { isEdit, id, month, year ->
+
+                                    adViewModel.showInterstitialAd(context as android.app.Activity) {
+                                        onSave(isEdit, id, currentPeriod, month, year)
+                                        if (isEdit) {
+                                            context.showToast(budgetEditToast)
+                                        } else {
+                                            context.showToast(budgetAddToast)
+                                        }
+                                    }
+
+                                }
+                            },
+                            modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.padding))
+                        )
+                    }
                 }
             }
         }
