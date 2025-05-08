@@ -8,10 +8,10 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -37,6 +37,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -150,10 +151,31 @@ fun AllDataScreen(
                 //.padding(bottomPadding)
                 .padding(innerPadding)
                 .fillMaxSize()
-                .padding(horizontal = dimensionResource(id = R.dimen.padding))
+                .padding(horizontal = dimensionResource(id = R.dimen.padding)),
+            verticalArrangement = Arrangement.spacedBy(5.dp)
         )
-
         {
+            val isBannerVisibleFlow = remember { mutableStateOf(false) }
+            val bannerAdViewFlow by remember {
+                mutableStateOf(
+                    adViewModel.loadBannerAd() { adState ->
+                        isBannerVisibleFlow.value = adState.bannerAdView != null
+                    }
+                )
+            }
+
+
+            AnimatedVisibility(
+                visible = isBannerVisibleFlow.value,
+            ) {
+                AndroidView(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg)),
+                    factory = { bannerAdViewFlow }
+                )
+            }
+
             SearchView(
                 textState = searchTextState,
                 onTextChange = {
@@ -175,7 +197,7 @@ fun AllDataScreen(
                     end = 0.dp
                 )
             )
-            Spacer(Modifier.height(dimensionResource((R.dimen.padding))))
+            //Spacer(Modifier.height(dimensionResource((R.dimen.padding))))
 
             if (pagingState.isRefresh && (lazyPagingData.itemCount == 0 || isAddSuccess)) {
                 LoadingWithProgress(
