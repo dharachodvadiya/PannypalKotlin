@@ -22,14 +22,14 @@ class InAppAdsRepositoryImpl @Inject constructor(
 ) : InAppAdsRepository {
 
     private var interstitialRequestCount = 0
-    private val interstitialTriggerFrequency = 10 // Show ad every given requests
+    private val interstitialTriggerFrequency = 5 // Show ad every given requests
 
 
     // Interstitial Ad
     private var interstitialAd: InterstitialAd? = null
     private var interstitialAdLoadCallback: InterstitialAdLoadCallback? = null
     private var interstitialAdShowCount = 0
-    private val maxInterstitialAdsPerSession = 200
+    private val maxInterstitialAdsPerSession = 3
 
     // Native Ad
     private var nativeAd: NativeAd? = null
