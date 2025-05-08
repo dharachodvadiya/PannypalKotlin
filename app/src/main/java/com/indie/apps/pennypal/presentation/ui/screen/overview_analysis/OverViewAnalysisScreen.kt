@@ -31,6 +31,7 @@ import com.indie.apps.pennypal.presentation.ui.component.composable.common.TopBa
 import com.indie.apps.pennypal.presentation.ui.component.composable.custom.CustomMonthPickerDialog
 import com.indie.apps.pennypal.presentation.ui.component.composable.custom.CustomYearPickerDialog
 import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.backgroundGradientsBrush
+import com.indie.apps.pennypal.presentation.ui.screen.AdViewModel
 import com.indie.apps.pennypal.presentation.ui.screen.InAppFeedbackViewModel
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
@@ -44,10 +45,18 @@ import java.util.Calendar
 fun OverViewAnalysisScreen(
     viewModel: OverViewAnalysisViewModel = hiltViewModel(),
     inAppFeedbackViewModel: InAppFeedbackViewModel = hiltViewModel(),
+    adViewModel: AdViewModel = hiltViewModel(),
     onNavigationUp: () -> Unit,
     bottomPadding: PaddingValues,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
+    val localContext = LocalContext.current
+
+    // Load ad when screen is created
+    LaunchedEffect(Unit) {
+        adViewModel.loadInterstitialAd()
+    }
+
     //val currency by viewModel.currency.collectAsStateWithLifecycle()
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
     val currentPeriod by remember { viewModel.currentPeriod }.collectAsStateWithLifecycle()
@@ -57,8 +66,6 @@ fun OverViewAnalysisScreen(
     val currentTotal by remember { viewModel.currentTotal }.collectAsStateWithLifecycle()
     var openDialog by remember { mutableStateOf<DialogType?>(null) }
     val title = stringResource(id = R.string.analysis)
-
-    val localContext = LocalContext.current
 
     Scaffold(
         topBar = {
@@ -86,7 +93,16 @@ fun OverViewAnalysisScreen(
             AnalysisTopSelectionButton(
                 list = AnalysisPeriod.entries,
                 selectedPeriod = currentPeriod,
-                onSelect = viewModel::setCurrentPeriod,
+                onSelect = { period ->
+                    adViewModel.showInterstitialAd(
+                        localContext as android.app.Activity,
+                        isReload = true
+                    ) {
+                        viewModel.setCurrentPeriod(
+                            period
+                        )
+                    }
+                },
             )
 
             val timeInMilli = when (currentPeriod) {
@@ -96,8 +112,22 @@ fun OverViewAnalysisScreen(
 
             AnalysisMonthYearSelection(
                 textYearMonth = viewModel.formatDateForDisplay(currentPeriod, timeInMilli),
-                onPreviousClick = viewModel::onPreviousClick,
-                onNextClick = viewModel::onNextClick,
+                onPreviousClick = {
+                    adViewModel.showInterstitialAd(
+                        localContext as android.app.Activity,
+                        isReload = true
+                    ) {
+                        viewModel.onPreviousClick()
+                    }
+                },
+                onNextClick = {
+                    adViewModel.showInterstitialAd(
+                        localContext as android.app.Activity,
+                        isReload = true
+                    ) {
+                        viewModel.onNextClick()
+                    }
+                },
                 onTextClick = {
                     if (isLoading)
                         return@AnalysisMonthYearSelection

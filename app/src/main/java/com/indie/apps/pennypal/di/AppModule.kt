@@ -28,6 +28,8 @@ import com.indie.apps.pennypal.repository.CategoryRepository
 import com.indie.apps.pennypal.repository.CategoryRepositoryImpl
 import com.indie.apps.pennypal.repository.ExchangeRateRepository
 import com.indie.apps.pennypal.repository.ExchangeRateRepositoryImpl
+import com.indie.apps.pennypal.repository.InAppAdsRepository
+import com.indie.apps.pennypal.repository.InAppAdsRepositoryImpl
 import com.indie.apps.pennypal.repository.InAppFeedbackRepository
 import com.indie.apps.pennypal.repository.InAppFeedbackRepositoryImpl
 import com.indie.apps.pennypal.repository.MerchantDataRepository
@@ -283,5 +285,12 @@ object AppModule {
     fun provideReviewManager(@ApplicationContext context: Context): ReviewManager {
         return ReviewManagerFactory.create(context)
     }
+
+    @Singleton
+    @Provides
+    fun provideInAppAdsRepository(@ApplicationContext context: Context): InAppAdsRepository {
+        return InAppAdsRepositoryImpl(context)
+    }
+
 
 }

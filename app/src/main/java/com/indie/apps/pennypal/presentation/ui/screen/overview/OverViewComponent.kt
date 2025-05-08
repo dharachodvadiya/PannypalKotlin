@@ -327,7 +327,6 @@ fun OverviewTransactionData(
             val scope = rememberCoroutineScope()
 
             if (recentTransaction.isNotEmpty()) {
-                println("aaaa 111 ${recentTransaction.size}")
                 recentTransaction.forEach { item ->
 
                     val baseColor = MyAppTheme.colors.itemBg

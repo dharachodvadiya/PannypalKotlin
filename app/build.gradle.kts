@@ -41,12 +41,12 @@ android {
                 "EXCHANGE_RATE_API_KEY",
                 properties.getProperty("EXCHANGE_RATE_API_KEY")
             )
-           /* isMinifyEnabled = true
-            //isShrinkResources = true
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )*/
+            /* isMinifyEnabled = true
+             //isShrinkResources = true
+             proguardFiles(
+                 getDefaultProguardFile("proguard-android-optimize.txt"),
+                 "proguard-rules.pro"
+             )*/
         }
         release {
             manifestPlaceholders["crashlyticsCollectionEnabled"] = true
@@ -206,6 +206,9 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.6.0")
     implementation("com.squareup.retrofit2:converter-gson:2.6.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.5.0")
+
+    //Admob
+    implementation("com.google.android.gms:play-services-ads:24.2.0")
 
 }
 /*

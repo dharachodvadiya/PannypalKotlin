@@ -51,6 +51,7 @@ import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.addA
 import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.editAnim
 import com.indie.apps.pennypal.presentation.ui.component.extension.showToast
+import com.indie.apps.pennypal.presentation.ui.screen.AdViewModel
 import com.indie.apps.pennypal.presentation.ui.screen.InAppFeedbackViewModel
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
@@ -68,6 +69,7 @@ import kotlinx.coroutines.launch
 fun MerchantScreen(
     merchantViewModel: MerchantViewModel = hiltViewModel(),
     inAppFeedbackViewModel: InAppFeedbackViewModel = hiltViewModel(),
+    adViewModel: AdViewModel = hiltViewModel(),
     onNavigationUp: () -> Unit,
     onMerchantClick: (Long) -> Unit,
     onAddClick: () -> Unit,
@@ -81,6 +83,11 @@ fun MerchantScreen(
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+
+    // Load ad when screen is created
+    LaunchedEffect(Unit) {
+        adViewModel.loadInterstitialAd()
+    }
     val merchantDeleteToast = stringResource(id = R.string.merchant_delete_success_message)
     val lazyPagingData = merchantViewModel.pagedData.collectAsLazyPagingItems()
     val pagingState by merchantViewModel.pagingState.collectAsStateWithLifecycle()
@@ -276,9 +283,11 @@ fun MerchantScreen(
                                     isSelected = selectedList.contains(data.id),
                                     onClick = {
                                         merchantViewModel.onItemClick(data.id) {
-                                            onMerchantClick(
-                                                it
-                                            )
+                                            adViewModel.showInterstitialAd(context as android.app.Activity) {
+                                                onMerchantClick(
+                                                    it
+                                                )
+                                            }
                                         }
                                     },
                                     onLongClick = { merchantViewModel.onItemLongClick(data.id) },

@@ -51,6 +51,7 @@ import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.addA
 import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.editAnim
 import com.indie.apps.pennypal.presentation.ui.component.extension.showToast
+import com.indie.apps.pennypal.presentation.ui.screen.AdViewModel
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
@@ -66,6 +67,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun CategoryScreen(
     viewModel: CategoryViewModel = hiltViewModel(),
+    adViewModel: AdViewModel = hiltViewModel(),
     onNavigationUp: () -> Unit,
     onAddClick: () -> Unit,
     onEditClick: (Long) -> Unit,
@@ -78,6 +80,12 @@ fun CategoryScreen(
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+
+    // Load ad when screen is created
+    LaunchedEffect(Unit) {
+        adViewModel.loadInterstitialAd()
+    }
+
     val categoryDeleteToast = stringResource(id = R.string.category_delete_success_message)
     val lazyPagingData = viewModel.pagedData.collectAsLazyPagingItems()
     val pagingState by viewModel.pagingState.collectAsStateWithLifecycle()
@@ -256,7 +264,9 @@ fun CategoryScreen(
                                     item = data,
                                     isSelected = false,
                                     onClick = {
-                                        onEditClick(data.id)
+                                        adViewModel.showInterstitialAd(context as android.app.Activity) {
+                                            onEditClick(data.id)
+                                        }
                                     },
                                     onDeleteClick = {
                                         deleteId = data.id

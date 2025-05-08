@@ -49,6 +49,7 @@ import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.addA
 import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.editAnim
 import com.indie.apps.pennypal.presentation.ui.component.extension.showToast
+import com.indie.apps.pennypal.presentation.ui.screen.AdViewModel
 import com.indie.apps.pennypal.presentation.ui.screen.InAppFeedbackViewModel
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
@@ -66,6 +67,7 @@ import kotlinx.coroutines.launch
 fun AllDataScreen(
     allDataViewModel: AllDataViewModel = hiltViewModel(),
     inAppFeedbackViewModel: InAppFeedbackViewModel = hiltViewModel(),
+    adViewModel: AdViewModel = hiltViewModel(),
     onDataClick: (Long) -> Unit,
     onAddClick: () -> Unit,
     onNavigationUp: () -> Unit,
@@ -76,6 +78,12 @@ fun AllDataScreen(
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+
+    // Load ad when screen is created
+    LaunchedEffect(Unit) {
+        adViewModel.loadInterstitialAd()
+    }
+
     val merchantDeleteToast = stringResource(id = R.string.data_delete_success_message)
     val lazyPagingData = allDataViewModel.pagedData.collectAsLazyPagingItems()
     val pagingState by allDataViewModel.pagingState.collectAsStateWithLifecycle()
@@ -260,9 +268,11 @@ fun AllDataScreen(
                                     isSelected = selectedList.contains(data.id),
                                     onClick = {
                                         allDataViewModel.onItemClick(data.id) {
-                                            onDataClick(
-                                                it
-                                            )
+                                            adViewModel.showInterstitialAd(context as android.app.Activity) {
+                                                onDataClick(
+                                                    it
+                                                )
+                                            }
                                         }
                                     },
                                     onLongClick = { allDataViewModel.onItemLongClick(data.id) },

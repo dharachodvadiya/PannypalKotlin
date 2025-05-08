@@ -3,10 +3,12 @@ package com.indie.apps.pennypal.presentation.ui.screen.overview
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -18,18 +20,21 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.presentation.ui.component.composable.custom.DoubleBackExitApp
 import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.extension.showToast
+import com.indie.apps.pennypal.presentation.ui.screen.AdViewModel
 import com.indie.apps.pennypal.presentation.ui.screen.InAppFeedbackViewModel
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
@@ -40,6 +45,7 @@ import com.indie.apps.pennypal.util.app_enum.PeriodType
 fun OverViewStartScreen(
     overViewViewModel: OverViewViewModel = hiltViewModel(),
     inAppFeedbackViewModel: InAppFeedbackViewModel = hiltViewModel(),
+    adViewModel: AdViewModel = hiltViewModel(),
     onMerchantClick: (Long) -> Unit,
     onSeeAllTransactionClick: () -> Unit,
     onSeeAllMerchantClick: () -> Unit,
@@ -59,6 +65,11 @@ fun OverViewStartScreen(
 
 
     val localContext = LocalContext.current
+
+    // Load ad when screen is created
+    LaunchedEffect(Unit) {
+        adViewModel.loadInterstitialAd()
+    }
 
     val currentPeriod by overViewViewModel.currentPeriod.collectAsStateWithLifecycle()
     // val currency by overViewViewModel.currency.collectAsStateWithLifecycle()
@@ -109,66 +120,113 @@ fun OverViewStartScreen(
 
     Scaffold { topBarPadding ->
 
-        val scrollState = rememberScrollState()
-        Column(
+        Box(
             modifier = modifier
                 .fillMaxSize()
-                .verticalScroll(scrollState)
                 .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
-                .padding(dimensionResource(id = R.dimen.padding))
+                //.padding(dimensionResource(id = R.dimen.padding))
                 .padding(
                     top = topBarPadding.calculateTopPadding(),
                     bottom = bottomPadding.calculateBottomPadding()
-                ),
-            verticalArrangement = Arrangement.spacedBy(25.dp),
+                )
         ) {
 
-            OverviewTopBarProfile(
-                onClick = {},
-                user = userData,
-                isSubscribed = isSubscribed,
-                onSubscriptionChanged = overViewViewModel::onSubscriptionChanged
-            )
 
-            OverviewData(
-                currentPeriod = currentPeriod,
-                data = currentTotal,
-                //currency = currency,
-                categoryList = currentMonthCategory,
-                recentTransaction = recentTransaction,
-                recentMerchant = recentMerchant,
-                onSeeAllTransactionClick = onSeeAllTransactionClick,
-                onSeeAllMerchantClick = onSeeAllMerchantClick,
-                onExploreAnalysisClick = onExploreAnalysisClick,
-                onExploreBudgetClick = onExploreBudgetClick,
-                onTransactionClick = onTransactionClick,
-                merchantDataAnimId = currentMerchantDataAnimId,
-                merchantDataAnimType = currentMerchantDataAnim,
-                onMerchantDataAnimStop = {
-                    overViewViewModel.onMerchantDataAnimationComplete(it)
-                },
-                budgetWithSpentAndCategoryIdList = budgetState.firstOrNull { it.periodType == currentBudgetPeriod.id },
-                selectBudgetPeriod = currentBudgetPeriod,
-                onSelectBudgetPeriod = {
-                    currentBudgetPeriod = if (currentBudgetPeriod == PeriodType.MONTH)
-                        PeriodType.YEAR
-                    else
-                        PeriodType.MONTH
-                },
-                onAddMerchant = onAddMerchant,
-                onMerchantAnimStop = {
-                    overViewViewModel.onMerchantAnimationComplete(it)
-                },
-                merchantAnim = currentMerchantAnim,
-                merchantAnimId = currentMerchantAnimId,
-                onSetBudgetClick = onSetBudgetClick,
-                onMerchantClick = onMerchantClick,
-                isSelectionEnable = budgetState.count { it.periodType == PeriodType.MONTH.id || it.periodType == PeriodType.YEAR.id } == 2
-            )
+            val scrollState = rememberScrollState()
+            Column(
+                modifier = modifier
+                    .fillMaxSize()
+                    .verticalScroll(scrollState)
+                    //.background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
+                    .padding(dimensionResource(id = R.dimen.padding))
+                    .padding(
+                        top = 50.dp,
+                        bottom = bottomPadding.calculateBottomPadding()
+                    ),
+                verticalArrangement = Arrangement.spacedBy(25.dp),
+            ) {
 
-            Spacer(modifier = Modifier.height(30.dp))
-            //}
+                OverviewTopBarProfile(
+                    onClick = {},
+                    user = userData,
+                    isSubscribed = isSubscribed,
+                    onSubscriptionChanged = overViewViewModel::onSubscriptionChanged
+                )
+
+                OverviewData(
+                    currentPeriod = currentPeriod,
+                    data = currentTotal,
+                    //currency = currency,
+                    categoryList = currentMonthCategory,
+                    recentTransaction = recentTransaction,
+                    recentMerchant = recentMerchant,
+                    onSeeAllTransactionClick = {
+                        adViewModel.showInterstitialAd(context as android.app.Activity) { onSeeAllTransactionClick() }
+                    },
+                    onSeeAllMerchantClick = {
+                        adViewModel.showInterstitialAd(context as android.app.Activity) { onSeeAllMerchantClick() }
+                    },
+                    onExploreAnalysisClick = {
+                        adViewModel.showInterstitialAd(context as android.app.Activity) { onExploreAnalysisClick() }
+                    },
+                    onExploreBudgetClick = {
+                        adViewModel.showInterstitialAd(context as android.app.Activity) { onExploreBudgetClick() }
+                    },
+                    onTransactionClick = { id ->
+                        adViewModel.showInterstitialAd(context as android.app.Activity) {
+                            onTransactionClick(id)
+                        }
+                    },
+                    merchantDataAnimId = currentMerchantDataAnimId,
+                    merchantDataAnimType = currentMerchantDataAnim,
+                    onMerchantDataAnimStop = {
+                        overViewViewModel.onMerchantDataAnimationComplete(it)
+                    },
+                    budgetWithSpentAndCategoryIdList = budgetState.firstOrNull { it.periodType == currentBudgetPeriod.id },
+                    selectBudgetPeriod = currentBudgetPeriod,
+                    onSelectBudgetPeriod = {
+                        currentBudgetPeriod = if (currentBudgetPeriod == PeriodType.MONTH)
+                            PeriodType.YEAR
+                        else
+                            PeriodType.MONTH
+                    },
+                    onAddMerchant = onAddMerchant,
+                    onMerchantAnimStop = {
+                        overViewViewModel.onMerchantAnimationComplete(it)
+                    },
+                    merchantAnim = currentMerchantAnim,
+                    merchantAnimId = currentMerchantAnimId,
+                    onSetBudgetClick = { id ->
+                        adViewModel.showInterstitialAd(context as android.app.Activity) {
+                            onSetBudgetClick(
+                                id
+                            )
+                        }
+                    },
+                    onMerchantClick = { id ->
+                        adViewModel.showInterstitialAd(context as android.app.Activity) {
+                            onMerchantClick(
+                                id
+                            )
+                        }
+                    },
+                    isSelectionEnable = budgetState.count { it.periodType == PeriodType.MONTH.id || it.periodType == PeriodType.YEAR.id } == 2
+                )
+
+                Spacer(modifier = Modifier.height(30.dp))
+                //}
+            }
+
+            AndroidView(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
+                    .align(Alignment.TopCenter),
+                factory = { adViewModel.loadBannerAd() }
+            )
         }
+
+
     }
 
 }

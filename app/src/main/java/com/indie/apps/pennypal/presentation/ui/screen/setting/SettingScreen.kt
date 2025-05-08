@@ -26,6 +26,7 @@ import com.indie.apps.pennypal.data.module.MoreItem
 import com.indie.apps.pennypal.presentation.ui.component.composable.custom.CustomProgressDialog
 import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.extension.showToast
+import com.indie.apps.pennypal.presentation.ui.screen.AdViewModel
 import com.indie.apps.pennypal.presentation.ui.screen.AuthViewModel
 import com.indie.apps.pennypal.presentation.ui.screen.SignInLauncher
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
@@ -38,6 +39,7 @@ import com.indie.apps.pennypal.util.app_enum.SyncEvent
 fun SettingScreen(
     settingViewModel: SettingViewModel = hiltViewModel(),
     authViewModel: AuthViewModel = hiltViewModel(),
+    adViewModel: AdViewModel = hiltViewModel(),
     onCurrencyChange: (String) -> Unit,
     onDefaultPaymentChange: (Long) -> Unit,
     onBalanceViewChange: () -> Unit,
@@ -49,7 +51,12 @@ fun SettingScreen(
     onNavigationUp: () -> Unit,
     bottomPadding: PaddingValues,
 ) {
+    val context = LocalContext.current
 
+    // Load ad when screen is created
+    LaunchedEffect(Unit) {
+        adViewModel.loadInterstitialAd()
+    }
     val screenList by settingViewModel.screenList.collectAsStateWithLifecycle()
     val generalList by settingViewModel.generalList.collectAsStateWithLifecycle()
     val languageList by settingViewModel.languageList.collectAsStateWithLifecycle()
@@ -71,8 +78,6 @@ fun SettingScreen(
         AuthProcess.SIGN_IN -> CustomProgressDialog(R.string.sign_in)
     }
 
-    val context = LocalContext.current
-
     BackHandler {
         onNavigationUp()
     }
@@ -84,11 +89,15 @@ fun SettingScreen(
             context.showToast(loginSuccessMessage)
         },
         onRestoreSuccess = {
-            settingViewModel.refreshState()
-            context.showToast(restoreSuccessMessage)
+            adViewModel.showInterstitialAd(context as android.app.Activity, isReload = true) {
+                settingViewModel.refreshState()
+                context.showToast(restoreSuccessMessage)
+            }
         },
         onBackUpSuccess = {
-            context.showToast(backupSuccessMessage)
+            adViewModel.showInterstitialAd(context as android.app.Activity, isReload = true) {
+                context.showToast(backupSuccessMessage)
+            }
         },
         onRestoreFail = {
             context.showToast(it)

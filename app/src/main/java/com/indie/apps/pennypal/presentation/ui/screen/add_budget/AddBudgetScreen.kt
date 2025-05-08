@@ -37,6 +37,7 @@ import com.indie.apps.pennypal.presentation.ui.component.composable.custom.Custo
 import com.indie.apps.pennypal.presentation.ui.component.composable.custom.CustomYearPickerDialog
 import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.extension.showToast
+import com.indie.apps.pennypal.presentation.ui.screen.AdViewModel
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
@@ -51,6 +52,7 @@ import java.util.Calendar
 @Composable
 fun AddEditBudgetScreen(
     addBudgetViewModel: AddBudgetViewModel = hiltViewModel(),
+    adViewModel: AdViewModel = hiltViewModel(),
     onCurrencyChange: (String) -> Unit,
     onNavigationUp: () -> Unit,
     onSave: (Boolean, Long, Int, Int, Int) -> Unit,
@@ -61,6 +63,12 @@ fun AddEditBudgetScreen(
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
 
+    val context = LocalContext.current
+
+    // Load ad when screen is created
+    LaunchedEffect(Unit) {
+        adViewModel.loadInterstitialAd()
+    }
     val uiState by addBudgetViewModel.uiState.collectAsStateWithLifecycle()
 
     var isCategoryExpanded by remember { mutableStateOf(false) }
@@ -97,7 +105,7 @@ fun AddEditBudgetScreen(
     val selectedCategoryList by addBudgetViewModel.selectedCategoryList.collectAsStateWithLifecycle()
 
 
-    val context = LocalContext.current
+    //val context = LocalContext.current
     val budgetEditToast = stringResource(id = R.string.budget_edit_success_toast)
     val budgetAddToast = stringResource(id = R.string.budget_add_success_toast)
     val periodEditToast = stringResource(id = R.string.period_not_edit_toast)
@@ -229,12 +237,16 @@ fun AddEditBudgetScreen(
                     BottomSaveButton(
                         onClick = {
                             addBudgetViewModel.saveData { isEdit, id, month, year ->
-                                onSave(isEdit, id, currentPeriod, month, year)
-                                if (isEdit) {
-                                    context.showToast(budgetEditToast)
-                                } else {
-                                    context.showToast(budgetAddToast)
+
+                                adViewModel.showInterstitialAd(context as android.app.Activity) {
+                                    onSave(isEdit, id, currentPeriod, month, year)
+                                    if (isEdit) {
+                                        context.showToast(budgetEditToast)
+                                    } else {
+                                        context.showToast(budgetAddToast)
+                                    }
                                 }
+
                             }
                         },
                         modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.padding))

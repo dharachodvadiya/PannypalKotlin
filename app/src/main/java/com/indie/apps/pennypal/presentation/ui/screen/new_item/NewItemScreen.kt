@@ -36,6 +36,7 @@ import com.indie.apps.pennypal.presentation.ui.component.composable.custom.Custo
 import com.indie.apps.pennypal.presentation.ui.component.composable.custom.CustomTimePickerDialog
 import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.extension.showToast
+import com.indie.apps.pennypal.presentation.ui.screen.AdViewModel
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
@@ -45,6 +46,7 @@ import com.indie.apps.pennypal.util.app_enum.Resource
 @Composable
 fun NewItemScreen(
     newItemViewModel: NewItemViewModel = hiltViewModel(),
+    adViewModel: AdViewModel = hiltViewModel(),
     onCurrencyChange: (String) -> Unit,
     onMerchantSelect: () -> Unit,
     onPaymentSelect: (Long?) -> Unit,
@@ -59,6 +61,14 @@ fun NewItemScreen(
     currencyCountryCode: String? = null,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
+
+    val context = LocalContext.current
+
+    // Load ad when screen is created
+    LaunchedEffect(Unit) {
+        adViewModel.loadInterstitialAd()
+    }
+
     LaunchedEffect(Unit) {
         newItemViewModel.setInitialData()
     }
@@ -113,7 +123,7 @@ fun NewItemScreen(
 
     var openDialog by remember { mutableStateOf<DialogType?>(null) }
 
-    val context = LocalContext.current
+    //val context = LocalContext.current
     val merchantChangeToastMessage = stringResource(R.string.can_not_change_merchant)
     val merchantDataEditToast = stringResource(id = R.string.merchant_data_edit_success_message)
     val merchantDataSaveToast = stringResource(id = R.string.merchant_data_save_success_message)
@@ -275,12 +285,14 @@ fun NewItemScreen(
                     BottomSaveButton(
                         onClick = {
                             newItemViewModel.addOrEditMerchantData() { isEdit, id, merchantId ->
-                                onSaveSuccess(isEdit, id, merchantId)
-                                if (isEdit)
-                                    context.showToast(merchantDataEditToast)
-                                else
-                                    context.showToast(merchantDataSaveToast)
 
+                                adViewModel.showInterstitialAd(context as android.app.Activity) {
+                                    onSaveSuccess(isEdit, id, merchantId)
+                                    if (isEdit)
+                                        context.showToast(merchantDataEditToast)
+                                    else
+                                        context.showToast(merchantDataSaveToast)
+                                }
                             }
                         },
                         enabled = enableButton,

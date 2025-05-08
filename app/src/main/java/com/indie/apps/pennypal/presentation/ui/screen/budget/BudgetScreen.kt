@@ -29,6 +29,7 @@ import com.indie.apps.pennypal.presentation.ui.component.composable.custom.Custo
 import com.indie.apps.pennypal.presentation.ui.component.composable.custom.CustomYearPickerDialog
 import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.extension.showToast
+import com.indie.apps.pennypal.presentation.ui.screen.AdViewModel
 import com.indie.apps.pennypal.presentation.ui.screen.InAppFeedbackViewModel
 import com.indie.apps.pennypal.presentation.ui.screen.add_budget.AddBudgetTopSelectionButton
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
@@ -42,6 +43,7 @@ import java.util.Calendar
 fun BudgetScreen(
     budgetViewModel: BudgetViewModel = hiltViewModel(),
     inAppFeedbackViewModel: InAppFeedbackViewModel = hiltViewModel(),
+    adViewModel: AdViewModel = hiltViewModel(),
     onNavigationUp: () -> Unit,
     onAddClick: (Int) -> Unit,
     onBudgetEditClick: (Long) -> Unit,
@@ -54,6 +56,13 @@ fun BudgetScreen(
     periodType: Int?,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+
+    // Load ad when screen is created
+    LaunchedEffect(Unit) {
+        adViewModel.loadInterstitialAd()
+    }
+
     val title = stringResource(id = R.string.budget_analysis)
 
     //val currency by budgetViewModel.currency.collectAsStateWithLifecycle()
@@ -75,7 +84,7 @@ fun BudgetScreen(
 
     val currentPeriod by budgetViewModel.currentPeriod.collectAsStateWithLifecycle()
 
-    val context = LocalContext.current
+    //val context = LocalContext.current
     val budgetDeleteToast = stringResource(id = R.string.budget_delete_success_toast)
 
     LaunchedEffect(budgetId) {
@@ -141,7 +150,11 @@ fun BudgetScreen(
                     Spacer(Modifier.height(20.dp))
                     BudgetList(
                         budgetState = budgetState,
-                        onBudgetEditClick = onBudgetEditClick,
+                        onBudgetEditClick = { id ->
+                            adViewModel.showInterstitialAd(context as android.app.Activity) {
+                                onBudgetEditClick(id)
+                            }
+                        },
                         currentAnim = currentAnim,
                         budgetAnimId = budgetAnimId,
                         onAnimComplete = {
@@ -160,7 +173,11 @@ fun BudgetScreen(
                         onExpandClick = budgetViewModel::onActiveExpandClick,
                         items = budgetState,
                         //currency = currency,
-                        onBudgetEditClick = onBudgetEditClick,
+                        onBudgetEditClick = { id ->
+                            adViewModel.showInterstitialAd(context as android.app.Activity) {
+                                onBudgetEditClick(id)
+                            }
+                        },
                         currentAnim = currentAnim,
                         budgetAnimId = budgetAnimId,
                         onAnimationComplete = {
@@ -178,7 +195,11 @@ fun BudgetScreen(
                         onExpandClick = budgetViewModel::onUpcomingExpandClick,
                         pagingItems = pagedDataUpcomingBudget,
                         //currency = currency,
-                        onBudgetEditClick = onBudgetEditClick,
+                        onBudgetEditClick = { id ->
+                            adViewModel.showInterstitialAd(context as android.app.Activity) {
+                                onBudgetEditClick(id)
+                            }
+                        },
                         currentAnim = currentAnim,
                         budgetAnimId = budgetAnimId,
                         onAnimationComplete = {
@@ -196,7 +217,11 @@ fun BudgetScreen(
                         onExpandClick = budgetViewModel::onPastExpandClick,
                         pagingItems = pagedDataPastBudget,
                         //currency = currency,
-                        onBudgetEditClick = onBudgetEditClick,
+                        onBudgetEditClick = { id ->
+                            adViewModel.showInterstitialAd(context as android.app.Activity) {
+                                onBudgetEditClick(id)
+                            }
+                        },
                         currentAnim = currentAnim,
                         budgetAnimId = budgetAnimId,
                         onAnimationComplete = {
