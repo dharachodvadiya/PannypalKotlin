@@ -9,7 +9,6 @@ import com.indie.apps.pennypal.domain.usecase.GetCategoryWiseExpenseUseCase
 import com.indie.apps.pennypal.domain.usecase.GetTotalUseCase
 import com.indie.apps.pennypal.domain.usecase.SearchMerchantDataWithAllDataListUseCase
 import com.indie.apps.pennypal.domain.usecase.SearchMerchantNameAndDetailListUseCase
-import com.indie.apps.pennypal.repository.BillingRepository
 import com.indie.apps.pennypal.repository.BudgetRepository
 import com.indie.apps.pennypal.repository.PreferenceRepository
 import com.indie.apps.pennypal.repository.UserRepository
@@ -40,7 +39,6 @@ class OverViewViewModel @Inject constructor(
     preferenceRepository: PreferenceRepository,
     budgetRepository: BudgetRepository,
     private val deleteMultipleMerchantDataUseCase: DeleteMerchantDataUseCase,
-    private val billingRepository: BillingRepository,
 ) : ViewModel() {
 
     private val calendar: Calendar = Calendar.getInstance()
@@ -115,7 +113,7 @@ class OverViewViewModel @Inject constructor(
     ).stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
 
 
-    val isSubscribed = MutableStateFlow(billingRepository.getSubscription())
+    // val isSubscribed = MutableStateFlow(billingRepository.getSubscription())
 
     init {
         loadTransactionData()
@@ -128,8 +126,7 @@ class OverViewViewModel @Inject constructor(
     }
 
     fun onSubscriptionChanged(isSubscribed: Boolean) {
-        billingRepository.setSubscription(isSubscribed)
-        this.isSubscribed.value = isSubscribed
+
     }
 
     fun onDeleteTransactionFromEditScreenClick(id: Long, onSuccess: () -> Unit) {
@@ -187,7 +184,6 @@ class OverViewViewModel @Inject constructor(
             onMerchantAnimationComplete(AnimationType.ADD)
         }
     }
-
 
 
     fun onMerchantDataAnimationComplete(animationType: AnimationType) {

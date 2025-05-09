@@ -1,6 +1,9 @@
 package com.indie.apps.pennypal.di
 
 import android.content.Context
+import com.example.iap.billing.BillingClientWrapper
+import com.example.iap.repository.BillingRepository
+import com.example.iap.repository.BillingRepositoryImpl
 import com.google.android.play.core.review.ReviewManager
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.indie.apps.contacts.data.provider.ContactsProvider
@@ -20,8 +23,6 @@ import com.indie.apps.pennypal.repository.BackupRepository
 import com.indie.apps.pennypal.repository.BackupRepositoryImpl
 import com.indie.apps.pennypal.repository.BaseCurrencyRepository
 import com.indie.apps.pennypal.repository.BaseCurrencyRepositoryImpl
-import com.indie.apps.pennypal.repository.BillingRepository
-import com.indie.apps.pennypal.repository.BillingRepositoryImpl
 import com.indie.apps.pennypal.repository.BudgetRepository
 import com.indie.apps.pennypal.repository.BudgetRepositoryImpl
 import com.indie.apps.pennypal.repository.CategoryRepository
@@ -46,6 +47,7 @@ import com.indie.apps.pennypal.repository.PreferenceRepository
 import com.indie.apps.pennypal.repository.PreferenceRepositoryImpl
 import com.indie.apps.pennypal.repository.UserRepository
 import com.indie.apps.pennypal.repository.UserRepositoryImpl
+import com.indie.apps.pennypal.util.ProductConfig
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -192,11 +194,6 @@ object AppModule {
     }
 
     @Provides
-    fun provideBillingRepository(): BillingRepository {
-        return BillingRepositoryImpl()
-    }
-
-    @Provides
     fun provideBudgetRepository(
         database: AppDatabase,
         merchantDataRepository: MerchantDataRepository,
@@ -290,6 +287,21 @@ object AppModule {
     @Provides
     fun provideInAppAdsRepository(@ApplicationContext context: Context): InAppAdsRepository {
         return InAppAdsRepositoryImpl(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideBillingRepository(
+        billingClientWrapper: BillingClientWrapper,
+        @IoDispatcher dispatcher: CoroutineDispatcher
+    ): BillingRepository {
+        return BillingRepositoryImpl(billingClientWrapper, dispatcher)
+    }
+
+    @Provides
+    @Singleton
+    fun provideBillingWrapper(@ApplicationContext context: Context): BillingClientWrapper {
+        return BillingClientWrapper(context, ProductConfig.products)
     }
 
 

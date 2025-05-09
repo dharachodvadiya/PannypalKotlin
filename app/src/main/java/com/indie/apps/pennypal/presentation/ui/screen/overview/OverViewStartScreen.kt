@@ -72,7 +72,6 @@ fun OverViewStartScreen(
 
     val currentPeriod by overViewViewModel.currentPeriod.collectAsStateWithLifecycle()
     // val currency by overViewViewModel.currency.collectAsStateWithLifecycle()
-    val isSubscribed by overViewViewModel.isSubscribed.collectAsStateWithLifecycle()
     val userData by overViewViewModel.userData.collectAsStateWithLifecycle()
     val currentTotal by overViewViewModel.currentTotal.collectAsStateWithLifecycle()
     val currentMerchantAnim by overViewViewModel.currentMerchantAnim.collectAsStateWithLifecycle()
@@ -169,7 +168,7 @@ fun OverViewStartScreen(
                 OverviewTopBarProfile(
                     onClick = {},
                     user = userData,
-                    isSubscribed = isSubscribed,
+                    isSubscribed = false,
                     onSubscriptionChanged = overViewViewModel::onSubscriptionChanged
                 )
 

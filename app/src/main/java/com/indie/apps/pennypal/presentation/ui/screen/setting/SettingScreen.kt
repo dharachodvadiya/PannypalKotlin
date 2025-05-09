@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.screen.setting
 
+import android.app.Activity
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -34,6 +35,7 @@ import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.back
 import com.indie.apps.pennypal.presentation.ui.component.extension.showToast
 import com.indie.apps.pennypal.presentation.ui.screen.AdViewModel
 import com.indie.apps.pennypal.presentation.ui.screen.AuthViewModel
+import com.indie.apps.pennypal.presentation.ui.screen.BillingViewModel
 import com.indie.apps.pennypal.presentation.ui.screen.SignInLauncher
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
@@ -46,6 +48,7 @@ fun SettingScreen(
     settingViewModel: SettingViewModel = hiltViewModel(),
     authViewModel: AuthViewModel = hiltViewModel(),
     adViewModel: AdViewModel = hiltViewModel(),
+    billingViewModel: BillingViewModel = hiltViewModel(),
     onCurrencyChange: (String) -> Unit,
     onDefaultPaymentChange: (Long) -> Unit,
     onBalanceViewChange: () -> Unit,
@@ -82,6 +85,12 @@ fun SettingScreen(
         AuthProcess.RESTORE -> CustomProgressDialog(R.string.restore_Data)
         AuthProcess.NONE -> {}
         AuthProcess.SIGN_IN -> CustomProgressDialog(R.string.sign_in)
+    }
+
+    val products by billingViewModel.productDetails.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        billingViewModel.init(context as Activity)
     }
 
     BackHandler {
@@ -184,7 +193,7 @@ fun SettingScreen(
                 }
             )
         },
-        onProfileClick = {
+        onProfileClick ={
             authViewModel.onEvent(
                 mainEvent = SyncEvent.SignInGoogle,
                 onFail = {

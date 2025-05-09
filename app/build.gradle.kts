@@ -114,6 +114,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-compose-android:2.8.7")
     implementation(project(":cpp"))
     implementation(project(":contacts"))
+    implementation(project(":iap"))
     implementation("androidx.appcompat:appcompat:1.7.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
@@ -212,7 +213,7 @@ dependencies {
 
     //IAP
     val billingVersion = "7.1.1"
-    implementation("com.android.billingclient:billing:$billingVersion")
+   // implementation("com.android.billingclient:billing:$billingVersion")
     implementation("com.android.billingclient:billing-ktx:$billingVersion")
 
 }

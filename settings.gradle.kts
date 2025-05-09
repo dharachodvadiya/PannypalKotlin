@@ -17,3 +17,4 @@ rootProject.name = "PennyPal"
 include(":app")
 include(":cpp")
 include(":contacts")
+include(":iap")
