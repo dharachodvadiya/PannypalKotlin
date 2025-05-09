@@ -19,8 +19,8 @@ android {
         applicationId = "com.indie.apps.pennypal"
         minSdk = 26
         targetSdk = 35
-        versionCode = 12
-        versionName = "2.6"
+        versionCode = 13
+        versionName = "2.7"
 
         testInstrumentationRunner = "com.indie.apps.pennypal.CustomTestRunner"
         vectorDrawables {
@@ -209,6 +209,11 @@ dependencies {
 
     //Admob
     implementation("com.google.android.gms:play-services-ads:24.2.0")
+
+    //IAP
+    val billingVersion = "7.1.1"
+    implementation("com.android.billingclient:billing:$billingVersion")
+    implementation("com.android.billingclient:billing-ktx:$billingVersion")
 
 }
 /*
