@@ -1,4 +1,4 @@
-package com.indie.apps.pennypal.presentation.ui.screen
+package com.indie.apps.pennypal.presentation.ui.shared_viewmodel.auth
 
 import android.annotation.SuppressLint
 import androidx.activity.compose.rememberLauncherForActivityResult

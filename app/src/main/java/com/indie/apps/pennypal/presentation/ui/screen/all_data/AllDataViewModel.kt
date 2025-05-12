@@ -7,7 +7,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.indie.apps.pennypal.data.module.merchant_data.MerchantDataWithAllData
 import com.indie.apps.pennypal.domain.usecase.DeleteMerchantDataUseCase
-import com.indie.apps.pennypal.domain.usecase.SearchMerchantDataWithAllDataListUseCase
+import com.indie.apps.pennypal.domain.usecase.LoadMerchantDataWithAllDataListUseCase
 import com.indie.apps.pennypal.presentation.ui.state.PagingState
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.util.Util
@@ -25,7 +25,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AllDataViewModel @Inject constructor(
-    searchMerchantDataWithAllDataListUseCase: SearchMerchantDataWithAllDataListUseCase,
+    searchMerchantDataWithAllDataListUseCase: LoadMerchantDataWithAllDataListUseCase,
     private val deleteMultipleMerchantDataUseCase: DeleteMerchantDataUseCase,
 ) : ViewModel() {
 

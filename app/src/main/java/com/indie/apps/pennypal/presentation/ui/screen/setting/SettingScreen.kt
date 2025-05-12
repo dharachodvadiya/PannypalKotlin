@@ -1,7 +1,11 @@
 package com.indie.apps.pennypal.presentation.ui.screen.setting
 
+import android.Manifest
 import android.app.Activity
+import android.os.Build
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -18,6 +22,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
@@ -31,15 +36,19 @@ import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.database.db_entity.User
 import com.indie.apps.pennypal.data.module.MoreItem
 import com.indie.apps.pennypal.presentation.ui.component.composable.custom.CustomProgressDialog
+import com.indie.apps.pennypal.presentation.ui.shared_viewmodel.export_pdf_excel.ExportSaveDialogs
 import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.extension.showToast
-import com.indie.apps.pennypal.presentation.ui.screen.AdViewModel
-import com.indie.apps.pennypal.presentation.ui.screen.AuthViewModel
-import com.indie.apps.pennypal.presentation.ui.screen.BillingViewModel
-import com.indie.apps.pennypal.presentation.ui.screen.SignInLauncher
+import com.indie.apps.pennypal.presentation.ui.shared_viewmodel.ads.AdViewModel
+import com.indie.apps.pennypal.presentation.ui.shared_viewmodel.auth.AuthViewModel
+import com.indie.apps.pennypal.presentation.ui.shared_viewmodel.iap.BillingViewModel
+import com.indie.apps.pennypal.presentation.ui.shared_viewmodel.export_pdf_excel.ExportViewModel
+import com.indie.apps.pennypal.presentation.ui.shared_viewmodel.auth.SignInLauncher
+import com.indie.apps.pennypal.presentation.ui.shared_viewmodel.export_pdf_excel.ExportFilterDialog
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.util.app_enum.AuthProcess
+import com.indie.apps.pennypal.util.app_enum.DialogType
 import com.indie.apps.pennypal.util.app_enum.SettingEffect
 import com.indie.apps.pennypal.util.app_enum.SyncEvent
 
@@ -49,6 +58,7 @@ fun SettingScreen(
     authViewModel: AuthViewModel = hiltViewModel(),
     adViewModel: AdViewModel = hiltViewModel(),
     billingViewModel: BillingViewModel = hiltViewModel(),
+    pdfExportViewModel: ExportViewModel = hiltViewModel(),
     onCurrencyChange: (String) -> Unit,
     onDefaultPaymentChange: (Long) -> Unit,
     onBalanceViewChange: () -> Unit,
@@ -72,6 +82,7 @@ fun SettingScreen(
     val moreList by settingViewModel.moreList.collectAsStateWithLifecycle()
     val backupRestoreList by settingViewModel.backupRestoreList.collectAsStateWithLifecycle()
     val userState by settingViewModel.userState.collectAsStateWithLifecycle()
+    var openDialog by remember { mutableStateOf<DialogType?>(null) }
 
     val backupSuccessMessage = stringResource(id = R.string.backup_success)
     val restoreSuccessMessage = stringResource(id = R.string.restore_success)
@@ -89,6 +100,25 @@ fun SettingScreen(
 
     val products by billingViewModel.productDetails.collectAsStateWithLifecycle()
 
+    val pdfExportResult by pdfExportViewModel.exportResult.collectAsStateWithLifecycle()
+
+    // Permission launcher
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            openDialog = DialogType.ExportFilter
+        }
+    }
+
+    // Permission handling
+    val requestPermission = { action: () -> Unit ->
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+            permissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        } else {
+            action() // No permission needed for API 29+ (scoped storage)
+        }
+    }
     LaunchedEffect(Unit) {
         billingViewModel.init(context as Activity)
     }
@@ -104,13 +134,13 @@ fun SettingScreen(
             context.showToast(loginSuccessMessage)
         },
         onRestoreSuccess = {
-            adViewModel.showInterstitialAd(context as android.app.Activity, isReload = true) {
+            adViewModel.showInterstitialAd(context as Activity, isReload = true) {
                 settingViewModel.refreshState()
                 context.showToast(restoreSuccessMessage)
             }
         },
         onBackUpSuccess = {
-            adViewModel.showInterstitialAd(context as android.app.Activity, isReload = true) {
+            adViewModel.showInterstitialAd(context as Activity, isReload = true) {
                 context.showToast(backupSuccessMessage)
             }
         },
@@ -194,16 +224,43 @@ fun SettingScreen(
             )
         },
         onProfileClick ={
-            authViewModel.onEvent(
+            /*authViewModel.onEvent(
                 mainEvent = SyncEvent.SignInGoogle,
                 onFail = {
                     context.showToast(it)
                 }
-            )
+            )*/
+
+            requestPermission { openDialog = DialogType.ExportFilter }
         },
         bottomPadding = bottomPadding,
         user = userState,
         adViewModel = adViewModel
+    )
+
+
+
+    openDialog?.let { dialog ->
+        when (dialog) {
+            DialogType.ExportFilter -> {
+                ExportFilterDialog(
+                    onDismiss = {
+                        openDialog = null
+                    },
+                    onExportClick = {fromDate,toDate->
+                        openDialog = null
+                        pdfExportViewModel.exportToPdf(fromDate, toDate)
+                    }
+                )
+            }
+            else -> {}
+        }
+    }
+
+    // Processing and result dialogs
+    ExportSaveDialogs(
+        pdfExportResult = pdfExportResult,
+        onClearResult = { pdfExportViewModel.clearExportResult() }
     )
 }
 

@@ -41,7 +41,7 @@ import com.indie.apps.pennypal.presentation.ui.component.composable.custom.Custo
 import com.indie.apps.pennypal.presentation.ui.component.composable.custom.CustomTimePickerDialog
 import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.extension.showToast
-import com.indie.apps.pennypal.presentation.ui.screen.AdViewModel
+import com.indie.apps.pennypal.presentation.ui.shared_viewmodel.ads.AdViewModel
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme

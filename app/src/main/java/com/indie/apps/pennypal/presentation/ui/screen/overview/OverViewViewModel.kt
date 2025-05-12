@@ -7,7 +7,7 @@ import com.indie.apps.pennypal.data.module.merchant_data.MerchantDataWithAllData
 import com.indie.apps.pennypal.domain.usecase.DeleteMerchantDataUseCase
 import com.indie.apps.pennypal.domain.usecase.GetCategoryWiseExpenseUseCase
 import com.indie.apps.pennypal.domain.usecase.GetTotalUseCase
-import com.indie.apps.pennypal.domain.usecase.SearchMerchantDataWithAllDataListUseCase
+import com.indie.apps.pennypal.domain.usecase.LoadMerchantDataWithAllDataListUseCase
 import com.indie.apps.pennypal.domain.usecase.SearchMerchantNameAndDetailListUseCase
 import com.indie.apps.pennypal.repository.BudgetRepository
 import com.indie.apps.pennypal.repository.PreferenceRepository
@@ -33,7 +33,7 @@ import javax.inject.Inject
 class OverViewViewModel @Inject constructor(
     userRepository: UserRepository,
     getTotalUseCase: GetTotalUseCase,
-    searchMerchantDataWithAllDataListUseCase: SearchMerchantDataWithAllDataListUseCase,
+    searchMerchantDataWithAllDataListUseCase: LoadMerchantDataWithAllDataListUseCase,
     searchMerchantNameAndDetailListUseCase: SearchMerchantNameAndDetailListUseCase,
     getCategoryWiseExpenseUseCase: GetCategoryWiseExpenseUseCase,
     preferenceRepository: PreferenceRepository,

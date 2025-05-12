@@ -1,4 +1,4 @@
-package com.indie.apps.pennypal.presentation.ui.screen
+package com.indie.apps.pennypal.presentation.ui.shared_viewmodel.iap
 
 import android.app.Activity
 import androidx.lifecycle.ViewModel

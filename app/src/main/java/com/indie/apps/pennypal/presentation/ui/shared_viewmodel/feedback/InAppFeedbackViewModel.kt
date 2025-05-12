@@ -1,4 +1,4 @@
-package com.indie.apps.pennypal.presentation.ui.screen
+package com.indie.apps.pennypal.presentation.ui.shared_viewmodel.feedback
 
 import android.app.Activity
 import android.content.Context

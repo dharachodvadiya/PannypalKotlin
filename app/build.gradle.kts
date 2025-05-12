@@ -216,6 +216,13 @@ dependencies {
    // implementation("com.android.billingclient:billing:$billingVersion")
     implementation("com.android.billingclient:billing-ktx:$billingVersion")
 
+    // Excel
+    implementation("org.apache.poi:poi:5.2.3")
+    implementation("org.apache.poi:poi-ooxml:5.2.3")
+
+    //pdf
+    implementation("com.itextpdf:itext7-core:7.2.5")
+
 }
 /*
 

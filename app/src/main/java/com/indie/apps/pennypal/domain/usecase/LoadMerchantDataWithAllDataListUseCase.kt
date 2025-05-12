@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
-class SearchMerchantDataWithAllDataListUseCase @Inject constructor(
+class LoadMerchantDataWithAllDataListUseCase @Inject constructor(
     private val merchantDataRepository: MerchantDataRepository,
     private val preferenceRepository: PreferenceRepository,
     @IoDispatcher private val dispatcher: CoroutineDispatcher

@@ -21,8 +21,8 @@ import com.indie.apps.pennypal.presentation.ui.component.composable.custom.Custo
 import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.extension.showToast
 import com.indie.apps.pennypal.presentation.ui.navigation.OnBoardingPage
-import com.indie.apps.pennypal.presentation.ui.screen.AuthViewModel
-import com.indie.apps.pennypal.presentation.ui.screen.SignInLauncher
+import com.indie.apps.pennypal.presentation.ui.shared_viewmodel.auth.AuthViewModel
+import com.indie.apps.pennypal.presentation.ui.shared_viewmodel.auth.SignInLauncher
 import com.indie.apps.pennypal.presentation.ui.screen.changeLanguage
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme

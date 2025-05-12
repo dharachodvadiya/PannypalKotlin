@@ -34,8 +34,8 @@ import com.indie.apps.pennypal.presentation.ui.component.composable.common.TopBa
 import com.indie.apps.pennypal.presentation.ui.component.composable.custom.CustomMonthPickerDialog
 import com.indie.apps.pennypal.presentation.ui.component.composable.custom.CustomYearPickerDialog
 import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.backgroundGradientsBrush
-import com.indie.apps.pennypal.presentation.ui.screen.AdViewModel
-import com.indie.apps.pennypal.presentation.ui.screen.InAppFeedbackViewModel
+import com.indie.apps.pennypal.presentation.ui.shared_viewmodel.ads.AdViewModel
+import com.indie.apps.pennypal.presentation.ui.shared_viewmodel.feedback.InAppFeedbackViewModel
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.util.app_enum.AnalysisPeriod

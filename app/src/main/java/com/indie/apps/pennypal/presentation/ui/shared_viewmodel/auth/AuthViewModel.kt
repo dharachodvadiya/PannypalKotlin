@@ -1,4 +1,4 @@
-package com.indie.apps.pennypal.presentation.ui.screen
+package com.indie.apps.pennypal.presentation.ui.shared_viewmodel.auth
 
 import android.content.Intent
 import androidx.credentials.Credential
