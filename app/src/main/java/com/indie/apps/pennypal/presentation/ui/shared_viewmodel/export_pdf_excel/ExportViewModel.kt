@@ -52,21 +52,21 @@ class ExportViewModel @Inject constructor(
     private val redColorPdf = DeviceRgb(220, 20, 60) // Crimson red
     private val lightBluePdf = DeviceRgb(191, 243, 255)
 
-    val headerBackgroundPdf = DeviceRgb(0, 102, 204) // Dark blue
-    val headerTextColorPdf = DeviceRgb(255, 255, 255) // White
-    val lightRowPdf = DeviceRgb(235, 245, 255) // Light blue
-    val whiteRowPdf = DeviceRgb(255, 255, 255) // White
+    private val headerBackgroundPdf = DeviceRgb(0, 102, 204) // Dark blue
+    private val headerTextColorPdf = DeviceRgb(255, 255, 255) // White
+    private val lightRowPdf = DeviceRgb(235, 245, 255) // Light blue
+    private val whiteRowPdf = DeviceRgb(255, 255, 255) // White
 
     val greenColor = XSSFColor(byteArrayOf(0, 128.toByte(), 0), null) // Dark green
     val redColor = XSSFColor(byteArrayOf(220.toByte(), 20, 60), null) // Crimson red
-    val lightBlueRow = XSSFColor(byteArrayOf(235.toByte(), 245.toByte(), 255.toByte()), null)
-    val whiteRow = XSSFColor(byteArrayOf(255.toByte(), 255.toByte(), 255.toByte()), null)
-    val headerBgColor = XSSFColor(byteArrayOf(0, 102.toByte(), 204.toByte()), null) // Dark blue
-    val headerTextColor =
+    private val lightBlueRow = XSSFColor(byteArrayOf(235.toByte(), 245.toByte(), 255.toByte()), null)
+    private val whiteRow = XSSFColor(byteArrayOf(255.toByte(), 255.toByte(), 255.toByte()), null)
+    private val headerBgColor = XSSFColor(byteArrayOf(0, 102.toByte(), 204.toByte()), null) // Dark blue
+    private val headerTextColor =
         IndexedColors.WHITE.index // Excel doesn't support RGB for font color directly in all cases
 
-    val dateTimeFormat = SimpleDateFormat("dd-MM-yyyy hh:mm aa", Locale.getDefault())
-    val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+    private val dateTimeFormat = SimpleDateFormat("dd-MM-yyyy hh:mm aa", Locale.getDefault())
+    private val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
     // val timeFormat = SimpleDateFormat("hh:mm aa", Locale.getDefault())
 
     private val _exportResult = MutableStateFlow<ExportResult?>(null)
@@ -119,14 +119,36 @@ class ExportViewModel @Inject constructor(
                     "Total Balance: $currencySymbol${Util.getFormattedString(totalSummary.balance)}"
                 )
 
-                summary.forEachIndexed { i, line ->
+                /*summary.forEachIndexed { i, line ->
                     val row = sheet.createRow(i)
                     val cell = row.createCell(0)
                     cell.setCellValue(line)
                     sheet.addMergedRegion(org.apache.poi.ss.util.CellRangeAddress(i, i, 0, 4))
                     cell.cellStyle = workbook.createCellStyle().apply {
-                        setFont(workbook.createFont().apply { bold = true })
+                        setFont(workbook.createFont().apply {
+                            bold = true
+                            IndexedColors.GREEN.index
+                        })
                     }
+                }*/
+
+                summary.forEachIndexed { i, line ->
+                    val row = sheet.createRow(i)
+                    val cell = row.createCell(0)
+                    cell.setCellValue(line)
+                    sheet.addMergedRegion(org.apache.poi.ss.util.CellRangeAddress(i, i, 0, 4))
+                    val font = workbook.createFont().apply {
+                        bold = true
+                        color = when(i){
+                            0 -> IndexedColors.GREEN.index
+                            1-> IndexedColors.RED.index
+                            else-> IndexedColors.BLACK.index
+                        }
+                    }
+                    val style = workbook.createCellStyle().apply {
+                        setFont(font)
+                    }
+                    cell.cellStyle = style
                 }
 
                 val startDataRow = summary.size + 1
@@ -170,8 +192,9 @@ class ExportViewModel @Inject constructor(
                 }
 
                 // Adjust column widths
-                columnHeaders.indices.forEach { sheet.autoSizeColumn(it) }
-
+                listOf(5, 25, 15, 15, 20, 25).forEachIndexed { i, width ->
+                    sheet.setColumnWidth(i, width * 256)
+                }
                 val firstRow = startDataRow      // Header row
                 val lastRow = startDataRow + merchantData.size // Last data row
                 val firstCol = 0
@@ -182,7 +205,8 @@ class ExportViewModel @Inject constructor(
 
                 val dateRangeStr =
                     "${dateFormat.format(fromDateMilli)}_${dateFormat.format(toDateMilli)}"
-                val fileName = "PennyPal_Transactions_$dateRangeStr.xlsx"
+                // val fileName = "PennyPal_Transactions_$dateRangeStr.xlsx"
+                val fileName = "PennyPal_Transactions_1.xlsx"
 
                 val file = File(
                     Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
@@ -355,6 +379,9 @@ class ExportViewModel @Inject constructor(
             val originalStyle = cell.cellStyle
             val newStyle = workbook.createCellStyle().apply {
                 cloneStyleFrom(originalStyle)
+                borderLeft = BorderStyle.NONE
+                borderRight = BorderStyle.NONE
+                borderBottom = BorderStyle.NONE
                 borderTop = borderStyle
             }
             cell.cellStyle = newStyle
@@ -366,6 +393,9 @@ class ExportViewModel @Inject constructor(
             val originalStyle = cell.cellStyle
             val newStyle = workbook.createCellStyle().apply {
                 cloneStyleFrom(originalStyle)
+                borderLeft = BorderStyle.NONE
+                borderRight = BorderStyle.NONE
+                borderTop = BorderStyle.NONE
                 borderBottom = borderStyle
             }
             cell.cellStyle = newStyle
@@ -381,6 +411,13 @@ class ExportViewModel @Inject constructor(
                 val originalStyle = leftCell.cellStyle
                 val newStyle = workbook.createCellStyle().apply {
                     cloneStyleFrom(originalStyle)
+                    if (originalStyle.borderTop != borderStyle)
+                        borderTop = BorderStyle.NONE
+
+                    if (originalStyle.borderBottom != borderStyle)
+                        borderBottom = BorderStyle.NONE
+
+                    borderRight = BorderStyle.NONE
                     borderLeft = borderStyle
                 }
                 leftCell.cellStyle = newStyle
@@ -392,6 +429,12 @@ class ExportViewModel @Inject constructor(
                 val originalStyle = rightCell.cellStyle
                 val newStyle = workbook.createCellStyle().apply {
                     cloneStyleFrom(originalStyle)
+                    if (originalStyle.borderTop != borderStyle)
+                        borderTop = BorderStyle.NONE
+
+                    if (originalStyle.borderBottom != borderStyle)
+                        borderBottom = BorderStyle.NONE
+                    borderLeft = BorderStyle.NONE
                     borderRight = borderStyle
                 }
                 rightCell.cellStyle = newStyle
@@ -399,11 +442,10 @@ class ExportViewModel @Inject constructor(
         }
     }
 
-    // ✅ Added summary helper
     private fun calculateSummary(data: List<MerchantDataWithAllData>): SummaryData {
         val income = data.filter { it.type > 0 }.sumOf { it.amount }
         val expense = data.filter { it.type < 0 }.sumOf { it.amount }
-        return SummaryData(income, expense, income + expense)
+        return SummaryData(income, expense,  income - expense)
     }
 
     data class SummaryData(val income: Double, val expense: Double, val balance: Double)
