@@ -59,9 +59,11 @@ class ExportViewModel @Inject constructor(
 
     val greenColor = XSSFColor(byteArrayOf(0, 128.toByte(), 0), null) // Dark green
     val redColor = XSSFColor(byteArrayOf(220.toByte(), 20, 60), null) // Crimson red
-    private val lightBlueRow = XSSFColor(byteArrayOf(235.toByte(), 245.toByte(), 255.toByte()), null)
+    private val lightBlueRow =
+        XSSFColor(byteArrayOf(235.toByte(), 245.toByte(), 255.toByte()), null)
     private val whiteRow = XSSFColor(byteArrayOf(255.toByte(), 255.toByte(), 255.toByte()), null)
-    private val headerBgColor = XSSFColor(byteArrayOf(0, 102.toByte(), 204.toByte()), null) // Dark blue
+    private val headerBgColor =
+        XSSFColor(byteArrayOf(0, 102.toByte(), 204.toByte()), null) // Dark blue
     private val headerTextColor =
         IndexedColors.WHITE.index // Excel doesn't support RGB for font color directly in all cases
 
@@ -139,10 +141,10 @@ class ExportViewModel @Inject constructor(
                     sheet.addMergedRegion(org.apache.poi.ss.util.CellRangeAddress(i, i, 0, 4))
                     val font = workbook.createFont().apply {
                         bold = true
-                        color = when(i){
+                        color = when (i) {
                             0 -> IndexedColors.GREEN.index
-                            1-> IndexedColors.RED.index
-                            else-> IndexedColors.BLACK.index
+                            1 -> IndexedColors.RED.index
+                            else -> IndexedColors.BLACK.index
                         }
                     }
                     val style = workbook.createCellStyle().apply {
@@ -203,10 +205,11 @@ class ExportViewModel @Inject constructor(
                 applyTableBorder(workbook, sheet, firstRow, lastRow, firstCol, lastCol)
 
 
-                val dateRangeStr =
-                    "${dateFormat.format(fromDateMilli)}_${dateFormat.format(toDateMilli)}"
-                // val fileName = "PennyPal_Transactions_$dateRangeStr.xlsx"
-                val fileName = "PennyPal_Transactions_1.xlsx"
+                /*val dateRangeStr =
+                    "${dateFormat.format(fromDateMilli)}_${dateFormat.format(toDateMilli)}"*/
+                val dateRangeStr = System.currentTimeMillis()
+                val fileName = "PennyPal_Transactions_$dateRangeStr.xlsx"
+                // fileName = "PennyPal_Transactions_1.xlsx"
 
                 val file = File(
                     Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
@@ -231,8 +234,9 @@ class ExportViewModel @Inject constructor(
                 val merchantData =
                     loadMerchantDataWithAllDataListUseCase.getLast3DataFromPeriod(0, 0).first()
 
-                val dateRangeStr =
-                    "${dateFormat.format(fromDateMilli)}_${dateFormat.format(toDateMilli)}"
+                /*val dateRangeStr =
+                    "${dateFormat.format(fromDateMilli)}_${dateFormat.format(toDateMilli)}"*/
+                val dateRangeStr = System.currentTimeMillis()
                 val fileName = "PennyPal_Transactions_$dateRangeStr.pdf"
 
                 val file = File(
@@ -354,6 +358,7 @@ class ExportViewModel @Inject constructor(
 
                 _exportResult.value = ExportResult.Success(file.absolutePath)
             } catch (e: Exception) {
+                println("aaaa ${e.message}")
                 _exportResult.value = ExportResult.Error(e.message ?: "PDF export failed")
             }
         }
@@ -445,7 +450,7 @@ class ExportViewModel @Inject constructor(
     private fun calculateSummary(data: List<MerchantDataWithAllData>): SummaryData {
         val income = data.filter { it.type > 0 }.sumOf { it.amount }
         val expense = data.filter { it.type < 0 }.sumOf { it.amount }
-        return SummaryData(income, expense,  income - expense)
+        return SummaryData(income, expense, income - expense)
     }
 
     data class SummaryData(val income: Double, val expense: Double, val balance: Double)
