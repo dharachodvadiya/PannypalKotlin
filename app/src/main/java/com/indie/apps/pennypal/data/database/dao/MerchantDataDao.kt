@@ -187,6 +187,40 @@ interface MerchantDataDao : BaseDao<MerchantData> {
     @Transaction
     @Query(
         """
+    SELECT md.id as id, 
+           md.merchant_id as merchantId, 
+           m.name as merchantName, 
+           md.category_id as categoryId, 
+           c.name as categoryName,
+           c.icon_id as categoryIconId,
+           c.icon_color_id as categoryIconColorId,
+           md.payment_id as paymentId, 
+           p.name as paymentName, 
+           md.date_milli as dateInMilli,
+           md.details, 
+           md.amount, 
+           md.original_amount as originalAmount,
+           bc.currency_symbol as baseAmountSymbol,
+           oc.currency_symbol as originalAmountSymbol,
+           md.type
+    FROM merchant_data md
+    LEFT JOIN merchant m ON md.merchant_id = m.id
+    INNER JOIN category c ON md.category_id = c.id
+    INNER JOIN payment_type p ON md.payment_id = p.id
+    INNER JOIN base_currency bc ON md.base_currency_id = bc.id
+    INNER JOIN base_currency oc ON md.original_currency_id = oc.id
+    WHERE md.date_milli BETWEEN :fromDateMilli AND :toDateMilli
+    ORDER BY md.date_milli DESC
+    """
+    )
+    fun getMerchantsDataWithAllDataListBetweenDates(
+        fromDateMilli: Long,
+        toDateMilli: Long,
+    ): Flow<List<MerchantDataWithAllData>>
+
+    @Transaction
+    @Query(
+        """
         SELECT md.id as id, 
                 md.payment_id as paymentId, 
                 md.date_milli as dateInMilli,

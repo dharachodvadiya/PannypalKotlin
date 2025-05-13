@@ -27,6 +27,8 @@ import com.indie.apps.pennypal.repository.BudgetRepository
 import com.indie.apps.pennypal.repository.BudgetRepositoryImpl
 import com.indie.apps.pennypal.repository.CategoryRepository
 import com.indie.apps.pennypal.repository.CategoryRepositoryImpl
+import com.indie.apps.pennypal.repository.DateConversionRepository
+import com.indie.apps.pennypal.repository.DateConversionRepositoryImpl
 import com.indie.apps.pennypal.repository.ExchangeRateRepository
 import com.indie.apps.pennypal.repository.ExchangeRateRepositoryImpl
 import com.indie.apps.pennypal.repository.InAppAdsRepository
@@ -146,6 +148,7 @@ object AppModule {
         exchangeRateRepository: ExchangeRateRepository,
         userRepository: UserRepository,
         baseCurrencyRepository: BaseCurrencyRepository,
+        dateConversionRepository: DateConversionRepository,
         @IoDispatcher dispatcher: CoroutineDispatcher
     ): MerchantDataRepository {
         return MerchantDataRepositoryImpl(
@@ -153,6 +156,7 @@ object AppModule {
             exchangeRateRepository,
             userRepository,
             baseCurrencyRepository,
+            dateConversionRepository,
             dispatcher
         )
     }
@@ -269,6 +273,11 @@ object AppModule {
             networkMonitor,
             dispatcher
         )
+    }
+
+    @Provides
+    fun provideDateConversionRepository(): DateConversionRepository {
+        return DateConversionRepositoryImpl()
     }
 
     @Singleton

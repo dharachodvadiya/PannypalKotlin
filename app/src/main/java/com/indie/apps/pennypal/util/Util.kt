@@ -13,7 +13,7 @@ object Util {
     var isSubscribed = false
 
     const val DB_NAME = "pennypal_money_db"
-    const val DB_VERSION = 7
+    const val DB_VERSION = 8
 
     //var currentCurrencySymbol = "$"
     const val SEARCH_NEWS_TIME_DELAY = 500L

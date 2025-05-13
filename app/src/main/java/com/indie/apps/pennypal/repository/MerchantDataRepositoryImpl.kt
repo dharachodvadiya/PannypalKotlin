@@ -9,6 +9,7 @@ import com.indie.apps.pennypal.data.module.balance.Total
 import com.indie.apps.pennypal.data.module.balance.mergeByAmount
 import com.indie.apps.pennypal.data.module.category.CategoryAmount
 import com.indie.apps.pennypal.data.module.category.mergeAndSortByAmount
+import com.indie.apps.pennypal.data.module.merchant_data.MerchantDataWithAllData
 import com.indie.apps.pennypal.data.module.mergeByAmount
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.coroutineScope
@@ -26,6 +27,7 @@ class MerchantDataRepositoryImpl @Inject constructor(
     private val exchangeRateRepository: ExchangeRateRepository,
     private val userRepository: UserRepository,
     private val baseCurrencyRepository: BaseCurrencyRepository,
+    private val dateConversionRepository: DateConversionRepository,
     private val dispatcher: CoroutineDispatcher
 ) :
     MerchantDataRepository {
@@ -88,6 +90,22 @@ class MerchantDataRepositoryImpl @Inject constructor(
         timeZoneOffsetInMilli,
         year.toString()
     ).flowOn(dispatcher)
+
+    override fun getMerchantsDataWithAllDataListBetweenDate(
+        timeZoneOffsetInMilli: Int,
+        fromMilli: Long,
+        toMilli: Long
+    ): Flow<List<MerchantDataWithAllData>> {
+
+        val startOfDay = dateConversionRepository.getStartOfDay(fromMilli)
+
+        val endOfDay = dateConversionRepository.getEndOfDay(toMilli)
+
+        return merchantDataDao.getMerchantsDataWithAllDataListBetweenDates(
+            fromDateMilli = startOfDay,
+            toDateMilli = endOfDay
+        ).flowOn(dispatcher)
+    }
 
     override fun getRecentMerchantsDataWithAllDataList() =
         merchantDataDao.getRecentMerchantsDataWithAllDataList().flowOn(dispatcher)

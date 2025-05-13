@@ -45,7 +45,8 @@ import androidx.room.PrimaryKey
         Index(value = ["payment_id"]),
         Index(value = ["category_id"]),
         Index(value = ["base_currency_id"]),
-        Index(value = ["original_currency_id"])
+        Index(value = ["original_currency_id"]),
+        Index(value = ["date_milli"])
     ]
 )
 data class MerchantData(

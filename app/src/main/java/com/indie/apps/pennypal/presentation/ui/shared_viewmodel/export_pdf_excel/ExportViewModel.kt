@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.module.merchant_data.MerchantDataWithAllData
-import com.indie.apps.pennypal.domain.usecase.LoadMerchantDataWithAllDataListUseCase
+import com.indie.apps.pennypal.repository.MerchantDataRepository
 import com.indie.apps.pennypal.util.Util
 import com.itextpdf.io.image.ImageDataFactory
 import com.itextpdf.kernel.colors.DeviceRgb
@@ -45,7 +45,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ExportViewModel @Inject constructor(
-    private val loadMerchantDataWithAllDataListUseCase: LoadMerchantDataWithAllDataListUseCase,
+    private val merchantDataRepository: MerchantDataRepository,
 ) : ViewModel() {
 
     private val greenColorPdf = DeviceRgb(0, 128, 0) // Dark green
@@ -79,7 +79,9 @@ class ExportViewModel @Inject constructor(
             _exportResult.value = ExportResult.Loading
             try {
                 val merchantData =
-                    loadMerchantDataWithAllDataListUseCase.getLast3DataFromPeriod(0, 0).first()
+                    merchantDataRepository.getMerchantsDataWithAllDataListBetweenDate(
+                        Util.TIME_ZONE_OFFSET_IN_MILLI, fromDateMilli, toDateMilli
+                    ).first()
                 val workbook = XSSFWorkbook()
                 val sheet = workbook.createSheet("Transaction Summary")
 
@@ -120,19 +122,6 @@ class ExportViewModel @Inject constructor(
                     "Total Expense: $currencySymbol${Util.getFormattedString(totalSummary.expense)}",
                     "Total Balance: $currencySymbol${Util.getFormattedString(totalSummary.balance)}"
                 )
-
-                /*summary.forEachIndexed { i, line ->
-                    val row = sheet.createRow(i)
-                    val cell = row.createCell(0)
-                    cell.setCellValue(line)
-                    sheet.addMergedRegion(org.apache.poi.ss.util.CellRangeAddress(i, i, 0, 4))
-                    cell.cellStyle = workbook.createCellStyle().apply {
-                        setFont(workbook.createFont().apply {
-                            bold = true
-                            IndexedColors.GREEN.index
-                        })
-                    }
-                }*/
 
                 summary.forEachIndexed { i, line ->
                     val row = sheet.createRow(i)
@@ -230,9 +219,10 @@ class ExportViewModel @Inject constructor(
             _exportResult.value = ExportResult.Loading
             try {
 
-
                 val merchantData =
-                    loadMerchantDataWithAllDataListUseCase.getLast3DataFromPeriod(0, 0).first()
+                    merchantDataRepository.getMerchantsDataWithAllDataListBetweenDate(
+                        Util.TIME_ZONE_OFFSET_IN_MILLI, fromDateMilli, toDateMilli
+                    ).first()
 
                 /*val dateRangeStr =
                     "${dateFormat.format(fromDateMilli)}_${dateFormat.format(toDateMilli)}"*/
