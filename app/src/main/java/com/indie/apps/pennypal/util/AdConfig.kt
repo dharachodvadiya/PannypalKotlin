@@ -10,19 +10,21 @@ object AdConfig {
 
     // Production Ad Unit IDs (replace with your PennyPal ad unit IDs)
     private const val PROD_BANNER_AD_UNIT_ID =
-        "ca-app-pub-1234567890123456/1111111111" // PennyPal_Banner
+        "ca-app-pub-3434809185169001/6943773139" // PennyPal_Banner
     private const val PROD_INTERSTITIAL_AD_UNIT_ID =
-        "ca-app-pub-1234567890123456/2222222222" // PennyPal_Interstitial
+        "ca-app-pub-3434809185169001/9058816491" // PennyPal_Interstitial
     private const val PROD_NATIVE_AD_UNIT_ID =
         "ca-app-pub-1234567890123456/3333333333" // PennyPal_Native
 
+    val isDebug = BuildConfig.DEBUG
+    //private const val isDebug = false
     val BANNER_AD_UNIT_ID: String
-        get() = if (BuildConfig.DEBUG) TEST_BANNER_AD_UNIT_ID else PROD_BANNER_AD_UNIT_ID
+        get() = if (isDebug) TEST_BANNER_AD_UNIT_ID else PROD_BANNER_AD_UNIT_ID
 
     val INTERSTITIAL_AD_UNIT_ID: String
-        get() = if (BuildConfig.DEBUG) TEST_INTERSTITIAL_AD_UNIT_ID else PROD_INTERSTITIAL_AD_UNIT_ID
+        get() = if (isDebug) TEST_INTERSTITIAL_AD_UNIT_ID else PROD_INTERSTITIAL_AD_UNIT_ID
 
     val NATIVE_AD_UNIT_ID: String
-        get() = if (BuildConfig.DEBUG) TEST_NATIVE_AD_UNIT_ID else PROD_NATIVE_AD_UNIT_ID
+        get() = if (isDebug) TEST_NATIVE_AD_UNIT_ID else PROD_NATIVE_AD_UNIT_ID
 
 }

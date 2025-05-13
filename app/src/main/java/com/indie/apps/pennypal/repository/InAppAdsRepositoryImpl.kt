@@ -29,7 +29,7 @@ class InAppAdsRepositoryImpl @Inject constructor(
     private var interstitialAd: InterstitialAd? = null
     private var interstitialAdLoadCallback: InterstitialAdLoadCallback? = null
     private var interstitialAdShowCount = 0
-    private val maxInterstitialAdsPerSession = 3
+    private val maxInterstitialAdsPerSession = 2
 
     // Native Ad
     private var nativeAd: NativeAd? = null
