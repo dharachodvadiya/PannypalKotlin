@@ -241,6 +241,14 @@
     <string name="final_amount">Final Amount</string>
     <string name="export_as_pdf">Export As Pdf</string>
     <string name="export_as_excel">Export As Excel</string>
+    <string name="select_date_range_6_month_pdf">Select Date Range (max 6 months) For PDF\n</string>
+    <string name="select_date_range_6_month_excel">Select Date Range (max 6 months) For Excel</string>
+    <string name="date_range_exceed_6_month">Date range cannot exceed 6 months.</string>
+    <string name="export">Export</string>
+    <string name="view">View</string>
+    <string name="pdf_export_success">Pdf export Success</string>
+    <string name="pdf_save_to">pdf saved to</string>
+    <string name="excel_save_to">excel saved to</string>
 
     <string-array name="months">
         <item>JAN</item>

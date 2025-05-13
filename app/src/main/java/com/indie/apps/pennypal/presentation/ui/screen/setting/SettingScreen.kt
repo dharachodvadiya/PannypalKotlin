@@ -235,7 +235,13 @@ fun SettingScreen(
     openDialog?.let { dialog ->
         when (dialog) {
             DialogType.ExportFilter -> {
+                val id = when (exportType) {
+                    ExportType.Pdf -> R.string.select_date_range_6_month_pdf
+                    ExportType.Excel -> R.string.select_date_range_6_month_excel
+                    null -> R.string.select_date_range_6_month_pdf
+                }
                 ExportFilterDialog(
+                    title = id,
                     onDismiss = {
                         openDialog = null
                     },

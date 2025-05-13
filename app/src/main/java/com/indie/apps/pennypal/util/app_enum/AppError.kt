@@ -44,6 +44,7 @@ object ErrorMessage {
     val BUDGET_EXIST_MONTH = UiText.StringResource(R.string.budget_exist_for_this_month)
     val BUDGET_EXIST_YEAR = UiText.StringResource(R.string.budget_exist_for_this_year)
     val INCORRECT_DATE = UiText.StringResource(R.string.from_date_greater_than_to_date)
+    val EXCEED_DATE_PERIOD = UiText.StringResource(R.string.date_range_exceed_6_month)
     val CATEGORY_LIMIT = UiText.StringResource(R.string.category_limit_within_total_budget)
     val BUDGET_TITLE_EMPTY = UiText.StringResource(R.string.enter_budget_title)
 }

@@ -2,10 +2,12 @@ package com.indie.apps.pennypal.presentation.ui.shared_viewmodel.export_pdf_exce
 
 import android.content.Context
 import android.content.Intent
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.core.content.FileProvider
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.presentation.ui.component.composable.custom.CustomProgressDialog
@@ -30,10 +32,16 @@ fun ExportSaveDialogs(
 
         is ExportResult.Success -> {
 
+            val dialogText = when (exportType) {
+                ExportType.Pdf -> stringResource(R.string.pdf_save_to)
+                ExportType.Excel -> stringResource(R.string.excel_save_to)
+                null -> stringResource(R.string.pdf_save_to)
+            } + " ${exportResult.filePath}"
+
             ExportDialog(
                 onDismissRequest = { onClearResult() },
-                dialogTitle = "Pdf export Success",
-                dialogText = "pdf saved to ${exportResult.filePath}",
+                dialogTitle = R.string.pdf_export_success,
+                dialogText = dialogText,
                 onView = {
                     if (exportType != null) {
                         viewFile(context, exportResult.filePath, exportType)
@@ -96,12 +104,12 @@ private fun ExportDialog(
     onDismissRequest: () -> Unit,
     onShare: () -> Unit,
     onView: () -> Unit,
-    dialogTitle: String,
+    @StringRes dialogTitle: Int,
     dialogText: String,
 ) {
     androidx.compose.material3.AlertDialog(title = {
         CustomText(
-            text = dialogTitle,
+            text = stringResource(dialogTitle),
             style = MyAppTheme.typography.Semibold57,
             color = MyAppTheme.colors.black
         )
@@ -119,13 +127,13 @@ private fun ExportDialog(
             TextButton(onClick = {
                 onView()
             }) {
-                CustomText("View")
+                CustomText(stringResource(R.string.view))
             }
 
             TextButton(onClick = {
                 onShare()
             }) {
-                CustomText("Share")
+                CustomText(stringResource(R.string.share))
             }
         }
 

@@ -1,6 +1,7 @@
 package com.indie.apps.pennypal.presentation.ui.shared_viewmodel.export_pdf_excel
 
 import android.annotation.SuppressLint
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.width
@@ -18,6 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.presentation.ui.component.composable.common.DialogSelectableItem
 import com.indie.apps.pennypal.presentation.ui.component.composable.common.TextFieldError
@@ -27,6 +29,7 @@ import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.clic
 import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.util.app_enum.DialogType
+import com.indie.apps.pennypal.util.app_enum.ErrorMessage
 import com.indie.apps.pennypal.util.internanal.method.getDateFromMillis
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -34,6 +37,7 @@ import java.util.Calendar
 @SuppressLint("SimpleDateFormat")
 @Composable
 fun ExportFilterDialog(
+    @StringRes title: Int,
     onDismiss: () -> Unit,
     onExportClick: (startDate: Long, endDate: Long) -> Unit
 ) {
@@ -53,7 +57,7 @@ fun ExportFilterDialog(
         onDismissRequest = onDismiss,
         title = {
             CustomText(
-                text = "Select Date Range (max 6 months)",
+                text = stringResource(title),
                 style = MyAppTheme.typography.Semibold57,
                 color = MyAppTheme.colors.black
             )
@@ -115,11 +119,11 @@ fun ExportFilterDialog(
             TextButton(onClick = {
                 when {
                     startDateMilli > endDateMilli -> {
-                        errorText = "Start date cannot be after end date."
+                        errorText = ErrorMessage.INCORRECT_DATE.toString()
                     }
 
                     !isUnder6Month(startDateMilli, endDateMilli) -> {
-                        errorText = "Date range cannot exceed 6 months."
+                        errorText = ErrorMessage.EXCEED_DATE_PERIOD.toString()
                     }
 
                     else -> {
@@ -128,12 +132,12 @@ fun ExportFilterDialog(
                     }
                 }
             }) {
-                CustomText("Export")
+                CustomText(stringResource(R.string.export))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                CustomText("Cancel")
+                CustomText(stringResource(R.string.cancel))
             }
         }
     )
