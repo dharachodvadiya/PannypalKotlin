@@ -239,6 +239,8 @@
     <string name="transactions">Transactions</string>
     <string name="select_more">Select More</string>
     <string name="final_amount">Final Amount</string>
+    <string name="export_as_pdf">Export As Pdf</string>
+    <string name="export_as_excel">Export As Excel</string>
 
     <string-array name="months">
         <item>JAN</item>

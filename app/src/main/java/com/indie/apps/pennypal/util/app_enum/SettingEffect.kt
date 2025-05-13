@@ -18,6 +18,8 @@ sealed class SettingEffect {
     data object OnMerchants : SettingEffect()
     data object OnCategories : SettingEffect()
     data object OnBudgets : SettingEffect()
+    data object OnPdfExport : SettingEffect()
+    data object OnExcelExport : SettingEffect()
 
 }
 
@@ -32,6 +34,8 @@ enum class SettingOption {
     CONTACT_US,
     BACKUP,
     RESTORE,
+    EXPORT_PDF,
+    EXPORT_EXCEL,
     GOOGLE_SIGN_IN,
     GOOGLE_SIGN_IN_OR_CHANGE,
     TRANSACTION,

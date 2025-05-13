@@ -5,6 +5,8 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import androidx.annotation.StringRes
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -12,16 +14,23 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.NavigateNext
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,6 +43,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.net.toUri
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.database.db_entity.Category
@@ -44,15 +54,123 @@ import com.indie.apps.pennypal.presentation.ui.component.composable.custom.Custo
 import com.indie.apps.pennypal.presentation.ui.component.composable.custom.ListItem
 import com.indie.apps.pennypal.presentation.ui.component.composable.custom.PrimaryButton
 import com.indie.apps.pennypal.presentation.ui.component.composable.custom.RoundImage
+import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.clickableWithNoRipple
 import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.roundedCornerBackground
 import com.indie.apps.pennypal.presentation.ui.screen.payment.AccountHeadingItem
+import com.indie.apps.pennypal.presentation.ui.shared_viewmodel.ads.AdViewModel
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.util.internanal.method.getCategoryIconById
 import com.indie.apps.pennypal.util.internanal.method.getDateFromMillis
 import com.indie.apps.pennypal.util.internanal.method.getTimeFromMillis
 import java.text.SimpleDateFormat
 
+
+@Composable
+fun SettingScreenData(
+    screenList: List<MoreItem>,
+    generalList: List<MoreItem>,
+    languageList: List<MoreItem>,
+    moreList: List<MoreItem>,
+    backupRestoreList: List<MoreItem>,
+    onSelect: (MoreItem) -> Unit,
+    onBackup: () -> Unit,
+    onProfileClick: () -> Unit,
+    bottomPadding: PaddingValues,
+    adViewModel: AdViewModel,
+    user: User?
+) {
+    Scaffold { topBarPadding ->
+
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
+                .padding(
+                    top = topBarPadding.calculateTopPadding(),
+                    bottom = bottomPadding.calculateBottomPadding()
+                ),
+            verticalArrangement = Arrangement.spacedBy(5.dp)
+        ) {
+
+            val isBannerVisibleFlow = remember { mutableStateOf(false) }
+            val bannerAdViewFlow by remember {
+                mutableStateOf(
+                    adViewModel.loadBannerAd() { adState ->
+                        isBannerVisibleFlow.value = adState.bannerAdView != null
+                    }
+                )
+            }
+
+
+            AnimatedVisibility(
+                visible = isBannerVisibleFlow.value,
+            ) {
+                AndroidView(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg)),
+                    factory = { bannerAdViewFlow }
+                )
+            }
+
+            val scrollState = rememberScrollState()
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(scrollState)
+                    // .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg))
+                    .padding(horizontal = dimensionResource(id = R.dimen.padding)),
+                verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding))
+            ) {
+
+                SettingProfileItem(
+                    user = user,
+                    onClick = onProfileClick,
+                    onBackup = onBackup
+                )
+
+                SettingItemList(
+                    dataList = screenList,
+                    onSelect = onSelect,
+                    arrowIconEnable = false
+                )
+
+                SettingTypeItem(
+                    titleId = R.string.general,
+                    dataList = generalList,
+                    onSelect = onSelect,
+                    arrowIconEnable = true
+                )
+
+                SettingTypeItem(
+                    titleId = R.string.language_support,
+                    dataList = languageList,
+                    onSelect = onSelect,
+                    arrowIconEnable = true
+                )
+
+
+                SettingTypeItem(
+                    titleId = R.string.backup_restore,
+                    dataList = backupRestoreList,
+                    onSelect = onSelect,
+                    arrowIconEnable = false
+                )
+
+                SettingTypeItem(
+                    titleId = R.string.more,
+                    dataList = moreList,
+                    onSelect = onSelect,
+                    arrowIconEnable = false
+                )
+            }
+        }
+
+    }
+}
 
 @Composable
 fun SettingTypeItem(

@@ -11,15 +11,17 @@ import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.presentation.ui.component.composable.custom.CustomProgressDialog
 import com.indie.apps.pennypal.presentation.ui.component.composable.custom.CustomText
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
+import com.indie.apps.pennypal.util.app_enum.ExportType
 import java.io.File
 
 @Composable
 fun ExportSaveDialogs(
-    pdfExportResult: ExportResult?,
+    exportType: ExportType?,
+    exportResult: ExportResult?,
     onClearResult: () -> Unit
 ) {
     val context = LocalContext.current
-    when (pdfExportResult) {
+    when (exportResult) {
         is ExportResult.Loading -> {
             CustomProgressDialog(
                 message = R.string.loading
@@ -31,13 +33,17 @@ fun ExportSaveDialogs(
             ExportDialog(
                 onDismissRequest = { onClearResult() },
                 dialogTitle = "Pdf export Success",
-                dialogText = "pdf saved to ${pdfExportResult.filePath}",
+                dialogText = "pdf saved to ${exportResult.filePath}",
                 onView = {
-                    viewPdf(context, pdfExportResult.filePath)
+                    if (exportType != null) {
+                        viewFile(context, exportResult.filePath, exportType)
+                    }
                     onClearResult()
                 },
                 onShare = {
-                    sharePdf(context, pdfExportResult.filePath)
+                    if (exportType != null) {
+                        sharePdf(context, exportResult.filePath, exportType)
+                    }
                     onClearResult()
                 },
             )
@@ -51,27 +57,39 @@ fun ExportSaveDialogs(
     }
 }
 
-private fun viewPdf(context: Context, filePath: String) {
+private fun viewFile(context: Context, filePath: String, exportType: ExportType) {
     val file = File(filePath)
     val uri = FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
+    val type = when (exportType) {
+        ExportType.Pdf -> "application/pdf"
+        ExportType.Excel -> "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    }
+
     val intent = Intent(Intent.ACTION_VIEW).apply {
-        setDataAndType(uri, "application/pdf")
+        setDataAndType(uri, type)
         flags = Intent.FLAG_ACTIVITY_NO_HISTORY or Intent.FLAG_GRANT_READ_URI_PERMISSION
     }
-    context.startActivity(Intent.createChooser(intent, "Open PDF"))
+    context.startActivity(Intent.createChooser(intent, "Open file"))
+
+
 }
 
-private fun sharePdf(context: Context, filePath: String) {
+private fun sharePdf(context: Context, filePath: String, exportType: ExportType) {
     val file = File(filePath)
     val uri = FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
+
+    val type = when (exportType) {
+        ExportType.Pdf -> "application/pdf"
+        ExportType.Excel -> "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    }
+
     val intent = Intent(Intent.ACTION_SEND).apply {
-        type = "application/pdf"
+        this.type = type
         putExtra(Intent.EXTRA_STREAM, uri)
         flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
     }
-    context.startActivity(Intent.createChooser(intent, "Share PDF"))
+    context.startActivity(Intent.createChooser(intent, "Share File"))
 }
-
 
 @Composable
 private fun ExportDialog(

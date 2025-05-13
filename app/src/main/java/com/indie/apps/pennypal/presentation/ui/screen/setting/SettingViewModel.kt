@@ -76,17 +76,24 @@ class SettingViewModel @Inject constructor(
             listOf(
                 MoreItem(R.string.backup_Data, SettingOption.BACKUP, R.drawable.ic_backup),
                 MoreItem(R.string.restore_Data, SettingOption.RESTORE, R.drawable.ic_restore),
+                MoreItem(R.string.export_as_pdf, SettingOption.EXPORT_PDF, R.drawable.ic_pdf),
+                MoreItem(R.string.export_as_excel, SettingOption.EXPORT_EXCEL, R.drawable.ic_excel),
                 MoreItem(
                     R.string.sign_in_change_account,
                     SettingOption.GOOGLE_SIGN_IN_OR_CHANGE,
-                    R.drawable.ic_restore
+                    R.drawable.ic_person_fill
                 )
             )
         )
     ) { _, list ->
-        val updatedList = list.toMutableList()
-        updatedList[2] =
-            updatedList[2].copy(subTitle = getCurrentEmail()?.let { UiText.DynamicString(it) })
+        val updatedList =
+            list.toMutableList().map { item ->
+                if (item.option == SettingOption.GOOGLE_SIGN_IN_OR_CHANGE) item.copy(subTitle = getCurrentEmail()?.let {
+                    UiText.DynamicString(it)
+                }) else item
+            }
+        /*updatedList[4] =
+            updatedList[4].copy(subTitle = getCurrentEmail()?.let { UiText.DynamicString(it) })*/
         updatedList
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
 
@@ -114,6 +121,8 @@ class SettingViewModel @Inject constructor(
                     SettingOption.MERCHANT -> SettingEffect.OnMerchants
                     SettingOption.CATEGORY -> SettingEffect.OnCategories
                     SettingOption.BUDGET -> SettingEffect.OnBudgets
+                    SettingOption.EXPORT_PDF -> SettingEffect.OnPdfExport
+                    SettingOption.EXPORT_EXCEL -> SettingEffect.OnExcelExport
                 }
             )
         }
