@@ -34,6 +34,7 @@ import org.apache.poi.ss.usermodel.FillPatternType
 import org.apache.poi.ss.usermodel.HorizontalAlignment
 import org.apache.poi.ss.usermodel.IndexedColors
 import org.apache.poi.ss.usermodel.Sheet
+import org.apache.poi.xssf.usermodel.XSSFCellStyle
 import org.apache.poi.xssf.usermodel.XSSFColor
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import java.io.ByteArrayOutputStream
@@ -128,17 +129,13 @@ class ExportViewModel @Inject constructor(
                     val cell = row.createCell(0)
                     cell.setCellValue(line)
                     sheet.addMergedRegion(org.apache.poi.ss.util.CellRangeAddress(i, i, 0, 4))
-                    val font = workbook.createFont().apply {
-                        bold = true
-                        color = when (i) {
-                            0 -> IndexedColors.GREEN.index
-                            1 -> IndexedColors.RED.index
-                            else -> IndexedColors.BLACK.index
-                        }
+
+                    val code = when (i) {
+                        0 -> 1
+                        1 -> -1
+                        else -> 0
                     }
-                    val style = workbook.createCellStyle().apply {
-                        setFont(font)
-                    }
+                    val style = getFontColorStyle(workbook, null, code, true)
                     cell.cellStyle = style
                 }
 
@@ -146,7 +143,8 @@ class ExportViewModel @Inject constructor(
 
                 // Header row
                 val headerRow = sheet.createRow(startDataRow)
-                val columnHeaders = listOf("No", "Title", "Amount", "Category", "Date", "Note")
+                val columnHeaders =
+                    listOf("No", "Title", "Income", "Expense", "Payment Mode", "Date & Time")
                 columnHeaders.forEachIndexed { index, title ->
                     val cell = headerRow.createCell(index)
                     cell.setCellValue(title)
@@ -159,12 +157,27 @@ class ExportViewModel @Inject constructor(
                     val row = sheet.createRow(rowIndex)
 
                     val isEven = index % 2 == 0
-                    val rowStyle = if (isEven) whiteRowStyle else lightBlueRowStyle
+                    val rowStyle = getFontColorStyle(
+                        workbook,
+                        if (isEven) whiteRowStyle else lightBlueRowStyle,
+                        0
+                    )
+                    val redRowStyle = getFontColorStyle(
+                        workbook,
+                        if (isEven) whiteRowStyle else lightBlueRowStyle,
+                        -1
+                    )
+                    val greenRowStyle = getFontColorStyle(
+                        workbook,
+                        if (isEven) whiteRowStyle else lightBlueRowStyle,
+                        1
+                    )
 
                     val incomeStr =
                         if (data.type > 0) "${data.originalAmount} ${data.originalAmountSymbol}" else "-"
                     val expenseStr =
                         if (data.type < 0) "${data.originalAmount} ${data.originalAmountSymbol}" else "-"
+
 
                     val values = listOf(
                         index.toString(),
@@ -178,7 +191,11 @@ class ExportViewModel @Inject constructor(
                     values.forEachIndexed { i, value ->
                         val cell = row.createCell(i)
                         cell.setCellValue(value)
-                        cell.cellStyle = rowStyle
+                        cell.cellStyle = when (i) {
+                            2 -> greenRowStyle
+                            3 -> redRowStyle
+                            else -> rowStyle
+                        }
                     }
                 }
 
@@ -289,7 +306,14 @@ class ExportViewModel @Inject constructor(
                 // Table
                 val table = Table(floatArrayOf(50f, 130f, 90f, 90f, 90f, 150f))
                 table.setBorder(Border.NO_BORDER)
-                listOf("ID", "Details", "Income", "Expense", "Payment Method", "Date").forEach {
+                listOf(
+                    "ID",
+                    "Details",
+                    "Income",
+                    "Expense",
+                    "Payment Mode",
+                    "Date & Time"
+                ).forEach {
                     val cell = Cell().add(
                         Paragraph(it)
                             .setBold()
@@ -356,6 +380,26 @@ class ExportViewModel @Inject constructor(
 
     fun clearExportResult() {
         _exportResult.value = null
+    }
+
+    private fun getFontColorStyle(
+        workbook: XSSFWorkbook,
+        baseStyle: XSSFCellStyle?,
+        transactionType: Int,
+        isBold: Boolean = false
+    ): XSSFCellStyle? {
+        val font = workbook.createFont().apply {
+            bold = isBold
+            color = when (transactionType) {
+                1 -> IndexedColors.GREEN.index
+                -1 -> IndexedColors.RED.index
+                else -> IndexedColors.BLACK.index
+            }
+        }
+        return workbook.createCellStyle().apply {
+            baseStyle?.let { cloneStyleFrom(it) }
+            setFont(font)
+        }
     }
 
     private fun applyTableBorder(
