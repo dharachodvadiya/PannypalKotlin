@@ -43,6 +43,8 @@ enum class ScreenNav(val route: String) {
 
     //ADD_BUDGET("add_budget"),
     ADD_EDIT_BUDGET("budget/add_edit_budget_data/{${Util.PARAM_BUDGET_ID}}"),
+
+    PURCHASE("purchase"),
 }
 
 enum class BottomNavItem(

@@ -27,9 +27,7 @@ import com.indie.apps.pennypal.presentation.ui.shared_viewmodel.auth.SignInLaunc
 import com.indie.apps.pennypal.presentation.ui.shared_viewmodel.export_pdf_excel.ExportFilterDialog
 import com.indie.apps.pennypal.presentation.ui.shared_viewmodel.export_pdf_excel.ExportSaveDialogs
 import com.indie.apps.pennypal.presentation.ui.shared_viewmodel.export_pdf_excel.ExportViewModel
-import com.indie.apps.pennypal.presentation.ui.shared_viewmodel.iap.BillingViewModel
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
-import com.indie.apps.pennypal.util.ProductId
 import com.indie.apps.pennypal.util.app_enum.AuthProcess
 import com.indie.apps.pennypal.util.app_enum.DialogType
 import com.indie.apps.pennypal.util.app_enum.ExportType
@@ -41,7 +39,6 @@ fun SettingScreen(
     settingViewModel: SettingViewModel = hiltViewModel(),
     authViewModel: AuthViewModel = hiltViewModel(),
     adViewModel: AdViewModel = hiltViewModel(),
-    billingViewModel: BillingViewModel = hiltViewModel(),
     pdfExportViewModel: ExportViewModel = hiltViewModel(),
     onCurrencyChange: (String) -> Unit,
     onDefaultPaymentChange: (Long) -> Unit,
@@ -51,6 +48,7 @@ fun SettingScreen(
     onMerchants: () -> Unit,
     onCategories: () -> Unit,
     onBudget: () -> Unit,
+    onPurchase: () -> Unit,
     onNavigationUp: () -> Unit,
     bottomPadding: PaddingValues,
 ) {
@@ -142,8 +140,8 @@ fun SettingScreen(
                     onLanguageChange()
                 }
 
-                SettingEffect.NoAds -> {
-                    billingViewModel.buy(context as Activity, ProductId.NoAds)
+                SettingEffect.Purchase -> {
+                    onPurchase()
                 }
 
                 SettingEffect.Share -> onShareClick(context)

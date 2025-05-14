@@ -6,7 +6,7 @@ sealed class SettingEffect {
     data class OnDefaultPaymentChange(val id: Long) : SettingEffect()
     data object OnBalanceViewChange : SettingEffect()
     data object OnLanguageChange : SettingEffect()
-    data object NoAds : SettingEffect()
+    data object Purchase : SettingEffect()
     data object Share : SettingEffect()
     data object Rate : SettingEffect()
     data object PrivacyPolicy : SettingEffect()
@@ -30,7 +30,7 @@ enum class SettingOption {
     BALANCE_VIEW_CHANGE,
     LANGUAGE_CHANGE,
     SHARE,
-    NO_ADS,
+    PURCHASE,
     RATE,
     PRIVACY_POLICY,
     CONTACT_US,

@@ -1,4 +1,4 @@
-package com.indie.apps.pennypal.presentation.ui.shared_viewmodel.iap
+package com.indie.apps.pennypal.presentation.ui.screen.purchase
 
 import android.app.Activity
 import androidx.compose.runtime.mutableStateListOf
@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class BillingViewModel @Inject constructor(
+class PurchaseViewModel @Inject constructor(
     private val billingRepository: BillingRepository,
     private val preferenceRepository: PreferenceRepository,
 ) : ViewModel() {

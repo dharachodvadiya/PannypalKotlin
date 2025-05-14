@@ -13,6 +13,7 @@ import com.indie.apps.pennypal.presentation.ui.screen.merchant.navigateToMerchan
 import com.indie.apps.pennypal.presentation.ui.screen.merchant_data.navigateToMerchantDataScreen
 import com.indie.apps.pennypal.presentation.ui.screen.merchant_profile.navigateToMerchantProfileScreen
 import com.indie.apps.pennypal.presentation.ui.screen.new_item.navigateToEditItemScreen
+import com.indie.apps.pennypal.presentation.ui.screen.purchase.navigateToPurchaseScreen
 import com.indie.apps.pennypal.presentation.ui.screen.single_budget_analysis.navigateToSingleBudgetScreen
 
 fun NavGraphBuilder.otherRoute(
@@ -39,4 +40,7 @@ fun NavGraphBuilder.otherRoute(
     navigateToMerchantScreen(navController, bottomBarState, innerPadding)
     navigateToMerchantDataScreen(navController, bottomBarState, innerPadding)
     navigateToMerchantProfileScreen(navController, bottomBarState, innerPadding)
+
+    //purchase
+    navigateToPurchaseScreen(navController, bottomBarState, innerPadding)
 }

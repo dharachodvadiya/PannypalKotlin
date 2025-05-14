@@ -69,6 +69,9 @@ internal fun NavGraphBuilder.navigateToSettingScreen(
             onBudget = {
                 navController.navigate(ScreenNav.BUDGET.route)
             },
+            onPurchase = {
+                navController.navigate(ScreenNav.PURCHASE.route)
+            }
         )
     }
 }
