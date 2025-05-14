@@ -2,6 +2,7 @@ package com.indie.apps.pennypal.presentation.ui.screen.overview
 
 import android.annotation.SuppressLint
 import androidx.annotation.StringRes
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -35,7 +36,9 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -790,30 +793,13 @@ fun OverviewItem(
 @Composable
 fun OverviewTopBarProfile(
     user: User?,
-    isSubscribed: Boolean,
-    onClick: () -> Unit,
-    onSubscriptionChanged: (Boolean) -> Unit,
+    onUnLockPlanClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
 
     Row(
         verticalAlignment = Alignment.CenterVertically, modifier = modifier
     ) {
-        /*PrimaryButton(
-            bgColor = MyAppTheme.colors.white,
-            borderStroke = BorderStroke(
-                width = 1.dp, color = MyAppTheme.colors.gray1
-            ),
-            onClick = onClick,
-            enabled = false,
-            modifier = Modifier.size(dimensionResource(R.dimen.top_bar_profile))
-        ) {
-            Icon(
-                imageVector = Icons.Filled.Person,
-                contentDescription = "Profile",
-                tint = MyAppTheme.colors.gray1
-            )
-        }*/
 
         UserProfileRect()
 
@@ -827,17 +813,16 @@ fun OverviewTopBarProfile(
 
         Spacer(modifier = Modifier.weight(1f))
 
-
-        /* Row(
-             verticalAlignment = Alignment.CenterVertically
-         ) {
-             Checkbox(checked = isSubscribed, onCheckedChange = onSubscriptionChanged)
-             CustomText(
-                 text = "Subscribed",
-                 style = MyAppTheme.typography.Regular57,
-                 color = MyAppTheme.colors.black
-             )
-         }*/
+        Image(
+            painterResource(R.drawable.premium),
+            contentDescription = "",
+            contentScale = ContentScale.Fit,
+            modifier = Modifier
+                .size(30.dp)
+                .clickableWithNoRipple {
+                    onUnLockPlanClick()
+                }
+        )
 
     }
 }
@@ -893,10 +878,8 @@ fun OverviewBudgetSelectionButton(
 private fun TopBarProfilePreview() {
     PennyPalTheme(darkTheme = true) {
         OverviewTopBarProfile(
-            onClick = { },
             user = null,
-            isSubscribed = false,
-            onSubscriptionChanged = {})
+            onUnLockPlanClick = {})
     }
 }
 

@@ -90,6 +90,9 @@ internal fun NavGraphBuilder.navigateToOverViewStartScreen(
                     )
                 )
             },
+            onUnLockPlanClick = {
+                navController.navigate(ScreenNav.PURCHASE.route)
+            },
             bottomPadding = innerPadding
         )
     }

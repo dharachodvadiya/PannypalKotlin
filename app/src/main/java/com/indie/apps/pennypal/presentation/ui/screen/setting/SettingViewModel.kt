@@ -51,6 +51,12 @@ class SettingViewModel @Inject constructor(
         )
     )
 
+    val premiumList = MutableStateFlow(
+        listOf(
+            MoreItem(R.string.unlock_premium, SettingOption.PURCHASE, R.drawable.premium),
+        )
+    )
+
     var generalList = getGeneralSettingUseCase.loadData()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
 
@@ -63,7 +69,6 @@ class SettingViewModel @Inject constructor(
 
     val moreList = MutableStateFlow(
         listOf(
-            MoreItem(R.string.unlock_premium, SettingOption.PURCHASE, R.drawable.ic_no_ads),
             MoreItem(R.string.share, SettingOption.SHARE, R.drawable.ic_share),
             MoreItem(R.string.rate, SettingOption.RATE, R.drawable.ic_rate),
             MoreItem(R.string.privacy_policy, SettingOption.PRIVACY_POLICY, R.drawable.ic_privacy),

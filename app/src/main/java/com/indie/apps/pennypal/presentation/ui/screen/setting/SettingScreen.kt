@@ -59,6 +59,7 @@ fun SettingScreen(
         adViewModel.loadInterstitialAd()
     }
     val screenList by settingViewModel.screenList.collectAsStateWithLifecycle()
+    val premiumList by settingViewModel.premiumList.collectAsStateWithLifecycle()
     val generalList by settingViewModel.generalList.collectAsStateWithLifecycle()
     val languageList by settingViewModel.languageList.collectAsStateWithLifecycle()
     val moreList by settingViewModel.moreList.collectAsStateWithLifecycle()
@@ -198,6 +199,7 @@ fun SettingScreen(
     SettingScreenData(
         generalList = generalList,
         screenList = screenList,
+        premiumList = premiumList,
         languageList = languageList,
         moreList = moreList,
         backupRestoreList = backupRestoreList,

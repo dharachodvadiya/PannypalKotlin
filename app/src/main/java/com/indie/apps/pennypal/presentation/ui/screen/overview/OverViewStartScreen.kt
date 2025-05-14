@@ -57,6 +57,7 @@ fun OverViewStartScreen(
     addEditMerchantDataId: Long,
     addMerchantId: Long,
     onAddMerchant: () -> Unit,
+    onUnLockPlanClick: () -> Unit,
     isAddMerchantDataSuccess: Boolean = false,
     isDeleteSuccess: Boolean = false,
     isEditSuccess: Boolean = false,
@@ -168,10 +169,10 @@ fun OverViewStartScreen(
             ) {
 
                 OverviewTopBarProfile(
-                    onClick = {},
                     user = userData,
-                    isSubscribed = false,
-                    onSubscriptionChanged = overViewViewModel::onSubscriptionChanged
+                    onUnLockPlanClick = {
+                        onUnLockPlanClick()
+                    }
                 )
 
                 OverviewData(
@@ -249,18 +250,5 @@ fun OverViewStartScreen(
 @Composable
 private fun OverViewScreenPreview() {
     PennyPalTheme(darkTheme = true) {
-        OverViewStartScreen(
-            addEditMerchantDataId = -1,
-            onSeeAllTransactionClick = {},
-            onSeeAllMerchantClick = {},
-            onTransactionClick = {},
-            onExploreAnalysisClick = {},
-            onExploreBudgetClick = {},
-            onAddMerchant = {},
-            addMerchantId = -1L,
-            onSetBudgetClick = {},
-            bottomPadding = PaddingValues(0.dp),
-            onMerchantClick = {}
-        )
     }
 }

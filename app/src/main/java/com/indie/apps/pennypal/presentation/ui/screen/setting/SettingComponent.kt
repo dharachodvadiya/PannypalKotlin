@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -35,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -69,6 +71,7 @@ import java.text.SimpleDateFormat
 @Composable
 fun SettingScreenData(
     screenList: List<MoreItem>,
+    premiumList: List<MoreItem>,
     generalList: List<MoreItem>,
     languageList: List<MoreItem>,
     moreList: List<MoreItem>,
@@ -134,6 +137,12 @@ fun SettingScreenData(
 
                 SettingItemList(
                     dataList = screenList,
+                    onSelect = onSelect,
+                    arrowIconEnable = false
+                )
+
+                SettingPremiumList(
+                    dataList = premiumList,
                     onSelect = onSelect,
                     arrowIconEnable = false
                 )
@@ -258,6 +267,58 @@ fun SettingItemList(
                     .fillMaxWidth(0.5f)
                     .padding(horizontal = 5.dp),
                 itemBgColor = MyAppTheme.colors.itemBg,
+                paddingValues = PaddingValues(vertical = 10.dp, horizontal = 5.dp)
+            )
+        }
+
+
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun SettingPremiumList(
+    dataList: List<MoreItem>,
+    onSelect: (MoreItem) -> Unit = {},
+    arrowIconEnable: Boolean,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
+) {
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        dataList.forEachIndexed { index, item ->
+
+            ListItem(
+                isClickable = true,
+                onClick = { onSelect(item) },
+                leadingIcon = {
+                    if (item.icon != null) {
+
+                        Image(
+                            painterResource(item.icon),
+                            contentDescription = "",
+                            contentScale = ContentScale.Fit,
+                            modifier = Modifier.size(30.dp)
+                        )
+                    }
+                },
+                content = {
+
+                    CustomText(
+                        text = stringResource(id = item.title),
+                        style = MyAppTheme.typography.Semibold50,
+                        color = MyAppTheme.colors.black,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                },
+                isSetDivider = false,
+                modifier = modifier
+                    .padding(horizontal = 5.dp),
+                itemBgColor = MyAppTheme.colors.lightBlue1.copy(alpha = 0.5f),
                 paddingValues = PaddingValues(vertical = 10.dp, horizontal = 5.dp)
             )
         }
