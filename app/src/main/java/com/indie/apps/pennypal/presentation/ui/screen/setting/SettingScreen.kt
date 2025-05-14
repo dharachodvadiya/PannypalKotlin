@@ -29,6 +29,7 @@ import com.indie.apps.pennypal.presentation.ui.shared_viewmodel.export_pdf_excel
 import com.indie.apps.pennypal.presentation.ui.shared_viewmodel.export_pdf_excel.ExportViewModel
 import com.indie.apps.pennypal.presentation.ui.shared_viewmodel.iap.BillingViewModel
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
+import com.indie.apps.pennypal.util.ProductId
 import com.indie.apps.pennypal.util.app_enum.AuthProcess
 import com.indie.apps.pennypal.util.app_enum.DialogType
 import com.indie.apps.pennypal.util.app_enum.ExportType
@@ -82,8 +83,6 @@ fun SettingScreen(
         AuthProcess.SIGN_IN -> CustomProgressDialog(R.string.sign_in)
     }
 
-    val products by billingViewModel.productDetails.collectAsStateWithLifecycle()
-
     val pdfExportResult by pdfExportViewModel.exportResult.collectAsStateWithLifecycle()
 
     // Permission launcher
@@ -102,9 +101,6 @@ fun SettingScreen(
         } else {
             action() // No permission needed for API 29+ (scoped storage)
         }
-    }
-    LaunchedEffect(Unit) {
-        billingViewModel.init(context as Activity)
     }
 
     BackHandler {
@@ -144,6 +140,10 @@ fun SettingScreen(
                 SettingEffect.OnBalanceViewChange -> onBalanceViewChange()
                 SettingEffect.OnLanguageChange -> {
                     onLanguageChange()
+                }
+
+                SettingEffect.NoAds -> {
+                    billingViewModel.buy(context as Activity, ProductId.NoAds)
                 }
 
                 SettingEffect.Share -> onShareClick(context)

@@ -16,9 +16,11 @@ import com.android.billingclient.api.queryPurchasesAsync
 import com.example.iap.model.Product
 import com.example.iap.model.ProductType
 import com.example.iap.model.PurchaseResult
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.suspendCancellableCoroutine
 
 class BillingClientWrapper(
-    private val context: Context,
+    context: Context,
     private val products: List<Product>
 ) {
 
@@ -26,32 +28,15 @@ class BillingClientWrapper(
         .setListener(::onPurchasesUpdated)
         .enablePendingPurchases()
         .build()
-    //private val _purchaseUpdates = MutableStateFlow<List<Purchase>>(emptyList())
-    // val purchaseUpdates: StateFlow<List<Purchase>> = _purchaseUpdates
 
-    private var onProductDetailsFetched: ((List<ProductDetails>) -> Unit)? = null
     private var onProductPurchased: ((PurchaseResult) -> Unit)? = null
 
-    fun onConnect(onConnectSuccess: () -> Unit) {
-        if (billingClient.connectionState == ConnectionState.DISCONNECTED) {
-            billingClient.startConnection(object : BillingClientStateListener {
-                override fun onBillingSetupFinished(result: BillingResult) {
-                    if (result.responseCode == BillingClient.BillingResponseCode.OK) {
-                        queryProductDetails()
-                        onConnectSuccess()
-                    }
-                }
-
-                override fun onBillingServiceDisconnected() {
-                    println("Billing service disconnected")
-                }
-            })
-        }
+    fun setOnProductPurchaseFetched(callback: (PurchaseResult) -> Unit) {
+        onProductPurchased = callback
     }
 
     private fun onPurchasesUpdated(billingResult: BillingResult, purchases: List<Purchase>?) {
         if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
-            // _purchaseUpdates.value = purchases
             onProductPurchased?.invoke(PurchaseResult.Success(purchases))
         } else {
             onProductPurchased?.invoke(
@@ -81,42 +66,66 @@ class BillingClientWrapper(
         billingClient.launchBillingFlow(activity, billingFlowParams)
     }
 
-    fun setOnProductDetailsFetched(callback: (List<ProductDetails>) -> Unit) {
-        onProductDetailsFetched = callback
-    }
-
-    fun setOnProductPurchaseFetched(callback: (PurchaseResult) -> Unit) {
-        onProductPurchased = callback
-    }
-
-    private fun queryProductDetails() {
-        val inApp = products.filter { it.type == ProductType.INAPP }
-        val subs = products.filter { it.type == ProductType.SUBS }
-
-        val all = (inApp + subs).map {
-            QueryProductDetailsParams.Product.newBuilder()
-                .setProductId(it.id)
-                .setProductType(
-                    if (it.type == ProductType.INAPP) BillingClient.ProductType.INAPP
-                    else BillingClient.ProductType.SUBS
-                ).build()
-        }
-
-        billingClient.queryProductDetailsAsync(
-            QueryProductDetailsParams.newBuilder().setProductList(all).build()
-        ) { result, details ->
-            if (result.responseCode == BillingClient.BillingResponseCode.OK) {
-                onProductDetailsFetched?.invoke(details)
-            }
-        }
-    }
-
     fun acknowledgePurchase(purchase: Purchase) {
         if (!purchase.isAcknowledged) {
             val params = AcknowledgePurchaseParams.newBuilder()
                 .setPurchaseToken(purchase.purchaseToken).build()
             billingClient.acknowledgePurchase(params) { result ->
                 println("Acknowledge result: ${result.responseCode}")
+            }
+        }
+    }
+
+    fun onConnect(onConnectSuccess: (Boolean) -> Unit) {
+        if (billingClient.connectionState == ConnectionState.DISCONNECTED) {
+            billingClient.startConnection(object : BillingClientStateListener {
+                override fun onBillingSetupFinished(result: BillingResult) {
+                    if (result.responseCode == BillingClient.BillingResponseCode.OK) {
+                        onConnectSuccess(true)
+                    }
+                }
+
+                override fun onBillingServiceDisconnected() {
+                    println("Billing service disconnected")
+                }
+            })
+        } else {
+            onConnectSuccess(false)
+        }
+    }
+
+    suspend fun queryAllProductDetails(): List<ProductDetails> {
+        val inApp = queryProductDetailsForType(ProductType.INAPP)
+        val subs = queryProductDetailsForType(ProductType.SUBS)
+        return inApp + subs
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private suspend fun queryProductDetailsForType(type: ProductType): List<ProductDetails> {
+        val productList = products.filter { it.type == type }.map {
+            QueryProductDetailsParams.Product.newBuilder()
+                .setProductId(it.id)
+                .setProductType(
+                    if (type == ProductType.INAPP)
+                        BillingClient.ProductType.INAPP
+                    else BillingClient.ProductType.SUBS
+                )
+                .build()
+        }
+
+        if (productList.isEmpty()) return emptyList()
+
+        val params = QueryProductDetailsParams.newBuilder()
+            .setProductList(productList)
+            .build()
+
+        return suspendCancellableCoroutine { cont ->
+            billingClient.queryProductDetailsAsync(params) { result, productDetails ->
+                if (result.responseCode == BillingClient.BillingResponseCode.OK) {
+                    cont.resume(productDetails, null)
+                } else {
+                    cont.resume(emptyList(), null)
+                }
             }
         }
     }

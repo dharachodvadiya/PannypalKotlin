@@ -6,6 +6,7 @@ import com.example.iap.repository.BillingRepository
 import com.example.iap.repository.BillingRepositoryImpl
 import com.google.android.play.core.review.ReviewManager
 import com.google.android.play.core.review.ReviewManagerFactory
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.indie.apps.contacts.data.provider.ContactsProvider
 import com.indie.apps.contacts.data.provider.impl.ContactsProviderImpl
 import com.indie.apps.contacts.data.repo.ContactsRepository
@@ -313,5 +314,9 @@ object AppModule {
         return BillingClientWrapper(context, ProductConfig.products)
     }
 
-
+    @Provides
+    @Singleton
+    fun provideFirebaseAnalytics(@ApplicationContext context: Context): FirebaseAnalytics {
+        return FirebaseAnalytics.getInstance(context)
+    }
 }

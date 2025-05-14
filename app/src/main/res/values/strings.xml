@@ -249,6 +249,7 @@
     <string name="pdf_export_success">Pdf export Success</string>
     <string name="pdf_save_to">pdf saved to</string>
     <string name="excel_save_to">excel saved to</string>
+    <string name="no_ads">No Ads</string>
 
     <string-array name="months">
         <item>JAN</item>

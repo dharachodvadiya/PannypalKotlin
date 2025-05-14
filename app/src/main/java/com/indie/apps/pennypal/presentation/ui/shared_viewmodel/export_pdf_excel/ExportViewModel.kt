@@ -372,7 +372,6 @@ class ExportViewModel @Inject constructor(
 
                 _exportResult.value = ExportResult.Success(file.absolutePath)
             } catch (e: Exception) {
-                println("aaaa ${e.message}")
                 _exportResult.value = ExportResult.Error(e.message ?: "PDF export failed")
             }
         }

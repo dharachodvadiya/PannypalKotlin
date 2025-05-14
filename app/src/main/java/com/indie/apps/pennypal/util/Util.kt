@@ -82,6 +82,7 @@ object Util {
     const val PREF_BALANCE_VIEW = "overview_balance_view"
     const val PREF_APP_LANGUAGE = "app_language"
     const val PREF_NEW_INSTALL = "new_install"
+    const val PREF_PURCHASE_ID = "penny_id_"
 
     val TIME_ZONE_OFFSET_IN_MILLI = TimeZone.getDefault().rawOffset
 

@@ -4,20 +4,14 @@ import android.app.Activity
 import com.android.billingclient.api.ProductDetails
 import com.android.billingclient.api.Purchase
 import com.example.iap.model.PurchaseResult
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.StateFlow
 
 interface BillingRepository {
-    val productDetails: StateFlow<List<ProductDetails>> // all product list
-    val purchaseResult: SharedFlow<PurchaseResult> // all product list
-    val purchaseStatus: StateFlow<Map<String, Boolean>>
-    // val purchases: StateFlow<List<Purchase>> // current purchased detail
-
-    fun initBilling(activity: Activity)
-    fun launchPurchaseFlow(activity: Activity, productDetails: ProductDetails)
-    fun handleAcknowledgement(purchase: Purchase)
-    fun cleanup()
-
-    suspend fun fetchPurchases()
-    fun isProductPurchased(productId: String): Boolean
+    fun connect(onConnected: (Boolean) -> Unit)
+    fun setOnProductPurchaseFetched(callback: (PurchaseResult) -> Unit)
+    fun launchPurchase(activity: Activity, productDetails: ProductDetails)
+    suspend fun getActivePurchases(): List<Purchase>
+    suspend fun getAllProductDetails(): List<ProductDetails>
+    suspend fun isProductActive(productId: String): Boolean
+    fun acknowledgePurchase(purchase: Purchase)
+    fun endConnection()
 }

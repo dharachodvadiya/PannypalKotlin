@@ -141,7 +141,7 @@ fun PaymentScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg)),
-                    factory = { bannerAdViewFlow }
+                    factory = { bannerAdViewFlow!! }
                 )
             }
 

@@ -63,6 +63,7 @@ class SettingViewModel @Inject constructor(
 
     val moreList = MutableStateFlow(
         listOf(
+            MoreItem(R.string.no_ads, SettingOption.NO_ADS, R.drawable.ic_no_ads),
             MoreItem(R.string.share, SettingOption.SHARE, R.drawable.ic_share),
             MoreItem(R.string.rate, SettingOption.RATE, R.drawable.ic_rate),
             MoreItem(R.string.privacy_policy, SettingOption.PRIVACY_POLICY, R.drawable.ic_privacy),
@@ -104,6 +105,7 @@ class SettingViewModel @Inject constructor(
                     SettingOption.CURRENCY_CHANGE -> SettingEffect.OnCurrencyChange(item.id)
                     SettingOption.PAYMENT_CHANGE -> SettingEffect.OnDefaultPaymentChange(item.id.toLong())
                     SettingOption.BALANCE_VIEW_CHANGE -> SettingEffect.OnBalanceViewChange
+                    SettingOption.NO_ADS -> SettingEffect.NoAds
                     SettingOption.SHARE -> SettingEffect.Share
                     SettingOption.RATE -> SettingEffect.Rate
                     SettingOption.PRIVACY_POLICY -> SettingEffect.PrivacyPolicy

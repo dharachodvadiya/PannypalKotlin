@@ -35,6 +35,7 @@ import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.back
 import com.indie.apps.pennypal.presentation.ui.component.extension.showToast
 import com.indie.apps.pennypal.presentation.ui.shared_viewmodel.ads.AdViewModel
 import com.indie.apps.pennypal.presentation.ui.shared_viewmodel.feedback.InAppFeedbackViewModel
+import com.indie.apps.pennypal.presentation.ui.shared_viewmodel.iap.BillingViewModel
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.util.app_enum.PeriodType
@@ -45,6 +46,7 @@ fun OverViewStartScreen(
     overViewViewModel: OverViewViewModel = hiltViewModel(),
     inAppFeedbackViewModel: InAppFeedbackViewModel = hiltViewModel(),
     adViewModel: AdViewModel = hiltViewModel(),
+    billingViewModel: BillingViewModel = hiltViewModel(),
     onMerchantClick: (Long) -> Unit,
     onSeeAllTransactionClick: () -> Unit,
     onSeeAllMerchantClick: () -> Unit,
@@ -146,7 +148,7 @@ fun OverViewStartScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg)),
-                    factory = { bannerAdViewFlow }
+                    factory = { bannerAdViewFlow!! }
                 )
             }
 

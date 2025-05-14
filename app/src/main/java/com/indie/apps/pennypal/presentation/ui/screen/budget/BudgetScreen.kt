@@ -34,9 +34,9 @@ import com.indie.apps.pennypal.presentation.ui.component.composable.custom.Custo
 import com.indie.apps.pennypal.presentation.ui.component.composable.custom.CustomYearPickerDialog
 import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.extension.showToast
+import com.indie.apps.pennypal.presentation.ui.screen.add_budget.AddBudgetTopSelectionButton
 import com.indie.apps.pennypal.presentation.ui.shared_viewmodel.ads.AdViewModel
 import com.indie.apps.pennypal.presentation.ui.shared_viewmodel.feedback.InAppFeedbackViewModel
-import com.indie.apps.pennypal.presentation.ui.screen.add_budget.AddBudgetTopSelectionButton
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.util.app_enum.DialogType
@@ -146,7 +146,7 @@ fun BudgetScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(backgroundGradientsBrush(MyAppTheme.colors.gradientBg)),
-                    factory = { bannerAdViewFlow }
+                    factory = { bannerAdViewFlow!! }
                 )
             }
 
