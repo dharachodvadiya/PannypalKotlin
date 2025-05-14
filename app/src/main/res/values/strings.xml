@@ -251,6 +251,15 @@
     <string name="excel_save_to">excel saved to</string>
     <string name="no_ads">No Ads</string>
     <string name="unlock_premium">Unlock Premium Plan</string>
+    <string name="unlock_now">Unlock Now</string>
+    <string name="get_premium_access">Get Premium Access</string>
+    <string name="premium_subtitle">Enjoy Ad-Free Experience</string>
+    <string name="active_now">Active Now</string>
+    <string name="restore">Restore</string>
+    <string name="upgrade_experience_today">Upgrade your experience today</string>
+    <string name="manage_subscription">Manage Subscription</string>
+    <string name="auti_renewal_cancel_anytime">Automatic Renewal, Cancel Anytime</string>
+    <string name="start_plan_now">Start your plan Now</string>
 
     <string-array name="months">
         <item>JAN</item>

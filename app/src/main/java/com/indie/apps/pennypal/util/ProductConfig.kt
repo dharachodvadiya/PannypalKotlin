@@ -4,14 +4,13 @@ import com.example.iap.model.Product
 import com.example.iap.model.ProductType
 
 enum class ProductId(val id: String) {
-    NoAds("text_no_ads_minimum_time")
+    NoAds("no_ads_1_month")
 }
 
 object ProductConfig {
 
 
     val products = listOf(
-        Product(id = "test_no_ads", type = ProductType.INAPP),
         Product(id = ProductId.NoAds.id, type = ProductType.SUBS)
     )
 

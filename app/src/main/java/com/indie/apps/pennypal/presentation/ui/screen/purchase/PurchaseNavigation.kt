@@ -16,6 +16,10 @@ internal fun NavGraphBuilder.navigateToPurchaseScreen(
 
 
         bottomBarState.value = false
-        PurchaseScreen()
+        PurchaseScreen(
+            onNavigationUp = {
+                navController.navigateUp()
+            }
+        )
     }
 }

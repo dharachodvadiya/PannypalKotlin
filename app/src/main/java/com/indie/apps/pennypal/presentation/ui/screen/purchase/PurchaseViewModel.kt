@@ -8,6 +8,7 @@ import com.android.billingclient.api.ProductDetails
 import com.android.billingclient.api.Purchase
 import com.example.iap.model.PurchaseResult
 import com.example.iap.repository.BillingRepository
+import com.indie.apps.pennypal.data.module.purchase.ProductUiModel
 import com.indie.apps.pennypal.repository.PreferenceRepository
 import com.indie.apps.pennypal.util.ProductId
 import com.indie.apps.pennypal.util.Util
@@ -22,6 +23,8 @@ class PurchaseViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _productDetailsList = mutableStateListOf<ProductDetails>()
+    private val _productUiList = mutableStateListOf<ProductUiModel>()
+    val productUiList: List<ProductUiModel> get() = _productUiList
 
     init {
         connect()
@@ -39,6 +42,7 @@ class PurchaseViewModel @Inject constructor(
                         }
                     }
                 }
+                buildProductUiList()
             }
         }
     }
@@ -46,26 +50,27 @@ class PurchaseViewModel @Inject constructor(
     private fun connect() {
         billingRepository.connect { isSuccess ->
             if (isSuccess) checkActiveSubscriptions()
+            getProductList()
         }
     }
 
-    private suspend fun getProductList() {
-        val list = billingRepository.getAllProductDetails()
-        _productDetailsList.clear()
-        _productDetailsList.addAll(list)
+    private fun getProductList() {
+        viewModelScope.launch {
+
+            val list = billingRepository.getAllProductDetails()
+            _productDetailsList.clear()
+            _productDetailsList.addAll(list)
+            buildProductUiList()
+        }
     }
 
     fun buy(activity: Activity, productId: ProductId) {
-        viewModelScope.launch {
-            if (_productDetailsList.isEmpty())
-                getProductList()
-            val productDetails = _productDetailsList.find { it.productId == productId.id }
+        val productDetails = _productDetailsList.find { it.productId == productId.id }
 
-            if (productDetails != null) {
-                billingRepository.launchPurchase(activity, productDetails)
-            } else {
-                // Optionally notify UI: product not found
-            }
+        if (productDetails != null) {
+            billingRepository.launchPurchase(activity, productDetails)
+        } else {
+            // Optionally notify UI: product not found
         }
     }
 
@@ -84,12 +89,67 @@ class PurchaseViewModel @Inject constructor(
                 val isActive = activeProductIds.contains(id)
                 setPref(id, isActive)
             }
+
+            buildProductUiList()
         }
     }
 
     private fun setPref(id: String, isActive: Boolean) {
         preferenceRepository.putBoolean("${Util.PREF_PURCHASE_ID}_$id", isActive)
     }
+
+    fun restorePurchases(onSuccess: (String) -> Unit) {
+        viewModelScope.launch {
+            try {
+                val purchases = billingRepository.getActivePurchases()
+
+                val activeProductIds = mutableListOf<String>()
+                purchases.forEach { purchase ->
+                    if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
+                        if (!purchase.isAcknowledged) {
+                            billingRepository.acknowledgePurchase(purchase)
+                        }
+                        purchase.products.forEach { productId ->
+                            activeProductIds.add(productId)
+                            setPref(productId, true)
+                        }
+                    }
+                }
+
+                // Update preferences for all known product IDs
+                val knownProductIds = ProductId.entries.map { it.id }
+                knownProductIds.forEach { id ->
+                    val isActive = activeProductIds.contains(id)
+                    setPref(id, isActive)
+                }
+                buildProductUiList()
+
+                if (activeProductIds.isNotEmpty()) {
+                    onSuccess("Successfully Restored")
+                } else {
+                    onSuccess("No Subscription Found")
+                }
+            } catch (e: Exception) {
+                onSuccess("Failed to restore purchases")
+            }
+        }
+    }
+
+    private fun buildProductUiList() {
+        val allowedProductIds = ProductId.entries.map { it.id }
+        _productUiList.clear()
+        _productUiList.addAll(
+            _productDetailsList
+                .filter { details -> details.productId in allowedProductIds }
+                .map { details ->
+                    ProductUiModel(details, getIsActive(details.productId))
+                }
+        )
+    }
+
+
+    private fun getIsActive(id: String) =
+        preferenceRepository.getBoolean("${Util.PREF_PURCHASE_ID}_$id", false)
 
 
 }

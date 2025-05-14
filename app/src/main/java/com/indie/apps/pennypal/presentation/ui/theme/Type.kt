@@ -126,6 +126,11 @@ val myAppTypography = MyAppTypography(
         fontSize = pxlToSp(90f).sp,
         fontWeight = FontWeight.SemiBold
     ),
+    Semibold130 = TextStyle(
+        fontFamily = displayFontFamily,
+        fontSize = pxlToSp(130f).sp,
+        fontWeight = FontWeight.SemiBold
+    ),
     Semibold80 = TextStyle(
         fontFamily = displayFontFamily,
         fontSize = pxlToSp(80f).sp,
@@ -222,6 +227,7 @@ data class MyAppTypography(
     val Medium30: TextStyle,
 
     val Regular66_5: TextStyle,
+    val Semibold130: TextStyle,
     val Semibold90: TextStyle,
     val Semibold80: TextStyle,
     val Semibold67_5: TextStyle,
