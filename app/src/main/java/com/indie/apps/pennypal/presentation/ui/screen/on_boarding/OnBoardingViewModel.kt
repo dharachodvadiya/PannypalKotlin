@@ -42,13 +42,16 @@ class OnBoardingViewModel @Inject constructor(
 
     private val userData = userRepository.getUser()
         .onEach { user ->
-            if (currencyCountryCode.value.isEmpty()) {
-                val currInfo = currencyRepository.getBaseCurrencyFromId(user.currencyId)
-                setCountryCode(currInfo?.currencyCountryCode ?: "US")
-                oldCurrencyCountryCode = currInfo?.currencyCountryCode
+
+            if(user != null) {
+                if (currencyCountryCode.value.isEmpty()) {
+                    val currInfo = currencyRepository.getBaseCurrencyFromId(user.currencyId)
+                    setCountryCode(currInfo?.currencyCountryCode ?: "US")
+                    oldCurrencyCountryCode = currInfo?.currencyCountryCode
+                }
+                oldName = user.name
+                updateNameText(user.name)
             }
-            oldName = user.name
-            updateNameText(user.name)
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), null)
 
@@ -58,7 +61,7 @@ class OnBoardingViewModel @Inject constructor(
     val nameState = MutableStateFlow(TextFieldState())
 
     var oldCurrencyCountryCode: String? = null
-    var oldName: String? = ""
+    var oldName: String? = null
 
     val introDataList = listOf(
         IntroData(R.string.introTitle1, R.string.introSubTitle1, R.drawable.grow),

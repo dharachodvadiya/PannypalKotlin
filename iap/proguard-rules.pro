@@ -19,3 +19,13 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Billing
+-keep class com.android.billingclient.api.** { *; }
+-keep class com.example.pennypal.iap.** { *; }  # :iap module classes
+
+# Lifecycle
+-keep class androidx.lifecycle.** { *; }
+-dontwarn androidx.lifecycle.**
+
+-keep class org.jetbrains.kotlin.analysis.api.** { *; }  # For Kotlin analysis
