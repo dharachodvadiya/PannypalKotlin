@@ -1,9 +1,11 @@
 package com.indie.apps.pennypal.presentation.ui.dialog.select_category
 
 import android.annotation.SuppressLint
+import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.indie.apps.pennypal.data.database.db_entity.Category
+import com.indie.apps.pennypal.repository.AnalyticRepository
 import com.indie.apps.pennypal.repository.CategoryRepository
 import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.util.app_enum.AnimationType
@@ -16,6 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SelectCategoryViewModel @Inject constructor(
     private val categoryRepository: CategoryRepository,
+    private val analyticRepository: AnalyticRepository
 ) : ViewModel() {
 
     val categoryList = MutableStateFlow<List<Category>>(emptyList())
@@ -46,6 +49,10 @@ class SelectCategoryViewModel @Inject constructor(
     fun addCategorySuccessAnimStop(animationType: AnimationType) {
         currentAnim.value = AnimationType.NONE
         currentAnimId.value = -1
+    }
+
+    fun logEvent(name: String, params: Bundle? = null) {
+        analyticRepository.logEvent(name, params)
     }
 
 

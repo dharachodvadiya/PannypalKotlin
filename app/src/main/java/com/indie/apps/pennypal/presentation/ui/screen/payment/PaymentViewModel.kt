@@ -1,8 +1,10 @@
 package com.indie.apps.pennypal.presentation.ui.screen.payment
 
+import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.indie.apps.pennypal.domain.usecase.DeletePaymentUseCase
+import com.indie.apps.pennypal.repository.AnalyticRepository
 import com.indie.apps.pennypal.repository.PaymentRepository
 import com.indie.apps.pennypal.repository.UserRepository
 import com.indie.apps.pennypal.util.Util
@@ -21,6 +23,7 @@ class PaymentViewModel @Inject constructor(
     private val deletePaymentUseCase: DeletePaymentUseCase,
     userRepository: UserRepository,
     paymentRepository: PaymentRepository,
+    private val analyticRepository: AnalyticRepository
 ) : ViewModel() {
 
     val userState = userRepository.getUser()
@@ -34,6 +37,10 @@ class PaymentViewModel @Inject constructor(
     val currentAnim = MutableStateFlow(AnimationType.NONE)
     val paymentAnimId = MutableStateFlow(-1L)
 
+
+    fun logEvent(name: String, params: Bundle? = null) {
+        analyticRepository.logEvent(name, params)
+    }
 
     fun editPaymentSuccess(id: Long) {
         paymentAnimId.value = id

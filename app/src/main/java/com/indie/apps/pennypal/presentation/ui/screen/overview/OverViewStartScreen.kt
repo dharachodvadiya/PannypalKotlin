@@ -171,6 +171,7 @@ fun OverViewStartScreen(
                 OverviewTopBarProfile(
                     user = userData,
                     onUnLockPlanClick = {
+                        overViewViewModel.logEvent("overview_unlock_plan")
                         onUnLockPlanClick()
                     }
                 )
@@ -183,18 +184,23 @@ fun OverViewStartScreen(
                     recentTransaction = recentTransaction,
                     recentMerchant = recentMerchant,
                     onSeeAllTransactionClick = {
+                        overViewViewModel.logEvent("overview_see_all_transaction")
                         adViewModel.showInterstitialAd(context as android.app.Activity) { onSeeAllTransactionClick() }
                     },
                     onSeeAllMerchantClick = {
+                        overViewViewModel.logEvent("overview_see_all_merchant")
                         adViewModel.showInterstitialAd(context as android.app.Activity) { onSeeAllMerchantClick() }
                     },
                     onExploreAnalysisClick = {
+                        overViewViewModel.logEvent("overview_analysis")
                         adViewModel.showInterstitialAd(context as android.app.Activity) { onExploreAnalysisClick() }
                     },
                     onExploreBudgetClick = {
+                        overViewViewModel.logEvent("overview_see_all_budget")
                         adViewModel.showInterstitialAd(context as android.app.Activity) { onExploreBudgetClick() }
                     },
                     onTransactionClick = { id ->
+                        overViewViewModel.logEvent("overview_transaction_click")
                         adViewModel.showInterstitialAd(context as android.app.Activity) {
                             onTransactionClick(id)
                         }
@@ -212,13 +218,17 @@ fun OverViewStartScreen(
                         else
                             PeriodType.MONTH
                     },
-                    onAddMerchant = onAddMerchant,
+                    onAddMerchant = {
+                        overViewViewModel.logEvent("overview_add_merchant")
+                        onAddMerchant()
+                    },
                     onMerchantAnimStop = {
                         overViewViewModel.onMerchantAnimationComplete(it)
                     },
                     merchantAnim = currentMerchantAnim,
                     merchantAnimId = currentMerchantAnimId,
                     onSetBudgetClick = { id ->
+                        overViewViewModel.logEvent("overview_set_budget")
                         adViewModel.showInterstitialAd(context as android.app.Activity) {
                             onSetBudgetClick(
                                 id
@@ -227,6 +237,7 @@ fun OverViewStartScreen(
                     },
                     onMerchantClick = { id ->
                         adViewModel.showInterstitialAd(context as android.app.Activity) {
+                            overViewViewModel.logEvent("overview_merchant_click")
                             onMerchantClick(
                                 id
                             )

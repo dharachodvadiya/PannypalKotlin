@@ -117,7 +117,10 @@ fun BudgetScreen(
             BudgetTopBar(
                 title = title,
                 onNavigationUp = onNavigationUp,
-                onAddClick = { onAddClick(currentPeriod.id) }
+                onAddClick = {
+                    budgetViewModel.logEvent("budget_add")
+                    onAddClick(currentPeriod.id)
+                }
             )
         }
     ) { innerPadding ->
@@ -185,6 +188,7 @@ fun BudgetScreen(
                             budgetState = budgetState,
                             onBudgetEditClick = { id ->
                                 adViewModel.showInterstitialAd(context as android.app.Activity) {
+                                    budgetViewModel.logEvent("budget_edit_month_year")
                                     onBudgetEditClick(id)
                                 }
                             },
@@ -208,6 +212,7 @@ fun BudgetScreen(
                             //currency = currency,
                             onBudgetEditClick = { id ->
                                 adViewModel.showInterstitialAd(context as android.app.Activity) {
+                                    budgetViewModel.logEvent("budget_edit_active")
                                     onBudgetEditClick(id)
                                 }
                             },
@@ -230,6 +235,7 @@ fun BudgetScreen(
                             //currency = currency,
                             onBudgetEditClick = { id ->
                                 adViewModel.showInterstitialAd(context as android.app.Activity) {
+                                    budgetViewModel.logEvent("budget_edit_upcoming")
                                     onBudgetEditClick(id)
                                 }
                             },
@@ -252,6 +258,7 @@ fun BudgetScreen(
                             //currency = currency,
                             onBudgetEditClick = { id ->
                                 adViewModel.showInterstitialAd(context as android.app.Activity) {
+                                    budgetViewModel.logEvent("budget_edit_past")
                                     onBudgetEditClick(id)
                                 }
                             },

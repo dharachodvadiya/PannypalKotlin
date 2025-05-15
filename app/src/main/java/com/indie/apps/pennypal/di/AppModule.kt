@@ -18,6 +18,8 @@ import com.indie.apps.pennypal.data.database.db.AppDatabase
 import com.indie.apps.pennypal.data.preference.PreferenceManager
 import com.indie.apps.pennypal.data.service.ExchangeRateApiService
 import com.indie.apps.pennypal.data.service.NetworkMonitor
+import com.indie.apps.pennypal.repository.AnalyticRepository
+import com.indie.apps.pennypal.repository.AnalyticRepositoryImpl
 import com.indie.apps.pennypal.repository.AuthRepository
 import com.indie.apps.pennypal.repository.AuthRepositoryImpl
 import com.indie.apps.pennypal.repository.BackupRepository
@@ -318,5 +320,10 @@ object AppModule {
     @Singleton
     fun provideFirebaseAnalytics(@ApplicationContext context: Context): FirebaseAnalytics {
         return FirebaseAnalytics.getInstance(context)
+    }
+
+    @Provides
+    fun provideAnalyticRepository(firebaseAnalytics: FirebaseAnalytics): AnalyticRepository {
+        return AnalyticRepositoryImpl(firebaseAnalytics)
     }
 }

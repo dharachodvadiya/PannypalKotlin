@@ -96,7 +96,10 @@ fun PaymentScreen(
                             width = 1.dp,
                             color = MyAppTheme.colors.gray1
                         ),
-                        onClick = onAddPaymentClick,
+                        onClick = {
+                            paymentViewModel.logEvent("payment_add")
+                            onAddPaymentClick()
+                        },
                         modifier = Modifier
                             .size(dimensionResource(R.dimen.top_bar_profile))
                     ) {
@@ -156,6 +159,7 @@ fun PaymentScreen(
             PaymentModeDefaultItem(
                 paymentModeName = paymentName,
                 onDefaultPaymentChange = {
+                    paymentViewModel.logEvent("payment_default_payment_change")
                     onDefaultPaymentChange(userData?.paymentId ?: -1L)
                 }
             )
@@ -178,9 +182,11 @@ fun PaymentScreen(
                         dataList = bankList,
                         selectPaymentId = userData?.paymentId ?: -1L,
                         onEditClick = {
+                            paymentViewModel.logEvent("payment_edit")
                             onEditPaymentClick(it)
                         },
                         onDeleteClick = {
+                            paymentViewModel.logEvent("payment_delete")
                             deletePaymentId = it.id
                             openDialog = DialogType.Delete
                         },
@@ -197,9 +203,11 @@ fun PaymentScreen(
                         dataList = cashList,
                         selectPaymentId = userData?.paymentId ?: -1L,
                         onEditClick = {
+                            paymentViewModel.logEvent("payment_edit")
                             onEditPaymentClick(it)
                         },
                         onDeleteClick = {
+                            paymentViewModel.logEvent("payment_delete")
                             deletePaymentId = it.id
                             openDialog = DialogType.Delete
                         },

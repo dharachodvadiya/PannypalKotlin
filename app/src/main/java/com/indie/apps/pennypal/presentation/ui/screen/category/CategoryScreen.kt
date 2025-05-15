@@ -126,7 +126,12 @@ fun CategoryScreen(
     Scaffold(topBar = {
         CategoryTopBar(
             title = stringResource(R.string.category),
-            onAddClick = { viewModel.onAddClick { onAddClick() } },
+            onAddClick = {
+                viewModel.onAddClick {
+                    viewModel.logEvent("category_add")
+                    onAddClick()
+                }
+            },
             onNavigationUp = {
                 viewModel.onBackClick { onNavigationUp() }
             })
@@ -285,10 +290,12 @@ fun CategoryScreen(
                                     isSelected = false,
                                     onClick = {
                                         adViewModel.showInterstitialAd(context as android.app.Activity) {
+                                            viewModel.logEvent("category_edit")
                                             onEditClick(data.id)
                                         }
                                     },
                                     onDeleteClick = {
+                                        viewModel.logEvent("category_delete")
                                         deleteId = data.id
                                         openDialog = DialogType.Delete
                                     },

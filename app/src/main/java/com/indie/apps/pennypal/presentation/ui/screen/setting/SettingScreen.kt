@@ -109,24 +109,29 @@ fun SettingScreen(
     SignInLauncher(
         authViewModel,
         onLoginSuccess = {
+            settingViewModel.logEvent("setting_login_success")
             settingViewModel.refreshState()
             context.showToast(loginSuccessMessage)
         },
         onRestoreSuccess = {
+            settingViewModel.logEvent("setting_restore_success")
             adViewModel.showInterstitialAd(context as Activity, isReload = true) {
                 settingViewModel.refreshState()
                 context.showToast(restoreSuccessMessage)
             }
         },
         onBackUpSuccess = {
+            settingViewModel.logEvent("setting_backup_success")
             adViewModel.showInterstitialAd(context as Activity, isReload = true) {
                 context.showToast(backupSuccessMessage)
             }
         },
         onRestoreFail = {
+            settingViewModel.logEvent("setting_restore_fail")
             context.showToast(it)
         },
         onBackUpFail = {
+            settingViewModel.logEvent("setting_backup_fail")
             context.showToast(it)
         })
 
@@ -204,11 +209,13 @@ fun SettingScreen(
         moreList = moreList,
         backupRestoreList = backupRestoreList,
         onSelect = {
+            settingViewModel.logEvent("setting_${it.option}_click")
             settingViewModel.onSelectOption(
                 item = it
             )
         },
         onBackup = {
+            settingViewModel.logEvent("setting_backup_now")
             settingViewModel.updateSyncTime()
             authViewModel.onEvent(
                 mainEvent = SyncEvent.Backup,
@@ -218,6 +225,7 @@ fun SettingScreen(
             )
         },
         onProfileClick = {
+            settingViewModel.logEvent("setting_profile")
             authViewModel.onEvent(
                 mainEvent = SyncEvent.SignInGoogle,
                 onFail = {
@@ -258,6 +266,9 @@ fun SettingScreen(
                             null -> {}
                         }
 
+                    },
+                    logEvent = {
+                        settingViewModel.logEvent("setting_export_filter_dialog_$it")
                     }
                 )
             }
@@ -270,7 +281,10 @@ fun SettingScreen(
     ExportSaveDialogs(
         exportType = exportType,
         exportResult = pdfExportResult,
-        onClearResult = { pdfExportViewModel.clearExportResult() }
+        onClearResult = { pdfExportViewModel.clearExportResult() },
+        logEvent = {
+            settingViewModel.logEvent("setting_export_dialog_$it")
+        }
     )
 }
 

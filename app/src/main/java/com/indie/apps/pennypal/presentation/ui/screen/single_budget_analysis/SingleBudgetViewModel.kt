@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.screen.single_budget_analysis
 
+import android.os.Bundle
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -7,6 +8,7 @@ import com.indie.apps.pennypal.data.module.budget.BudgetWithCategory
 import com.indie.apps.pennypal.data.module.category.CategoryAmount
 import com.indie.apps.pennypal.domain.usecase.DeleteSingleBudgetDataUseCase
 import com.indie.apps.pennypal.domain.usecase.GetCategoryWiseSpentAmountForPeriodUseCase
+import com.indie.apps.pennypal.repository.AnalyticRepository
 import com.indie.apps.pennypal.repository.BudgetRepository
 import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.util.app_enum.PeriodType
@@ -22,6 +24,7 @@ class SingleBudgetViewModel @Inject constructor(
     private val budgetRepository: BudgetRepository,
     private val getCategoryWiseSpentAmountForPeriodUseCase: GetCategoryWiseSpentAmountForPeriodUseCase,
     private val deleteSingleBudgetDataUseCase: DeleteSingleBudgetDataUseCase,
+    private val analyticRepository: AnalyticRepository,
     //userRepository: UserRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -34,6 +37,11 @@ class SingleBudgetViewModel @Inject constructor(
     var spentCategoryData = MutableStateFlow<List<CategoryAmount>>(emptyList())
 
     val uiState = MutableStateFlow<Resource<Unit>>(Resource.Loading())
+
+
+    fun logEvent(name: String, params: Bundle? = null) {
+        analyticRepository.logEvent(name, params)
+    }
 
     fun loadBudgetData() {
         uiState.value = Resource.Loading()

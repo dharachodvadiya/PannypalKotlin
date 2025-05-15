@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.screen.category
 
+import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
@@ -9,6 +10,7 @@ import com.indie.apps.pennypal.domain.usecase.DeleteCategoryUseCase
 import com.indie.apps.pennypal.domain.usecase.SearchCategoryListUseCase
 import com.indie.apps.pennypal.presentation.ui.state.PagingState
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
+import com.indie.apps.pennypal.repository.AnalyticRepository
 import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.util.app_enum.AnimationType
 import com.indie.apps.pennypal.util.app_enum.Resource
@@ -25,7 +27,8 @@ import javax.inject.Inject
 @HiltViewModel
 class CategoryViewModel @Inject constructor(
     searchCategoryListUseCase: SearchCategoryListUseCase,
-    private val deleteCategoryUseCase: DeleteCategoryUseCase
+    private val deleteCategoryUseCase: DeleteCategoryUseCase,
+    private val analyticRepository: AnalyticRepository
 ) : ViewModel() {
 
     var scrollIndex = MutableStateFlow(0)
@@ -53,6 +56,10 @@ class CategoryViewModel @Inject constructor(
         .cachedIn(viewModelScope)
     val pagingState = MutableStateFlow(PagingState<Category>())
 
+
+    fun logEvent(name: String, params: Bundle? = null) {
+        analyticRepository.logEvent(name, params)
+    }
 
     init {
 

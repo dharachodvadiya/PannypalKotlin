@@ -2,9 +2,11 @@ package com.indie.apps.pennypal.presentation.ui.shared_viewmodel.feedback
 
 import android.app.Activity
 import android.content.Context
+import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.play.core.review.ReviewManager
+import com.indie.apps.pennypal.repository.AnalyticRepository
 import com.indie.apps.pennypal.repository.InAppFeedbackRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -17,6 +19,7 @@ import javax.inject.Inject
 class InAppFeedbackViewModel @Inject constructor(
     private val reviewManager: ReviewManager,
     private val inAppFeedbackRepository: InAppFeedbackRepository,
+    private val analyticRepository: AnalyticRepository,
 ) : ViewModel() {
 
     private var reviewJob: Job? = null
@@ -39,11 +42,17 @@ class InAppFeedbackViewModel @Inject constructor(
 
     private suspend fun launchInAppReview(activity: Activity) {
         try {
+            logEvent("review_dialog_show")
             val reviewInfo = reviewManager.requestReviewFlow().await()
             reviewManager.launchReviewFlow(activity, reviewInfo).await()
         } catch (_: Exception) {
 
         }
+    }
+
+
+    fun logEvent(name: String, params: Bundle? = null) {
+        analyticRepository.logEvent(name, params)
     }
 }
 

@@ -76,9 +76,11 @@ fun SingleBudgetScreen(
                         title = title,
                         onNavigationUp = onNavigationUp,
                         onDeleteClick = {
+                            viewModel.logEvent("single_budget_delete_dialog")
                             openDialog = DialogType.Delete
                         },
                         onEditClick = {
+                            viewModel.logEvent("single_budget_edit")
                             budgetData?.let { onEditClick(it.id) }
                         }
                     )
@@ -201,6 +203,7 @@ fun SingleBudgetScreen(
                         viewModel.onDeleteDialogClick {
                             openDialog = null
                             // context.showToast(budgetDeleteToast)
+                            viewModel.logEvent("single_budget_delete")
                             onDeleteSuccess(it)
                         }
                     },

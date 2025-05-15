@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.screen.merchant_data
 
+import android.os.Bundle
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -10,6 +11,7 @@ import com.indie.apps.pennypal.data.module.merchant_data.MerchantDataWithPayment
 import com.indie.apps.pennypal.domain.usecase.DeleteMerchantDataUseCase
 import com.indie.apps.pennypal.domain.usecase.GetMerchantDataWithPaymentNameListFromMerchantIdUseCase
 import com.indie.apps.pennypal.presentation.ui.state.PagingState
+import com.indie.apps.pennypal.repository.AnalyticRepository
 import com.indie.apps.pennypal.repository.MerchantRepository
 import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.util.app_enum.AnimationType
@@ -31,6 +33,7 @@ class MerchantDataViewModel @Inject constructor(
     merchantRepository: MerchantRepository,
     getMerchantDataWithPaymentNameListFromMerchantIdUseCase: GetMerchantDataWithPaymentNameListFromMerchantIdUseCase,
     private val deleteMultipleMerchantDataUseCase: DeleteMerchantDataUseCase,
+    private val analyticRepository: AnalyticRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -70,6 +73,11 @@ class MerchantDataViewModel @Inject constructor(
 
     val pagingState = MutableStateFlow(PagingState<MerchantDataWithPaymentName>())
 
+
+    fun logEvent(name: String, params: Bundle? = null) {
+        analyticRepository.logEvent(name, params)
+    }
+
     init {
 
         loadData()
@@ -90,6 +98,7 @@ class MerchantDataViewModel @Inject constructor(
     fun onItemClick(id: Long) {
         if (!isEditable.value && !isDeletable.value) {
             //callBack(id)
+            logEvent("merchant_data_item_click")
         } else {
             setSelectItem(id)
         }

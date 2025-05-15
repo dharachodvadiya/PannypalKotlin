@@ -39,6 +39,7 @@ import java.util.Calendar
 fun ExportFilterDialog(
     @StringRes title: Int,
     onDismiss: () -> Unit,
+    logEvent: (String) -> Unit,
     onExportClick: (startDate: Long, endDate: Long) -> Unit
 ) {
     val context = LocalContext.current
@@ -69,6 +70,7 @@ fun ExportFilterDialog(
                     label = R.string.from,
                     text = getDateFromMillis(startDateMilli, dateFormat),
                     onClick = {
+                        logEvent("select_from_date")
                         openDialog = DialogType.FromDate
                     },
                     placeholder = R.string.from,
@@ -91,6 +93,7 @@ fun ExportFilterDialog(
                 DialogSelectableItem(
                     label = R.string.to,
                     onClick = {
+                        logEvent("select_to_date")
                         openDialog = DialogType.ToDate
                     },
                     text = getDateFromMillis(endDateMilli, dateFormat),

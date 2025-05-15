@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.screen.merchant
 
+import android.os.Bundle
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,6 +11,7 @@ import com.indie.apps.pennypal.domain.usecase.DeleteMultipleMerchantUseCase
 import com.indie.apps.pennypal.domain.usecase.SearchMerchantListUseCase
 import com.indie.apps.pennypal.presentation.ui.state.PagingState
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
+import com.indie.apps.pennypal.repository.AnalyticRepository
 import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.util.app_enum.AnimationType
 import com.indie.apps.pennypal.util.app_enum.Resource
@@ -26,7 +28,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MerchantViewModel @Inject constructor(
     searchMerchantListUseCase: SearchMerchantListUseCase,
-    private val deleteMultipleMerchantUseCase: DeleteMultipleMerchantUseCase
+    private val deleteMultipleMerchantUseCase: DeleteMultipleMerchantUseCase,
+    private val analyticRepository: AnalyticRepository
 ) : ViewModel() {
 
     var scrollIndex = MutableStateFlow(0)
@@ -60,6 +63,9 @@ class MerchantViewModel @Inject constructor(
         .cachedIn(viewModelScope)
     val pagingState = MutableStateFlow(PagingState<Merchant>())
 
+    fun logEvent(name: String, params: Bundle? = null) {
+        analyticRepository.logEvent(name, params)
+    }
 
     init {
 

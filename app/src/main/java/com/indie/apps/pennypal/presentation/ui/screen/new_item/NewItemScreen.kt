@@ -136,6 +136,7 @@ fun NewItemScreen(
 
     BackHandler {
         if (newItemViewModel.isEditData()) {
+            newItemViewModel.logEvent("new_transaction_discard_dialog")
             openDialog = DialogType.Discard
         } else {
             onNavigationUp()
@@ -159,11 +160,13 @@ fun NewItemScreen(
                     title = title,
                     isShowDelete = newItemViewModel.isEditData(),
                     onDeleteClick = {
+                        newItemViewModel.logEvent("new_transaction_delete_dialog")
                         openDialog = DialogType.Delete
                     },
                     onNavigationUp = {
                         if (enableButton) {
                             if (newItemViewModel.isEditData()) {
+                                newItemViewModel.logEvent("new_transaction_discard_dialog")
                                 openDialog = DialogType.Discard
                             } else {
                                 onNavigationUp()
@@ -258,10 +261,12 @@ fun NewItemScreen(
                                     }
 
                                     is NewEntryEvent.CategorySelect -> {
+                                        newItemViewModel.logEvent("new_transaction_category_select")
                                         newItemViewModel.setCategory(event.category)
                                     }
 
                                     NewEntryEvent.DateSelect -> {
+                                        newItemViewModel.logEvent("new_transaction_date_dialog")
                                         openDialog = DialogType.Date
                                     }
 
@@ -275,12 +280,14 @@ fun NewItemScreen(
                                                 context.showToast(merchantChangeToastMessage)
                                             } else {
                                                 focusManager.clearFocus()
+                                                newItemViewModel.logEvent("new_transaction_select_merchant")
                                                 onMerchantSelect()
                                             }
                                         }
                                     }
 
                                     NewEntryEvent.MoreCategories -> {
+                                        newItemViewModel.logEvent("new_transaction_category_more")
                                         if (enableButton) {
                                             focusManager.clearFocus()
                                             onCategorySelect(category?.id, if (received) 1 else -1)
@@ -288,6 +295,7 @@ fun NewItemScreen(
                                     }
 
                                     NewEntryEvent.PaymentSelect -> {
+                                        newItemViewModel.logEvent("new_transaction_select_payment")
                                         if (enableButton) {
                                             focusManager.clearFocus()
                                             onPaymentSelect(payment?.id)
@@ -295,18 +303,25 @@ fun NewItemScreen(
                                     }
 
                                     NewEntryEvent.TimeSelect -> {
+                                        newItemViewModel.logEvent("new_transaction_time_dialog")
                                         openDialog = DialogType.Time
                                     }
 
-                                    NewEntryEvent.CurrencyChange -> onCurrencyChange(
-                                        originalCurrencyInfo?.currencyCountryCode ?: "US"
-                                    )
+                                    NewEntryEvent.CurrencyChange -> {
+                                        newItemViewModel.logEvent("new_transaction_select_currency")
+                                        onCurrencyChange(
+                                            originalCurrencyInfo?.currencyCountryCode ?: "US"
+                                        )
+                                    }
 
                                     is NewEntryEvent.RateChange -> {
                                         newItemViewModel.updateRateText(event.value)
                                     }
 
-                                    NewEntryEvent.RetryRateFetch -> newItemViewModel.loadRateAndFinalAmount()
+                                    NewEntryEvent.RetryRateFetch -> {
+                                        newItemViewModel.logEvent("new_transaction_retry_rate")
+                                        newItemViewModel.loadRateAndFinalAmount()
+                                    }
                                 }
                             }
                         )
@@ -317,10 +332,13 @@ fun NewItemScreen(
 
                                     adViewModel.showInterstitialAd(context as android.app.Activity) {
                                         onSaveSuccess(isEdit, id, merchantId)
-                                        if (isEdit)
+                                        if (isEdit) {
+                                            newItemViewModel.logEvent("new_transaction_edit")
                                             context.showToast(merchantDataEditToast)
-                                        else
+                                        } else {
+                                            newItemViewModel.logEvent("new_transaction_add")
                                             context.showToast(merchantDataSaveToast)
+                                        }
                                     }
                                 }
                             },

@@ -1,6 +1,7 @@
 package com.indie.apps.pennypal.presentation.ui.screen.overview
 
 import android.annotation.SuppressLint
+import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.indie.apps.pennypal.data.module.merchant_data.MerchantDataWithAllData
@@ -9,6 +10,7 @@ import com.indie.apps.pennypal.domain.usecase.GetCategoryWiseExpenseUseCase
 import com.indie.apps.pennypal.domain.usecase.GetTotalUseCase
 import com.indie.apps.pennypal.domain.usecase.LoadMerchantDataWithAllDataListUseCase
 import com.indie.apps.pennypal.domain.usecase.SearchMerchantNameAndDetailListUseCase
+import com.indie.apps.pennypal.repository.AnalyticRepository
 import com.indie.apps.pennypal.repository.BudgetRepository
 import com.indie.apps.pennypal.repository.PreferenceRepository
 import com.indie.apps.pennypal.repository.UserRepository
@@ -39,6 +41,7 @@ class OverViewViewModel @Inject constructor(
     preferenceRepository: PreferenceRepository,
     budgetRepository: BudgetRepository,
     private val deleteMultipleMerchantDataUseCase: DeleteMerchantDataUseCase,
+    private val analyticRepository: AnalyticRepository
 ) : ViewModel() {
 
     private val calendar: Calendar = Calendar.getInstance()
@@ -112,21 +115,18 @@ class OverViewViewModel @Inject constructor(
         timeZoneOffsetInMilli = Util.TIME_ZONE_OFFSET_IN_MILLI
     ).stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), emptyList())
 
-
-    // val isSubscribed = MutableStateFlow(billingRepository.getSubscription())
-
     init {
         loadTransactionData()
+    }
+
+    fun logEvent(name: String, params: Bundle? = null) {
+        analyticRepository.logEvent(name, params)
     }
 
     private fun loadTransactionData() {
         viewModelScope.launch {
             triggerRecentTransaction.emit(Unit)
         }
-    }
-
-    fun onSubscriptionChanged(isSubscribed: Boolean) {
-
     }
 
     fun onDeleteTransactionFromEditScreenClick(id: Long, onSuccess: () -> Unit) {

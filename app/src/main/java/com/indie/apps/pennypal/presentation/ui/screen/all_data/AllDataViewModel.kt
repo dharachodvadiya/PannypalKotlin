@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.screen.all_data
 
+import android.os.Bundle
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,6 +11,7 @@ import com.indie.apps.pennypal.domain.usecase.DeleteMerchantDataUseCase
 import com.indie.apps.pennypal.domain.usecase.LoadMerchantDataWithAllDataListUseCase
 import com.indie.apps.pennypal.presentation.ui.state.PagingState
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
+import com.indie.apps.pennypal.repository.AnalyticRepository
 import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.util.app_enum.AnimationType
 import com.indie.apps.pennypal.util.app_enum.Resource
@@ -27,6 +29,7 @@ import javax.inject.Inject
 class AllDataViewModel @Inject constructor(
     searchMerchantDataWithAllDataListUseCase: LoadMerchantDataWithAllDataListUseCase,
     private val deleteMultipleMerchantDataUseCase: DeleteMerchantDataUseCase,
+    private val analyticRepository: AnalyticRepository
 ) : ViewModel() {
 
     var scrollIndex = MutableStateFlow(0)
@@ -64,6 +67,10 @@ class AllDataViewModel @Inject constructor(
     init {
 
         searchData()
+    }
+
+    fun logEvent(name: String, params: Bundle? = null) {
+        analyticRepository.logEvent(name, params)
     }
 
     fun searchData() {

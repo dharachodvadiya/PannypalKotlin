@@ -43,8 +43,8 @@ import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.addA
 import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.editAnim
 import com.indie.apps.pennypal.presentation.ui.component.extension.showToast
-import com.indie.apps.pennypal.presentation.ui.shared_viewmodel.feedback.InAppFeedbackViewModel
 import com.indie.apps.pennypal.presentation.ui.screen.loading.LoadingWithProgress
+import com.indie.apps.pennypal.presentation.ui.shared_viewmodel.feedback.InAppFeedbackViewModel
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
 import com.indie.apps.pennypal.util.app_enum.AnimationType
@@ -110,7 +110,10 @@ fun MerchantDataScreen(
                 selectCount = selectedList.size,
                 name = merchant?.name ?: "",
                 description = merchant?.details ?: "",
-                onClick = { merchant?.let { onProfileClick(it.id) } },
+                onClick = {
+                    merchantDataViewModel.logEvent("merchant_data_profile")
+                    merchant?.let { onProfileClick(it.id) }
+                },
                 onAddClick = { merchant?.let { onAddClick(it.toMerchantNameAndDetails()) } },
                 onNavigationUp = onNavigationUp,
                 onCloseClick = {
@@ -283,9 +286,20 @@ fun MerchantDataScreen(
                 //totalExpense = merchant?.expenseAmount ?: 0.0,
                 isEditable = isEditable,
                 isDeletable = isDeletable,
-                onEditClick = { merchantDataViewModel.onEditClick(onSuccess = onEditClick) },
-                onDeleteClick = { openDialog = DialogType.Delete },
-                onAddClick = { merchant?.let { onAddClick(it.toMerchantNameAndDetails()) } }
+                onEditClick = {
+                    merchantDataViewModel.logEvent("merchant_data_edit")
+                    merchantDataViewModel.onEditClick(onSuccess = onEditClick)
+                },
+                onDeleteClick = {
+                    merchantDataViewModel.logEvent("merchant_data_delete_dialog")
+                    openDialog = DialogType.Delete
+                },
+                onAddClick = {
+                    merchant?.let {
+                        merchantDataViewModel.logEvent("merchant_data_add")
+                        onAddClick(it.toMerchantNameAndDetails())
+                    }
+                }
             )
 
         }
@@ -301,6 +315,7 @@ fun MerchantDataScreen(
                         dialogText = R.string.delete_item_dialog_text,
                         onConfirmation = {
                             merchantDataViewModel.onDeleteDialogClick {
+                                merchantDataViewModel.logEvent("merchant_data_delete")
                                 openDialog = null
                                 context.showToast(merchantDataDeleteToast)
                             }

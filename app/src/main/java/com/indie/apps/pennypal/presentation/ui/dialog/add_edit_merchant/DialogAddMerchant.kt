@@ -87,10 +87,12 @@ fun DialogAddMerchant(
                 phoneNoState = phoneNumber,
                 descState = description,
                 onCpp = {
+                    addMerchantViewModel.logEvent("add_merchant_cpp")
                     if (enableButton)
                         onCpp()
                 },
                 onContactBook = {
+                    addMerchantViewModel.logEvent("add_merchant_contact_click")
                     if (!permissionState.status.isGranted) {
                         if (!permissionState.status.shouldShowRationale) {
                             val i = Intent()
@@ -103,6 +105,7 @@ fun DialogAddMerchant(
                         }
 
                     } else {
+                        addMerchantViewModel.logEvent("add_merchant_contact_open")
                         onContactBook()
                     }
 

@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.screen.budget
 
+import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
@@ -9,6 +10,7 @@ import com.indie.apps.pennypal.domain.usecase.DeleteSingleBudgetDataUseCase
 import com.indie.apps.pennypal.domain.usecase.GetBudgetsAndSpentWithCategoryIdListUseCase
 import com.indie.apps.pennypal.domain.usecase.GetPastBudgetsAndSpentWithCategoryIdListFromPeriodType
 import com.indie.apps.pennypal.domain.usecase.GetUpComingBudgetsAndSpentWithCategoryIdListFromPeriodType
+import com.indie.apps.pennypal.repository.AnalyticRepository
 import com.indie.apps.pennypal.util.Util
 import com.indie.apps.pennypal.util.app_enum.AnimationType
 import com.indie.apps.pennypal.util.app_enum.PeriodType
@@ -33,7 +35,8 @@ class BudgetViewModel @Inject constructor(
     getBudgetsAndSpentWithCategoryIdListUseCase: GetBudgetsAndSpentWithCategoryIdListUseCase,
     getPastBudgetsAndSpentWithCategoryIdListFromPeriodType: GetPastBudgetsAndSpentWithCategoryIdListFromPeriodType,
     getUpComingBudgetsAndSpentWithCategoryIdListFromPeriodType: GetUpComingBudgetsAndSpentWithCategoryIdListFromPeriodType,
-    private val deleteSingleBudgetDataUseCase: DeleteSingleBudgetDataUseCase
+    private val deleteSingleBudgetDataUseCase: DeleteSingleBudgetDataUseCase,
+    private val analyticRepository: AnalyticRepository
 ) : ViewModel() {
 
     private val calendar: Calendar = Calendar.getInstance()
@@ -118,6 +121,10 @@ class BudgetViewModel @Inject constructor(
     init {
         // setCurrentPeriod(PeriodType.MONTH)
         loadData()
+    }
+
+    fun logEvent(name: String, params: Bundle? = null) {
+        analyticRepository.logEvent(name, params)
     }
 
     fun loadData() {

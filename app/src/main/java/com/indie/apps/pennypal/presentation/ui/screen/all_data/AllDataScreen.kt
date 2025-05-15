@@ -130,8 +130,14 @@ fun AllDataScreen(
             textState = searchTextState,
             isSelected = allDataViewModel.getIsSelected(),
             isDeletable = isDeletable,
-            onAddClick = { allDataViewModel.onAddClick { onAddClick() } },
-            onDeleteClick = { allDataViewModel.onDeleteClick { openDialog = DialogType.Delete } },
+            onAddClick = {
+                allDataViewModel.logEvent("all_transaction_add")
+                allDataViewModel.onAddClick { onAddClick() }
+            },
+            onDeleteClick = {
+                allDataViewModel.logEvent("all_transaction_delete")
+                allDataViewModel.onDeleteClick { openDialog = DialogType.Delete }
+            },
             onNavigationUp = {
                 allDataViewModel.onBackClick { onNavigationUp() }
             },
@@ -291,6 +297,7 @@ fun AllDataScreen(
                                     onClick = {
                                         allDataViewModel.onItemClick(data.id) {
                                             adViewModel.showInterstitialAd(context as android.app.Activity) {
+                                                allDataViewModel.logEvent("all_transaction_edit")
                                                 onDataClick(
                                                     it
                                                 )

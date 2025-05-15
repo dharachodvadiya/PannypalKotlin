@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.dialog.add_edit_merchant
 
+import android.os.Bundle
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,6 +10,7 @@ import com.indie.apps.pennypal.data.module.ContactNumberAndCode
 import com.indie.apps.pennypal.domain.usecase.AddMerchantUseCase
 import com.indie.apps.pennypal.domain.usecase.UpdateMerchantUseCase
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
+import com.indie.apps.pennypal.repository.AnalyticRepository
 import com.indie.apps.pennypal.repository.BaseCurrencyRepository
 import com.indie.apps.pennypal.repository.MerchantRepository
 import com.indie.apps.pennypal.repository.UserRepository
@@ -28,6 +30,7 @@ class AddEditMerchantViewModel @Inject constructor(
     private val merchantRepository: MerchantRepository,
     private val countryRepository: CountryRepository,
     private val currencyRepository: BaseCurrencyRepository,
+    private val analyticRepository: AnalyticRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -179,6 +182,10 @@ class AddEditMerchantViewModel @Inject constructor(
             }
         }
 
+    }
+
+    fun logEvent(name: String, params: Bundle? = null) {
+        analyticRepository.logEvent(name, params)
     }
 
     private fun getDialCodeFromCountryCode(countryCode: String) =

@@ -131,9 +131,22 @@ fun MerchantScreen(
             isSelected = merchantViewModel.getIsSelected(),
             isEditable = isEditable,
             isDeletable = isDeletable,
-            onAddClick = { merchantViewModel.onAddClick { onAddClick() } },
-            onEditClick = { merchantViewModel.onEditClick { onEditClick(it) } },
-            onDeleteClick = { merchantViewModel.onDeleteClick { openDialog = DialogType.Delete } },
+            onAddClick = {
+                merchantViewModel.onAddClick {
+                    merchantViewModel.logEvent("merchant_add")
+                    onAddClick()
+                }
+            },
+            onEditClick = {
+                merchantViewModel.onEditClick {
+                    merchantViewModel.logEvent("merchant_edit")
+                    onEditClick(it)
+                }
+            },
+            onDeleteClick = {
+                merchantViewModel.logEvent("merchant_delete_dialog")
+                merchantViewModel.onDeleteClick { openDialog = DialogType.Delete }
+            },
             onNavigationUp = {
                 merchantViewModel.onBackClick {
                     onNavigationUp()
@@ -294,6 +307,8 @@ fun MerchantScreen(
                                     onClick = {
                                         merchantViewModel.onItemClick(data.id) {
                                             adViewModel.showInterstitialAd(context as android.app.Activity) {
+
+                                                merchantViewModel.logEvent("merchant_item_click")
                                                 onMerchantClick(
                                                     it
                                                 )
@@ -329,6 +344,7 @@ fun MerchantScreen(
                             dialogText = R.string.delete_item_dialog_text,
                             onConfirmation = {
                                 merchantViewModel.onDeleteDialogClick {
+                                    merchantViewModel.logEvent("merchant_delete_success")
                                     openDialog = null
                                     context.showToast(merchantDeleteToast)
                                 }

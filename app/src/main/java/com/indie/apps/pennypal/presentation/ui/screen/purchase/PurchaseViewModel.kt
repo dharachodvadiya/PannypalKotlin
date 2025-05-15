@@ -1,6 +1,7 @@
 package com.indie.apps.pennypal.presentation.ui.screen.purchase
 
 import android.app.Activity
+import android.os.Bundle
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,6 +10,7 @@ import com.android.billingclient.api.Purchase
 import com.example.iap.model.PurchaseResult
 import com.example.iap.repository.BillingRepository
 import com.indie.apps.pennypal.data.module.purchase.ProductUiModel
+import com.indie.apps.pennypal.repository.AnalyticRepository
 import com.indie.apps.pennypal.repository.PreferenceRepository
 import com.indie.apps.pennypal.util.ProductId
 import com.indie.apps.pennypal.util.Util
@@ -20,6 +22,7 @@ import javax.inject.Inject
 class PurchaseViewModel @Inject constructor(
     private val billingRepository: BillingRepository,
     private val preferenceRepository: PreferenceRepository,
+    private val analyticRepository: AnalyticRepository
 ) : ViewModel() {
 
     private val _productDetailsList = mutableStateListOf<ProductDetails>()
@@ -39,12 +42,19 @@ class PurchaseViewModel @Inject constructor(
 
                         purchase.products.forEach { productId ->
                             setPref(productId, true)
+                            logEvent("purchase_success", Bundle().apply {
+                                putString("product_id", productId)
+                            })
                         }
                     }
                 }
                 buildProductUiList()
             }
         }
+    }
+
+    fun logEvent(name: String, params: Bundle? = null) {
+        analyticRepository.logEvent(name, params)
     }
 
     private fun connect() {
@@ -65,6 +75,9 @@ class PurchaseViewModel @Inject constructor(
     }
 
     fun buy(activity: Activity, productId: ProductId) {
+        logEvent("purchase_started", Bundle().apply {
+            putString("product_id", productId.id)
+        })
         val productDetails = _productDetailsList.find { it.productId == productId.id }
 
         if (productDetails != null) {
@@ -125,6 +138,9 @@ class PurchaseViewModel @Inject constructor(
                 buildProductUiList()
 
                 if (activeProductIds.isNotEmpty()) {
+                    logEvent("purchase_restored", Bundle().apply {
+                        putString("product_id", activeProductIds.toString())
+                    })
                     onSuccess("Successfully Restored")
                 } else {
                     onSuccess("No Subscription Found")

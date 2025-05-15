@@ -1,11 +1,13 @@
 package com.indie.apps.pennypal.presentation.ui.screen.setting
 
+import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.indie.apps.pennypal.R
 import com.indie.apps.pennypal.data.module.MoreItem
 import com.indie.apps.pennypal.domain.usecase.GetGeneralSettingUseCase
 import com.indie.apps.pennypal.presentation.ui.component.UiText
+import com.indie.apps.pennypal.repository.AnalyticRepository
 import com.indie.apps.pennypal.repository.AuthRepository
 import com.indie.apps.pennypal.repository.PreferenceRepository
 import com.indie.apps.pennypal.repository.UserRepository
@@ -32,6 +34,7 @@ class SettingViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val authRepository: AuthRepository,
     private val preferenceRepository: PreferenceRepository,
+    private val analyticRepository: AnalyticRepository,
     // private val backupRepository: BackupRepository
 ) : ViewModel() {
 
@@ -173,5 +176,11 @@ class SettingViewModel @Inject constructor(
                 }),
         )
     }
+
+
+    fun logEvent(name: String, params: Bundle? = null) {
+        analyticRepository.logEvent(name, params)
+    }
+
 }
 

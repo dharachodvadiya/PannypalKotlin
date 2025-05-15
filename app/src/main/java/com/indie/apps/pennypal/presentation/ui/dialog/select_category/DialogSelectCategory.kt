@@ -56,9 +56,13 @@ fun DialogSelectCategory(
                 currentId = currentId,
                 categoryList = categoryList,
                 onSelectCategory = {
+                    selectCategoryViewModel.logEvent("select_category_select")
                     onSelect(it)
                 },
-                onAddCategory = onAddCategory,
+                onAddCategory = {
+                    selectCategoryViewModel.logEvent("select_category_add")
+                    onAddCategory()
+                },
                 categoryAnimId = currentAnimId,
                 currentAnim = currentAnim,
                 onAnimationComplete = {

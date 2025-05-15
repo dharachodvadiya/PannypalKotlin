@@ -20,7 +20,8 @@ import java.io.File
 fun ExportSaveDialogs(
     exportType: ExportType?,
     exportResult: ExportResult?,
-    onClearResult: () -> Unit
+    onClearResult: () -> Unit,
+    logEvent: (String) -> Unit,
 ) {
     val context = LocalContext.current
     when (exportResult) {
@@ -39,17 +40,22 @@ fun ExportSaveDialogs(
             } + " ${exportResult.filePath}"
 
             ExportDialog(
-                onDismissRequest = { onClearResult() },
+                onDismissRequest = {
+                    logEvent("dismiss")
+                    onClearResult()
+                },
                 dialogTitle = R.string.pdf_export_success,
                 dialogText = dialogText,
                 onView = {
                     if (exportType != null) {
+                        logEvent("view")
                         viewFile(context, exportResult.filePath, exportType)
                     }
                     onClearResult()
                 },
                 onShare = {
                     if (exportType != null) {
+                        logEvent("share")
                         sharePdf(context, exportResult.filePath, exportType)
                     }
                     onClearResult()

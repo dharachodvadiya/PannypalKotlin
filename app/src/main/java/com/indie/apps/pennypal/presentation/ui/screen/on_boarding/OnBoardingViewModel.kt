@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.screen.on_boarding
 
+import android.os.Bundle
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
@@ -11,6 +12,7 @@ import com.indie.apps.pennypal.domain.usecase.UpdateUserNameUseCase
 import com.indie.apps.pennypal.presentation.ui.component.UiText
 import com.indie.apps.pennypal.presentation.ui.navigation.OnBoardingPage
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
+import com.indie.apps.pennypal.repository.AnalyticRepository
 import com.indie.apps.pennypal.repository.BaseCurrencyRepository
 import com.indie.apps.pennypal.repository.PreferenceRepository
 import com.indie.apps.pennypal.repository.UserRepository
@@ -34,18 +36,19 @@ class OnBoardingViewModel @Inject constructor(
     private val updateUserNameUseCase: UpdateUserNameUseCase,
     private val updateUserCurrencyDataUseCase: UpdateUserCurrencyDataUseCase,
     private val preferenceRepository: PreferenceRepository,
-    private val currencyRepository: BaseCurrencyRepository
+    private val currencyRepository: BaseCurrencyRepository,
+    private val analyticRepository: AnalyticRepository,
 ) : ViewModel() {
 
     private val userData = userRepository.getUser()
         .onEach { user ->
-            if (user != null) {
-                if (currencyCountryCode.value.isEmpty()) {
-                    val currInfo = currencyRepository.getBaseCurrencyFromId(user.currencyId)
-                    setCountryCode(currInfo?.currencyCountryCode ?: "US")
-                }
-                updateNameText(user.name)
+            if (currencyCountryCode.value.isEmpty()) {
+                val currInfo = currencyRepository.getBaseCurrencyFromId(user.currencyId)
+                setCountryCode(currInfo?.currencyCountryCode ?: "US")
+                oldCurrencyCountryCode = currInfo?.currencyCountryCode
             }
+            oldName = user.name
+            updateNameText(user.name)
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), null)
 
@@ -53,6 +56,9 @@ class OnBoardingViewModel @Inject constructor(
     val currencyCountryCode = MutableStateFlow("")
     val currencyText = MutableStateFlow("")
     val nameState = MutableStateFlow(TextFieldState())
+
+    var oldCurrencyCountryCode: String? = null
+    var oldName: String? = ""
 
     val introDataList = listOf(
         IntroData(R.string.introTitle1, R.string.introSubTitle1, R.drawable.grow),
@@ -84,7 +90,7 @@ class OnBoardingViewModel @Inject constructor(
             OnBoardingPage.BEGIN -> currentPageState.value = OnBoardingPage.INTRO
             OnBoardingPage.INTRO -> currentPageState.value = OnBoardingPage.SET_LANGUAGE
             OnBoardingPage.SET_LANGUAGE -> {
-                saveName { currentPageState.value = OnBoardingPage.SET_NAME }
+                currentPageState.value = OnBoardingPage.SET_NAME
             }
 
             OnBoardingPage.SET_NAME -> {
@@ -147,6 +153,8 @@ class OnBoardingViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
+            if (oldName != nameState.value.text.trim())
+                logEvent("boarding_name_change")
             updateUserNameUseCase
                 .updateData(
                     name = nameState.value.text
@@ -167,6 +175,8 @@ class OnBoardingViewModel @Inject constructor(
 
     private fun saveCurrency(onSuccess: () -> Unit) {
         viewModelScope.launch {
+            if (oldCurrencyCountryCode != currencyCountryCode.value)
+                logEvent("boarding_currency_change")
             updateUserCurrencyDataUseCase
                 .updateData(
                     currencyCountryCode = currencyCountryCode.value
@@ -183,6 +193,11 @@ class OnBoardingViewModel @Inject constructor(
                     }
                 }
         }
+    }
+
+
+    fun logEvent(name: String, params: Bundle? = null) {
+        analyticRepository.logEvent(name, params)
     }
 
 }

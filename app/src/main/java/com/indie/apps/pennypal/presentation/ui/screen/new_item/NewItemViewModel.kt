@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.screen.new_item
 
+import android.os.Bundle
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -18,6 +19,7 @@ import com.indie.apps.pennypal.domain.usecase.GetPaymentFromIdUseCase
 import com.indie.apps.pennypal.domain.usecase.UpdateMerchantDataUseCase
 import com.indie.apps.pennypal.presentation.ui.component.UiText
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
+import com.indie.apps.pennypal.repository.AnalyticRepository
 import com.indie.apps.pennypal.repository.BaseCurrencyRepository
 import com.indie.apps.pennypal.repository.CategoryRepository
 import com.indie.apps.pennypal.repository.ExchangeRateRepository
@@ -48,6 +50,7 @@ class NewItemViewModel @Inject constructor(
     private val exchangeRateRepository: ExchangeRateRepository,
     private val baseCurrencyRepository: BaseCurrencyRepository,
     private val deleteMerchantDataUseCase: DeleteMerchantDataUseCase,
+    private val analyticRepository: AnalyticRepository
 ) : ViewModel() {
 
     /* val currency = userRepository.getCurrency()
@@ -102,8 +105,8 @@ class NewItemViewModel @Inject constructor(
 
     val categories = MutableStateFlow<List<Category>>(emptyList())
 
-    init {
-
+    fun logEvent(name: String, params: Bundle? = null) {
+        analyticRepository.logEvent(name, params)
     }
 
     fun setInitialData() {
@@ -296,7 +299,16 @@ class NewItemViewModel @Inject constructor(
         viewModelScope.launch {
             val merchantData = createMerchant()
 
+            logEvent("new_transaction_type", Bundle().apply {
+                putInt("type", if (received.value) 1 else -1)
+            })
 
+            logEvent("new_transaction_currency", Bundle().apply {
+                putBoolean(
+                    "same_currency",
+                    merchantData.baseCurrencyId == merchantData.originalCurrencyId
+                )
+            })
             if (merchantEditId == 0L) {
                 addMerchantDataUseCase.addData(merchantData).collect {
                     when (it) {
@@ -369,6 +381,7 @@ class NewItemViewModel @Inject constructor(
         val baseCurrencyId = baseCurrencyInfo.value?.id ?: 0
 
         val amount = amount.value.text.toDouble()
+
         return if (merchantEditId == 0L) {
             MerchantData(
                 merchantId = merchant.value?.id,
@@ -429,9 +442,12 @@ class NewItemViewModel @Inject constructor(
                 )
 
             rateState.value = when (response) {
-                is Resource.Error -> Resource.Error(
-                    response.message ?: AppError.UnknownError.message
-                )
+                is Resource.Error -> {
+                    logEvent("new_transaction_load_rate_fail")
+                    Resource.Error(
+                        response.message ?: AppError.UnknownError.message
+                    )
+                }
 
                 is Resource.Loading -> Resource.Loading()
                 is Resource.Success -> {

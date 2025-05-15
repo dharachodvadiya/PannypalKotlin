@@ -82,6 +82,7 @@ fun DialogSearchMerchant(
                         delay(Util.DIALOG_ANIM_DELAY)
                         onAddClick()
                     }*/
+                    searchMerchantViewModel.logEvent("search_merchant_add")
                     onAddClick()
                 },
                 onItemClick = { data ->
@@ -90,6 +91,7 @@ fun DialogSearchMerchant(
                         delay(Util.DIALOG_ANIM_DELAY)
                         onSelectMerchant(data)
                     }*/
+                    searchMerchantViewModel.logEvent("search_merchant_select")
                     onSelectMerchant(data)
                 },
                 textState = uiState,

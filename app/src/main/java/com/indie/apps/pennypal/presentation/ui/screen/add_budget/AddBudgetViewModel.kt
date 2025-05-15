@@ -1,5 +1,6 @@
 package com.indie.apps.pennypal.presentation.ui.screen.add_budget
 
+import android.os.Bundle
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,6 +15,7 @@ import com.indie.apps.pennypal.domain.usecase.AddBudgetUseCase
 import com.indie.apps.pennypal.domain.usecase.UpdateBudgetUseCase
 import com.indie.apps.pennypal.presentation.ui.component.UiText
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
+import com.indie.apps.pennypal.repository.AnalyticRepository
 import com.indie.apps.pennypal.repository.BaseCurrencyRepository
 import com.indie.apps.pennypal.repository.BudgetRepository
 import com.indie.apps.pennypal.repository.CategoryRepository
@@ -24,6 +26,7 @@ import com.indie.apps.pennypal.util.app_enum.PeriodType
 import com.indie.apps.pennypal.util.app_enum.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import javax.inject.Inject
@@ -37,6 +40,7 @@ class AddBudgetViewModel @Inject constructor(
     private val baseCurrencyRepository: BaseCurrencyRepository,
     private val userRepository: UserRepository,
     private val countryRepository: CountryRepository,
+    private val analyticRepository: AnalyticRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -104,6 +108,10 @@ class AddBudgetViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun logEvent(name: String, params: Bundle? = null) {
+        analyticRepository.logEvent(name, params)
     }
 
     private fun loadUserData() {
@@ -350,6 +358,13 @@ class AddBudgetViewModel @Inject constructor(
 
                 val month = startCalender.get(Calendar.MONTH)
                 val year = startCalender.get(Calendar.YEAR)
+
+                val baseCurrencyId = userRepository.getCurrencyId().first()
+                val currentCurrencyId = budgetWithCategory.originalCurrencyId
+
+                logEvent("set_budget_same_currency", Bundle().apply {
+                    putBoolean("SameCurrency", baseCurrencyId == currentCurrencyId)
+                })
 
                 if (budgetEditId == -1L) {
 

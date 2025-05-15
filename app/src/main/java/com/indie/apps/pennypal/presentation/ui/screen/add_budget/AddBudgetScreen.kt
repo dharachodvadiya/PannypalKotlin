@@ -1,6 +1,7 @@
 package com.indie.apps.pennypal.presentation.ui.screen.add_budget
 
 import android.annotation.SuppressLint
+import android.os.Bundle
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -218,6 +219,7 @@ fun AddEditBudgetScreen(
                         }
                         AddBudgetFieldItem(
                             onSelectCategory = {
+                                addBudgetViewModel.logEvent("set_budget_select_category")
                                 onSelectCategory(selectedCategoryList.map { it.id })
                             },
                             selectBudgetPeriod = PeriodType.entries.firstOrNull() { it.id == currentPeriod }
@@ -263,6 +265,7 @@ fun AddEditBudgetScreen(
                             focusRequesterTitle = focusRequesterTitle,
                             currency = originalCurrencyInfo?.currencySymbol ?: "$",
                             onCurrencyChange = {
+                                addBudgetViewModel.logEvent("set_budget_currency_change")
                                 onCurrencyChange(originalCurrencyInfo?.currencyCountryCode ?: "US")
                             }
                         )
@@ -276,8 +279,24 @@ fun AddEditBudgetScreen(
                                     adViewModel.showInterstitialAd(context as android.app.Activity) {
                                         onSave(isEdit, id, currentPeriod, month, year)
                                         if (isEdit) {
+                                            addBudgetViewModel.logEvent(
+                                                "set_budget_edit",
+                                                Bundle().apply {
+                                                    putString(
+                                                        "period",
+                                                        PeriodType.fromId(currentPeriod).toString()
+                                                    )
+                                                })
                                             context.showToast(budgetEditToast)
                                         } else {
+                                            addBudgetViewModel.logEvent(
+                                                "set_budget_save",
+                                                Bundle().apply {
+                                                    putString(
+                                                        "period",
+                                                        PeriodType.fromId(currentPeriod).toString()
+                                                    )
+                                                })
                                             context.showToast(budgetAddToast)
                                         }
                                     }

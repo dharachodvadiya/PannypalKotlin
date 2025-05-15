@@ -150,7 +150,7 @@ fun PurchaseScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                            .padding(vertical = dimensionResource(R.dimen.padding)),
+                        .padding(vertical = dimensionResource(R.dimen.padding)),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     CustomText(
@@ -186,6 +186,7 @@ fun PurchaseScreen(
                             text = stringResource(R.string.manage_subscription),
                             color = MyAppTheme.colors.lightBlue1,
                             modifier = Modifier.clickableWithNoRipple {
+                                viewModel.logEvent("manage_subscription")
                                 val intent = Intent(Intent.ACTION_VIEW)
                                 intent.data =
                                     "https://play.google.com/store/account/subscriptions".toUri()

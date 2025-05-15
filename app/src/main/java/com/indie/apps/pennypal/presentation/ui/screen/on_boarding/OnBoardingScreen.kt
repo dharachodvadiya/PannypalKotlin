@@ -1,6 +1,7 @@
 package com.indie.apps.pennypal.presentation.ui.screen.on_boarding
 
 import android.annotation.SuppressLint
+import android.os.Bundle
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,9 +22,9 @@ import com.indie.apps.pennypal.presentation.ui.component.composable.custom.Custo
 import com.indie.apps.pennypal.presentation.ui.component.extension.modifier.backgroundGradientsBrush
 import com.indie.apps.pennypal.presentation.ui.component.extension.showToast
 import com.indie.apps.pennypal.presentation.ui.navigation.OnBoardingPage
+import com.indie.apps.pennypal.presentation.ui.screen.changeLanguage
 import com.indie.apps.pennypal.presentation.ui.shared_viewmodel.auth.AuthViewModel
 import com.indie.apps.pennypal.presentation.ui.shared_viewmodel.auth.SignInLauncher
-import com.indie.apps.pennypal.presentation.ui.screen.changeLanguage
 import com.indie.apps.pennypal.presentation.ui.state.TextFieldState
 import com.indie.apps.pennypal.presentation.ui.theme.MyAppTheme
 import com.indie.apps.pennypal.presentation.ui.theme.PennyPalTheme
@@ -65,7 +66,9 @@ fun OnBoardingScreen(
         authViewModel,
         onLoginSuccess = {
             authViewModel.isBackupAvailable { isBackUpAvailable ->
-
+                viewModel.logEvent("boarding_login_success", Bundle().apply {
+                    putBoolean("backup_available", isBackUpAvailable)
+                })
                 context.showToast(loginSuccessMessage)
                 viewModel.onContinueClick(
                     currentPageState,
@@ -77,6 +80,7 @@ fun OnBoardingScreen(
 
         },
         onRestoreSuccess = {
+            viewModel.logEvent("boarding_restore_success")
             context.showToast(restoreSuccessMessage)
             viewModel.onContinueClick(
                 currentPageState,
@@ -84,7 +88,9 @@ fun OnBoardingScreen(
                     onBoardingComplete()
                 })
         },
-        onLoginFail = {})
+        onLoginFail = {
+            viewModel.logEvent("boarding_login_fail")
+        })
 
     val currentLanguageIndex by viewModel.currentLanguageIndex.collectAsStateWithLifecycle()
     val languageList by viewModel.languageList.collectAsStateWithLifecycle()
@@ -94,6 +100,7 @@ fun OnBoardingScreen(
         onBoardingPage = currentPageState,
         onClick = {
             if (viewModel.isLoginClick(it)) {
+                viewModel.logEvent("boarding_login")
                 authViewModel.onEvent(
                     mainEvent = SyncEvent.SignInGoogle,
                     onFail = { message ->
@@ -101,6 +108,7 @@ fun OnBoardingScreen(
                     }
                 )
             } else if (viewModel.isRestoreClick(it)) {
+                viewModel.logEvent("boarding_restore")
                 authViewModel.onEvent(
                     mainEvent = SyncEvent.Restore,
                     onFail = { message ->
