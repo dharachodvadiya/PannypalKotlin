@@ -236,6 +236,28 @@
     <string name="active_budget">सक्रिय बजट</string>
     <string name="transactions">लेनदेन</string>
     <string name="select_more">और चुनें</string>
+    <string name="final_amount">अंतिम राशि</string>
+    <string name="export_as_pdf">PDF के रूप में निर्यात करें</string>
+    <string name="export_as_excel">Excel के रूप में निर्यात करें</string>
+    <string name="select_date_range_6_month_pdf">PDF के लिए तारीख सीमा चुनें (अधिकतम 6 महीने)\n</string>
+    <string name="select_date_range_6_month_excel">Excel के लिए तारीख सीमा चुनें (अधिकतम 6 महीने)</string>
+    <string name="date_range_exceed_6_month">तारीख सीमा 6 महीने से अधिक नहीं हो सकती।</string>
+    <string name="export">निर्यात</string>
+    <string name="view">देखें</string>
+    <string name="pdf_export_success">PDF निर्यात सफल</string>
+    <string name="pdf_save_to">PDF यहाँ सहेजा गया</string>
+    <string name="excel_save_to">Excel यहाँ सहेजा गया</string>
+    <string name="no_ads">कोई विज्ञापन नहीं</string>
+    <string name="unlock_premium">प्रीमियम प्लान अनलॉक करें</string>
+    <string name="unlock_now">अब अनलॉक करें</string>
+    <string name="get_premium_access">प्रीमियम एक्सेस प्राप्त करें</string>
+    <string name="premium_subtitle">विज्ञापन-मुक्त अनुभव का आनंद लें</string>
+    <string name="active_now">अब सक्रिय</string>
+    <string name="restore">पुनर्स्थापित करें</string>
+    <string name="upgrade_experience_today">आज अपने अनुभव को अपग्रेड करें</string>
+    <string name="manage_subscription">सदस्यता प्रबंधित करें</string>
+    <string name="auti_renewal_cancel_anytime">स्वचालित नवीनीकरण, कभी भी रद्द करें</string>
+    <string name="start_plan_now">अब अपना प्लान शुरू करें</string>
 
 
     <string-array name="months">

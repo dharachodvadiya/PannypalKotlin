@@ -236,6 +236,28 @@
     <string name="active_budget">સક્રિય બજેટ</string>
     <string name="transactions">વ્યવહારો</string>
     <string name="select_more">વધુ પસંદ કરો</string>
+    <string name="final_amount">અંતિમ રકમ</string>
+    <string name="export_as_pdf">PDF તરીકે નિકાસ કરો</string>
+    <string name="export_as_excel">Excel તરીકે નિકાસ કરો</string>
+    <string name="select_date_range_6_month_pdf">PDF માટે તારીખ શ્રેણી પસંદ કરો (મહત્તમ 6 મહિના)\n</string>
+    <string name="select_date_range_6_month_excel">Excel માટે તારીખ શ્રેણી પસંદ કરો (મહત્તમ 6 મહિના)</string>
+    <string name="date_range_exceed_6_month">તારીખ શ્રેણી 6 મહિનાથી વધુ ન હોઈ શકે.</string>
+    <string name="export">નિકાસ</string>
+    <string name="view">જુઓ</string>
+    <string name="pdf_export_success">PDF નિકાસ સફળ</string>
+    <string name="pdf_save_to">PDF આમાં સાચવાયેલ છે</string>
+    <string name="excel_save_to">Excel આમાં સાચવાયેલ છે</string>
+    <string name="no_ads">કોઈ જાહેરાતો નથી</string>
+    <string name="unlock_premium">પ્રીમિયમ પ્લાન અનલૉક કરો</string>
+    <string name="unlock_now">હવે અનલૉક કરો</string>
+    <string name="get_premium_access">પ્રીમિયમ ઍક્સેસ મેળવો</string>
+    <string name="premium_subtitle">જાહેરાત-મુક્ત અનુભવનો આનંદ માણો</string>
+    <string name="active_now">હવે સક્રિય</string>
+    <string name="restore">પુનઃસ્થાપન</string>
+    <string name="upgrade_experience_today">આજે તમારા અનુભવને અપગ્રેડ કરો</string>
+    <string name="manage_subscription">સબ્સ્ક્રિપ્શન મેનેજ કરો</string>
+    <string name="auti_renewal_cancel_anytime">ઓટોમેટિક રિન્યૂઅલ, ગમે ત્યારે રદ કરો</string>
+    <string name="start_plan_now">હવે તમારો પ્લાન શરૂ કરો</string>
 
     <string-array name="months">
         <item>જાન્યુઆરી</item>
