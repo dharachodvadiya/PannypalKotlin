@@ -173,8 +173,11 @@ object AppModule {
     }
 
     @Provides
-    fun provideCountryRepository(countryDb: CountryDb): CountryRepository {
-        return CountryRepositoryImpl(countryDb)
+    fun provideCountryRepository(
+        countryDb: CountryDb,
+        @ApplicationContext context: Context
+    ): CountryRepository {
+        return CountryRepositoryImpl(countryDb, context)
     }
 
     @Provides

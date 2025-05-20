@@ -26,7 +26,7 @@ class CountryDb {
         }
     }
 
-    private fun getDefaultCountryCode(context: Context): String {
+    fun getDefaultCountryCode(context: Context): String {
         val localeCode: TelephonyManager =
             context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
         val countryCode = localeCode.networkCountryIso
