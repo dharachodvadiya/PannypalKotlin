@@ -8,7 +8,7 @@ interface InAppAdsRepository {
     fun loadBannerAd(adUnitId: String, onStateChange: (AdState) -> Unit): AdView
 
     fun loadInterstitialAd(adUnitId: String, onStateChange: (AdState) -> Unit)
-    fun showInterstitialAd(activity: Activity, onAdDismissed: () -> Unit)
+    fun showInterstitialAd(activity: Activity, onAdDismissed: (Boolean) -> Unit)
 
     fun loadNativeAd(adUnitId: String, onStateChange: (AdState) -> Unit)
 }

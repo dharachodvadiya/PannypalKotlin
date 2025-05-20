@@ -48,8 +48,11 @@ class AdViewModel @Inject constructor(
     ) {
         if (!isSubscribed(noAdsId)) {
             viewModelScope.launch {
-                logEvent("ads_show_interstitial")
-                adRepository.showInterstitialAd(activity) {
+                adRepository.showInterstitialAd(activity) { isShow ->
+                    if (isShow)
+                        logEvent("ads_show_interstitial_loaded")
+                    else
+                        logEvent("ads_show_interstitial_not_loaded")
                     if (isReload) {
                         loadInterstitialAd()
                     }

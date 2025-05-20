@@ -122,25 +122,24 @@ class InAppAdsRepositoryImpl @Inject constructor(
     }
 
     // Show the ad using Activity
-    override fun showInterstitialAd(activity: Activity, onAdDismissed: () -> Unit) {
+    override fun showInterstitialAd(activity: Activity, onAdDismissed: (Boolean) -> Unit) {
 
         interstitialRequestCount++
 
         if (interstitialRequestCount < interstitialTriggerFrequency) {
-            onAdDismissed()
+            onAdDismissed(false)
             return
         }
 
 
         if (shouldShowInterstitialAd() && interstitialAd != null) {
-
             interstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
                 override fun onAdDismissedFullScreenContent() {
                     interstitialAd = null
                     interstitialAdShowCount++
                     interstitialRequestCount = 0 // Reset counter after showing
                     currentState = currentState.copy(isInterstitialReady = false)
-                    onAdDismissed()
+                    onAdDismissed(true)
                 }
 
                 override fun onAdFailedToShowFullScreenContent(adError: AdError) {
@@ -149,14 +148,14 @@ class InAppAdsRepositoryImpl @Inject constructor(
                         isInterstitialReady = false,
                         interstitialError = adError.message
                     )
-                    onAdDismissed()
+                    onAdDismissed(true)
                 }
             }
 
             interstitialAd?.show(activity)
 
         } else {
-            onAdDismissed()
+            onAdDismissed(false)
         }
     }
 
