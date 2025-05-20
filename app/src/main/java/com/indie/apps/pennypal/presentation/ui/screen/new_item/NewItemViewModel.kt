@@ -461,10 +461,9 @@ class NewItemViewModel @Inject constructor(
     }
 
     private fun updateFinalAmountWithRate() {
-        val originalAmount =
-            if (amount.value.text.trim().isEmpty()) 0.0 else amount.value.text.trim().toDouble()
+        val originalAmount = amount.value.text.trim().toDoubleOrNull() ?: 0.0
 
-        val rate = if (rate.value.text.trim().isEmpty()) 1.0 else rate.value.text.trim().toDouble()
+        val rate = rate.value.text.trim().toDoubleOrNull() ?: 0.0
 
         val amount = exchangeRateRepository.getAmountFromRate(originalAmount, rate)
         updateFinalAmount(amount)

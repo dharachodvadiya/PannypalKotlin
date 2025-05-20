@@ -90,7 +90,13 @@ fun MyAppTextField(
             modifier = textModifier
                 .fillMaxWidth()
                 .then(focusRequester?.let { Modifier.focusRequester(focusRequester) } ?: Modifier),
-            onValueChange = onValueChange,
+            onValueChange = {
+                if (!(keyboardType == KeyboardType.Number && (it.contains(" ") || it.contains("-") || it.contains(
+                        ","
+                    )))
+                )
+                    onValueChange(it)
+            },
             textStyle = textStyle.copy(color = MyAppTheme.colors.black),
             keyboardOptions = KeyboardOptions(imeAction = imeAction, keyboardType = keyboardType),
             keyboardActions = KeyboardActions(onDone = {
