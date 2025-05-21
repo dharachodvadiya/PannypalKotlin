@@ -53,7 +53,7 @@ class InAppAdsRepositoryImpl @Inject constructor(
         onStateChange: (AdState) -> Unit
     ): AdView {
         val adView = AdView(context).apply {
-            setAdSize(AdSize.BANNER)
+            setAdSize(getAdaptiveAdSize(context))
             this.adUnitId = adUnitId
             layoutParams = ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -74,6 +74,14 @@ class InAppAdsRepositoryImpl @Inject constructor(
             loadAd(AdRequest.Builder().build())
         }
         return adView
+    }
+
+    fun getAdaptiveAdSize(context: Context): AdSize {
+        val displayMetrics = context.resources.displayMetrics
+        val density = displayMetrics.density
+        val adWidthPixels = displayMetrics.widthPixels.toFloat()
+        val adWidth = (adWidthPixels / density).toInt()
+        return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(context, adWidth-30)
     }
 
 

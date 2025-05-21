@@ -16,8 +16,8 @@ object AdConfig {
     private const val PROD_NATIVE_AD_UNIT_ID =
         "ca-app-pub-1234567890123456/3333333333" // PennyPal_Native
 
-    val isDebug = BuildConfig.DEBUG
-    //private const val isDebug = false
+    //val isDebug = BuildConfig.DEBUG
+    private const val isDebug = false
     val BANNER_AD_UNIT_ID: String
         get() = if (isDebug) TEST_BANNER_AD_UNIT_ID else PROD_BANNER_AD_UNIT_ID
 

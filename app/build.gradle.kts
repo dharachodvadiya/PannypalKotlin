@@ -211,6 +211,8 @@ dependencies {
     //Admob
     implementation("com.google.android.gms:play-services-ads:24.2.0")
 
+    implementation("com.google.ads.mediation:facebook:6.18.0.0")
+
     //IAP
     val billingVersion = "7.1.1"
    // implementation("com.android.billingclient:billing:$billingVersion")
