@@ -19,8 +19,8 @@ android {
         applicationId = "com.indie.apps.pennypal"
         minSdk = 26
         targetSdk = 35
-        versionCode = 14
-        versionName = "2.8"
+        versionCode = 15
+        versionName = "2.9"
 
         testInstrumentationRunner = "com.indie.apps.pennypal.CustomTestRunner"
         vectorDrawables {

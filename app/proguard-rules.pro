@@ -292,3 +292,6 @@
 # Prevent iText from being obfuscated (for licensing/debugging compatibility)
 -dontwarn com.itextpdf.**
 
+-dontwarn com.facebook.infer.annotation.Nullsafe$Mode
+-dontwarn com.facebook.infer.annotation.Nullsafe
+
